@@ -19,6 +19,8 @@
     "i18n:check": "node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs",
     "api:generate": "pnpm --filter @agilityhub/api-client api:generate",
     "e2e": "turbo run e2e",
+    "e2e:docker": "bash scripts/e2e-docker.sh",
+    "size-limit": "size-limit",
     "prepare": "node packages/config/scripts/prepare-husky.mjs"
   },
   "devDependencies": {
@@ -27,6 +29,7 @@
     "@eslint/css": "catalog:",
     "@eslint/js": "catalog:",
     "@playwright/test": "catalog:",
+    "@size-limit/file": "^13.0.3",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "eslint-import-resolver-typescript": "catalog:",
@@ -40,6 +43,7 @@
     "lint-staged": "catalog:",
     "msw": "catalog:",
     "prettier": "catalog:",
+    "size-limit": "^13.0.3",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:"

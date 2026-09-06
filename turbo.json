@@ -18,7 +18,8 @@
     },
     "e2e": {
       "dependsOn": ["build"],
-      "cache": false
+      "cache": false,
+      "env": ["PLAYWRIGHT_BROWSERS_PATH"]
     },
     "dev": {
       "cache": false,

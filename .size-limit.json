@@ -1,0 +1,8 @@
+[
+  {
+    "name": "clubs initial JavaScript",
+    "path": "apps/clubs/dist/assets/index-*.js",
+    "limit": "300 kB",
+    "gzip": true
+  }
+]
