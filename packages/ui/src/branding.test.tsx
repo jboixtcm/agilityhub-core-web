@@ -3,7 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 
 import brandingFixture from "../../api-client/src/mocks/fixtures/branding-canic.json";
 
-import { type Branding, BrandingProvider, useBranding } from "./branding";
+import {
+  type Branding,
+  BrandingProvider,
+  resolveBrandingLogo,
+  useBranding,
+} from "./branding";
 
 function canicBranding(): Branding {
   return {
@@ -20,6 +25,31 @@ function BrandingName() {
 }
 
 describe("T-02-05 BrandingProvider", () => {
+  it("selects the theme-aware full logo before the mark fallback", () => {
+    const branding = canicBranding();
+
+    expect(resolveBrandingLogo(branding.theme)).toEqual({
+      logoUrl: branding.theme.logoDarkUrl,
+      markUrl: branding.theme.markUrl,
+    });
+    expect(resolveBrandingLogo({ ...branding.theme, mode: "light" })).toEqual({
+      logoUrl: branding.theme.logoUrl,
+      markUrl: branding.theme.markUrl,
+    });
+    const withoutDarkLogo: Branding["theme"] = { ...branding.theme };
+    delete withoutDarkLogo.logoDarkUrl;
+    expect(resolveBrandingLogo(withoutDarkLogo)).toEqual({
+      logoUrl: branding.theme.logoUrl,
+      markUrl: branding.theme.markUrl,
+    });
+    const markOnlyTheme: Branding["theme"] = { ...branding.theme, logoDarkUrl: " " };
+    delete markOnlyTheme.logoUrl;
+    expect(resolveBrandingLogo(markOnlyTheme)).toEqual({
+      logoUrl: undefined,
+      markUrl: branding.theme.markUrl,
+    });
+  });
+
   it("applies theme tokens and exposes public branding", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const branding = canicBranding();

@@ -21,6 +21,7 @@ import {
   isModuleUiItemEnabled,
   Modal,
   requiredModulesForUiItem,
+  resolveBrandingLogo,
   Select,
   TabBar,
   type TabBarItem,
@@ -129,26 +130,21 @@ function routeAfterLogin(me: Me): string {
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   const branding = useBranding();
-  const darkLogo = branding.theme.logoDarkUrl?.trim();
-  const logo =
-    branding.theme.mode === "dark" && darkLogo !== undefined && darkLogo !== ""
-      ? darkLogo
-      : branding.theme.logoUrl?.trim();
-  const mark = branding.theme.markUrl?.trim();
-  const hasLogo = logo !== undefined && logo !== "";
-  const hasMark = mark !== undefined && mark !== "";
+  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
   return (
     <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
-      {hasLogo ? (
-        <img alt={branding.club.name} className="auth-logo__full" src={logo} />
-      ) : hasMark ? (
-        <img alt="" className="auth-logo__mark" src={mark} />
+      {logoUrl !== undefined ? (
+        <img alt={branding.club.name} className="auth-logo__full" src={logoUrl} />
+      ) : markUrl !== undefined ? (
+        <img alt="" className="auth-logo__mark" src={markUrl} />
       ) : (
         <span aria-hidden="true" className="auth-logo__fallback">
           <Icon aria-hidden="true" name="paw" />
         </span>
       )}
-      {hasLogo ? null : <strong className="auth-logo__name">{branding.club.name}</strong>}
+      {logoUrl === undefined ? (
+        <strong className="auth-logo__name">{branding.club.name}</strong>
+      ) : null}
     </div>
   );
 }
@@ -274,7 +270,7 @@ function MobileShell({
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
-  const logo = branding.theme.logoUrl ?? branding.theme.markUrl;
+  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
 
   return (
     <div className="clubs-shell">
@@ -296,12 +292,16 @@ function MobileShell({
               </div>
             }
             start={
-              logo === undefined ? (
+              logoUrl === undefined && markUrl === undefined ? (
                 <span aria-hidden="true" className="clubs-shell__mark">
                   {branding.club.name.charAt(0)}
                 </span>
               ) : (
-                <img alt={branding.club.name} className="clubs-shell__logo" src={logo} />
+                <img
+                  alt={logoUrl === undefined ? "" : branding.club.name}
+                  className="clubs-shell__logo"
+                  src={logoUrl ?? markUrl}
+                />
               )
             }
             title={branding.club.name}

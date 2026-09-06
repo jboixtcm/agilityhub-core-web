@@ -17,6 +17,7 @@ import {
   Input,
   isModuleUiItemEnabled,
   requiredModulesForUiItem,
+  resolveBrandingLogo,
   Sidebar,
   type SidebarEntry,
   type SidebarGroup,
@@ -359,18 +360,21 @@ function AdminShell({ children }: { children: ReactNode }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
-  const logo = branding.theme.logoUrl ?? branding.theme.markUrl;
+  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
 
   return (
     <div className="admin-shell">
       <header className="admin-shell__header">
         <div className="admin-shell__brand">
-          {logo === undefined ? (
+          {logoUrl === undefined && markUrl === undefined ? (
             <span aria-hidden="true" className="admin-shell__mark">
               {branding.club.name.charAt(0)}
             </span>
           ) : (
-            <img alt={branding.club.name} src={logo} />
+            <img
+              alt={logoUrl === undefined ? "" : branding.club.name}
+              src={logoUrl ?? markUrl}
+            />
           )}
           <strong>{branding.club.name}</strong>
         </div>

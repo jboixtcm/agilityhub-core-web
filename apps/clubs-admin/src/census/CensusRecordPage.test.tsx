@@ -62,6 +62,7 @@ describe("T-03-39 D10 member record", () => {
     expect(screen.getByText("titular del grup familiar")).toBeVisible();
     expect(screen.getByText("···· ···· ···· ···· 2231", { exact: false })).toBeVisible();
     expect(screen.getByText("canvi només admin")).toBeVisible();
+    expect(screen.getByText("alumne", { exact: true })).toBeVisible();
     expect(
       screen.getByText("No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella."),
     ).toBeVisible();

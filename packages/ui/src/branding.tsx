@@ -28,6 +28,11 @@ export interface BrandingTheme {
   ringPalette?: string[];
 }
 
+export interface BrandingLogoAssets {
+  logoUrl: string | undefined;
+  markUrl: string | undefined;
+}
+
 /** Normalized public branding data consumed by the design system. */
 export interface Branding {
   club: {
@@ -49,6 +54,21 @@ export interface Branding {
   status: string;
   theme: BrandingTheme;
   timeZone: string;
+}
+
+function nonEmptyAssetUrl(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized === "" ? undefined : normalized;
+}
+
+/** Selects the full logo for the active theme and keeps the mark as its fallback. */
+export function resolveBrandingLogo(theme: BrandingTheme): BrandingLogoAssets {
+  const logoUrl = nonEmptyAssetUrl(theme.logoUrl);
+  return {
+    logoUrl:
+      theme.mode === "dark" ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl) : logoUrl,
+    markUrl: nonEmptyAssetUrl(theme.markUrl),
+  };
 }
 
 interface BrandingProviderProps {

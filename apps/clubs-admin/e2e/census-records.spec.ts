@@ -160,6 +160,7 @@ test.describe("E2-W02 census records", () => {
     await expect(page.getByText(/No autoritza l'ús de la seva imatge/u)).toBeVisible();
     await expect(page.getByText(/···· ···· ···· ···· 2231/u)).toBeVisible();
     await expect(page.getByText("canvi només admin")).toBeVisible();
+    await expect(page.getByText("alumne", { exact: true })).toBeVisible();
     await expect(page.getByText("Pack 10: 6/4 · caduca 12-11")).toBeVisible();
     await expect(page.getByText("Pot entrenar sol")).toBeVisible();
     await page.screenshot({

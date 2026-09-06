@@ -240,7 +240,7 @@
   "roles": {
     "admin": "administrador",
     "instructor": "instructor",
-    "member": "abonat"
+    "member": "alumne"
   },
   "values": {
     "empty": "—",

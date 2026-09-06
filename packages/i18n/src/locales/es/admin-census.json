@@ -227,7 +227,7 @@
   "roles": {
     "admin": "administrador",
     "instructor": "instructor",
-    "member": "abonado"
+    "member": "alumno"
   },
   "values": {
     "empty": "—",

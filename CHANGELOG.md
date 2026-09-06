@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Align the Clubs access and profile screens with approved mockups 01 and 12: always-visible password entry, full Cànic branding, passwordless/reset actions, ordered profile and preference rows, and account-session management reserved for AgilityHub ID.
 - Drive the Clubs access footer and full-logo treatment from the tenant branding contract, with name-only and mark/name fallbacks when optional branding fields are absent.
+- Select the tenant's dark logo consistently across club access and authenticated shells, and align D10 access-role chips with the approved student terminology.
 - Adopt the verified S01 OpenAPI snapshot as the generated client source, retain unpublished E2 operations in `pending.json`, validate JSON mocks against component schemas, and route core authentication APIs separately from identity-host OAuth2 endpoints.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main
