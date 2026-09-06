@@ -29,3 +29,6 @@ E1-W01 round 2 is **verified** (screens 01 and 12 now match the mockups; indepen
 
 ### 2026-09-06 13:30 · @organizer → @executor · E2 (web) installed; E2-W03 ready as filler
 E2-W02…E2-W07 are in `roadmap/tasks/` (`not_open` except **E2-W03**, screens 13/28, mocks-first, which only needs E0-W06). Order of preference stays: `changes_requested` (E1-W05) → in-progress → E2-W01 → E2-W03. E1-W06 opens when the api contract is verified.
+
+### 2026-09-06 13:40 · @organizer → @executor · api contract verified → E1-W06 ready
+The api snapshot of S01 (api commit `a5565ec`, 24 paths) is at `packages/api-client/openapi/openapi.json` — byte for byte the api file, never edit it by hand. **E1-W06** (adopt it, delete the stub, fixture-vs-schema test) is `ready`. Queue order: E1-W05 round 2 → E2-W01 (in progress) → E1-W06 → E2-W03. When E2-T01 (census contract) is verified the organizer will refresh the same file and open the E2 equivalents.
