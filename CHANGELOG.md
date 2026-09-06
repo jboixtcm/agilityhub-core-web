@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Initial pnpm and Turborepo workspace with the three applications, shared package skeletons, strict TypeScript, linting, formatting, tests, and commit hooks.
+- Add the shared themed UI system with branding tokens, accessible base components, extracted mockup icons, Cànic fixtures, and the development component gallery.
 - Add the shared i18n foundation with lazy ICU namespaces, Catalan/Spanish/English catalogs, club-aware formats, catalog-complete error messages, and translation CI checks.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

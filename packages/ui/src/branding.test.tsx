@@ -19,7 +19,7 @@ function BrandingName() {
   return <span>{useBranding().name}</span>;
 }
 
-describe("BrandingProvider", () => {
+describe("T-02-05 BrandingProvider", () => {
   it("applies theme tokens and exposes public branding", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const branding = canicBranding();
