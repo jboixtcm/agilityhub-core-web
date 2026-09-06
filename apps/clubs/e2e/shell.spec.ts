@@ -48,9 +48,8 @@ async function prepareScenario(page: Page, scenario: "member" | "minimal", brand
 async function login(page: Page) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("biel.roca@example.test");
-  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
   await page.getByLabel("Contrasenya").fill("secret-password");
-  await page.getByRole("button", { name: "ENTRA" }).click();
+  await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }
 

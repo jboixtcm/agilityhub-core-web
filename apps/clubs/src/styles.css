@@ -228,10 +228,23 @@ select {
   height: 4.5rem;
 }
 
+.auth-logo__wordmark {
+  display: grid;
+  justify-items: center;
+  gap: var(--ah-space-1);
+}
+
 .auth-logo strong {
   font: 800 1.35rem/1.2 var(--ah-font-display);
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.auth-logo__wordmark small {
+  color: var(--ah-color-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
 }
 
 .auth-logo--compact {
@@ -437,20 +450,21 @@ select {
 
 .profile-account {
   display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3);
+}
+
+.profile-account > a {
+  display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--ah-space-3);
-}
-
-.profile-account > span,
-.session-list li > span {
-  display: grid;
-  gap: var(--ah-space-1);
+  color: var(--ah-color-text);
+  text-decoration: none;
 }
 
 .profile-account small,
-.profile-list small,
-.session-list small {
+.profile-list small {
   color: var(--ah-color-text-muted);
 }
 
@@ -487,35 +501,130 @@ select {
   color: var(--ah-color-primary);
 }
 
+.profile-list__muted {
+  color: var(--ah-color-text-muted) !important;
+}
+
+.profile-list__muted > .ah-icon:first-child,
+.profile-list__logout > .ah-icon:first-child {
+  color: var(--ah-color-text-muted) !important;
+}
+
+.profile-list__logout {
+  color: var(--ah-color-danger) !important;
+}
+
+.profile-language-card {
+  padding-block: 0;
+}
+
 .profile-language .ah-select {
   width: auto;
   min-height: 2.25rem;
+}
+
+.profile-notices {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.profile-notices__header,
+.profile-notices__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.75rem 2.75rem;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.profile-notices__header h2 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font: 700 0.75rem/1.2 var(--ah-font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile-notices__header small {
+  color: var(--ah-color-text-muted);
+  text-align: center;
+}
+
+.profile-notices__row {
+  font-size: 0.8125rem;
+}
+
+.profile-notices__row > .ah-icon,
+.profile-notices__app-state > .ah-icon {
+  justify-self: center;
+  color: var(--ah-color-success);
+}
+
+.profile-notices__app-state {
+  display: grid;
+  justify-items: center;
+  color: var(--ah-color-success);
+}
+
+.profile-notices__app-state small {
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.profile-notices__toggle {
+  position: relative;
+  width: 1.9rem;
+  height: 1.05rem;
+  justify-self: center;
+  background: var(--ah-color-border);
+  border-radius: 999px;
+}
+
+.profile-notices__toggle::after {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--ah-color-text);
+  border-radius: 50%;
+  content: "";
+}
+
+.profile-notices__toggle--on {
+  background: var(--ah-color-primary);
+}
+
+.profile-notices__toggle--on::after {
+  right: 0.15rem;
+  left: auto;
+}
+
+.profile-notices__reminder,
+.profile-notices__mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  font-size: 0.8125rem;
+}
+
+.profile-notices__reminder > :last-child {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+}
+
+.profile-notices__mobile {
+  padding-top: var(--ah-space-3);
+  border-top: 1px solid var(--ah-color-border);
 }
 
 .profile-modal-form label {
   color: var(--ah-color-text-muted);
   font-size: 0.8125rem;
   font-weight: 700;
-}
-
-.session-list {
-  display: grid;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.session-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ah-space-3);
-  padding-block: var(--ah-space-3);
-  border-bottom: 1px solid var(--ah-color-border);
-}
-
-.session-list li:last-child {
-  border-bottom: 0;
 }
 
 @media (min-width: 30rem) {

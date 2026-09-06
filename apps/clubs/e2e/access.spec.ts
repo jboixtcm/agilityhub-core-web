@@ -39,9 +39,8 @@ async function passwordLogin(page: Page) {
   await prepareScenario(page, "multiProfile");
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
-  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
   await page.getByLabel("Contrasenya").fill("secret-password");
-  await page.getByRole("button", { name: "ENTRA" }).click();
+  await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
 }
 
 test.describe("T-01-18 access screen", () => {
@@ -50,20 +49,33 @@ test.describe("T-01-18 access screen", () => {
   }) => {
     await prepareScenario(page, "member");
     await page.goto(`${baseUrl}/entrar`);
+    await expect(page.getByRole("img", { name: "Cànic" })).toHaveAttribute(
+      "src",
+      /^data:image\/png;base64,/u,
+    );
+    await expect(page.getByText("Cànic AGILITY")).toBeVisible();
     await expect(page.getByPlaceholder("correu@exemple.cat")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Envia'm l'enllaç" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Tinc contrasenya" })).toBeVisible();
+    await expect(page.getByPlaceholder("contrasenya")).toBeVisible();
+    await expect(page.getByRole("button", { exact: true, name: "ENTRA" })).toBeVisible();
+    const magicLink = page.getByRole("button", {
+      name: "Envia'm un enllaç per entrar sense contrasenya",
+    });
+    await expect(magicLink).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    await expect(page.getByText("Club Agility Cànic · Cabrera de Mar")).toBeVisible();
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "01-entrar-375.png"),
     });
 
-    await page.getByRole("button", { name: "Envia'm l'enllaç" }).click();
+    await magicLink.click();
     await expect(page.getByLabel("Correu electrònic")).toBeFocused();
     await expect(page.getByRole("alert")).toHaveText("Escriu el teu correu");
     await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
-    await page.getByRole("button", { name: "Envia'm l'enllaç" }).click();
+    await magicLink.click();
     await expect(page.getByRole("status")).toHaveText(
       "Si el correu és al club, hi rebràs l'enllaç",
     );
@@ -73,11 +85,14 @@ test.describe("T-01-18 access screen", () => {
     await prepareScenario(page, "rateLimited");
     await page.goto(`${baseUrl}/entrar`);
     await page.getByLabel("Correu electrònic").fill("limit@example.test");
-    await page.getByRole("button", { name: "Envia'm l'enllaç" }).click();
+    const magicLink = page.getByRole("button", {
+      name: "Envia'm un enllaç per entrar sense contrasenya",
+    });
+    await magicLink.click();
     await expect(page.getByRole("alert")).toContainText(
       "Massa intents. Torna-ho a provar d'aquí a 120 s",
     );
-    await expect(page.getByRole("button", { name: "Envia'm l'enllaç" })).toBeDisabled();
+    await expect(magicLink).toBeDisabled();
     await expect(page.getByRole("alert")).toContainText("119 s", { timeout: 2_500 });
   });
 
@@ -178,11 +193,26 @@ test.describe("T-01-20 profile choice", () => {
 });
 
 test.describe("T-01-21 profile rows and impersonation", () => {
-  test("renders screen 12 and changes password, locale and sessions", async ({ page }) => {
+  test("renders screen 12 rows in order and changes password and locale", async ({ page }) => {
     await passwordLogin(page);
     await page.waitForURL("**/perfil-acces");
     await page.goto(`${baseUrl}/perfil`);
     await expect(page.getByRole("heading", { name: "El meu perfil" })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Estel Rius/u })).toHaveAttribute("href", "/dades");
+    await expect(page.getByRole("link", { name: "Els meus gossos" })).toHaveAttribute(
+      "href",
+      "/gossos",
+    );
+    await expect(page.getByRole("link", { name: /Canviar de perfil/u })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Avisos" })).toBeVisible();
+    await expect(page.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Sol·licitar període d'inactivitat" }),
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "Sol·licitar la baixa" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Tanca la sessió" })).toBeVisible();
+    await expect(page.getByText("Sessions")).toHaveCount(0);
+    await expect(page.getByText("Obre el backoffice")).toHaveCount(0);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "12-perfil-375.png"),
@@ -191,12 +221,6 @@ test.describe("T-01-21 profile rows and impersonation", () => {
     await page.getByRole("button", { name: "Canvia la contrasenya" }).click();
     await expect(page.getByRole("dialog", { name: "Canvia la contrasenya" })).toBeVisible();
     await expect(page.getByLabel("contrasenya actual")).toHaveCount(0);
-    await page.getByRole("button", { exact: true, name: "Tanca" }).click();
-
-    await page.getByRole("button", { name: "Sessions" }).click();
-    await expect(page.getByText("Safari · iPhone")).toBeVisible();
-    await page.getByRole("button", { name: "Tanca aquesta sessió" }).click();
-    await expect(page.getByText("Chrome · Mac")).toHaveCount(0);
     await page.getByRole("button", { exact: true, name: "Tanca" }).click();
 
     const profileLanguage = page.locator(".profile-language").getByRole("combobox");

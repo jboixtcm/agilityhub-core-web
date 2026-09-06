@@ -18,4 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add frontend playbooks for mockup-driven screen delivery, API client usage, and the reusable task Definition of Done checklist.
 - Add the Clubs and Clubs Admin access flows, including magic-link activation, password entry, profile selection, account security controls, impersonation exit, cross-app handoff, translated MSW scenarios, and mobile screenshot evidence.
 
+### Changed
+
+- Align the Clubs access and profile screens with approved mockups 01 and 12: always-visible password entry, full Cànic branding, passwordless/reset actions, ordered profile and preference rows, and account-session management reserved for AgilityHub ID.
+
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

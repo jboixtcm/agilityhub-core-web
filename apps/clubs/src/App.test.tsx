@@ -135,27 +135,50 @@ describe("T-02-14 clubs shell", () => {
 describe("T-01-18 access screen", () => {
   it("uses the exact access actions, focuses an empty email and gates signup", async () => {
     window.history.pushState(null, "", "/entrar");
-    await renderApplication(authClient());
+    const client = authClient();
+    const requestMagicLink = vi.spyOn(client, "requestMagicLink");
+    await renderApplication(client);
 
+    expect(screen.getByRole("img", { name: "Cànic" })).toHaveAttribute(
+      "src",
+      expect.stringMatching(/^data:image\/png;base64,/u),
+    );
+    expect(screen.getByText("Cànic AGILITY")).toBeVisible();
     expect(screen.getByPlaceholderText("correu@exemple.cat")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Envia'm l'enllaç" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Tinc contrasenya" })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("contrasenya")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Envia'm un enllaç per entrar sense contrasenya",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    expect(screen.getByText("Club Agility Cànic · Cabrera de Mar")).toBeVisible();
 
-    fireEvent.click(screen.getByRole("button", { name: "Envia'm l'enllaç" }));
+    const magicLinkButton = screen.getByRole("button", {
+      name: "Envia'm un enllaç per entrar sense contrasenya",
+    });
+    fireEvent.click(magicLinkButton);
     expect(screen.getByLabelText("Correu electrònic")).toHaveFocus();
     expect(screen.getByRole("alert")).toHaveTextContent("Escriu el teu correu");
 
     fireEvent.change(screen.getByLabelText("Correu electrònic"), {
       target: { value: "estel.rius@example.test" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Envia'm l'enllaç" }));
+    fireEvent.click(magicLinkButton);
     expect(await screen.findByRole("status")).toHaveTextContent(
       "Si el correu és al club, hi rebràs l'enllaç",
     );
-    fireEvent.click(screen.getByRole("button", { name: "Tinc contrasenya" }));
-    expect(screen.getByLabelText("Contrasenya")).toBeVisible();
-    expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+    expect(requestMagicLink).toHaveBeenCalledWith("estel.rius@example.test", "LOGIN");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
+    );
+    await waitFor(() => {
+      expect(requestMagicLink).toHaveBeenCalledWith("estel.rius@example.test", "RESET");
+    });
 
     cleanup();
     window.history.pushState(null, "", "/entrar");
@@ -171,12 +194,20 @@ describe("T-01-18 access screen", () => {
     fireEvent.change(screen.getByLabelText("Correu electrònic"), {
       target: { value: "limit@example.test" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Envia'm l'enllaç" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Envia'm un enllaç per entrar sense contrasenya",
+      }),
+    );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Massa intents. Torna-ho a provar d'aquí a 120 s",
     );
-    expect(screen.getByRole("button", { name: "Envia'm l'enllaç" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", {
+        name: "Envia'm un enllaç per entrar sense contrasenya",
+      }),
+    ).toBeDisabled();
   });
 });
 
@@ -245,14 +276,53 @@ describe("T-01-20 profile choice", () => {
 });
 
 describe("T-01-21 profile access rows and impersonation", () => {
-  it("renders password, locale and revocable session controls from the contract", async () => {
+  it("renders the mockup rows in order without account sessions or backoffice handoff", async () => {
     mockScenario("multiProfile");
     const client = authClient();
     await client.login("estel.rius@example.test", "secret-password");
     window.history.pushState(null, "", "/perfil");
     await renderApplication(client);
 
-    fireEvent.click(screen.getByRole("button", { name: "Canvia la contrasenya" }));
+    const account = screen.getByRole("link", { name: /Estel Rius/u });
+    expect(account).toHaveAttribute("href", "/dades");
+    expect(
+      screen.getByText("Toca el teu nom per veure i editar totes les teves dades"),
+    ).toBeVisible();
+    const dogs = screen.getByRole("link", { name: "Els meus gossos" });
+    expect(dogs).toHaveAttribute("href", "/gossos");
+    const password = screen.getByRole("button", { name: "Canvia la contrasenya" });
+    const profile = screen.getByRole("link", { name: /Canviar de perfil/u });
+    const notices = screen.getByRole("heading", { name: "Avisos" });
+    expect(screen.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
+    const language = document.querySelector(".profile-language");
+    if (language === null) {
+      throw new TypeError("Expected the profile language row");
+    }
+    const inactivity = screen.getByRole("link", { name: "Sol·licitar període d'inactivitat" });
+    expect(inactivity).toHaveAttribute("href", "/inactivitat");
+    const leave = screen.getByRole("link", { name: "Sol·licitar la baixa" });
+    expect(leave).toHaveAttribute("href", "/baixa");
+    const logout = screen.getByRole("button", { name: "Tanca la sessió" });
+    const orderedRows = [
+      account,
+      dogs,
+      password,
+      profile,
+      notices,
+      language,
+      inactivity,
+      leave,
+      logout,
+    ];
+    for (const [index, row] of orderedRows.slice(0, -1).entries()) {
+      expect(row.compareDocumentPosition(orderedRows[index + 1] as Node)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    }
+    expect(screen.queryByText("Sessions")).not.toBeInTheDocument();
+    expect(screen.queryByText("Obre el backoffice")).not.toBeInTheDocument();
+
+    fireEvent.click(password);
     expect(screen.getByRole("dialog", { name: "Canvia la contrasenya" })).toBeVisible();
     expect(screen.queryByLabelText("contrasenya actual")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Tanca" }));
@@ -265,11 +335,6 @@ describe("T-01-21 profile access rows and impersonation", () => {
     expect(within(locale).getByRole("option", { name: "Català" })).toBeInTheDocument();
     expect(within(locale).getByRole("option", { name: "Castellà" })).toBeInTheDocument();
     expect(within(locale).queryByRole("option", { name: "Anglès" })).not.toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Sessions" }));
-    expect(await screen.findByText("Safari · iPhone")).toBeVisible();
-    expect(screen.getByText("Sessió actual")).toBeVisible();
-    expect(screen.getByRole("button", { name: "Tanca aquesta sessió" })).toBeVisible();
   });
 
   it("keeps the impersonation banner visible from /me", async () => {

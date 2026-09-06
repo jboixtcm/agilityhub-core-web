@@ -1,6 +1,5 @@
 import { isApiError } from "@agilityhub/api-client";
 import {
-  type AccountSession,
   type AuthClient,
   RequireAuth,
   RequireModule,
@@ -118,17 +117,30 @@ function routeAfterLogin(me: CurrentMe): string {
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   const branding = useBranding();
-  const logo = branding.theme.logoDarkUrl ?? branding.theme.logoUrl ?? branding.theme.markUrl;
+  const { t } = useTranslation("auth");
+  const logo = branding.theme.logoUrl?.trim();
+  const mark = branding.theme.markUrl?.trim();
+  const hasLogo = logo !== undefined && logo !== "";
+  const hasMark = mark !== undefined && mark !== "";
   return (
     <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
-      {logo === undefined ? (
-        <span aria-label={branding.club.name} className="auth-logo__fallback" role="img">
+      {hasLogo ? (
+        <img alt={branding.club.name} src={logo} />
+      ) : hasMark ? (
+        <img alt="" className="auth-logo__mark" src={mark} />
+      ) : (
+        <span aria-hidden="true" className="auth-logo__fallback">
           <Icon aria-hidden="true" name="paw" />
         </span>
-      ) : (
-        <img alt={branding.club.name} src={logo} />
       )}
-      {compact ? null : <strong>{branding.club.name}</strong>}
+      {compact ? null : (
+        <span className="auth-logo__wordmark">
+          <strong>
+            {hasLogo ? t("auth:access.wordmark", { club: branding.club.name }) : branding.club.name}
+          </strong>
+          {hasLogo ? <small>{t("auth:access.tagline")}</small> : null}
+        </span>
+      )}
     </div>
   );
 }
@@ -341,7 +353,6 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
     () => new URLSearchParams(window.location.search).get("email") ?? "",
   );
   const [password, setPassword] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
   const [message, setMessage] = useState<string>();
   const [error, setError] = useState<string>();
@@ -419,62 +430,47 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
             type="email"
             value={email}
           />
+          <label className="ah-sr-only" htmlFor="access-password">
+            {t("auth:access.passwordLabel")}
+          </label>
+          <Input
+            autoComplete="current-password"
+            id="access-password"
+            onChange={(event) => {
+              setPassword(event.currentTarget.value);
+            }}
+            placeholder={t("auth:access.passwordPlaceholder")}
+            required
+            type="password"
+            value={password}
+          />
           <Button
             className="auth-form__primary"
+            disabled={pending !== null || countdown.seconds > 0}
+            loading={pending === "login"}
+            loadingLabel={t("auth:access.entering")}
+            type="submit"
+          >
+            {t("auth:access.enter")}
+          </Button>
+          <Button
             disabled={pending !== null || countdown.seconds > 0}
             loading={pending === "magic"}
             onClick={() => void requestLink("LOGIN")}
             type="button"
+            variant="secondary"
           >
             <Icon aria-hidden="true" name="mail" />
-            {t("auth:access.magicLink")}
+            {t("auth:access.passwordlessLink")}
           </Button>
-          {passwordVisible ? (
-            <>
-              <label className="ah-sr-only" htmlFor="access-password">
-                {t("auth:access.passwordLabel")}
-              </label>
-              <Input
-                autoComplete="current-password"
-                id="access-password"
-                onChange={(event) => {
-                  setPassword(event.currentTarget.value);
-                }}
-                placeholder={t("auth:access.passwordPlaceholder")}
-                required
-                type="password"
-                value={password}
-              />
-              <Button
-                className="auth-form__primary"
-                disabled={pending !== null || countdown.seconds > 0}
-                loading={pending === "login"}
-                loadingLabel={t("auth:access.entering")}
-                type="submit"
-              >
-                {t("auth:access.enter")}
-              </Button>
-              <button
-                className="auth-text-action"
-                disabled={pending !== null || countdown.seconds > 0}
-                onClick={() => void requestLink("RESET")}
-                type="button"
-              >
-                {t("auth:access.forgot")}
-              </button>
-            </>
-          ) : (
-            <Button
-              onClick={() => {
-                setPasswordVisible(true);
-              }}
-              type="button"
-              variant="secondary"
-            >
-              <Icon aria-hidden="true" name="lock" />
-              {t("auth:access.passwordReveal")}
-            </Button>
-          )}
+          <button
+            className="auth-text-action"
+            disabled={pending !== null || countdown.seconds > 0}
+            onClick={() => void requestLink("RESET")}
+            type="button"
+          >
+            {t("auth:access.forgot")}
+          </button>
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
               {t("auth:access.countdown", { seconds: countdown.seconds })}
@@ -498,7 +494,12 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
         ) : null}
       </section>
       <footer className="auth-footer">
-        {t("auth:access.footer", { club: branding.club.name })}
+        {branding.club.slug === "canic"
+          ? t("auth:access.footerWithLocation", {
+              club: branding.club.name,
+              location: t("auth:access.locationCanic"),
+            })
+          : t("auth:access.footer", { club: branding.club.name })}
       </footer>
     </main>
   );
@@ -860,75 +861,6 @@ function PasswordModal({
   );
 }
 
-function SessionsModal({
-  authClient,
-  onClose,
-  open,
-}: {
-  authClient: AuthClient;
-  onClose: () => void;
-  open: boolean;
-}) {
-  const { t } = useTranslation("auth");
-  const [sessions, setSessions] = useState<AccountSession[]>();
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    void authClient.listSessions().then(
-      (items) => {
-        setSessions(items);
-        setFailed(false);
-      },
-      () => {
-        setFailed(true);
-      },
-    );
-  }, [authClient, open]);
-
-  return (
-    <Modal
-      closeLabel={t("auth:profile.close")}
-      onClose={onClose}
-      open={open}
-      title={t("auth:profile.sessionsTitle")}
-    >
-      {sessions === undefined && !failed ? (
-        <p role="status">{t("auth:profile.sessionsLoading")}</p>
-      ) : null}
-      {failed ? <p role="alert">{t("auth:access.genericError")}</p> : null}
-      {sessions?.length === 0 ? <p>{t("auth:profile.sessionsEmpty")}</p> : null}
-      <ul className="session-list">
-        {sessions?.map((session) => (
-          <li key={session.id}>
-            <span>
-              <strong>{session.deviceLabel}</strong>
-              {session.current ? <small>{t("auth:profile.currentSession")}</small> : null}
-            </span>
-            {session.current ? null : (
-              <Button
-                onClick={() => {
-                  void authClient.revokeSession(session.id).then(() => {
-                    setSessions((currentSessions) =>
-                      currentSessions?.filter((item) => item.id !== session.id),
-                    );
-                  });
-                }}
-                type="button"
-                variant="ghost"
-              >
-                {t("auth:profile.revokeSession")}
-              </Button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </Modal>
-  );
-}
-
 function activeProfileLabel(
   role: Role | undefined,
   t: ReturnType<typeof useTranslation>["t"],
@@ -947,37 +879,30 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
   const { me } = useSession();
   const { i18n, t } = useTranslation(["auth", "shell"]);
   const [passwordOpen, setPasswordOpen] = useState(false);
-  const [sessionsOpen, setSessionsOpen] = useState(false);
   const [working, setWorking] = useState(false);
   if (me === null) {
     return null;
   }
   const profiles = profileRoles(me);
-  const canOpenBackoffice = profiles.includes("ADMIN") || profiles.includes("INSTRUCTOR");
   const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
-
-  const openBackoffice = async () => {
-    setWorking(true);
-    try {
-      const handoff = await authClient.createHandoff("clubs-admin");
-      window.location.assign(handoff.url);
-    } finally {
-      setWorking(false);
-    }
-  };
 
   return (
     <div className="profile-page">
       <h1>{t("auth:profile.title")}</h1>
       <Card className="profile-account">
-        <Avatar name={me.account.name} />
-        <span>
+        <a href="/dades">
+          <Avatar name={me.account.name} />
           <strong>{me.account.name}</strong>
-          <small>{t("auth:profile.accountHelp")}</small>
-        </span>
-        <Icon aria-hidden="true" name="chev" />
+          <Icon aria-hidden="true" name="chev" />
+        </a>
+        <small>{t("auth:profile.accountHelp")}</small>
       </Card>
       <Card className="profile-list">
+        <a href="/gossos">
+          <Icon aria-hidden="true" name="paw" />
+          <span>{t("auth:profile.dogs")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </a>
         <button
           onClick={() => {
             setPasswordOpen(true);
@@ -996,6 +921,50 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
+      </Card>
+      <Card aria-disabled="true" className="profile-notices">
+        <div className="profile-notices__header">
+          <h2>{t("auth:profile.notices")}</h2>
+          <small>{t("auth:profile.appChannel")}</small>
+          <small>{t("auth:profile.emailChannel")}</small>
+        </div>
+        <div className="profile-notices__row">
+          <span>{t("auth:profile.operationalNotices")}</span>
+          <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
+          <span aria-hidden="true" className="profile-notices__toggle" />
+        </div>
+        <div className="profile-notices__row">
+          <span>{t("auth:profile.personalNotices")}</span>
+          <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
+          <span
+            aria-hidden="true"
+            className="profile-notices__toggle profile-notices__toggle--on"
+          />
+        </div>
+        <div className="profile-notices__row">
+          <span>{t("auth:profile.clubChanges")}</span>
+          <span className="profile-notices__app-state">
+            <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
+            <small>{t("auth:profile.smsIncluded")}</small>
+          </span>
+          <span
+            aria-hidden="true"
+            className="profile-notices__toggle profile-notices__toggle--on"
+          />
+        </div>
+        <div className="profile-notices__reminder">
+          <span>{t("auth:profile.classReminder")}</span>
+          <span>{t("auth:profile.never")}</span>
+        </div>
+        <div className="profile-notices__mobile">
+          <span>{t("auth:profile.mobileNotices")}</span>
+          <span
+            aria-hidden="true"
+            className="profile-notices__toggle profile-notices__toggle--on"
+          />
+        </div>
+      </Card>
+      <Card className="profile-language-card">
         <label className="profile-language">
           <Icon aria-hidden="true" name="globe" />
           <span>{t("auth:profile.language")}</span>
@@ -1029,24 +998,20 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
             ))}
           </Select>
         </label>
-        <button
-          onClick={() => {
-            setSessionsOpen(true);
-          }}
-          type="button"
-        >
-          <Icon aria-hidden="true" name="list" />
-          <span>{t("auth:profile.sessions")}</span>
+      </Card>
+      <Card className="profile-list profile-list--final">
+        <a href="/inactivitat">
+          <Icon aria-hidden="true" name="palm" />
+          <span>{t("auth:profile.inactivity")}</span>
           <Icon aria-hidden="true" name="chev" />
-        </button>
-        {canOpenBackoffice ? (
-          <button disabled={working} onClick={() => void openBackoffice()} type="button">
-            <Icon aria-hidden="true" name="globe" />
-            <span>{t("auth:profile.openBackoffice")}</span>
-            <Icon aria-hidden="true" name="chev" />
-          </button>
-        ) : null}
+        </a>
+        <a className="profile-list__muted" href="/baixa">
+          <Icon aria-hidden="true" name="ban" />
+          <span>{t("auth:profile.leave")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </a>
         <button
+          className="profile-list__logout"
           disabled={working}
           onClick={() => {
             setWorking(true);
@@ -1068,15 +1033,6 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
         }}
         open={passwordOpen}
       />
-      {sessionsOpen ? (
-        <SessionsModal
-          authClient={authClient}
-          onClose={() => {
-            setSessionsOpen(false);
-          }}
-          open
-        />
-      ) : null}
     </div>
   );
 }

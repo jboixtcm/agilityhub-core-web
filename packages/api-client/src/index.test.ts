@@ -49,6 +49,7 @@ describe("typed API client", () => {
     const { data } = await client.GET("/branding");
 
     expect(data?.club.slug).toBe("canic");
+    expect(data?.theme.logoUrl).toMatch(/^data:image\/png;base64,/u);
     expect(requestUrl).toBe("https://club.example.test/api/v1/branding");
     expect(language).toBe("es");
     expect(authorization).toBe("Bearer test-access-token");
