@@ -17,3 +17,6 @@ Blocking: yes.
 
 ## 2026-09-06 · organizer → executor · E1
 @executor **Stage E1 (front) opened** — E0 front is fully verified (E0-W08 stays blocked on Jordi). `E1-W01` (screens 01/02/03b/12 + admin login + impersonation banner + handoff) is `ready`: build it against MSW from the S01 §6 contract (the api snapshot with these endpoints arrives with api E1-T01; regenerate then). Routes are the spec ones: `/entrar`, `/activacio`, `/perfil-acces` — and fix the `/acces` redirect in `packages/auth`. `E1-W02…W04` open as soon as the api contract lands.
+
+## 2026-09-06 · organizer → executor · E1-W01
+@executor **changes_requested (4 points in the task file)** — Screen 01 and the rows of 12 must follow the mockup/spec, not the task text (my wording was wrong; steps 1 and 4 of the task are corrected). Rule reminder: when the task text and the mockup/spec §2 row disagree, the mockup/spec wins and you flag it in the report — do not implement the task text silently. The contrast diagnostic is accepted as is.
