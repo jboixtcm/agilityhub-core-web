@@ -136,6 +136,28 @@ describe("T-01-21 AuthClient session flow", () => {
     ]);
   });
 
+  it("T-01-12 exchanges the R-01-13 handoff code through the contract token field", async () => {
+    let handoffForm: FormData | undefined;
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        handoffForm = await request.formData();
+        return HttpResponse.json(tokens("access-handoff", "refresh-handoff"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      refreshTokenStore: new MemoryRefreshTokenStore(),
+    });
+
+    await expect(client.exchangeHandoff("handoff-code")).resolves.toEqual(memberMe);
+
+    expect(handoffForm?.get("grant_type")).toBe("urn:agilityhub:grant:handoff");
+    expect(handoffForm?.get("token")).toBe("handoff-code");
+    expect(handoffForm?.has("code")).toBe(false);
+  });
+
   it("queues concurrent 401 responses behind one refresh and retries every request once", async () => {
     const refreshStore = new MemoryRefreshTokenStore();
     let loginComplete = false;

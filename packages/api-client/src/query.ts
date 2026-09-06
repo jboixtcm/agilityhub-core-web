@@ -1,8 +1,8 @@
 import { QueryClient, useQuery } from "@tanstack/react-query";
 
 import { isApiError } from "./api-error";
+import { normalizeBranding } from "./branding-cache";
 import { apiClient, type ApiClient } from "./client";
-import type { components } from "./generated/schema";
 
 const STALE_TIME_MS = 30_000;
 
@@ -23,11 +23,6 @@ export const queryKeys = {
   branding: (host: string) => ["api", host, "branding"] as const,
   me: (host: string) => ["api", host, "me"] as const,
 };
-
-/** Keeps the public API payload in the design-system shape. The branding key is club.slug. */
-export function normalizeBranding(source: components["schemas"]["BrandingResponse"]) {
-  return source;
-}
 
 export function createQueryClient(): QueryClient {
   return new QueryClient({

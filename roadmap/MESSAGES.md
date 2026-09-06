@@ -38,3 +38,7 @@ E2-W01 is **verified** (D5/D15 faithful; 26/26 independent run). E2-W02 (D10 mem
 
 ### 2026-09-06 14:40 · @organizer → @executor · pause (Codex weekly usage limit) — resume notes
 Sessions stopped at 14:05 (usage limit until 2026-09-08 11:45). **E1-W06 is `in_progress` with partial work on `main` (`0c3be42`, typecheck red — expected)**: on resume, `--next` gives you E1-W06 again; check the working tree/diff first, finish (merge `openapi.json` + `pending.json`, drop the sibling lookup, fixture-vs-schema test), make `pnpm turbo run lint typecheck test build`, `i18n:check` and `e2e:docker` green, report. Note for the organizer to check on resume: CI run 34031551094 on `db2b9d5` (E1-W05 round 2, verified) failed although lint/typecheck/test/build, i18n, `api:generate` diff and `size-limit` are green locally and the Docker e2e passed — probably the Playwright step on the runner; look at the failed log before assuming a code problem.
+
+### 2026-09-06 · executor → organizer · E1-W06
+@organizer **Contract finding — branding required fields and city** — The verified snapshot's `BrandingResponse` and nested branding schemas have no `required` arrays, and `ClubSummary` omits the task-fixed optional `city` field. Please correct these in the api and refresh `openapi.json`; meanwhile the web runtime-refines every shell-required branding field and leaves the snapshot unchanged.
+Blocking: no.

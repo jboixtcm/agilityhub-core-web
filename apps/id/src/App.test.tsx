@@ -7,41 +7,47 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { App, oidcContinuation } from "./App";
 
-type Me = components["schemas"]["MeResponse"];
+type Me = components["schemas"]["Me"];
 
 const me: Me = {
   account: {
     email: "biel.roca@example.test",
-    gender: "MALE",
     hasPassword: true,
     id: "10000000-0000-4000-8000-000000000002",
     locale: "ca",
     name: "Biel Roca",
+    onboardingPending: false,
+    platformRoles: [],
   },
   membership: {
     activeProfile: "MEMBER",
+    clubId: "50000000-0000-4000-8000-000000000001",
+    gender: "MALE",
     profiles: ["MEMBER"],
+    rememberProfile: true,
     roles: ["MEMBER"],
   },
-  modules: [],
+  features: [],
 };
 
-const sessions: components["schemas"]["SessionListResponse"] = {
-  items: [
-    {
-      current: true,
-      deviceLabel: "Safari · iPhone",
-      id: "40000000-0000-4000-8000-000000000001",
-      lastUsedAt: "2026-09-06T08:41:00Z",
-    },
-    {
-      current: false,
-      deviceLabel: "Chrome · Mac",
-      id: "40000000-0000-4000-8000-000000000002",
-      lastUsedAt: "2026-09-05T17:20:00Z",
-    },
-  ],
-};
+const sessions: components["schemas"]["Session"][] = [
+  {
+    clientId: "id-web",
+    createdAt: "2026-08-18T08:41:00Z",
+    deviceLabel: "Safari · iPhone",
+    expiresAt: "2026-10-06T08:41:00Z",
+    id: "40000000-0000-4000-8000-000000000001",
+    lastUsedAt: "2026-09-06T08:41:00Z",
+  },
+  {
+    clientId: "id-web",
+    createdAt: "2026-08-17T17:20:00Z",
+    deviceLabel: "Chrome · Mac",
+    expiresAt: "2026-10-05T17:20:00Z",
+    id: "40000000-0000-4000-8000-000000000002",
+    lastUsedAt: "2026-09-05T17:20:00Z",
+  },
+];
 
 interface RecordedRequest {
   body: string;
@@ -69,6 +75,7 @@ function testFetcher() {
         access_token: "mock-access-token",
         expires_in: 900,
         refresh_token: "mock-refresh-token",
+        scope: "openid profile",
         token_type: "Bearer",
       });
     }
@@ -76,7 +83,7 @@ function testFetcher() {
       return json(me);
     }
     if (pathname === "/api/v1/me" && request.method === "PATCH") {
-      const patch = JSON.parse(body) as components["schemas"]["UpdateMeRequest"];
+      const patch = JSON.parse(body) as components["schemas"]["AccountPatchRequest"];
       return json({ ...me, account: { ...me.account, ...patch } });
     }
     if (pathname === "/api/v1/me/sessions") {
@@ -89,7 +96,7 @@ function testFetcher() {
     ) {
       return new Response(null, { status: 200 });
     }
-    if (pathname === "/auth/magic-link") {
+    if (pathname === "/api/v1/auth/magic-link") {
       return new Response(null, { status: 202 });
     }
     return json({ code: "NOT_FOUND", message: "Not found" }, 404);
@@ -101,12 +108,10 @@ function testFetcher() {
 function createClient(fetcher: typeof fetch) {
   return new AuthClient({
     apiBaseUrl: "http://id.test/api/v1",
-    authBaseUrl: "http://id.test",
     clientId: "id-web",
     fetch: fetcher,
+    identityBaseUrl: "http://id.test",
     refreshTokenStore: new MemoryRefreshTokenStore(),
-    revokeEndpoint: "http://id.test/oauth2/revoke",
-    tokenEndpoint: "http://id.test/oauth2/token",
   });
 }
 

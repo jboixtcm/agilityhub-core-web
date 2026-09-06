@@ -76,7 +76,6 @@
     "sessionsError": "No se han podido cargar o actualizar las sesiones.",
     "noSessions": "No hay ninguna sesión activa.",
     "lastUsed": "Último uso: {date}",
-    "current": "Esta sesión",
     "revoke": "Cerrar esta sesión"
   },
   "products": {

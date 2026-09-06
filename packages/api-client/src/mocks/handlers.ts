@@ -453,7 +453,7 @@ export const handlers = [
   }),
   http.put("*/api/v1/me/profile", async ({ request }) => {
     const body = (await request.json()) as UpdateProfileRequest;
-    if (!currentMockScenario().me.membership.roles.includes(body.activeProfile)) {
+    if (currentMockScenario().me.membership?.roles.includes(body.activeProfile) !== true) {
       return apiError("PROFILE_NOT_AVAILABLE", "Profile not available", 422);
     }
     return HttpResponse.json({ access_token: `mock-${body.activeProfile.toLowerCase()}-token` });
@@ -496,7 +496,7 @@ export const handlers = [
       return HttpResponse.json(mockTokens());
     }
     if (grant === "urn:agilityhub:grant:handoff") {
-      return form.get("code") === "invalid"
+      return form.get("token") === "invalid"
         ? apiError("HANDOFF_INVALID", "Handoff invalid", 400)
         : HttpResponse.json(mockTokens());
     }

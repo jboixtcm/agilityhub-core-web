@@ -1,10 +1,6 @@
 import { isApiError } from "@agilityhub/api-client";
 import { type AccountSession, type AuthClient, useSession } from "@agilityhub/auth";
-import {
-  LOCALE_STORAGE_KEY,
-  productLocales,
-  type Locale,
-} from "@agilityhub/i18n";
+import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
 import { Badge, Button, Card, Icon, Input, Select } from "@agilityhub/ui";
 import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -63,9 +59,7 @@ function preferredLocale(): Locale | null {
     return null;
   }
   return (
-    requested.find((locale): locale is Locale =>
-      productLocales.includes(locale as Locale),
-    ) ?? "en"
+    requested.find((locale): locale is Locale => productLocales.includes(locale as Locale)) ?? "en"
   );
 }
 
@@ -617,26 +611,28 @@ function AccountContent({ authClient }: { authClient: AuthClient }) {
             </a>
           </Card>
 
-          <Card className="id-content-card">
-            <h2>{t("id:account.membershipsTitle")}</h2>
-            <div className="id-membership">
-              <span aria-hidden="true" className="id-product-icon">
-                <Icon aria-hidden="true" name="paw" />
-              </span>
-              <div>
-                <strong>{t("id:products.clubsTitle")}</strong>
-                <div className="id-badges">
-                  {me.membership.roles.map((role) => (
-                    <Badge key={role}>{roleLabel(role, t)}</Badge>
-                  ))}
+          {me.membership === undefined ? null : (
+            <Card className="id-content-card">
+              <h2>{t("id:account.membershipsTitle")}</h2>
+              <div className="id-membership">
+                <span aria-hidden="true" className="id-product-icon">
+                  <Icon aria-hidden="true" name="paw" />
+                </span>
+                <div>
+                  <strong>{t("id:products.clubsTitle")}</strong>
+                  <div className="id-badges">
+                    {me.membership.roles.map((role) => (
+                      <Badge key={role}>{roleLabel(role, t)}</Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-            <a className="id-inline-link" href="/products">
-              <Icon aria-hidden="true" name="grid" />
-              {t("id:account.products")}
-            </a>
-          </Card>
+              <a className="id-inline-link" href="/products">
+                <Icon aria-hidden="true" name="grid" />
+                {t("id:account.products")}
+              </a>
+            </Card>
+          )}
         </div>
 
         <Card className="id-content-card id-sessions">
@@ -654,11 +650,10 @@ function AccountContent({ authClient }: { authClient: AuthClient }) {
                   <strong>{session.deviceLabel}</strong>
                   <small>
                     {t("id:account.lastUsed", {
-                      date: dateFormatter.format(new Date(session.lastUsedAt)),
+                      date: dateFormatter.format(new Date(session.lastUsedAt ?? session.createdAt)),
                     })}
                   </small>
                 </span>
-                {session.current ? <Badge tone="success">{t("id:account.current")}</Badge> : null}
                 <Button
                   loading={pendingSession === session.id}
                   onClick={() => void closeSession(session)}

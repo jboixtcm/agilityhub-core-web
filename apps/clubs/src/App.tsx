@@ -1,6 +1,7 @@
 import { isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
+  type Me,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -102,14 +103,23 @@ function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name;
 }
 
-type CurrentMe = NonNullable<ReturnType<AuthClient["getMe"]>>;
+type CurrentMe = Me & {
+  membership: NonNullable<Me["membership"]>;
+};
 
-function profileRoles(me: CurrentMe): readonly Role[] {
-  return me.membership.profiles ?? me.membership.roles;
+function isCurrentClubMe(me: Me): me is CurrentMe {
+  return me.membership !== undefined;
 }
 
-function routeAfterLogin(me: CurrentMe): string {
-  if (profileRoles(me).length > 1 && me.membership.rememberProfile !== true) {
+function profileRoles(me: CurrentMe): readonly Role[] {
+  return me.membership.profiles;
+}
+
+function routeAfterLogin(me: Me): string {
+  if (!isCurrentClubMe(me)) {
+    throw new TypeError("The club session did not contain a membership");
+  }
+  if (profileRoles(me).length > 1 && !me.membership.rememberProfile) {
     return "/perfil-acces";
   }
   return me.membership.activeProfile === "INSTRUCTOR" ? "/instructor/avui" : "/inici";
@@ -540,9 +550,18 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     if (token === null || token === "") {
       return;
     }
-    void authClient.exchangeMagicLink(token).then(setMe, () => {
-      setInvalid(true);
-    });
+    void authClient.exchangeMagicLink(token).then(
+      (result) => {
+        if (isCurrentClubMe(result)) {
+          setMe(result);
+        } else {
+          setInvalid(true);
+        }
+      },
+      () => {
+        setInvalid(true);
+      },
+    );
   }, [authClient, token]);
 
   if (invalid) {
@@ -589,7 +608,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     }
   };
 
-  const gender = me.account.gender === "FEMALE" ? "female" : "other";
+  const gender = me.membership.gender === "FEMALE" ? "female" : "other";
   return (
     <main className="auth-page">
       <section className="auth-panel activation-panel">
@@ -694,11 +713,11 @@ function ProfileChoicePage({ authClient }: { authClient: AuthClient }) {
   const [remember, setRemember] = useState(true);
   const [pending, setPending] = useState<Role>();
   const [error, setError] = useState(false);
-  if (me === null) {
+  if (me === null || !isCurrentClubMe(me)) {
     return null;
   }
   const roles = profileRoles(me);
-  const gender = me.account.gender === "FEMALE" ? "female" : "other";
+  const gender = me.membership.gender === "FEMALE" ? "female" : "other";
 
   const selectProfile = async (role: Role) => {
     setPending(role);
@@ -877,7 +896,7 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
   const { i18n, t } = useTranslation(["auth", "shell"]);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [working, setWorking] = useState(false);
-  if (me === null) {
+  if (me === null || !isCurrentClubMe(me)) {
     return null;
   }
   const profiles = profileRoles(me);

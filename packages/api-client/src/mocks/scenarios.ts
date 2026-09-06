@@ -26,6 +26,11 @@ const minimal = brandingMinim as Branding;
 const member = meMember as Me;
 const multiProfile = meMultiProfile as Me;
 const accountSessions = sessions;
+const memberMembership = member.membership;
+
+if (memberMembership === undefined) {
+  throw new TypeError("The member mock fixture requires a club membership");
+}
 
 const scenarios = {
   admin: {
@@ -73,7 +78,7 @@ const scenarios = {
     me: {
       ...member,
       account: { ...member.account, name: "Marc Puig" },
-      membership: { ...member.membership, gender: "MALE" },
+      membership: { ...memberMembership, gender: "MALE" },
     },
     sessions: accountSessions,
   },
@@ -82,7 +87,7 @@ const scenarios = {
     me: {
       ...member,
       account: { ...member.account, name: "Àlex Roca" },
-      membership: { ...member.membership, gender: "OTHER" },
+      membership: { ...memberMembership, gender: "OTHER" },
     },
     sessions: accountSessions,
   },

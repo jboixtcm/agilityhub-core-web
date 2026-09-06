@@ -76,7 +76,6 @@
     "sessionsError": "No s'han pogut carregar o actualitzar les sessions.",
     "noSessions": "No hi ha cap sessió activa.",
     "lastUsed": "Darrer ús: {date}",
-    "current": "Aquesta sessió",
     "revoke": "Tanca aquesta sessió"
   },
   "products": {

@@ -76,7 +76,6 @@
     "sessionsError": "The sessions could not be loaded or updated.",
     "noSessions": "There are no active sessions.",
     "lastUsed": "Last used: {date}",
-    "current": "This session",
     "revoke": "Close this session"
   },
   "products": {

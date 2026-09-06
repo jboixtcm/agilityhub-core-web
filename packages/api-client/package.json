@@ -19,6 +19,8 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
+    "ajv": "catalog:",
+    "ajv-formats": "catalog:",
     "openapi-typescript": "catalog:",
     "react": "catalog:",
     "msw": "catalog:",

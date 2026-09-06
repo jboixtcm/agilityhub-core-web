@@ -19,6 +19,7 @@ export type HandoffResponse = components["schemas"]["HandoffResponse"];
 export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
 export type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
 export type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
+type AccountLocale = NonNullable<UpdateMeRequest["locale"]>;
 
 export interface AuthClientOptions {
   apiBaseUrl?: string;
@@ -33,6 +34,10 @@ function defaultNavigate(path: string): void {
   if (typeof window !== "undefined") {
     window.location.assign(path);
   }
+}
+
+function isAccountLocale(locale: string): locale is AccountLocale {
+  return locale === "ca" || locale === "es" || locale === "en";
 }
 
 function isTokenResponse(value: unknown): value is TokenResponse {
@@ -133,12 +138,12 @@ export class AuthClient extends EventTarget {
     );
   }
 
-  async exchangeHandoff(code: string): Promise<Me> {
+  async exchangeHandoff(token: string): Promise<Me> {
     return this.exchangeOneTimeCode(
       new URLSearchParams({
         client_id: this.clientId,
-        code,
         grant_type: "urn:agilityhub:grant:handoff",
+        token,
       }),
     );
   }
@@ -160,7 +165,7 @@ export class AuthClient extends EventTarget {
 
   async updatePassword(request: UpdatePasswordRequest): Promise<void> {
     await this.apiClient.PUT("/me/password", { body: request });
-    if (this.currentMe !== null && this.currentMe.membership !== undefined) {
+    if (this.currentMe !== null) {
       this.currentMe = {
         ...this.currentMe,
         account: { ...this.currentMe.account, hasPassword: true },
@@ -177,7 +182,7 @@ export class AuthClient extends EventTarget {
       throw new TypeError("The profile response did not contain data", { cause: result.error });
     }
     this.accessToken = result.data.access_token;
-    if (this.currentMe !== null) {
+    if (this.currentMe?.membership !== undefined) {
       this.currentMe = {
         ...this.currentMe,
         membership: {
@@ -202,6 +207,9 @@ export class AuthClient extends EventTarget {
   }
 
   async updateLocale(locale: string): Promise<Me> {
+    if (!isAccountLocale(locale)) {
+      throw new TypeError(`Unsupported account locale: ${locale}`);
+    }
     return this.updateAccount({ locale });
   }
 
@@ -380,9 +388,7 @@ export class AuthClient extends EventTarget {
 
   private endpointFor(path: string): string {
     const identityPath =
-      path.startsWith("/oauth2/") ||
-      path.startsWith("/.well-known/") ||
-      path === "/connect/logout";
+      path.startsWith("/oauth2/") || path.startsWith("/.well-known/") || path === "/connect/logout";
     const baseUrl = identityPath ? this.identityBaseUrl : this.apiBaseUrl;
     return new URL(path.replace(/^\//u, ""), `${baseUrl.replace(/\/$/u, "")}/`).href;
   }

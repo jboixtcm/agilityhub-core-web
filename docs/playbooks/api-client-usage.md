@@ -6,16 +6,33 @@ shape, parameter, error code, event, or notification.
 
 ## Client ownership
 
-Create the client at the app boundary with the tenant-relative API URL and pass or
-provide the same instance to feature hooks. The current bootstrap is real code from
-`apps/clubs/src/main.tsx`:
+Create the client at the app boundary and pass or provide the same instance to feature
+hooks. Application API paths use the core base URL; OAuth2/OIDC paths use the identity
+base URL. The app bootstraps accept these deployment variables:
+
+- `VITE_API_BASE_URL`: core API base including `/api/v1`; defaults to `/api/v1` on the
+  current origin for local and MSW development.
+- `VITE_IDENTITY_BASE_URL`: identity origin without a path; `AuthClient` defaults to
+  `https://id.agilitydoghub.com`, while MSW mode uses the current origin.
+
+`AuthClient` routes `/oauth2/*`, `/.well-known/*`, and `/connect/logout` to the identity
+origin. It routes `/auth/magic-link`, `/auth/handoff`, and every other application path
+to the core API. The current bootstrap shape is:
 
 ```ts
-const apiBaseUrl = new URL("/api/v1", window.location.origin).href;
+const apiBaseUrl =
+  import.meta.env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
+const identityBaseUrl =
+  import.meta.env.VITE_IDENTITY_BASE_URL ??
+  (import.meta.env.VITE_MOCK === "1" ? window.location.origin : undefined);
 const source = await refreshBranding(
   createApiClient({ baseUrl: apiBaseUrl }),
   window.location.host,
 );
+const authClient = new AuthClient({
+  apiBaseUrl,
+  ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
+});
 ```
 
 The auth package owns tokens and refresh. Do not read, persist, log, or place tokens in

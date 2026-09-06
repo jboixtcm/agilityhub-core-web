@@ -14,14 +14,20 @@ if (rootElement === null) {
 }
 
 async function bootstrap(root: HTMLElement) {
-  if (import.meta.env.VITE_MOCK === "1") {
+  const env = (
+    import.meta as unknown as {
+      readonly env: Record<string, string | undefined>;
+    }
+  ).env;
+  const mockEnabled = env.VITE_MOCK === "1";
+  if (mockEnabled) {
     const { startMockWorker } = await import("@agilityhub/api-client/mocks/browser");
     await startMockWorker();
   }
 
-  const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
-  const identityBaseUrl = import.meta.env.VITE_IDENTITY_BASE_URL ?? window.location.origin;
+  const apiBaseUrl = env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
+  const identityBaseUrl =
+    env.VITE_IDENTITY_BASE_URL ?? (mockEnabled ? window.location.origin : undefined);
   const i18n = await createI18n({
     branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
     initialNamespaces: ["common", "errors", "id"],
@@ -29,7 +35,7 @@ async function bootstrap(root: HTMLElement) {
   const authClient = new AuthClient({
     apiBaseUrl,
     clientId: "id-web",
-    identityBaseUrl,
+    ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
   });
 
   createRoot(root).render(
