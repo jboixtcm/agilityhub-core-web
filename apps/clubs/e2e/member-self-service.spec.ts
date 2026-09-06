@@ -144,6 +144,8 @@ test.describe("T-03-41 mobile own data", () => {
     await expect(page.getByRole("heading", { name: "Domiciliació" })).toBeVisible();
     await expect(page.getByLabel("Domiciliació")).toHaveValue("···· ···· ···· ···· 2231");
     await expect(page.getByLabel("Domiciliació")).toHaveAttribute("readonly", "");
+    await expect(page.getByRole("heading", { name: "Consentiments" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Idioma" })).toHaveCount(0);
 
     await page.screenshot({
       fullPage: true,

@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the AgilityHub ID login and magic-link continuation flows, account and session management, password and product pages, global logout, three-locale copy, and desktop browser evidence.
 - Add the reusable UniversalList pattern and the Clubs Admin member and dog census screens with URL-synced filters, configurable columns, saved views, bulk selection, exports, and three-locale coverage.
 - Add the Clubs Admin member and dog records with D10 actions, optimistic concurrency, payment and role management, booking controls, consent and notification settings, dog level and document workflows, translated mocks, and browser evidence.
-- Add the Clubs member self-service dog and personal-data screens with country-aware validation, postal locality lookup, uploads, task and module gating, consent text, translated mocks, and mobile browser evidence.
+- Add the Clubs member self-service dog and personal-data screens with country-aware validation, postal locality lookup, uploads, task and module gating, translated mocks, and mobile browser evidence.
 
 ### Changed
 
@@ -28,5 +28,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Drive the Clubs access footer and full-logo treatment from the tenant branding contract, with name-only and mark/name fallbacks when optional branding fields are absent.
 - Select the tenant's dark logo consistently across club access and authenticated shells, and align D10 access-role chips with the approved student terminology.
 - Adopt the verified S01 OpenAPI snapshot as the generated client source, retain unpublished E2 operations in `pending.json`, validate JSON mocks against component schemas, and route core authentication APIs separately from identity-host OAuth2 endpoints.
+- Align mobile screen 28 with its approved mockup by keeping language on screen 12 and consent management out of the member data form.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

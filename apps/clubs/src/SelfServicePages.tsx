@@ -1,6 +1,4 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import type { AuthClient } from "@agilityhub/auth";
-import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -10,7 +8,6 @@ import {
   Input,
   Modal,
   Select,
-  Switch,
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
@@ -840,26 +837,21 @@ function translatedFieldError(code: string, t: ReturnType<typeof useTranslation>
   return t("errors:VALIDATION_ERROR");
 }
 
-export function MyDataPage({ authClient, client }: { authClient: AuthClient; client: ApiClient }) {
+export function MyDataPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const profileCountry = countryProfile(branding.countryProfile);
-  const { i18n, t } = useTranslation(["census", "errors", "shell"]);
+  const { t } = useTranslation(["census", "errors"]);
   const [profile, setProfile] = useState<MeProfile>();
   const [towns, setTowns] = useState<PostalTown[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string>();
   const [loadError, setLoadError] = useState(false);
   const [working, setWorking] = useState(false);
-  const [consentText, setConsentText] = useState<string>();
-  const [consentTextVersion, setConsentTextVersion] = useState<number>();
 
   useEffect(() => {
     let active = true;
-    void Promise.all([
-      client.GET("/me/profile"),
-      optionalParameter(client, "signup.text.imageConsent"),
-    ]).then(
-      ([result, consent]) => {
+    void client.GET("/me/profile").then(
+      (result) => {
         if (!active) {
           return;
         }
@@ -868,8 +860,6 @@ export function MyDataPage({ authClient, client }: { authClient: AuthClient; cli
           return;
         }
         setProfile(result.data);
-        setConsentText(typeof consent?.value === "string" ? consent.value : undefined);
-        setConsentTextVersion(consent?.version);
       },
       () => {
         if (active) {
@@ -1022,9 +1012,6 @@ export function MyDataPage({ authClient, client }: { authClient: AuthClient; cli
       setWorking(false);
     }
   };
-
-  const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
-  const imageRights = profile.consents?.imageRights;
 
   return (
     <div className="self-page my-data-page">
@@ -1241,69 +1228,6 @@ export function MyDataPage({ authClient, client }: { authClient: AuthClient; cli
             <p className="my-data-form__help">{t("census:myData.directDebitHelp")}</p>
           </section>
         ) : null}
-
-        <section>
-          <h2>{t("census:myData.consents")}</h2>
-          <div className="my-data-form__consent">
-            <span>
-              {t("census:myData.imageRights")}
-              {imageRights?.version === undefined ? null : (
-                <small>{t("census:myData.consentVersion", { version: imageRights.version })}</small>
-              )}
-            </span>
-            <Switch
-              checked={imageRights?.granted === true}
-              disabled
-              label={t("census:myData.imageRights")}
-              onCheckedChange={() => undefined}
-            />
-          </div>
-          {consentText === undefined ? null : (
-            <details className="my-data-form__consent-help" open>
-              <summary>{t("census:myData.consentHelp")}</summary>
-              <p>{consentText}</p>
-              {consentTextVersion === undefined ? null : (
-                <small>
-                  {t("census:myData.parameterVersion", { version: consentTextVersion })}
-                </small>
-              )}
-            </details>
-          )}
-        </section>
-
-        <section>
-          <h2>{t("census:myData.language")}</h2>
-          <Select
-            aria-label={t("census:myData.language")}
-            disabled={working}
-            onChange={(event) => {
-              const locale = event.currentTarget.value;
-              setWorking(true);
-              void authClient.updateLocale(locale).then(
-                async () => {
-                  localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-                  await i18n.changeLanguage(locale);
-                  setWorking(false);
-                },
-                () => {
-                  setMessage(t("census:myData.languageError"));
-                  setWorking(false);
-                },
-              );
-            }}
-            value={i18n.resolvedLanguage ?? branding.defaultLocale}
-          >
-            {localeOptions.map((locale) => (
-              <option key={locale} value={locale}>
-                {locale === "ca"
-                  ? t("shell:language.ca")
-                  : locale === "es"
-                    ? t("shell:language.es")
-                    : t("shell:language.en")}
-              </option>
-            ))}
-          </Select>
-        </section>
 
         <Button disabled={working} loading={working} type="submit">
           {t("census:selfService.save")}

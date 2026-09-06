@@ -427,6 +427,8 @@ describe("T-03-41 mobile own data", () => {
     expect(screen.getByLabelText("Segon email (opcional)")).toHaveValue("feina@example.cat");
     expect(await screen.findByLabelText("Població (proposada pel CP)")).not.toHaveValue("");
     expect(screen.getByText("Domiciliació")).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Consentiments" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Idioma" })).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("CP"), { target: { value: "99999" } });
     const towns = await screen.findByRole("combobox", {

@@ -1116,7 +1116,7 @@ export function App({
       </RequireAuth>
     ) : pathname === "/dades" ? (
       <RequireAuth>
-        <MyDataPage authClient={authClient} client={apiClient} />
+        <MyDataPage client={apiClient} />
       </RequireAuth>
     ) : (
       routePlaceholder(route)

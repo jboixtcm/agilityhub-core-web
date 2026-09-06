@@ -1038,39 +1038,6 @@ select {
   letter-spacing: 0.05em;
 }
 
-.my-data-form__consent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ah-space-3);
-}
-
-.my-data-form__consent > span {
-  display: grid;
-  gap: var(--ah-space-1);
-  font-size: 0.9rem;
-}
-
-.my-data-form__consent small,
-.my-data-form__consent-help small {
-  color: var(--ah-color-text-muted);
-  font-size: 0.75rem;
-}
-
-.my-data-form__consent-help {
-  color: var(--ah-color-text-muted);
-  font-size: 0.8125rem;
-}
-
-.my-data-form__consent-help summary {
-  color: var(--ah-color-primary);
-  cursor: pointer;
-}
-
-.my-data-form__consent-help p {
-  line-height: 1.55;
-}
-
 .my-data-form > .ah-button {
   width: 100%;
   min-height: 3.5rem;
