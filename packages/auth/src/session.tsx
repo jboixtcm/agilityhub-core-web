@@ -50,8 +50,8 @@ const loadingSession: SessionSnapshot = {
 const SessionContext = createContext<SessionSnapshot | undefined>(undefined);
 
 function sessionFromMe(me: Me): SessionSnapshot {
-  const roles = [...me.membership.roles];
-  const preferredProfile = me.membership.activeProfile ?? me.membership.defaultProfile;
+  const roles = [...(me.membership?.roles ?? [])];
+  const preferredProfile = me.membership?.activeProfile ?? me.membership?.defaultProfile;
   const activeProfile = roles.find((role) => role === preferredProfile) ?? roles[0] ?? null;
   return { activeProfile, me, roles, status: "signedIn" };
 }

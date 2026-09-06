@@ -17,7 +17,7 @@ function isBrandingResponse(value: unknown): value is BrandingResponse {
   return (
     typeof candidate.club?.slug === "string" &&
     typeof candidate.club.name === "string" &&
-    typeof candidate.theme?.colors.primary === "string" &&
+    typeof candidate.theme?.colors?.primary === "string" &&
     Array.isArray(candidate.modules)
   );
 }

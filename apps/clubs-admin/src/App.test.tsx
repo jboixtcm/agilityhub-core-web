@@ -30,11 +30,9 @@ afterAll(() => {
 function authClient() {
   return new AuthClient({
     apiBaseUrl: `${window.location.origin}/api/v1`,
-    authBaseUrl: window.location.origin,
     clientId: "clubs-admin",
+    identityBaseUrl: window.location.origin,
     refreshTokenStore: new MemoryRefreshTokenStore(),
-    revokeEndpoint: `${window.location.origin}/oauth2/revoke`,
-    tokenEndpoint: `${window.location.origin}/oauth2/token`,
   });
 }
 

@@ -10,8 +10,8 @@ import meMultiProfile from "./fixtures/me-multi-profile.json";
 import sessions from "./fixtures/sessions.json";
 
 type Branding = components["schemas"]["BrandingResponse"];
-type Me = components["schemas"]["MeResponse"];
-type SessionList = components["schemas"]["SessionListResponse"];
+type Me = components["schemas"]["Me"];
+type SessionList = components["schemas"]["Session"][];
 
 export interface MockScenarioDefinition {
   branding: Branding;
@@ -72,7 +72,8 @@ const scenarios = {
     branding: canic,
     me: {
       ...member,
-      account: { ...member.account, name: "Marc Puig", gender: "MALE" },
+      account: { ...member.account, name: "Marc Puig" },
+      membership: { ...member.membership, gender: "MALE" },
     },
     sessions: accountSessions,
   },
@@ -80,7 +81,8 @@ const scenarios = {
     branding: canic,
     me: {
       ...member,
-      account: { ...member.account, name: "Àlex Roca", gender: "NON_BINARY" },
+      account: { ...member.account, name: "Àlex Roca" },
+      membership: { ...member.membership, gender: "OTHER" },
     },
     sessions: accountSessions,
   },

@@ -7,6 +7,7 @@ import { MemoryRefreshTokenStore } from "./crypto-store";
 import { createAuthenticatedApiClient } from "./refresh-interceptor";
 
 const API_BASE_URL = "https://club.example.test/api/v1";
+const IDENTITY_BASE_URL = "https://id.example.test";
 const TOKEN_ENDPOINT = "https://id.example.test/oauth2/token";
 const REVOKE_ENDPOINT = "https://id.example.test/oauth2/revoke";
 
@@ -16,19 +17,22 @@ const memberMe: Me = {
     id: "10000000-0000-4000-8000-000000000002",
     locale: "ca",
     name: "Biel Roca",
-    gender: "MALE",
     hasPassword: true,
     emailVerifiedAt: "2026-08-01T08:00:00Z",
+    onboardingPending: false,
+    platformRoles: [],
   },
   membership: {
+    clubId: "50000000-0000-4000-8000-000000000001",
     defaultProfile: "MEMBER",
+    gender: "MALE",
     activeProfile: "MEMBER",
     profiles: ["MEMBER"],
     rememberProfile: true,
     memberId: "20000000-0000-4000-8000-000000000002",
     roles: ["MEMBER"],
   },
-  modules: ["FREE_TRAINING", "COURSES"],
+  features: ["FREE_TRAINING", "COURSES"],
 };
 
 function tokens(accessToken: string, refreshToken: string): TokenResponse {
@@ -36,6 +40,7 @@ function tokens(accessToken: string, refreshToken: string): TokenResponse {
     access_token: accessToken,
     expires_in: 900,
     refresh_token: refreshToken,
+    scope: "openid profile",
     token_type: "Bearer",
   };
 }
@@ -71,9 +76,8 @@ describe("T-01-21 AuthClient session flow", () => {
     );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       refreshTokenStore: refreshStore,
-      revokeEndpoint: REVOKE_ENDPOINT,
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
 
     await expect(client.login("biel.roca@example.test", "secret-password")).resolves.toEqual(
@@ -86,6 +90,50 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(meAuthorization).toBe("Bearer access-login");
     expect(client.getAccessToken()).toBe("access-login");
     await expect(refreshStore.get()).resolves.toBe("refresh-login");
+  });
+
+  it("routes OAuth2 requests to identity and application auth requests to core", async () => {
+    const refreshStore = new MemoryRefreshTokenStore();
+    const requestedUrls: string[] = [];
+    server.use(
+      http.post(TOKEN_ENDPOINT, ({ request }) => {
+        requestedUrls.push(request.url);
+        return HttpResponse.json(tokens("access-login", "refresh-login"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+      http.post(`${API_BASE_URL}/auth/magic-link`, ({ request }) => {
+        requestedUrls.push(request.url);
+        return new HttpResponse(null, { status: 202 });
+      }),
+      http.post(`${API_BASE_URL}/auth/handoff`, ({ request }) => {
+        requestedUrls.push(request.url);
+        return HttpResponse.json(
+          { code: "handoff-code", url: "https://admin.example.test/entrar?handoff=handoff-code" },
+          { status: 201 },
+        );
+      }),
+      http.post(REVOKE_ENDPOINT, ({ request }) => {
+        requestedUrls.push(request.url);
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      refreshTokenStore: refreshStore,
+    });
+
+    await client.login("biel.roca@example.test", "secret-password");
+    await client.requestMagicLink("biel.roca@example.test", "LOGIN");
+    await client.createHandoff("clubs-admin");
+    await client.logout();
+
+    expect(requestedUrls).toEqual([
+      `${IDENTITY_BASE_URL}/oauth2/token`,
+      `${API_BASE_URL}/auth/magic-link`,
+      `${API_BASE_URL}/auth/handoff`,
+      `${IDENTITY_BASE_URL}/oauth2/revoke`,
+    ]);
   });
 
   it("queues concurrent 401 responses behind one refresh and retries every request once", async () => {
@@ -120,8 +168,8 @@ describe("T-01-21 AuthClient session flow", () => {
     );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       refreshTokenStore: refreshStore,
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
     await client.login("biel.roca@example.test", "secret-password");
     loginComplete = true;
@@ -162,9 +210,9 @@ describe("T-01-21 AuthClient session flow", () => {
     );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       navigate,
       refreshTokenStore: refreshStore,
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
     await client.login("biel.roca@example.test", "secret-password");
     loginComplete = true;
@@ -198,9 +246,8 @@ describe("T-01-21 AuthClient session flow", () => {
     );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       refreshTokenStore: refreshStore,
-      revokeEndpoint: REVOKE_ENDPOINT,
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
     await client.login("biel.roca@example.test", "secret-password");
     const signedOut = vi.fn();

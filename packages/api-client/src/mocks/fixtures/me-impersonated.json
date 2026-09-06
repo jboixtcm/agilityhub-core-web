@@ -4,13 +4,16 @@
     "name": "Laura Serra Vidal",
     "email": "laura.serra@example.test",
     "locale": "ca",
-    "gender": "FEMALE",
     "hasPassword": true,
-    "emailVerifiedAt": "2026-08-04T08:00:00Z"
+    "emailVerifiedAt": "2026-08-04T08:00:00Z",
+    "onboardingPending": false,
+    "platformRoles": []
   },
   "membership": {
+    "clubId": "50000000-0000-4000-8000-000000000001",
     "roles": ["MEMBER"],
     "memberId": "20000000-0000-4000-8000-000000000005",
+    "gender": "FEMALE",
     "activeProfile": "MEMBER",
     "profiles": ["MEMBER"],
     "defaultProfile": "MEMBER",
@@ -19,5 +22,5 @@
   "impersonation": {
     "actorName": "Jordi Soler"
   },
-  "modules": ["CLASSES", "FREE_TRAINING", "COURSES"]
+  "features": ["CLASSES", "FREE_TRAINING", "COURSES"]
 }

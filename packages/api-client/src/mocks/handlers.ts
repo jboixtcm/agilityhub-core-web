@@ -12,11 +12,11 @@ import {
 } from "./fixtures/census";
 import { currentMockScenario, mockScenario, type MockScenario } from "./scenarios";
 
-type ApiErrorResponse = components["schemas"]["ApiErrorResponse"];
+type ApiErrorResponse = components["schemas"]["ApiError"];
 type MagicLinkRequest = components["schemas"]["MagicLinkRequest"];
-type UpdateMeRequest = components["schemas"]["UpdateMeRequest"];
-type UpdatePasswordRequest = components["schemas"]["UpdatePasswordRequest"];
-type UpdateProfileRequest = components["schemas"]["UpdateProfileRequest"];
+type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
+type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
+type UpdateProfileRequest = components["schemas"]["ProfileRequest"];
 type ListFilter = components["schemas"]["ListFilter"];
 type SavedViewRequest = components["schemas"]["SavedViewRequest"];
 
@@ -392,7 +392,7 @@ function pagination(url: URL) {
 
 function apiError(code: string, message: string, status: number, headers?: HeadersInit) {
   return HttpResponse.json<ApiErrorResponse>(
-    { code, message },
+    { code, details: {}, message, traceId: "mock-trace-id" },
     { status, ...(headers === undefined ? {} : { headers }) },
   );
 }
@@ -401,6 +401,7 @@ function mockTokens() {
   return {
     access_token: "mock-access-token",
     refresh_token: "mock-refresh-token",
+    scope: "openid profile",
     token_type: "Bearer",
     expires_in: 900,
   };
@@ -416,8 +417,8 @@ export const handlers = [
     const branding = currentMockScenario().branding;
     return HttpResponse.json({
       display: "standalone",
-      name: branding.club.name,
-      short_name: branding.club.name,
+      name: branding.club?.name ?? "AgilityHub",
+      short_name: branding.club?.name ?? "AgilityHub",
       start_url: "/inici",
     });
   }),
@@ -425,7 +426,7 @@ export const handlers = [
   http.patch("*/api/v1/me", async ({ request }) => {
     const body = (await request.json()) as UpdateMeRequest;
     const scenario = currentMockScenario();
-    if (body.locale !== undefined && !scenario.branding.locales.includes(body.locale)) {
+    if (body.locale !== undefined && scenario.branding.locales?.includes(body.locale) !== true) {
       return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
     }
     return HttpResponse.json({

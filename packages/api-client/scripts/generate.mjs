@@ -1,76 +1,78 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import openapiTS, { astToString } from "openapi-typescript";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const repositoryRoot = resolve(packageRoot, "../..");
-const siblingSnapshot = resolve(repositoryRoot, "../agilityhub-core-api/docs/openapi/openapi.json");
-const fallbackStub = resolve(packageRoot, "openapi/stub.json");
+const authoritativeInput = resolve(packageRoot, "openapi/openapi.json");
+const pendingInput = resolve(packageRoot, "openapi/pending.json");
 const output = resolve(packageRoot, "src/generated/schema.d.ts");
-const requiredPaths = [
-  "/branding",
-  "/me",
-  "/oauth2/token",
-  "/health",
-  "/members",
-  "/members/filter-values",
-  "/dogs",
-  "/dogs/filter-values",
-  "/saved-views",
-];
 
-function resolveConfiguredSpec(value) {
-  return isAbsolute(value) ? value : resolve(repositoryRoot, value);
+function readDocument(inputPath) {
+  return JSON.parse(readFileSync(inputPath, "utf8"));
 }
 
-function snapshotIsComplete(snapshotPath) {
-  if (!existsSync(snapshotPath)) {
-    return false;
+function clientPath(path) {
+  return path.replace(/^\/api\/v1(?=\/)/, "");
+}
+
+function assertNoPendingRedefinitions(authoritative, pending) {
+  const authoritativePaths = new Set(Object.keys(authoritative.paths ?? {}).map(clientPath));
+  const duplicatePaths = Object.keys(pending.paths ?? {})
+    .map(clientPath)
+    .filter((path) => authoritativePaths.has(path));
+  const duplicateComponents = Object.entries(pending.components ?? {}).flatMap(
+    ([section, pendingEntries]) => {
+      const authoritativeEntries = new Set(
+        Object.keys(authoritative.components?.[section] ?? {}),
+      );
+      return Object.keys(pendingEntries)
+        .filter((name) => authoritativeEntries.has(name))
+        .map((name) => `${section}.${name}`);
+    },
+  );
+
+  if (duplicatePaths.length > 0 || duplicateComponents.length > 0) {
+    const details = [
+      duplicatePaths.length === 0 ? undefined : `paths: ${duplicatePaths.join(", ")}`,
+      duplicateComponents.length === 0
+        ? undefined
+        : `components: ${duplicateComponents.join(", ")}`,
+    ].filter(Boolean);
+    throw new Error(
+      `openapi/pending.json redefines authoritative contract entries (${details.join("; ")}). Remove the published entries from pending.json.`,
+    );
+  }
+}
+
+function mergedClientDocument(authoritative, pending) {
+  assertNoPendingRedefinitions(authoritative, pending);
+
+  const paths = Object.fromEntries(
+    [...Object.entries(authoritative.paths ?? {}), ...Object.entries(pending.paths ?? {})].map(
+      ([path, pathItem]) => [clientPath(path), pathItem],
+    ),
+  );
+  const components = { ...(authoritative.components ?? {}) };
+  for (const [section, pendingEntries] of Object.entries(pending.components ?? {})) {
+    components[section] = {
+      ...(components[section] ?? {}),
+      ...pendingEntries,
+    };
   }
 
-  const document = JSON.parse(readFileSync(snapshotPath, "utf8"));
-  return requiredPaths.every(
-    (path) =>
-      document.paths?.[path] !== undefined || document.paths?.[`/api/v1${path}`] !== undefined,
-  );
+  return {
+    ...authoritative,
+    paths,
+    components,
+  };
 }
 
-function clientDocument(inputPath) {
-  const document = JSON.parse(readFileSync(inputPath, "utf8"));
-  document.paths = Object.fromEntries(
-    Object.entries(document.paths ?? {}).map(([path, pathItem]) => [
-      path.replace(/^\/api\/v1(?=\/)/, ""),
-      pathItem,
-    ]),
-  );
-  return document;
-}
-
-const configuredSpec = process.env.API_SPEC;
-let input;
-
-if (configuredSpec !== undefined && configuredSpec !== "") {
-  const configuredInput = resolveConfiguredSpec(configuredSpec);
-  if (!existsSync(configuredInput)) {
-    throw new Error(`API_SPEC does not exist: ${configuredInput}`);
-  }
-  input = snapshotIsComplete(configuredInput) ? configuredInput : fallbackStub;
-  if (input === fallbackStub) {
-    console.warn(`Using ${fallbackStub}: ${configuredInput} is missing required operations.`);
-  }
-} else if (snapshotIsComplete(siblingSnapshot)) {
-  input = siblingSnapshot;
-} else {
-  input = fallbackStub;
-  console.warn(
-    `Using ${input}: the sibling OpenAPI snapshot is missing one or more required operations.`,
-  );
-}
-
-const ast = await openapiTS(clientDocument(input));
+const authoritative = readDocument(authoritativeInput);
+const pending = readDocument(pendingInput);
+const ast = await openapiTS(mergedClientDocument(authoritative, pending));
 const contents = `${astToString(ast)}\n`;
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, contents);
-console.log(`Generated ${output} from ${input}`);
+console.log(`Generated ${output} from ${authoritativeInput} merged with ${pendingInput}`);

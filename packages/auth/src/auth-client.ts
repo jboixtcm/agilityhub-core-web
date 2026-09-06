@@ -9,27 +9,24 @@ import {
 import { createRefreshTokenStore, type RefreshTokenStore } from "./crypto-store";
 
 const DEFAULT_API_BASE_URL = "https://core.agilitydoghub.com/api/v1";
-const DEFAULT_TOKEN_ENDPOINT = "https://id.agilitydoghub.com/oauth2/token";
-const DEFAULT_REVOKE_ENDPOINT = "https://id.agilitydoghub.com/oauth2/revoke";
+const DEFAULT_IDENTITY_BASE_URL = "https://id.agilitydoghub.com";
 
-export type Me = components["schemas"]["MeResponse"];
-export type Role = Me["membership"]["roles"][number];
+export type Me = components["schemas"]["Me"];
+export type Role = components["schemas"]["Profile"];
 export type TokenResponse = components["schemas"]["TokenResponse"];
-export type AccountSession = components["schemas"]["AccountSession"];
+export type AccountSession = components["schemas"]["Session"];
 export type HandoffResponse = components["schemas"]["HandoffResponse"];
 export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
-export type UpdateMeRequest = components["schemas"]["UpdateMeRequest"];
-export type UpdatePasswordRequest = components["schemas"]["UpdatePasswordRequest"];
+export type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
+export type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 
 export interface AuthClientOptions {
   apiBaseUrl?: string;
-  authBaseUrl?: string;
   clientId?: string;
   fetch?: typeof globalThis.fetch;
+  identityBaseUrl?: string;
   navigate?: (path: string) => void;
   refreshTokenStore?: RefreshTokenStore;
-  revokeEndpoint?: string;
-  tokenEndpoint?: string;
 }
 
 function defaultNavigate(path: string): void {
@@ -45,37 +42,36 @@ function isTokenResponse(value: unknown): value is TokenResponse {
   const token = value as Partial<Record<keyof TokenResponse, unknown>>;
   return (
     typeof token.access_token === "string" &&
-    typeof token.refresh_token === "string" &&
+    (token.refresh_token === undefined || typeof token.refresh_token === "string") &&
     typeof token.token_type === "string" &&
-    typeof token.expires_in === "number"
+    typeof token.expires_in === "number" &&
+    typeof token.scope === "string"
   );
 }
 
 export class AuthClient extends EventTarget {
   private accessToken: null | string = null;
+  private readonly apiBaseUrl: string;
   private readonly apiClient: ApiClient;
-  private readonly authBaseUrl: string;
   private readonly clientId: string;
   private currentMe: Me | null = null;
   private readonly fetcher: typeof globalThis.fetch;
+  private readonly identityBaseUrl: string;
   private readonly navigate: (path: string) => void;
   private refreshInFlight: Promise<TokenResponse> | null = null;
   private readonly refreshTokenStore: RefreshTokenStore;
-  private readonly revokeEndpoint: string;
   private signedOutNotified = false;
-  private readonly tokenEndpoint: string;
 
   constructor(options: AuthClientOptions = {}) {
     super();
-    this.authBaseUrl = options.authBaseUrl ?? "https://id.agilitydoghub.com";
+    this.apiBaseUrl = options.apiBaseUrl ?? DEFAULT_API_BASE_URL;
     this.clientId = options.clientId ?? "clubs-app";
     this.fetcher = options.fetch ?? globalThis.fetch.bind(globalThis);
+    this.identityBaseUrl = options.identityBaseUrl ?? DEFAULT_IDENTITY_BASE_URL;
     this.navigate = options.navigate ?? defaultNavigate;
     this.refreshTokenStore = options.refreshTokenStore ?? createRefreshTokenStore();
-    this.revokeEndpoint = options.revokeEndpoint ?? DEFAULT_REVOKE_ENDPOINT;
-    this.tokenEndpoint = options.tokenEndpoint ?? DEFAULT_TOKEN_ENDPOINT;
     this.apiClient = createApiClient({
-      baseUrl: options.apiBaseUrl ?? DEFAULT_API_BASE_URL,
+      baseUrl: this.apiBaseUrl,
       fetch: this.fetcher,
       getAccessToken: () => this.accessToken,
     });
@@ -115,7 +111,7 @@ export class AuthClient extends EventTarget {
     purpose: MagicLinkPurpose,
     redirectUri?: string,
   ): Promise<void> {
-    await this.authRequest("/auth/magic-link", {
+    await this.routedRequest("/auth/magic-link", {
       body: JSON.stringify({
         client_id: this.clientId,
         email,
@@ -164,7 +160,7 @@ export class AuthClient extends EventTarget {
 
   async updatePassword(request: UpdatePasswordRequest): Promise<void> {
     await this.apiClient.PUT("/me/password", { body: request });
-    if (this.currentMe !== null) {
+    if (this.currentMe !== null && this.currentMe.membership !== undefined) {
       this.currentMe = {
         ...this.currentMe,
         account: { ...this.currentMe.account, hasPassword: true },
@@ -214,7 +210,7 @@ export class AuthClient extends EventTarget {
     if (result.data === undefined) {
       throw new TypeError("The sessions response did not contain data", { cause: result.error });
     }
-    return result.data.items;
+    return result.data;
   }
 
   async revokeSession(id: string): Promise<void> {
@@ -222,7 +218,7 @@ export class AuthClient extends EventTarget {
   }
 
   async createHandoff(targetClientId: string): Promise<HandoffResponse> {
-    const response = await this.authRequest("/auth/handoff", {
+    const response = await this.routedRequest("/auth/handoff", {
       body: JSON.stringify({ targetClientId }),
       headers: {
         Authorization: `Bearer ${this.accessToken ?? ""}`,
@@ -283,7 +279,7 @@ export class AuthClient extends EventTarget {
         if (this.accessToken !== null) {
           headers.set("Authorization", `Bearer ${this.accessToken}`);
         }
-        const response = await this.fetcher(this.revokeEndpoint, {
+        const response = await this.routedRequest("/oauth2/revoke", {
           body: JSON.stringify({ token: tokenToRevoke }),
           headers,
           method: "POST",
@@ -315,7 +311,11 @@ export class AuthClient extends EventTarget {
 
   private async acceptTokens(tokens: TokenResponse): Promise<void> {
     this.accessToken = tokens.access_token;
-    await this.refreshTokenStore.set(tokens.refresh_token);
+    if (tokens.refresh_token === undefined) {
+      await this.refreshTokenStore.clear();
+    } else {
+      await this.refreshTokenStore.set(tokens.refresh_token);
+    }
     this.signedOutNotified = false;
   }
 
@@ -335,7 +335,7 @@ export class AuthClient extends EventTarget {
   private async issueToken(form: URLSearchParams): Promise<TokenResponse> {
     let response: Response;
     try {
-      response = await this.fetcher(this.tokenEndpoint, {
+      response = await this.fetcher(this.endpointFor("/oauth2/token"), {
         body: form,
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         method: "POST",
@@ -378,10 +378,19 @@ export class AuthClient extends EventTarget {
     return tokens;
   }
 
-  private async authRequest(path: string, init: RequestInit): Promise<Response> {
+  private endpointFor(path: string): string {
+    const identityPath =
+      path.startsWith("/oauth2/") ||
+      path.startsWith("/.well-known/") ||
+      path === "/connect/logout";
+    const baseUrl = identityPath ? this.identityBaseUrl : this.apiBaseUrl;
+    return new URL(path.replace(/^\//u, ""), `${baseUrl.replace(/\/$/u, "")}/`).href;
+  }
+
+  private async routedRequest(path: string, init: RequestInit): Promise<Response> {
     let response: Response;
     try {
-      response = await this.fetcher(new URL(path, this.authBaseUrl), init);
+      response = await this.fetcher(this.endpointFor(path), init);
     } catch (error) {
       throw ApiError.network(error);
     }

@@ -4,17 +4,20 @@
     "name": "Ivet Puig",
     "email": "ivet.puig@example.test",
     "locale": "ca",
-    "gender": "FEMALE",
     "hasPassword": true,
-    "emailVerifiedAt": "2026-08-02T08:00:00Z"
+    "emailVerifiedAt": "2026-08-02T08:00:00Z",
+    "onboardingPending": false,
+    "platformRoles": []
   },
   "membership": {
+    "clubId": "50000000-0000-4000-8000-000000000001",
     "roles": ["INSTRUCTOR"],
     "memberId": "20000000-0000-4000-8000-000000000003",
+    "gender": "FEMALE",
     "activeProfile": "INSTRUCTOR",
     "profiles": ["INSTRUCTOR"],
     "defaultProfile": "INSTRUCTOR",
     "rememberProfile": true
   },
-  "modules": ["FREE_TRAINING", "TASKS", "COURSES"]
+  "features": ["FREE_TRAINING", "TASKS", "COURSES"]
 }

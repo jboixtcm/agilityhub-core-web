@@ -21,7 +21,9 @@ async function bootstrap(root: HTMLElement) {
     await startMockWorker();
   }
 
-  const apiBaseUrl = new URL("/api/v1", window.location.origin).href;
+  const apiBaseUrl =
+    import.meta.env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
+  const identityBaseUrl = import.meta.env.VITE_IDENTITY_BASE_URL ?? window.location.origin;
   const source = await refreshBranding(
     createApiClient({ baseUrl: apiBaseUrl }),
     window.location.host,
@@ -32,10 +34,8 @@ async function bootstrap(root: HTMLElement) {
   const i18n = await createI18n({ branding, initialNamespaces: ["common", "auth", "shell"] });
   const authClient = new AuthClient({
     apiBaseUrl,
-    authBaseUrl: window.location.origin,
     clientId: "clubs-app",
-    revokeEndpoint: new URL("/oauth2/revoke", window.location.origin).href,
-    tokenEndpoint: new URL("/oauth2/token", window.location.origin).href,
+    identityBaseUrl,
   });
   if (window.location.hash.startsWith("#impersonation=")) {
     const token = new URLSearchParams(window.location.hash.slice(1)).get("impersonation");

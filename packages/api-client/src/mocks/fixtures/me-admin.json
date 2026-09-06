@@ -4,17 +4,20 @@
     "name": "Aina Serra",
     "email": "aina.serra@example.test",
     "locale": "ca",
-    "gender": "FEMALE",
     "hasPassword": true,
-    "emailVerifiedAt": "2026-08-03T08:00:00Z"
+    "emailVerifiedAt": "2026-08-03T08:00:00Z",
+    "onboardingPending": false,
+    "platformRoles": []
   },
   "membership": {
+    "clubId": "50000000-0000-4000-8000-000000000001",
     "roles": ["ADMIN", "INSTRUCTOR"],
     "memberId": "20000000-0000-4000-8000-000000000001",
+    "gender": "FEMALE",
     "activeProfile": "ADMIN",
     "profiles": ["ADMIN", "INSTRUCTOR"],
     "defaultProfile": "ADMIN",
     "rememberProfile": true
   },
-  "modules": ["CLASSES", "FREE_TRAINING", "COURSES"]
+  "features": ["CLASSES", "FREE_TRAINING", "COURSES"]
 }

@@ -19,17 +19,17 @@ async function bootstrap(root: HTMLElement) {
     await startMockWorker();
   }
 
-  const apiBaseUrl = new URL("/api/v1", window.location.origin).href;
+  const apiBaseUrl =
+    import.meta.env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
+  const identityBaseUrl = import.meta.env.VITE_IDENTITY_BASE_URL ?? window.location.origin;
   const i18n = await createI18n({
     branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
     initialNamespaces: ["common", "errors", "id"],
   });
   const authClient = new AuthClient({
     apiBaseUrl,
-    authBaseUrl: window.location.origin,
     clientId: "id-web",
-    revokeEndpoint: new URL("/oauth2/revoke", window.location.origin).href,
-    tokenEndpoint: new URL("/oauth2/token", window.location.origin).href,
+    identityBaseUrl,
   });
 
   createRoot(root).render(

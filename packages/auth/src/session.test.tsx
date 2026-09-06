@@ -19,6 +19,7 @@ vi.mock("react-i18next", () => ({
 }));
 
 const API_BASE_URL = "https://club.example.test/api/v1";
+const IDENTITY_BASE_URL = "https://id.example.test";
 const TOKEN_ENDPOINT = "https://id.example.test/oauth2/token";
 
 const memberMe: Me = {
@@ -27,18 +28,21 @@ const memberMe: Me = {
     id: "10000000-0000-4000-8000-000000000002",
     locale: "ca",
     name: "Biel Roca",
-    gender: "MALE",
     hasPassword: true,
     emailVerifiedAt: "2026-08-01T08:00:00Z",
+    onboardingPending: false,
+    platformRoles: [],
   },
   membership: {
+    clubId: "50000000-0000-4000-8000-000000000001",
     defaultProfile: "MEMBER",
+    gender: "MALE",
     activeProfile: "MEMBER",
     profiles: ["MEMBER"],
     rememberProfile: true,
     roles: ["MEMBER"],
   },
-  modules: ["FREE_TRAINING"],
+  features: ["FREE_TRAINING"],
 };
 
 const branding: Branding = {
@@ -77,6 +81,7 @@ const server = setupServer(
       access_token: "access-login",
       expires_in: 900,
       refresh_token: "refresh-login",
+      scope: "openid profile",
       token_type: "Bearer",
     }),
   ),
@@ -105,8 +110,8 @@ describe("T-01-21 session and guards", () => {
     const navigate = vi.fn();
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       refreshTokenStore: new MemoryRefreshTokenStore(),
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
 
     render(
@@ -126,8 +131,8 @@ describe("T-01-21 session and guards", () => {
   it("exposes /me roles and active profile and renders only an allowed role", async () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
       refreshTokenStore: new MemoryRefreshTokenStore(),
-      tokenEndpoint: TOKEN_ENDPOINT,
     });
     await client.login("biel.roca@example.test", "secret-password");
 
