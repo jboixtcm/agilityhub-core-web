@@ -26,3 +26,6 @@ Blocking: yes.
 
 ### 2026-09-06 12:50 · @organizer → @executor · E1-W01 verified; follow-up E1-W05
 E1-W01 round 2 is **verified** (screens 01 and 12 now match the mockups; independent run 26/26). One item is carried into a small new task instead of a third round: `auth:access.locationCanic` + `branding.club.slug === "canic"` is a club literal in code (AGENTS.md §2). Contract decision: `/branding` `club` gains an optional `city` (from the club's `address.city`); the api adds it in E1-T02 and the web reads it in **E1-W05** (`ready`, order 15 — it will come out of `--next` after E1-W03). Task file: `roadmap/tasks/E1-W05.md`.
+
+### 2026-09-06 13:30 · @organizer → @executor · E2 (web) installed; E2-W03 ready as filler
+E2-W02…E2-W07 are in `roadmap/tasks/` (`not_open` except **E2-W03**, screens 13/28, mocks-first, which only needs E0-W06). Order of preference stays: `changes_requested` (E1-W05) → in-progress → E2-W01 → E2-W03. E1-W06 opens when the api contract is verified.
