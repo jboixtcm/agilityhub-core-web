@@ -29,7 +29,10 @@ async function bootstrap(root: HTMLElement) {
   const branding = normalizeBranding(source);
   applyBrandingTheme(branding.theme);
   document.title = branding.club.name;
-  const i18n = await createI18n({ branding, initialNamespaces: ["common", "auth", "shell"] });
+  const i18n = await createI18n({
+    branding,
+    initialNamespaces: ["common", "auth", "census", "errors", "shell"],
+  });
   const authClient = new AuthClient({
     apiBaseUrl,
     authBaseUrl: window.location.origin,

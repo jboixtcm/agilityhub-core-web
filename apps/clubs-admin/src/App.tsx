@@ -1,5 +1,6 @@
 import {
   type AuthClient,
+  createAuthenticatedApiClient,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -21,9 +22,10 @@ import {
   type SidebarGroup,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
+import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { Gallery } from "./dev/gallery";
 
 interface AdminRouteDefinition {
@@ -46,6 +48,7 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/abonats/:id", roles: ["ADMIN"] },
   // Screen D15.
   { path: "/gossos", roles: ["ADMIN"] },
+  { path: "/gossos/:id", roles: ["ADMIN"] },
   // Screen D6.
   { path: "/facturacio", roles: ["ADMIN"] },
   { path: "/facturacio/remeses", roles: ["ADMIN"] },
@@ -322,8 +325,20 @@ function PlatformRoleGuard({ children }: { children: ReactNode }) {
   return <RequireAuth>{allowed ? children : null}</RequireAuth>;
 }
 
-function routePlaceholder(route: AdminRouteDefinition): ReactNode {
-  let content: ReactNode = <Placeholder />;
+function routeContent(
+  route: AdminRouteDefinition,
+  client: ReturnType<typeof createAuthenticatedApiClient>,
+) {
+  if (route.path === "/abonats") {
+    return <MembersPage client={client} />;
+  }
+  if (route.path === "/gossos") {
+    return <DogsPage client={client} />;
+  }
+  return <Placeholder />;
+}
+
+function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode {
   requiredModulesForUiItem("routes", route.path).forEach((module) => {
     content = <RequireModule module={module}>{content}</RequireModule>;
   });
@@ -490,6 +505,13 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
 }
 
 export function App({ authClient }: { authClient: AuthClient }) {
+  const client = useMemo(
+    () =>
+      createAuthenticatedApiClient(authClient, {
+        baseUrl: new URL("/api/v1", window.location.origin).href,
+      }),
+    [authClient],
+  );
   if (import.meta.env.DEV && window.location.pathname === "/_gallery") {
     return <Gallery />;
   }
@@ -502,5 +524,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
   }
 
   const route = currentRoute(window.location.pathname) ?? currentRoute("/tauler");
-  return route === undefined ? null : <AdminShell>{routePlaceholder(route)}</AdminShell>;
+  return route === undefined ? null : (
+    <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+  );
 }

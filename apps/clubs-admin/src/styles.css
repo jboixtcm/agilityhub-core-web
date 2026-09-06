@@ -95,7 +95,7 @@ select {
   display: grid;
   min-width: 0;
   padding: var(--ah-space-8);
-  place-items: center;
+  align-items: start;
 }
 
 .admin-shell__content .ah-empty-state {
@@ -103,6 +103,91 @@ select {
   background: var(--ah-color-surface);
   border: 1px solid var(--ah-color-border);
   border-radius: var(--ah-radius-lg);
+}
+
+.admin-shell__content > .ah-empty-state {
+  justify-self: center;
+}
+
+.census-page {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ah-space-5);
+}
+
+.census-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-4);
+}
+
+.census-page__header h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  margin: 0;
+  font: 800 1.5rem/1.2 var(--ah-font-display);
+}
+
+.census-page__new {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-4);
+  color: var(--ah-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid var(--ah-color-primary);
+  border-radius: var(--ah-radius-md);
+}
+
+.census-page .ah-universal-list__table-wrap {
+  max-height: calc(100dvh - 18rem);
+}
+
+.census-dogs-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.census-dogs-cell > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
+.census-level-chip {
+  display: inline-grid;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  padding: var(--ah-space-1);
+  color: var(--ah-color-primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: color-mix(in srgb, var(--ah-color-primary) 16%, transparent);
+  border-radius: var(--ah-radius-full);
+  place-items: center;
+}
+
+.census-page .ah-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
+@media (max-width: 60rem) {
+  .admin-shell__content {
+    padding: var(--ah-space-5);
+  }
+
+  .census-page .ah-universal-list__table-wrap {
+    max-height: none;
+  }
 }
 
 .access-page {

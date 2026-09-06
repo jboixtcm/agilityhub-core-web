@@ -181,7 +181,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(15);
+    expect(handlers).toHaveLength(25);
 
     const [authorizeResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
@@ -223,5 +223,79 @@ describe("MSW bootstrap handlers", () => {
       expires_in: 900,
     });
     await expect(healthResponse.json()).resolves.toMatchObject({ status: "UP" });
+  });
+});
+
+describe("R-03-22 census list handlers", () => {
+  it("paginates members, reports applied filters, and resolves facet labels", async () => {
+    const client = createApiClient({ baseUrl: "https://core.agilitydoghub.com/api/v1" });
+    const [members, plans] = await Promise.all([
+      client.GET("/members", {
+        params: {
+          query: {
+            filter: ["status:eq:ACTIVE", "planId:eq:plan-member"],
+            page: 0,
+            size: 20,
+            sort: ["memberNumber,asc"],
+          },
+        },
+      }),
+      client.GET("/members/filter-values", {
+        params: {
+          query: { field: "planId", filter: ["status:eq:ACTIVE"] },
+        },
+      }),
+    ]);
+
+    expect(members.data).toMatchObject({
+      page: 0,
+      size: 20,
+      totalItems: 184,
+      totalPages: 10,
+      appliedFilters: [
+        { field: "status", op: "eq", value: "ACTIVE" },
+        {
+          field: "planId",
+          label: "Modalitat",
+          op: "eq",
+          value: "plan-member",
+          valueLabel: "Abonat",
+        },
+      ],
+    });
+    expect(members.data?.items).toHaveLength(20);
+    expect(plans.data?.values).toContainEqual({
+      count: 184,
+      label: "Abonat",
+      value: "plan-member",
+    });
+  });
+
+  it("serves 242 dogs and rejects unknown filter fields", async () => {
+    const client = createApiClient({ baseUrl: "https://core.agilitydoghub.com/api/v1" });
+    const dogs = await client.GET("/dogs", {
+      params: {
+        query: {
+          filter: ["status:eq:ACTIVE"],
+          page: 0,
+          size: 50,
+          sort: ["registeredAt,asc"],
+        },
+      },
+    });
+
+    expect(dogs.data).toMatchObject({ totalItems: 242, totalPages: 5 });
+    await expect(
+      client.GET("/dogs", {
+        params: {
+          query: {
+            filter: ["unknown:eq:value"],
+            page: 0,
+            size: 50,
+            sort: [],
+          },
+        },
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
   });
 });

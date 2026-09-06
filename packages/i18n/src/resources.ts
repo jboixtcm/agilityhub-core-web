@@ -8,6 +8,7 @@ type ResourceLoader = () => Promise<{ default: Messages }>;
 const loaders = {
   ca: {
     auth: () => import("./locales/ca/auth.json"),
+    census: () => import("./locales/ca/census.json"),
     common: () => import("./locales/ca/common.json"),
     errors: () => import("./locales/ca/errors.json"),
     id: () => import("./locales/ca/id.json"),
@@ -15,6 +16,7 @@ const loaders = {
   },
   en: {
     auth: () => import("./locales/en/auth.json"),
+    census: () => import("./locales/en/census.json"),
     common: () => import("./locales/en/common.json"),
     errors: () => import("./locales/en/errors.json"),
     id: () => import("./locales/en/id.json"),
@@ -22,6 +24,7 @@ const loaders = {
   },
   es: {
     auth: () => import("./locales/es/auth.json"),
+    census: () => import("./locales/es/census.json"),
     common: () => import("./locales/es/common.json"),
     errors: () => import("./locales/es/errors.json"),
     id: () => import("./locales/es/id.json"),

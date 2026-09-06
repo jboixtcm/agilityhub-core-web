@@ -9,7 +9,17 @@ const repositoryRoot = resolve(packageRoot, "../..");
 const siblingSnapshot = resolve(repositoryRoot, "../agilityhub-core-api/docs/openapi/openapi.json");
 const fallbackStub = resolve(packageRoot, "openapi/stub.json");
 const output = resolve(packageRoot, "src/generated/schema.d.ts");
-const requiredPaths = ["/branding", "/me", "/oauth2/token", "/health"];
+const requiredPaths = [
+  "/branding",
+  "/me",
+  "/oauth2/token",
+  "/health",
+  "/members",
+  "/members/filter-values",
+  "/dogs",
+  "/dogs/filter-values",
+  "/saved-views",
+];
 
 function resolveConfiguredSpec(value) {
   return isAbsolute(value) ? value : resolve(repositoryRoot, value);
@@ -48,14 +58,14 @@ if (configuredSpec !== undefined && configuredSpec !== "") {
   }
   input = snapshotIsComplete(configuredInput) ? configuredInput : fallbackStub;
   if (input === fallbackStub) {
-    console.warn(`Using ${fallbackStub}: ${configuredInput} is missing bootstrap operations.`);
+    console.warn(`Using ${fallbackStub}: ${configuredInput} is missing required operations.`);
   }
 } else if (snapshotIsComplete(siblingSnapshot)) {
   input = siblingSnapshot;
 } else {
   input = fallbackStub;
   console.warn(
-    `Using ${input}: the sibling OpenAPI snapshot is missing one or more bootstrap operations.`,
+    `Using ${input}: the sibling OpenAPI snapshot is missing one or more required operations.`,
   );
 }
 

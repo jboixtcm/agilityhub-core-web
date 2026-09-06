@@ -99,6 +99,7 @@ describe("T-02-14 clubs-admin shell", () => {
         "/abonats",
         "/abonats/:id",
         "/gossos",
+        "/gossos/:id",
         "/facturacio",
         "/facturacio/remeses",
         "/activitats",

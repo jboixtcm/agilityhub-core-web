@@ -95,6 +95,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMembers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMemberFilterValues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["exportMembers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listDogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listDogFilterValues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["exportDogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/saved-views": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listSavedViews"];
+        put?: never;
+        post: operations["createSavedView"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/saved-views/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateSavedView"];
+        post?: never;
+        delete: operations["deleteSavedView"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/magic-link": {
         parameters: {
             query?: never;
@@ -184,6 +312,150 @@ export interface components {
             message: string;
             details?: unknown;
             traceId?: string;
+        };
+        Money: {
+            amountMinor: number;
+            currency: string;
+        };
+        ListFilter: {
+            field: string;
+            /** @enum {string} */
+            op: "eq" | "ne" | "in" | "nin" | "lt" | "lte" | "gt" | "gte" | "contains" | "startsWith" | "exists" | "between";
+            value: string;
+            label?: string;
+            valueLabel?: string;
+        };
+        FilterValue: {
+            value: string;
+            label: string;
+            count: number;
+        };
+        FilterValuesResponse: {
+            field: string;
+            values: components["schemas"]["FilterValue"][];
+        };
+        DisplayStatus: {
+            /** @enum {string} */
+            kind: "PENDING" | "ACTIVE" | "INACTIVE_PERIOD" | "LEAVE_SCHEDULED" | "LEFT";
+            label: string;
+            /** Format: date */
+            date?: string;
+        };
+        MemberListItem: {
+            id: string;
+            memberNumber: number;
+            firstName: string;
+            lastName: string;
+            fullName: string;
+            dogs: {
+                id: string;
+                name: string;
+                levelCode: string;
+            }[];
+            plan: {
+                id: string;
+                name: string;
+                summary: string;
+            };
+            priceId?: string;
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "LEFT";
+            displayStatus: components["schemas"]["DisplayStatus"];
+            contact: string;
+            paymentMethod?: string;
+            /** Format: date */
+            nextInvoiceDate?: string;
+            familyGroup?: string;
+            /** Format: date-time */
+            joinedAt: string;
+            /** Format: date */
+            leaveDate?: string;
+            bookingBlocked: boolean;
+            imageRightsGranted: boolean;
+            roles: string[];
+            city: string;
+            postalCode: string;
+            pendingDocuments: number;
+            freeTrainingAllowed: boolean;
+            /** Format: date */
+            birthDate: string;
+            /** @enum {string} */
+            gender: "FEMALE" | "MALE" | "NON_BINARY" | "UNSPECIFIED";
+            idDocument: string;
+        };
+        MemberListResponse: {
+            items: components["schemas"]["MemberListItem"][];
+            page: number;
+            size: number;
+            totalItems: number;
+            totalPages: number;
+            appliedFilters: components["schemas"]["ListFilter"][];
+        };
+        DogListItem: {
+            id: string;
+            name: string;
+            breed: string;
+            level: {
+                id: string;
+                code: string;
+                name: string;
+                order: number;
+            };
+            owner: {
+                id: string;
+                fullName: string;
+                lastName: string;
+            };
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "INACTIVE";
+            displayStatus: components["schemas"]["DisplayStatus"];
+            freeTrainingAllowed: boolean;
+            licenses: {
+                organisation: string;
+                number: string;
+                grade?: string;
+            }[];
+            /** @enum {string} */
+            sex: "FEMALE" | "MALE" | "UNSPECIFIED";
+            ageYears: number;
+            /** Format: date */
+            birthDate?: string;
+            chip: string;
+            pendingDocuments: number;
+            /** Format: date */
+            levelAssignedAt: string;
+            pack?: string;
+            /** Format: date-time */
+            registeredAt: string;
+        };
+        DogListResponse: {
+            items: components["schemas"]["DogListItem"][];
+            page: number;
+            size: number;
+            totalItems: number;
+            totalPages: number;
+            appliedFilters: components["schemas"]["ListFilter"][];
+        };
+        SavedView: {
+            id: string;
+            ownerAccountId: string;
+            listKey: string;
+            name: string;
+            columns: string[];
+            filters: components["schemas"]["ListFilter"][];
+            sort: string[];
+            shared: boolean;
+        };
+        SavedViewRequest: {
+            listKey: string;
+            name: string;
+            columns: string[];
+            filters: components["schemas"]["ListFilter"][];
+            sort: string[];
+            shared: boolean;
+        };
+        ExportJobResponse: {
+            jobId: string;
         };
         BrandingResponse: {
             club: {
@@ -373,7 +645,18 @@ export interface components {
             };
         };
     };
-    parameters: never;
+    parameters: {
+        Page: number;
+        Size: 20 | 50 | 200 | 1000;
+        Sort: string[];
+        Search: string;
+        Filter: string[];
+        Fields: string;
+        Columns: string;
+        FilterField: string;
+        ExportFormat: "xlsx" | "pdf";
+        ResourceId: string;
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;
@@ -530,6 +813,280 @@ export interface operations {
         responses: {
             /** @description Session revoked */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listMembers: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                size?: components["parameters"]["Size"];
+                sort?: components["parameters"]["Sort"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+                fields?: components["parameters"]["Fields"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Universal member list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberListResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listMemberFilterValues: {
+        parameters: {
+            query: {
+                field: components["parameters"]["FilterField"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member facet values */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValuesResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    exportMembers: {
+        parameters: {
+            query: {
+                format: components["parameters"]["ExportFormat"];
+                sort?: components["parameters"]["Sort"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+                columns: components["parameters"]["Columns"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member export */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            /** @description Asynchronous export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportJobResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listDogs: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                size?: components["parameters"]["Size"];
+                sort?: components["parameters"]["Sort"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+                fields?: components["parameters"]["Fields"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Universal dog list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogListResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listDogFilterValues: {
+        parameters: {
+            query: {
+                field: components["parameters"]["FilterField"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dog facet values */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValuesResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    exportDogs: {
+        parameters: {
+            query: {
+                format: components["parameters"]["ExportFormat"];
+                sort?: components["parameters"]["Sort"];
+                q?: components["parameters"]["Search"];
+                filter?: components["parameters"]["Filter"];
+                columns: components["parameters"]["Columns"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dog export */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            /** @description Asynchronous export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportJobResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listSavedViews: {
+        parameters: {
+            query: {
+                listKey: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Saved views for a list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedView"][];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createSavedView: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SavedViewRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved view created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedView"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateSavedView: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SavedViewRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved view updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedView"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteSavedView: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Saved view deleted */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };

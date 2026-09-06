@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "AgilityHub bootstrap API fallback",
+    "title": "AgilityHub frontend API fallback",
     "version": "0.0.0-stub",
-    "description": "Temporary frontend contract until the core OpenAPI snapshot includes the bootstrap endpoints."
+    "description": "Temporary frontend contract until the core OpenAPI snapshot includes all required endpoints."
   },
   "servers": [
     {
@@ -213,6 +213,332 @@
         }
       }
     },
+    "/members": {
+      "get": {
+        "operationId": "listMembers",
+        "security": [{ "bearerAuth": [] }],
+        "x-filterable": [
+          "memberNumber",
+          "lastName",
+          "fullName(contains)",
+          "status",
+          "displayStatus",
+          "planId",
+          "priceId",
+          "paymentMethodType",
+          "nextInvoiceDate",
+          "joinedAt",
+          "leaveDate",
+          "bookingBlocked",
+          "familyGroupId",
+          "imageRightsGranted",
+          "roles",
+          "city",
+          "postalCode",
+          "dogLevelId",
+          "dogName(contains)",
+          "hasPendingDocuments",
+          "freeTrainingAllowed",
+          "gender",
+          "birthDate"
+        ],
+        "x-sortable": [
+          "lastName",
+          "firstName",
+          "memberNumber",
+          "joinedAt",
+          "leaveDate",
+          "nextInvoiceDate",
+          "city"
+        ],
+        "x-columns": [
+          { "key": "fullName", "label": "Abonat", "defaultVisible": true },
+          { "key": "dogs", "label": "Gossos (nivell)", "defaultVisible": true },
+          { "key": "plan", "label": "Modalitat", "defaultVisible": true },
+          { "key": "displayStatus", "label": "Estat", "defaultVisible": true },
+          { "key": "memberNumber", "label": "Número" },
+          { "key": "contact", "label": "Contacte" },
+          { "key": "paymentMethod", "label": "Pagament", "module": "BILLING" },
+          { "key": "nextInvoiceDate", "label": "Proper rebut", "module": "BILLING" },
+          { "key": "familyGroup", "label": "Grup familiar", "module": "FAMILY_GROUP" },
+          { "key": "joinedAt", "label": "Alta des de" },
+          { "key": "leaveDate", "label": "Data de baixa" },
+          { "key": "bookingBlocked", "label": "Reserves bloquejades" },
+          { "key": "imageRights", "label": "Drets d'imatge" },
+          { "key": "roles", "label": "Rols" },
+          { "key": "city", "label": "Població" },
+          { "key": "postalCode", "label": "CP" },
+          { "key": "pendingDocuments", "label": "Documents pendents" },
+          { "key": "freeTraining", "label": "Entrenament lliure", "module": "FREE_TRAINING" },
+          { "key": "birthDate", "label": "Data de naixement" },
+          { "key": "gender", "label": "Gènere" },
+          { "key": "idDocument", "label": "DNI" }
+        ],
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Size" },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" },
+          { "$ref": "#/components/parameters/Fields" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Universal member list",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MemberListResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/filter-values": {
+      "get": {
+        "operationId": "listMemberFilterValues",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/FilterField" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member facet values",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FilterValuesResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/export": {
+      "get": {
+        "operationId": "exportMembers",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/ExportFormat" },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" },
+          { "$ref": "#/components/parameters/Columns" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member export",
+            "content": {
+              "application/octet-stream": { "schema": { "type": "string", "format": "binary" } }
+            }
+          },
+          "202": {
+            "description": "Asynchronous export",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExportJobResponse" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs": {
+      "get": {
+        "operationId": "listDogs",
+        "security": [{ "bearerAuth": [] }],
+        "x-filterable": [
+          "name(contains)",
+          "breed(contains)",
+          "levelId",
+          "memberId",
+          "ownerName(contains)",
+          "status",
+          "freeTrainingAllowed",
+          "hasLicense",
+          "licenseOrganisation",
+          "hasPendingDocuments",
+          "sex",
+          "birthDate",
+          "chip",
+          "registeredAt",
+          "levelAssignedAt"
+        ],
+        "x-sortable": [
+          "name",
+          "breed",
+          "levelOrder",
+          "ownerLastName",
+          "registeredAt",
+          "levelAssignedAt"
+        ],
+        "x-columns": [
+          { "key": "name", "label": "Gos", "defaultVisible": true },
+          { "key": "breed", "label": "Raça", "defaultVisible": true },
+          {
+            "key": "level",
+            "label": "Nivell",
+            "defaultVisible": true,
+            "setting": "levels.enabled"
+          },
+          { "key": "owner", "label": "Abonat", "defaultVisible": true },
+          {
+            "key": "freeTraining",
+            "label": "Entrenament lliure",
+            "defaultVisible": true,
+            "module": "FREE_TRAINING"
+          },
+          { "key": "licenses", "label": "Llicències", "defaultVisible": true },
+          { "key": "displayStatus", "label": "Estat", "defaultVisible": true },
+          { "key": "sex", "label": "Sexe" },
+          { "key": "age", "label": "Edat" },
+          { "key": "chip", "label": "Xip" },
+          { "key": "pendingDocuments", "label": "Documents pendents" },
+          { "key": "levelAssignedAt", "label": "Al nivell des de" },
+          { "key": "pack", "label": "Pack", "module": "PACKS" },
+          { "key": "registeredAt", "label": "Data d'alta" }
+        ],
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/Size" },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" },
+          { "$ref": "#/components/parameters/Fields" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Universal dog list",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogListResponse" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/filter-values": {
+      "get": {
+        "operationId": "listDogFilterValues",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/FilterField" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dog facet values",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FilterValuesResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/export": {
+      "get": {
+        "operationId": "exportDogs",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/ExportFormat" },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/Filter" },
+          { "$ref": "#/components/parameters/Columns" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dog export",
+            "content": {
+              "application/octet-stream": { "schema": { "type": "string", "format": "binary" } }
+            }
+          },
+          "202": {
+            "description": "Asynchronous export",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExportJobResponse" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/saved-views": {
+      "get": {
+        "operationId": "listSavedViews",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "listKey", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved views for a list",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/SavedView" } }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createSavedView",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SavedViewRequest" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Saved view created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SavedView" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/saved-views/{id}": {
+      "put": {
+        "operationId": "updateSavedView",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SavedViewRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved view updated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SavedView" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSavedView",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "204": { "description": "Saved view deleted" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
     "/auth/magic-link": {
       "servers": [
         {
@@ -371,6 +697,58 @@
     }
   },
   "components": {
+    "parameters": {
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 0, "default": 0 }
+      },
+      "Size": {
+        "name": "size",
+        "in": "query",
+        "schema": { "type": "integer", "enum": [20, 50, 200, 1000], "default": 50 }
+      },
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "Search": { "name": "q", "in": "query", "schema": { "type": "string" } },
+      "Filter": {
+        "name": "filter",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "Fields": { "name": "fields", "in": "query", "schema": { "type": "string" } },
+      "Columns": {
+        "name": "columns",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "FilterField": {
+        "name": "field",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "ExportFormat": {
+        "name": "format",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string", "enum": ["xlsx", "pdf"] }
+      },
+      "ResourceId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      }
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
@@ -406,6 +784,283 @@
             "type": "string"
           }
         }
+      },
+      "Money": {
+        "type": "object",
+        "required": ["amountMinor", "currency"],
+        "properties": {
+          "amountMinor": { "type": "integer" },
+          "currency": { "type": "string" }
+        }
+      },
+      "ListFilter": {
+        "type": "object",
+        "required": ["field", "op", "value"],
+        "properties": {
+          "field": { "type": "string" },
+          "op": {
+            "type": "string",
+            "enum": [
+              "eq",
+              "ne",
+              "in",
+              "nin",
+              "lt",
+              "lte",
+              "gt",
+              "gte",
+              "contains",
+              "startsWith",
+              "exists",
+              "between"
+            ]
+          },
+          "value": { "type": "string" },
+          "label": { "type": "string" },
+          "valueLabel": { "type": "string" }
+        }
+      },
+      "FilterValue": {
+        "type": "object",
+        "required": ["value", "label", "count"],
+        "properties": {
+          "value": { "type": "string" },
+          "label": { "type": "string" },
+          "count": { "type": "integer" }
+        }
+      },
+      "FilterValuesResponse": {
+        "type": "object",
+        "required": ["field", "values"],
+        "properties": {
+          "field": { "type": "string" },
+          "values": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/FilterValue" }
+          }
+        }
+      },
+      "DisplayStatus": {
+        "type": "object",
+        "required": ["kind", "label"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["PENDING", "ACTIVE", "INACTIVE_PERIOD", "LEAVE_SCHEDULED", "LEFT"]
+          },
+          "label": { "type": "string" },
+          "date": { "type": "string", "format": "date" }
+        }
+      },
+      "MemberListItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "memberNumber",
+          "firstName",
+          "lastName",
+          "fullName",
+          "dogs",
+          "plan",
+          "status",
+          "displayStatus",
+          "contact",
+          "joinedAt",
+          "bookingBlocked",
+          "imageRightsGranted",
+          "roles",
+          "city",
+          "postalCode",
+          "pendingDocuments",
+          "freeTrainingAllowed",
+          "birthDate",
+          "gender",
+          "idDocument"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "memberNumber": { "type": "integer" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "fullName": { "type": "string" },
+          "dogs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "levelCode"],
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "levelCode": { "type": "string" }
+              }
+            }
+          },
+          "plan": {
+            "type": "object",
+            "required": ["id", "name", "summary"],
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "summary": { "type": "string" }
+            }
+          },
+          "priceId": { "type": "string" },
+          "status": { "type": "string", "enum": ["PENDING", "ACTIVE", "LEFT"] },
+          "displayStatus": { "$ref": "#/components/schemas/DisplayStatus" },
+          "contact": { "type": "string" },
+          "paymentMethod": { "type": "string" },
+          "nextInvoiceDate": { "type": "string", "format": "date" },
+          "familyGroup": { "type": "string" },
+          "joinedAt": { "type": "string", "format": "date-time" },
+          "leaveDate": { "type": "string", "format": "date" },
+          "bookingBlocked": { "type": "boolean" },
+          "imageRightsGranted": { "type": "boolean" },
+          "roles": { "type": "array", "items": { "type": "string" } },
+          "city": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "pendingDocuments": { "type": "integer" },
+          "freeTrainingAllowed": { "type": "boolean" },
+          "birthDate": { "type": "string", "format": "date" },
+          "gender": { "type": "string", "enum": ["FEMALE", "MALE", "NON_BINARY", "UNSPECIFIED"] },
+          "idDocument": { "type": "string" }
+        }
+      },
+      "MemberListResponse": {
+        "type": "object",
+        "required": ["items", "page", "size", "totalItems", "totalPages", "appliedFilters"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/MemberListItem" } },
+          "page": { "type": "integer" },
+          "size": { "type": "integer" },
+          "totalItems": { "type": "integer" },
+          "totalPages": { "type": "integer" },
+          "appliedFilters": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ListFilter" }
+          }
+        }
+      },
+      "DogListItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "breed",
+          "level",
+          "owner",
+          "status",
+          "displayStatus",
+          "freeTrainingAllowed",
+          "licenses",
+          "sex",
+          "ageYears",
+          "chip",
+          "pendingDocuments",
+          "levelAssignedAt",
+          "registeredAt"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "level": {
+            "type": "object",
+            "required": ["id", "code", "name", "order"],
+            "properties": {
+              "id": { "type": "string" },
+              "code": { "type": "string" },
+              "name": { "type": "string" },
+              "order": { "type": "integer" }
+            }
+          },
+          "owner": {
+            "type": "object",
+            "required": ["id", "fullName", "lastName"],
+            "properties": {
+              "id": { "type": "string" },
+              "fullName": { "type": "string" },
+              "lastName": { "type": "string" }
+            }
+          },
+          "status": { "type": "string", "enum": ["PENDING", "ACTIVE", "INACTIVE"] },
+          "displayStatus": { "$ref": "#/components/schemas/DisplayStatus" },
+          "freeTrainingAllowed": { "type": "boolean" },
+          "licenses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["organisation", "number"],
+              "properties": {
+                "organisation": { "type": "string" },
+                "number": { "type": "string" },
+                "grade": { "type": "string" }
+              }
+            }
+          },
+          "sex": { "type": "string", "enum": ["FEMALE", "MALE", "UNSPECIFIED"] },
+          "ageYears": { "type": "integer" },
+          "birthDate": { "type": "string", "format": "date" },
+          "chip": { "type": "string" },
+          "pendingDocuments": { "type": "integer" },
+          "levelAssignedAt": { "type": "string", "format": "date" },
+          "pack": { "type": "string" },
+          "registeredAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DogListResponse": {
+        "type": "object",
+        "required": ["items", "page", "size", "totalItems", "totalPages", "appliedFilters"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/DogListItem" } },
+          "page": { "type": "integer" },
+          "size": { "type": "integer" },
+          "totalItems": { "type": "integer" },
+          "totalPages": { "type": "integer" },
+          "appliedFilters": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ListFilter" }
+          }
+        }
+      },
+      "SavedView": {
+        "type": "object",
+        "required": [
+          "id",
+          "ownerAccountId",
+          "listKey",
+          "name",
+          "columns",
+          "filters",
+          "sort",
+          "shared"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "ownerAccountId": { "type": "string" },
+          "listKey": { "type": "string" },
+          "name": { "type": "string", "maxLength": 40 },
+          "columns": { "type": "array", "items": { "type": "string" } },
+          "filters": { "type": "array", "items": { "$ref": "#/components/schemas/ListFilter" } },
+          "sort": { "type": "array", "items": { "type": "string" } },
+          "shared": { "type": "boolean" }
+        }
+      },
+      "SavedViewRequest": {
+        "type": "object",
+        "required": ["listKey", "name", "columns", "filters", "sort", "shared"],
+        "properties": {
+          "listKey": { "type": "string" },
+          "name": { "type": "string", "maxLength": 40 },
+          "columns": { "type": "array", "items": { "type": "string" } },
+          "filters": { "type": "array", "items": { "$ref": "#/components/schemas/ListFilter" } },
+          "sort": { "type": "array", "items": { "type": "string" } },
+          "shared": { "type": "boolean" }
+        }
+      },
+      "ExportJobResponse": {
+        "type": "object",
+        "required": ["jobId"],
+        "properties": { "jobId": { "type": "string" } }
       },
       "BrandingResponse": {
         "type": "object",

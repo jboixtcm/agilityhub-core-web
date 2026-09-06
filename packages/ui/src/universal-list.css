@@ -1,0 +1,369 @@
+.ah-universal-list {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ah-space-4);
+}
+
+.ah-universal-list > .ah-toast {
+  justify-self: end;
+}
+
+.ah-universal-list__toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.ah-universal-list__search {
+  position: relative;
+  display: flex;
+  flex: 1 1 18rem;
+  align-items: center;
+  min-width: 12rem;
+}
+
+.ah-universal-list__search > .ah-icon {
+  position: absolute;
+  left: var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  pointer-events: none;
+}
+
+.ah-universal-list__search input,
+.ah-universal-list__status,
+.ah-universal-list__menu-panel input,
+.ah-universal-list__menu-panel select,
+.ah-universal-list__pagination select {
+  min-height: 2.5rem;
+  color: var(--ah-color-text);
+  font: inherit;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.ah-universal-list__search input {
+  width: 100%;
+  padding: var(--ah-space-2) var(--ah-space-3) var(--ah-space-2) var(--ah-space-8);
+}
+
+.ah-universal-list__search input::placeholder {
+  color: var(--ah-color-text-muted);
+}
+
+.ah-universal-list__status,
+.ah-universal-list__menu > summary {
+  min-height: 2.25rem;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: var(--ah-radius-full);
+}
+
+.ah-universal-list__status {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.ah-universal-list__menu {
+  position: relative;
+}
+
+.ah-universal-list__menu > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  list-style: none;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+}
+
+.ah-universal-list__menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ah-universal-list__menu > summary.ah-universal-list__summary--active {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.ah-universal-list__menu-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + var(--ah-space-2));
+  right: 0;
+  display: grid;
+  width: min(24rem, calc(100vw - var(--ah-space-8)));
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+  box-shadow: var(--ah-shadow-lg);
+}
+
+.ah-universal-list__filter-menu .ah-universal-list__menu-panel {
+  left: 0;
+  right: auto;
+}
+
+.ah-universal-list__menu-panel label {
+  display: grid;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ah-universal-list__menu-panel input,
+.ah-universal-list__menu-panel select {
+  width: 100%;
+  padding: var(--ah-space-2) var(--ah-space-3);
+}
+
+.ah-universal-list__menu-actions,
+.ah-universal-list__active-filter,
+.ah-universal-list__check-label {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.ah-universal-list__menu-actions {
+  flex-wrap: wrap;
+}
+
+.ah-universal-list__menu-actions .ah-button {
+  min-height: 2rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
+  font-size: 0.75rem;
+}
+
+.ah-universal-list__active-filter {
+  justify-content: space-between;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--ah-color-primary) 14%, transparent);
+  border-radius: var(--ah-radius-md);
+}
+
+.ah-universal-list__active-filter button {
+  display: grid;
+  padding: var(--ah-space-1);
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  place-items: center;
+}
+
+.ah-universal-list__columns {
+  display: grid;
+  max-height: 22rem;
+  gap: var(--ah-space-1);
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.ah-universal-list__columns li,
+.ah-universal-list__columns label {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.ah-universal-list__columns li {
+  padding: var(--ah-space-2);
+  cursor: grab;
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-universal-list__columns li:hover {
+  background: var(--ah-color-surface-2);
+}
+
+.ah-universal-list__check-label {
+  grid-template-columns: auto 1fr;
+}
+
+.ah-universal-list__export .ah-universal-list__menu-panel {
+  width: 9rem;
+  padding: var(--ah-space-2);
+}
+
+.ah-universal-list__export a {
+  padding: var(--ah-space-2);
+  color: var(--ah-color-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-universal-list__export a:hover {
+  color: var(--ah-color-primary);
+  background: var(--ah-color-surface-2);
+}
+
+.ah-universal-list__table-wrap {
+  min-width: 0;
+  overflow: auto;
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+}
+
+.ah-universal-list table {
+  width: 100%;
+  font-size: 0.78rem;
+  border-collapse: collapse;
+}
+
+.ah-universal-list th,
+.ah-universal-list td {
+  padding: var(--ah-space-3);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.ah-universal-list th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--ah-color-surface);
+}
+
+.ah-universal-list th button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.ah-universal-list tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ah-universal-list tbody tr:hover {
+  background: color-mix(in srgb, var(--ah-color-primary) 6%, transparent);
+}
+
+.ah-universal-list td > a {
+  display: block;
+  min-height: 1.5rem;
+  color: var(--ah-color-text-muted);
+  text-decoration: none;
+}
+
+.ah-universal-list td:first-of-type > a,
+.ah-universal-list__selection + td > a {
+  color: var(--ah-color-text);
+  font-weight: 700;
+}
+
+.ah-universal-list__selection {
+  width: 2rem;
+}
+
+.ah-universal-list__chevron {
+  width: 2rem;
+  text-align: right;
+}
+
+.ah-universal-list__chevron .ah-icon {
+  color: var(--ah-color-text-muted);
+}
+
+.ah-universal-list__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.5rem;
+  gap: var(--ah-space-4);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.ah-universal-list__bulk,
+.ah-universal-list__pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.ah-universal-list__bulk {
+  flex-wrap: wrap;
+}
+
+.ah-universal-list__bulk > *:not(strong) {
+  min-height: 2rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
+  font-size: 0.72rem;
+}
+
+.ah-universal-list__pagination {
+  margin-left: auto;
+}
+
+.ah-universal-list__pagination button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: var(--ah-color-text-muted);
+  cursor: pointer;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+  place-items: center;
+}
+
+.ah-universal-list__pagination button:first-of-type .ah-icon {
+  transform: rotate(180deg);
+}
+
+.ah-universal-list__pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ah-universal-list__pagination select {
+  padding: var(--ah-space-1) var(--ah-space-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--ah-radius-full);
+}
+
+@media (max-width: 75rem) {
+  .ah-universal-list__toolbar {
+    flex-wrap: wrap;
+  }
+
+  .ah-universal-list__search {
+    flex-basis: 100%;
+  }
+}
