@@ -8,6 +8,6 @@ describe("clubs-admin placeholder", () => {
   it("renders the application heading", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: t("shell.clubsAdmin") })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: t("shell:app.clubsAdmin") })).toBeInTheDocument();
   });
 });

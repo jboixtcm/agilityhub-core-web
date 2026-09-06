@@ -56,10 +56,10 @@ function GalleryToastButton() {
   return (
     <Button
       onClick={() => {
-        toast.push(t("gallery.updated"), "success");
+        toast.push(t("common:gallery.updated"), "success");
       }}
     >
-      {t("gallery.toast")}
+      {t("common:gallery.toast")}
     </Button>
   );
 }
@@ -76,63 +76,67 @@ function GalleryContent({ canic, onThemeChange }: { canic: boolean; onThemeChang
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const members: GalleryMember[] = [
-    { level: "c", name: t("gallery.person"), status: "active" },
-    { level: "d", name: t("gallery.dog"), status: "risk" },
+    { level: "c", name: t("common:gallery.person"), status: "active" },
+    { level: "d", name: t("common:gallery.dog"), status: "risk" },
   ];
 
   return (
-    <ToastProvider dismissLabel={t("gallery.close")}>
+    <ToastProvider dismissLabel={t("common:gallery.close")}>
       <main className="gallery-page">
         <header className="gallery-header">
           <div>
-            <span className="gallery-header__eyebrow">{t("shell.clubsAdmin")}</span>
-            <h1>{t("gallery.title")}</h1>
+            <span className="gallery-header__eyebrow">{t("shell:app.clubsAdmin")}</span>
+            <h1>{t("common:gallery.title")}</h1>
           </div>
           <Button onClick={onThemeChange} variant="secondary">
-            {canic ? t("gallery.theme.agilityhub") : t("gallery.theme.canic")}
+            {canic ? t("common:gallery.theme.agilityhub") : t("common:gallery.theme.canic")}
           </Button>
         </header>
 
-        <GallerySection title={t("gallery.states")}>
+        <GallerySection title={t("common:gallery.states")}>
           <div className="gallery-row">
-            <Button>{t("gallery.save")}</Button>
-            <Button variant="secondary">{t("gallery.cancel")}</Button>
-            <Button variant="ghost">{t("gallery.edit")}</Button>
-            <Button variant="danger">{t("gallery.delete")}</Button>
-            <Button loading loadingLabel={t("gallery.saving")}>
-              {t("gallery.save")}
+            <Button>{t("common:gallery.save")}</Button>
+            <Button variant="secondary">{t("common:gallery.cancel")}</Button>
+            <Button variant="ghost">{t("common:gallery.edit")}</Button>
+            <Button variant="danger">{t("common:gallery.delete")}</Button>
+            <Button loading loadingLabel={t("common:gallery.saving")}>
+              {t("common:gallery.save")}
             </Button>
-            <IconButton icon="edit" label={t("gallery.edit")} />
+            <IconButton icon="edit" label={t("common:gallery.edit")} />
           </div>
           <Card>
             <div className="gallery-row">
-              <Chip tone="success">{t("gallery.active")}</Chip>
-              <Chip tone="warning">{t("gallery.risk")}</Chip>
-              <Chip tone="danger">{t("gallery.cancelled")}</Chip>
-              <Chip tone="info">{t("gallery.noShow")}</Chip>
-              <Chip>{t("gallery.levelC")}</Chip>
+              <Chip tone="success">{t("common:gallery.active")}</Chip>
+              <Chip tone="warning">{t("common:gallery.risk")}</Chip>
+              <Chip tone="danger">{t("common:gallery.cancelled")}</Chip>
+              <Chip tone="info">{t("common:gallery.noShow")}</Chip>
+              <Chip>{t("common:gallery.levelC")}</Chip>
               <Badge tone="danger">4</Badge>
             </div>
           </Card>
         </GallerySection>
 
-        <GallerySection title={t("gallery.forms")}>
+        <GallerySection title={t("common:gallery.forms")}>
           <div className="gallery-form-grid">
-            <FormField help={t("gallery.help")} id="gallery-name" label={t("gallery.name")}>
-              <Input id="gallery-name" placeholder={t("gallery.person")} />
+            <FormField
+              help={t("common:gallery.help")}
+              id="gallery-name"
+              label={t("common:gallery.name")}
+            >
+              <Input id="gallery-name" placeholder={t("common:gallery.person")} />
             </FormField>
-            <FormField id="gallery-notes" label={t("gallery.notes")}>
+            <FormField id="gallery-notes" label={t("common:gallery.notes")}>
               <Textarea id="gallery-notes" />
             </FormField>
-            <FormField id="gallery-level" label={t("gallery.level")}>
+            <FormField id="gallery-level" label={t("common:gallery.level")}>
               <Select defaultValue="c" id="gallery-level">
-                <option value="c">{t("gallery.levelC")}</option>
+                <option value="c">{t("common:gallery.levelC")}</option>
               </Select>
             </FormField>
             <FormField
-              error={t("gallery.required")}
+              error={t("common:gallery.required")}
               id="gallery-required"
-              label={t("gallery.name")}
+              label={t("common:gallery.name")}
             >
               <Input id="gallery-required" />
             </FormField>
@@ -145,71 +149,84 @@ function GalleryContent({ canic, onThemeChange }: { canic: boolean; onThemeChang
                   setChecked(event.currentTarget.checked);
                 }}
               />
-              {t("gallery.select")}
+              {t("common:gallery.select")}
             </label>
             <Switch
               checked={checked}
-              label={t("gallery.notifications")}
+              label={t("common:gallery.notifications")}
               onCheckedChange={setChecked}
             />
             <RadioGroup
-              label={t("gallery.modality")}
+              label={t("common:gallery.modality")}
               onValueChange={setModality}
               options={[
-                { label: t("gallery.agility"), value: "agility" },
-                { label: t("gallery.initiation"), value: "initiation" },
+                { label: t("common:gallery.agility"), value: "agility" },
+                { label: t("common:gallery.initiation"), value: "initiation" },
               ]}
               value={modality}
             />
           </div>
         </GallerySection>
 
-        <GallerySection title={t("gallery.navigation")}>
+        <GallerySection title={t("common:gallery.navigation")}>
           <div className="gallery-mobile-preview">
             <AppBar
-              end={<IconButton icon="bell" label={t("gallery.notifications")} />}
-              start={<Avatar name={t("gallery.dog")} kind="dog" />}
-              title={t("gallery.home")}
+              end={<IconButton icon="bell" label={t("common:gallery.notifications")} />}
+              start={<Avatar name={t("common:gallery.dog")} kind="dog" />}
+              title={t("common:gallery.home")}
             />
             <Tabs
               items={[
-                { content: t("gallery.person"), label: t("gallery.profile"), value: "profile" },
-                { content: t("gallery.dog"), label: t("gallery.dogs"), value: "dogs" },
+                {
+                  content: t("common:gallery.person"),
+                  label: t("common:gallery.profile"),
+                  value: "profile",
+                },
+                {
+                  content: t("common:gallery.dog"),
+                  label: t("common:gallery.dogs"),
+                  value: "dogs",
+                },
               ]}
-              label={t("gallery.drawerTitle")}
+              label={t("common:gallery.drawerTitle")}
             />
             <TabBar
               items={[
-                { active: true, href: "#home", icon: "home", label: t("gallery.home") },
-                { href: "#book", icon: "cal", label: t("gallery.reserve") },
-                { href: "#training", icon: "cone", label: t("gallery.training") },
-                { href: "#today", icon: "day", label: t("gallery.today") },
-                { href: "#profile", icon: "user", label: t("gallery.profile") },
-                { href: "#info", icon: "info", label: t("gallery.info") },
+                { active: true, href: "#home", icon: "home", label: t("common:gallery.home") },
+                { href: "#book", icon: "cal", label: t("common:gallery.reserve") },
+                { href: "#training", icon: "cone", label: t("common:gallery.training") },
+                { href: "#today", icon: "day", label: t("common:gallery.today") },
+                { href: "#profile", icon: "user", label: t("common:gallery.profile") },
+                { href: "#info", icon: "info", label: t("common:gallery.info") },
               ]}
-              label={t("gallery.mainNav")}
+              label={t("common:gallery.mainNav")}
             />
           </div>
           <Sidebar
             groups={[
               {
                 entries: [
-                  { active: true, href: "#dashboard", icon: "grid", label: t("gallery.dashboard") },
-                  { count: 4, href: "#members", icon: "user", label: t("gallery.members") },
+                  {
+                    active: true,
+                    href: "#dashboard",
+                    icon: "grid",
+                    label: t("common:gallery.dashboard"),
+                  },
+                  { count: 4, href: "#members", icon: "user", label: t("common:gallery.members") },
                 ],
-                label: t("gallery.club"),
+                label: t("common:gallery.club"),
               },
             ]}
-            label={t("gallery.admin")}
+            label={t("common:gallery.admin")}
           />
         </GallerySection>
 
-        <GallerySection title={t("gallery.status")}>
+        <GallerySection title={t("common:gallery.status")}>
           <div className="gallery-row">
-            <Avatar name={t("gallery.person")} />
-            <Avatar kind="dog" name={t("gallery.dog")} />
-            <LevelDot label={t("gallery.levelC")} level="c" />
-            <Toast tone="info">{t("gallery.updated")}</Toast>
+            <Avatar name={t("common:gallery.person")} />
+            <Avatar kind="dog" name={t("common:gallery.dog")} />
+            <LevelDot label={t("common:gallery.levelC")} level="c" />
+            <Toast tone="info">{t("common:gallery.updated")}</Toast>
             <GalleryToastButton />
             <Button
               onClick={() => {
@@ -217,7 +234,7 @@ function GalleryContent({ canic, onThemeChange }: { canic: boolean; onThemeChang
               }}
               variant="ghost"
             >
-              {t("gallery.openModal")}
+              {t("common:gallery.openModal")}
             </Button>
             <Button
               onClick={() => {
@@ -225,62 +242,64 @@ function GalleryContent({ canic, onThemeChange }: { canic: boolean; onThemeChang
               }}
               variant="ghost"
             >
-              {t("gallery.openDrawer")}
+              {t("common:gallery.openDrawer")}
             </Button>
           </div>
-          <Skeleton height="1.5rem" label={t("gallery.loading")} />
+          <Skeleton height="1.5rem" label={t("common:gallery.loading")} />
           <EmptyState
-            action={<Button variant="secondary">{t("gallery.add")}</Button>}
-            description={t("gallery.emptyDescription")}
-            title={t("gallery.emptyTitle")}
+            action={<Button variant="secondary">{t("common:gallery.add")}</Button>}
+            description={t("common:gallery.emptyDescription")}
+            title={t("common:gallery.emptyTitle")}
           />
           <DataTable
-            caption={t("gallery.tableCaption")}
+            caption={t("common:gallery.tableCaption")}
             columns={[
-              { header: t("gallery.name"), key: "name", render: (row) => row.name },
+              { header: t("common:gallery.name"), key: "name", render: (row) => row.name },
               {
-                header: t("gallery.level"),
+                header: t("common:gallery.level"),
                 key: "level",
                 render: (row) => (
-                  <LevelDot label={`${t("gallery.level")} ${row.level}`} level={row.level} />
+                  <LevelDot label={`${t("common:gallery.level")} ${row.level}`} level={row.level} />
                 ),
               },
               {
-                header: t("gallery.status"),
+                header: t("common:gallery.status"),
                 key: "status",
                 render: (row) => (
                   <Chip tone={row.status === "active" ? "success" : "warning"}>
-                    {row.status === "active" ? t("gallery.active") : t("gallery.risk")}
+                    {row.status === "active"
+                      ? t("common:gallery.active")
+                      : t("common:gallery.risk")}
                   </Chip>
                 ),
               },
             ]}
-            empty={t("gallery.tableEmpty")}
-            loadingLabel={t("gallery.loading")}
+            empty={t("common:gallery.tableEmpty")}
+            loadingLabel={t("common:gallery.loading")}
             rowKey={(row) => row.name}
             rows={members}
           />
         </GallerySection>
 
         <Modal
-          closeLabel={t("gallery.close")}
+          closeLabel={t("common:gallery.close")}
           onClose={() => {
             setModalOpen(false);
           }}
           open={modalOpen}
-          title={t("gallery.modalTitle")}
+          title={t("common:gallery.modalTitle")}
         >
-          {t("gallery.confirmQuestion")}
+          {t("common:gallery.confirmQuestion")}
         </Modal>
         <Drawer
-          closeLabel={t("gallery.close")}
+          closeLabel={t("common:gallery.close")}
           onClose={() => {
             setDrawerOpen(false);
           }}
           open={drawerOpen}
-          title={t("gallery.drawerTitle")}
+          title={t("common:gallery.drawerTitle")}
         >
-          {t("gallery.person")}
+          {t("common:gallery.person")}
         </Drawer>
       </main>
     </ToastProvider>

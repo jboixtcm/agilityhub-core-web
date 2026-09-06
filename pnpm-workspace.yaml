@@ -25,6 +25,7 @@ catalog:
   husky: ^9.1.7
   i18next: ^26.4.2
   i18next-icu: ^2.4.4
+  i18next-parser: ^9.3.0
   jsdom: ^30.0.1
   lint-staged: ^17.5.0
   msw: ^2.15.0

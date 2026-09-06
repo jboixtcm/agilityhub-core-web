@@ -15,7 +15,8 @@
     "build": "turbo run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "i18n:check": "pnpm --filter @agilityhub/i18n test",
+    "i18n:extract": "i18next 'apps/**/*.{ts,tsx}' 'packages/**/*.{ts,tsx}' '!**/node_modules/**' '!**/*.test.{ts,tsx}' --config i18next-parser.config.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs",
     "api:generate": "pnpm --filter @agilityhub/api-client api:generate",
     "e2e": "turbo run e2e",
     "prepare": "node packages/config/scripts/prepare-husky.mjs"
@@ -35,6 +36,7 @@
     "eslint-plugin-react-hooks": "catalog:",
     "globals": "catalog:",
     "husky": "catalog:",
+    "i18next-parser": "catalog:",
     "lint-staged": "catalog:",
     "msw": "catalog:",
     "prettier": "catalog:",

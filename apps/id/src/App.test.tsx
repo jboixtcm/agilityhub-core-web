@@ -8,6 +8,6 @@ describe("id placeholder", () => {
   it("renders the application heading", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: t("shell.id") })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: t("shell:app.id") })).toBeInTheDocument();
   });
 });
