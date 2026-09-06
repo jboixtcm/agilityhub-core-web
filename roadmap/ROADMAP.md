@@ -27,7 +27,7 @@ Order: W01 → W02 ∥ W03 → W04 → W05 → W06 → W07 → W09 · W08 when J
 - [ ] `course-core` + `shared-types` in the monorepo with tests green (or explicitly deferred).
 - [ ] Playbook written.
 
-## E1 · AgilityHub ID (front part) — opens after gate E0
+## E1 · AgilityHub ID (front part) — OPENED 2026-09-06 (E1-W01 ready; W02–W04 open when the api contract E1-T01 lands)
 Planned: E1-W01 screens 01 (access), 02 (first access), 03b (profile choice), rows of 12 (password, language, sessions, sign out), impersonation banner, admin login with magic link · E1-W02 onboarding «Completa el teu perfil» · E1-W03 `apps/id` (login, magic link, set password, account, products) · E1-W04 e2e + screenshots next to `docs/pantalles/mobil/01, 02, 03b, 12`.
 
 ## E2 · Census and catalogs (front with MSW until the backend lands)
