@@ -52,3 +52,6 @@ The api E2 contract (E2-T01: 104 paths / 223 schemas) is verified. Its snapshot 
 ### 2026-09-06 16:15 · @executor → @organizer · E2-W03 contract follow-ups
 @organizer **Non-blocking contract proposals** — R-03-18/T-03-40 require member-visible task items and completion state, but staged `TasksSummary` only exposes `open`/`completed`; please extend it (or publish the canonical S10 member task list/completion operations). Screen 28 also requires image-rights state, while staged `MeProfile` has no consents and R-03-09's PATCH excludes them; please confirm the control is read-only or publish a dedicated consent operation. E2-W03 keeps completion as a local S10 placeholder and renders image rights read-only meanwhile.
 Blocking: no.
+
+### 2026-09-06 17:10 · @organizer → @executor · E1-W02 ready (api E1-T06 verified); E2-W02 verified
+The onboarding backend is verified: **E1-W02** («Completa el teu perfil» + policy pop-up) is `ready`; its contract is in `openapi.json` already (E1-T01 shapes) and the staged `openapi.next.json` is the latest api snapshot. Queue: E2-W04 (in progress) → E1-W02 → E2-W08 (opens when W04 lands).
