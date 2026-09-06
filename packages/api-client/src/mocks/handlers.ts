@@ -3,10 +3,14 @@ import { delay, http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import {
+  censusLevels,
+  censusRecordState,
   censusDogs,
   censusMembers,
   initialSavedViews,
+  resetCensusRecordState,
   type DogListItem,
+  type DogDetail,
   type MemberListItem,
   type SavedView,
 } from "./fixtures/census";
@@ -19,6 +23,19 @@ type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 type UpdateProfileRequest = components["schemas"]["ProfileRequest"];
 type ListFilter = components["schemas"]["ListFilter"];
 type SavedViewRequest = components["schemas"]["SavedViewRequest"];
+type MemberPatchRequest = components["schemas"]["MemberPatchRequest"];
+type PaymentMethodRequest = components["schemas"]["PaymentMethodRequest"];
+type BookingBlockRequest = components["schemas"]["BookingBlockRequest"];
+type RolesRequest = components["schemas"]["RolesRequest"];
+type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesPatch"];
+type DogPatchRequest = components["schemas"]["DogPatchRequest"];
+type DogLevelRequest = components["schemas"]["DogLevelRequest"];
+type FreeTrainingRequest = components["schemas"]["FreeTrainingRequest"];
+type DogTransferRequest = components["schemas"]["DogTransferRequest"];
+type PhotoRequest = components["schemas"]["PhotoRequest"];
+type DogDocumentUploadRequest = components["schemas"]["DogDocumentUploadRequest"];
+type DogDocumentReminderRequest = components["schemas"]["DogDocumentReminderRequest"];
+type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
 
 const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   ...view,
@@ -397,6 +414,27 @@ function apiError(code: string, message: string, status: number, headers?: Heade
   );
 }
 
+function currentDog(id: string): DogDetail | undefined {
+  return censusRecordState.dogs[id];
+}
+
+function replaceDog(dog: DogDetail): DogDetail {
+  censusRecordState.dogs[dog.id] = dog;
+  censusRecordState.memberOverview.dogs = censusRecordState.memberOverview.dogs.map((summary) =>
+    summary.id === dog.id
+      ? {
+          ...summary,
+          breed: dog.breed,
+          freeTrainingAllowed: dog.freeTraining.allowed,
+          ...(dog.instructorNote === undefined ? {} : { instructorNote: dog.instructorNote }),
+          ...(dog.level === undefined ? {} : { level: dog.level }),
+          name: dog.name,
+        }
+      : summary,
+  );
+  return dog;
+}
+
 function mockTokens() {
   return {
     access_token: "mock-access-token",
@@ -422,7 +460,12 @@ export const handlers = [
       start_url: "/inici",
     });
   }),
-  http.get("*/api/v1/me", () => HttpResponse.json(currentMockScenario().me)),
+  http.get("*/api/v1/me", ({ request }) => {
+    if (request.headers.get("Authorization") === "Bearer mock-impersonation-token") {
+      mockScenario("impersonated");
+    }
+    return HttpResponse.json(currentMockScenario().me);
+  }),
   http.patch("*/api/v1/me", async ({ request }) => {
     const body = (await request.json()) as UpdateMeRequest;
     const scenario = currentMockScenario();
@@ -567,6 +610,145 @@ export const handlers = [
         status: 200,
       }),
   ),
+  http.get("*/api/v1/members/:id/overview", ({ params }) =>
+    String(params.id) === censusRecordState.memberOverview.member.id
+      ? HttpResponse.json(censusRecordState.memberOverview)
+      : apiError("NOT_FOUND", "Member not found", 404),
+  ),
+  http.get("*/api/v1/members/:id", ({ params }) =>
+    String(params.id) === censusRecordState.memberOverview.member.id
+      ? HttpResponse.json(censusRecordState.memberOverview.member)
+      : apiError("NOT_FOUND", "Member not found", 404),
+  ),
+  http.patch("*/api/v1/members/:id", async ({ params, request }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    const body = (await request.json()) as MemberPatchRequest;
+    const member = censusRecordState.memberOverview.member;
+    if (body.version !== member.version) {
+      return apiError("STALE_VERSION", "Stale version", 409);
+    }
+    const fullName = [
+      body.firstName ?? member.firstName,
+      body.lastName1 ?? member.lastName1,
+      body.lastName2 ?? member.lastName2,
+    ]
+      .filter((part): part is string => part !== undefined && part !== "")
+      .join(" ");
+    const updated = {
+      ...member,
+      ...body,
+      fullName,
+      version: member.version + 1,
+    };
+    censusRecordState.memberOverview.member = updated;
+    return HttpResponse.json(updated);
+  }),
+  http.patch("*/api/v1/members/:id/payment-method", async ({ params, request }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    const body = (await request.json()) as PaymentMethodRequest;
+    const iban = body.sepa?.iban?.replaceAll(" ", "");
+    if (body.type === "SEPA_DD" && (iban === undefined || !/^ES\d{22}$/u.test(iban))) {
+      return apiError("INVALID_IBAN", "Invalid IBAN", 400);
+    }
+    const paymentMethod = {
+      ...(body.sepa?.holderName === undefined ? {} : { holderName: body.sepa.holderName }),
+      ...(body.type === "SEPA_DD" && iban !== undefined
+        ? { maskedAccount: `···· ···· ···· ···· ${iban.slice(-4)}` }
+        : {}),
+      type: body.type,
+    };
+    censusRecordState.memberOverview.member.paymentMethod = paymentMethod;
+    censusRecordState.memberOverview.member.accountMissing = false;
+    return HttpResponse.json(paymentMethod);
+  }),
+  http.post("*/api/v1/members/:id/booking-block", async ({ params, request }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    const body = (await request.json()) as BookingBlockRequest;
+    const member = censusRecordState.memberOverview.member;
+    if (body.reason.trim() === "") {
+      return apiError("VALIDATION_ERROR", "Reason is required", 400);
+    }
+    if (member.bookingBlock.active) {
+      return apiError("BOOKING_BLOCK_ALREADY_ACTIVE", "Booking block already active", 409);
+    }
+    const bookingBlock = {
+      active: true,
+      byAccountId: "account-admin",
+      reason: body.reason,
+      since: "2026-09-06T15:00:00Z",
+    };
+    member.bookingBlock = bookingBlock;
+    return HttpResponse.json(bookingBlock, { status: 201 });
+  }),
+  http.delete("*/api/v1/members/:id/booking-block", ({ params }) => {
+    const member = censusRecordState.memberOverview.member;
+    if (String(params.id) !== member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    if (!member.bookingBlock.active) {
+      return apiError("BOOKING_BLOCK_NOT_ACTIVE", "Booking block not active", 409);
+    }
+    member.bookingBlock = { active: false };
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.post("*/api/v1/members/:id/access-resend", ({ params }) => {
+    const member = censusRecordState.memberOverview.member;
+    if (String(params.id) !== member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    if (member.status !== "ACTIVE" || member.accountId === undefined) {
+      return apiError("MEMBER_NOT_ACTIVE", "Member not active", 409);
+    }
+    return HttpResponse.json({ sentTo: member.contactEmails[0]?.email ?? "" }, { status: 202 });
+  }),
+  http.post("*/api/v1/members/:id/impersonation-token", async ({ params, request }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    await request.json();
+    return HttpResponse.json(
+      {
+        expiresAt: "2026-09-06T16:00:00Z",
+        launchUrl: "http://127.0.0.1:4173/perfil",
+        token: "mock-impersonation-token",
+      },
+      { status: 201 },
+    );
+  }),
+  http.put("*/api/v1/members/:id/roles", async ({ params, request }) => {
+    const member = censusRecordState.memberOverview.member;
+    if (String(params.id) !== member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    const body = (await request.json()) as RolesRequest;
+    if (!body.roles.includes("MEMBER")) {
+      return apiError("ROLE_MEMBER_REQUIRED", "Member role required", 422);
+    }
+    member.roles = body.roles;
+    return HttpResponse.json({ roles: body.roles });
+  }),
+  http.put("*/api/v1/members/:id/notification-preferences", async ({ params, request }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    const body = (await request.json()) as NotificationPreferencesPatch;
+    const preferences = censusRecordState.memberOverview.notificationPreferences;
+    censusRecordState.memberOverview.notificationPreferences = {
+      ...preferences,
+      ...body,
+      emailByCategory: {
+        ...preferences.emailByCategory,
+        ...body.emailByCategory,
+      },
+    };
+    return HttpResponse.json(censusRecordState.memberOverview.notificationPreferences);
+  }),
   http.get("*/api/v1/dogs", async ({ request }) => {
     await delay(120);
     const url = new URL(request.url);
@@ -623,6 +805,214 @@ export const handlers = [
         headers: { "Content-Disposition": 'attachment; filename="dogs.mock"' },
         status: 200,
       }),
+  ),
+  http.get("*/api/v1/dogs/:id", ({ params }) => {
+    const dog = currentDog(String(params.id));
+    return dog === undefined ? apiError("NOT_FOUND", "Dog not found", 404) : HttpResponse.json(dog);
+  }),
+  http.patch("*/api/v1/dogs/:id", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogPatchRequest;
+    if (body.version !== dog.version) {
+      return apiError("STALE_VERSION", "Stale version", 409);
+    }
+    const duplicateChip = Object.values(censusRecordState.dogs).some(
+      (candidate) => candidate.id !== dog.id && candidate.chip === body.chip,
+    );
+    if (duplicateChip) {
+      return apiError("CHIP_ALREADY_EXISTS", "Chip already exists", 409);
+    }
+    return HttpResponse.json(replaceDog({ ...dog, ...body, version: dog.version + 1 }));
+  }),
+  http.patch("*/api/v1/dogs/:id/level", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogLevelRequest;
+    const level = censusLevels.find((candidate) => candidate.id === body.levelId);
+    if (!level?.active) {
+      return apiError("LEVEL_NOT_ACTIVE", "Level not active", 422);
+    }
+    if (level.id === dog.level?.id) {
+      return apiError("LEVEL_UNCHANGED", "Level unchanged", 422);
+    }
+    const assignedAt = "2026-09-06T15:00:00Z";
+    dog.levelHistory = [
+      ...dog.levelHistory.map((entry) =>
+        entry.to === undefined ? { ...entry, to: assignedAt } : entry,
+      ),
+      {
+        byAccountId: "account-admin",
+        from: assignedAt,
+        levelCode: level.code,
+        levelId: level.id,
+      },
+    ];
+    dog.level = level;
+    dog.levelAssignedAt = assignedAt;
+    if (dog.freeTraining.override === null) {
+      dog.freeTraining = {
+        allowed: level.grantsFreeTraining,
+        override: null,
+        source: "LEVEL",
+      };
+    }
+    replaceDog(dog);
+    return HttpResponse.json({
+      level,
+      levelAssignedAt: assignedAt,
+      warnings: { futureBookingsOutsideLevel: dog.id === "dog-duna" ? 1 : 0 },
+    });
+  }),
+  http.patch("*/api/v1/dogs/:id/free-training", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as FreeTrainingRequest;
+    const allowed = body.override ?? dog.level?.grantsFreeTraining ?? false;
+    dog.freeTraining = {
+      allowed,
+      override: body.override,
+      source: body.override === null ? "LEVEL" : "MANUAL",
+    };
+    replaceDog(dog);
+    return HttpResponse.json(dog.freeTraining);
+  }),
+  http.post("*/api/v1/dogs/:id/transfer", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogTransferRequest;
+    if (body.toMemberId === dog.owner.id) {
+      return apiError("SAME_MEMBER", "Same member", 422);
+    }
+    const target = censusMembers.find(
+      (member) => member.id === body.toMemberId && member.status === "ACTIVE",
+    );
+    if (target === undefined) {
+      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
+    }
+    dog.owner = {
+      fullName: target.fullName,
+      id: target.id,
+      memberNumber: target.memberNumber,
+      status: target.status,
+    };
+    return HttpResponse.json(replaceDog(dog));
+  }),
+  http.post("*/api/v1/dogs/:id/deactivation", ({ params }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    if (dog.status !== "ACTIVE") {
+      return apiError("DOG_NOT_ACTIVE", "Dog not active", 409);
+    }
+    dog.status = "INACTIVE";
+    dog.deactivatedAt = "2026-09-06T15:00:00Z";
+    dog.deactivationReason = "CLUB";
+    return HttpResponse.json(replaceDog(dog));
+  }),
+  http.post("*/api/v1/dogs/:id/reactivation", ({ params }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    if (dog.owner.status !== "ACTIVE") {
+      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
+    }
+    dog.status = "ACTIVE";
+    delete dog.deactivatedAt;
+    delete dog.deactivationReason;
+    return HttpResponse.json(replaceDog(dog));
+  }),
+  http.put("*/api/v1/dogs/:id/photo", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as PhotoRequest;
+    dog.photoUrl = `https://files.example.test/${body.fileKey}`;
+    return HttpResponse.json({ photoUrl: dog.photoUrl });
+  }),
+  http.get("*/api/v1/dogs/:id/documents", ({ params }) => {
+    const dog = currentDog(String(params.id));
+    return dog === undefined
+      ? apiError("NOT_FOUND", "Dog not found", 404)
+      : HttpResponse.json(dog.documents);
+  }),
+  http.post("*/api/v1/dogs/:id/documents", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogDocumentUploadRequest;
+    const document = dog.documents.find((candidate) => candidate.type === body.type);
+    if (document === undefined) {
+      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
+    }
+    const file = {
+      id: `file-${String(document.files.length + 1)}-${dog.id}`,
+      name: body.name,
+      uploadedAt: "2026-09-06T15:00:00Z",
+      url: `https://files.example.test/${body.fileKey}`,
+    };
+    document.files = [...document.files, file];
+    document.state = "RECEIVED";
+    return HttpResponse.json(document, { status: 201 });
+  }),
+  http.delete("*/api/v1/dogs/:id/documents/:docId/files/:fileId", ({ params }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const document = dog.documents.find((candidate) => candidate.id === String(params.docId));
+    if (document === undefined) {
+      return apiError("NOT_FOUND", "Document not found", 404);
+    }
+    document.files = document.files.filter((file) => file.id !== String(params.fileId));
+    document.state = document.files.length === 0 ? "PENDING" : "RECEIVED";
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.post("*/api/v1/dogs/:id/documents/reminder", async ({ params, request }) => {
+    const dog = currentDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogDocumentReminderRequest;
+    const document = dog.documents.find((candidate) => candidate.type === body.type);
+    if (document?.state !== "PENDING") {
+      return apiError("DOCUMENT_NOT_PENDING", "Document not pending", 422);
+    }
+    if (document.lastReminderAt !== undefined) {
+      return apiError("DOCUMENT_REMINDER_TOO_SOON", "Document reminder too soon", 409);
+    }
+    document.lastReminderAt = "2026-09-06T15:00:00Z";
+    return new HttpResponse(null, { status: 202 });
+  }),
+  http.post("*/api/v1/attachments/upload-url", async ({ request }) => {
+    const body = (await request.json()) as AttachmentUploadRequest;
+    if (body.sizeBytes > 25 * 1024 * 1024) {
+      return apiError("FILE_TOO_LARGE", "File too large", 400);
+    }
+    if (!body.mimeType.startsWith("image/") && body.mimeType !== "application/pdf") {
+      return apiError("FILE_TYPE_NOT_ALLOWED", "File type not allowed", 400);
+    }
+    const fileKey = `mock-${body.purpose.toLocaleLowerCase()}-${body.fileName}`;
+    return HttpResponse.json(
+      { fileKey, uploadUrl: `https://uploads.example.test/${fileKey}` },
+      { status: 201 },
+    );
+  }),
+  http.put("https://uploads.example.test/:fileKey", () => new HttpResponse(null, { status: 200 })),
+  http.get("*/api/v1/levels", () =>
+    HttpResponse.json({ items: censusLevels, totalItems: censusLevels.length }),
   ),
   http.get("*/api/v1/saved-views", ({ request }) => {
     const listKey = new URL(request.url).searchParams.get("listKey");
@@ -687,4 +1077,4 @@ export const handlers = [
   ),
 ];
 
-export { mockScenario, type MockScenario };
+export { mockScenario, resetCensusRecordState, type MockScenario };

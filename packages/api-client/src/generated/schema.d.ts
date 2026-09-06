@@ -571,6 +571,310 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getMember"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateMember"];
+        trace?: never;
+    };
+    "/members/{id}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getMemberOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/payment-method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateMemberPaymentMethod"];
+        trace?: never;
+    };
+    "/members/{id}/booking-block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["blockMemberBookings"];
+        delete: operations["unblockMemberBookings"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/access-resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["resendMemberAccess"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateMemberRoles"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateMemberNotificationPreferences"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getDog"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateDog"];
+        trace?: never;
+    };
+    "/dogs/{id}/level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateDogLevel"];
+        trace?: never;
+    };
+    "/dogs/{id}/free-training": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateDogFreeTraining"];
+        trace?: never;
+    };
+    "/dogs/{id}/transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["transferDog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/deactivation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["deactivateDog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/reactivation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["reactivateDog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateDogPhoto"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listDogDocuments"];
+        put?: never;
+        post: operations["uploadDogDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/documents/{docId}/files/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["removeDogDocumentFile"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dogs/{id}/documents/reminder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["remindDogDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createAttachmentUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listLevels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/saved-views": {
         parameters: {
             query?: never;
@@ -1052,6 +1356,376 @@ export interface components {
             totalItems: number;
             totalPages: number;
             appliedFilters: components["schemas"]["ListFilter"][];
+        };
+        IdDocument: {
+            type: string;
+            number: string;
+        };
+        ContactEmail: {
+            /** Format: email */
+            email: string;
+            bounced: boolean;
+        };
+        Phone: {
+            prefix: string;
+            number: string;
+            label: string;
+        };
+        Address: {
+            street: string;
+            postalCode: string;
+            city: string;
+            province?: string;
+            country?: string;
+        };
+        BookingBlock: {
+            active: boolean;
+            reason?: string;
+            /** Format: date-time */
+            since?: string;
+            /** Format: uuid */
+            byAccountId?: string;
+        };
+        BookingBlockRequest: {
+            reason: string;
+        };
+        PaymentMethod: {
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+            maskedAccount?: string;
+            holderName?: string;
+            holderTaxId?: string;
+            channel?: string;
+        };
+        PaymentMethodRequest: {
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+            sepa?: {
+                iban?: string;
+                holderName?: string;
+                holderTaxId?: string;
+            };
+            card?: {
+                stripeSetupIntentId?: string;
+            };
+            manual?: {
+                channel?: string;
+            };
+        };
+        MemberConsents: {
+            imageRights: {
+                granted: boolean;
+                /** Format: date-time */
+                at?: string;
+                version?: string;
+                /** Format: uuid */
+                byAccountId?: string;
+            };
+        };
+        MemberPlan: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            summary: string;
+        };
+        MemberDetail: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            accountId?: string;
+            accountMissing?: boolean;
+            memberNumber: number;
+            idDocument: components["schemas"]["IdDocument"];
+            firstName: string;
+            lastName1: string;
+            lastName2?: string;
+            fullName: string;
+            /** @enum {string} */
+            gender: "MALE" | "FEMALE" | "OTHER";
+            /** Format: date */
+            birthDate: string;
+            contactEmails: components["schemas"]["ContactEmail"][];
+            phones: components["schemas"]["Phone"][];
+            address: components["schemas"]["Address"];
+            paymentMethod?: components["schemas"]["PaymentMethod"];
+            plan?: components["schemas"]["MemberPlan"];
+            /** Format: date */
+            nextInvoiceDate?: string;
+            consents: components["schemas"]["MemberConsents"];
+            remarks?: string;
+            internalNotes?: string;
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "LEFT";
+            /** Format: date-time */
+            joinedAt: string;
+            /** Format: date */
+            leaveDate?: string;
+            bookingBlock: components["schemas"]["BookingBlock"];
+            roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
+            /** Format: uuid */
+            familyGroupId?: string;
+            version: number;
+        };
+        MemberPatchRequest: {
+            idDocument?: components["schemas"]["IdDocument"];
+            firstName?: string;
+            lastName1?: string;
+            lastName2?: string;
+            /** @enum {string} */
+            gender?: "MALE" | "FEMALE" | "OTHER";
+            /** Format: date */
+            birthDate?: string;
+            contactEmails?: components["schemas"]["ContactEmail"][];
+            phones?: components["schemas"]["Phone"][];
+            address?: components["schemas"]["Address"];
+            remarks?: string;
+            internalNotes?: string;
+            consents?: components["schemas"]["MemberConsents"];
+            version: number;
+        };
+        FamilyGroupSummary: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            holderMemberId: string;
+            members: {
+                /** Format: uuid */
+                id: string;
+                fullName: string;
+                memberNumber: number;
+            }[];
+        };
+        DogOverview: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            breed: string;
+            level: components["schemas"]["LevelSummary"];
+            freeTrainingAllowed: boolean;
+            pack?: string;
+            pendingDocuments: string[];
+            instructorNote?: string;
+        };
+        InvoiceSummary: {
+            /** Format: uuid */
+            id: string;
+            label: string;
+            amount: number;
+            status: string;
+        };
+        AuditSummary: {
+            /** Format: uuid */
+            id: string;
+            summary: string;
+            /** Format: date-time */
+            changedAt: string;
+        };
+        NotificationPreferences: {
+            emailByCategory: {
+                OPERATIONAL: boolean;
+                PERSONAL: boolean;
+                CLUB_CHANGES: boolean;
+                CLUB_NEWS: boolean;
+            };
+            smsFixed: boolean;
+            reminderMinutesBefore?: number | null;
+            reminderOptionsMinutes: (60 | 120 | 240 | 360 | 720 | 1440)[];
+            pushClubNews: boolean;
+            locale: string;
+            availableLocales: string[];
+            modules: {
+                sms: boolean;
+                push: boolean;
+            };
+        };
+        NotificationPreferencesPatch: {
+            emailByCategory?: {
+                OPERATIONAL?: boolean;
+                PERSONAL?: boolean;
+                CLUB_CHANGES?: boolean;
+                CLUB_NEWS?: boolean;
+            };
+            reminderMinutesBefore?: number | null;
+            pushClubNews?: boolean;
+        };
+        MemberOverview: {
+            member: components["schemas"]["MemberDetail"];
+            familyGroup?: components["schemas"]["FamilyGroupSummary"];
+            dogs: components["schemas"]["DogOverview"][];
+            notificationPreferences: components["schemas"]["NotificationPreferences"];
+            recentInvoices: components["schemas"]["InvoiceSummary"][];
+            invoicesCount: number;
+            recentAudit: components["schemas"]["AuditSummary"][];
+            nextInvoice?: {
+                /** Format: date */
+                date: string;
+                amount: number;
+            };
+        };
+        AccessResendResponse: {
+            /** Format: email */
+            sentTo: string;
+        };
+        RolesRequest: {
+            roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
+        };
+        RolesResponse: {
+            roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
+        };
+        LevelSummary: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            order: number;
+            grantsFreeTraining: boolean;
+            active: boolean;
+        };
+        LevelList: {
+            items: components["schemas"]["LevelSummary"][];
+            totalItems: number;
+        };
+        FreeTraining: {
+            allowed: boolean;
+            /** @enum {string} */
+            source: "LEVEL" | "MANUAL";
+            override?: boolean | null;
+        };
+        DogDocumentFile: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            /** Format: uri */
+            url: string;
+            /** Format: date-time */
+            uploadedAt: string;
+        };
+        DogDocument: {
+            /** Format: uuid */
+            id: string;
+            type: string;
+            typeLabel: string;
+            /** @enum {string} */
+            state: "PENDING" | "RECEIVED";
+            files: components["schemas"]["DogDocumentFile"][];
+            /** Format: date-time */
+            lastReminderAt?: string;
+        };
+        DogLicense: {
+            organisation: string;
+            number: string;
+            grade?: string;
+        };
+        DogDetail: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            breed: string;
+            chip: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+            /** Format: date */
+            birthDate: string;
+            /** Format: uri */
+            photoUrl?: string;
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "INACTIVE";
+            /** Format: date-time */
+            registeredAt: string;
+            /** Format: date-time */
+            deactivatedAt?: string;
+            /** @enum {string} */
+            deactivationReason?: "CLUB" | "MEMBER_LEFT" | "SIGNUP_REJECTED";
+            owner: {
+                /** Format: uuid */
+                id: string;
+                fullName: string;
+                memberNumber: number;
+                /** @enum {string} */
+                status: "PENDING" | "ACTIVE" | "LEFT";
+            };
+            level?: components["schemas"]["LevelSummary"];
+            /** Format: date-time */
+            levelAssignedAt?: string;
+            levelHistory: {
+                /** Format: uuid */
+                levelId: string;
+                levelCode: string;
+                /** Format: date-time */
+                from: string;
+                /** Format: date-time */
+                to?: string;
+                /** Format: uuid */
+                byAccountId: string;
+            }[];
+            freeTraining: components["schemas"]["FreeTraining"];
+            documents: components["schemas"]["DogDocument"][];
+            licenses: components["schemas"]["DogLicense"][];
+            pack?: string;
+            instructorNote?: string;
+            tasksSummary?: string;
+            version: number;
+        };
+        DogPatchRequest: {
+            name?: string;
+            breed?: string;
+            /** @enum {string} */
+            sex?: "MALE" | "FEMALE";
+            /** Format: date */
+            birthDate?: string;
+            chip?: string;
+            licenses?: components["schemas"]["DogLicense"][];
+            version: number;
+        };
+        DogLevelRequest: {
+            /** Format: uuid */
+            levelId: string;
+        };
+        DogLevelResponse: {
+            level: components["schemas"]["LevelSummary"];
+            /** Format: date-time */
+            levelAssignedAt: string;
+            warnings: {
+                futureBookingsOutsideLevel: number;
+            };
+        };
+        FreeTrainingRequest: {
+            override: boolean | null;
+        };
+        DogTransferRequest: {
+            /** Format: uuid */
+            toMemberId: string;
+            reason?: string;
+        };
+        ReasonRequest: {
+            reason?: string;
+        };
+        PhotoRequest: {
+            fileKey: string;
+        };
+        PhotoResponse: {
+            /** Format: uri */
+            photoUrl: string;
+        };
+        DogDocumentUploadRequest: {
+            type: string;
+            name: string;
+            fileKey: string;
+        };
+        DogDocumentReminderRequest: {
+            type: string;
+        };
+        AttachmentUploadRequest: {
+            /** @enum {string} */
+            purpose: "DOG_DOCUMENT" | "DOG_PHOTO";
+            fileName: string;
+            mimeType: string;
+            sizeBytes: number;
+        };
+        AttachmentUploadResponse: {
+            fileKey: string;
+            /** Format: uri */
+            uploadUrl: string;
         };
         SavedView: {
             id: string;
@@ -4489,6 +5163,589 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExportJobResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    getMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Member record */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated member */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    getMemberOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description D10 member overview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberOverview"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateMemberPaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated payment method */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentMethod"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    blockMemberBookings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingBlockRequest"];
+            };
+        };
+        responses: {
+            /** @description Booking block activated */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingBlock"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    unblockMemberBookings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Booking block removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    resendMemberAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Access link sent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessResendResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateMemberRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RolesRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated membership roles */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolesResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateMemberNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated notification preferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferences"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    getDog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dog record aggregate */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateDog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated dog record */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateDogLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogLevelRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated dog level and warnings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogLevelResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateDogFreeTraining: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FreeTrainingRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated free-training rule */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FreeTraining"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    transferDog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogTransferRequest"];
+            };
+        };
+        responses: {
+            /** @description Transferred dog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deactivateDog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ReasonRequest"];
+            };
+        };
+        responses: {
+            /** @description Deactivated dog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    reactivateDog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ReasonRequest"];
+            };
+        };
+        responses: {
+            /** @description Reactivated dog */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDetail"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateDogPhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhotoRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated dog photo */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhotoResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listDogDocuments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dog documents */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDocument"][];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    uploadDogDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogDocumentUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Uploaded dog document */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDocument"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    removeDogDocumentFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+                docId: string;
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Document file removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    remindDogDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogDocumentReminderRequest"];
+            };
+        };
+        responses: {
+            /** @description Document reminder accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createAttachmentUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Signed upload URL */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentUploadResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listLevels: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ordered level catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LevelList"];
                 };
             };
             default: components["responses"]["ApiError"];

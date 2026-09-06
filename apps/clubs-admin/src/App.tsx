@@ -26,6 +26,7 @@ import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useSta
 import { useTranslation } from "react-i18next";
 
 import { DogsPage, MembersPage } from "./census/CensusListPage";
+import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { Gallery } from "./dev/gallery";
 
 interface AdminRouteDefinition {
@@ -334,6 +335,12 @@ function routeContent(
   }
   if (route.path === "/gossos") {
     return <DogsPage client={client} />;
+  }
+  if (route.path === "/abonats/:id") {
+    return <MemberRecordPage client={client} />;
+  }
+  if (route.path === "/gossos/:id") {
+    return <DogRecordPage client={client} />;
   }
   return <Placeholder />;
 }

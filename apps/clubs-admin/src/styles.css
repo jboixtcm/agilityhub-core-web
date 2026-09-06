@@ -180,6 +180,363 @@ select {
   gap: var(--ah-space-1);
 }
 
+.census-record {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ah-space-4);
+}
+
+.census-record__header,
+.census-record__identity,
+.census-record__header-actions,
+.census-record__section-heading,
+.census-record__dialog-actions,
+.census-record__badges,
+.census-record__links--horizontal,
+.census-record__footer-actions,
+.census-record__document-head,
+.census-record__level-current {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.census-record__header {
+  justify-content: space-between;
+  gap: var(--ah-space-4);
+}
+
+.census-record__identity,
+.census-record__header-actions,
+.census-record__badges,
+.census-record__footer-actions {
+  flex-wrap: wrap;
+}
+
+.census-record__identity h1 {
+  margin: 0 var(--ah-space-1) 0 0;
+  font: 800 1.35rem/1.2 var(--ah-font-display);
+}
+
+.census-record__header-actions {
+  justify-content: flex-end;
+}
+
+.census-record__header-actions .ah-button,
+.census-record__action-link,
+.census-record__footer-actions .ah-button {
+  min-height: 2.25rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
+  font-size: 0.75rem;
+}
+
+.census-record__action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  color: var(--ah-color-text);
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.census-record__action-link:focus-visible,
+.census-record a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.census-record__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-4);
+}
+
+.census-record__section-title {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font: 800 0.72rem/1.25 var(--ah-font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.census-record__section-heading {
+  justify-content: space-between;
+}
+
+.census-record__section-heading .ah-button,
+.census-record__inline-action {
+  min-height: 1.75rem;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  font-size: 0.7rem;
+}
+
+.census-record__data-list {
+  display: grid;
+  margin: var(--ah-space-2) 0 0;
+}
+
+.census-record__data-row {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.36fr) minmax(0, 1fr);
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-2);
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.census-record__data-row dt,
+.census-record__muted {
+  color: var(--ah-color-text-muted);
+}
+
+.census-record__data-row dt,
+.census-record__data-row dd,
+.census-record__muted,
+.census-record__preferences-head,
+.census-record__preference-row,
+.census-record__invoice-list,
+.census-record__plain-list,
+.census-record__history,
+.census-record__documents {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.census-record__data-row dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.census-record__image-alert {
+  justify-content: flex-start;
+  line-height: 1.35;
+}
+
+.census-record__links {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.census-record__links a,
+.census-record__dog-link,
+.census-record__documents a {
+  color: var(--ah-color-text);
+}
+
+.census-record__links--horizontal {
+  flex-wrap: wrap;
+  margin-top: var(--ah-space-3);
+}
+
+.census-record__links--horizontal a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-1) var(--ah-space-2);
+  text-decoration: none;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+}
+
+.census-record__dog-list,
+.census-record__invoice-list,
+.census-record__plain-list,
+.census-record__history,
+.census-record__documents,
+.census-record__documents ul {
+  padding: 0;
+  margin: var(--ah-space-2) 0 0;
+  list-style: none;
+}
+
+.census-record__dog-list > li,
+.census-record__invoice-list > li,
+.census-record__documents > li {
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.census-record__dog-link,
+.census-record__invoice-list > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-3) var(--ah-space-2);
+}
+
+.census-record__dog-link {
+  text-decoration: none;
+}
+
+.census-record__dog-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-size: 0.73rem;
+}
+
+.census-record__preferences-head,
+.census-record__preference-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.5rem 5.5rem;
+  align-items: center;
+  gap: var(--ah-space-2);
+  min-height: 2rem;
+}
+
+.census-record__preferences-head {
+  color: var(--ah-color-text-muted);
+  text-align: center;
+}
+
+.census-record__preference-row > .ah-icon {
+  justify-self: center;
+  color: var(--ah-color-success);
+}
+
+.census-record__preference-row .ah-select {
+  min-height: 1.8rem;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  font-size: 0.72rem;
+}
+
+.census-record__preference-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ah-space-1);
+}
+
+.census-record__preference-control small {
+  color: var(--ah-color-success);
+  font-weight: 700;
+}
+
+.census-record__muted {
+  margin-top: var(--ah-space-3);
+}
+
+.census-record__footer-actions {
+  margin-top: var(--ah-space-3);
+}
+
+.census-record__notes {
+  margin-top: var(--ah-space-4);
+}
+
+.census-record__feedback,
+.census-record__warning {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  font-size: 0.8rem;
+}
+
+.census-record__feedback--success {
+  color: var(--ah-color-success);
+  border-color: var(--ah-color-success);
+}
+
+.census-record__feedback--danger {
+  color: var(--ah-color-danger);
+  border-color: var(--ah-color-danger);
+}
+
+.census-record__warning {
+  color: var(--ah-color-warning);
+  border-color: var(--ah-color-warning);
+}
+
+.census-record__loading,
+.census-record__load-error {
+  justify-self: center;
+  width: min(100%, 32rem);
+  padding: var(--ah-space-8);
+  text-align: center;
+}
+
+.census-record__form,
+.census-record__fieldset,
+.census-record__role-list,
+.census-record__upload-form {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.census-record__form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-3);
+}
+
+.census-record__fieldset {
+  padding: var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.census-record__fieldset legend {
+  padding: 0 var(--ah-space-1);
+  font-weight: 700;
+}
+
+.census-record__check-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.census-record__dialog-actions {
+  justify-content: flex-end;
+  margin-top: var(--ah-space-4);
+}
+
+.census-record__license-edit {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 1fr;
+  gap: var(--ah-space-2);
+}
+
+.census-record__history li,
+.census-record__plain-list li,
+.census-record__documents li {
+  padding: var(--ah-space-2) 0;
+}
+
+.census-record__document-head {
+  flex-wrap: wrap;
+}
+
+.census-record__documents ul {
+  margin-left: var(--ah-space-4);
+}
+
+.census-record__photo-placeholder {
+  display: grid;
+  min-height: 8rem;
+  margin-top: var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border: 1px dashed var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  place-items: center;
+}
+
+.census-record__photo {
+  display: block;
+  width: min(100%, 18rem);
+  max-height: 14rem;
+  margin-top: var(--ah-space-3);
+  object-fit: cover;
+  border-radius: var(--ah-radius-md);
+}
+
 @media (max-width: 60rem) {
   .admin-shell__content {
     padding: var(--ah-space-5);
@@ -187,6 +544,15 @@ select {
 
   .census-page .ah-universal-list__table-wrap {
     max-height: none;
+  }
+
+  .census-record__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .census-record__header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

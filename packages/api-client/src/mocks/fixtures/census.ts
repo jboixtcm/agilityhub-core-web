@@ -3,6 +3,268 @@ import type { components } from "../../generated/schema";
 export type MemberListItem = components["schemas"]["MemberListItem"];
 export type DogListItem = components["schemas"]["DogListItem"];
 export type SavedView = components["schemas"]["SavedView"];
+export type MemberOverview = components["schemas"]["MemberOverview"];
+export type DogDetail = components["schemas"]["DogDetail"];
+export type LevelSummary = components["schemas"]["LevelSummary"];
+
+export const censusLevels: readonly LevelSummary[] = [
+  {
+    active: true,
+    code: "A",
+    grantsFreeTraining: false,
+    id: "level-a",
+    name: "Nivell A",
+    order: 1,
+  },
+  {
+    active: true,
+    code: "B",
+    grantsFreeTraining: false,
+    id: "level-b",
+    name: "Nivell B",
+    order: 2,
+  },
+  {
+    active: true,
+    code: "C",
+    grantsFreeTraining: false,
+    id: "level-c",
+    name: "Nivell C",
+    order: 3,
+  },
+  {
+    active: true,
+    code: "D",
+    grantsFreeTraining: true,
+    id: "level-d",
+    name: "Nivell D",
+    order: 4,
+  },
+  {
+    active: true,
+    code: "E",
+    grantsFreeTraining: true,
+    id: "level-e",
+    name: "Nivell E",
+    order: 5,
+  },
+];
+
+function levelAt(index: number): LevelSummary {
+  const level = censusLevels[index];
+  if (level === undefined) {
+    throw new RangeError("Mock level is missing");
+  }
+  return level;
+}
+
+const memberOverviewFixture: MemberOverview = {
+  dogs: [
+    {
+      breed: "border collie",
+      freeTrainingAllowed: false,
+      id: "dog-duna",
+      instructorNote: "Treballar la calma a la sortida.",
+      level: levelAt(2),
+      name: "Duna",
+      pendingDocuments: [],
+    },
+    {
+      breed: "mestís",
+      freeTrainingAllowed: true,
+      id: "dog-rock",
+      instructorNote: "Vigilar l'espatlla esquerra.",
+      level: levelAt(3),
+      name: "Rock",
+      pack: "Pack 10: 6/4 · caduca 12-11",
+      pendingDocuments: [],
+    },
+  ],
+  familyGroup: {
+    holderMemberId: "member-laura",
+    id: "family-laura",
+    members: [
+      { fullName: "Laura Serra Vidal", id: "member-laura", memberNumber: 87 },
+      { fullName: "Joan Antoni Serra", id: "member-joan", memberNumber: 112 },
+    ],
+  },
+  invoicesCount: 38,
+  member: {
+    accountId: "account-laura",
+    accountMissing: false,
+    address: {
+      city: "Cabrera de Mar",
+      country: "ES",
+      postalCode: "08349",
+      province: "Barcelona",
+      street: "Carrer de la Riera, 12",
+    },
+    birthDate: "1988-04-12",
+    bookingBlock: { active: false },
+    consents: {
+      imageRights: {
+        at: "2026-02-03T09:00:00Z",
+        granted: false,
+        version: "2026-01",
+      },
+    },
+    contactEmails: [
+      { bounced: false, email: "laura.serra@example.test" },
+      { bounced: false, email: "feina.laura@example.test" },
+    ],
+    firstName: "Laura",
+    fullName: "Laura Serra Vidal",
+    gender: "FEMALE",
+    id: "member-laura",
+    idDocument: { number: "38888881P", type: "DNI" },
+    internalNotes: "Prefereix classes de tarda.",
+    joinedAt: "2023-02-03T09:00:00Z",
+    lastName1: "Serra",
+    lastName2: "Vidal",
+    memberNumber: 87,
+    nextInvoiceDate: "2026-09-01",
+    paymentMethod: {
+      holderName: "Laura Serra Vidal",
+      maskedAccount: "···· ···· ···· ···· 2231",
+      type: "SEPA_DD",
+    },
+    phones: [
+      { label: "Laura", number: "655100101", prefix: "+34" },
+      { label: "Joan", number: "617100102", prefix: "+34" },
+    ],
+    plan: {
+      id: "plan-member",
+      name: "Abonat",
+      summary: "Abonat · 2 gossos — 90 €/mes (tarifa familiar)",
+    },
+    remarks: "Contactar preferentment per correu.",
+    roles: ["MEMBER"],
+    status: "ACTIVE",
+    version: 7,
+  },
+  nextInvoice: { amount: 90, date: "2026-09-01" },
+  notificationPreferences: {
+    availableLocales: ["ca", "es", "en"],
+    emailByCategory: {
+      CLUB_CHANGES: true,
+      CLUB_NEWS: true,
+      OPERATIONAL: false,
+      PERSONAL: true,
+    },
+    locale: "ca",
+    modules: { push: true, sms: true },
+    pushClubNews: true,
+    reminderMinutesBefore: null,
+    reminderOptionsMinutes: [60, 120, 240, 360, 720, 1440],
+    smsFixed: true,
+  },
+  recentAudit: [
+    {
+      changedAt: "2026-08-03T11:15:00Z",
+      id: "audit-iban",
+      summary: "canvi d'IBAN (admin Jordi)",
+    },
+    {
+      changedAt: "2026-07-26T09:30:00Z",
+      id: "audit-plan",
+      summary: "canvi de tarifa (admin Jordi)",
+    },
+  ],
+  recentInvoices: [
+    { amount: 90, id: "invoice-september", label: "2026-0912 · Setembre", status: "REMITTED" },
+    { amount: 90, id: "invoice-august", label: "2026-0744 · Agost", status: "PAID" },
+  ],
+};
+
+function dogDetailFixture(id: "dog-duna" | "dog-rock"): DogDetail {
+  const rock = id === "dog-rock";
+  const level = levelAt(rock ? 3 : 2);
+  return {
+    birthDate: rock ? "2020-05-20" : "2022-03-12",
+    breed: rock ? "mestís" : "border collie",
+    chip: rock ? "941000000000002" : "941000000000001",
+    documents: [
+      {
+        files: rock
+          ? []
+          : [
+              {
+                id: "file-vaccination-duna",
+                name: "cartilla_Duna_1.jpg",
+                uploadedAt: "2026-01-12T10:00:00Z",
+                url: "https://files.example.test/cartilla_Duna_1.jpg",
+              },
+            ],
+        id: `document-vaccination-${id}`,
+        state: rock ? "PENDING" : "RECEIVED",
+        type: "VACCINATION_CARD",
+        typeLabel: "Cartilla de vacunes",
+      },
+      {
+        files: [],
+        id: `document-insurance-${id}`,
+        state: "PENDING",
+        type: "INSURANCE",
+        typeLabel: "Assegurança",
+      },
+    ],
+    freeTraining: {
+      allowed: rock,
+      override: null,
+      source: "LEVEL",
+    },
+    id,
+    instructorNote: rock ? "Vigilar l'espatlla esquerra." : "Treballar la calma a la sortida.",
+    level,
+    levelAssignedAt: rock ? "2025-04-08T09:00:00Z" : "2025-02-01T09:00:00Z",
+    levelHistory: [
+      {
+        byAccountId: "account-admin",
+        from: "2025-02-01T09:00:00Z",
+        levelCode: level.code,
+        levelId: level.id,
+      },
+    ],
+    licenses: rock
+      ? [
+          { grade: "Iniciació", number: "3241", organisation: "FCAG" },
+          { grade: "G2", number: "13298", organisation: "RSCE" },
+        ]
+      : [],
+    name: rock ? "Rock" : "Duna",
+    owner: {
+      fullName: "Laura Serra Vidal",
+      id: "member-laura",
+      memberNumber: 87,
+      status: "ACTIVE",
+    },
+    ...(rock ? { pack: "Pack 10: 6/4 · caduca 12-11" } : {}),
+    registeredAt: "2023-02-03T09:00:00Z",
+    sex: rock ? "MALE" : "FEMALE",
+    status: "ACTIVE",
+    tasksSummary: "2 pendents",
+    version: 4,
+  };
+}
+
+export const censusRecordState: {
+  dogs: Record<string, DogDetail>;
+  memberOverview: MemberOverview;
+} = {
+  dogs: {
+    "dog-duna": dogDetailFixture("dog-duna"),
+    "dog-rock": dogDetailFixture("dog-rock"),
+  },
+  memberOverview: structuredClone(memberOverviewFixture),
+};
+
+export function resetCensusRecordState(): void {
+  censusRecordState.memberOverview = structuredClone(memberOverviewFixture);
+  censusRecordState.dogs = {
+    "dog-duna": dogDetailFixture("dog-duna"),
+    "dog-rock": dogDetailFixture("dog-rock"),
+  };
+}
 
 const memberNames = [
   ["Laura", "Serra Vidal"],

@@ -1,0 +1,241 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "edit": "Editar",
+    "genericError": "No se ha podido completar la acción.",
+    "loadError": "No se ha podido cargar la ficha.",
+    "loading": "Cargando la ficha…",
+    "retry": "Volver a intentarlo",
+    "save": "Guardar",
+    "saving": "Guardando…"
+  },
+  "dog": {
+    "actions": {
+      "changeLevel": "Cambiar el nivel",
+      "deactivate": "Dar de baja",
+      "photo": "Cambiar la foto",
+      "reactivate": "Reactivar",
+      "transfer": "Transferir"
+    },
+    "deactivate": {
+      "description": "Las reservas futuras pueden impedir la baja. Los datos y el historial se conservarán.",
+      "title": "Dar de baja al perro"
+    },
+    "documents": {
+      "file": "Archivo",
+      "name": "Nombre del documento",
+      "pending": "pendiente",
+      "received": "recibido",
+      "remind": "Recordar la cartilla",
+      "remove": "Retirar",
+      "type": "Tipo de documento",
+      "upload": "Subir el documento"
+    },
+    "edit": { "title": "Editar los datos del perro" },
+    "feedback": {
+      "deactivated": "El perro se ha dado de baja.",
+      "documentRemoved": "El archivo se ha retirado.",
+      "documentUploaded": "El documento se ha subido.",
+      "freeTraining": "El derecho de entrenamiento libre se ha actualizado.",
+      "levelSaved": "El nivel se ha actualizado.",
+      "levelWarning": "Nivel actualizado. {count, plural, one {# reserva futura queda fuera del nivel nuevo.} other {# reservas futuras quedan fuera del nivel nuevo.}}",
+      "photo": "La foto se ha actualizado.",
+      "reactivated": "El perro se ha reactivado.",
+      "reminderSent": "El recordatorio se ha enviado.",
+      "saved": "Los datos del perro se han guardado.",
+      "transferred": "El perro se ha transferido."
+    },
+    "fields": {
+      "birthDate": "Fecha de nacimiento",
+      "breed": "Raza",
+      "chip": "Chip",
+      "grade": "Grado",
+      "licenseGrade": "Grado de la licencia {number}",
+      "licenseNumber": "Número de la licencia {number}",
+      "licenseOrganisation": "Organismo de la licencia {number}",
+      "name": "Nombre",
+      "number": "Número",
+      "organisation": "Organismo",
+      "owner": "Abonado",
+      "registeredAt": "Alta",
+      "sex": "Sexo"
+    },
+    "freeTraining": {
+      "byLevel": "El derecho viene del nivel.",
+      "levelOption": "Según el nivel",
+      "manual": "Decisión manual del club.",
+      "notAllowed": "No puede entrenar solo",
+      "title": "Entrenamiento libre"
+    },
+    "level": {
+      "current": "actual",
+      "futureWarning": "Las reservas futuras se mantienen aunque no admitan el nivel nuevo.",
+      "select": "Nivel nuevo",
+      "since": "desde {date}",
+      "title": "Cambiar el nivel"
+    },
+    "license": { "number": "licencia {number}" },
+    "photo": {
+      "alt": "Foto de {name}",
+      "empty": "Todavía no hay ninguna foto",
+      "file": "Archivo de imagen",
+      "title": "Foto del perro"
+    },
+    "reactivate": {
+      "description": "El perro volverá a estar disponible si el abonado continúa de alta.",
+      "title": "Reactivar al perro"
+    },
+    "sections": {
+      "data": "Datos del perro",
+      "documents": "Documentos",
+      "freeTraining": "Entrenamiento libre",
+      "instructorNotes": "Notas para los instructores",
+      "level": "Nivel e historial",
+      "licenses": "Licencias",
+      "photo": "Foto"
+    },
+    "status": {
+      "active": "activo",
+      "inactive": "baja",
+      "reason": "Motivo (opcional)"
+    },
+    "tasks": { "summary": "Tareas" },
+    "transfer": {
+      "owner": "Abonado de destino",
+      "reason": "Motivo (opcional)",
+      "select": "Seleccionar un abonado",
+      "title": "Transferir al perro"
+    }
+  },
+  "member": {
+    "accountMissing": "Cuenta no informada",
+    "actions": {
+      "block": "Bloquear las reservas",
+      "impersonate": "Entrar como el abonado",
+      "inactivity": "Inactividad",
+      "leave": "Baja (con fecha)",
+      "resend": "Reenviar acceso",
+      "unblock": "Desbloquear las reservas",
+      "whatsapp": "WhatsApp"
+    },
+    "activeSince": "de alta desde {year}",
+    "audit": { "all": "Toda la auditoría ›", "recent": "Últimos cambios" },
+    "block": {
+      "description": "El bloqueo impide reservas nuevas y muestra este motivo al abonado. Las reservas existentes se mantienen.",
+      "reason": "Motivo del bloqueo",
+      "title": "Bloquear las reservas"
+    },
+    "bookingBlocked": "Reservas bloqueadas",
+    "edit": { "title": "Editar al abonado" },
+    "familyHolder": "titular del grupo familiar",
+    "familyMember": "miembro del grupo familiar",
+    "feedback": {
+      "accessSent": "Enlace enviado a {email}",
+      "blocked": "Las reservas se han bloqueado.",
+      "payment": "El método de pago se ha actualizado.",
+      "preferences": "Las preferencias de avisos se han guardado.",
+      "roles": "Los roles de acceso se han actualizado.",
+      "saved": "Los datos del abonado se han guardado.",
+      "unblocked": "Las reservas se han desbloqueado."
+    },
+    "fields": {
+      "address": "Dirección",
+      "birthDate": "Fecha de nacimiento",
+      "city": "Población",
+      "consents": "Consentimientos",
+      "contact": "Contacto",
+      "document": "Documento de identidad",
+      "documentType": "Tipo de documento",
+      "email": "Correo {number}",
+      "emails": "Correos electrónicos",
+      "familyGroup": "Grupo familiar",
+      "firstName": "Nombre",
+      "gender": "Género",
+      "imageRights": "Autoriza el uso de su imagen",
+      "internalNotes": "Notas internas",
+      "lastName1": "Primer apellido",
+      "lastName2": "Segundo apellido",
+      "nextInvoice": "Próximo recibo",
+      "payment": "Pago",
+      "phone": "Teléfono {number}",
+      "phoneLabel": "Descripción",
+      "phonePrefix": "Prefijo",
+      "phones": "Teléfonos",
+      "plan": "Modalidad",
+      "postalCode": "CP",
+      "remarks": "Observaciones visibles",
+      "roles": "Roles de acceso",
+      "street": "Calle y número"
+    },
+    "imageNotice": "{gender, select, FEMALE {No autoriza el uso de su imagen: no publique fotos en las que aparezca ella.} other {No autoriza el uso de su imagen: no publique fotos en las que aparezca él.}}",
+    "impersonate": {
+      "description": "Se abrirá la app tal como la ve el abonado. Las acciones quedarán auditadas con el administrador que las realice.",
+      "reason": "Motivo (opcional)",
+      "title": "Entrar como el abonado"
+    },
+    "invoice": {
+      "all": "Todos los recibos ({count}) ›",
+      "paid": "cobrado",
+      "remitted": "remesado"
+    },
+    "language": "idioma: {locale}",
+    "number": "n.º {number}",
+    "payment": {
+      "adminOnly": "cambio solo admin",
+      "holder": "Titular de la cuenta",
+      "iban": "IBAN nuevo",
+      "ibanHelp": "El número completo queda oculto y no se vuelve a mostrar.",
+      "sepa": "Domiciliación",
+      "title": "Método de pago"
+    },
+    "preferences": {
+      "alwaysOn": "Siempre activo en la app",
+      "app": "App",
+      "club_changes": "Cambios en reservas (hechos por el club)",
+      "email": "Correo",
+      "emailToggle": "Correo: {category}",
+      "hoursBefore": "{count} h antes",
+      "never": "Nunca",
+      "operational": "Operativa (reservas y cambios hechos por el abonado)",
+      "personal": "Comunicados personales",
+      "push": "Notificaciones push de comunicados del club",
+      "reminder": "Recordatorio de clase",
+      "sms": "+SMS"
+    },
+    "resend": {
+      "description": "Se enviará un enlace nuevo al correo de acceso de la cuenta.",
+      "title": "Reenviar el acceso"
+    },
+    "roles": { "title": "Roles de acceso" },
+    "sections": {
+      "dataPayment": "Datos y pago",
+      "dogs": "Perros",
+      "instructorNotes": "Notas para los instructores",
+      "invoicesAudit": "Recibos recientes y auditoría",
+      "preferences": "Preferencias de avisos (mantenibles aquí y en el perfil)"
+    },
+    "tabs": {
+      "audit": "Auditoría",
+      "auditPlaceholder": "La consulta completa de la auditoría se incorpora en la fase de auditoría.",
+      "label": "Apartados de la ficha",
+      "summary": "Ficha",
+      "tasks": "Tareas",
+      "tasksPlaceholder": "La gestión completa de tareas se incorpora con el seguimiento de alumnos."
+    }
+  },
+  "roles": {
+    "admin": "administrador",
+    "instructor": "instructor",
+    "member": "abonado"
+  },
+  "values": {
+    "empty": "—",
+    "female": "hembra",
+    "freeTraining": "Puede entrenar solo",
+    "male": "macho",
+    "no": "No",
+    "other": "otro",
+    "yes": "Sí"
+  }
+}

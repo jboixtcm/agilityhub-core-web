@@ -1,0 +1,254 @@
+{
+  "common": {
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "edit": "Edita",
+    "genericError": "No s'ha pogut completar l'acció.",
+    "loadError": "No s'ha pogut carregar la fitxa.",
+    "loading": "Carregant la fitxa…",
+    "retry": "Torna-ho a provar",
+    "save": "Desa",
+    "saving": "Desant…"
+  },
+  "dog": {
+    "actions": {
+      "changeLevel": "Canvia el nivell",
+      "deactivate": "Dona de baixa",
+      "photo": "Canvia la foto",
+      "reactivate": "Reactiva",
+      "transfer": "Transfereix"
+    },
+    "deactivate": {
+      "description": "Les reserves futures poden impedir la baixa. Les dades i l'historial es conservaran.",
+      "title": "Dona de baixa el gos"
+    },
+    "documents": {
+      "file": "Fitxer",
+      "name": "Nom del document",
+      "pending": "pendent",
+      "received": "rebut",
+      "remind": "Recorda la cartilla",
+      "remove": "Retira",
+      "type": "Tipus de document",
+      "upload": "Puja el document"
+    },
+    "edit": {
+      "title": "Edita les dades del gos"
+    },
+    "feedback": {
+      "deactivated": "El gos s'ha donat de baixa.",
+      "documentRemoved": "El fitxer s'ha retirat.",
+      "documentUploaded": "El document s'ha pujat.",
+      "freeTraining": "El dret d'entrenament lliure s'ha actualitzat.",
+      "levelSaved": "El nivell s'ha actualitzat.",
+      "levelWarning": "Nivell actualitzat. {count, plural, one {# reserva futura queda fora del nivell nou.} other {# reserves futures queden fora del nivell nou.}}",
+      "photo": "La foto s'ha actualitzat.",
+      "reactivated": "El gos s'ha reactivat.",
+      "reminderSent": "El recordatori s'ha enviat.",
+      "saved": "Les dades del gos s'han desat.",
+      "transferred": "El gos s'ha transferit."
+    },
+    "fields": {
+      "birthDate": "Data de naixement",
+      "breed": "Raça",
+      "chip": "Xip",
+      "grade": "Grau",
+      "licenseGrade": "Grau de la llicència {number}",
+      "licenseNumber": "Número de la llicència {number}",
+      "licenseOrganisation": "Organisme de la llicència {number}",
+      "name": "Nom",
+      "number": "Número",
+      "organisation": "Organisme",
+      "owner": "Abonat",
+      "registeredAt": "Alta",
+      "sex": "Sexe"
+    },
+    "freeTraining": {
+      "byLevel": "El dret ve del nivell.",
+      "levelOption": "Segons el nivell",
+      "manual": "Decisió manual del club.",
+      "notAllowed": "No pot entrenar sol",
+      "title": "Entrenament lliure"
+    },
+    "level": {
+      "current": "actual",
+      "futureWarning": "Les reserves futures es mantenen encara que no admetin el nivell nou.",
+      "select": "Nivell nou",
+      "since": "des de {date}",
+      "title": "Canvia el nivell"
+    },
+    "license": {
+      "number": "llicència {number}"
+    },
+    "photo": {
+      "alt": "Foto de {name}",
+      "empty": "Encara no hi ha cap foto",
+      "file": "Fitxer d'imatge",
+      "title": "Foto del gos"
+    },
+    "reactivate": {
+      "description": "El gos tornarà a estar disponible si l'abonat continua d'alta.",
+      "title": "Reactiva el gos"
+    },
+    "sections": {
+      "data": "Dades del gos",
+      "documents": "Documents",
+      "freeTraining": "Entrenament lliure",
+      "instructorNotes": "Notes als instructors",
+      "level": "Nivell i historial",
+      "licenses": "Llicències",
+      "photo": "Foto"
+    },
+    "status": {
+      "active": "actiu",
+      "inactive": "baixa",
+      "reason": "Motiu (opcional)"
+    },
+    "tasks": {
+      "summary": "Tasques"
+    },
+    "transfer": {
+      "owner": "Abonat de destí",
+      "reason": "Motiu (opcional)",
+      "select": "Selecciona un abonat",
+      "title": "Transfereix el gos"
+    }
+  },
+  "member": {
+    "accountMissing": "Compte no informat",
+    "actions": {
+      "block": "Bloqueja les reserves",
+      "impersonate": "Entra com l'abonat",
+      "inactivity": "Inactivitat",
+      "leave": "Baixa (amb data)",
+      "resend": "Reenvia accés",
+      "unblock": "Desbloqueja les reserves",
+      "whatsapp": "WhatsApp"
+    },
+    "activeSince": "alta des de {year}",
+    "audit": {
+      "all": "Tota l'auditoria ›",
+      "recent": "Darrers canvis"
+    },
+    "block": {
+      "description": "El bloqueig impedeix reserves noves i mostra aquest motiu a l'abonat. Les reserves existents es mantenen.",
+      "reason": "Motiu del bloqueig",
+      "title": "Bloqueja les reserves"
+    },
+    "bookingBlocked": "Reserves bloquejades",
+    "edit": {
+      "title": "Edita l'abonat"
+    },
+    "familyHolder": "titular del grup familiar",
+    "familyMember": "membre del grup familiar",
+    "feedback": {
+      "accessSent": "Enllaç enviat a {email}",
+      "blocked": "Les reserves s'han bloquejat.",
+      "payment": "El mètode de pagament s'ha actualitzat.",
+      "preferences": "Les preferències d'avisos s'han desat.",
+      "roles": "Els rols d'accés s'han actualitzat.",
+      "saved": "Les dades de l'abonat s'han desat.",
+      "unblocked": "Les reserves s'han desbloquejat."
+    },
+    "fields": {
+      "address": "Adreça",
+      "birthDate": "Data de naixement",
+      "city": "Població",
+      "consents": "Consentiments",
+      "contact": "Contacte",
+      "document": "Document d'identitat",
+      "documentType": "Tipus de document",
+      "email": "Correu {number}",
+      "emails": "Correus electrònics",
+      "familyGroup": "Grup familiar",
+      "firstName": "Nom",
+      "gender": "Gènere",
+      "imageRights": "Autoritza l'ús de la seva imatge",
+      "internalNotes": "Notes internes",
+      "lastName1": "Primer cognom",
+      "lastName2": "Segon cognom",
+      "nextInvoice": "Proper rebut",
+      "payment": "Pagament",
+      "phone": "Telèfon {number}",
+      "phoneLabel": "Descripció",
+      "phonePrefix": "Prefix",
+      "phones": "Telèfons",
+      "plan": "Modalitat",
+      "postalCode": "CP",
+      "remarks": "Observacions visibles",
+      "roles": "Rols d'accés",
+      "street": "Carrer i número"
+    },
+    "imageNotice": "{gender, select, FEMALE {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella.} other {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ell.}}",
+    "impersonate": {
+      "description": "S'obrirà l'app tal com la veu l'abonat. Les accions quedaran auditades amb l'administrador que les faci.",
+      "reason": "Motiu (opcional)",
+      "title": "Entra com l'abonat"
+    },
+    "invoice": {
+      "all": "Tots els rebuts ({count}) ›",
+      "paid": "cobrat",
+      "remitted": "remesat"
+    },
+    "language": "idioma: {locale}",
+    "number": "núm. {number}",
+    "payment": {
+      "adminOnly": "canvi només admin",
+      "holder": "Titular del compte",
+      "iban": "IBAN nou",
+      "ibanHelp": "El número complet queda ocult i no es torna a mostrar.",
+      "sepa": "Domiciliació",
+      "title": "Mètode de pagament"
+    },
+    "preferences": {
+      "alwaysOn": "Sempre actiu a l'app",
+      "app": "App",
+      "club_changes": "Canvis en reserves (fets pel club)",
+      "email": "Correu",
+      "emailToggle": "Correu: {category}",
+      "hoursBefore": "{count} h abans",
+      "never": "Mai",
+      "operational": "Operativa (reserves i canvis fets per l'abonat)",
+      "personal": "Comunicats personals",
+      "push": "Notificacions push de comunicats del club",
+      "reminder": "Recordatori de classe",
+      "sms": "+SMS"
+    },
+    "resend": {
+      "description": "S'enviarà un enllaç nou al correu d'accés del compte.",
+      "title": "Reenvia l'accés"
+    },
+    "roles": {
+      "title": "Rols d'accés"
+    },
+    "sections": {
+      "dataPayment": "Dades i pagament",
+      "dogs": "Gossos",
+      "instructorNotes": "Notes als instructors",
+      "invoicesAudit": "Rebuts recents i auditoria",
+      "preferences": "Preferències d'avisos (mantenibles aquí i al perfil)"
+    },
+    "tabs": {
+      "audit": "Auditoria",
+      "auditPlaceholder": "La consulta completa de l'auditoria s'incorpora a la fase d'auditoria.",
+      "label": "Apartats de la fitxa",
+      "summary": "Fitxa",
+      "tasks": "Tasques",
+      "tasksPlaceholder": "La gestió completa de tasques s'incorpora amb el seguiment d'alumnes."
+    }
+  },
+  "roles": {
+    "admin": "administrador",
+    "instructor": "instructor",
+    "member": "abonat"
+  },
+  "values": {
+    "empty": "—",
+    "female": "femella",
+    "freeTraining": "Pot entrenar sol",
+    "male": "mascle",
+    "no": "No",
+    "other": "altre",
+    "yes": "Sí"
+  }
+}

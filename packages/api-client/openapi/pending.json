@@ -495,6 +495,493 @@
         }
       }
     },
+    "/members/{id}": {
+      "get": {
+        "operationId": "getMember",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "200": {
+            "description": "Member record",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/MemberDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "patch": {
+        "operationId": "updateMember",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MemberPatchRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated member",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/MemberDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/overview": {
+      "get": {
+        "operationId": "getMemberOverview",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "200": {
+            "description": "D10 member overview",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MemberOverview" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/payment-method": {
+      "patch": {
+        "operationId": "updateMemberPaymentMethod",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PaymentMethodRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated payment method",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaymentMethod" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/booking-block": {
+      "post": {
+        "operationId": "blockMemberBookings",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BookingBlockRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking block activated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BookingBlock" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "unblockMemberBookings",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "204": { "description": "Booking block removed" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/access-resend": {
+      "post": {
+        "operationId": "resendMemberAccess",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "202": {
+            "description": "Access link sent",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AccessResendResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/roles": {
+      "put": {
+        "operationId": "updateMemberRoles",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RolesRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated membership roles",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/RolesResponse" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/members/{id}/notification-preferences": {
+      "put": {
+        "operationId": "updateMemberNotificationPreferences",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NotificationPreferencesPatch" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated notification preferences",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationPreferences" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}": {
+      "get": {
+        "operationId": "getDog",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "200": {
+            "description": "Dog record aggregate",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "patch": {
+        "operationId": "updateDog",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/DogPatchRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dog record",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/level": {
+      "patch": {
+        "operationId": "updateDogLevel",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/DogLevelRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dog level and warnings",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DogLevelResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/free-training": {
+      "patch": {
+        "operationId": "updateDogFreeTraining",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FreeTrainingRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated free-training rule",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/FreeTraining" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/transfer": {
+      "post": {
+        "operationId": "transferDog",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/DogTransferRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transferred dog",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/deactivation": {
+      "post": {
+        "operationId": "deactivateDog",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ReasonRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deactivated dog",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/reactivation": {
+      "post": {
+        "operationId": "reactivateDog",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ReasonRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reactivated dog",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDetail" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/photo": {
+      "put": {
+        "operationId": "updateDogPhoto",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PhotoRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dog photo",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/PhotoResponse" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/documents": {
+      "get": {
+        "operationId": "listDogDocuments",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "responses": {
+          "200": {
+            "description": "Dog documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/DogDocument" }
+                }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "uploadDogDocument",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DogDocumentUploadRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Uploaded dog document",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/DogDocument" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/documents/{docId}/files/{fileId}": {
+      "delete": {
+        "operationId": "removeDogDocumentFile",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/ResourceId" },
+          {
+            "name": "docId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Document file removed" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/dogs/{id}/documents/reminder": {
+      "post": {
+        "operationId": "remindDogDocument",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DogDocumentReminderRequest" }
+            }
+          }
+        },
+        "responses": {
+          "202": { "description": "Document reminder accepted" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/attachments/upload-url": {
+      "post": {
+        "operationId": "createAttachmentUploadUrl",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AttachmentUploadRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signed upload URL",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AttachmentUploadResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/levels": {
+      "get": {
+        "operationId": "listLevels",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ordered level catalogue",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LevelList" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
     "/saved-views": {
       "get": {
         "operationId": "listSavedViews",
@@ -722,20 +1209,11 @@
     "schemas": {
       "DisplayStatus": {
         "type": "object",
-        "required": [
-          "kind",
-          "label"
-        ],
+        "required": ["kind", "label"],
         "properties": {
           "kind": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "ACTIVE",
-              "INACTIVE_PERIOD",
-              "LEAVE_SCHEDULED",
-              "LEFT"
-            ]
+            "enum": ["PENDING", "ACTIVE", "INACTIVE_PERIOD", "LEAVE_SCHEDULED", "LEFT"]
           },
           "label": {
             "type": "string"
@@ -777,12 +1255,7 @@
           },
           "level": {
             "type": "object",
-            "required": [
-              "id",
-              "code",
-              "name",
-              "order"
-            ],
+            "required": ["id", "code", "name", "order"],
             "properties": {
               "id": {
                 "type": "string"
@@ -800,11 +1273,7 @@
           },
           "owner": {
             "type": "object",
-            "required": [
-              "id",
-              "fullName",
-              "lastName"
-            ],
+            "required": ["id", "fullName", "lastName"],
             "properties": {
               "id": {
                 "type": "string"
@@ -819,11 +1288,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "ACTIVE",
-              "INACTIVE"
-            ]
+            "enum": ["PENDING", "ACTIVE", "INACTIVE"]
           },
           "displayStatus": {
             "$ref": "#/components/schemas/DisplayStatus"
@@ -835,10 +1300,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "organisation",
-                "number"
-              ],
+              "required": ["organisation", "number"],
               "properties": {
                 "organisation": {
                   "type": "string"
@@ -854,11 +1316,7 @@
           },
           "sex": {
             "type": "string",
-            "enum": [
-              "FEMALE",
-              "MALE",
-              "UNSPECIFIED"
-            ]
+            "enum": ["FEMALE", "MALE", "UNSPECIFIED"]
           },
           "ageYears": {
             "type": "integer"
@@ -888,14 +1346,7 @@
       },
       "DogListResponse": {
         "type": "object",
-        "required": [
-          "items",
-          "page",
-          "size",
-          "totalItems",
-          "totalPages",
-          "appliedFilters"
-        ],
+        "required": ["items", "page", "size", "totalItems", "totalPages", "appliedFilters"],
         "properties": {
           "items": {
             "type": "array",
@@ -925,9 +1376,7 @@
       },
       "ExportJobResponse": {
         "type": "object",
-        "required": [
-          "jobId"
-        ],
+        "required": ["jobId"],
         "properties": {
           "jobId": {
             "type": "string"
@@ -936,11 +1385,7 @@
       },
       "FilterValue": {
         "type": "object",
-        "required": [
-          "value",
-          "label",
-          "count"
-        ],
+        "required": ["value", "label", "count"],
         "properties": {
           "value": {
             "type": "string"
@@ -955,10 +1400,7 @@
       },
       "FilterValuesResponse": {
         "type": "object",
-        "required": [
-          "field",
-          "values"
-        ],
+        "required": ["field", "values"],
         "properties": {
           "field": {
             "type": "string"
@@ -973,11 +1415,7 @@
       },
       "ListFilter": {
         "type": "object",
-        "required": [
-          "field",
-          "op",
-          "value"
-        ],
+        "required": ["field", "op", "value"],
         "properties": {
           "field": {
             "type": "string"
@@ -1055,11 +1493,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "id",
-                "name",
-                "levelCode"
-              ],
+              "required": ["id", "name", "levelCode"],
               "properties": {
                 "id": {
                   "type": "string"
@@ -1075,11 +1509,7 @@
           },
           "plan": {
             "type": "object",
-            "required": [
-              "id",
-              "name",
-              "summary"
-            ],
+            "required": ["id", "name", "summary"],
             "properties": {
               "id": {
                 "type": "string"
@@ -1097,11 +1527,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "ACTIVE",
-              "LEFT"
-            ]
+            "enum": ["PENDING", "ACTIVE", "LEFT"]
           },
           "displayStatus": {
             "$ref": "#/components/schemas/DisplayStatus"
@@ -1157,12 +1583,7 @@
           },
           "gender": {
             "type": "string",
-            "enum": [
-              "FEMALE",
-              "MALE",
-              "NON_BINARY",
-              "UNSPECIFIED"
-            ]
+            "enum": ["FEMALE", "MALE", "NON_BINARY", "UNSPECIFIED"]
           },
           "idDocument": {
             "type": "string"
@@ -1171,14 +1592,7 @@
       },
       "MemberListResponse": {
         "type": "object",
-        "required": [
-          "items",
-          "page",
-          "size",
-          "totalItems",
-          "totalPages",
-          "appliedFilters"
-        ],
+        "required": ["items", "page", "size", "totalItems", "totalPages", "appliedFilters"],
         "properties": {
           "items": {
             "type": "array",
@@ -1204,6 +1618,643 @@
               "$ref": "#/components/schemas/ListFilter"
             }
           }
+        }
+      },
+      "IdDocument": {
+        "type": "object",
+        "required": ["type", "number"],
+        "properties": {
+          "type": { "type": "string" },
+          "number": { "type": "string" }
+        }
+      },
+      "ContactEmail": {
+        "type": "object",
+        "required": ["email", "bounced"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "bounced": { "type": "boolean" }
+        }
+      },
+      "Phone": {
+        "type": "object",
+        "required": ["prefix", "number", "label"],
+        "properties": {
+          "prefix": { "type": "string" },
+          "number": { "type": "string" },
+          "label": { "type": "string", "maxLength": 30 }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "required": ["street", "postalCode", "city"],
+        "properties": {
+          "street": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "city": { "type": "string" },
+          "province": { "type": "string" },
+          "country": { "type": "string" }
+        }
+      },
+      "BookingBlock": {
+        "type": "object",
+        "required": ["active"],
+        "properties": {
+          "active": { "type": "boolean" },
+          "reason": { "type": "string", "maxLength": 200 },
+          "since": { "type": "string", "format": "date-time" },
+          "byAccountId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "BookingBlockRequest": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": {
+          "reason": { "type": "string", "maxLength": 200 }
+        }
+      },
+      "PaymentMethod": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string", "enum": ["SEPA_DD", "CARD", "MANUAL"] },
+          "maskedAccount": { "type": "string" },
+          "holderName": { "type": "string" },
+          "holderTaxId": { "type": "string" },
+          "channel": { "type": "string" }
+        }
+      },
+      "PaymentMethodRequest": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string", "enum": ["SEPA_DD", "CARD", "MANUAL"] },
+          "sepa": {
+            "type": "object",
+            "properties": {
+              "iban": { "type": "string" },
+              "holderName": { "type": "string" },
+              "holderTaxId": { "type": "string" }
+            }
+          },
+          "card": {
+            "type": "object",
+            "properties": {
+              "stripeSetupIntentId": { "type": "string" }
+            }
+          },
+          "manual": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" }
+            }
+          }
+        }
+      },
+      "MemberConsents": {
+        "type": "object",
+        "required": ["imageRights"],
+        "properties": {
+          "imageRights": {
+            "type": "object",
+            "required": ["granted"],
+            "properties": {
+              "granted": { "type": "boolean" },
+              "at": { "type": "string", "format": "date-time" },
+              "version": { "type": "string" },
+              "byAccountId": { "type": "string", "format": "uuid" }
+            }
+          }
+        }
+      },
+      "MemberPlan": {
+        "type": "object",
+        "required": ["id", "name", "summary"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "summary": { "type": "string" }
+        }
+      },
+      "MemberDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "memberNumber",
+          "idDocument",
+          "firstName",
+          "lastName1",
+          "fullName",
+          "gender",
+          "birthDate",
+          "contactEmails",
+          "phones",
+          "address",
+          "consents",
+          "status",
+          "joinedAt",
+          "bookingBlock",
+          "roles",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "accountId": { "type": "string", "format": "uuid" },
+          "accountMissing": { "type": "boolean" },
+          "memberNumber": { "type": "integer" },
+          "idDocument": { "$ref": "#/components/schemas/IdDocument" },
+          "firstName": { "type": "string", "maxLength": 60 },
+          "lastName1": { "type": "string", "maxLength": 60 },
+          "lastName2": { "type": "string", "maxLength": 60 },
+          "fullName": { "type": "string" },
+          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
+          "birthDate": { "type": "string", "format": "date" },
+          "contactEmails": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/ContactEmail" }
+          },
+          "phones": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/Phone" }
+          },
+          "address": { "$ref": "#/components/schemas/Address" },
+          "paymentMethod": { "$ref": "#/components/schemas/PaymentMethod" },
+          "plan": { "$ref": "#/components/schemas/MemberPlan" },
+          "nextInvoiceDate": { "type": "string", "format": "date" },
+          "consents": { "$ref": "#/components/schemas/MemberConsents" },
+          "remarks": { "type": "string", "maxLength": 2000 },
+          "internalNotes": { "type": "string", "maxLength": 2000 },
+          "status": { "type": "string", "enum": ["PENDING", "ACTIVE", "LEFT"] },
+          "joinedAt": { "type": "string", "format": "date-time" },
+          "leaveDate": { "type": "string", "format": "date" },
+          "bookingBlock": { "$ref": "#/components/schemas/BookingBlock" },
+          "roles": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"] }
+          },
+          "familyGroupId": { "type": "string", "format": "uuid" },
+          "version": { "type": "integer" }
+        }
+      },
+      "MemberPatchRequest": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "idDocument": { "$ref": "#/components/schemas/IdDocument" },
+          "firstName": { "type": "string", "maxLength": 60 },
+          "lastName1": { "type": "string", "maxLength": 60 },
+          "lastName2": { "type": "string", "maxLength": 60 },
+          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
+          "birthDate": { "type": "string", "format": "date" },
+          "contactEmails": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/ContactEmail" }
+          },
+          "phones": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/Phone" }
+          },
+          "address": { "$ref": "#/components/schemas/Address" },
+          "remarks": { "type": "string", "maxLength": 2000 },
+          "internalNotes": { "type": "string", "maxLength": 2000 },
+          "consents": { "$ref": "#/components/schemas/MemberConsents" },
+          "version": { "type": "integer" }
+        }
+      },
+      "FamilyGroupSummary": {
+        "type": "object",
+        "required": ["id", "holderMemberId", "members"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "holderMemberId": { "type": "string", "format": "uuid" },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "fullName", "memberNumber"],
+              "properties": {
+                "id": { "type": "string", "format": "uuid" },
+                "fullName": { "type": "string" },
+                "memberNumber": { "type": "integer" }
+              }
+            }
+          }
+        }
+      },
+      "DogOverview": {
+        "type": "object",
+        "required": ["id", "name", "breed", "level", "freeTrainingAllowed", "pendingDocuments"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "level": { "$ref": "#/components/schemas/LevelSummary" },
+          "freeTrainingAllowed": { "type": "boolean" },
+          "pack": { "type": "string" },
+          "pendingDocuments": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "instructorNote": { "type": "string" }
+        }
+      },
+      "InvoiceSummary": {
+        "type": "object",
+        "required": ["id", "label", "amount", "status"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "label": { "type": "string" },
+          "amount": { "type": "number" },
+          "status": { "type": "string" }
+        }
+      },
+      "AuditSummary": {
+        "type": "object",
+        "required": ["id", "summary", "changedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "summary": { "type": "string" },
+          "changedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "NotificationPreferences": {
+        "type": "object",
+        "required": [
+          "emailByCategory",
+          "smsFixed",
+          "reminderOptionsMinutes",
+          "pushClubNews",
+          "locale",
+          "availableLocales",
+          "modules"
+        ],
+        "properties": {
+          "emailByCategory": {
+            "type": "object",
+            "required": ["OPERATIONAL", "PERSONAL", "CLUB_CHANGES", "CLUB_NEWS"],
+            "properties": {
+              "OPERATIONAL": { "type": "boolean" },
+              "PERSONAL": { "type": "boolean" },
+              "CLUB_CHANGES": { "type": "boolean" },
+              "CLUB_NEWS": { "type": "boolean" }
+            }
+          },
+          "smsFixed": { "type": "boolean" },
+          "reminderMinutesBefore": { "type": ["integer", "null"] },
+          "reminderOptionsMinutes": {
+            "type": "array",
+            "items": { "type": "integer", "enum": [60, 120, 240, 360, 720, 1440] }
+          },
+          "pushClubNews": { "type": "boolean" },
+          "locale": { "type": "string" },
+          "availableLocales": { "type": "array", "items": { "type": "string" } },
+          "modules": {
+            "type": "object",
+            "required": ["sms", "push"],
+            "properties": {
+              "sms": { "type": "boolean" },
+              "push": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "NotificationPreferencesPatch": {
+        "type": "object",
+        "properties": {
+          "emailByCategory": {
+            "type": "object",
+            "properties": {
+              "OPERATIONAL": { "type": "boolean" },
+              "PERSONAL": { "type": "boolean" },
+              "CLUB_CHANGES": { "type": "boolean" },
+              "CLUB_NEWS": { "type": "boolean" }
+            }
+          },
+          "reminderMinutesBefore": { "type": ["integer", "null"] },
+          "pushClubNews": { "type": "boolean" }
+        }
+      },
+      "MemberOverview": {
+        "type": "object",
+        "required": [
+          "member",
+          "dogs",
+          "notificationPreferences",
+          "recentInvoices",
+          "invoicesCount",
+          "recentAudit"
+        ],
+        "properties": {
+          "member": { "$ref": "#/components/schemas/MemberDetail" },
+          "familyGroup": { "$ref": "#/components/schemas/FamilyGroupSummary" },
+          "dogs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogOverview" }
+          },
+          "notificationPreferences": {
+            "$ref": "#/components/schemas/NotificationPreferences"
+          },
+          "recentInvoices": {
+            "type": "array",
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/InvoiceSummary" }
+          },
+          "invoicesCount": { "type": "integer" },
+          "recentAudit": {
+            "type": "array",
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/AuditSummary" }
+          },
+          "nextInvoice": {
+            "type": "object",
+            "required": ["date", "amount"],
+            "properties": {
+              "date": { "type": "string", "format": "date" },
+              "amount": { "type": "number" }
+            }
+          }
+        }
+      },
+      "AccessResendResponse": {
+        "type": "object",
+        "required": ["sentTo"],
+        "properties": {
+          "sentTo": { "type": "string", "format": "email" }
+        }
+      },
+      "RolesRequest": {
+        "type": "object",
+        "required": ["roles"],
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"] }
+          }
+        }
+      },
+      "RolesResponse": {
+        "type": "object",
+        "required": ["roles"],
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"] }
+          }
+        }
+      },
+      "LevelSummary": {
+        "type": "object",
+        "required": ["id", "code", "name", "order", "grantsFreeTraining", "active"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "order": { "type": "integer" },
+          "grantsFreeTraining": { "type": "boolean" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "LevelList": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/LevelSummary" }
+          },
+          "totalItems": { "type": "integer" }
+        }
+      },
+      "FreeTraining": {
+        "type": "object",
+        "required": ["allowed", "source"],
+        "properties": {
+          "allowed": { "type": "boolean" },
+          "source": { "type": "string", "enum": ["LEVEL", "MANUAL"] },
+          "override": { "type": ["boolean", "null"] }
+        }
+      },
+      "DogDocumentFile": {
+        "type": "object",
+        "required": ["id", "name", "url", "uploadedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "uploadedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DogDocument": {
+        "type": "object",
+        "required": ["id", "type", "typeLabel", "state", "files"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "type": { "type": "string" },
+          "typeLabel": { "type": "string" },
+          "state": { "type": "string", "enum": ["PENDING", "RECEIVED"] },
+          "files": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogDocumentFile" }
+          },
+          "lastReminderAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DogLicense": {
+        "type": "object",
+        "required": ["organisation", "number"],
+        "properties": {
+          "organisation": { "type": "string" },
+          "number": { "type": "string" },
+          "grade": { "type": "string" }
+        }
+      },
+      "DogDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "breed",
+          "chip",
+          "sex",
+          "birthDate",
+          "status",
+          "registeredAt",
+          "owner",
+          "levelHistory",
+          "freeTraining",
+          "documents",
+          "licenses",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "chip": { "type": "string" },
+          "sex": { "type": "string", "enum": ["MALE", "FEMALE"] },
+          "birthDate": { "type": "string", "format": "date" },
+          "photoUrl": { "type": "string", "format": "uri" },
+          "status": { "type": "string", "enum": ["PENDING", "ACTIVE", "INACTIVE"] },
+          "registeredAt": { "type": "string", "format": "date-time" },
+          "deactivatedAt": { "type": "string", "format": "date-time" },
+          "deactivationReason": {
+            "type": "string",
+            "enum": ["CLUB", "MEMBER_LEFT", "SIGNUP_REJECTED"]
+          },
+          "owner": {
+            "type": "object",
+            "required": ["id", "fullName", "memberNumber", "status"],
+            "properties": {
+              "id": { "type": "string", "format": "uuid" },
+              "fullName": { "type": "string" },
+              "memberNumber": { "type": "integer" },
+              "status": { "type": "string", "enum": ["PENDING", "ACTIVE", "LEFT"] }
+            }
+          },
+          "level": { "$ref": "#/components/schemas/LevelSummary" },
+          "levelAssignedAt": { "type": "string", "format": "date-time" },
+          "levelHistory": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["levelId", "levelCode", "from", "byAccountId"],
+              "properties": {
+                "levelId": { "type": "string", "format": "uuid" },
+                "levelCode": { "type": "string" },
+                "from": { "type": "string", "format": "date-time" },
+                "to": { "type": "string", "format": "date-time" },
+                "byAccountId": { "type": "string", "format": "uuid" }
+              }
+            }
+          },
+          "freeTraining": { "$ref": "#/components/schemas/FreeTraining" },
+          "documents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogDocument" }
+          },
+          "licenses": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogLicense" }
+          },
+          "pack": { "type": "string" },
+          "instructorNote": { "type": "string" },
+          "tasksSummary": { "type": "string" },
+          "version": { "type": "integer" }
+        }
+      },
+      "DogPatchRequest": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "sex": { "type": "string", "enum": ["MALE", "FEMALE"] },
+          "birthDate": { "type": "string", "format": "date" },
+          "chip": { "type": "string" },
+          "licenses": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogLicense" }
+          },
+          "version": { "type": "integer" }
+        }
+      },
+      "DogLevelRequest": {
+        "type": "object",
+        "required": ["levelId"],
+        "properties": {
+          "levelId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "DogLevelResponse": {
+        "type": "object",
+        "required": ["level", "levelAssignedAt", "warnings"],
+        "properties": {
+          "level": { "$ref": "#/components/schemas/LevelSummary" },
+          "levelAssignedAt": { "type": "string", "format": "date-time" },
+          "warnings": {
+            "type": "object",
+            "required": ["futureBookingsOutsideLevel"],
+            "properties": {
+              "futureBookingsOutsideLevel": { "type": "integer" }
+            }
+          }
+        }
+      },
+      "FreeTrainingRequest": {
+        "type": "object",
+        "required": ["override"],
+        "properties": {
+          "override": { "type": ["boolean", "null"] }
+        }
+      },
+      "DogTransferRequest": {
+        "type": "object",
+        "required": ["toMemberId"],
+        "properties": {
+          "toMemberId": { "type": "string", "format": "uuid" },
+          "reason": { "type": "string" }
+        }
+      },
+      "ReasonRequest": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string" }
+        }
+      },
+      "PhotoRequest": {
+        "type": "object",
+        "required": ["fileKey"],
+        "properties": {
+          "fileKey": { "type": "string" }
+        }
+      },
+      "PhotoResponse": {
+        "type": "object",
+        "required": ["photoUrl"],
+        "properties": {
+          "photoUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "DogDocumentUploadRequest": {
+        "type": "object",
+        "required": ["type", "name", "fileKey"],
+        "properties": {
+          "type": { "type": "string" },
+          "name": { "type": "string" },
+          "fileKey": { "type": "string" }
+        }
+      },
+      "DogDocumentReminderRequest": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string" }
+        }
+      },
+      "AttachmentUploadRequest": {
+        "type": "object",
+        "required": ["purpose", "fileName", "mimeType", "sizeBytes"],
+        "properties": {
+          "purpose": { "type": "string", "enum": ["DOG_DOCUMENT", "DOG_PHOTO"] },
+          "fileName": { "type": "string" },
+          "mimeType": { "type": "string" },
+          "sizeBytes": { "type": "integer" }
+        }
+      },
+      "AttachmentUploadResponse": {
+        "type": "object",
+        "required": ["fileKey", "uploadUrl"],
+        "properties": {
+          "fileKey": { "type": "string" },
+          "uploadUrl": { "type": "string", "format": "uri" }
         }
       },
       "SavedView": {
@@ -1257,14 +2308,7 @@
       },
       "SavedViewRequest": {
         "type": "object",
-        "required": [
-          "listKey",
-          "name",
-          "columns",
-          "filters",
-          "sort",
-          "shared"
-        ],
+        "required": ["listKey", "name", "columns", "filters", "sort", "shared"],
         "properties": {
           "listKey": {
             "type": "string"

@@ -1,0 +1,241 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "genericError": "The action could not be completed.",
+    "loadError": "The record could not be loaded.",
+    "loading": "Loading record…",
+    "retry": "Try again",
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "dog": {
+    "actions": {
+      "changeLevel": "Change level",
+      "deactivate": "Deactivate",
+      "photo": "Change photo",
+      "reactivate": "Reactivate",
+      "transfer": "Transfer"
+    },
+    "deactivate": {
+      "description": "Future bookings may prevent deactivation. The data and history will be kept.",
+      "title": "Deactivate dog"
+    },
+    "documents": {
+      "file": "File",
+      "name": "Document name",
+      "pending": "pending",
+      "received": "received",
+      "remind": "Remind about vaccination record",
+      "remove": "Remove",
+      "type": "Document type",
+      "upload": "Upload document"
+    },
+    "edit": { "title": "Edit dog details" },
+    "feedback": {
+      "deactivated": "The dog was deactivated.",
+      "documentRemoved": "The file was removed.",
+      "documentUploaded": "The document was uploaded.",
+      "freeTraining": "The free-training permission was updated.",
+      "levelSaved": "The level was updated.",
+      "levelWarning": "Level updated. {count, plural, one {# future booking is outside the new level.} other {# future bookings are outside the new level.}}",
+      "photo": "The photo was updated.",
+      "reactivated": "The dog was reactivated.",
+      "reminderSent": "The reminder was sent.",
+      "saved": "The dog details were saved.",
+      "transferred": "The dog was transferred."
+    },
+    "fields": {
+      "birthDate": "Date of birth",
+      "breed": "Breed",
+      "chip": "Chip",
+      "grade": "Grade",
+      "licenseGrade": "Licence {number} grade",
+      "licenseNumber": "Licence {number} number",
+      "licenseOrganisation": "Licence {number} organisation",
+      "name": "Name",
+      "number": "Number",
+      "organisation": "Organisation",
+      "owner": "Member",
+      "registeredAt": "Registered",
+      "sex": "Sex"
+    },
+    "freeTraining": {
+      "byLevel": "Permission comes from the level.",
+      "levelOption": "According to level",
+      "manual": "Manual club decision.",
+      "notAllowed": "Cannot train independently",
+      "title": "Free training"
+    },
+    "level": {
+      "current": "current",
+      "futureWarning": "Future bookings are kept even if they do not admit the new level.",
+      "select": "New level",
+      "since": "since {date}",
+      "title": "Change level"
+    },
+    "license": { "number": "licence {number}" },
+    "photo": {
+      "alt": "Photo of {name}",
+      "empty": "No photo yet",
+      "file": "Image file",
+      "title": "Dog photo"
+    },
+    "reactivate": {
+      "description": "The dog will become available again if the member is still active.",
+      "title": "Reactivate dog"
+    },
+    "sections": {
+      "data": "Dog details",
+      "documents": "Documents",
+      "freeTraining": "Free training",
+      "instructorNotes": "Notes for instructors",
+      "level": "Level and history",
+      "licenses": "Licences",
+      "photo": "Photo"
+    },
+    "status": {
+      "active": "active",
+      "inactive": "inactive",
+      "reason": "Reason (optional)"
+    },
+    "tasks": { "summary": "Tasks" },
+    "transfer": {
+      "owner": "Destination member",
+      "reason": "Reason (optional)",
+      "select": "Select a member",
+      "title": "Transfer dog"
+    }
+  },
+  "member": {
+    "accountMissing": "Account not provided",
+    "actions": {
+      "block": "Block bookings",
+      "impersonate": "Enter as member",
+      "inactivity": "Inactivity",
+      "leave": "Leave (with date)",
+      "resend": "Resend access",
+      "unblock": "Unblock bookings",
+      "whatsapp": "WhatsApp"
+    },
+    "activeSince": "active since {year}",
+    "audit": { "all": "Full audit ›", "recent": "Latest changes" },
+    "block": {
+      "description": "The block prevents new bookings and shows this reason to the member. Existing bookings are kept.",
+      "reason": "Block reason",
+      "title": "Block bookings"
+    },
+    "bookingBlocked": "Bookings blocked",
+    "edit": { "title": "Edit member" },
+    "familyHolder": "family group holder",
+    "familyMember": "family group member",
+    "feedback": {
+      "accessSent": "Link sent to {email}",
+      "blocked": "Bookings were blocked.",
+      "payment": "The payment method was updated.",
+      "preferences": "Notification preferences were saved.",
+      "roles": "Access roles were updated.",
+      "saved": "The member details were saved.",
+      "unblocked": "Bookings were unblocked."
+    },
+    "fields": {
+      "address": "Address",
+      "birthDate": "Date of birth",
+      "city": "Town",
+      "consents": "Consents",
+      "contact": "Contact",
+      "document": "Identity document",
+      "documentType": "Document type",
+      "email": "Email {number}",
+      "emails": "Email addresses",
+      "familyGroup": "Family group",
+      "firstName": "First name",
+      "gender": "Gender",
+      "imageRights": "Authorises use of their image",
+      "internalNotes": "Internal notes",
+      "lastName1": "First surname",
+      "lastName2": "Second surname",
+      "nextInvoice": "Next invoice",
+      "payment": "Payment",
+      "phone": "Phone {number}",
+      "phoneLabel": "Description",
+      "phonePrefix": "Prefix",
+      "phones": "Phone numbers",
+      "plan": "Plan",
+      "postalCode": "Postcode",
+      "remarks": "Visible remarks",
+      "roles": "Access roles",
+      "street": "Street and number"
+    },
+    "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} other {Does not authorise use of his image: do not publish photos showing him.}}",
+    "impersonate": {
+      "description": "The app will open as the member sees it. Actions will be audited with the administrator who performs them.",
+      "reason": "Reason (optional)",
+      "title": "Enter as member"
+    },
+    "invoice": {
+      "all": "All invoices ({count}) ›",
+      "paid": "paid",
+      "remitted": "submitted"
+    },
+    "language": "language: {locale}",
+    "number": "no. {number}",
+    "payment": {
+      "adminOnly": "admin only",
+      "holder": "Account holder",
+      "iban": "New IBAN",
+      "ibanHelp": "The full number is hidden and is not shown again.",
+      "sepa": "Direct debit",
+      "title": "Payment method"
+    },
+    "preferences": {
+      "alwaysOn": "Always on in the app",
+      "app": "App",
+      "club_changes": "Booking changes (made by the club)",
+      "email": "Email",
+      "emailToggle": "Email: {category}",
+      "hoursBefore": "{count} h before",
+      "never": "Never",
+      "operational": "Operational (bookings and changes made by the member)",
+      "personal": "Personal announcements",
+      "push": "Push notifications for club announcements",
+      "reminder": "Class reminder",
+      "sms": "+SMS"
+    },
+    "resend": {
+      "description": "A new link will be sent to the account access email.",
+      "title": "Resend access"
+    },
+    "roles": { "title": "Access roles" },
+    "sections": {
+      "dataPayment": "Details and payment",
+      "dogs": "Dogs",
+      "instructorNotes": "Notes for instructors",
+      "invoicesAudit": "Recent invoices and audit",
+      "preferences": "Notification preferences (maintained here and in the profile)"
+    },
+    "tabs": {
+      "audit": "Audit",
+      "auditPlaceholder": "The full audit view will be added in the audit stage.",
+      "label": "Record sections",
+      "summary": "Record",
+      "tasks": "Tasks",
+      "tasksPlaceholder": "Full task management will be added with student follow-up."
+    }
+  },
+  "roles": {
+    "admin": "administrator",
+    "instructor": "instructor",
+    "member": "member"
+  },
+  "values": {
+    "empty": "—",
+    "female": "female",
+    "freeTraining": "Can train independently",
+    "male": "male",
+    "no": "No",
+    "other": "other",
+    "yes": "Yes"
+  }
+}
