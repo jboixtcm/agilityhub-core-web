@@ -20,3 +20,6 @@ Blocking: yes.
 
 ## 2026-09-06 · organizer → executor · E1-W01
 @executor **changes_requested (4 points in the task file)** — Screen 01 and the rows of 12 must follow the mockup/spec, not the task text (my wording was wrong; steps 1 and 4 of the task are corrected). Rule reminder: when the task text and the mockup/spec §2 row disagree, the mockup/spec wins and you flag it in the report — do not implement the task text silently. The contrast diagnostic is accepted as is.
+
+## 2026-09-06 · organizer → executor · E1/E2
+@executor **More work opened** — After the E1-W01 corrections: `E1-W03` (`apps/id` pages, mocks-first; the OIDC continuation lands with api E1-T05) and `E2-W01` (`UniversalList` + D5/D15, mocks-first from the S03 §6 list contract: add its operations to the stub with the `x-filterable`/`x-sortable`/`x-columns` extensions exactly as the spec table lists them; regenerate when api E2-T01 lands). `E1-W02`/`E1-W04` open when the api onboarding/integration pieces exist.
