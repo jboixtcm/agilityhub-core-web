@@ -126,6 +126,7 @@
   "MAX_ATTEMPTS": "S'ha assolit el nombre màxim d'intents.",
   "MEMBER_ALREADY_EXISTS": "Aquest abonat ja existeix.",
   "MEMBER_NOT_ACTIVE": "Aquest abonat no està actiu.",
+  "MEMBER_ERASED": "Aquest abonat ha estat suprimit i ja no es pot modificar.",
   "MEMBER_NOT_LEFT": "Aquest abonat encara no ha causat baixa.",
   "MEMBERSHIP_EXISTS": "Aquest abonament ja existeix.",
   "MEMBERSHIP_SUSPENDED": "Aquest abonament està suspès.",
