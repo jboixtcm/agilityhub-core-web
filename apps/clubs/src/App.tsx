@@ -1,4 +1,4 @@
-import { isApiError } from "@agilityhub/api-client";
+import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
 import {
   type AuthClient,
   type Me,
@@ -28,6 +28,8 @@ import {
 } from "@agilityhub/ui";
 import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 
 interface RouteDefinition {
   path: string;
@@ -224,7 +226,10 @@ export function MobileNavigation({
     .filter((item) => isModuleUiItemEnabled(modules, "tabs", item.id))
     .filter((item) => item.roles === undefined || item.roles.some((role) => roles.includes(role)))
     .map((item) => ({
-      active: matchesPath(pathname, item.href),
+      active:
+        item.id === "profile"
+          ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
+          : matchesPath(pathname, item.href),
       href: item.href,
       icon: item.icon,
       label: item.label,
@@ -257,7 +262,15 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   );
 }
 
-function MobileShell({ authClient, children }: { authClient: AuthClient; children: ReactNode }) {
+function MobileShell({
+  authClient,
+  children,
+  detail = false,
+}: {
+  authClient: AuthClient;
+  children: ReactNode;
+  detail?: boolean;
+}) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
@@ -267,31 +280,33 @@ function MobileShell({ authClient, children }: { authClient: AuthClient; childre
     <div className="clubs-shell">
       <div className="clubs-shell__top">
         <ImpersonationBanner authClient={authClient} />
-        <AppBar
-          className="clubs-shell__header"
-          end={
-            <div className="clubs-shell__actions">
-              <LanguageSelector />
-              <a
-                aria-label={t("shell:header.userMenu")}
-                className="clubs-shell__user"
-                href="/perfil"
-              >
-                <Icon aria-hidden="true" name="user" />
-              </a>
-            </div>
-          }
-          start={
-            logo === undefined ? (
-              <span aria-hidden="true" className="clubs-shell__mark">
-                {branding.club.name.charAt(0)}
-              </span>
-            ) : (
-              <img alt={branding.club.name} className="clubs-shell__logo" src={logo} />
-            )
-          }
-          title={branding.club.name}
-        />
+        {detail ? null : (
+          <AppBar
+            className="clubs-shell__header"
+            end={
+              <div className="clubs-shell__actions">
+                <LanguageSelector />
+                <a
+                  aria-label={t("shell:header.userMenu")}
+                  className="clubs-shell__user"
+                  href="/perfil"
+                >
+                  <Icon aria-hidden="true" name="user" />
+                </a>
+              </div>
+            }
+            start={
+              logo === undefined ? (
+                <span aria-hidden="true" className="clubs-shell__mark">
+                  {branding.club.name.charAt(0)}
+                </span>
+              ) : (
+                <img alt={branding.club.name} className="clubs-shell__logo" src={logo} />
+              )
+            }
+            title={branding.club.name}
+          />
+        )}
       </div>
       <main className="clubs-shell__content">{children}</main>
       <MobileNavigation
@@ -1060,7 +1075,13 @@ function LegacyAccessRedirect() {
   return null;
 }
 
-export function App({ authClient }: { authClient: AuthClient }) {
+export function App({
+  apiClient = defaultApiClient,
+  authClient,
+}: {
+  apiClient?: ApiClient;
+  authClient: AuthClient;
+}) {
   const pathname = window.location.pathname;
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;
@@ -1089,6 +1110,14 @@ export function App({ authClient }: { authClient: AuthClient }) {
       <RequireAuth>
         <ProfilePage authClient={authClient} />
       </RequireAuth>
+    ) : pathname === "/gossos" ? (
+      <RequireAuth>
+        <MyDogsPage client={apiClient} />
+      </RequireAuth>
+    ) : pathname === "/dades" ? (
+      <RequireAuth>
+        <MyDataPage authClient={authClient} client={apiClient} />
+      </RequireAuth>
     ) : (
       routePlaceholder(route)
     );
@@ -1096,6 +1125,8 @@ export function App({ authClient }: { authClient: AuthClient }) {
   return route.public === true ? (
     content
   ) : (
-    <MobileShell authClient={authClient}>{content}</MobileShell>
+    <MobileShell authClient={authClient} detail={pathname === "/gossos" || pathname === "/dades"}>
+      {content}
+    </MobileShell>
   );
 }

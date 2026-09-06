@@ -982,6 +982,193 @@
         }
       }
     },
+    "/country-profile/postal-codes/{code}": {
+      "get": {
+        "operationId": "postalCodeTowns",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Towns for the postal code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PostalTown" }
+                }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/dogs": {
+      "get": {
+        "operationId": "myDogs",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "The member's active dogs",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MeDogs" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/dogs/{id}/documents": {
+      "post": {
+        "operationId": "uploadMyDogDocument",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DogDocumentUploadRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Uploaded dog document",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DogDocument" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/dogs/{id}/instructor-note": {
+      "put": {
+        "operationId": "updateInstructorNote",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/InstructorNoteRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved instructor note",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstructorNote" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/dogs/{id}/photo": {
+      "put": {
+        "operationId": "updateMyDogPhoto",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ResourceId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PhotoRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated dog photo",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PhotoResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/profile": {
+      "get": {
+        "operationId": "myCensusProfile",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "The member's editable census profile",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MeProfile" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "patch": {
+        "operationId": "updateMyCensusProfile",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MeProfilePatch" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated member census profile",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MeProfile" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/parameters/{key}": {
+      "get": {
+        "operationId": "parameter",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resolved parameter",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Parameter" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
     "/saved-views": {
       "get": {
         "operationId": "listSavedViews",
@@ -2255,6 +2442,202 @@
         "properties": {
           "fileKey": { "type": "string" },
           "uploadUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "PostalTown": {
+        "type": "object",
+        "required": ["town", "region"],
+        "properties": {
+          "town": { "type": "string" },
+          "region": { "type": "string" }
+        }
+      },
+      "InstructorNote": {
+        "type": "object",
+        "required": ["text", "updatedAt"],
+        "properties": {
+          "text": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "InstructorNoteRequest": {
+        "type": "object",
+        "required": ["text"],
+        "properties": {
+          "text": { "type": "string", "maxLength": 2000 }
+        }
+      },
+      "MemberDogTask": {
+        "type": "object",
+        "required": ["id", "text", "createdAt", "instructorName", "attachmentsCount"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "text": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "instructorName": { "type": "string" },
+          "attachmentsCount": { "type": "integer", "minimum": 0 },
+          "doneAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TasksSummary": {
+        "type": "object",
+        "required": ["open", "completed", "items"],
+        "properties": {
+          "open": { "type": "integer", "minimum": 0 },
+          "completed": { "type": "integer", "minimum": 0 },
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MemberDogTask" }
+          }
+        }
+      },
+      "PackSummary": {
+        "type": "object",
+        "required": ["id", "remaining", "total"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "remaining": { "type": "integer" },
+          "total": { "type": "integer" },
+          "expiresOn": { "type": "string", "format": "date" }
+        }
+      },
+      "MeDog": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "breed",
+          "sex",
+          "ageYears",
+          "documents",
+          "freeTrainingAllowed",
+          "licenses"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "sex": { "type": "string", "enum": ["MALE", "FEMALE"] },
+          "ageYears": { "type": "number" },
+          "photoUrl": { "type": "string", "format": "uri" },
+          "level": { "$ref": "#/components/schemas/LevelSummary" },
+          "instructorNote": { "$ref": "#/components/schemas/InstructorNote" },
+          "tasks": { "$ref": "#/components/schemas/TasksSummary" },
+          "documents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogDocument" }
+          },
+          "freeTrainingAllowed": { "type": "boolean" },
+          "licenses": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DogLicense" }
+          },
+          "pack": { "$ref": "#/components/schemas/PackSummary" }
+        }
+      },
+      "MeDogs": {
+        "type": "object",
+        "required": ["dogs", "canAddDog"],
+        "properties": {
+          "dogs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MeDog" }
+          },
+          "canAddDog": { "type": "boolean" }
+        }
+      },
+      "ContactEmailInput": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": { "type": "string", "format": "email" }
+        }
+      },
+      "MeProfile": {
+        "type": "object",
+        "required": [
+          "idDocumentMasked",
+          "firstName",
+          "lastName1",
+          "contactEmails",
+          "phones",
+          "address",
+          "version"
+        ],
+        "properties": {
+          "idDocumentMasked": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName1": { "type": "string" },
+          "lastName2": { "type": "string" },
+          "contactEmails": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ContactEmail" }
+          },
+          "phones": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Phone" }
+          },
+          "address": { "$ref": "#/components/schemas/Address" },
+          "paymentMethod": { "$ref": "#/components/schemas/PaymentMethod" },
+          "consents": { "$ref": "#/components/schemas/MemberConsents" },
+          "version": { "type": "integer", "format": "int64" }
+        }
+      },
+      "MeProfilePatch": {
+        "type": "object",
+        "required": ["contactEmails", "phones", "address", "version"],
+        "properties": {
+          "contactEmails": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/ContactEmailInput" }
+          },
+          "phones": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": { "$ref": "#/components/schemas/Phone" }
+          },
+          "address": { "$ref": "#/components/schemas/Address" },
+          "version": { "type": "integer", "format": "int64" }
+        }
+      },
+      "LastChange": {
+        "type": "object",
+        "required": ["action", "at"],
+        "properties": {
+          "action": { "type": "string" },
+          "actorName": { "type": "string" },
+          "at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Parameter": {
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "help",
+          "type",
+          "value",
+          "constraints",
+          "editableBy",
+          "isOverride",
+          "version"
+        ],
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "help": { "type": "string" },
+          "type": { "type": "string" },
+          "value": {},
+          "constraints": { "type": "object", "additionalProperties": true },
+          "editableBy": { "type": "string", "enum": ["CLUB", "PLATFORM"] },
+          "module": { "type": "string" },
+          "scopeRef": { "type": "string" },
+          "isOverride": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
         }
       },
       "SavedView": {

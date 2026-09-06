@@ -14,6 +14,14 @@ import {
   type MemberListItem,
   type SavedView,
 } from "./fixtures/census";
+import {
+  meDogsFixture,
+  meProfileFixture,
+  postalTownFixtures,
+  type MeDog,
+  type MeDogs,
+  type MeProfile,
+} from "./fixtures/member-self-service";
 import { currentMockScenario, mockScenario, type MockScenario } from "./scenarios";
 
 type ApiErrorResponse = components["schemas"]["ApiError"];
@@ -36,6 +44,9 @@ type PhotoRequest = components["schemas"]["PhotoRequest"];
 type DogDocumentUploadRequest = components["schemas"]["DogDocumentUploadRequest"];
 type DogDocumentReminderRequest = components["schemas"]["DogDocumentReminderRequest"];
 type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
+type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
+type MeProfilePatch = components["schemas"]["MeProfilePatch"];
+type Parameter = components["schemas"]["Parameter"];
 
 const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   ...view,
@@ -43,6 +54,14 @@ const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   filters: view.filters.map((filter) => ({ ...filter })),
   sort: [...view.sort],
 }));
+
+let memberDogsState: MeDogs = structuredClone(meDogsFixture);
+let memberProfileState: MeProfile = structuredClone(meProfileFixture);
+
+function resetMemberSelfServiceState(): void {
+  memberDogsState = structuredClone(meDogsFixture);
+  memberProfileState = structuredClone(meProfileFixture);
+}
 
 const memberFilterLabels: Readonly<Record<string, string>> = {
   birthDate: "Data de naixement",
@@ -414,6 +433,22 @@ function apiError(code: string, message: string, status: number, headers?: Heade
   );
 }
 
+function validationError(fieldErrors: { code: string; field: string }[]) {
+  return HttpResponse.json<ApiErrorResponse>(
+    {
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors },
+      message: "Validation failed",
+      traceId: "mock-trace-id",
+    },
+    { status: 400 },
+  );
+}
+
+function currentMemberDog(id: string): MeDog | undefined {
+  return memberDogsState.dogs.find((dog) => dog.id === id);
+}
+
 function currentDog(id: string): DogDetail | undefined {
   return censusRecordState.dogs[id];
 }
@@ -501,6 +536,146 @@ export const handlers = [
     }
     return HttpResponse.json({ access_token: `mock-${body.activeProfile.toLowerCase()}-token` });
   }),
+  http.get("*/api/v1/me/profile", () => HttpResponse.json(memberProfileState)),
+  http.patch("*/api/v1/me/profile", async ({ request }) => {
+    const body = (await request.json()) as MeProfilePatch;
+    if (body.contactEmails[0]?.email === "readonly@example.test") {
+      return validationError([{ code: "READ_ONLY", field: "firstName" }]);
+    }
+    if (body.version !== memberProfileState.version) {
+      return apiError("STALE_VERSION", "Stale version", 409);
+    }
+    memberProfileState = {
+      ...memberProfileState,
+      address: body.address,
+      contactEmails: body.contactEmails.map((email) => ({ ...email, bounced: false })),
+      phones: body.phones,
+      version: memberProfileState.version + 1,
+    };
+    return HttpResponse.json(memberProfileState);
+  }),
+  http.get("*/api/v1/me/dogs", () => HttpResponse.json(memberDogsState)),
+  http.put("*/api/v1/me/dogs/:id/instructor-note", async ({ params, request }) => {
+    if (!currentMockScenario().branding.modules?.includes("TASKS")) {
+      return apiError("MODULE_DISABLED", "Module disabled", 404);
+    }
+    const dog = currentMemberDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as InstructorNoteRequest;
+    if (body.text.length > 2000) {
+      return validationError([{ code: "TOO_LONG", field: "text" }]);
+    }
+    const instructorNote = { text: body.text, updatedAt: "2026-09-06T16:00:00Z" };
+    dog.instructorNote = instructorNote;
+    return HttpResponse.json(instructorNote);
+  }),
+  http.put("*/api/v1/me/dogs/:id/photo", async ({ params, request }) => {
+    const dog = currentMemberDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as PhotoRequest;
+    dog.photoUrl = `https://files.example.test/${body.fileKey}`;
+    return HttpResponse.json({ photoUrl: dog.photoUrl });
+  }),
+  http.post("*/api/v1/me/dogs/:id/documents", async ({ params, request }) => {
+    const dog = currentMemberDog(String(params.id));
+    if (dog === undefined) {
+      return apiError("NOT_FOUND", "Dog not found", 404);
+    }
+    const body = (await request.json()) as DogDocumentUploadRequest;
+    if (!["INSURANCE", "VACCINATION_CARD"].includes(body.type)) {
+      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
+    }
+    const existing = dog.documents.find((document) => document.type === body.type);
+    const file = {
+      id: `file-member-${String(existing?.files.length ?? 0)}-${dog.id}`,
+      name: body.name,
+      uploadedAt: "2026-09-06T16:00:00Z",
+      url: `https://files.example.test/${body.fileKey}`,
+    };
+    const document: components["schemas"]["DogDocument"] = existing ?? {
+      files: [],
+      id: `document-member-${body.type.toLocaleLowerCase()}-${dog.id}`,
+      state: "PENDING",
+      type: body.type,
+      typeLabel: body.type === "VACCINATION_CARD" ? "Cartilla de vacunes" : "Assegurança",
+    };
+    document.files = [...document.files, file];
+    document.state = "RECEIVED";
+    if (existing === undefined) {
+      dog.documents = [...dog.documents, document];
+    }
+    return HttpResponse.json(document, { status: 201 });
+  }),
+  http.get("*/api/v1/country-profile/postal-codes/:code", ({ params }) => {
+    const code = String(params.code);
+    return HttpResponse.json(postalTownFixtures[code] ?? []);
+  }),
+  http.get<{ key: string }, never, Parameter | ApiErrorResponse>(
+    "*/api/v1/parameters/:key",
+    ({ params, request }) => {
+      const key = params.key;
+      const locale = request.headers.get("Accept-Language")?.split(/[-,]/u)[0] ?? "ca";
+      const scenario = currentMockScenario();
+      const base: Omit<Parameter, "key" | "label" | "type" | "value" | "version"> = {
+        constraints: {},
+        editableBy: "CLUB",
+        help: "",
+        isOverride: true,
+      };
+      if (key === "levels.enabled") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          key,
+          label: "Nivells",
+          type: "BOOLEAN",
+          value: true,
+          version: 1,
+        });
+      }
+      if (key === "census.dogDocumentTypes") {
+        const labels =
+          locale === "es"
+            ? ["Cartilla de vacunas", "Seguro"]
+            : locale === "en"
+              ? ["Vaccination record", "Insurance"]
+              : ["Cartilla de vacunes", "Assegurança"];
+        return HttpResponse.json<Parameter>({
+          ...base,
+          key,
+          label: "Documents",
+          type: "LIST",
+          value: [
+            { code: "VACCINATION_CARD", label: labels[0], required: true },
+            { code: "INSURANCE", label: labels[1], required: false },
+          ],
+          version: 2,
+        });
+      }
+      if (key === "signup.text.imageConsent") {
+        const club = scenario.branding.club?.name ?? "AgilityHub";
+        const contact = `contact@${scenario.branding.club?.slug ?? "club"}.example.test`;
+        const text =
+          locale === "es"
+            ? `Autorizo a ${club} a tomar fotografías y vídeos en los que aparezcamos mi perro o yo durante las clases, entrenamientos y actividades del club, y a publicarlos en los canales del club con la única finalidad de dar a conocer su actividad. Puedo retirar esta autorización en cualquier momento desde mi perfil o escribiendo a ${contact}; la retirada no afecta a publicaciones anteriores.`
+            : locale === "en"
+              ? `I authorize ${club} to take photographs and videos showing me or my dog during club classes, training sessions and activities, and to publish them on club channels solely to explain the club's activity. I can withdraw this authorization at any time from my profile or by writing to ${contact}; withdrawal does not affect earlier publications.`
+              : `Autoritzo ${club} a fer fotografies i vídeos on aparegui jo i/o el meu gos durant les classes, entrenaments i activitats del club, i a publicar-los als canals del club amb l'única finalitat de donar a conèixer l'activitat del club. Puc retirar aquesta autorització en qualsevol moment des del meu perfil o escrivint a ${contact}; la retirada no afecta les publicacions fetes abans.`;
+        return HttpResponse.json<Parameter>({
+          ...base,
+          key,
+          label: "Autorització d'imatge",
+          type: "TEXT",
+          value: text,
+          version: 3,
+        });
+      }
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
+    },
+  ),
   http.get("*/api/v1/me/sessions", () => HttpResponse.json(currentMockScenario().sessions)),
   http.delete("*/api/v1/me/sessions/:id", () => new HttpResponse(null, { status: 200 })),
   http.post("*/auth/magic-link", async ({ request }) => {
@@ -1077,4 +1252,4 @@ export const handlers = [
   ),
 ];
 
-export { mockScenario, resetCensusRecordState, type MockScenario };
+export { mockScenario, resetCensusRecordState, resetMemberSelfServiceState, type MockScenario };

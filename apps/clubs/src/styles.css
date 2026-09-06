@@ -626,6 +626,456 @@ select {
   font-weight: 700;
 }
 
+.self-page {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  align-self: start;
+  grid-template-rows: auto 1fr;
+}
+
+.self-page__header {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ah-space-2);
+  min-height: 3.5rem;
+  padding: var(--ah-space-2) var(--ah-space-4);
+  background: var(--ah-color-background);
+}
+
+.self-page__header a {
+  display: grid;
+  min-width: 2rem;
+  min-height: 2rem;
+  color: var(--ah-color-primary);
+  font-size: 1.5rem;
+  line-height: 1;
+  text-decoration: none;
+  place-items: center;
+}
+
+.self-page__header h1 {
+  margin: 0;
+  font: 700 1.35rem/1.2 var(--ah-font-display);
+}
+
+.self-page__body,
+.my-data-form {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-3);
+  padding: 0 var(--ah-space-4) var(--ah-space-5);
+}
+
+.self-page__loading {
+  padding: var(--ah-space-5);
+  color: var(--ah-color-text-muted);
+}
+
+.self-page__message {
+  margin: 0;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-success);
+  background: color-mix(in srgb, var(--ah-color-success) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ah-color-success) 45%, transparent);
+  border-radius: var(--ah-radius-sm);
+  font-size: 0.8125rem;
+}
+
+.self-page__message[data-error] {
+  color: var(--ah-color-danger);
+  background: color-mix(in srgb, var(--ah-color-danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--ah-color-danger) 45%, transparent);
+}
+
+.dog-card {
+  display: grid;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4);
+}
+
+.dog-card__identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.dog-card__identity h2,
+.dog-card__identity p,
+.dog-card__license,
+.dog-pack h3,
+.dog-pack p,
+.dog-task p {
+  margin: 0;
+}
+
+.dog-card__identity h2 {
+  font: 700 1rem/1.2 var(--ah-font-display);
+}
+
+.dog-card__identity p,
+.dog-card__license,
+.dog-pack p,
+.dog-task p {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.dog-photo {
+  position: relative;
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  color: var(--ah-color-primary);
+  background: color-mix(in srgb, var(--ah-color-primary) 18%, var(--ah-color-surface));
+  border-radius: 50%;
+  cursor: pointer;
+  place-items: center;
+}
+
+.dog-photo[data-working] {
+  opacity: 0.55;
+}
+
+.dog-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dog-photo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.dog-card__level,
+.dog-card__free,
+.dog-pack > div:first-child span {
+  width: max-content;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dog-card__level {
+  color: var(--ah-color-primary);
+  background: color-mix(in srgb, var(--ah-color-primary) 16%, transparent);
+}
+
+.dog-card__free {
+  color: var(--ah-color-success);
+  background: color-mix(in srgb, var(--ah-color-success) 14%, transparent);
+}
+
+.dog-card__section,
+.dog-pack {
+  padding-top: var(--ah-space-3);
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.dog-note {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.dog-note label,
+.dog-tasks h3,
+.my-data-form section h2 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font: 700 0.75rem/1.35 var(--ah-font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dog-note label span,
+.dog-tasks h3 span {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.dog-note .ah-textarea {
+  min-height: 4.5rem;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  resize: vertical;
+}
+
+.dog-note .ah-button {
+  min-height: 2.25rem;
+  justify-self: end;
+}
+
+.dog-tasks {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.dog-task {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ah-space-2);
+}
+
+.dog-task[data-done] {
+  opacity: 0.62;
+}
+
+.dog-task[data-done] p {
+  text-decoration: line-through;
+}
+
+.dog-task small {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.dog-task small .ah-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.dog-task__check {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--ah-color-text);
+  background: transparent;
+  border: 1px solid var(--ah-color-border);
+  border-radius: 50%;
+  cursor: pointer;
+  place-items: center;
+}
+
+.dog-task__check[aria-checked="true"] {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-success);
+  border-color: var(--ah-color-success);
+}
+
+.self-link {
+  color: var(--ah-color-primary);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.dog-documents {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.dog-documents > div,
+.dog-documents > div > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1);
+}
+
+.dog-documents > div span {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.dog-documents__pending {
+  color: var(--ah-color-warning) !important;
+}
+
+.dog-documents .ah-button {
+  min-height: 2.5rem;
+  padding-inline: var(--ah-space-2);
+}
+
+.dog-card__license + .dog-card__license {
+  margin-top: calc(var(--ah-space-2) * -1);
+}
+
+.dog-pack {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.dog-pack > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+}
+
+.dog-pack h3 {
+  font-size: 0.9rem;
+}
+
+.dog-pack > div:first-child span {
+  color: var(--ah-color-warning);
+  background: color-mix(in srgb, var(--ah-color-warning) 14%, transparent);
+}
+
+.dog-pack__track {
+  height: 0.45rem;
+  overflow: hidden;
+  background: var(--ah-color-surface-2);
+  border-radius: 999px;
+}
+
+.dog-pack__track span {
+  display: block;
+  height: 100%;
+  background: var(--ah-color-primary);
+  border-radius: inherit;
+}
+
+.dog-pack p b {
+  color: var(--ah-color-primary);
+}
+
+.self-button-link {
+  display: grid;
+  min-height: 3.25rem;
+  padding: var(--ah-space-3);
+  color: var(--ah-color-primary-fg);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  background: var(--ah-color-primary);
+  border: 1px solid var(--ah-color-primary);
+  border-radius: var(--ah-radius-sm);
+  place-items: center;
+}
+
+.self-button-link--secondary {
+  color: var(--ah-color-primary);
+  background: transparent;
+}
+
+.my-dogs-page__footnote {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.self-modal-form,
+.my-data-form section,
+.my-data-form__identity {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.my-data-form section {
+  padding-top: var(--ah-space-1);
+}
+
+.my-data-form .ah-form-field {
+  gap: var(--ah-space-1);
+}
+
+.my-data-form .ah-form-field__label {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.my-data-form .ah-input {
+  min-height: 3.2rem;
+  font-size: 0.9rem;
+}
+
+.my-data-form input[readonly] {
+  color: var(--ah-color-text-muted);
+  background: color-mix(in srgb, var(--ah-color-surface-2) 62%, transparent);
+}
+
+.my-data-form__columns,
+.my-data-form__address-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--ah-space-3);
+}
+
+.my-data-form__phone {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--ah-space-2);
+}
+
+.my-data-form__prefix {
+  display: grid;
+  min-height: 3.2rem;
+  padding: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  font-size: 0.8125rem;
+  place-items: center;
+}
+
+.my-data-form__help {
+  margin: calc(var(--ah-space-1) * -1) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.my-data-form__masked {
+  letter-spacing: 0.05em;
+}
+
+.my-data-form__consent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.my-data-form__consent > span {
+  display: grid;
+  gap: var(--ah-space-1);
+  font-size: 0.9rem;
+}
+
+.my-data-form__consent small,
+.my-data-form__consent-help small {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.my-data-form__consent-help {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.my-data-form__consent-help summary {
+  color: var(--ah-color-primary);
+  cursor: pointer;
+}
+
+.my-data-form__consent-help p {
+  line-height: 1.55;
+}
+
+.my-data-form > .ah-button {
+  width: 100%;
+  min-height: 3.5rem;
+}
+
 @media (min-width: 30rem) {
   .clubs-shell,
   .auth-page {

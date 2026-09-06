@@ -18,24 +18,38 @@ function clientPath(path) {
 }
 
 function assertNoPendingRedefinitions(authoritative, pending) {
-  const authoritativePaths = new Set(Object.keys(authoritative.paths ?? {}).map(clientPath));
-  const duplicatePaths = Object.keys(pending.paths ?? {})
-    .map(clientPath)
-    .filter((path) => authoritativePaths.has(path));
+  const authoritativePaths = new Map(
+    Object.entries(authoritative.paths ?? {}).map(([path, pathItem]) => [
+      clientPath(path),
+      pathItem,
+    ]),
+  );
+  const duplicateOperations = Object.entries(pending.paths ?? {}).flatMap(
+    ([path, pendingPathItem]) => {
+      const normalizedPath = clientPath(path);
+      const authoritativePathItem = authoritativePaths.get(normalizedPath);
+      if (authoritativePathItem === undefined) {
+        return [];
+      }
+      return Object.keys(pendingPathItem)
+        .filter((key) => key in authoritativePathItem)
+        .map((key) => `${normalizedPath} ${key.toUpperCase()}`);
+    },
+  );
   const duplicateComponents = Object.entries(pending.components ?? {}).flatMap(
     ([section, pendingEntries]) => {
-      const authoritativeEntries = new Set(
-        Object.keys(authoritative.components?.[section] ?? {}),
-      );
+      const authoritativeEntries = new Set(Object.keys(authoritative.components?.[section] ?? {}));
       return Object.keys(pendingEntries)
         .filter((name) => authoritativeEntries.has(name))
         .map((name) => `${section}.${name}`);
     },
   );
 
-  if (duplicatePaths.length > 0 || duplicateComponents.length > 0) {
+  if (duplicateOperations.length > 0 || duplicateComponents.length > 0) {
     const details = [
-      duplicatePaths.length === 0 ? undefined : `paths: ${duplicatePaths.join(", ")}`,
+      duplicateOperations.length === 0
+        ? undefined
+        : `operations: ${duplicateOperations.join(", ")}`,
       duplicateComponents.length === 0
         ? undefined
         : `components: ${duplicateComponents.join(", ")}`,
@@ -49,10 +63,13 @@ function assertNoPendingRedefinitions(authoritative, pending) {
 function mergedClientDocument(authoritative, pending) {
   assertNoPendingRedefinitions(authoritative, pending);
 
+  const authoritativePaths = pathsByClientPath(authoritative);
+  const pendingPaths = pathsByClientPath(pending);
   const paths = Object.fromEntries(
-    [...Object.entries(authoritative.paths ?? {}), ...Object.entries(pending.paths ?? {})].map(
-      ([path, pathItem]) => [clientPath(path), pathItem],
-    ),
+    [...new Set([...Object.keys(authoritativePaths), ...Object.keys(pendingPaths)])].map((path) => [
+      path,
+      { ...(authoritativePaths[path] ?? {}), ...(pendingPaths[path] ?? {}) },
+    ]),
   );
   const components = { ...(authoritative.components ?? {}) };
   for (const [section, pendingEntries] of Object.entries(pending.components ?? {})) {
@@ -67,6 +84,12 @@ function mergedClientDocument(authoritative, pending) {
     paths,
     components,
   };
+}
+
+function pathsByClientPath(document) {
+  return Object.fromEntries(
+    Object.entries(document.paths ?? {}).map(([path, pathItem]) => [clientPath(path), pathItem]),
+  );
 }
 
 const authoritative = readDocument(authoritativeInput);

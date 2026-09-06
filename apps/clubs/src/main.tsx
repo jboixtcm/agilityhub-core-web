@@ -43,6 +43,11 @@ async function bootstrap(root: HTMLElement) {
     clientId: "clubs-app",
     ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
   });
+  const apiClient = createApiClient({
+    baseUrl: apiBaseUrl,
+    getAccessToken: () => authClient.getAccessToken(),
+    getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
+  });
   if (window.location.hash.startsWith("#impersonation=")) {
     const token = new URLSearchParams(window.location.hash.slice(1)).get("impersonation");
     window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
@@ -56,7 +61,7 @@ async function bootstrap(root: HTMLElement) {
       <I18nextProvider i18n={i18n}>
         <BrandingProvider branding={branding}>
           <SessionProvider client={authClient}>
-            <App authClient={authClient} />
+            <App apiClient={apiClient} authClient={authClient} />
           </SessionProvider>
         </BrandingProvider>
       </I18nextProvider>

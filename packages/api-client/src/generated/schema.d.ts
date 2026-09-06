@@ -242,7 +242,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["myCensusProfile"];
         /**
          * Select an available club profile
          * @description Account token with club context. R-01-07. Returns a fresh access token.
@@ -252,7 +252,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        patch: operations["updateMyCensusProfile"];
         trace?: never;
     };
     "/me/sessions": {
@@ -867,6 +867,102 @@ export interface paths {
             cookie?: never;
         };
         get: operations["listLevels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/country-profile/postal-codes/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["postalCodeTowns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["myDogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs/{id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["uploadMyDogDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs/{id}/instructor-note": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateInstructorNote"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateMyDogPhoto"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/parameters/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["parameter"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1726,6 +1822,112 @@ export interface components {
             fileKey: string;
             /** Format: uri */
             uploadUrl: string;
+        };
+        PostalTown: {
+            town: string;
+            region: string;
+        };
+        InstructorNote: {
+            text: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        InstructorNoteRequest: {
+            text: string;
+        };
+        MemberDogTask: {
+            /** Format: uuid */
+            id: string;
+            text: string;
+            /** Format: date-time */
+            createdAt: string;
+            instructorName: string;
+            attachmentsCount: number;
+            /** Format: date-time */
+            doneAt?: string;
+        };
+        TasksSummary: {
+            open: number;
+            completed: number;
+            items: components["schemas"]["MemberDogTask"][];
+        };
+        PackSummary: {
+            /** Format: uuid */
+            id: string;
+            remaining: number;
+            total: number;
+            /** Format: date */
+            expiresOn?: string;
+        };
+        MeDog: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            breed: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+            ageYears: number;
+            /** Format: uri */
+            photoUrl?: string;
+            level?: components["schemas"]["LevelSummary"];
+            instructorNote?: components["schemas"]["InstructorNote"];
+            tasks?: components["schemas"]["TasksSummary"];
+            documents: components["schemas"]["DogDocument"][];
+            freeTrainingAllowed: boolean;
+            licenses: components["schemas"]["DogLicense"][];
+            pack?: components["schemas"]["PackSummary"];
+        };
+        MeDogs: {
+            dogs: components["schemas"]["MeDog"][];
+            canAddDog: boolean;
+        };
+        ContactEmailInput: {
+            /** Format: email */
+            email: string;
+        };
+        MeProfile: {
+            idDocumentMasked: string;
+            firstName: string;
+            lastName1: string;
+            lastName2?: string;
+            contactEmails: components["schemas"]["ContactEmail"][];
+            phones: components["schemas"]["Phone"][];
+            address: components["schemas"]["Address"];
+            paymentMethod?: components["schemas"]["PaymentMethod"];
+            consents?: components["schemas"]["MemberConsents"];
+            /** Format: int64 */
+            version: number;
+        };
+        MeProfilePatch: {
+            contactEmails: components["schemas"]["ContactEmailInput"][];
+            phones: components["schemas"]["Phone"][];
+            address: components["schemas"]["Address"];
+            /** Format: int64 */
+            version: number;
+        };
+        LastChange: {
+            action: string;
+            actorName?: string;
+            /** Format: date-time */
+            at: string;
+        };
+        Parameter: {
+            key: string;
+            label: string;
+            help: string;
+            type: string;
+            value: unknown;
+            constraints: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            editableBy: "CLUB" | "PLATFORM";
+            module?: string;
+            scopeRef?: string;
+            isOverride: boolean;
+            /** Format: int64 */
+            version: number;
+            lastChange?: components["schemas"]["LastChange"];
         };
         SavedView: {
             id: string;
@@ -3503,6 +3705,27 @@ export interface operations {
             };
         };
     };
+    myCensusProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The member's editable census profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeProfile"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
     profile: {
         parameters: {
             query?: never;
@@ -3626,6 +3849,31 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+        };
+    };
+    updateMyCensusProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeProfilePatch"];
+            };
+        };
+        responses: {
+            /** @description Updated member census profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeProfile"];
+                };
+            };
+            default: components["responses"]["ApiError"];
         };
     };
     sessions: {
@@ -5746,6 +5994,154 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LevelList"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    postalCodeTowns: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Towns for the postal code */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostalTown"][];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    myDogs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The member's active dogs */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeDogs"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    uploadMyDogDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DogDocumentUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Uploaded dog document */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DogDocument"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateInstructorNote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstructorNoteRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved instructor note */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstructorNote"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateMyDogPhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ResourceId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhotoRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated dog photo */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhotoResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    parameter: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resolved parameter */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Parameter"];
                 };
             };
             default: components["responses"]["ApiError"];

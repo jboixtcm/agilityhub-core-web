@@ -48,3 +48,7 @@ E1-W06 is **verified** (26/26 independent; merge + Ajv contract test are exactly
 
 ### 2026-09-06 15:45 · @organizer → @executor · api E2 contract verified → staged snapshot + task E2-W08
 The api E2 contract (E2-T01: 104 paths / 223 schemas) is verified. Its snapshot is staged at `packages/api-client/openapi/openapi.next.json` — **do not swap it in from another task**: the generator's guard would fail while `pending.json` still defines the same paths. Task **E2-W08** (not_open until E2-W02/E2-W04 land) does the swap, prunes `pending.json` and aligns fixtures/consumers. Until then keep working mocks-first, but prefer the real names when you extend `pending.json` (look them up in `openapi.next.json`) — it makes E2-W08 cheaper. New catalog code with translation already present: `MEMBER_ERASED` (409).
+
+### 2026-09-06 16:15 · @executor → @organizer · E2-W03 contract follow-ups
+@organizer **Non-blocking contract proposals** — R-03-18/T-03-40 require member-visible task items and completion state, but staged `TasksSummary` only exposes `open`/`completed`; please extend it (or publish the canonical S10 member task list/completion operations). Screen 28 also requires image-rights state, while staged `MeProfile` has no consents and R-03-09's PATCH excludes them; please confirm the control is read-only or publish a dedicated consent operation. E2-W03 keeps completion as a local S10 placeholder and renders image rights read-only meanwhile.
+Blocking: no.

@@ -1,4 +1,5 @@
-import { mockScenario } from "@agilityhub/api-client/mocks";
+import { createApiClient } from "@agilityhub/api-client";
+import { mockScenario, resetMemberSelfServiceState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
@@ -9,6 +10,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { App, MOBILE_ROUTES, MobileNavigation } from "./App";
+import { isCountryFieldValid } from "./SelfServicePages";
 
 const canicBranding: Branding = {
   ...brandingCanicFixture,
@@ -18,6 +20,7 @@ const minimalBranding: Branding = {
   ...canicBranding,
   club: { name: "Club Mínim", slug: "minim" },
   locales: ["ca", "es", "en"],
+  modules: ["WAITLIST", "FAQ", "PUSH"],
   signup: { enabled: false },
   theme: {
     colors: canicBranding.theme.colors,
@@ -32,6 +35,7 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   mockScenario("member");
+  resetMemberSelfServiceState();
 });
 afterAll(() => {
   server.close();
@@ -50,14 +54,21 @@ async function renderApplication(client: AuthClient, branding: Branding = canicB
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["auth", "errors", "shell"],
+    initialNamespaces: ["auth", "census", "errors", "shell"],
     storage: undefined,
   });
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
         <SessionProvider client={client}>
-          <App authClient={client} />
+          <App
+            apiClient={createApiClient({
+              baseUrl: `${window.location.origin}/api/v1`,
+              getAccessToken: () => client.getAccessToken(),
+              getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
+            })}
+            authClient={client}
+          />
         </SessionProvider>
       </BrandingProvider>
     </I18nextProvider>,
@@ -351,5 +362,101 @@ describe("T-01-21 profile access rows and impersonation", () => {
 
     expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     expect(screen.getByRole("button", { name: "Surt" })).toBeVisible();
+  });
+});
+
+describe("T-03-40 mobile own dogs", () => {
+  it("renders own dogs, saves the note, completes a task and gates TASKS", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Els meus gossos" })).toBeVisible();
+    expect(screen.getByText(/Border collie · femella · 4 anys/u)).toBeVisible();
+    expect(screen.getByText("Nivell C")).toBeVisible();
+    expect(screen.getByText("Pot entrenar sol")).toBeVisible();
+    expect(screen.getByText(/FCAG · llicència 3241 · Iniciació/u)).toBeVisible();
+    expect(screen.getByText(/RSCE · llicència 13298 · G2/u)).toBeVisible();
+    expect(
+      screen.getByText(
+        "El nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club",
+      ),
+    ).toBeVisible();
+
+    const note = screen.getAllByLabelText(/Notes als instructors/u)[0] as HTMLTextAreaElement;
+    fireEvent.change(note, { target: { value: "Treballarem el balancí amb calma." } });
+    fireEvent.click(screen.getAllByRole("button", { name: "DESA" })[0] as HTMLButtonElement);
+    expect(await screen.findByRole("status")).toHaveTextContent("Nota de Duna desada");
+
+    const task = screen.getByRole("checkbox", {
+      name: /Marca la tasca com a feta: Aquesta setmana practiqueu el balancí/u,
+    });
+    fireEvent.click(task);
+    expect(task).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
+    expect(screen.getByRole("dialog", { name: "Afegeix un document de Duna" })).toBeVisible();
+    expect(screen.getByLabelText("Tipus")).toBeVisible();
+    expect(screen.getByLabelText("Nom del document")).toBeVisible();
+    expect(screen.getByLabelText("Fitxer")).toBeVisible();
+
+    cleanup();
+    mockScenario("minimal");
+    const minimalClient = authClient();
+    await minimalClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(minimalClient, minimalBranding);
+    await screen.findByRole("heading", { name: "Els meus gossos" });
+    expect(screen.queryByText("Notes als instructors", { exact: false })).not.toBeInTheDocument();
+    expect(screen.queryByText("Tasques", { exact: true })).not.toBeInTheDocument();
+  });
+});
+
+describe("T-03-41 mobile own data", () => {
+  it("keeps identity read-only, resolves towns, maps READ_ONLY and gates billing", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/dades");
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Les meves dades" })).toBeVisible();
+    expect(screen.getByLabelText("DNI")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Nom")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Cognom 1")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Cognom 2")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Segon email (opcional)")).toHaveValue("feina@example.cat");
+    expect(await screen.findByLabelText("Població (proposada pel CP)")).not.toHaveValue("");
+    expect(screen.getByText("Domiciliació")).toBeVisible();
+
+    fireEvent.change(screen.getByLabelText("CP"), { target: { value: "99999" } });
+    const towns = await screen.findByRole("combobox", {
+      name: "Població (proposada pel CP)",
+    });
+    expect(within(towns).getByRole("option", { name: "Poble Nord" })).toBeInTheDocument();
+    expect(within(towns).getByRole("option", { name: "Poble Sud" })).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Email principal"), {
+      target: { value: "readonly@example.test" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    expect(await screen.findByText("Aquest element és només de lectura.")).toBeVisible();
+
+    cleanup();
+    mockScenario("minimal");
+    const minimalClient = authClient();
+    await minimalClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/dades");
+    await renderApplication(minimalClient, minimalBranding);
+    await screen.findByRole("heading", { name: "Les meves dades" });
+    expect(screen.queryByText("Domiciliació")).not.toBeInTheDocument();
+  });
+
+  it("validates DNI, NIE, phone and postal code from the country profile", () => {
+    const es = { code: "ES", idDocumentTypes: ["DNI", "NIE"], phonePrefix: "+34" };
+    expect(isCountryFieldValid(es, "DNI", "12345678Z")).toBe(true);
+    expect(isCountryFieldValid(es, "NIE", "X1234567L")).toBe(true);
+    expect(isCountryFieldValid(es, "PHONE", "12345678")).toBe(false);
+    expect(isCountryFieldValid(es, "POSTAL_CODE", "0834")).toBe(false);
+    expect(isCountryFieldValid({ code: "GENERIC", phonePrefix: "+1" }, "DNI", "A-42")).toBe(true);
   });
 });

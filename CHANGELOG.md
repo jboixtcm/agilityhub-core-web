@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the AgilityHub ID login and magic-link continuation flows, account and session management, password and product pages, global logout, three-locale copy, and desktop browser evidence.
 - Add the reusable UniversalList pattern and the Clubs Admin member and dog census screens with URL-synced filters, configurable columns, saved views, bulk selection, exports, and three-locale coverage.
 - Add the Clubs Admin member and dog records with D10 actions, optimistic concurrency, payment and role management, booking controls, consent and notification settings, dog level and document workflows, translated mocks, and browser evidence.
+- Add the Clubs member self-service dog and personal-data screens with country-aware validation, postal locality lookup, uploads, task and module gating, consent text, translated mocks, and mobile browser evidence.
 
 ### Changed
 
