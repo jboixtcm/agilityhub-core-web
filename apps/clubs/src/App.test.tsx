@@ -19,6 +19,10 @@ const minimalBranding: Branding = {
   club: { name: "Club Mínim", slug: "minim" },
   locales: ["ca", "es", "en"],
   signup: { enabled: false },
+  theme: {
+    colors: canicBranding.theme.colors,
+    mode: "light",
+  },
 };
 
 beforeAll(() => {
@@ -139,11 +143,11 @@ describe("T-01-18 access screen", () => {
     const requestMagicLink = vi.spyOn(client, "requestMagicLink");
     await renderApplication(client);
 
-    expect(screen.getByRole("img", { name: "Cànic" })).toHaveAttribute(
+    expect(screen.getByRole("img", { name: "Club Agility Cànic" })).toHaveAttribute(
       "src",
-      expect.stringMatching(/^data:image\/png;base64,/u),
+      brandingCanicFixture.theme.logoDarkUrl,
     );
-    expect(screen.getByText("Cànic AGILITY")).toBeVisible();
+    expect(screen.queryByText("Club Agility Cànic AGILITY")).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText("correu@exemple.cat")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("contrasenya")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ENTRA" })).toBeInTheDocument();
@@ -185,7 +189,8 @@ describe("T-01-18 access screen", () => {
     mockScenario("minimal");
     await renderApplication(authClient(), minimalBranding);
     expect(screen.queryByRole("link", { name: /Apunta-t'hi/u })).not.toBeInTheDocument();
-    expect(screen.getByRole("contentinfo")).toHaveTextContent("Club Agility Club Mínim");
+    expect(screen.getByText("Club Mínim", { selector: ".auth-logo__name" })).toBeVisible();
+    expect(screen.getByRole("contentinfo")).toHaveTextContent("Club Mínim");
     expect(screen.getByRole("contentinfo")).not.toHaveTextContent("·");
   });
 

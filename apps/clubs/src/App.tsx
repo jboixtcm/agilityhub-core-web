@@ -117,15 +117,18 @@ function routeAfterLogin(me: CurrentMe): string {
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   const branding = useBranding();
-  const { t } = useTranslation("auth");
-  const logo = branding.theme.logoUrl?.trim();
+  const darkLogo = branding.theme.logoDarkUrl?.trim();
+  const logo =
+    branding.theme.mode === "dark" && darkLogo !== undefined && darkLogo !== ""
+      ? darkLogo
+      : branding.theme.logoUrl?.trim();
   const mark = branding.theme.markUrl?.trim();
   const hasLogo = logo !== undefined && logo !== "";
   const hasMark = mark !== undefined && mark !== "";
   return (
     <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
       {hasLogo ? (
-        <img alt={branding.club.name} src={logo} />
+        <img alt={branding.club.name} className="auth-logo__full" src={logo} />
       ) : hasMark ? (
         <img alt="" className="auth-logo__mark" src={mark} />
       ) : (
@@ -133,14 +136,7 @@ function LogoMark({ compact = false }: { compact?: boolean }) {
           <Icon aria-hidden="true" name="paw" />
         </span>
       )}
-      {compact ? null : (
-        <span className="auth-logo__wordmark">
-          <strong>
-            {hasLogo ? t("auth:access.wordmark", { club: branding.club.name }) : branding.club.name}
-          </strong>
-          {hasLogo ? <small>{t("auth:access.tagline")}</small> : null}
-        </span>
-      )}
+      {hasLogo ? null : <strong className="auth-logo__name">{branding.club.name}</strong>}
     </div>
   );
 }

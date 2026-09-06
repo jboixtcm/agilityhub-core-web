@@ -57,7 +57,7 @@ describe("typed API client", () => {
       throw new TypeError("Expected a branding payload");
     }
     expect(normalizeBranding(data)).toMatchObject({
-      club: { name: "Cànic", slug: "canic" },
+      club: { name: "Club Agility Cànic", slug: "canic" },
       theme: {
         mode: "dark",
         colors: {

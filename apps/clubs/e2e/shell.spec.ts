@@ -73,7 +73,10 @@ test.describe("T-02-14 clubs shell", () => {
       const href = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.href;
       return href === undefined ? null : ((await fetch(href)).json() as Promise<unknown>);
     });
-    expect(manifest).toMatchObject({ name: "Cànic", short_name: "Cànic" });
+    expect(manifest).toMatchObject({
+      name: "Club Agility Cànic",
+      short_name: "Club Agility Cànic",
+    });
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "clubs-canic-375.png"),

@@ -205,7 +205,7 @@ select {
   margin-bottom: var(--ah-space-5);
 }
 
-.auth-logo img,
+.auth-logo__mark,
 .auth-logo__fallback {
   width: 8rem;
   height: 8rem;
@@ -213,6 +213,11 @@ select {
 
 .auth-logo img {
   object-fit: contain;
+}
+
+.auth-logo__full {
+  width: 15rem;
+  height: 11.75rem;
 }
 
 .auth-logo__fallback {
@@ -228,33 +233,27 @@ select {
   height: 4.5rem;
 }
 
-.auth-logo__wordmark {
-  display: grid;
-  justify-items: center;
-  gap: var(--ah-space-1);
-}
-
-.auth-logo strong {
-  font: 800 1.35rem/1.2 var(--ah-font-display);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.auth-logo__wordmark small {
-  color: var(--ah-color-primary);
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.26em;
+.auth-logo__name {
+  font: 700 1.35rem/1.2 var(--ah-font-display);
 }
 
 .auth-logo--compact {
   margin-bottom: var(--ah-space-2);
 }
 
-.auth-logo--compact img,
+.auth-logo--compact .auth-logo__mark,
 .auth-logo--compact .auth-logo__fallback {
   width: 5.5rem;
   height: 5.5rem;
+}
+
+.auth-logo--compact .auth-logo__full {
+  width: 7rem;
+  height: 5.5rem;
+}
+
+.auth-logo--compact .auth-logo__name {
+  font-size: 1rem;
 }
 
 .auth-logo--compact .auth-logo__fallback .ah-icon {

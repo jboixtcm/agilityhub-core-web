@@ -49,11 +49,11 @@ test.describe("T-01-18 access screen", () => {
   }) => {
     await prepareScenario(page, "member");
     await page.goto(`${baseUrl}/entrar`);
-    await expect(page.getByRole("img", { name: "Cànic" })).toHaveAttribute(
+    await expect(page.getByRole("img", { name: "Club Agility Cànic" })).toHaveAttribute(
       "src",
       /^data:image\/png;base64,/u,
     );
-    await expect(page.getByText("Cànic AGILITY")).toBeVisible();
+    await expect(page.getByText("Club Agility Cànic AGILITY")).toHaveCount(0);
     await expect(page.getByPlaceholder("correu@exemple.cat")).toBeVisible();
     await expect(page.getByPlaceholder("contrasenya")).toBeVisible();
     await expect(page.getByRole("button", { exact: true, name: "ENTRA" })).toBeVisible();
