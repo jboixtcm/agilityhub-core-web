@@ -1,4 +1,6 @@
+import { isApiError } from "@agilityhub/api-client";
 import {
+  type AccountSession,
   type AuthClient,
   RequireAuth,
   RequireModule,
@@ -9,19 +11,22 @@ import type { Role } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import {
   AppBar,
+  Avatar,
   Button,
   Card,
+  Checkbox,
   EmptyState,
-  FormField,
   Icon,
   Input,
   isModuleUiItemEnabled,
+  Modal,
   requiredModulesForUiItem,
+  Select,
   TabBar,
   type TabBarItem,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useState } from "react";
+import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface RouteDefinition {
@@ -92,6 +97,40 @@ function currentRoute(pathname: string): RouteDefinition | undefined {
     (route) => !route.path.includes("*") && matchesPath(pathname, route.path),
   );
   return exact ?? MOBILE_ROUTES.find((route) => matchesPath(pathname, route.path));
+}
+
+function firstName(name: string): string {
+  return name.trim().split(/\s+/)[0] ?? name;
+}
+
+type CurrentMe = NonNullable<ReturnType<AuthClient["getMe"]>>;
+
+function profileRoles(me: CurrentMe): readonly Role[] {
+  return me.membership.profiles ?? me.membership.roles;
+}
+
+function routeAfterLogin(me: CurrentMe): string {
+  if (profileRoles(me).length > 1 && me.membership.rememberProfile !== true) {
+    return "/perfil-acces";
+  }
+  return me.membership.activeProfile === "INSTRUCTOR" ? "/instructor/avui" : "/inici";
+}
+
+function LogoMark({ compact = false }: { compact?: boolean }) {
+  const branding = useBranding();
+  const logo = branding.theme.logoDarkUrl ?? branding.theme.logoUrl ?? branding.theme.markUrl;
+  return (
+    <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
+      {logo === undefined ? (
+        <span aria-label={branding.club.name} className="auth-logo__fallback" role="img">
+          <Icon aria-hidden="true" name="paw" />
+        </span>
+      ) : (
+        <img alt={branding.club.name} src={logo} />
+      )}
+      {compact ? null : <strong>{branding.club.name}</strong>}
+    </div>
+  );
 }
 
 function Placeholder() {
@@ -176,7 +215,31 @@ export function MobileNavigation({
   return <TabBar items={items} label={t("shell:nav.main")} />;
 }
 
-function MobileShell({ children }: { children: ReactNode }) {
+function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
+  const { me } = useSession();
+  const { t } = useTranslation("auth");
+  const [pending, setPending] = useState(false);
+  if (me?.impersonation === undefined) {
+    return null;
+  }
+  return (
+    <div className="impersonation-banner" role="status">
+      <span>{t("auth:impersonation.banner", { member: me.account.name })}</span>
+      <button
+        disabled={pending}
+        onClick={() => {
+          setPending(true);
+          void authClient.logout().catch(() => undefined);
+        }}
+        type="button"
+      >
+        {t("auth:impersonation.exit")}
+      </button>
+    </div>
+  );
+}
+
+function MobileShell({ authClient, children }: { authClient: AuthClient; children: ReactNode }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
@@ -184,31 +247,34 @@ function MobileShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="clubs-shell">
-      <AppBar
-        className="clubs-shell__header"
-        end={
-          <div className="clubs-shell__actions">
-            <LanguageSelector />
-            <button
-              aria-label={t("shell:header.userMenu")}
-              className="clubs-shell__user"
-              type="button"
-            >
-              <Icon aria-hidden="true" name="user" />
-            </button>
-          </div>
-        }
-        start={
-          logo === undefined ? (
-            <span aria-hidden="true" className="clubs-shell__mark">
-              {branding.club.name.charAt(0)}
-            </span>
-          ) : (
-            <img alt={branding.club.name} className="clubs-shell__logo" src={logo} />
-          )
-        }
-        title={branding.club.name}
-      />
+      <div className="clubs-shell__top">
+        <ImpersonationBanner authClient={authClient} />
+        <AppBar
+          className="clubs-shell__header"
+          end={
+            <div className="clubs-shell__actions">
+              <LanguageSelector />
+              <a
+                aria-label={t("shell:header.userMenu")}
+                className="clubs-shell__user"
+                href="/perfil"
+              >
+                <Icon aria-hidden="true" name="user" />
+              </a>
+            </div>
+          }
+          start={
+            logo === undefined ? (
+              <span aria-hidden="true" className="clubs-shell__mark">
+                {branding.club.name.charAt(0)}
+              </span>
+            ) : (
+              <img alt={branding.club.name} className="clubs-shell__logo" src={logo} />
+            )
+          }
+          title={branding.club.name}
+        />
+      </div>
       <main className="clubs-shell__content">{children}</main>
       <MobileNavigation
         modules={branding.modules}
@@ -235,69 +301,810 @@ function routePlaceholder(route: RouteDefinition): ReactNode {
   return content;
 }
 
-function AccessPage({ authClient }: { authClient: AuthClient }) {
-  const { t } = useTranslation("shell");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [pending, setPending] = useState(false);
-  const [failed, setFailed] = useState(false);
+function useCountdown() {
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    if (seconds <= 0) {
+      return undefined;
+    }
+    const timer = window.setTimeout(() => {
+      setSeconds((current) => Math.max(0, current - 1));
+    }, 1000);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [seconds]);
+  return { seconds, start: setSeconds };
+}
 
-  const submit = async (event: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
-    event.preventDefault();
-    setFailed(false);
-    setPending(true);
+function accessError(
+  error: unknown,
+  club: string,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  if (isApiError(error, "INVALID_CREDENTIALS")) {
+    return t("auth:access.invalidCredentials");
+  }
+  if (isApiError(error, "NO_MEMBERSHIP")) {
+    return t("auth:access.noMembership", { club });
+  }
+  if (isApiError(error, "MEMBERSHIP_SUSPENDED") || isApiError(error, "ACCOUNT_BLOCKED")) {
+    return t("auth:access.accessDisabled");
+  }
+  return t("auth:access.genericError");
+}
+
+export function AccessPage({ authClient }: { authClient: AuthClient }) {
+  const branding = useBranding();
+  const { t } = useTranslation("auth");
+  const [email, setEmail] = useState(
+    () => new URLSearchParams(window.location.search).get("email") ?? "",
+  );
+  const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
+  const [message, setMessage] = useState<string>();
+  const [error, setError] = useState<string>();
+  const countdown = useCountdown();
+
+  const requireEmail = (): boolean => {
+    if (email.trim() !== "") {
+      return true;
+    }
+    setError(t("auth:access.emailRequired"));
+    document.querySelector<HTMLInputElement>("#access-email")?.focus();
+    return false;
+  };
+
+  const requestLink = async (purpose: "LOGIN" | "RESET") => {
+    if (!requireEmail()) {
+      return;
+    }
+    setError(undefined);
+    setMessage(undefined);
+    setPending(purpose === "LOGIN" ? "magic" : "reset");
     try {
-      await authClient.login(email, password);
-      window.location.assign("/inici");
+      await authClient.requestMagicLink(email, purpose);
+      setMessage(t("auth:access.neutralSuccess"));
+    } catch (requestError) {
+      if (isApiError(requestError) && requestError.status === 429) {
+        countdown.start(requestError.retryAfter ?? 60);
+      } else {
+        setError(accessError(requestError, branding.club.name, t));
+      }
+    } finally {
+      setPending(null);
+    }
+  };
+
+  const login = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!requireEmail()) {
+      return;
+    }
+    setError(undefined);
+    setMessage(undefined);
+    setPending("login");
+    try {
+      const me = await authClient.login(email, password);
+      window.location.assign(routeAfterLogin(me));
+    } catch (loginError) {
+      if (isApiError(loginError) && loginError.status === 429) {
+        countdown.start(loginError.retryAfter ?? 60);
+      } else {
+        setError(accessError(loginError, branding.club.name, t));
+      }
+      setPending(null);
+    }
+  };
+
+  return (
+    <main className="auth-page">
+      <section aria-labelledby="access-title" className="auth-panel">
+        <h1 className="ah-sr-only" id="access-title">
+          {t("auth:access.title")}
+        </h1>
+        <LogoMark />
+        <form className="auth-form" noValidate onSubmit={(event) => void login(event)}>
+          <label className="ah-sr-only" htmlFor="access-email">
+            {t("auth:access.emailLabel")}
+          </label>
+          <Input
+            autoComplete="email"
+            id="access-email"
+            onChange={(event) => {
+              setEmail(event.currentTarget.value);
+            }}
+            placeholder={t("auth:access.emailPlaceholder")}
+            type="email"
+            value={email}
+          />
+          <Button
+            className="auth-form__primary"
+            disabled={pending !== null || countdown.seconds > 0}
+            loading={pending === "magic"}
+            onClick={() => void requestLink("LOGIN")}
+            type="button"
+          >
+            <Icon aria-hidden="true" name="mail" />
+            {t("auth:access.magicLink")}
+          </Button>
+          {passwordVisible ? (
+            <>
+              <label className="ah-sr-only" htmlFor="access-password">
+                {t("auth:access.passwordLabel")}
+              </label>
+              <Input
+                autoComplete="current-password"
+                id="access-password"
+                onChange={(event) => {
+                  setPassword(event.currentTarget.value);
+                }}
+                placeholder={t("auth:access.passwordPlaceholder")}
+                required
+                type="password"
+                value={password}
+              />
+              <Button
+                className="auth-form__primary"
+                disabled={pending !== null || countdown.seconds > 0}
+                loading={pending === "login"}
+                loadingLabel={t("auth:access.entering")}
+                type="submit"
+              >
+                {t("auth:access.enter")}
+              </Button>
+              <button
+                className="auth-text-action"
+                disabled={pending !== null || countdown.seconds > 0}
+                onClick={() => void requestLink("RESET")}
+                type="button"
+              >
+                {t("auth:access.forgot")}
+              </button>
+            </>
+          ) : (
+            <Button
+              onClick={() => {
+                setPasswordVisible(true);
+              }}
+              type="button"
+              variant="secondary"
+            >
+              <Icon aria-hidden="true" name="lock" />
+              {t("auth:access.passwordReveal")}
+            </Button>
+          )}
+          {countdown.seconds > 0 ? (
+            <p className="auth-message auth-message--error" role="alert">
+              {t("auth:access.countdown", { seconds: countdown.seconds })}
+            </p>
+          ) : null}
+          {error === undefined ? null : (
+            <p className="auth-message auth-message--error" id="access-error" role="alert">
+              {error}
+            </p>
+          )}
+          {message === undefined ? null : (
+            <p className="auth-message auth-message--success" role="status">
+              {message}
+            </p>
+          )}
+        </form>
+        {branding.signup.enabled ? (
+          <div className="auth-signup">
+            <a href="/apuntat-hi">{t("auth:access.signup")}</a>
+          </div>
+        ) : null}
+      </section>
+      <footer className="auth-footer">
+        {t("auth:access.footer", { club: branding.club.name })}
+      </footer>
+    </main>
+  );
+}
+
+function passwordError(error: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
+  if (isApiError(error, "PASSWORD_TOO_SHORT")) {
+    return t("errors:PASSWORD_TOO_SHORT");
+  }
+  if (isApiError(error, "PASSWORD_MISMATCH")) {
+    return t("errors:PASSWORD_MISMATCH");
+  }
+  if (isApiError(error, "PASSWORD_COMPROMISED")) {
+    return t("errors:PASSWORD_COMPROMISED");
+  }
+  if (isApiError(error, "INVALID_CREDENTIALS")) {
+    return t("errors:INVALID_CREDENTIALS");
+  }
+  return t("auth:access.genericError");
+}
+
+function ActivationPage({ authClient }: { authClient: AuthClient }) {
+  const { t } = useTranslation(["auth", "errors"]);
+  const parameters = new URLSearchParams(window.location.search);
+  const purpose = parameters.get("purpose")?.toUpperCase();
+  const token = parameters.get("token") ?? parameters.get("t");
+  const started = useRef(false);
+  const [me, setMe] = useState<CurrentMe>();
+  const [invalid, setInvalid] = useState(token === null || token === "");
+  const [newPassword, setNewPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [passwordPending, setPasswordPending] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<string>();
+  const [passwordFailure, setPasswordFailure] = useState<string>();
+
+  useEffect(() => {
+    if (started.current) {
+      return;
+    }
+    started.current = true;
+    if (token === null || token === "") {
+      return;
+    }
+    void authClient.exchangeMagicLink(token).then(setMe, () => {
+      setInvalid(true);
+    });
+  }, [authClient, token]);
+
+  if (invalid) {
+    return (
+      <main className="auth-page">
+        <section className="auth-panel auth-panel--centered">
+          <LogoMark compact />
+          <Icon aria-hidden="true" className="activation-error__icon" name="warn" />
+          <h1>{t("auth:activation.invalidTitle")}</h1>
+          <p>{t("auth:activation.invalidDescription")}</p>
+          <Button
+            onClick={() => {
+              window.location.assign("/entrar");
+            }}
+            type="button"
+          >
+            {t("auth:activation.resend")}
+          </Button>
+        </section>
+      </main>
+    );
+  }
+
+  if (me === undefined) {
+    return (
+      <main className="auth-page auth-page--loading">
+        <p role="status">{t("auth:activation.loading")}</p>
+      </main>
+    );
+  }
+
+  const savePassword = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPasswordPending(true);
+    setPasswordFailure(undefined);
+    setPasswordMessage(undefined);
+    try {
+      await authClient.updatePassword({ new: newPassword, repeat: repeatPassword });
+      setPasswordMessage(t("auth:activation.passwordSaved"));
+    } catch (error) {
+      setPasswordFailure(passwordError(error, t));
+    } finally {
+      setPasswordPending(false);
+    }
+  };
+
+  const gender = me.account.gender === "FEMALE" ? "female" : "other";
+  return (
+    <main className="auth-page">
+      <section className="auth-panel activation-panel">
+        <LogoMark compact />
+        <h1>
+          {purpose === "RESET"
+            ? t("auth:activation.resetTitle")
+            : t("auth:activation.welcome", { gender, name: firstName(me.account.name) })}
+        </h1>
+        <p className="activation-panel__description">{t("auth:activation.description")}</p>
+        {purpose === "RESET" ? null : (
+          <p className="activation-success" role="status">
+            <Icon aria-hidden="true" name="check" />
+            {t("auth:activation.activated")}
+          </p>
+        )}
+        <Button
+          className="auth-form__primary"
+          onClick={() => {
+            window.location.assign(routeAfterLogin(me));
+          }}
+          type="button"
+        >
+          {t("auth:activation.continue")}
+        </Button>
+        <form className="activation-password" onSubmit={(event) => void savePassword(event)}>
+          <h2>{t("auth:activation.passwordPrompt")}</h2>
+          <label className="ah-sr-only" htmlFor="activation-password">
+            {t("auth:activation.newPassword")}
+          </label>
+          <Input
+            autoComplete="new-password"
+            id="activation-password"
+            onChange={(event) => {
+              setNewPassword(event.currentTarget.value);
+            }}
+            placeholder={t("auth:activation.newPassword")}
+            required
+            type="password"
+            value={newPassword}
+          />
+          <label className="ah-sr-only" htmlFor="activation-password-repeat">
+            {t("auth:activation.repeatPassword")}
+          </label>
+          <Input
+            autoComplete="new-password"
+            id="activation-password-repeat"
+            onChange={(event) => {
+              setRepeatPassword(event.currentTarget.value);
+            }}
+            placeholder={t("auth:activation.repeatPassword")}
+            required
+            type="password"
+            value={repeatPassword}
+          />
+          <Button
+            loading={passwordPending}
+            loadingLabel={t("auth:activation.savingPassword")}
+            type="submit"
+            variant="secondary"
+          >
+            {t("auth:activation.savePassword")}
+          </Button>
+          {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
+          {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
+        </form>
+        <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
+      </section>
+    </main>
+  );
+}
+
+function roleCopy(
+  role: Role,
+  gender: "female" | "other",
+  t: ReturnType<typeof useTranslation>["t"],
+) {
+  if (role === "MEMBER") {
+    return {
+      description: t("auth:profileChoice.memberDescription"),
+      icon: "paw" as const,
+      label: t("auth:profileChoice.member", { gender }),
+    };
+  }
+  if (role === "INSTRUCTOR") {
+    return {
+      description: t("auth:profileChoice.instructorDescription"),
+      icon: "list" as const,
+      label: t("auth:profileChoice.instructor", { gender }),
+    };
+  }
+  return {
+    description: t("auth:profileChoice.adminDescription"),
+    icon: "globe" as const,
+    label: t("auth:profileChoice.admin", { gender }),
+  };
+}
+
+function ProfileChoicePage({ authClient }: { authClient: AuthClient }) {
+  const { me } = useSession();
+  const { t } = useTranslation("auth");
+  const [remember, setRemember] = useState(true);
+  const [pending, setPending] = useState<Role>();
+  const [error, setError] = useState(false);
+  if (me === null) {
+    return null;
+  }
+  const roles = profileRoles(me);
+  const gender = me.account.gender === "FEMALE" ? "female" : "other";
+
+  const selectProfile = async (role: Role) => {
+    setPending(role);
+    setError(false);
+    try {
+      await authClient.updateProfile(role, remember);
+      if (role === "ADMIN") {
+        const handoff = await authClient.createHandoff("clubs-admin");
+        window.location.assign(handoff.url);
+      } else {
+        window.location.assign(role === "INSTRUCTOR" ? "/instructor/avui" : "/inici");
+      }
     } catch {
-      setFailed(true);
+      setError(true);
+      setPending(undefined);
+    }
+  };
+
+  return (
+    <main className="auth-page">
+      <section className="auth-panel profile-choice">
+        <LogoMark compact />
+        <h1>{t("auth:profileChoice.greeting", { name: firstName(me.account.name) })}</h1>
+        <p>{t("auth:profileChoice.prompt")}</p>
+        <div className="profile-choice__cards">
+          {roles.map((role) => {
+            const copy = roleCopy(role, gender, t);
+            return (
+              <button
+                aria-busy={pending === role || undefined}
+                className="profile-choice__card"
+                disabled={pending !== undefined}
+                key={role}
+                onClick={() => void selectProfile(role)}
+                type="button"
+              >
+                <Icon aria-hidden="true" name={copy.icon} />
+                <span>
+                  <strong>{pending === role ? t("auth:profileChoice.saving") : copy.label}</strong>
+                  <small>{copy.description}</small>
+                </span>
+                <Icon aria-hidden="true" name="chev" />
+              </button>
+            );
+          })}
+        </div>
+        <label className="profile-choice__remember">
+          <Checkbox
+            checked={remember}
+            onChange={(event) => {
+              setRemember(event.currentTarget.checked);
+            }}
+          />
+          <span>{t("auth:profileChoice.remember")}</span>
+        </label>
+        {error ? <p role="alert">{t("auth:profileChoice.error")}</p> : null}
+        <p className="profile-choice__footnote">{t("auth:profileChoice.footer")}</p>
+      </section>
+    </main>
+  );
+}
+
+function PasswordModal({
+  authClient,
+  hasPassword,
+  onClose,
+  open,
+}: {
+  authClient: AuthClient;
+  hasPassword: boolean;
+  onClose: () => void;
+  open: boolean;
+}) {
+  const { t } = useTranslation(["auth", "errors"]);
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [repeat, setRepeat] = useState("");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+  const [saved, setSaved] = useState(false);
+
+  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPending(true);
+    setError(undefined);
+    try {
+      await authClient.updatePassword({
+        ...(hasPassword ? { current } : {}),
+        new: next,
+        repeat,
+      });
+      setSaved(true);
+    } catch (updateError) {
+      setError(passwordError(updateError, t));
+    } finally {
       setPending(false);
     }
   };
 
   return (
-    <main className="access-page">
-      <Card className="access-card">
-        <h1>{t("shell:login.title")}</h1>
-        <form onSubmit={(event) => void submit(event)}>
-          <FormField id="access-email" label={t("shell:login.email")}>
-            <Input
-              autoComplete="email"
-              id="access-email"
-              onChange={(event) => {
-                setEmail(event.currentTarget.value);
-              }}
-              required
-              type="email"
-              value={email}
-            />
-          </FormField>
-          <FormField id="access-password" label={t("shell:login.password")}>
-            <Input
-              autoComplete="current-password"
-              id="access-password"
-              onChange={(event) => {
-                setPassword(event.currentTarget.value);
-              }}
-              required
-              type="password"
-              value={password}
-            />
-          </FormField>
-          {failed ? <p role="alert">{t("shell:login.error")}</p> : null}
+    <Modal
+      closeLabel={t("auth:profile.close")}
+      onClose={onClose}
+      open={open}
+      title={t("auth:profile.passwordTitle")}
+    >
+      {saved ? (
+        <p className="auth-message auth-message--success" role="status">
+          {t("auth:profile.passwordSaved")}
+        </p>
+      ) : (
+        <form className="profile-modal-form" onSubmit={(event) => void submit(event)}>
+          {hasPassword ? (
+            <>
+              <label htmlFor="profile-current-password">{t("auth:profile.currentPassword")}</label>
+              <Input
+                autoComplete="current-password"
+                id="profile-current-password"
+                onChange={(event) => {
+                  setCurrent(event.currentTarget.value);
+                }}
+                required
+                type="password"
+                value={current}
+              />
+            </>
+          ) : null}
+          <label htmlFor="profile-new-password">{t("auth:profile.newPassword")}</label>
+          <Input
+            autoComplete="new-password"
+            id="profile-new-password"
+            onChange={(event) => {
+              setNext(event.currentTarget.value);
+            }}
+            required
+            type="password"
+            value={next}
+          />
+          <label htmlFor="profile-repeat-password">{t("auth:profile.repeatPassword")}</label>
+          <Input
+            autoComplete="new-password"
+            id="profile-repeat-password"
+            onChange={(event) => {
+              setRepeat(event.currentTarget.value);
+            }}
+            required
+            type="password"
+            value={repeat}
+          />
+          {error === undefined ? null : <p role="alert">{error}</p>}
           <Button disabled={pending} type="submit">
-            {pending ? t("shell:login.submitting") : t("shell:login.submit")}
+            {t("auth:profile.savePassword")}
           </Button>
         </form>
-      </Card>
-    </main>
+      )}
+    </Modal>
   );
+}
+
+function SessionsModal({
+  authClient,
+  onClose,
+  open,
+}: {
+  authClient: AuthClient;
+  onClose: () => void;
+  open: boolean;
+}) {
+  const { t } = useTranslation("auth");
+  const [sessions, setSessions] = useState<AccountSession[]>();
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    void authClient.listSessions().then(
+      (items) => {
+        setSessions(items);
+        setFailed(false);
+      },
+      () => {
+        setFailed(true);
+      },
+    );
+  }, [authClient, open]);
+
+  return (
+    <Modal
+      closeLabel={t("auth:profile.close")}
+      onClose={onClose}
+      open={open}
+      title={t("auth:profile.sessionsTitle")}
+    >
+      {sessions === undefined && !failed ? (
+        <p role="status">{t("auth:profile.sessionsLoading")}</p>
+      ) : null}
+      {failed ? <p role="alert">{t("auth:access.genericError")}</p> : null}
+      {sessions?.length === 0 ? <p>{t("auth:profile.sessionsEmpty")}</p> : null}
+      <ul className="session-list">
+        {sessions?.map((session) => (
+          <li key={session.id}>
+            <span>
+              <strong>{session.deviceLabel}</strong>
+              {session.current ? <small>{t("auth:profile.currentSession")}</small> : null}
+            </span>
+            {session.current ? null : (
+              <Button
+                onClick={() => {
+                  void authClient.revokeSession(session.id).then(() => {
+                    setSessions((currentSessions) =>
+                      currentSessions?.filter((item) => item.id !== session.id),
+                    );
+                  });
+                }}
+                type="button"
+                variant="ghost"
+              >
+                {t("auth:profile.revokeSession")}
+              </Button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Modal>
+  );
+}
+
+function activeProfileLabel(
+  role: Role | undefined,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  if (role === "INSTRUCTOR") {
+    return t("auth:profile.instructorProfile");
+  }
+  if (role === "ADMIN") {
+    return t("auth:profile.adminProfile");
+  }
+  return t("auth:profile.memberProfile");
+}
+
+function ProfilePage({ authClient }: { authClient: AuthClient }) {
+  const branding = useBranding();
+  const { me } = useSession();
+  const { i18n, t } = useTranslation(["auth", "shell"]);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [sessionsOpen, setSessionsOpen] = useState(false);
+  const [working, setWorking] = useState(false);
+  if (me === null) {
+    return null;
+  }
+  const profiles = profileRoles(me);
+  const canOpenBackoffice = profiles.includes("ADMIN") || profiles.includes("INSTRUCTOR");
+  const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
+
+  const openBackoffice = async () => {
+    setWorking(true);
+    try {
+      const handoff = await authClient.createHandoff("clubs-admin");
+      window.location.assign(handoff.url);
+    } finally {
+      setWorking(false);
+    }
+  };
+
+  return (
+    <div className="profile-page">
+      <h1>{t("auth:profile.title")}</h1>
+      <Card className="profile-account">
+        <Avatar name={me.account.name} />
+        <span>
+          <strong>{me.account.name}</strong>
+          <small>{t("auth:profile.accountHelp")}</small>
+        </span>
+        <Icon aria-hidden="true" name="chev" />
+      </Card>
+      <Card className="profile-list">
+        <button
+          onClick={() => {
+            setPasswordOpen(true);
+          }}
+          type="button"
+        >
+          <Icon aria-hidden="true" name="lock" />
+          <span>{t("auth:profile.password")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </button>
+        {profiles.length > 1 ? (
+          <a href="/perfil-acces">
+            <Icon aria-hidden="true" name="user" />
+            <span>{t("auth:profile.changeProfile")}</span>
+            <small>{activeProfileLabel(me.membership.activeProfile, t)}</small>
+            <Icon aria-hidden="true" name="chev" />
+          </a>
+        ) : null}
+        <label className="profile-language">
+          <Icon aria-hidden="true" name="globe" />
+          <span>{t("auth:profile.language")}</span>
+          <Select
+            aria-label={t("auth:profile.language")}
+            disabled={working}
+            onChange={(event) => {
+              const locale = event.currentTarget.value;
+              setWorking(true);
+              void authClient.updateLocale(locale).then(
+                async () => {
+                  localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+                  await i18n.changeLanguage(locale);
+                  setWorking(false);
+                },
+                () => {
+                  setWorking(false);
+                },
+              );
+            }}
+            value={me.account.locale}
+          >
+            {localeOptions.map((locale) => (
+              <option key={locale} value={locale}>
+                {locale === "ca"
+                  ? t("shell:language.ca")
+                  : locale === "es"
+                    ? t("shell:language.es")
+                    : t("shell:language.en")}
+              </option>
+            ))}
+          </Select>
+        </label>
+        <button
+          onClick={() => {
+            setSessionsOpen(true);
+          }}
+          type="button"
+        >
+          <Icon aria-hidden="true" name="list" />
+          <span>{t("auth:profile.sessions")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </button>
+        {canOpenBackoffice ? (
+          <button disabled={working} onClick={() => void openBackoffice()} type="button">
+            <Icon aria-hidden="true" name="globe" />
+            <span>{t("auth:profile.openBackoffice")}</span>
+            <Icon aria-hidden="true" name="chev" />
+          </button>
+        ) : null}
+        <button
+          disabled={working}
+          onClick={() => {
+            setWorking(true);
+            void authClient.logout().catch(() => undefined);
+          }}
+          type="button"
+        >
+          <Icon aria-hidden="true" name="unlock" />
+          <span>{t("auth:profile.logout")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </button>
+      </Card>
+      {working ? <p role="status">{t("auth:profile.working")}</p> : null}
+      <PasswordModal
+        authClient={authClient}
+        hasPassword={me.account.hasPassword}
+        onClose={() => {
+          setPasswordOpen(false);
+        }}
+        open={passwordOpen}
+      />
+      {sessionsOpen ? (
+        <SessionsModal
+          authClient={authClient}
+          onClose={() => {
+            setSessionsOpen(false);
+          }}
+          open
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function LegacyAccessRedirect() {
+  useEffect(() => {
+    window.location.replace("/entrar");
+  }, []);
+  return null;
 }
 
 export function App({ authClient }: { authClient: AuthClient }) {
   const pathname = window.location.pathname;
   if (pathname === "/acces") {
+    return <LegacyAccessRedirect />;
+  }
+  if (pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
+  }
+  if (pathname === "/activacio") {
+    return <ActivationPage authClient={authClient} />;
+  }
+  if (pathname === "/perfil-acces") {
+    return (
+      <RequireAuth>
+        <ProfileChoicePage authClient={authClient} />
+      </RequireAuth>
+    );
   }
 
   const route = currentRoute(pathname) ?? currentRoute("/inici");
@@ -305,9 +1112,18 @@ export function App({ authClient }: { authClient: AuthClient }) {
     return null;
   }
 
-  if (route.public === true) {
-    return routePlaceholder(route);
-  }
+  const content =
+    pathname === "/perfil" ? (
+      <RequireAuth>
+        <ProfilePage authClient={authClient} />
+      </RequireAuth>
+    ) : (
+      routePlaceholder(route)
+    );
 
-  return <MobileShell>{routePlaceholder(route)}</MobileShell>;
+  return route.public === true ? (
+    content
+  ) : (
+    <MobileShell authClient={authClient}>{content}</MobileShell>
+  );
 }

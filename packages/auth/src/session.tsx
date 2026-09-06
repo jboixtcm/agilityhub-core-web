@@ -51,14 +51,14 @@ const SessionContext = createContext<SessionSnapshot | undefined>(undefined);
 
 function sessionFromMe(me: Me): SessionSnapshot {
   const roles = [...me.membership.roles];
-  const rememberedProfile = me.membership.defaultProfile;
-  const activeProfile = roles.find((role) => role === rememberedProfile) ?? roles[0] ?? null;
+  const preferredProfile = me.membership.activeProfile ?? me.membership.defaultProfile;
+  const activeProfile = roles.find((role) => role === preferredProfile) ?? roles[0] ?? null;
   return { activeProfile, me, roles, status: "signedIn" };
 }
 
 function navigateToAccess(): void {
-  if (typeof window !== "undefined" && window.location.pathname !== "/acces") {
-    window.location.assign("/acces");
+  if (typeof window !== "undefined" && window.location.pathname !== "/entrar") {
+    window.location.assign("/entrar");
   }
 }
 
@@ -127,7 +127,7 @@ export function RequireAuth({
 
   useEffect(() => {
     if (status === "anonymous") {
-      navigate("/acces");
+      navigate("/entrar");
     }
   }, [navigate, status]);
 

@@ -40,8 +40,9 @@ async function prepareScenario(
 }
 
 async function login(page: Page) {
-  await page.goto(`${baseUrl}/acces`);
+  await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
+  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
   await page.getByLabel("Contrasenya").fill("secret-password");
   await page.getByRole("button", { name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
@@ -79,5 +80,30 @@ test.describe("T-02-14 clubs-admin shell", () => {
     await expect(page.getByRole("link", { name: "Entrenaments" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Configuració" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Paràmetres" })).toHaveCount(0);
+  });
+});
+
+test.describe("T-01-18 clubs-admin access", () => {
+  test("offers magic-link and password sign-in", async ({ page }) => {
+    await prepareScenario(page, "admin", brandingCanic);
+    await page.goto(`${baseUrl}/entrar`);
+
+    await expect(page.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Envia'm l'enllaç" })).toBeVisible();
+    await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
+    await page.getByRole("button", { name: "Envia'm l'enllaç" }).click();
+    await expect(page.getByRole("status")).toHaveText(
+      "Si el correu és al club, hi rebràs l'enllaç",
+    );
+  });
+});
+
+test.describe("T-01-20 clubs-admin handoff", () => {
+  test("exchanges the one-time code and opens the backoffice session", async ({ page }) => {
+    await prepareScenario(page, "admin", brandingCanic);
+    await page.goto(`${baseUrl}/entrar?handoff=mock-handoff-code`);
+
+    await page.waitForURL("**/tauler");
+    await expect(page.getByRole("heading", { name: "Configuració" })).toBeVisible();
   });
 });

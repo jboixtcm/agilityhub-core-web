@@ -15,9 +15,15 @@ const DEFAULT_REVOKE_ENDPOINT = "https://id.agilitydoghub.com/oauth2/revoke";
 export type Me = components["schemas"]["MeResponse"];
 export type Role = Me["membership"]["roles"][number];
 export type TokenResponse = components["schemas"]["TokenResponse"];
+export type AccountSession = components["schemas"]["AccountSession"];
+export type HandoffResponse = components["schemas"]["HandoffResponse"];
+export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
+export type UpdatePasswordRequest = components["schemas"]["UpdatePasswordRequest"];
 
 export interface AuthClientOptions {
   apiBaseUrl?: string;
+  authBaseUrl?: string;
+  clientId?: string;
   fetch?: typeof globalThis.fetch;
   navigate?: (path: string) => void;
   refreshTokenStore?: RefreshTokenStore;
@@ -47,6 +53,8 @@ function isTokenResponse(value: unknown): value is TokenResponse {
 export class AuthClient extends EventTarget {
   private accessToken: null | string = null;
   private readonly apiClient: ApiClient;
+  private readonly authBaseUrl: string;
+  private readonly clientId: string;
   private currentMe: Me | null = null;
   private readonly fetcher: typeof globalThis.fetch;
   private readonly navigate: (path: string) => void;
@@ -58,6 +66,8 @@ export class AuthClient extends EventTarget {
 
   constructor(options: AuthClientOptions = {}) {
     super();
+    this.authBaseUrl = options.authBaseUrl ?? "https://id.agilitydoghub.com";
+    this.clientId = options.clientId ?? "clubs-app";
     this.fetcher = options.fetch ?? globalThis.fetch.bind(globalThis);
     this.navigate = options.navigate ?? defaultNavigate;
     this.refreshTokenStore = options.refreshTokenStore ?? createRefreshTokenStore();
@@ -80,6 +90,7 @@ export class AuthClient extends EventTarget {
 
   async login(email: string, password: string): Promise<Me> {
     const form = new URLSearchParams({
+      client_id: this.clientId,
       grant_type: "password",
       password,
       username: email,
@@ -96,6 +107,116 @@ export class AuthClient extends EventTarget {
       await this.clearLocalSession();
       throw error;
     }
+  }
+
+  async requestMagicLink(email: string, purpose: MagicLinkPurpose): Promise<void> {
+    await this.authRequest("/auth/magic-link", {
+      body: JSON.stringify({ client_id: this.clientId, email, purpose }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+  }
+
+  async exchangeMagicLink(token: string): Promise<Me> {
+    return this.exchangeOneTimeCode(
+      new URLSearchParams({
+        client_id: this.clientId,
+        grant_type: "urn:agilityhub:grant:magic-link",
+        token,
+      }),
+    );
+  }
+
+  async exchangeHandoff(code: string): Promise<Me> {
+    return this.exchangeOneTimeCode(
+      new URLSearchParams({
+        client_id: this.clientId,
+        code,
+        grant_type: "urn:agilityhub:grant:handoff",
+      }),
+    );
+  }
+
+  async acceptImpersonation(token: string): Promise<Me> {
+    await this.refreshTokenStore.clear();
+    this.accessToken = token;
+    try {
+      const me = await this.loadMe();
+      this.currentMe = me;
+      this.signedOutNotified = false;
+      this.dispatchEvent(new Event("signedIn"));
+      return me;
+    } catch (error) {
+      await this.clearLocalSession();
+      throw error;
+    }
+  }
+
+  async updatePassword(request: UpdatePasswordRequest): Promise<void> {
+    await this.apiClient.PUT("/me/password", { body: request });
+    if (this.currentMe !== null) {
+      this.currentMe = {
+        ...this.currentMe,
+        account: { ...this.currentMe.account, hasPassword: true },
+      };
+      this.dispatchEvent(new Event("signedIn"));
+    }
+  }
+
+  async updateProfile(activeProfile: Role, remember: boolean): Promise<void> {
+    const result = await this.apiClient.PUT("/me/profile", {
+      body: { activeProfile, remember },
+    });
+    if (result.data === undefined) {
+      throw new TypeError("The profile response did not contain data", { cause: result.error });
+    }
+    this.accessToken = result.data.access_token;
+    if (this.currentMe !== null) {
+      this.currentMe = {
+        ...this.currentMe,
+        membership: {
+          ...this.currentMe.membership,
+          activeProfile,
+          rememberProfile: remember,
+          ...(remember ? { defaultProfile: activeProfile } : {}),
+        },
+      };
+      this.dispatchEvent(new Event("signedIn"));
+    }
+  }
+
+  async updateLocale(locale: string): Promise<Me> {
+    const result = await this.apiClient.PATCH("/me", { body: { locale } });
+    if (result.data === undefined) {
+      throw new TypeError("The account response did not contain data", { cause: result.error });
+    }
+    this.currentMe = result.data;
+    this.dispatchEvent(new Event("signedIn"));
+    return result.data;
+  }
+
+  async listSessions(): Promise<AccountSession[]> {
+    const result = await this.apiClient.GET("/me/sessions");
+    if (result.data === undefined) {
+      throw new TypeError("The sessions response did not contain data", { cause: result.error });
+    }
+    return result.data.items;
+  }
+
+  async revokeSession(id: string): Promise<void> {
+    await this.apiClient.DELETE("/me/sessions/{id}", { params: { path: { id } } });
+  }
+
+  async createHandoff(targetClientId: string): Promise<HandoffResponse> {
+    const response = await this.authRequest("/auth/handoff", {
+      body: JSON.stringify({ targetClientId }),
+      headers: {
+        Authorization: `Bearer ${this.accessToken ?? ""}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+    return (await response.json()) as HandoffResponse;
   }
 
   async refresh(): Promise<TokenResponse> {
@@ -138,16 +259,18 @@ export class AuthClient extends EventTarget {
 
   async logout(): Promise<void> {
     const refreshToken = await this.refreshTokenStore.get();
+    const tokenToRevoke =
+      refreshToken ?? (this.currentMe?.impersonation === undefined ? null : this.accessToken);
     let failure: Error | undefined;
 
     try {
-      if (refreshToken !== null) {
+      if (tokenToRevoke !== null) {
         const headers = new Headers({ "Content-Type": "application/json" });
         if (this.accessToken !== null) {
           headers.set("Authorization", `Bearer ${this.accessToken}`);
         }
         const response = await this.fetcher(this.revokeEndpoint, {
-          body: JSON.stringify({ token: refreshToken }),
+          body: JSON.stringify({ token: tokenToRevoke }),
           headers,
           method: "POST",
         });
@@ -173,7 +296,7 @@ export class AuthClient extends EventTarget {
     }
     await this.clearLocalSession();
     this.emitSignedOut();
-    this.navigate("/acces");
+    this.navigate("/entrar");
   }
 
   private async acceptTokens(tokens: TokenResponse): Promise<void> {
@@ -231,9 +354,40 @@ export class AuthClient extends EventTarget {
       throw new TypeError("No refresh token is available");
     }
     const tokens = await this.issueToken(
-      new URLSearchParams({ grant_type: "refresh_token", refresh_token: refreshToken }),
+      new URLSearchParams({
+        client_id: this.clientId,
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }),
     );
     await this.acceptTokens(tokens);
     return tokens;
+  }
+
+  private async authRequest(path: string, init: RequestInit): Promise<Response> {
+    let response: Response;
+    try {
+      response = await this.fetcher(new URL(path, this.authBaseUrl), init);
+    } catch (error) {
+      throw ApiError.network(error);
+    }
+    if (!response.ok) {
+      throw await ApiError.fromResponse(response);
+    }
+    return response;
+  }
+
+  private async exchangeOneTimeCode(form: URLSearchParams): Promise<Me> {
+    const tokens = await this.issueToken(form);
+    await this.acceptTokens(tokens);
+    try {
+      const me = await this.loadMe();
+      this.currentMe = me;
+      this.dispatchEvent(new Event("signedIn"));
+      return me;
+    } catch (error) {
+      await this.clearLocalSession();
+      throw error;
+    }
   }
 }

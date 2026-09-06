@@ -16,9 +16,15 @@ const memberMe: Me = {
     id: "10000000-0000-4000-8000-000000000002",
     locale: "ca",
     name: "Biel Roca",
+    gender: "MALE",
+    hasPassword: true,
+    emailVerifiedAt: "2026-08-01T08:00:00Z",
   },
   membership: {
     defaultProfile: "MEMBER",
+    activeProfile: "MEMBER",
+    profiles: ["MEMBER"],
+    rememberProfile: true,
     memberId: "20000000-0000-4000-8000-000000000002",
     roles: ["MEMBER"],
   },
@@ -131,7 +137,7 @@ describe("T-01-21 AuthClient session flow", () => {
     await expect(refreshStore.get()).resolves.toBe("refresh-rotated");
   });
 
-  it("emits signedOut and redirects to /acces when refresh fails", async () => {
+  it("emits signedOut and redirects to /entrar when refresh fails", async () => {
     const refreshStore = new MemoryRefreshTokenStore();
     const navigate = vi.fn();
     let loginComplete = false;
@@ -173,7 +179,7 @@ describe("T-01-21 AuthClient session flow", () => {
 
     expect(signedOut).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledOnce();
-    expect(navigate).toHaveBeenCalledWith("/acces");
+    expect(navigate).toHaveBeenCalledWith("/entrar");
     expect(client.getAccessToken()).toBeNull();
     await expect(refreshStore.get()).resolves.toBeNull();
   });

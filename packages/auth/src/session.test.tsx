@@ -27,9 +27,15 @@ const memberMe: Me = {
     id: "10000000-0000-4000-8000-000000000002",
     locale: "ca",
     name: "Biel Roca",
+    gender: "MALE",
+    hasPassword: true,
+    emailVerifiedAt: "2026-08-01T08:00:00Z",
   },
   membership: {
     defaultProfile: "MEMBER",
+    activeProfile: "MEMBER",
+    profiles: ["MEMBER"],
+    rememberProfile: true,
     roles: ["MEMBER"],
   },
   modules: ["FREE_TRAINING"],
@@ -95,7 +101,7 @@ function SessionDetails() {
 }
 
 describe("T-01-21 session and guards", () => {
-  it("redirects anonymous users to /acces without rendering protected content", async () => {
+  it("redirects anonymous users to /entrar without rendering protected content", async () => {
     const navigate = vi.fn();
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
@@ -112,7 +118,7 @@ describe("T-01-21 session and guards", () => {
     );
 
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("/acces");
+      expect(navigate).toHaveBeenCalledWith("/entrar");
     });
     expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
   });

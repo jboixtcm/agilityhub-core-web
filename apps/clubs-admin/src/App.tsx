@@ -21,7 +21,7 @@ import {
   type SidebarGroup,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useState } from "react";
+import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Gallery } from "./dev/gallery";
@@ -370,58 +370,119 @@ function AdminShell({ children }: { children: ReactNode }) {
 }
 
 function AccessPage({ authClient }: { authClient: AuthClient }) {
-  const { t } = useTranslation("shell");
+  const { t } = useTranslation("auth");
+  const handoff = new URLSearchParams(window.location.search).get("handoff");
+  const handoffStarted = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [pending, setPending] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [pending, setPending] = useState<"handoff" | "login" | "magic" | null>(
+    handoff === null ? null : "handoff",
+  );
+  const [message, setMessage] = useState<string>();
+  const [error, setError] = useState<string>();
 
-  const submit = async (event: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
+  useEffect(() => {
+    if (handoff === null || handoffStarted.current) {
+      return;
+    }
+    handoffStarted.current = true;
+    void authClient.exchangeHandoff(handoff).then(
+      () => {
+        window.location.assign("/tauler");
+      },
+      () => {
+        setError(t("auth:admin.handoffError"));
+        setPending(null);
+      },
+    );
+  }, [authClient, handoff, t]);
+
+  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFailed(false);
-    setPending(true);
+    setError(undefined);
+    setPending("login");
     try {
       await authClient.login(email, password);
       window.location.assign("/tauler");
     } catch {
-      setFailed(true);
-      setPending(false);
+      setError(t("auth:access.genericError"));
+      setPending(null);
+    }
+  };
+
+  const requestMagicLink = async () => {
+    if (email.trim() === "") {
+      setError(t("auth:access.emailRequired"));
+      document.querySelector<HTMLInputElement>("#access-email")?.focus();
+      return;
+    }
+    setError(undefined);
+    setMessage(undefined);
+    setPending("magic");
+    try {
+      await authClient.requestMagicLink(email, "LOGIN");
+      setMessage(t("auth:access.neutralSuccess"));
+    } catch {
+      setError(t("auth:access.genericError"));
+    } finally {
+      setPending(null);
     }
   };
 
   return (
     <main className="access-page">
       <Card className="access-card">
-        <h1>{t("shell:login.title")}</h1>
+        <h1>{t("auth:admin.title")}</h1>
+        {pending === "handoff" ? <p role="status">{t("auth:admin.handoffLoading")}</p> : null}
         <form onSubmit={(event) => void submit(event)}>
-          <FormField id="access-email" label={t("shell:login.email")}>
+          <FormField id="access-email" label={t("auth:access.emailLabel")}>
             <Input
               autoComplete="email"
               id="access-email"
               onChange={(event) => {
                 setEmail(event.currentTarget.value);
               }}
-              required
               type="email"
               value={email}
             />
           </FormField>
-          <FormField id="access-password" label={t("shell:login.password")}>
-            <Input
-              autoComplete="current-password"
-              id="access-password"
-              onChange={(event) => {
-                setPassword(event.currentTarget.value);
-              }}
-              required
-              type="password"
-              value={password}
-            />
-          </FormField>
-          {failed ? <p role="alert">{t("shell:login.error")}</p> : null}
-          <Button disabled={pending} type="submit">
-            {pending ? t("shell:login.submitting") : t("shell:login.submit")}
+          <Button disabled={pending !== null} onClick={() => void requestMagicLink()} type="button">
+            <Icon aria-hidden="true" name="mail" />
+            {t("auth:access.magicLink")}
           </Button>
+          {passwordVisible ? (
+            <>
+              <FormField id="access-password" label={t("auth:access.passwordLabel")}>
+                <Input
+                  autoComplete="current-password"
+                  id="access-password"
+                  onChange={(event) => {
+                    setPassword(event.currentTarget.value);
+                  }}
+                  required
+                  type="password"
+                  value={password}
+                />
+              </FormField>
+              <Button disabled={pending !== null} type="submit">
+                {pending === "login" ? t("auth:access.entering") : t("auth:access.enter")}
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={() => {
+                setPasswordVisible(true);
+              }}
+              type="button"
+              variant="secondary"
+            >
+              <Icon aria-hidden="true" name="lock" />
+              {t("auth:access.passwordReveal")}
+            </Button>
+          )}
+          {error === undefined ? null : <p role="alert">{error}</p>}
+          {message === undefined ? null : <p role="status">{message}</p>}
         </form>
       </Card>
     </main>
@@ -433,6 +494,10 @@ export function App({ authClient }: { authClient: AuthClient }) {
     return <Gallery />;
   }
   if (window.location.pathname === "/acces") {
+    window.location.replace("/entrar");
+    return null;
+  }
+  if (window.location.pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
   }
 

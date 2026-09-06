@@ -180,7 +180,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap and dynamic manifest handlers", () => {
-    expect(handlers).toHaveLength(5);
+    expect(handlers).toHaveLength(13);
   });
 
   it("serves branding, current account, token, and health fixtures", async () => {

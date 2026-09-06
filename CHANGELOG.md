@@ -16,5 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add themed, host-cached shells for Clubs, Clubs Admin, and AgilityHub ID with module/role-gated navigation, placeholder route registries, dynamic PWA manifests, and browser-flow evidence.
 - Add the frontend CI gate, Docker-based Playwright runner, weekly Dependabot updates, and a 300 kB gzip budget for the Clubs entry chunk.
 - Add frontend playbooks for mockup-driven screen delivery, API client usage, and the reusable task Definition of Done checklist.
+- Add the Clubs and Clubs Admin access flows, including magic-link activation, password entry, profile selection, account security controls, impersonation exit, cross-app handoff, translated MSW scenarios, and mobile screenshot evidence.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

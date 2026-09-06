@@ -16,14 +16,6 @@
     "mark": "AH",
     "title": "AgilityHub ID"
   },
-  "login": {
-    "email": "Email",
-    "error": "We could not sign you in.",
-    "password": "Password",
-    "submit": "SIGN IN",
-    "submitting": "SIGNING IN…",
-    "title": "Sign in"
-  },
   "nav": {
     "activities": "Activities",
     "admin": "Administration navigation",

@@ -16,14 +16,6 @@
     "mark": "AH",
     "title": "AgilityHub ID"
   },
-  "login": {
-    "email": "Correu electrònic",
-    "error": "No s’ha pogut iniciar la sessió.",
-    "password": "Contrasenya",
-    "submit": "ENTRA",
-    "submitting": "ENTRANT…",
-    "title": "Accés"
-  },
   "nav": {
     "activities": "Activitats",
     "admin": "Navegació d’administració",

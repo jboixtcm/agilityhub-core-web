@@ -1,0 +1,23 @@
+{
+  "account": {
+    "id": "10000000-0000-4000-8000-000000000005",
+    "name": "Laura Serra Vidal",
+    "email": "laura.serra@example.test",
+    "locale": "ca",
+    "gender": "FEMALE",
+    "hasPassword": true,
+    "emailVerifiedAt": "2026-08-04T08:00:00Z"
+  },
+  "membership": {
+    "roles": ["MEMBER"],
+    "memberId": "20000000-0000-4000-8000-000000000005",
+    "activeProfile": "MEMBER",
+    "profiles": ["MEMBER"],
+    "defaultProfile": "MEMBER",
+    "rememberProfile": true
+  },
+  "impersonation": {
+    "actorName": "Jordi Soler"
+  },
+  "modules": ["CLASSES", "FREE_TRAINING", "COURSES"]
+}

@@ -3,12 +3,18 @@
     "id": "10000000-0000-4000-8000-000000000001",
     "name": "Aina Serra",
     "email": "aina.serra@example.test",
-    "locale": "ca"
+    "locale": "ca",
+    "gender": "FEMALE",
+    "hasPassword": true,
+    "emailVerifiedAt": "2026-08-03T08:00:00Z"
   },
   "membership": {
     "roles": ["ADMIN", "INSTRUCTOR"],
     "memberId": "20000000-0000-4000-8000-000000000001",
-    "defaultProfile": "ADMIN"
+    "activeProfile": "ADMIN",
+    "profiles": ["ADMIN", "INSTRUCTOR"],
+    "defaultProfile": "ADMIN",
+    "rememberProfile": true
   },
   "modules": ["CLASSES", "FREE_TRAINING", "COURSES"]
 }

@@ -16,14 +16,6 @@
     "mark": "AH",
     "title": "AgilityHub ID"
   },
-  "login": {
-    "email": "Correo electrónico",
-    "error": "No se ha podido iniciar sesión.",
-    "password": "Contraseña",
-    "submit": "ENTRAR",
-    "submitting": "ENTRANDO…",
-    "title": "Acceso"
-  },
   "nav": {
     "activities": "Actividades",
     "admin": "Navegación de administración",

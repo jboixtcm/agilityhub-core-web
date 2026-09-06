@@ -2,6 +2,7 @@ interface ApiErrorInit {
   code: string;
   details?: unknown;
   message: string;
+  retryAfter?: number;
   status: number;
   traceId?: string;
 }
@@ -25,14 +26,16 @@ export class ApiError extends Error {
   readonly details: unknown;
   readonly status: number;
   readonly traceId: string | undefined;
+  readonly retryAfter: number | undefined;
 
-  constructor({ code, details, message, status, traceId }: ApiErrorInit) {
+  constructor({ code, details, message, retryAfter, status, traceId }: ApiErrorInit) {
     super(message);
     this.name = "ApiError";
     this.code = code;
     this.details = details;
     this.status = status;
     this.traceId = traceId;
+    this.retryAfter = retryAfter;
   }
 
   static async fromResponse(response: Response): Promise<ApiError> {
@@ -42,12 +45,16 @@ export class ApiError extends Error {
       typeof payload?.message === "string"
         ? payload.message
         : response.statusText || "The API returned an invalid error response";
+    const retryAfterHeader = response.headers.get("Retry-After");
+    const retryAfter =
+      retryAfterHeader === null ? undefined : Number.parseInt(retryAfterHeader, 10);
 
     return new ApiError({
       code,
       details: payload?.details,
       message,
       status: response.status,
+      ...(retryAfter !== undefined && Number.isFinite(retryAfter) ? { retryAfter } : {}),
       ...(typeof payload?.traceId === "string" ? { traceId: payload.traceId } : {}),
     });
   }

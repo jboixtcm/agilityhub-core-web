@@ -32,7 +32,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsc --noEmit && vite build",
-    "e2e": "playwright test --grep 'Cànic administrator' && playwright test --grep 'minimal club' && playwright test --grep 'instructor'",
+    "e2e": "playwright test",
     "preview": "vite preview"
   },
   "msw": {

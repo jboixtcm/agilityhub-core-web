@@ -1,0 +1,19 @@
+{
+  "account": {
+    "id": "10000000-0000-4000-8000-000000000004",
+    "name": "Estel Rius",
+    "email": "estel.rius@example.test",
+    "locale": "ca",
+    "gender": "FEMALE",
+    "hasPassword": false
+  },
+  "membership": {
+    "roles": ["MEMBER", "INSTRUCTOR", "ADMIN"],
+    "memberId": "20000000-0000-4000-8000-000000000004",
+    "instructorId": "30000000-0000-4000-8000-000000000004",
+    "activeProfile": "MEMBER",
+    "profiles": ["MEMBER", "INSTRUCTOR", "ADMIN"],
+    "rememberProfile": false
+  },
+  "modules": ["CLASSES", "FREE_TRAINING", "COURSES"]
+}

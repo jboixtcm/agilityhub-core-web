@@ -32,9 +32,18 @@ async function bootstrap(root: HTMLElement) {
   const i18n = await createI18n({ branding, initialNamespaces: ["common", "auth", "shell"] });
   const authClient = new AuthClient({
     apiBaseUrl,
+    authBaseUrl: window.location.origin,
+    clientId: "clubs-app",
     revokeEndpoint: new URL("/oauth2/revoke", window.location.origin).href,
     tokenEndpoint: new URL("/oauth2/token", window.location.origin).href,
   });
+  if (window.location.hash.startsWith("#impersonation=")) {
+    const token = new URLSearchParams(window.location.hash.slice(1)).get("impersonation");
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    if (token !== null && token !== "") {
+      await authClient.acceptImpersonation(token);
+    }
+  }
 
   createRoot(root).render(
     <StrictMode>

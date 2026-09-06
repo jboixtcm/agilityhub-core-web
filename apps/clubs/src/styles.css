@@ -19,8 +19,15 @@ body {
 }
 
 button,
-select {
+select,
+input {
   font: inherit;
+}
+
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .clubs-shell {
@@ -37,6 +44,10 @@ select {
 .clubs-shell__header {
   grid-template-columns: auto minmax(0, 1fr) auto;
   border-bottom: 0;
+}
+
+.clubs-shell__top {
+  min-width: 0;
 }
 
 .clubs-shell__logo,
@@ -83,7 +94,31 @@ select {
   display: grid;
   width: 2rem;
   padding: 0;
+  text-decoration: none;
   place-items: center;
+}
+
+.impersonation-banner {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-2) var(--ah-space-4);
+  color: var(--ah-color-text);
+  background: color-mix(in srgb, var(--ah-color-warning) 18%, var(--ah-color-background));
+  border-bottom: 1px solid var(--ah-color-warning);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.impersonation-banner button {
+  padding: var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-text);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--ah-radius-sm);
+  font-weight: 700;
 }
 
 .clubs-shell__content {
@@ -125,8 +160,367 @@ select {
   font-size: 0.875rem;
 }
 
+.auth-page {
+  display: grid;
+  width: min(100%, 30rem);
+  min-height: 100dvh;
+  grid-template-rows: 1fr auto;
+  margin: 0 auto;
+  padding: var(--ah-space-5) var(--ah-space-5) var(--ah-space-4);
+  background: var(--ah-color-background);
+  place-items: center;
+}
+
+.auth-page--loading {
+  grid-template-rows: 1fr;
+}
+
+.auth-panel {
+  display: grid;
+  width: min(100%, 23.625rem);
+  align-content: center;
+  gap: var(--ah-space-4);
+}
+
+.auth-panel--centered {
+  justify-items: center;
+  text-align: center;
+}
+
+.auth-panel h1 {
+  margin: 0;
+  font: 700 1.125rem/1.25 var(--ah-font-display);
+  text-align: center;
+}
+
+.auth-panel > p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+}
+
+.auth-logo {
+  display: grid;
+  justify-items: center;
+  gap: var(--ah-space-3);
+  margin-bottom: var(--ah-space-5);
+}
+
+.auth-logo img,
+.auth-logo__fallback {
+  width: 8rem;
+  height: 8rem;
+}
+
+.auth-logo img {
+  object-fit: contain;
+}
+
+.auth-logo__fallback {
+  display: grid;
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-md);
+  place-items: center;
+}
+
+.auth-logo__fallback .ah-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.auth-logo strong {
+  font: 800 1.35rem/1.2 var(--ah-font-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.auth-logo--compact {
+  margin-bottom: var(--ah-space-2);
+}
+
+.auth-logo--compact img,
+.auth-logo--compact .auth-logo__fallback {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.auth-logo--compact .auth-logo__fallback .ah-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.auth-form,
+.activation-password,
+.profile-modal-form {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.auth-form .ah-input,
+.activation-password .ah-input {
+  min-height: 3.25rem;
+}
+
+.auth-form .ah-button,
+.activation-panel > .ah-button,
+.activation-password .ah-button {
+  width: 100%;
+  min-height: 3.5rem;
+  letter-spacing: 0.03em;
+}
+
+.auth-text-action {
+  padding: 0;
+  color: var(--ah-color-text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.auth-text-action:hover,
+.auth-signup a {
+  color: var(--ah-color-primary);
+}
+
+.auth-message,
+.activation-password [role="alert"],
+.activation-password [role="status"] {
+  margin: 0;
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.auth-message--error,
+.activation-password [role="alert"],
+.profile-modal-form [role="alert"],
+.profile-choice [role="alert"] {
+  color: var(--ah-color-danger);
+}
+
+.auth-message--success,
+.activation-password [role="status"] {
+  color: var(--ah-color-success);
+}
+
+.auth-signup {
+  padding-top: var(--ah-space-5);
+  margin-top: var(--ah-space-1);
+  text-align: center;
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.auth-signup a {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer {
+  padding-top: var(--ah-space-4);
+  color: var(--ah-color-text-muted);
+  font-size: 0.6875rem;
+  text-align: center;
+}
+
+.activation-panel {
+  gap: var(--ah-space-4);
+  padding-block: var(--ah-space-8);
+}
+
+.activation-panel__description,
+.activation-panel__footnote {
+  text-align: center;
+}
+
+.activation-success {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-3);
+  color: var(--ah-color-success) !important;
+  background: color-mix(in srgb, var(--ah-color-success) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ah-color-success) 55%, transparent);
+  border-radius: var(--ah-radius-sm);
+}
+
+.activation-password {
+  padding-top: var(--ah-space-2);
+}
+
+.activation-password h2 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font: 700 0.75rem/1.4 var(--ah-font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.activation-panel__footnote {
+  font-size: 0.75rem;
+}
+
+.activation-error__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--ah-color-danger);
+}
+
+.profile-choice {
+  gap: var(--ah-space-3);
+}
+
+.profile-choice > p {
+  text-align: center;
+}
+
+.profile-choice__cards {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.profile-choice__card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-3);
+  min-height: 4.35rem;
+  padding: var(--ah-space-3);
+  color: var(--ah-color-text);
+  text-align: left;
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+  cursor: pointer;
+}
+
+.profile-choice__card:first-child {
+  border-color: var(--ah-color-primary);
+}
+
+.profile-choice__card > .ah-icon:first-child {
+  color: var(--ah-color-primary);
+}
+
+.profile-choice__card span {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.profile-choice__card small,
+.profile-choice__footnote {
+  color: var(--ah-color-text-muted);
+}
+
+.profile-choice__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding-block: var(--ah-space-1);
+}
+
+.profile-choice__footnote {
+  font-size: 0.75rem;
+}
+
+.profile-page {
+  display: grid;
+  width: 100%;
+  align-self: start;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4);
+}
+
+.profile-page h1 {
+  margin: 0 0 var(--ah-space-1);
+  font: 700 1.35rem/1.2 var(--ah-font-display);
+}
+
+.profile-account {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.profile-account > span,
+.session-list li > span {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.profile-account small,
+.profile-list small,
+.session-list small {
+  color: var(--ah-color-text-muted);
+}
+
+.profile-list {
+  padding-block: 0;
+}
+
+.profile-list > button,
+.profile-list > a,
+.profile-language {
+  display: grid;
+  width: 100%;
+  min-height: 3.25rem;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-2) 0;
+  color: var(--ah-color-text);
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ah-color-border);
+  cursor: pointer;
+}
+
+.profile-list > :last-child {
+  border-bottom: 0;
+}
+
+.profile-list > button > .ah-icon:first-child,
+.profile-list > a > .ah-icon:first-child,
+.profile-language > .ah-icon {
+  color: var(--ah-color-primary);
+}
+
+.profile-language .ah-select {
+  width: auto;
+  min-height: 2.25rem;
+}
+
+.profile-modal-form label {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.session-list {
+  display: grid;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.session-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  padding-block: var(--ah-space-3);
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.session-list li:last-child {
+  border-bottom: 0;
+}
+
 @media (min-width: 30rem) {
-  .clubs-shell {
+  .clubs-shell,
+  .auth-page {
     box-shadow: var(--ah-shadow-lg);
   }
 }

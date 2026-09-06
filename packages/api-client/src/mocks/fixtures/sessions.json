@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "40000000-0000-4000-8000-000000000001",
+      "deviceLabel": "Safari · iPhone",
+      "lastUsedAt": "2026-09-06T08:41:00Z",
+      "current": true
+    },
+    {
+      "id": "40000000-0000-4000-8000-000000000002",
+      "deviceLabel": "Chrome · Mac",
+      "lastUsedAt": "2026-09-05T17:20:00Z",
+      "current": false
+    }
+  ]
+}

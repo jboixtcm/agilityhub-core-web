@@ -61,6 +61,257 @@
             "$ref": "#/components/responses/ApiError"
           }
         }
+      },
+      "patch": {
+        "operationId": "updateMe",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated account and club membership",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/me/password": {
+      "put": {
+        "operationId": "updatePassword",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password updated"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/me/profile": {
+      "put": {
+        "operationId": "updateProfile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Active profile updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileTokenResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/me/sessions": {
+      "get": {
+        "operationId": "listSessions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active account sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/me/sessions/{id}": {
+      "delete": {
+        "operationId": "revokeSession",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session revoked"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/auth/magic-link": {
+      "servers": [
+        {
+          "url": "https://id.agilitydoghub.com"
+        }
+      ],
+      "post": {
+        "operationId": "requestMagicLink",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MagicLinkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Neutral accepted response"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/auth/handoff": {
+      "servers": [
+        {
+          "url": "https://id.agilitydoghub.com"
+        }
+      ],
+      "post": {
+        "operationId": "createHandoff",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoffRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "One-time handoff code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/oauth2/revoke": {
+      "servers": [
+        {
+          "url": "https://id.agilitydoghub.com"
+        }
+      ],
+      "post": {
+        "operationId": "revokeToken",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token revoked"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
       }
     },
     "/health": {
@@ -96,7 +347,7 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/PasswordGrantRequest"
+                "$ref": "#/components/schemas/TokenGrantRequest"
               }
             }
           }
@@ -304,12 +555,18 @@
         "properties": {
           "account": {
             "type": "object",
-            "required": ["id", "name", "email", "locale"],
+            "required": ["id", "name", "email", "locale", "gender", "hasPassword"],
             "properties": {
               "id": { "type": "string", "format": "uuid" },
               "name": { "type": "string" },
               "email": { "type": "string", "format": "email" },
-              "locale": { "type": "string" }
+              "locale": { "type": "string" },
+              "gender": {
+                "type": "string",
+                "enum": ["FEMALE", "MALE", "NON_BINARY", "UNSPECIFIED"]
+              },
+              "hasPassword": { "type": "boolean" },
+              "emailVerifiedAt": { "type": "string", "format": "date-time" }
             }
           },
           "membership": {
@@ -324,7 +581,30 @@
                 }
               },
               "memberId": { "type": "string", "format": "uuid" },
-              "defaultProfile": { "type": "string" }
+              "instructorId": { "type": "string", "format": "uuid" },
+              "activeProfile": {
+                "type": "string",
+                "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"]
+              },
+              "profiles": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"]
+                }
+              },
+              "defaultProfile": {
+                "type": "string",
+                "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"]
+              },
+              "rememberProfile": { "type": "boolean" }
+            }
+          },
+          "impersonation": {
+            "type": "object",
+            "required": ["actorName"],
+            "properties": {
+              "actorName": { "type": "string" }
             }
           },
           "modules": {
@@ -351,6 +631,49 @@
           }
         }
       },
+      "MagicLinkGrantRequest": {
+        "type": "object",
+        "required": ["grant_type", "token", "client_id"],
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "const": "urn:agilityhub:grant:magic-link"
+          },
+          "token": { "type": "string" },
+          "client_id": { "type": "string" }
+        }
+      },
+      "HandoffGrantRequest": {
+        "type": "object",
+        "required": ["grant_type", "code", "client_id"],
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "const": "urn:agilityhub:grant:handoff"
+          },
+          "code": { "type": "string" },
+          "client_id": { "type": "string" }
+        }
+      },
+      "RefreshGrantRequest": {
+        "type": "object",
+        "required": ["grant_type", "refresh_token"],
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "const": "refresh_token"
+          },
+          "refresh_token": { "type": "string" }
+        }
+      },
+      "TokenGrantRequest": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/PasswordGrantRequest" },
+          { "$ref": "#/components/schemas/MagicLinkGrantRequest" },
+          { "$ref": "#/components/schemas/HandoffGrantRequest" },
+          { "$ref": "#/components/schemas/RefreshGrantRequest" }
+        ]
+      },
       "TokenResponse": {
         "type": "object",
         "required": ["access_token", "refresh_token", "token_type", "expires_in"],
@@ -359,6 +682,92 @@
           "refresh_token": { "type": "string" },
           "token_type": { "type": "string" },
           "expires_in": { "type": "integer" }
+        }
+      },
+      "MagicLinkRequest": {
+        "type": "object",
+        "required": ["email", "purpose", "client_id"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "purpose": { "type": "string", "enum": ["LOGIN", "RESET"] },
+          "client_id": { "type": "string" },
+          "redirect_uri": { "type": "string", "format": "uri" }
+        }
+      },
+      "UpdatePasswordRequest": {
+        "type": "object",
+        "required": ["new", "repeat"],
+        "properties": {
+          "current": { "type": "string", "format": "password" },
+          "new": { "type": "string", "format": "password" },
+          "repeat": { "type": "string", "format": "password" }
+        }
+      },
+      "UpdateProfileRequest": {
+        "type": "object",
+        "required": ["activeProfile", "remember"],
+        "properties": {
+          "activeProfile": {
+            "type": "string",
+            "enum": ["MEMBER", "INSTRUCTOR", "ADMIN"]
+          },
+          "remember": { "type": "boolean" }
+        }
+      },
+      "ProfileTokenResponse": {
+        "type": "object",
+        "required": ["access_token"],
+        "properties": {
+          "access_token": { "type": "string" }
+        }
+      },
+      "UpdateMeRequest": {
+        "type": "object",
+        "properties": {
+          "locale": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      },
+      "AccountSession": {
+        "type": "object",
+        "required": ["id", "deviceLabel", "lastUsedAt", "current"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "deviceLabel": { "type": "string" },
+          "lastUsedAt": { "type": "string", "format": "date-time" },
+          "current": { "type": "boolean" }
+        }
+      },
+      "SessionListResponse": {
+        "type": "object",
+        "required": ["items"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AccountSession" }
+          }
+        }
+      },
+      "HandoffRequest": {
+        "type": "object",
+        "required": ["targetClientId"],
+        "properties": {
+          "targetClientId": { "type": "string" }
+        }
+      },
+      "HandoffResponse": {
+        "type": "object",
+        "required": ["code", "url"],
+        "properties": {
+          "code": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "RevokeTokenRequest": {
+        "type": "object",
+        "required": ["token"],
+        "properties": {
+          "token": { "type": "string" }
         }
       },
       "HealthResponse": {
