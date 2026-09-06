@@ -1,0 +1,107 @@
+import { QueryClient, useQuery } from "@tanstack/react-query";
+
+import { isApiError } from "./api-error";
+import { apiClient, type ApiClient } from "./client";
+import type { components } from "./generated/schema";
+
+const STALE_TIME_MS = 30_000;
+
+interface HookOptions {
+  client?: ApiClient;
+  host?: string;
+}
+
+function currentHost(): string {
+  return typeof window === "undefined" ? "server" : window.location.host;
+}
+
+function shouldRetry(failureCount: number, error: unknown): boolean {
+  return failureCount < 3 && isApiError(error) && (error.code === "NETWORK" || error.status >= 500);
+}
+
+export const queryKeys = {
+  branding: (host: string) => ["api", host, "branding"] as const,
+  me: (host: string) => ["api", host, "me"] as const,
+};
+
+function normalizedThemeMode(mode: components["schemas"]["Theme"]["mode"]) {
+  switch (mode) {
+    case "AUTO":
+      return "auto" as const;
+    case "DARK":
+      return "dark" as const;
+    case "LIGHT":
+      return "light" as const;
+  }
+}
+
+/** Maps the public API payload to the flat shape consumed by BrandingProvider. */
+export function normalizeBranding(source: components["schemas"]["BrandingResponse"]) {
+  return {
+    ...source,
+    clubId: source.club.slug,
+    name: source.club.name,
+    slug: source.club.slug,
+    theme: {
+      ...source.theme,
+      colors: {
+        ...source.theme.colors,
+        background: source.theme.colors.surface,
+        onPrimary: source.theme.colors.primaryFg,
+        surfaceAlt: source.theme.colors.surface2,
+      },
+      mode: normalizedThemeMode(source.theme.mode),
+    },
+  };
+}
+
+export function createQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: shouldRetry,
+        staleTime: STALE_TIME_MS,
+      },
+      mutations: {
+        retry: false,
+      },
+    },
+  });
+}
+
+export function useBranding(options: HookOptions = {}) {
+  const client = options.client ?? apiClient;
+  const host = options.host ?? currentHost();
+
+  return useQuery({
+    queryKey: queryKeys.branding(host),
+    select: normalizeBranding,
+    queryFn: async () => {
+      const result = await client.GET("/branding");
+      if (result.data === undefined) {
+        throw new TypeError("The branding response did not contain data", {
+          cause: result.error,
+        });
+      }
+      return result.data;
+    },
+  });
+}
+
+export function useMe(options: HookOptions = {}) {
+  const client = options.client ?? apiClient;
+  const host = options.host ?? currentHost();
+
+  return useQuery({
+    queryKey: queryKeys.me(host),
+    queryFn: async () => {
+      const result = await client.GET("/me");
+      if (result.data === undefined) {
+        throw new TypeError("The account response did not contain data", {
+          cause: result.error,
+        });
+      }
+      return result.data;
+    },
+  });
+}

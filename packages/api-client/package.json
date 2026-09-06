@@ -6,16 +6,28 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./mocks/branding-canic": "./src/mocks/branding-canic.ts"
+    "./mocks/branding-canic": "./src/mocks/branding-canic.ts",
+    "./mocks": "./src/mocks/handlers.ts",
+    "./mocks/browser": "./src/mocks/browser.ts",
+    "./mocks/server": "./src/mocks/server.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "catalog:",
+    "openapi-fetch": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
   },
   "devDependencies": {
+    "openapi-typescript": "catalog:",
+    "react": "catalog:",
     "msw": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "scripts": {
-    "api:generate": "node -e \"console.log('API generation is configured in E0-W04.')\"",
-    "lint": "eslint src --max-warnings 0 --config ../../eslint.config.mjs",
+    "api:generate": "node scripts/generate.mjs",
+    "lint": "eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   }

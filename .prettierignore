@@ -8,3 +8,4 @@ AGENTS.md
 docs
 roadmap
 pnpm-lock.yaml
+packages/api-client/src/generated

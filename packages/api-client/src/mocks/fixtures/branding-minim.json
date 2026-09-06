@@ -1,0 +1,39 @@
+{
+  "club": {
+    "slug": "minim",
+    "name": "Club Mínim"
+  },
+  "locales": ["ca", "es", "en"],
+  "defaultLocale": "ca",
+  "timeZone": "Europe/Madrid",
+  "currency": "EUR",
+  "countryProfile": {
+    "code": "GENERIC",
+    "idDocumentTypes": [],
+    "phonePrefix": "+34"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#2457D6",
+      "primaryFg": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "surface2": "#F4F6FA",
+      "text": "#17191F",
+      "textMuted": "#626875",
+      "border": "#D8DCE5",
+      "success": "#237A4B",
+      "warning": "#A66400",
+      "danger": "#B42318",
+      "info": "#2457D6"
+    },
+    "mode": "LIGHT"
+  },
+  "modules": [],
+  "signup": {
+    "enabled": false
+  },
+  "status": "ONBOARDING",
+  "legal": {
+    "privacyPolicyUrl": "https://minim.example.test/privacy"
+  }
+}
