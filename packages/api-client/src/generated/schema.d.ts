@@ -156,7 +156,7 @@ export interface paths {
         };
         /**
          * Get the current account and active club context
-         * @description Any valid account token. R-01-15: only the current host/JWT membership, role profiles and enabled features. The E0 club bootstrap works; global account and impersonation bootstrap are completed in E1.
+         * @description Any valid account token. R-01-15: only the current host/JWT membership, role profiles and enabled features. Includes global account bootstrap; impersonation is completed in E1-T04.
          */
         get: operations["me"];
         put?: never;
@@ -426,7 +426,7 @@ export interface paths {
         put?: never;
         /**
          * Issue tokens using an OAuth2 or AgilityHub grant
-         * @description ANON with client authentication. Club context comes from the host, never request data. Password/refresh for clubs-app and clubs-admin remain implemented by the E0 security filter; other grants and confidential clients are contracts for E1. Refresh tokens rotate on use. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
+         * @description ANON with client authentication. Club context comes from the host, never request data. Password and magic-link grants issue sessions; refresh tokens rotate on every use. Handoff, authorization-code grants and confidential clients are completed by later E1 tasks. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
          */
         post: operations["token"];
         delete?: never;
@@ -647,6 +647,7 @@ export interface components {
             timeZone?: string;
         };
         ClubSummary: {
+            city?: string | null;
             name?: string;
             slug?: string;
         };
@@ -4221,7 +4222,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description UNAUTHENTICATED; details.reason = WEBHOOK_SIGNATURE_INVALID */
+            /** @description WEBHOOK_SIGNATURE_INVALID */
             401: {
                 headers: {
                     [name: string]: unknown;
