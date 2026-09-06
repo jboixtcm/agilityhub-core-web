@@ -180,8 +180,25 @@ describe("TanStack Query defaults", () => {
 });
 
 describe("MSW bootstrap handlers", () => {
-  it("exports the bootstrap and dynamic manifest handlers", () => {
-    expect(handlers).toHaveLength(13);
+  it("exports the bootstrap, identity continuation, and dynamic manifest handlers", async () => {
+    expect(handlers).toHaveLength(15);
+
+    const [authorizeResponse, logoutResponse] = await Promise.all([
+      fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
+        redirect: "manual",
+      }),
+      fetch(
+        "https://id.agilitydoghub.com/connect/logout?post_logout_redirect_uri=https%3A%2F%2Fid.agilitydoghub.com%2Flogin",
+        { redirect: "manual" },
+      ),
+    ]);
+
+    expect(authorizeResponse.status).toBe(302);
+    expect(authorizeResponse.headers.get("location")).toBe(
+      "https://id.agilitydoghub.com/products?authorization=complete",
+    );
+    expect(logoutResponse.status).toBe(302);
+    expect(logoutResponse.headers.get("location")).toBe("https://id.agilitydoghub.com/login");
   });
 
   it("serves branding, current account, token, and health fixtures", async () => {

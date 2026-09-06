@@ -1,0 +1,104 @@
+{
+  "brand": {
+    "mark": "AH",
+    "name": "AgilityHub ID",
+    "subtitle": "Un compte, tots els productes"
+  },
+  "navigation": {
+    "label": "Navegació del compte",
+    "products": "Productes",
+    "account": "Compte",
+    "logout": "Tanca la sessió"
+  },
+  "language": {
+    "label": "Idioma",
+    "ca": "Català",
+    "es": "Castellà",
+    "en": "Anglès"
+  },
+  "footer": {
+    "security": "Accés segur amb AgilityHub ID"
+  },
+  "status": {
+    "loadingAccount": "Carregant el compte…"
+  },
+  "login": {
+    "title": "Entra a AgilityHub",
+    "description": "Accedeix al teu compte i continua al producte que has triat.",
+    "email": "Correu electrònic",
+    "emailPlaceholder": "correu@exemple.cat",
+    "password": "Contrasenya",
+    "submit": "ENTRA",
+    "entering": "ENTRANT…",
+    "magic": "Envia'm un enllaç per entrar",
+    "forgot": "Has oblidat la contrasenya? Recupera-la",
+    "emailRequired": "Escriu el teu correu",
+    "magicSent": "Si el compte existeix, hi rebràs l'enllaç"
+  },
+  "magic": {
+    "title": "Comprovem l'enllaç",
+    "description": "Estem iniciant la sessió i preparant el teu compte.",
+    "validating": "Validant l'enllaç…",
+    "invalidTitle": "Aquest enllaç ja no és vàlid",
+    "invalidDescription": "Demana un altre enllaç per tornar a entrar.",
+    "tryAgain": "TORNA A ENTRAR"
+  },
+  "password": {
+    "title": "Contrasenya",
+    "description": "Pots establir o canviar la contrasenya del teu AgilityHub ID.",
+    "current": "Contrasenya actual",
+    "next": "Contrasenya nova",
+    "repeat": "Repeteix la contrasenya nova",
+    "save": "DESA LA CONTRASENYA",
+    "saved": "La contrasenya s'ha desat.",
+    "back": "TORNA AL COMPTE"
+  },
+  "roles": {
+    "member": "Alumnat",
+    "instructor": "Instrucció",
+    "admin": "Administració"
+  },
+  "account": {
+    "title": "El teu compte",
+    "description": "Gestiona les dades del teu AgilityHub ID i les sessions obertes.",
+    "personalTitle": "Dades del compte",
+    "name": "Nom",
+    "email": "Correu electrònic",
+    "locale": "Idioma",
+    "save": "DESA ELS CANVIS",
+    "saved": "Els canvis s'han desat.",
+    "password": "Canvia la contrasenya",
+    "membershipsTitle": "Pertinences",
+    "products": "Consulta els teus productes",
+    "sessionsTitle": "Sessions actives",
+    "sessionsDescription": "Revisa els dispositius on tens la sessió oberta i tanca els que ja no facis servir.",
+    "sessionsLoading": "Carregant les sessions…",
+    "sessionsError": "No s'han pogut carregar o actualitzar les sessions.",
+    "noSessions": "No hi ha cap sessió activa.",
+    "lastUsed": "Darrer ús: {date}",
+    "current": "Aquesta sessió",
+    "revoke": "Tanca aquesta sessió"
+  },
+  "products": {
+    "title": "Els teus productes",
+    "description": "Entra als productes AgilityHub vinculats al teu compte.",
+    "learnTitle": "AgilityHub Learn",
+    "learnDescription": "Aprèn, practica i avança amb continguts d'agility.",
+    "openLearn": "OBRE LEARN",
+    "clubsTitle": "AgilityHub Clubs",
+    "clubsDescription": "Accedeix als clubs on tens una pertinença activa.",
+    "openClubs": "OBRE CLUBS"
+  },
+  "logout": {
+    "title": "Tanquem la sessió",
+    "description": "Estem tancant la sessió del teu AgilityHub ID."
+  },
+  "notFound": {
+    "title": "Pàgina no trobada",
+    "description": "L'adreça que has obert no correspon a cap pàgina de l'AgilityHub ID.",
+    "back": "TORNA A L'INICI"
+  },
+  "errors": {
+    "generic": "No s'ha pogut completar l'acció. Torna-ho a provar."
+  }
+}

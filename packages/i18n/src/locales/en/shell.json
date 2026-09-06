@@ -11,11 +11,6 @@
     "en": "English",
     "es": "Spanish"
   },
-  "landing": {
-    "description": "Your identity for every AgilityHub product.",
-    "mark": "AH",
-    "title": "AgilityHub ID"
-  },
   "nav": {
     "activities": "Activities",
     "admin": "Administration navigation",

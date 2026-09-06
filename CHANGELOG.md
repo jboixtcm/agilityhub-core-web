@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the frontend CI gate, Docker-based Playwright runner, weekly Dependabot updates, and a 300 kB gzip budget for the Clubs entry chunk.
 - Add frontend playbooks for mockup-driven screen delivery, API client usage, and the reusable task Definition of Done checklist.
 - Add the Clubs and Clubs Admin access flows, including magic-link activation, password entry, profile selection, account security controls, impersonation exit, cross-app handoff, translated MSW scenarios, and mobile screenshot evidence.
+- Add the AgilityHub ID login and magic-link continuation flows, account and session management, password and product pages, global logout, three-locale copy, and desktop browser evidence.
 
 ### Changed
 

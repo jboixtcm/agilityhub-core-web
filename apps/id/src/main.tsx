@@ -1,6 +1,5 @@
-import { createApiClient, normalizeBranding, refreshBranding } from "@agilityhub/api-client";
+import { AuthClient, SessionProvider } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
-import { applyBrandingTheme, BrandingProvider } from "@agilityhub/ui";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
@@ -20,20 +19,25 @@ async function bootstrap(root: HTMLElement) {
     await startMockWorker();
   }
 
-  const source = await refreshBranding(
-    createApiClient({ baseUrl: new URL("/api/v1", window.location.origin).href }),
-    window.location.host,
-  );
-  const branding = normalizeBranding(source);
-  applyBrandingTheme(branding.theme);
-  const i18n = await createI18n({ branding, initialNamespaces: ["common", "shell"] });
+  const apiBaseUrl = new URL("/api/v1", window.location.origin).href;
+  const i18n = await createI18n({
+    branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
+    initialNamespaces: ["common", "errors", "id"],
+  });
+  const authClient = new AuthClient({
+    apiBaseUrl,
+    authBaseUrl: window.location.origin,
+    clientId: "id-web",
+    revokeEndpoint: new URL("/oauth2/revoke", window.location.origin).href,
+    tokenEndpoint: new URL("/oauth2/token", window.location.origin).href,
+  });
 
   createRoot(root).render(
     <StrictMode>
       <I18nextProvider i18n={i18n}>
-        <BrandingProvider branding={branding}>
-          <App />
-        </BrandingProvider>
+        <SessionProvider client={authClient}>
+          <App authClient={authClient} />
+        </SessionProvider>
       </I18nextProvider>
     </StrictMode>,
   );

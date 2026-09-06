@@ -18,6 +18,7 @@ export type TokenResponse = components["schemas"]["TokenResponse"];
 export type AccountSession = components["schemas"]["AccountSession"];
 export type HandoffResponse = components["schemas"]["HandoffResponse"];
 export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
+export type UpdateMeRequest = components["schemas"]["UpdateMeRequest"];
 export type UpdatePasswordRequest = components["schemas"]["UpdatePasswordRequest"];
 
 export interface AuthClientOptions {
@@ -109,9 +110,18 @@ export class AuthClient extends EventTarget {
     }
   }
 
-  async requestMagicLink(email: string, purpose: MagicLinkPurpose): Promise<void> {
+  async requestMagicLink(
+    email: string,
+    purpose: MagicLinkPurpose,
+    redirectUri?: string,
+  ): Promise<void> {
     await this.authRequest("/auth/magic-link", {
-      body: JSON.stringify({ client_id: this.clientId, email, purpose }),
+      body: JSON.stringify({
+        client_id: this.clientId,
+        email,
+        purpose,
+        ...(redirectUri === undefined ? {} : { redirect_uri: redirectUri }),
+      }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
@@ -185,14 +195,18 @@ export class AuthClient extends EventTarget {
     }
   }
 
-  async updateLocale(locale: string): Promise<Me> {
-    const result = await this.apiClient.PATCH("/me", { body: { locale } });
+  async updateAccount(request: UpdateMeRequest): Promise<Me> {
+    const result = await this.apiClient.PATCH("/me", { body: request });
     if (result.data === undefined) {
       throw new TypeError("The account response did not contain data", { cause: result.error });
     }
     this.currentMe = result.data;
     this.dispatchEvent(new Event("signedIn"));
     return result.data;
+  }
+
+  async updateLocale(locale: string): Promise<Me> {
+    return this.updateAccount({ locale });
   }
 
   async listSessions(): Promise<AccountSession[]> {

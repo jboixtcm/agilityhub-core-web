@@ -11,11 +11,6 @@
     "en": "Anglès",
     "es": "Castellà"
   },
-  "landing": {
-    "description": "La teva identitat per a tots els productes AgilityHub.",
-    "mark": "AH",
-    "title": "AgilityHub ID"
-  },
   "nav": {
     "activities": "Activitats",
     "admin": "Navegació d’administració",

@@ -1,0 +1,104 @@
+{
+  "brand": {
+    "mark": "AH",
+    "name": "AgilityHub ID",
+    "subtitle": "One account, every product"
+  },
+  "navigation": {
+    "label": "Account navigation",
+    "products": "Products",
+    "account": "Account",
+    "logout": "Sign out"
+  },
+  "language": {
+    "label": "Language",
+    "ca": "Catalan",
+    "es": "Spanish",
+    "en": "English"
+  },
+  "footer": {
+    "security": "Secure access with AgilityHub ID"
+  },
+  "status": {
+    "loadingAccount": "Loading your account…"
+  },
+  "login": {
+    "title": "Sign in to AgilityHub",
+    "description": "Access your account and continue to your chosen product.",
+    "email": "Email address",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "submit": "SIGN IN",
+    "entering": "SIGNING IN…",
+    "magic": "Send me a sign-in link",
+    "forgot": "Forgot your password? Recover it",
+    "emailRequired": "Enter your email address",
+    "magicSent": "If the account exists, you will receive the link"
+  },
+  "magic": {
+    "title": "Checking the link",
+    "description": "We are signing you in and preparing your account.",
+    "validating": "Validating the link…",
+    "invalidTitle": "This link is no longer valid",
+    "invalidDescription": "Request another link to sign in again.",
+    "tryAgain": "SIGN IN AGAIN"
+  },
+  "password": {
+    "title": "Password",
+    "description": "You can set or change your AgilityHub ID password.",
+    "current": "Current password",
+    "next": "New password",
+    "repeat": "Repeat the new password",
+    "save": "SAVE PASSWORD",
+    "saved": "Your password has been saved.",
+    "back": "BACK TO ACCOUNT"
+  },
+  "roles": {
+    "member": "Student",
+    "instructor": "Instructor",
+    "admin": "Administration"
+  },
+  "account": {
+    "title": "Your account",
+    "description": "Manage your AgilityHub ID details and active sessions.",
+    "personalTitle": "Account details",
+    "name": "Name",
+    "email": "Email address",
+    "locale": "Language",
+    "save": "SAVE CHANGES",
+    "saved": "Your changes have been saved.",
+    "password": "Change password",
+    "membershipsTitle": "Memberships",
+    "products": "View your products",
+    "sessionsTitle": "Active sessions",
+    "sessionsDescription": "Review the devices where you are signed in and close any you no longer use.",
+    "sessionsLoading": "Loading sessions…",
+    "sessionsError": "The sessions could not be loaded or updated.",
+    "noSessions": "There are no active sessions.",
+    "lastUsed": "Last used: {date}",
+    "current": "This session",
+    "revoke": "Close this session"
+  },
+  "products": {
+    "title": "Your products",
+    "description": "Open the AgilityHub products linked to your account.",
+    "learnTitle": "AgilityHub Learn",
+    "learnDescription": "Learn, practise and progress with agility content.",
+    "openLearn": "OPEN LEARN",
+    "clubsTitle": "AgilityHub Clubs",
+    "clubsDescription": "Access the clubs where you have an active membership.",
+    "openClubs": "OPEN CLUBS"
+  },
+  "logout": {
+    "title": "Signing you out",
+    "description": "We are closing your AgilityHub ID session."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The address you opened does not match an AgilityHub ID page.",
+    "back": "BACK TO SIGN IN"
+  },
+  "errors": {
+    "generic": "The action could not be completed. Try again."
+  }
+}

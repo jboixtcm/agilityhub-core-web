@@ -10,18 +10,21 @@ const loaders = {
     auth: () => import("./locales/ca/auth.json"),
     common: () => import("./locales/ca/common.json"),
     errors: () => import("./locales/ca/errors.json"),
+    id: () => import("./locales/ca/id.json"),
     shell: () => import("./locales/ca/shell.json"),
   },
   en: {
     auth: () => import("./locales/en/auth.json"),
     common: () => import("./locales/en/common.json"),
     errors: () => import("./locales/en/errors.json"),
+    id: () => import("./locales/en/id.json"),
     shell: () => import("./locales/en/shell.json"),
   },
   es: {
     auth: () => import("./locales/es/auth.json"),
     common: () => import("./locales/es/common.json"),
     errors: () => import("./locales/es/errors.json"),
+    id: () => import("./locales/es/id.json"),
     shell: () => import("./locales/es/shell.json"),
   },
 } as const satisfies Record<Locale, Record<Namespace, ResourceLoader>>;

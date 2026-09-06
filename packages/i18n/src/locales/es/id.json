@@ -1,0 +1,104 @@
+{
+  "brand": {
+    "mark": "AH",
+    "name": "AgilityHub ID",
+    "subtitle": "Una cuenta, todos los productos"
+  },
+  "navigation": {
+    "label": "Navegación de la cuenta",
+    "products": "Productos",
+    "account": "Cuenta",
+    "logout": "Cerrar sesión"
+  },
+  "language": {
+    "label": "Idioma",
+    "ca": "Catalán",
+    "es": "Castellano",
+    "en": "Inglés"
+  },
+  "footer": {
+    "security": "Acceso seguro con AgilityHub ID"
+  },
+  "status": {
+    "loadingAccount": "Cargando la cuenta…"
+  },
+  "login": {
+    "title": "Entra en AgilityHub",
+    "description": "Accede a tu cuenta y continúa al producto que has elegido.",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "correo@ejemplo.es",
+    "password": "Contraseña",
+    "submit": "ENTRAR",
+    "entering": "ENTRANDO…",
+    "magic": "Envíame un enlace para entrar",
+    "forgot": "¿Has olvidado la contraseña? Recupérala",
+    "emailRequired": "Escribe tu correo",
+    "magicSent": "Si la cuenta existe, recibirás el enlace"
+  },
+  "magic": {
+    "title": "Comprobamos el enlace",
+    "description": "Estamos iniciando la sesión y preparando tu cuenta.",
+    "validating": "Validando el enlace…",
+    "invalidTitle": "Este enlace ya no es válido",
+    "invalidDescription": "Solicita otro enlace para volver a entrar.",
+    "tryAgain": "VOLVER A ENTRAR"
+  },
+  "password": {
+    "title": "Contraseña",
+    "description": "Puedes establecer o cambiar la contraseña de tu AgilityHub ID.",
+    "current": "Contraseña actual",
+    "next": "Contraseña nueva",
+    "repeat": "Repite la contraseña nueva",
+    "save": "GUARDAR LA CONTRASEÑA",
+    "saved": "La contraseña se ha guardado.",
+    "back": "VOLVER A LA CUENTA"
+  },
+  "roles": {
+    "member": "Alumnado",
+    "instructor": "Instrucción",
+    "admin": "Administración"
+  },
+  "account": {
+    "title": "Tu cuenta",
+    "description": "Gestiona los datos de tu AgilityHub ID y las sesiones abiertas.",
+    "personalTitle": "Datos de la cuenta",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "locale": "Idioma",
+    "save": "GUARDAR LOS CAMBIOS",
+    "saved": "Los cambios se han guardado.",
+    "password": "Cambiar la contraseña",
+    "membershipsTitle": "Pertenencias",
+    "products": "Consulta tus productos",
+    "sessionsTitle": "Sesiones activas",
+    "sessionsDescription": "Revisa los dispositivos donde tienes la sesión abierta y cierra los que ya no utilices.",
+    "sessionsLoading": "Cargando las sesiones…",
+    "sessionsError": "No se han podido cargar o actualizar las sesiones.",
+    "noSessions": "No hay ninguna sesión activa.",
+    "lastUsed": "Último uso: {date}",
+    "current": "Esta sesión",
+    "revoke": "Cerrar esta sesión"
+  },
+  "products": {
+    "title": "Tus productos",
+    "description": "Entra en los productos AgilityHub vinculados a tu cuenta.",
+    "learnTitle": "AgilityHub Learn",
+    "learnDescription": "Aprende, practica y avanza con contenidos de agility.",
+    "openLearn": "ABRIR LEARN",
+    "clubsTitle": "AgilityHub Clubs",
+    "clubsDescription": "Accede a los clubs donde tienes una pertenencia activa.",
+    "openClubs": "ABRIR CLUBS"
+  },
+  "logout": {
+    "title": "Cerramos la sesión",
+    "description": "Estamos cerrando la sesión de tu AgilityHub ID."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La dirección que has abierto no corresponde a ninguna página de AgilityHub ID.",
+    "back": "VOLVER AL INICIO"
+  },
+  "errors": {
+    "generic": "No se ha podido completar la acción. Vuelve a intentarlo."
+  }
+}

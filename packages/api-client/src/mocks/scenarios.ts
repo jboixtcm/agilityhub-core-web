@@ -43,6 +43,11 @@ const scenarios = {
     me: meInstructor as Me,
     sessions: accountSessions,
   },
+  id: {
+    branding: minimal,
+    me: member,
+    sessions: accountSessions,
+  },
   minimal: {
     branding: minimal,
     me: member,

@@ -96,6 +96,14 @@ export const handlers = [
     ),
   ),
   http.post("*/oauth2/revoke", () => new HttpResponse(null, { status: 200 })),
+  http.get("*/oauth2/authorize", ({ request }) =>
+    HttpResponse.redirect(new URL("/products?authorization=complete", request.url), 302),
+  ),
+  http.get("*/connect/logout", ({ request }) => {
+    const requested = new URL(request.url).searchParams.get("post_logout_redirect_uri");
+    const destination = requested === null ? new URL("/login", request.url) : new URL(requested);
+    return HttpResponse.redirect(destination, 302);
+  }),
   http.post("*/oauth2/token", async ({ request }) => {
     const form = new URLSearchParams(await request.text());
     const grant = form.get("grant_type");
