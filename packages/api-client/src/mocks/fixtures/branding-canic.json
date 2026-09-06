@@ -1,7 +1,4 @@
 {
-  "clubId": "club-canic",
-  "slug": "canic",
-  "name": "Cànic",
   "club": {
     "slug": "canic",
     "name": "Cànic"
@@ -19,11 +16,9 @@
     "colors": {
       "primary": "#E26A2A",
       "onPrimary": "#FFFFFF",
-      "primaryFg": "#FFFFFF",
       "background": "#0B0B0B",
       "surface": "#161616",
       "surfaceAlt": "#1E1E1E",
-      "surface2": "#1E1E1E",
       "text": "#FFFFFF",
       "textMuted": "#B5B5B5",
       "border": "#2B2B2B",
@@ -32,15 +27,26 @@
       "danger": "#E05B5B",
       "info": "#85B8E8"
     },
-    "fonts": {
-      "sans": "Montserrat, system-ui, sans-serif"
-    },
     "fontFamily": "Montserrat, system-ui, sans-serif",
     "radius": "4px",
     "ringPalette": ["#F2B58C", "#8FCE8F", "#C9CDD3", "#F5D67A", "#85B8E8"],
-    "mode": "DARK"
+    "mode": "dark"
   },
-  "modules": ["CLASSES", "FREE_TRAINING", "COURSES"],
+  "modules": [
+    "FREE_TRAINING",
+    "BILLING",
+    "PACKS",
+    "ACTIVITIES",
+    "FAMILY_GROUP",
+    "WAITLIST",
+    "TASKS",
+    "FAQ",
+    "SMS",
+    "PUSH",
+    "INACTIVITY",
+    "COURSES",
+    "LEARN_LINK"
+  ],
   "signup": {
     "enabled": true
   },

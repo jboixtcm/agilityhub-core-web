@@ -24,35 +24,9 @@ export const queryKeys = {
   me: (host: string) => ["api", host, "me"] as const,
 };
 
-function normalizedThemeMode(mode: components["schemas"]["Theme"]["mode"]) {
-  switch (mode) {
-    case "AUTO":
-      return "auto" as const;
-    case "DARK":
-      return "dark" as const;
-    case "LIGHT":
-      return "light" as const;
-  }
-}
-
-/** Maps the public API payload to the flat shape consumed by BrandingProvider. */
+/** Keeps the public API payload in the design-system shape. The branding key is club.slug. */
 export function normalizeBranding(source: components["schemas"]["BrandingResponse"]) {
-  return {
-    ...source,
-    clubId: source.club.slug,
-    name: source.club.name,
-    slug: source.club.slug,
-    theme: {
-      ...source.theme,
-      colors: {
-        ...source.theme.colors,
-        background: source.theme.colors.surface,
-        onPrimary: source.theme.colors.primaryFg,
-        surfaceAlt: source.theme.colors.surface2,
-      },
-      mode: normalizedThemeMode(source.theme.mode),
-    },
-  };
+  return source;
 }
 
 export function createQueryClient(): QueryClient {

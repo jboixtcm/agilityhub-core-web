@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useEffect } from "react";
+import { createContext, type ReactNode, useContext, useLayoutEffect } from "react";
 
 export type ThemeMode = "auto" | "dark" | "light";
 
@@ -13,18 +13,14 @@ export interface BrandingThemeColors {
   text: string;
   textMuted: string;
   warning: string;
-  border?: string;
-  info?: string;
+  border: string;
+  info: string;
 }
 
 export interface BrandingTheme {
   colors: BrandingThemeColors;
   mode: ThemeMode;
   fontFamily?: string;
-  fonts?: {
-    display?: string;
-    sans?: string;
-  };
   logoDarkUrl?: string;
   logoUrl?: string;
   markUrl?: string;
@@ -34,17 +30,22 @@ export interface BrandingTheme {
 
 /** Normalized public branding data consumed by the design system. */
 export interface Branding {
-  clubId: string;
+  club: {
+    name: string;
+    slug: string;
+  };
   countryProfile: unknown;
   currency: string;
   defaultLocale: string;
+  legal: {
+    privacyPolicyUrl: string;
+  };
   locales: string[];
   modules: string[];
-  name: string;
   signup: {
     enabled: boolean;
   };
-  slug: string;
+  status: string;
   theme: BrandingTheme;
   timeZone: string;
 }
@@ -129,8 +130,8 @@ function themeProperties(theme: BrandingTheme): [string, string][] {
     return [[token, value] as [string, string]];
   });
 
-  const sans = theme.fonts?.sans ?? theme.fontFamily;
-  const display = theme.fonts?.display ?? sans;
+  const sans = theme.fontFamily;
+  const display = sans;
   if (sans !== undefined) {
     properties.push(["--ah-font-sans", sans]);
   }
@@ -147,8 +148,19 @@ function themeProperties(theme: BrandingTheme): [string, string][] {
   return properties;
 }
 
+export function applyBrandingTheme(
+  theme: BrandingTheme,
+  root: HTMLElement = document.documentElement,
+): void {
+  root.dataset.theme = theme.mode;
+  root.style.colorScheme = theme.mode === "auto" ? "light dark" : theme.mode;
+  themeProperties(theme).forEach(([property, value]) => {
+    root.style.setProperty(property, value);
+  });
+}
+
 export function BrandingProvider({ branding, children }: BrandingProviderProps) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     const properties = themeProperties(branding.theme);
     const previousTheme = root.getAttribute("data-theme");
@@ -157,16 +169,12 @@ export function BrandingProvider({ branding, children }: BrandingProviderProps) 
       properties.map(([property]) => [property, root.style.getPropertyValue(property)]),
     );
 
-    root.dataset.theme = branding.theme.mode;
-    root.style.colorScheme = branding.theme.mode === "auto" ? "light dark" : branding.theme.mode;
-    properties.forEach(([property, value]) => {
-      root.style.setProperty(property, value);
-    });
+    applyBrandingTheme(branding.theme, root);
 
     const ratio = contrastRatio(branding.theme.colors.primary, branding.theme.colors.onPrimary);
     if (ratio !== undefined && ratio < 4.5) {
       console.warn(
-        `[BrandingProvider] ${branding.name}: primary and onPrimary contrast (${ratio.toFixed(2)}:1) is below WCAG AA.`,
+        `[BrandingProvider] ${branding.club.name}: primary and onPrimary contrast (${ratio.toFixed(2)}:1) is below WCAG AA.`,
       );
     }
 

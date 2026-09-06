@@ -1,7 +1,63 @@
 {
   "app": {
-    "clubs": "AgilityHub Clubs",
-    "clubsAdmin": "AgilityHub Clubs Admin",
-    "id": "AgilityHub ID"
+    "clubsAdmin": "AgilityHub Clubs Admin"
+  },
+  "header": {
+    "language": "Idioma",
+    "userMenu": "Menú de usuario"
+  },
+  "language": {
+    "ca": "Catalán",
+    "en": "Inglés",
+    "es": "Castellano"
+  },
+  "landing": {
+    "description": "Tu identidad para todos los productos AgilityHub.",
+    "mark": "AH",
+    "title": "AgilityHub ID"
+  },
+  "login": {
+    "email": "Correo electrónico",
+    "error": "No se ha podido iniciar sesión.",
+    "password": "Contraseña",
+    "submit": "ENTRAR",
+    "submitting": "ENTRANDO…",
+    "title": "Acceso"
+  },
+  "nav": {
+    "activities": "Actividades",
+    "admin": "Navegación de administración",
+    "announcements": "Comunicados",
+    "audit": "Auditoría",
+    "billing": "Facturación",
+    "classCalendar": "Calendario de clases",
+    "configuration": "Configuración",
+    "console": "Consola",
+    "courses": "Recorridos",
+    "dashboard": "Panel",
+    "dogs": "Perros",
+    "field": "Campo",
+    "home": "Inicio",
+    "inactivity": "Inactividades y bajas",
+    "info": "Info",
+    "main": "Navegación principal",
+    "management": "Gestión",
+    "members": "Abonados",
+    "modalities": "Modalidades y tarifas",
+    "people": "Personas",
+    "preRegistrations": "Preinscripciones",
+    "profile": "Perfil",
+    "reserve": "Reservar",
+    "rings": "Pistas",
+    "settings": "Parámetros",
+    "studentFollowUp": "Seguimiento de alumnos",
+    "team": "Instructores y administradores",
+    "today": "Hoy",
+    "training": "Entrenamientos",
+    "weeklyTemplate": "Plantilla semanal"
+  },
+  "placeholder": {
+    "description": "Esta pantalla estará disponible pronto.",
+    "title": "Próximamente"
   }
 }

@@ -16,7 +16,7 @@ function canicBranding(): Branding {
 }
 
 function BrandingName() {
-  return <span>{useBranding().name}</span>;
+  return <span>{useBranding().club.name}</span>;
 }
 
 describe("T-02-05 BrandingProvider", () => {
@@ -30,7 +30,7 @@ describe("T-02-05 BrandingProvider", () => {
       </BrandingProvider>,
     );
 
-    expect(screen.getByText(branding.name)).toBeInTheDocument();
+    expect(screen.getByText(branding.club.name)).toBeInTheDocument();
     expect(document.documentElement.dataset.theme).toBe("dark");
     expect(document.documentElement.style.getPropertyValue("--ah-color-primary")).toBe(
       branding.theme.colors.primary,

@@ -58,7 +58,7 @@ export class AuthClient extends EventTarget {
 
   constructor(options: AuthClientOptions = {}) {
     super();
-    this.fetcher = options.fetch ?? globalThis.fetch;
+    this.fetcher = options.fetch ?? globalThis.fetch.bind(globalThis);
     this.navigate = options.navigate ?? defaultNavigate;
     this.refreshTokenStore = options.refreshTokenStore ?? createRefreshTokenStore();
     this.revokeEndpoint = options.revokeEndpoint ?? DEFAULT_REVOKE_ENDPOINT;

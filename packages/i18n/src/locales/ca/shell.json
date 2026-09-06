@@ -1,7 +1,63 @@
 {
   "app": {
-    "clubs": "AgilityHub Clubs",
-    "clubsAdmin": "AgilityHub Clubs Admin",
-    "id": "AgilityHub ID"
+    "clubsAdmin": "AgilityHub Clubs Admin"
+  },
+  "header": {
+    "language": "Idioma",
+    "userMenu": "Menú d’usuari"
+  },
+  "language": {
+    "ca": "Català",
+    "en": "Anglès",
+    "es": "Castellà"
+  },
+  "landing": {
+    "description": "La teva identitat per a tots els productes AgilityHub.",
+    "mark": "AH",
+    "title": "AgilityHub ID"
+  },
+  "login": {
+    "email": "Correu electrònic",
+    "error": "No s’ha pogut iniciar la sessió.",
+    "password": "Contrasenya",
+    "submit": "ENTRA",
+    "submitting": "ENTRANT…",
+    "title": "Accés"
+  },
+  "nav": {
+    "activities": "Activitats",
+    "admin": "Navegació d’administració",
+    "announcements": "Comunicats",
+    "audit": "Auditoria",
+    "billing": "Facturació",
+    "classCalendar": "Calendari de classes",
+    "configuration": "Configuració",
+    "console": "Consola",
+    "courses": "Recorreguts",
+    "dashboard": "Tauler",
+    "dogs": "Gossos",
+    "field": "Camp",
+    "home": "Inici",
+    "inactivity": "Inactivitats i baixes",
+    "info": "Info",
+    "main": "Navegació principal",
+    "management": "Gestió",
+    "members": "Abonats",
+    "modalities": "Modalitats i tarifes",
+    "people": "Persones",
+    "preRegistrations": "Preinscripcions",
+    "profile": "Perfil",
+    "reserve": "Reservar",
+    "rings": "Pistes",
+    "settings": "Paràmetres",
+    "studentFollowUp": "Seguiment alumnes",
+    "team": "Instructors i administradors",
+    "today": "Avui",
+    "training": "Entrenaments",
+    "weeklyTemplate": "Plantilla setmanal"
+  },
+  "placeholder": {
+    "description": "Aquesta pantalla estarà disponible aviat.",
+    "title": "Aviat"
   }
 }

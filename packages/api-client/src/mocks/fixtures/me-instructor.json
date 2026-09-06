@@ -1,0 +1,14 @@
+{
+  "account": {
+    "id": "10000000-0000-4000-8000-000000000003",
+    "name": "Ivet Puig",
+    "email": "ivet.puig@example.test",
+    "locale": "ca"
+  },
+  "membership": {
+    "roles": ["INSTRUCTOR"],
+    "memberId": "20000000-0000-4000-8000-000000000003",
+    "defaultProfile": "INSTRUCTOR"
+  },
+  "modules": ["FREE_TRAINING", "TASKS", "COURSES"]
+}

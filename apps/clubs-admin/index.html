@@ -4,6 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgilityHub Clubs Admin</title>
+    <script>
+      (() => {
+        try {
+          const cached = localStorage.getItem(`agilityhub.branding:${location.host}`);
+          if (cached === null) return;
+          const theme = JSON.parse(cached).theme;
+          const tokens = {
+            background: "--ah-color-background",
+            border: "--ah-color-border",
+            danger: "--ah-color-danger",
+            info: "--ah-color-info",
+            onPrimary: "--ah-color-primary-fg",
+            primary: "--ah-color-primary",
+            success: "--ah-color-success",
+            surface: "--ah-color-surface",
+            surfaceAlt: "--ah-color-surface-2",
+            text: "--ah-color-text",
+            textMuted: "--ah-color-text-muted",
+            warning: "--ah-color-warning",
+          };
+          Object.entries(theme.colors).forEach(([name, value]) => {
+            const token = tokens[name];
+            if (token !== undefined && typeof value === "string") {
+              document.documentElement.style.setProperty(token, value);
+            }
+          });
+          if (typeof theme.fontFamily === "string") {
+            document.documentElement.style.setProperty("--ah-font-sans", theme.fontFamily);
+            document.documentElement.style.setProperty("--ah-font-display", theme.fontFamily);
+          }
+          if (typeof theme.radius === "string") {
+            document.documentElement.style.setProperty("--ah-radius-sm", theme.radius);
+            document.documentElement.style.setProperty("--ah-radius-md", theme.radius);
+          }
+          if (Array.isArray(theme.ringPalette)) {
+            theme.ringPalette.forEach((color, index) => {
+              if (typeof color === "string") {
+                document.documentElement.style.setProperty(`--ah-color-ring-${index + 1}`, color);
+              }
+            });
+          }
+          if (["auto", "dark", "light"].includes(theme.mode)) {
+            document.documentElement.dataset.theme = theme.mode;
+            document.documentElement.style.colorScheme =
+              theme.mode === "auto" ? "light dark" : theme.mode;
+          }
+        } catch {
+          // The AgilityHub defaults remain active when cached branding is unavailable.
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

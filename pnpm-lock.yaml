@@ -200,16 +200,31 @@ importers:
 
   apps/clubs:
     dependencies:
+      '@agilityhub/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@agilityhub/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@agilityhub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@agilityhub/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       react:
         specifier: 'catalog:'
         version: 19.2.8
       react-dom:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
+      react-i18next:
+        specifier: 'catalog:'
+        version: 17.0.13(i18next@26.4.2(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3)
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.63.0
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
@@ -252,6 +267,9 @@ importers:
       '@agilityhub/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@agilityhub/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@agilityhub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -264,7 +282,13 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
+      react-i18next:
+        specifier: 'catalog:'
+        version: 17.0.13(i18next@26.4.2(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3)
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.63.0
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
@@ -301,15 +325,24 @@ importers:
 
   apps/id:
     dependencies:
+      '@agilityhub/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@agilityhub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@agilityhub/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       react:
         specifier: 'catalog:'
         version: 19.2.8
       react-dom:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
+      react-i18next:
+        specifier: 'catalog:'
+        version: 17.0.13(i18next@26.4.2(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3)
     devDependencies:
       '@tailwindcss/vite':
         specifier: 'catalog:'

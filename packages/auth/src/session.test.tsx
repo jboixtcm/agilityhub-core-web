@@ -36,19 +36,21 @@ const memberMe: Me = {
 };
 
 const branding: Branding = {
-  clubId: "canic",
+  club: { name: "Cànic", slug: "canic" },
   countryProfile: {},
   currency: "EUR",
   defaultLocale: "ca",
+  legal: { privacyPolicyUrl: "https://canic.example.test/privacitat" },
   locales: ["ca", "es", "en"],
   modules: ["FREE_TRAINING"],
-  name: "Cànic",
   signup: { enabled: true },
-  slug: "canic",
+  status: "ACTIVE",
   theme: {
     colors: {
       background: "canvas",
+      border: "gray",
       danger: "red",
+      info: "blue",
       onPrimary: "white",
       primary: "blue",
       success: "green",

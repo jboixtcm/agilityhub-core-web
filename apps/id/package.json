@@ -4,9 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@agilityhub/api-client": "workspace:*",
     "@agilityhub/i18n": "workspace:*",
+    "@agilityhub/ui": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-i18next": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",

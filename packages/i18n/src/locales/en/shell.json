@@ -1,7 +1,63 @@
 {
   "app": {
-    "clubs": "AgilityHub Clubs",
-    "clubsAdmin": "AgilityHub Clubs Admin",
-    "id": "AgilityHub ID"
+    "clubsAdmin": "AgilityHub Clubs Admin"
+  },
+  "header": {
+    "language": "Language",
+    "userMenu": "User menu"
+  },
+  "language": {
+    "ca": "Catalan",
+    "en": "English",
+    "es": "Spanish"
+  },
+  "landing": {
+    "description": "Your identity for every AgilityHub product.",
+    "mark": "AH",
+    "title": "AgilityHub ID"
+  },
+  "login": {
+    "email": "Email",
+    "error": "We could not sign you in.",
+    "password": "Password",
+    "submit": "SIGN IN",
+    "submitting": "SIGNING IN…",
+    "title": "Sign in"
+  },
+  "nav": {
+    "activities": "Activities",
+    "admin": "Administration navigation",
+    "announcements": "Announcements",
+    "audit": "Audit",
+    "billing": "Billing",
+    "classCalendar": "Class calendar",
+    "configuration": "Configuration",
+    "console": "Console",
+    "courses": "Courses",
+    "dashboard": "Dashboard",
+    "dogs": "Dogs",
+    "field": "Field",
+    "home": "Home",
+    "inactivity": "Inactivity and cancellations",
+    "info": "Info",
+    "main": "Main navigation",
+    "management": "Management",
+    "members": "Members",
+    "modalities": "Modalities and rates",
+    "people": "People",
+    "preRegistrations": "Pre-registrations",
+    "profile": "Profile",
+    "reserve": "Book",
+    "rings": "Rings",
+    "settings": "Settings",
+    "studentFollowUp": "Student follow-up",
+    "team": "Instructors and administrators",
+    "today": "Today",
+    "training": "Training",
+    "weeklyTemplate": "Weekly template"
+  },
+  "placeholder": {
+    "description": "This screen will be available soon.",
+    "title": "Coming soon"
   }
 }

@@ -98,9 +98,10 @@ export interface components {
         Theme: {
             colors: {
                 primary: string;
-                primaryFg: string;
+                onPrimary: string;
+                background: string;
                 surface: string;
-                surface2: string;
+                surfaceAlt: string;
                 text: string;
                 textMuted: string;
                 border: string;
@@ -112,12 +113,14 @@ export interface components {
             /** Format: uri */
             logoUrl?: string;
             /** Format: uri */
+            logoDarkUrl?: string;
+            /** Format: uri */
             markUrl?: string;
-            fonts?: {
-                [key: string]: string;
-            };
+            fontFamily: string;
+            radius: string;
+            ringPalette: string[];
             /** @enum {string} */
-            mode: "AUTO" | "LIGHT" | "DARK";
+            mode: "auto" | "light" | "dark";
         };
         CountryProfile: {
             code: string;

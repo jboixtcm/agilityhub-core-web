@@ -56,15 +56,13 @@ describe("typed API client", () => {
       throw new TypeError("Expected a branding payload");
     }
     expect(normalizeBranding(data)).toMatchObject({
-      clubId: "canic",
-      name: "Cànic",
-      slug: "canic",
+      club: { name: "Cànic", slug: "canic" },
       theme: {
         mode: "dark",
         colors: {
-          background: brandingCanic.theme.colors.surface,
-          onPrimary: brandingCanic.theme.colors.primaryFg,
-          surfaceAlt: brandingCanic.theme.colors.surface2,
+          background: brandingCanic.theme.colors.background,
+          onPrimary: brandingCanic.theme.colors.onPrimary,
+          surfaceAlt: brandingCanic.theme.colors.surfaceAlt,
         },
       },
     });
@@ -181,8 +179,8 @@ describe("TanStack Query defaults", () => {
 });
 
 describe("MSW bootstrap handlers", () => {
-  it("exports exactly the four bootstrap handlers", () => {
-    expect(handlers).toHaveLength(4);
+  it("exports the bootstrap and dynamic manifest handlers", () => {
+    expect(handlers).toHaveLength(5);
   });
 
   it("serves branding, current account, token, and health fixtures", async () => {

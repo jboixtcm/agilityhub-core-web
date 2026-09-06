@@ -8,6 +8,15 @@ export const handlers = [
       headers: { ETag: '"mock-branding-v1"' },
     }),
   ),
+  http.get("*/api/v1/manifest.webmanifest", () => {
+    const branding = currentMockScenario().branding;
+    return HttpResponse.json({
+      display: "standalone",
+      name: branding.club.name,
+      short_name: branding.club.name,
+      start_url: "/inici",
+    });
+  }),
   http.get("*/api/v1/me", () => HttpResponse.json(currentMockScenario().me)),
   http.post("*/oauth2/token", () =>
     HttpResponse.json({

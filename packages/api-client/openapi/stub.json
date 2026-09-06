@@ -238,15 +238,16 @@
       },
       "Theme": {
         "type": "object",
-        "required": ["colors", "mode"],
+        "required": ["colors", "fontFamily", "radius", "ringPalette", "mode"],
         "properties": {
           "colors": {
             "type": "object",
             "required": [
               "primary",
-              "primaryFg",
+              "onPrimary",
+              "background",
               "surface",
-              "surface2",
+              "surfaceAlt",
               "text",
               "textMuted",
               "border",
@@ -257,9 +258,10 @@
             ],
             "properties": {
               "primary": { "type": "string" },
-              "primaryFg": { "type": "string" },
+              "onPrimary": { "type": "string" },
+              "background": { "type": "string" },
               "surface": { "type": "string" },
-              "surface2": { "type": "string" },
+              "surfaceAlt": { "type": "string" },
               "text": { "type": "string" },
               "textMuted": { "type": "string" },
               "border": { "type": "string" },
@@ -270,14 +272,17 @@
             }
           },
           "logoUrl": { "type": "string", "format": "uri" },
+          "logoDarkUrl": { "type": "string", "format": "uri" },
           "markUrl": { "type": "string", "format": "uri" },
-          "fonts": {
-            "type": "object",
-            "additionalProperties": { "type": "string" }
+          "fontFamily": { "type": "string" },
+          "radius": { "type": "string" },
+          "ringPalette": {
+            "type": "array",
+            "items": { "type": "string" }
           },
           "mode": {
             "type": "string",
-            "enum": ["AUTO", "LIGHT", "DARK"]
+            "enum": ["auto", "light", "dark"]
           }
         }
       },

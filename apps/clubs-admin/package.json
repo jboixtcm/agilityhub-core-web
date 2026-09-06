@@ -5,12 +5,15 @@
   "type": "module",
   "dependencies": {
     "@agilityhub/api-client": "workspace:*",
+    "@agilityhub/auth": "workspace:*",
     "@agilityhub/i18n": "workspace:*",
     "@agilityhub/ui": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-i18next": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
@@ -29,6 +32,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsc --noEmit && vite build",
+    "e2e": "playwright test --grep 'Cànic administrator' && playwright test --grep 'minimal club' && playwright test --grep 'instructor'",
     "preview": "vite preview"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

@@ -15,9 +15,10 @@
   "theme": {
     "colors": {
       "primary": "#2457D6",
-      "primaryFg": "#FFFFFF",
+      "onPrimary": "#FFFFFF",
+      "background": "#FFFFFF",
       "surface": "#FFFFFF",
-      "surface2": "#F4F6FA",
+      "surfaceAlt": "#F4F6FA",
       "text": "#17191F",
       "textMuted": "#626875",
       "border": "#D8DCE5",
@@ -26,9 +27,12 @@
       "danger": "#B42318",
       "info": "#2457D6"
     },
-    "mode": "LIGHT"
+    "fontFamily": "Montserrat, system-ui, sans-serif",
+    "radius": "4px",
+    "ringPalette": ["#F2B58C", "#8FCE8F", "#C9CDD3", "#F5D67A", "#85B8E8"],
+    "mode": "light"
   },
-  "modules": [],
+  "modules": ["WAITLIST", "FAQ", "PUSH"],
   "signup": {
     "enabled": false
   },
