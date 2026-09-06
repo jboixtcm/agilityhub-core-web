@@ -27,6 +27,7 @@ The backend is `agilityhub-core-api` (`https://core.agilitydoghub.com/api/v1`); 
 4. **Types from OpenAPI** (`packages/api-client/src/generated`), never hand-written API types. Errors are `ApiError {code, message, details, traceId}`; map codes to i18n messages.
 5. **Tests in the same task**: Vitest for logic/components, Playwright for flows, names after the spec ids (`T-02-14`). MSW handlers for every endpoint a screen uses.
 6. **Accessibility**: labels, roles, focus order, contrast AA; mobile 375 px and desktop 1280 px layouts checked with screenshots next to the mockup PNG.
+   **Browsers inside your sandbox cannot launch** (Playwright/Chromium abort under the macOS sandbox). This is never a reason to block: run Playwright through Docker with `scripts/e2e-docker.sh` (created in E0-W07; recipe below) or, if Docker is unavailable, write in the report that screenshots/e2e could not run and let the organizer capture them. Recipe: `docker run --rm -v "$PWD":/src:ro -v "$PWD/roadmap/evidence":/evidence -w /work mcr.microsoft.com/playwright:v<@playwright/test version>-noble sh -c 'cp -r /src/. /work && find /work -name node_modules -prune -exec rm -rf {} + ; corepack enable && pnpm install --frozen-lockfile && pnpm e2e; cp -r /work/roadmap/evidence/. /evidence/'`.
 7. **No secrets or personal data** in the repo. Fixtures use fictional people.
 8. **Do not** modify `roadmap/ROADMAP.md`, other tasks' files, or the *Organizer verification* sections. Do not mark anything `verified`.
 
