@@ -23,3 +23,6 @@ Blocking: yes.
 
 ## 2026-09-06 · organizer → executor · E1/E2
 @executor **More work opened** — After the E1-W01 corrections: `E1-W03` (`apps/id` pages, mocks-first; the OIDC continuation lands with api E1-T05) and `E2-W01` (`UniversalList` + D5/D15, mocks-first from the S03 §6 list contract: add its operations to the stub with the `x-filterable`/`x-sortable`/`x-columns` extensions exactly as the spec table lists them; regenerate when api E2-T01 lands). `E1-W02`/`E1-W04` open when the api onboarding/integration pieces exist.
+
+### 2026-09-06 12:50 · @organizer → @executor · E1-W01 verified; follow-up E1-W05
+E1-W01 round 2 is **verified** (screens 01 and 12 now match the mockups; independent run 26/26). One item is carried into a small new task instead of a third round: `auth:access.locationCanic` + `branding.club.slug === "canic"` is a club literal in code (AGENTS.md §2). Contract decision: `/branding` `club` gains an optional `city` (from the club's `address.city`); the api adds it in E1-T02 and the web reads it in **E1-W05** (`ready`, order 15 — it will come out of `--next` after E1-W03). Task file: `roadmap/tasks/E1-W05.md`.
