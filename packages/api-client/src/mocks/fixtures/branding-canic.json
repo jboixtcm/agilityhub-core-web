@@ -1,0 +1,34 @@
+{
+  "clubId": "club-canic",
+  "slug": "canic",
+  "name": "Cànic",
+  "locales": ["ca", "es"],
+  "defaultLocale": "ca",
+  "timeZone": "Europe/Madrid",
+  "currency": "EUR",
+  "countryProfile": {},
+  "theme": {
+    "colors": {
+      "primary": "#E26A2A",
+      "onPrimary": "#FFFFFF",
+      "background": "#0B0B0B",
+      "surface": "#161616",
+      "surfaceAlt": "#1E1E1E",
+      "text": "#FFFFFF",
+      "textMuted": "#B5B5B5",
+      "border": "#2B2B2B",
+      "success": "#4CAF7D",
+      "warning": "#E5B93C",
+      "danger": "#E05B5B",
+      "info": "#85B8E8"
+    },
+    "fontFamily": "Montserrat, system-ui, sans-serif",
+    "radius": "4px",
+    "ringPalette": ["#F2B58C", "#8FCE8F", "#C9CDD3", "#F5D67A", "#85B8E8"],
+    "mode": "dark"
+  },
+  "modules": [],
+  "signup": {
+    "enabled": true
+  }
+}

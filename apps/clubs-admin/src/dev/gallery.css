@@ -1,0 +1,116 @@
+.gallery-page {
+  min-height: 100vh;
+  padding: var(--ah-space-8);
+  color: var(--ah-color-text);
+  font-family: var(--ah-font-sans);
+  background: var(--ah-color-background);
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 75rem;
+  gap: var(--ah-space-6);
+  margin: 0 auto var(--ah-space-8);
+}
+
+.gallery-header h1 {
+  margin: var(--ah-space-1) 0 0;
+  font: 800 clamp(1.75rem, 3vw, 2.5rem) / 1.1 var(--ah-font-display);
+}
+
+.gallery-header__eyebrow {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gallery-section {
+  max-width: 75rem;
+  padding: var(--ah-space-6);
+  margin: 0 auto var(--ah-space-6);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+}
+
+.gallery-section > h2 {
+  margin: 0 0 var(--ah-space-5);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gallery-section__content,
+.gallery-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ah-space-4);
+}
+
+.gallery-section__content {
+  flex-direction: column;
+}
+
+.gallery-form-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-4);
+}
+
+.gallery-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.gallery-mobile-preview {
+  width: min(100%, 28rem);
+  overflow: hidden;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+}
+
+.gallery-mobile-preview .ah-tabs {
+  padding: var(--ah-space-4);
+}
+
+.gallery-mobile-preview .ah-tab-bar {
+  margin-top: var(--ah-space-8);
+}
+
+.gallery-section .ah-sidebar {
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+}
+
+.gallery-section .ah-empty-state {
+  width: 100%;
+  border: 1px dashed var(--ah-color-border);
+  border-radius: var(--ah-radius-lg);
+}
+
+@media (max-width: 42rem) {
+  .gallery-page {
+    padding: var(--ah-space-4);
+  }
+
+  .gallery-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gallery-section {
+    padding: var(--ah-space-4);
+  }
+
+  .gallery-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

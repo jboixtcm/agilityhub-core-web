@@ -1,4 +1,91 @@
+@theme inline {
+  --color-background: var(--ah-color-background);
+  --color-primary: var(--ah-color-primary);
+  --color-primary-fg: var(--ah-color-primary-fg);
+  --color-surface: var(--ah-color-surface);
+  --color-surface-2: var(--ah-color-surface-2);
+  --color-text: var(--ah-color-text);
+  --color-muted: var(--ah-color-text-muted);
+  --color-border: var(--ah-color-border);
+  --color-success: var(--ah-color-success);
+  --color-warning: var(--ah-color-warning);
+  --color-danger: var(--ah-color-danger);
+  --color-info: var(--ah-color-info);
+  --font-sans: var(--ah-font-sans);
+  --font-display: var(--ah-font-display);
+  --radius-sm: var(--ah-radius-sm);
+  --radius-md: var(--ah-radius-md);
+  --radius-lg: var(--ah-radius-lg);
+}
+
 :root {
+  color-scheme: light;
+
+  --ah-color-primary: #1d1d1f;
+  --ah-color-primary-fg: #ffffff;
   --ah-color-background: #ffffff;
-  --ah-color-foreground: #1d1d1f;
+  --ah-color-surface: #ffffff;
+  --ah-color-surface-2: color-mix(in srgb, #ffffff 94%, #1d1d1f);
+  --ah-color-text: #1d1d1f;
+  --ah-color-text-muted: color-mix(in srgb, #1d1d1f 68%, #ffffff);
+  --ah-color-border: color-mix(in srgb, #1d1d1f 18%, #ffffff);
+  --ah-color-success: #4caf7d;
+  --ah-color-warning: #e5b93c;
+  --ah-color-danger: #e05b5b;
+  --ah-color-info: #85b8e8;
+  --ah-color-overlay: color-mix(in srgb, #000000 58%, transparent);
+  --ah-color-level-a: #f2b58c;
+  --ah-color-level-b: #8fce8f;
+  --ah-color-level-c: #c9cdd3;
+  --ah-color-level-d: #f5d67a;
+  --ah-color-level-therapy: #85b8e8;
+
+  --ah-radius-sm: 0.25rem;
+  --ah-radius-md: 0.5rem;
+  --ah-radius-lg: 0.625rem;
+  --ah-radius-full: 9999px;
+
+  --ah-font-sans: "Montserrat", system-ui, sans-serif;
+  --ah-font-display: "Montserrat", system-ui, sans-serif;
+
+  --ah-space-0: 0;
+  --ah-space-1: 0.25rem;
+  --ah-space-2: 0.5rem;
+  --ah-space-3: 0.75rem;
+  --ah-space-4: 1rem;
+  --ah-space-5: 1.25rem;
+  --ah-space-6: 1.5rem;
+  --ah-space-8: 2rem;
+  --ah-space-10: 2.5rem;
+  --ah-space-12: 3rem;
+  --ah-space-16: 4rem;
+
+  --ah-shadow-sm: 0 1px 2px color-mix(in srgb, #000000 12%, transparent);
+  --ah-shadow-lg: 0 18px 40px color-mix(in srgb, #000000 28%, transparent);
+  --ah-transition-fast: 150ms ease;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-theme="auto"] {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] {
+    --ah-color-primary: #ffffff;
+    --ah-color-primary-fg: #0b0b0b;
+    --ah-color-background: #0b0b0b;
+    --ah-color-surface: #161616;
+    --ah-color-surface-2: #1e1e1e;
+    --ah-color-text: #ffffff;
+    --ah-color-text-muted: #b5b5b5;
+    --ah-color-border: #2b2b2b;
+  }
 }
