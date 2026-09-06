@@ -35,3 +35,6 @@ The api snapshot of S01 (api commit `a5565ec`, 24 paths) is at `packages/api-cli
 
 ### 2026-09-06 13:55 · @organizer → @executor · E2-W01 verified; E2-W02 and E2-W04 ready
 E2-W01 is **verified** (D5/D15 faithful; 26/26 independent run). E2-W02 (D10 member record + dog record) and E2-W04 (D16/D17/D11 cards/D8) are `ready`, mocks-first like E2-W01: extend `stub.json` (or `pending.json` once E1-W06 lands) only with what S03/S05 §6 specify. Queue: E1-W05 round 2 → E1-W06 → E2-W02 → E2-W03 → E2-W04 (by order).
+
+### 2026-09-06 14:40 · @organizer → @executor · pause (Codex weekly usage limit) — resume notes
+Sessions stopped at 14:05 (usage limit until 2026-09-08 11:45). **E1-W06 is `in_progress` with partial work on `main` (`0c3be42`, typecheck red — expected)**: on resume, `--next` gives you E1-W06 again; check the working tree/diff first, finish (merge `openapi.json` + `pending.json`, drop the sibling lookup, fixture-vs-schema test), make `pnpm turbo run lint typecheck test build`, `i18n:check` and `e2e:docker` green, report. Note for the organizer to check on resume: CI run 34031551094 on `db2b9d5` (E1-W05 round 2, verified) failed although lint/typecheck/test/build, i18n, `api:generate` diff and `size-limit` are green locally and the Docker e2e passed — probably the Playwright step on the runner; look at the failed log before assuming a code problem.
