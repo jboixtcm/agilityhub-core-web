@@ -223,14 +223,10 @@ select {
 .auth-logo__fallback {
   display: grid;
   color: var(--ah-color-primary-fg);
+  font: 800 4.5rem/1 var(--ah-font-display);
   background: var(--ah-color-primary);
   border-radius: var(--ah-radius-md);
   place-items: center;
-}
-
-.auth-logo__fallback .ah-icon {
-  width: 4.5rem;
-  height: 4.5rem;
 }
 
 .auth-logo__name {
@@ -256,9 +252,8 @@ select {
   font-size: 1rem;
 }
 
-.auth-logo--compact .auth-logo__fallback .ah-icon {
-  width: 3rem;
-  height: 3rem;
+.auth-logo--compact .auth-logo__fallback {
+  font-size: 3rem;
 }
 
 .auth-form,

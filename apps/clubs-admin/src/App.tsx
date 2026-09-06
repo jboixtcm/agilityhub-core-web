@@ -360,21 +360,18 @@ function AdminShell({ children }: { children: ReactNode }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
-  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
+  const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
 
   return (
     <div className="admin-shell">
       <header className="admin-shell__header">
         <div className="admin-shell__brand">
-          {logoUrl === undefined && markUrl === undefined ? (
+          {logo.kind === "initial" ? (
             <span aria-hidden="true" className="admin-shell__mark">
               {branding.club.name.charAt(0)}
             </span>
           ) : (
-            <img
-              alt={logoUrl === undefined ? "" : branding.club.name}
-              src={logoUrl ?? markUrl}
-            />
+            <img alt="" src={logo.src} />
           )}
           <strong>{branding.club.name}</strong>
         </div>

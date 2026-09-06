@@ -28,10 +28,12 @@ export interface BrandingTheme {
   ringPalette?: string[];
 }
 
-export interface BrandingLogoAssets {
-  logoUrl: string | undefined;
-  markUrl: string | undefined;
-}
+export type BrandingLogoPlacement = "compact" | "full";
+
+export type BrandingLogoAssets =
+  | { kind: "full"; showName: false; src: string }
+  | { kind: "initial"; showName: true; src: undefined }
+  | { kind: "mark"; showName: true; src: string };
 
 /** Normalized public branding data consumed by the design system. */
 export interface Branding {
@@ -61,14 +63,27 @@ function nonEmptyAssetUrl(value: string | undefined): string | undefined {
   return normalized === "" ? undefined : normalized;
 }
 
-/** Selects the full logo for the active theme and keeps the mark as its fallback. */
-export function resolveBrandingLogo(theme: BrandingTheme): BrandingLogoAssets {
+/** Resolves the approved asset and name treatment for compact or full placements. */
+export function resolveBrandingLogo(
+  theme: BrandingTheme,
+  { placement }: { placement: BrandingLogoPlacement },
+): BrandingLogoAssets {
+  const markUrl = nonEmptyAssetUrl(theme.markUrl);
+  if (placement === "compact") {
+    return markUrl === undefined
+      ? { kind: "initial", showName: true, src: undefined }
+      : { kind: "mark", showName: true, src: markUrl };
+  }
+
   const logoUrl = nonEmptyAssetUrl(theme.logoUrl);
-  return {
-    logoUrl:
-      theme.mode === "dark" ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl) : logoUrl,
-    markUrl: nonEmptyAssetUrl(theme.markUrl),
-  };
+  const themedLogoUrl =
+    theme.mode === "dark" ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl) : logoUrl;
+  if (themedLogoUrl !== undefined) {
+    return { kind: "full", showName: false, src: themedLogoUrl };
+  }
+  return markUrl === undefined
+    ? { kind: "initial", showName: true, src: undefined }
+    : { kind: "mark", showName: true, src: markUrl };
 }
 
 interface BrandingProviderProps {

@@ -71,6 +71,20 @@ async function renderNavigation(roles: ("ADMIN" | "INSTRUCTOR" | "MEMBER")[]) {
 }
 
 describe("T-02-14 clubs-admin shell", () => {
+  it("uses the compact mark with the runtime club name", async () => {
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+
+    expect(document.querySelector(".admin-shell__brand img")).toHaveAttribute(
+      "src",
+      brandingCanicFixture.theme.markUrl,
+    );
+    expect(document.querySelector(".admin-shell__brand img")).toHaveAttribute("alt", "");
+    expect(screen.getByText(brandingCanicFixture.club.name)).toBeVisible();
+  });
+
   it("hides the Configuració group from instructors", async () => {
     await renderNavigation(["INSTRUCTOR"]);
 

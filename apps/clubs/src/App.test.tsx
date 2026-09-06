@@ -92,6 +92,20 @@ async function renderNavigation(modules: string[], roles: ("ADMIN" | "INSTRUCTOR
 }
 
 describe("T-02-14 clubs shell", () => {
+  it("uses the compact mark with the runtime club name", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(client);
+
+    expect(document.querySelector(".clubs-shell__logo")).toHaveAttribute(
+      "src",
+      brandingCanicFixture.theme.markUrl,
+    );
+    expect(document.querySelector(".clubs-shell__logo")).toHaveAttribute("alt", "");
+    expect(screen.getByText(brandingCanicFixture.club.name)).toBeVisible();
+  });
+
   it("filters the six-tab mockup navigation by modules and roles", async () => {
     await renderNavigation(["FREE_TRAINING", "FAQ"], ["MEMBER"]);
 

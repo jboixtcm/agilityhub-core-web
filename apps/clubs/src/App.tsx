@@ -130,21 +130,21 @@ function routeAfterLogin(me: Me): string {
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   const branding = useBranding();
-  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
+  const logo = resolveBrandingLogo(branding.theme, { placement: "full" });
   return (
     <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
-      {logoUrl !== undefined ? (
-        <img alt={branding.club.name} className="auth-logo__full" src={logoUrl} />
-      ) : markUrl !== undefined ? (
-        <img alt="" className="auth-logo__mark" src={markUrl} />
-      ) : (
+      {logo.kind === "initial" ? (
         <span aria-hidden="true" className="auth-logo__fallback">
-          <Icon aria-hidden="true" name="paw" />
+          {branding.club.name.charAt(0)}
         </span>
+      ) : (
+        <img
+          alt={logo.kind === "full" ? branding.club.name : ""}
+          className={logo.kind === "full" ? "auth-logo__full" : "auth-logo__mark"}
+          src={logo.src}
+        />
       )}
-      {logoUrl === undefined ? (
-        <strong className="auth-logo__name">{branding.club.name}</strong>
-      ) : null}
+      {logo.showName ? <strong className="auth-logo__name">{branding.club.name}</strong> : null}
     </div>
   );
 }
@@ -270,7 +270,7 @@ function MobileShell({
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
-  const { logoUrl, markUrl } = resolveBrandingLogo(branding.theme);
+  const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
 
   return (
     <div className="clubs-shell">
@@ -292,16 +292,12 @@ function MobileShell({
               </div>
             }
             start={
-              logoUrl === undefined && markUrl === undefined ? (
+              logo.kind === "initial" ? (
                 <span aria-hidden="true" className="clubs-shell__mark">
                   {branding.club.name.charAt(0)}
                 </span>
               ) : (
-                <img
-                  alt={logoUrl === undefined ? "" : branding.club.name}
-                  className="clubs-shell__logo"
-                  src={logoUrl ?? markUrl}
-                />
+                <img alt="" className="clubs-shell__logo" src={logo.src} />
               )
             }
             title={branding.club.name}
