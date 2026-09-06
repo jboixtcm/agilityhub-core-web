@@ -349,6 +349,7 @@ function accessError(
 export function AccessPage({ authClient }: { authClient: AuthClient }) {
   const branding = useBranding();
   const { t } = useTranslation("auth");
+  const footerCity = branding.club.city?.trim();
   const [email, setEmail] = useState(
     () => new URLSearchParams(window.location.search).get("email") ?? "",
   );
@@ -494,10 +495,10 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
         ) : null}
       </section>
       <footer className="auth-footer">
-        {branding.club.slug === "canic"
+        {footerCity
           ? t("auth:access.footerWithLocation", {
               club: branding.club.name,
-              location: t("auth:access.locationCanic"),
+              city: footerCity,
             })
           : t("auth:access.footer", { club: branding.club.name })}
       </footer>

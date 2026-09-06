@@ -22,5 +22,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - Align the Clubs access and profile screens with approved mockups 01 and 12: always-visible password entry, full Cànic branding, passwordless/reset actions, ordered profile and preference rows, and account-session management reserved for AgilityHub ID.
+- Drive the Clubs access footer location from the optional branding `club.city` contract, with a name-only fallback for clubs without a city.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

@@ -432,6 +432,10 @@
               },
               "name": {
                 "type": "string"
+              },
+              "city": {
+                "type": "string",
+                "nullable": true
               }
             }
           },

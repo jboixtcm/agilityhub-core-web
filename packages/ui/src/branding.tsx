@@ -31,6 +31,7 @@ export interface BrandingTheme {
 /** Normalized public branding data consumed by the design system. */
 export interface Branding {
   club: {
+    city?: string | null;
     name: string;
     slug: string;
   };

@@ -189,6 +189,7 @@ export interface components {
             club: {
                 slug: string;
                 name: string;
+                city?: string | null;
             };
             theme: components["schemas"]["Theme"];
             locales: string[];

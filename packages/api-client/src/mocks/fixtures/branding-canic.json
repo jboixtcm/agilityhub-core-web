@@ -1,7 +1,8 @@
 {
   "club": {
     "slug": "canic",
-    "name": "Cànic"
+    "name": "Cànic",
+    "city": "Cabrera de Mar"
   },
   "locales": ["ca", "es"],
   "defaultLocale": "ca",

@@ -185,6 +185,8 @@ describe("T-01-18 access screen", () => {
     mockScenario("minimal");
     await renderApplication(authClient(), minimalBranding);
     expect(screen.queryByRole("link", { name: /Apunta-t'hi/u })).not.toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toHaveTextContent("Club Agility Club Mínim");
+    expect(screen.getByRole("contentinfo")).not.toHaveTextContent("·");
   });
 
   it("shows the Retry-After countdown and disables requests", async () => {
