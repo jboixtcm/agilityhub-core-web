@@ -1,0 +1,15 @@
+{
+  "name": "@agilityhub/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.mjs",
+    "./prettier": "./prettier.config.mjs",
+    "./tsconfig": "./tsconfig.base.json"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0 --config ../../eslint.config.mjs",
+    "typecheck": "node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs"
+  }
+}
