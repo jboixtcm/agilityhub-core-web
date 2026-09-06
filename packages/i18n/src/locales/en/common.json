@@ -4,6 +4,9 @@
       "before": "{duration} before"
     }
   },
+  "unavailable": {
+    "title": "Unavailable"
+  },
   "gallery": {
     "active": "Active",
     "add": "Add",

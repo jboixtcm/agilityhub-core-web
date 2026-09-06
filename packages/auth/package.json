@@ -7,7 +7,24 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@agilityhub/api-client": "workspace:*",
+    "@agilityhub/ui": "workspace:*",
+    "react-i18next": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
   "devDependencies": {
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "fake-indexeddb": "catalog:",
+    "jsdom": "catalog:",
+    "msw": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

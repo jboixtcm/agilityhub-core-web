@@ -4,6 +4,9 @@
       "before": "{duration} abans"
     }
   },
+  "unavailable": {
+    "title": "No disponible"
+  },
   "gallery": {
     "active": "Activa",
     "add": "Afegeix",
