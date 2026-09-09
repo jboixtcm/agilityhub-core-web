@@ -42,6 +42,11 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
+  adminAllLocales: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
   member: {
     branding: canic,
     me: member,

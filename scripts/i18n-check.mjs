@@ -138,8 +138,39 @@ for (const [key, file] of usedKeys) {
   }
 }
 
+const dynamicKeyPrefixes = [
+  "admin-settings:blocks.",
+  "admin-settings:days.",
+  "admin-settings:editor.coverage.",
+  "admin-settings:enum.",
+  "admin-settings:modules.",
+  "admin-settings:param.",
+];
+
+const settingsFixture = await readFile(
+  path.join(root, "packages/api-client/src/mocks/fixtures/settings.ts"),
+  "utf8",
+);
+const parameterKeys = new Set(
+  [...settingsFixture.matchAll(/\bparameter\(\s*"([^"]+)"/gu)].map((match) => match[1]),
+);
+for (const parameterKey of parameterKeys) {
+  for (const suffix of ["help", "label"]) {
+    const translationKey = `admin-settings:param.${parameterKey}.${suffix}`;
+    for (const locale of locales) {
+      if (!catalogs.get(locale).has(translationKey)) {
+        issues.push(`${locale}: missing parameter translation key ${translationKey}`);
+      }
+    }
+  }
+}
+
 for (const key of canonicalKeys) {
-  if (!key.startsWith("errors:") && !usedKeys.has(key)) {
+  if (
+    !key.startsWith("errors:") &&
+    !dynamicKeyPrefixes.some((prefix) => key.startsWith(prefix)) &&
+    !usedKeys.has(key)
+  ) {
     issues.push(`unused translation key ${key}`);
   }
 }

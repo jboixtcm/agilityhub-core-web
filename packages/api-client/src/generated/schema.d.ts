@@ -135,14 +135,14 @@ export interface paths {
         post?: never;
         /**
          * Delete administrator
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.
          */
         delete: operations["deleteAdministrator"];
         options?: never;
         head?: never;
         /**
          * Update administrator
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.
          */
         patch: operations["updateAdministrator"];
         trace?: never;
@@ -464,7 +464,7 @@ export interface paths {
         };
         /**
          * List dogs
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-22. Tenant-scoped universal list, with literal search and role/module-safe projections; fields selects a sparse response.
          */
         get: operations["listDogs"];
         put?: never;
@@ -484,7 +484,7 @@ export interface paths {
         };
         /**
          * Export dogs
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.
          */
         get: operations["exportDogs"];
         put?: never;
@@ -504,7 +504,7 @@ export interface paths {
         };
         /**
          * Dog filter values
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.
          */
         get: operations["dogFilterValues"];
         put?: never;
@@ -826,7 +826,7 @@ export interface paths {
         put?: never;
         /**
          * Create faq
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         post: operations["createFaq"];
         delete?: never;
@@ -844,7 +844,7 @@ export interface paths {
         };
         /**
          * Faq category values
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["faqCategoryValues"];
         put?: never;
@@ -865,7 +865,7 @@ export interface paths {
         get?: never;
         /**
          * Order faqs
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         put: operations["orderFaqs"];
         post?: never;
@@ -887,14 +887,14 @@ export interface paths {
         post?: never;
         /**
          * Delete faq
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["deleteFaq"];
         options?: never;
         head?: never;
         /**
          * Update faq
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         patch: operations["updateFaq"];
         trace?: never;
@@ -951,14 +951,14 @@ export interface paths {
         post?: never;
         /**
          * Delete instructor
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.
          */
         delete: operations["deleteInstructor"];
         options?: never;
         head?: never;
         /**
          * Update instructor
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.
          */
         patch: operations["updateInstructor"];
         trace?: never;
@@ -998,7 +998,7 @@ export interface paths {
         put?: never;
         /**
          * Create level
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         post: operations["createLevel"];
         delete?: never;
@@ -1017,7 +1017,7 @@ export interface paths {
         get?: never;
         /**
          * Order levels
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         put: operations["orderLevels"];
         post?: never;
@@ -1036,21 +1036,21 @@ export interface paths {
         };
         /**
          * Get level
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["getLevel"];
         put?: never;
         post?: never;
         /**
          * Delete level
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["deleteLevel"];
         options?: never;
         head?: never;
         /**
          * Update level
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         patch: operations["updateLevel"];
         trace?: never;
@@ -1376,7 +1376,7 @@ export interface paths {
         };
         /**
          * Export members
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.
          */
         get: operations["exportMembers"];
         put?: never;
@@ -1396,7 +1396,7 @@ export interface paths {
         };
         /**
          * Member filter values
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.
          */
         get: operations["memberFilterValues"];
         put?: never;
@@ -1633,7 +1633,7 @@ export interface paths {
         get?: never;
         /**
          * Update member roles
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S03 R-03-10. Synchronizes S05 profiles; MEMBER is required and ADMIN cannot be removed from oneself.
          */
         put: operations["updateMemberRoles"];
         post?: never;
@@ -2010,7 +2010,7 @@ export interface paths {
         put?: never;
         /**
          * Create ring
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         post: operations["createRing"];
         delete?: never;
@@ -2029,7 +2029,7 @@ export interface paths {
         get?: never;
         /**
          * Order rings
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         put: operations["orderRings"];
         post?: never;
@@ -2048,21 +2048,21 @@ export interface paths {
         };
         /**
          * Get ring
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["getRing"];
         put?: never;
         post?: never;
         /**
          * Delete ring
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["deleteRing"];
         options?: never;
         head?: never;
         /**
          * Update ring
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         patch: operations["updateRing"];
         trace?: never;
@@ -2076,13 +2076,13 @@ export interface paths {
         };
         /**
          * Saved views
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.
          */
         get: operations["savedViews"];
         put?: never;
         /**
          * Create saved view
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.
          */
         post: operations["createSavedView"];
         delete?: never;
@@ -2100,7 +2100,7 @@ export interface paths {
         };
         /**
          * Saved view
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.
          */
         get: operations["savedView"];
         /**
@@ -2111,7 +2111,7 @@ export interface paths {
         post?: never;
         /**
          * Delete saved view
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.
          */
         delete: operations["deleteSavedView"];
         options?: never;
@@ -2323,7 +2323,7 @@ export interface components {
         };
         AccountPatchRequest: {
             /** @enum {string} */
-            locale?: "ca" | "es" | "en";
+            locale?: "ca" | "es" | "en" | "fr" | "de" | "no" | "pt";
             name?: string;
         };
         AccountSummary: {
@@ -2332,7 +2332,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            locale: "ca" | "es" | "en";
+            locale: "ca" | "es" | "en" | "fr" | "de" | "no" | "pt";
             name: string;
             platformRoles: "AGILITYHUB_ADMIN"[];
         };
@@ -2799,6 +2799,7 @@ export interface components {
             chip?: string;
             displayStatus: components["schemas"]["DisplayStatus"];
             freeTraining?: components["schemas"]["FreeTraining"];
+            handler?: string;
             /** Format: uuid */
             id: string;
             level?: components["schemas"]["LevelSummary"];
@@ -3124,7 +3125,7 @@ export interface components {
             id: string;
             lastChange?: components["schemas"]["LastChange"];
             /** Format: uuid */
-            memberId: string;
+            memberId?: string;
             shortName: string;
             usage?: components["schemas"]["InstructorUsage"];
             /** Format: int64 */
@@ -3189,8 +3190,6 @@ export interface components {
         /** @description ADMIN projection; reduced catalog readers omit usage and nameI18n. */
         Level: {
             active: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             /** Format: int32 */
             capacity: number;
             code: string;
@@ -3208,7 +3207,7 @@ export interface components {
             usage?: components["schemas"]["LevelUsage"];
             /** Format: int64 */
             version: number;
-            warnings?: string[];
+            warnings?: components["schemas"]["LevelUsage"];
         };
         LevelChangeResult: {
             level: components["schemas"]["LevelSummary"];
@@ -3218,8 +3217,6 @@ export interface components {
         };
         LevelCreate: {
             active?: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             /** Format: int32 */
             capacity?: number;
             code: string;
@@ -3246,8 +3243,6 @@ export interface components {
         };
         LevelPatch: {
             active?: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             /** Format: int32 */
             capacity?: number;
             code?: string;
@@ -3263,8 +3258,6 @@ export interface components {
         };
         LevelReaderView: {
             active: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             /** Format: int32 */
             capacity: number;
             code: string;
@@ -3415,7 +3408,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            locale: "ca" | "es" | "en";
+            locale: "ca" | "es" | "en" | "fr" | "de" | "no" | "pt";
             name: string;
             onboardingPending: boolean;
             platformRoles: "AGILITYHUB_ADMIN"[];
@@ -3661,7 +3654,7 @@ export interface components {
         };
         OnboardingFields: {
             /** @enum {string} */
-            locale?: "ca" | "es" | "en";
+            locale?: "ca" | "es" | "en" | "fr" | "de" | "no" | "pt";
             name?: string;
             /** @description Requested only when configured by the club */
             phone?: string;
@@ -4012,7 +4005,7 @@ export interface components {
             /** Format: email */
             email: string;
             /** @enum {string} */
-            locale: "ca" | "es" | "en";
+            locale: "ca" | "es" | "en" | "fr" | "de" | "no" | "pt";
             name: string;
             /** @description Existing Learn bcrypt hash, preserved on import */
             passwordHash?: string;
@@ -4187,7 +4180,7 @@ export interface components {
             order?: number;
             shortName?: string;
             /** Format: int32 */
-            trainingCapacity?: number;
+            trainingCapacity?: number | null;
             /** Format: int64 */
             version: number;
         };
@@ -7903,7 +7896,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<DogListItem> */
+            /** @description ListPage<DogListItem>; fields selects a sparse projection */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -11218,7 +11211,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description STALE_VERSION, STALE_VERSION */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -15052,7 +15045,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<MemberListItem> */
+            /** @description ListPage<MemberListItem>; fields selects a sparse projection */
             200: {
                 headers: {
                     [name: string]: unknown;

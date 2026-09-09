@@ -1,0 +1,627 @@
+{
+  "blocks": {
+    "automatedProcesses": "Processos automàtics",
+    "billing": "Quotes, packs i remesa",
+    "classes": "Classes",
+    "club": "Club i pistes",
+    "clubPages": "Pàgines del club",
+    "communications": "Comunicacions",
+    "courses": "Recorreguts",
+    "freeTraining": "Entrenaments lliures",
+    "modules": "Mòduls",
+    "privacyAudit": "Privacitat i auditoria",
+    "signup": "Alta i consentiments",
+    "waitlist": "Llista d'espera"
+  },
+  "common": {
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "loading": "Carregant",
+    "save": "DESA",
+    "saving": "Desant"
+  },
+  "days": {
+    "long": {
+      "FRIDAY": "Divendres",
+      "MONDAY": "Dilluns",
+      "SATURDAY": "Dissabte",
+      "SUNDAY": "Diumenge",
+      "THURSDAY": "Dijous",
+      "TUESDAY": "Dimarts",
+      "WEDNESDAY": "Dimecres"
+    },
+    "short": {
+      "FRIDAY": "dv",
+      "MONDAY": "dl",
+      "SATURDAY": "ds",
+      "SUNDAY": "dg",
+      "THURSDAY": "dj",
+      "TUESDAY": "dt",
+      "WEDNESDAY": "dc"
+    }
+  },
+  "editor": {
+    "addHoliday": "Afegeix un festiu",
+    "appliesFromNow": "S'aplica a partir d'ara.",
+    "closes": "Tancament de {day}",
+    "coverage": {
+      "ok": "Cobertura correcta per sobre de (%)",
+      "short": "Cal ampliar per sota de (%)",
+      "tight": "Cobertura ajustada per sobre de (%)"
+    },
+    "dayOfWeek": "Dia de la setmana",
+    "defaultLocaleRequired": "Cal completar el text en l'idioma predeterminat del club.",
+    "holidayDate": "Data del festiu {index}",
+    "holidayLabel": "Nom del festiu {index}",
+    "invalidCoverage": "Els llindars han d'anar de més gran a més petit.",
+    "invalidJson": "El JSON no és vàlid.",
+    "invalidOpeningHours": "L'hora d'obertura ha de ser anterior al tancament i usar intervals de 5 minuts.",
+    "noHolidays": "Encara no hi ha cap festiu.",
+    "open": "Edita {label}",
+    "opens": "Obertura de {day}",
+    "reason": "Motiu del canvi (opcional)",
+    "removeHoliday": "Elimina el festiu {index}",
+    "reset": "Restableix el valor de producte",
+    "time": "Hora"
+  },
+  "enum": {
+    "billing": {
+      "accountingExportFormat": {
+        "CSV": "CSV",
+        "XLSX": "XLSX"
+      },
+      "cashInvoicing": {
+        "MONTHLY": "Mensual",
+        "SEMESTER": "Semestral"
+      },
+      "singleClassCancelPolicy": {
+        "CREDIT": "Crèdit",
+        "NONE": "Sense retorn",
+        "REFUND": "Devolució"
+      }
+    },
+    "bookings": {
+      "limitUnit": {
+        "DOG": "Gos",
+        "MEMBER": "Abonat"
+      }
+    },
+    "waitlist": {
+      "mode": {
+        "ALL_AT_ONCE": "Avís a tothom alhora",
+        "FIFO": "Per ordre d'entrada"
+      }
+    }
+  },
+  "history": {
+    "globalTitle": "Històric de paràmetres",
+    "open": "Mostra l'històric de {label}",
+    "parameterTitle": "Històric · {label}"
+  },
+  "lastChange": "últim canvi: {key} · {date} · {actor} — amb històric",
+  "modules": {
+    "FAQ": {
+      "help": "Mostra la pàgina de preguntes freqüents a l'app.",
+      "label": "Preguntes freqüents"
+    },
+    "LEARN_LINK": {
+      "help": "Mostra l'accés a Learn al menú de l'app.",
+      "label": "Enllaç a Learn"
+    },
+    "PUSH": {
+      "help": "Permet rebre notificacions web al dispositiu.",
+      "label": "Notificacions push"
+    }
+  },
+  "pages": {
+    "faq": "Preguntes freqüents",
+    "navigation": "Editors de pàgines del club",
+    "rules": "Normes del club"
+  },
+  "param": {
+    "activities": {
+      "cancelDeadline": {
+        "help": "Moment límit perquè una persona anul·li la inscripció.",
+        "label": "Anul·lació d'activitats fins a"
+      },
+      "publicUrlTemplate": {
+        "help": "Plantilla de l'enllaç públic de cada activitat.",
+        "label": "Enllaç públic de les activitats"
+      }
+    },
+    "attendance": {
+      "editDays": {
+        "help": "Dies disponibles per corregir l'assistència.",
+        "label": "Termini per editar assistències"
+      }
+    },
+    "audit": {
+      "retentionYears": {
+        "help": "Anys durant els quals es conserva l'auditoria.",
+        "label": "Conservació de l'auditoria"
+      }
+    },
+    "billing": {
+      "accountingExportFormat": {
+        "help": "Format predeterminat de les exportacions comptables.",
+        "label": "Format d'exportació comptable"
+      },
+      "cashInvoicing": {
+        "help": "Periodicitat de facturació dels pagaments en efectiu.",
+        "label": "Facturació en efectiu"
+      },
+      "cashPeriodMonths": {
+        "help": "Mesos que inclou cada període de pagament en efectiu.",
+        "label": "Període de pagament en efectiu"
+      },
+      "entryFeePerDog": {
+        "help": "Import d'entrada aplicat a cada gos.",
+        "label": "Entrada per gos (matrícula)"
+      },
+      "familyDiscountPercentFromSecondDog": {
+        "help": "Descompte proposat des del segon gos del grup familiar.",
+        "label": "Descompte familiar des del segon gos"
+      },
+      "inactivityFeeFirstMonth": {
+        "help": "Quota d'inactivitat del primer mes.",
+        "label": "Quota d'inactivitat · primer mes"
+      },
+      "inactivityFeeFollowingMonths": {
+        "help": "Quota d'inactivitat dels mesos següents.",
+        "label": "Quota d'inactivitat · mesos següents"
+      },
+      "invoiceResetYearly": {
+        "help": "Reinicia la numeració dels rebuts cada any.",
+        "label": "Reinici anual de la numeració"
+      },
+      "invoiceSeriesPattern": {
+        "help": "Patró de la sèrie anual de rebuts.",
+        "label": "Sèrie i numeració de rebuts"
+      },
+      "nextInvoiceDayOfMonth": {
+        "help": "Dia del mes del proper rebut.",
+        "label": "Dia del proper rebut"
+      },
+      "packExpiryWarningDays": {
+        "help": "Dies d'antelació de l'avís de caducitat del pack.",
+        "label": "Avís de caducitat del pack"
+      },
+      "packLowBalanceSessions": {
+        "help": "Sessions restants que activen l'avís de saldo baix.",
+        "label": "Avís de saldo baix del pack"
+      },
+      "packToMemberEntryDiscountPercent": {
+        "help": "Descompte d'entrada en passar de pack a abonament.",
+        "label": "Descompte d'entrada després d'un pack"
+      },
+      "packToMemberMinSessions": {
+        "help": "Sessions mínimes del pack per obtenir el descompte.",
+        "label": "Sessions mínimes per al descompte"
+      },
+      "remittanceReminderDay": {
+        "help": "Dia de l'avís per preparar la remesa; 0 el desactiva.",
+        "label": "Recordatori de la remesa"
+      },
+      "sepa": {
+        "collectionDayOfMonth": {
+          "help": "Dia del mes en què es cobra la quota.",
+          "label": "Dia de cobrament SEPA"
+        },
+        "schema": {
+          "help": "Esquema del fitxer de remesa SEPA.",
+          "label": "Esquema SEPA"
+        },
+        "useFrst": {
+          "help": "Usa la seqüència inicial abans dels cobraments recurrents.",
+          "label": "Seqüència inicial SEPA"
+        }
+      },
+      "singleClassCancelPolicy": {
+        "help": "Tractament del pagament quan s'anul·la dins del termini.",
+        "label": "Política d'anul·lació de classe individual"
+      },
+      "stripeMaxAttempts": {
+        "help": "Nombre màxim d'intents de cobrament.",
+        "label": "Intents màxims de cobrament"
+      },
+      "stripeReceiptEmail": {
+        "help": "Envia el rebut de Stripe per correu.",
+        "label": "Rebut de Stripe per correu"
+      },
+      "taxIncluded": {
+        "help": "Indica si els imports ja inclouen impostos.",
+        "label": "Impostos inclosos"
+      },
+      "upfrontCutoffDay": {
+        "help": "Dia límit per demanar una alta per al mes següent.",
+        "label": "Dia límit d'altes del mes següent"
+      }
+    },
+    "bookings": {
+      "instructorLastMinuteNotice": {
+        "help": "Permet que l'instructor indiqui que l'alumne ha avisat.",
+        "label": "Avís d'última hora per l'instructor"
+      },
+      "lateCancelThresholdMinutes": {
+        "help": "A partir d'aquest llindar l'anul·lació compta com a classe feta.",
+        "label": "Llindar d'anul·lació tardana («classe feta»)"
+      },
+      "limitUnit": {
+        "help": "Unitat a la qual s'apliquen els límits de reserva.",
+        "label": "Unitat dels límits de reserva"
+      },
+      "maxCurrentWeek": {
+        "help": "Màxim de classes reservables durant la setmana en curs.",
+        "label": "Màx. classes setmana en curs (per gos)"
+      },
+      "maxNextWeek": {
+        "help": "Màxim de classes reservables durant la setmana següent.",
+        "label": "Màx. classes setmana següent"
+      },
+      "paymentPendingMinutes": {
+        "help": "Temps disponible per completar el pagament d'una reserva.",
+        "label": "Temps per completar el pagament"
+      },
+      "seatHoldSeconds": {
+        "help": "Temps durant el qual una plaça queda retinguda.",
+        "label": "Retenció temporal d'una plaça"
+      },
+      "showInstructorHoursBefore": {
+        "help": "Antelació amb què l'abonat veu l'instructor.",
+        "label": "Mostrar instructor a l'abonat"
+      },
+      "weekOpensAt": {
+        "help": "Hora local en què s'obren les reserves de la setmana següent.",
+        "label": "Obertura d'inscripcions i canvi de setmana"
+      }
+    },
+    "census": {
+      "bookingBlockReasons": {
+        "help": "Motius disponibles per bloquejar les reserves.",
+        "label": "Motius de bloqueig de reserves"
+      },
+      "dogDocumentTypes": {
+        "help": "Documents disponibles per als gossos i obligatorietat.",
+        "label": "Documents dels gossos"
+      }
+    },
+    "classes": {
+      "defaultCapacity": {
+        "help": "Aforament per defecte; cada classe usa el mínim dels seus nivells.",
+        "label": "Aforament per nivell"
+      },
+      "finishGraceMinutes": {
+        "help": "Marge després de l'hora final abans de tancar la classe.",
+        "label": "Marge per finalitzar classes"
+      },
+      "maxInstructorsPerClass": {
+        "help": "Nombre màxim d'instructors assignables a una classe.",
+        "label": "Màx. instructors per classe"
+      },
+      "minDogs": {
+        "help": "Nombre mínim de gossos perquè una classe no estigui en risc.",
+        "label": "Mínim de gossos per classe"
+      },
+      "riskAutoCancelSameDay": {
+        "help": "Anul·la automàticament les classes en risc del mateix dia.",
+        "label": "Anul·lació automàtica el mateix dia"
+      },
+      "riskLookaheadDays": {
+        "help": "Dies vista inclosos en la revisió de classes en risc.",
+        "label": "Revisió de classes en risc · abast"
+      },
+      "riskReviewTime": {
+        "help": "Hora local de la revisió de classes en risc.",
+        "label": "Revisió de classes en risc · hora"
+      },
+      "slotMinutes": {
+        "help": "Granularitat de la graella de plantilles.",
+        "label": "Durada de la franja de plantilla"
+      }
+    },
+    "club": {
+      "holidays": {
+        "help": "Dates locals en què no es generen classes ni entrenaments.",
+        "label": "Festius"
+      },
+      "openingHours": {
+        "help": "Horari setmanal del club amb intervals de 5 minuts.",
+        "label": "Horari d'obertura"
+      },
+      "privacyPolicyUrl": {
+        "help": "Enllaç a la política de privacitat del club.",
+        "label": "Política de privacitat"
+      }
+    },
+    "courses": {
+      "allowInstructorPublish": {
+        "help": "Permet que l'instructor publiqui muntatges.",
+        "label": "Publicació de muntatges pels instructors"
+      },
+      "buildSessionMaxHours": {
+        "help": "Durada màxima d'una sessió de muntatge.",
+        "label": "Durada màxima de la sessió de muntatge"
+      },
+      "gateClearanceMeters": {
+        "help": "Distància mínima de seguretat a les portes.",
+        "label": "Marge de seguretat a portes"
+      },
+      "obstacleClearanceMeters": {
+        "help": "Distància mínima entre obstacles.",
+        "label": "Marge entre obstacles"
+      },
+      "placementMarginMeters": {
+        "help": "Marge mínim entre un obstacle i el límit de la pista.",
+        "label": "Marge de col·locació d'obstacles"
+      },
+      "setupAutoExpireDays": {
+        "help": "Dies fins que un recorregut muntat caduca automàticament.",
+        "label": "Caducitat del recorregut muntat"
+      },
+      "showSetupToMembers": {
+        "help": "Mostra als abonats el recorregut muntat.",
+        "label": "Mostra el recorregut als abonats"
+      }
+    },
+    "coverage": {
+      "activeDogWeeks": {
+        "help": "Setmanes considerades per determinar els gossos actius.",
+        "label": "Període de gossos actius"
+      },
+      "thresholds": {
+        "help": "Llindars percentuals de cobertura correcta, ajustada i curta.",
+        "label": "Llindars de cobertura"
+      }
+    },
+    "inactivity": {
+      "cancelBookingsOnApproval": {
+        "help": "Anul·la les reserves quan s'aprova una inactivitat.",
+        "label": "Anul·la reserves en aprovar la inactivitat"
+      },
+      "maxStartMonthsAhead": {
+        "help": "Mesos màxims d'antelació per iniciar una inactivitat.",
+        "label": "Antelació màxima d'una inactivitat"
+      },
+      "requestDeadlineDay": {
+        "help": "Dia límit del mes anterior per sol·licitar canvis.",
+        "label": "Dia límit de sol·licitud d'inactivitat"
+      }
+    },
+    "learn": {
+      "linkText": {
+        "help": "Text de l'enllaç a Learn que es mostra a l'app.",
+        "label": "Text de l'enllaç a Learn"
+      }
+    },
+    "leave": {
+      "fullMonthIfLater": {
+        "help": "Cobra el mes sencer quan la baixa és posterior al límit.",
+        "label": "Mes sencer en baixes fora de termini"
+      },
+      "npsEnabled": {
+        "help": "Demana una valoració en completar la baixa.",
+        "label": "Valoració en la baixa"
+      },
+      "packExpiryGraceDays": {
+        "help": "Dies de marge després de caducar el pack.",
+        "label": "Marge de caducitat del pack"
+      },
+      "reasons": {
+        "help": "Motius disponibles en el procés de baixa.",
+        "label": "Motius de baixa"
+      }
+    },
+    "legal": {
+      "maxPostpones": {
+        "help": "Vegades que es pot ajornar l'acceptació d'una política nova.",
+        "label": "Ajornaments de la política"
+      }
+    },
+    "levels": {
+      "enabled": {
+        "help": "Activa el catàleg local de nivells.",
+        "label": "Nivells actius"
+      }
+    },
+    "messaging": {
+      "documentReminderDays": {
+        "help": "Dies d'antelació dels recordatoris de documentació; 0 deixa només l'enviament manual.",
+        "label": "Recordatori de documentació"
+      },
+      "email": {
+        "fromAddress": {
+          "help": "Adreça verificada des d'on s'envien els correus.",
+          "label": "Adreça remitent"
+        },
+        "fromName": {
+          "help": "Nom del club que apareix com a remitent.",
+          "label": "Nom del remitent"
+        },
+        "replyTo": {
+          "help": "Adreça de resposta; en blanc s'usa el contacte del club.",
+          "label": "Adreça de resposta"
+        }
+      },
+      "noShowNoticeTime": {
+        "help": "Hora d'enviament dels avisos de no assistència de l'endemà.",
+        "label": "Enviament d'avisos de no assistència"
+      },
+      "notifyNewRingSetup": {
+        "help": "Avisa quan hi ha un recorregut nou muntat.",
+        "label": "Avís de recorregut nou"
+      },
+      "notifyWeekOpening": {
+        "help": "Avisa quan s'obre la setmana següent.",
+        "label": "Avís d'obertura de setmana"
+      },
+      "reminderOptionsMinutes": {
+        "help": "Antelacions que cada abonat pot triar per al recordatori de classe.",
+        "label": "Opcions del recordatori de classe"
+      },
+      "sms": {
+        "monthlyCap": {
+          "help": "Límit mensual de seguretat dels SMS.",
+          "label": "Límit mensual d'SMS"
+        },
+        "senderId": {
+          "help": "Identificador que apareix com a remitent dels SMS.",
+          "label": "Remitent dels SMS"
+        },
+        "transliterateToGsm7": {
+          "help": "Adapta els missatges a l'alfabet GSM-7.",
+          "label": "Adaptació dels SMS a GSM-7"
+        }
+      }
+    },
+    "rgpd": {
+      "erasureMinDaysAfterLeave": {
+        "help": "Dies mínims després de la baixa abans de poder esborrar dades.",
+        "label": "Espera mínima abans de l'esborrat"
+      },
+      "rejectedSignupRetentionDays": {
+        "help": "Dies de conservació de les sol·licituds rebutjades.",
+        "label": "Conservació d'altes rebutjades"
+      },
+      "retentionYearsAfterLeave": {
+        "help": "Anys de conservació de dades després de la baixa.",
+        "label": "Conservació després de la baixa"
+      }
+    },
+    "ringBlocks": {
+      "maxHorizonDays": {
+        "help": "Dies màxims d'antelació per crear bloquejos de pista.",
+        "label": "Antelació màxima dels bloquejos"
+      }
+    },
+    "signup": {
+      "allowFamilyGroupPending": {
+        "help": "Permet continuar l'alta amb el grup familiar pendent.",
+        "label": "Grup familiar pendent"
+      },
+      "enabled": {
+        "help": "Obre o tanca el formulari públic d'alta.",
+        "label": "Altes públiques"
+      },
+      "firstMonthSplitDay": {
+        "help": "Dia que separa la quota inicial sencera de la mitja quota.",
+        "label": "Tall de la quota del primer mes"
+      },
+      "onboardingFields": {
+        "help": "Camps que es demanen als comptes importats en el primer accés.",
+        "label": "Camps per completar el perfil"
+      },
+      "pendingExpiryDays": {
+        "help": "Dies fins que una sol·licitud pendent genera un recordatori.",
+        "label": "Caducitat de les altes pendents"
+      },
+      "requireDogDocumentAtSignup": {
+        "help": "Demana documentació del gos abans d'acabar l'alta.",
+        "label": "Documentació obligatòria durant l'alta"
+      },
+      "text": {
+        "cashConditions": {
+          "help": "Condicions que es mostren per al pagament en efectiu.",
+          "label": "Text del pagament en efectiu"
+        },
+        "closed": {
+          "help": "Missatge que es mostra quan les altes són tancades.",
+          "label": "Text d'altes tancades"
+        },
+        "familyGroupIntro": {
+          "help": "Introducció del pas de grup familiar.",
+          "label": "Text del grup familiar"
+        },
+        "freeTrainingConditions": {
+          "help": "Condicions d'entrenament lliure mostrades durant l'alta.",
+          "label": "Text d'entrenament lliure"
+        },
+        "imageConsent": {
+          "help": "Text de l'autorització d'imatge.",
+          "label": "Autorització d'imatge"
+        },
+        "monthlyPaymentIntro": {
+          "help": "Introducció sobre el cobrament de les quotes mensuals.",
+          "label": "Text del pagament mensual"
+        },
+        "paymentDay": {
+          "help": "Informació sobre el dia de cobrament i el termini de canvis.",
+          "label": "Text del dia de cobrament"
+        },
+        "therapyIntro": {
+          "help": "Introducció de la modalitat de teràpia.",
+          "label": "Text de teràpia"
+        }
+      }
+    },
+    "training": {
+      "bookingWindowDays": {
+        "help": "Dies naturals d'antelació disponibles per reservar.",
+        "label": "Antelació màxima (dies naturals)"
+      },
+      "cancelThresholdMinutes": {
+        "help": "Antelació mínima per anul·lar un entrenament.",
+        "label": "Anul·lació fins a"
+      },
+      "capacityPerRingSlot": {
+        "help": "Nombre de gossos que poden entrenar alhora a cada pista.",
+        "label": "Gossos alhora per pista"
+      },
+      "freeTrainingRequiresLicense": {
+        "help": "Indica informativament si cal llicència esportiva.",
+        "label": "Llicència per a entrenament lliure"
+      },
+      "maxPerWeek": {
+        "help": "Màxim d'entrenaments per setmana i gos.",
+        "label": "Màx. entrenaments/setmana (reinici dg 20:00)"
+      },
+      "slotMinutes": {
+        "help": "Durada de cada franja d'entrenament.",
+        "label": "Durada del slot"
+      }
+    },
+    "waitlist": {
+      "fifoConfirmMinutes": {
+        "help": "Temps per confirmar una plaça quan l'avís és per ordre.",
+        "label": "Temps de confirmació per ordre"
+      },
+      "maxPerClass": {
+        "help": "Nombre màxim de persones a la llista de cada classe.",
+        "label": "Màx. per classe"
+      },
+      "maxPerDogPerWeek": {
+        "help": "Nombre màxim de llistes per gos i setmana.",
+        "label": "Màx. llistes per gos i setmana"
+      },
+      "maxPerDogPerWeekIfAttended": {
+        "help": "Límit aplicat si el gos ja ha fet classe aquella setmana.",
+        "label": "Màx. llistes si ja ha fet classe"
+      },
+      "mode": {
+        "help": "Forma d'oferir una plaça quan queda lliure.",
+        "label": "Mode d'avís de la llista d'espera"
+      },
+      "notifyThresholdMinutes": {
+        "help": "Només s'avisa si la plaça s'allibera amb més antelació que aquest llindar.",
+        "label": "Llindar d'avís a la llista d'espera"
+      }
+    }
+  },
+  "title": "Paràmetres",
+  "value": {
+    "always": "Sempre",
+    "closed": "Tancat",
+    "coverageSummary": "correcta > {ok}% · ajustada {tight}–{ok}% · curta {short}–{tight}%",
+    "dayBefore": "El dia abans",
+    "dayHours": "{day} {open}–{close}",
+    "everyDayHours": "dl–dg {open}–{close}",
+    "holidayCount": "{count, plural, one {# festiu} other {# festius}}",
+    "invoiceSeries": "{year}-····",
+    "no": "No",
+    "noHolidays": "Cap festiu",
+    "notConfigured": "No configurat",
+    "system": "Sistema",
+    "todayPlusDays": "dia en curs + {count} dies",
+    "weekOpensAt": "{day} {time}",
+    "yes": "Sí"
+  }
+}

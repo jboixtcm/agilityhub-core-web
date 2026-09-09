@@ -1,0 +1,627 @@
+{
+  "blocks": {
+    "automatedProcesses": "Automated processes",
+    "billing": "Fees, packs and collections",
+    "classes": "Classes",
+    "club": "Club and rings",
+    "clubPages": "Club pages",
+    "communications": "Communications",
+    "courses": "Courses",
+    "freeTraining": "Free training",
+    "modules": "Modules",
+    "privacyAudit": "Privacy and audit",
+    "signup": "Registration and consent",
+    "waitlist": "Waitlist"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading",
+    "save": "SAVE",
+    "saving": "Saving"
+  },
+  "days": {
+    "long": {
+      "FRIDAY": "Friday",
+      "MONDAY": "Monday",
+      "SATURDAY": "Saturday",
+      "SUNDAY": "Sunday",
+      "THURSDAY": "Thursday",
+      "TUESDAY": "Tuesday",
+      "WEDNESDAY": "Wednesday"
+    },
+    "short": {
+      "FRIDAY": "Fri",
+      "MONDAY": "Mon",
+      "SATURDAY": "Sat",
+      "SUNDAY": "Sun",
+      "THURSDAY": "Thu",
+      "TUESDAY": "Tue",
+      "WEDNESDAY": "Wed"
+    }
+  },
+  "editor": {
+    "addHoliday": "Add a holiday",
+    "appliesFromNow": "Applies from now on.",
+    "closes": "{day} closing time",
+    "coverage": {
+      "ok": "Good coverage above (%)",
+      "short": "Expansion needed below (%)",
+      "tight": "Tight coverage above (%)"
+    },
+    "dayOfWeek": "Day of the week",
+    "defaultLocaleRequired": "The text is required in the club's default language.",
+    "holidayDate": "Holiday {index} date",
+    "holidayLabel": "Holiday {index} name",
+    "invalidCoverage": "Thresholds must run from highest to lowest.",
+    "invalidJson": "The JSON is invalid.",
+    "invalidOpeningHours": "Opening must be before closing and use five-minute intervals.",
+    "noHolidays": "There are no holidays yet.",
+    "open": "Edit {label}",
+    "opens": "{day} opening time",
+    "reason": "Reason for change (optional)",
+    "removeHoliday": "Remove holiday {index}",
+    "reset": "Restore product default",
+    "time": "Time"
+  },
+  "enum": {
+    "billing": {
+      "accountingExportFormat": {
+        "CSV": "CSV",
+        "XLSX": "XLSX"
+      },
+      "cashInvoicing": {
+        "MONTHLY": "Monthly",
+        "SEMESTER": "Every six months"
+      },
+      "singleClassCancelPolicy": {
+        "CREDIT": "Credit",
+        "NONE": "No refund",
+        "REFUND": "Refund"
+      }
+    },
+    "bookings": {
+      "limitUnit": {
+        "DOG": "Dog",
+        "MEMBER": "Member"
+      }
+    },
+    "waitlist": {
+      "mode": {
+        "ALL_AT_ONCE": "Notify everyone at once",
+        "FIFO": "In joining order"
+      }
+    }
+  },
+  "history": {
+    "globalTitle": "Parameter history",
+    "open": "Show history for {label}",
+    "parameterTitle": "History · {label}"
+  },
+  "lastChange": "last change: {key} · {date} · {actor} — with history",
+  "modules": {
+    "FAQ": {
+      "help": "Shows the frequently asked questions page in the app.",
+      "label": "Frequently asked questions"
+    },
+    "LEARN_LINK": {
+      "help": "Shows the Learn entry in the app menu.",
+      "label": "Learn link"
+    },
+    "PUSH": {
+      "help": "Allows web notifications on the device.",
+      "label": "Push notifications"
+    }
+  },
+  "pages": {
+    "faq": "Frequently asked questions",
+    "navigation": "Club page editors",
+    "rules": "Club rules"
+  },
+  "param": {
+    "activities": {
+      "cancelDeadline": {
+        "help": "The final point at which a person can cancel a registration.",
+        "label": "Activity cancellation deadline"
+      },
+      "publicUrlTemplate": {
+        "help": "Template for each activity's public link.",
+        "label": "Public activity link"
+      }
+    },
+    "attendance": {
+      "editDays": {
+        "help": "Number of days available to correct attendance.",
+        "label": "Attendance editing period"
+      }
+    },
+    "audit": {
+      "retentionYears": {
+        "help": "Number of years for which audit records are kept.",
+        "label": "Audit retention"
+      }
+    },
+    "billing": {
+      "accountingExportFormat": {
+        "help": "Default format for accounting exports.",
+        "label": "Accounting export format"
+      },
+      "cashInvoicing": {
+        "help": "Billing frequency for cash payments.",
+        "label": "Cash invoicing"
+      },
+      "cashPeriodMonths": {
+        "help": "Number of months included in each cash-payment period.",
+        "label": "Cash-payment period"
+      },
+      "entryFeePerDog": {
+        "help": "Joining fee charged for each dog.",
+        "label": "Joining fee per dog"
+      },
+      "familyDiscountPercentFromSecondDog": {
+        "help": "Suggested discount from the second dog in a family group.",
+        "label": "Family discount from the second dog"
+      },
+      "inactivityFeeFirstMonth": {
+        "help": "Inactivity fee for the first month.",
+        "label": "Inactivity fee · first month"
+      },
+      "inactivityFeeFollowingMonths": {
+        "help": "Inactivity fee for subsequent months.",
+        "label": "Inactivity fee · subsequent months"
+      },
+      "invoiceResetYearly": {
+        "help": "Restarts receipt numbering each year.",
+        "label": "Annual numbering reset"
+      },
+      "invoiceSeriesPattern": {
+        "help": "Pattern for the annual receipt series.",
+        "label": "Receipt series and numbering"
+      },
+      "nextInvoiceDayOfMonth": {
+        "help": "Day of the month for the next receipt.",
+        "label": "Next receipt day"
+      },
+      "packExpiryWarningDays": {
+        "help": "Advance notice before a pack expires.",
+        "label": "Pack expiry notice"
+      },
+      "packLowBalanceSessions": {
+        "help": "Remaining sessions that trigger the low-balance notice.",
+        "label": "Pack low-balance notice"
+      },
+      "packToMemberEntryDiscountPercent": {
+        "help": "Joining-fee discount when moving from a pack to membership.",
+        "label": "Joining discount after a pack"
+      },
+      "packToMemberMinSessions": {
+        "help": "Minimum pack sessions required for the discount.",
+        "label": "Minimum sessions for the discount"
+      },
+      "remittanceReminderDay": {
+        "help": "Day of the collection-file reminder; 0 disables it.",
+        "label": "Collection-file reminder"
+      },
+      "sepa": {
+        "collectionDayOfMonth": {
+          "help": "Day of the month on which the fee is collected.",
+          "label": "SEPA collection day"
+        },
+        "schema": {
+          "help": "Schema used for the SEPA collection file.",
+          "label": "SEPA schema"
+        },
+        "useFrst": {
+          "help": "Uses the first-payment sequence before recurring collections.",
+          "label": "SEPA first-payment sequence"
+        }
+      },
+      "singleClassCancelPolicy": {
+        "help": "How payment is handled when cancellation is within the deadline.",
+        "label": "Single-class cancellation policy"
+      },
+      "stripeMaxAttempts": {
+        "help": "Maximum number of collection attempts.",
+        "label": "Maximum collection attempts"
+      },
+      "stripeReceiptEmail": {
+        "help": "Sends the Stripe receipt by email.",
+        "label": "Stripe receipt by email"
+      },
+      "taxIncluded": {
+        "help": "Indicates whether amounts already include tax.",
+        "label": "Tax included"
+      },
+      "upfrontCutoffDay": {
+        "help": "Deadline for requesting a registration for the following month.",
+        "label": "Following-month registration deadline"
+      }
+    },
+    "bookings": {
+      "instructorLastMinuteNotice": {
+        "help": "Allows the instructor to record that the student gave notice.",
+        "label": "Last-minute notice by instructor"
+      },
+      "lateCancelThresholdMinutes": {
+        "help": "After this threshold, cancellation counts as an attended class.",
+        "label": "Late-cancellation threshold (‘attended class’)"
+      },
+      "limitUnit": {
+        "help": "Unit to which booking limits apply.",
+        "label": "Booking limit unit"
+      },
+      "maxCurrentWeek": {
+        "help": "Maximum bookable classes during the current week.",
+        "label": "Max. current-week classes (per dog)"
+      },
+      "maxNextWeek": {
+        "help": "Maximum bookable classes during the following week.",
+        "label": "Max. following-week classes"
+      },
+      "paymentPendingMinutes": {
+        "help": "Time available to complete payment for a booking.",
+        "label": "Time to complete payment"
+      },
+      "seatHoldSeconds": {
+        "help": "Time for which a place is temporarily held.",
+        "label": "Temporary place hold"
+      },
+      "showInstructorHoursBefore": {
+        "help": "How far in advance the member can see the instructor.",
+        "label": "Show instructor to the member"
+      },
+      "weekOpensAt": {
+        "help": "Local time when bookings open for the following week.",
+        "label": "Registration opening and week change"
+      }
+    },
+    "census": {
+      "bookingBlockReasons": {
+        "help": "Reasons available for blocking bookings.",
+        "label": "Booking block reasons"
+      },
+      "dogDocumentTypes": {
+        "help": "Available dog documents and whether each is required.",
+        "label": "Dog documents"
+      }
+    },
+    "classes": {
+      "defaultCapacity": {
+        "help": "Default capacity; each class uses the minimum of its levels.",
+        "label": "Capacity by level"
+      },
+      "finishGraceMinutes": {
+        "help": "Grace period after the end time before closing a class.",
+        "label": "Class finishing grace period"
+      },
+      "maxInstructorsPerClass": {
+        "help": "Maximum number of instructors assignable to a class.",
+        "label": "Max. instructors per class"
+      },
+      "minDogs": {
+        "help": "Minimum number of dogs before a class is considered at risk.",
+        "label": "Minimum dogs per class"
+      },
+      "riskAutoCancelSameDay": {
+        "help": "Automatically cancels same-day classes at risk.",
+        "label": "Same-day automatic cancellation"
+      },
+      "riskLookaheadDays": {
+        "help": "Days included in the review of classes at risk.",
+        "label": "At-risk class review · range"
+      },
+      "riskReviewTime": {
+        "help": "Local time for reviewing classes at risk.",
+        "label": "At-risk class review · time"
+      },
+      "slotMinutes": {
+        "help": "Granularity of the template grid.",
+        "label": "Template slot duration"
+      }
+    },
+    "club": {
+      "holidays": {
+        "help": "Local dates on which no classes or training are generated.",
+        "label": "Holidays"
+      },
+      "openingHours": {
+        "help": "Weekly club opening hours in five-minute intervals.",
+        "label": "Opening hours"
+      },
+      "privacyPolicyUrl": {
+        "help": "Link to the club privacy policy.",
+        "label": "Privacy policy"
+      }
+    },
+    "courses": {
+      "allowInstructorPublish": {
+        "help": "Allows instructors to publish course setups.",
+        "label": "Instructor setup publishing"
+      },
+      "buildSessionMaxHours": {
+        "help": "Maximum duration of a build session.",
+        "label": "Maximum build-session duration"
+      },
+      "gateClearanceMeters": {
+        "help": "Minimum safe distance at gates.",
+        "label": "Gate safety clearance"
+      },
+      "obstacleClearanceMeters": {
+        "help": "Minimum distance between obstacles.",
+        "label": "Obstacle clearance"
+      },
+      "placementMarginMeters": {
+        "help": "Minimum distance between an obstacle and the ring boundary.",
+        "label": "Obstacle placement margin"
+      },
+      "setupAutoExpireDays": {
+        "help": "Days before a course setup expires automatically.",
+        "label": "Course setup expiry"
+      },
+      "showSetupToMembers": {
+        "help": "Shows the current course setup to members.",
+        "label": "Show course setup to members"
+      }
+    },
+    "coverage": {
+      "activeDogWeeks": {
+        "help": "Weeks considered when determining active dogs.",
+        "label": "Active-dog period"
+      },
+      "thresholds": {
+        "help": "Percentage thresholds for good, tight and short coverage.",
+        "label": "Coverage thresholds"
+      }
+    },
+    "inactivity": {
+      "cancelBookingsOnApproval": {
+        "help": "Cancels bookings when inactivity is approved.",
+        "label": "Cancel bookings on inactivity approval"
+      },
+      "maxStartMonthsAhead": {
+        "help": "Maximum advance period for starting inactivity.",
+        "label": "Maximum inactivity notice"
+      },
+      "requestDeadlineDay": {
+        "help": "Deadline in the preceding month for requesting changes.",
+        "label": "Inactivity request deadline"
+      }
+    },
+    "learn": {
+      "linkText": {
+        "help": "Text of the Learn link shown in the app.",
+        "label": "Learn link text"
+      }
+    },
+    "leave": {
+      "fullMonthIfLater": {
+        "help": "Charges the full month when leaving after the deadline.",
+        "label": "Full month when leaving after deadline"
+      },
+      "npsEnabled": {
+        "help": "Requests feedback when the leaving process is complete.",
+        "label": "Feedback when leaving"
+      },
+      "packExpiryGraceDays": {
+        "help": "Grace period after a pack expires.",
+        "label": "Pack expiry grace period"
+      },
+      "reasons": {
+        "help": "Reasons available in the leaving process.",
+        "label": "Leaving reasons"
+      }
+    },
+    "legal": {
+      "maxPostpones": {
+        "help": "Number of times acceptance of a new policy may be postponed.",
+        "label": "Policy postponements"
+      }
+    },
+    "levels": {
+      "enabled": {
+        "help": "Enables the local level catalog.",
+        "label": "Levels enabled"
+      }
+    },
+    "messaging": {
+      "documentReminderDays": {
+        "help": "Advance notice for document reminders; 0 leaves manual sending only.",
+        "label": "Document reminder"
+      },
+      "email": {
+        "fromAddress": {
+          "help": "Verified address from which email is sent.",
+          "label": "Sender address"
+        },
+        "fromName": {
+          "help": "Club name shown as the sender.",
+          "label": "Sender name"
+        },
+        "replyTo": {
+          "help": "Reply address; blank uses the club contact address.",
+          "label": "Reply address"
+        }
+      },
+      "noShowNoticeTime": {
+        "help": "Time for sending the following day's non-attendance notices.",
+        "label": "Non-attendance notice time"
+      },
+      "notifyNewRingSetup": {
+        "help": "Sends a notice when a new course is set up.",
+        "label": "New course setup notice"
+      },
+      "notifyWeekOpening": {
+        "help": "Sends a notice when the following week opens.",
+        "label": "Week-opening notice"
+      },
+      "reminderOptionsMinutes": {
+        "help": "Advance times each member can choose for class reminders.",
+        "label": "Class reminder options"
+      },
+      "sms": {
+        "monthlyCap": {
+          "help": "Monthly SMS safety limit.",
+          "label": "Monthly SMS limit"
+        },
+        "senderId": {
+          "help": "Identifier shown as the SMS sender.",
+          "label": "SMS sender"
+        },
+        "transliterateToGsm7": {
+          "help": "Adapts messages to the GSM-7 alphabet.",
+          "label": "SMS adaptation to GSM-7"
+        }
+      }
+    },
+    "rgpd": {
+      "erasureMinDaysAfterLeave": {
+        "help": "Minimum days after leaving before data can be erased.",
+        "label": "Minimum wait before erasure"
+      },
+      "rejectedSignupRetentionDays": {
+        "help": "Retention period for rejected applications.",
+        "label": "Rejected application retention"
+      },
+      "retentionYearsAfterLeave": {
+        "help": "Years for which data is retained after leaving.",
+        "label": "Retention after leaving"
+      }
+    },
+    "ringBlocks": {
+      "maxHorizonDays": {
+        "help": "Maximum advance period for creating ring blocks.",
+        "label": "Maximum block horizon"
+      }
+    },
+    "signup": {
+      "allowFamilyGroupPending": {
+        "help": "Allows registration to continue while the family group is pending.",
+        "label": "Pending family group"
+      },
+      "enabled": {
+        "help": "Opens or closes the public registration form.",
+        "label": "Public registration"
+      },
+      "firstMonthSplitDay": {
+        "help": "Day separating a full initial fee from a half fee.",
+        "label": "First-month fee cutoff"
+      },
+      "onboardingFields": {
+        "help": "Fields requested from imported accounts on first access.",
+        "label": "Profile completion fields"
+      },
+      "pendingExpiryDays": {
+        "help": "Days before a pending application generates a reminder.",
+        "label": "Pending registration expiry"
+      },
+      "requireDogDocumentAtSignup": {
+        "help": "Requests dog documents before registration can be completed.",
+        "label": "Documents required during registration"
+      },
+      "text": {
+        "cashConditions": {
+          "help": "Conditions shown for cash payments.",
+          "label": "Cash-payment text"
+        },
+        "closed": {
+          "help": "Message shown when registration is closed.",
+          "label": "Closed-registration text"
+        },
+        "familyGroupIntro": {
+          "help": "Introduction to the family-group step.",
+          "label": "Family-group text"
+        },
+        "freeTrainingConditions": {
+          "help": "Free-training conditions shown during registration.",
+          "label": "Free-training text"
+        },
+        "imageConsent": {
+          "help": "Image-consent wording.",
+          "label": "Image consent"
+        },
+        "monthlyPaymentIntro": {
+          "help": "Introduction to monthly fee collection.",
+          "label": "Monthly-payment text"
+        },
+        "paymentDay": {
+          "help": "Information about the collection day and change deadline.",
+          "label": "Collection-day text"
+        },
+        "therapyIntro": {
+          "help": "Introduction to the therapy option.",
+          "label": "Therapy text"
+        }
+      }
+    },
+    "training": {
+      "bookingWindowDays": {
+        "help": "Calendar days in advance available for booking.",
+        "label": "Maximum advance booking (calendar days)"
+      },
+      "cancelThresholdMinutes": {
+        "help": "Minimum notice required to cancel a training session.",
+        "label": "Cancellation up to"
+      },
+      "capacityPerRingSlot": {
+        "help": "Number of dogs that can train simultaneously in each ring.",
+        "label": "Dogs at once per ring"
+      },
+      "freeTrainingRequiresLicense": {
+        "help": "Informational indication of whether a sports licence is needed.",
+        "label": "Licence for free training"
+      },
+      "maxPerWeek": {
+        "help": "Maximum training sessions per week and dog.",
+        "label": "Max. training sessions/week (reset Sun 20:00)"
+      },
+      "slotMinutes": {
+        "help": "Duration of each training slot.",
+        "label": "Slot duration"
+      }
+    },
+    "waitlist": {
+      "fifoConfirmMinutes": {
+        "help": "Time to confirm a place when notifications follow joining order.",
+        "label": "Ordered confirmation time"
+      },
+      "maxPerClass": {
+        "help": "Maximum number of people on each class waitlist.",
+        "label": "Max. per class"
+      },
+      "maxPerDogPerWeek": {
+        "help": "Maximum waitlists per dog and week.",
+        "label": "Max. waitlists per dog and week"
+      },
+      "maxPerDogPerWeekIfAttended": {
+        "help": "Limit used if the dog has already attended a class that week.",
+        "label": "Max. waitlists after attending"
+      },
+      "mode": {
+        "help": "How a place is offered when it becomes available.",
+        "label": "Waitlist notification mode"
+      },
+      "notifyThresholdMinutes": {
+        "help": "A notice is sent only when the place opens with more lead time than this threshold.",
+        "label": "Waitlist notification threshold"
+      }
+    }
+  },
+  "title": "Settings",
+  "value": {
+    "always": "Always",
+    "closed": "Closed",
+    "coverageSummary": "good > {ok}% · tight {tight}–{ok}% · short {short}–{tight}%",
+    "dayBefore": "The day before",
+    "dayHours": "{day} {open}–{close}",
+    "everyDayHours": "Mon–Sun {open}–{close}",
+    "holidayCount": "{count, plural, one {# holiday} other {# holidays}}",
+    "invoiceSeries": "{year}-····",
+    "no": "No",
+    "noHolidays": "No holidays",
+    "notConfigured": "Not configured",
+    "system": "System",
+    "todayPlusDays": "today + {count} days",
+    "weekOpensAt": "{day} {time}",
+    "yes": "Yes"
+  }
+}

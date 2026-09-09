@@ -12,9 +12,9 @@ import {
 import { type SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ParameterSettings } from "./ParameterSettings";
 import {
   CatalogFeedback,
-  CatalogPageHeader,
   CatalogSectionHeader,
   CatalogTable,
   ColorValue,
@@ -375,7 +375,8 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     }
     return result.data.items;
   }, [client]);
-  const faqEnabled = branding.modules.includes("FAQ");
+  const [activeModules, setActiveModules] = useState<string[]>([...branding.modules]);
+  const faqEnabled = activeModules.includes("FAQ");
   const loadFaq = useCallback(async () => {
     if (!faqEnabled) {
       return [];
@@ -495,7 +496,11 @@ export function SettingsPage({ client }: { client: ApiClient }) {
 
   return (
     <section className="catalog-page">
-      <CatalogPageHeader title={t("admin-catalogs:settings.title")} />
+      <ParameterSettings
+        client={client}
+        modules={activeModules}
+        onModulesChange={setActiveModules}
+      />
       <CatalogFeedback
         message={feedback}
         onDismiss={() => {

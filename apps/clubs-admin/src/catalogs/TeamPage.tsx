@@ -21,8 +21,13 @@ type AdministratorPatch = components["schemas"]["AdministratorPatch"];
 type Instructor = components["schemas"]["Instructor"];
 type InstructorCreate = components["schemas"]["InstructorCreate"];
 type InstructorPatch = components["schemas"]["InstructorPatch"];
+type InstructorReaderView = components["schemas"]["InstructorReaderView"];
 type Member = components["schemas"]["MemberListItem"];
 type TeamKind = "administrator" | "instructor";
+
+function isManagedInstructor(item: Instructor | InstructorReaderView): item is Instructor {
+  return "active" in item && "version" in item;
+}
 
 function memberText(
   member: Member | undefined,
@@ -275,7 +280,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
     if (result.data === undefined) {
       throw new TypeError("Instructor response did not contain data");
     }
-    return result.data.items as Instructor[];
+    return result.data.items.filter(isManagedInstructor);
   }, [client]);
   const loadAdministrators = useCallback(async () => {
     const result = await client.GET("/administrators", {
@@ -389,7 +394,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
               header: t("admin-catalogs:team.columns.member"),
               key: "member",
               render: (item) => (
-                <strong>{memberLabel(memberById.get(item.memberId), item.shortName)}</strong>
+                <strong>{memberLabel(memberById.get(item.memberId ?? ""), item.shortName)}</strong>
               ),
             },
             {
@@ -491,7 +496,11 @@ export function TeamPage({ client }: { client: ApiClient }) {
             client={client}
             item={editing.item}
             kind={editing.kind}
-            member={editing.item === undefined ? undefined : memberById.get(editing.item.memberId)}
+            member={
+              editing.item?.memberId === undefined
+                ? undefined
+                : memberById.get(editing.item.memberId)
+            }
             onClose={() => {
               setEditing(undefined);
             }}
@@ -512,7 +521,10 @@ export function TeamPage({ client }: { client: ApiClient }) {
             name:
               removing === undefined
                 ? ""
-                : memberLabel(memberById.get(removing.item.memberId), removing.item.shortName),
+                : memberLabel(
+                    memberById.get(removing.item.memberId ?? ""),
+                    removing.item.shortName,
+                  ),
           })}
         </p>
         <div className="catalog-form__actions">

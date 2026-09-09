@@ -1,0 +1,627 @@
+{
+  "blocks": {
+    "automatedProcesses": "Procesos automáticos",
+    "billing": "Cuotas, bonos y remesa",
+    "classes": "Clases",
+    "club": "Club y pistas",
+    "clubPages": "Páginas del club",
+    "communications": "Comunicaciones",
+    "courses": "Recorridos",
+    "freeTraining": "Entrenamientos libres",
+    "modules": "Módulos",
+    "privacyAudit": "Privacidad y auditoría",
+    "signup": "Alta y consentimientos",
+    "waitlist": "Lista de espera"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "loading": "Cargando",
+    "save": "GUARDAR",
+    "saving": "Guardando"
+  },
+  "days": {
+    "long": {
+      "FRIDAY": "Viernes",
+      "MONDAY": "Lunes",
+      "SATURDAY": "Sábado",
+      "SUNDAY": "Domingo",
+      "THURSDAY": "Jueves",
+      "TUESDAY": "Martes",
+      "WEDNESDAY": "Miércoles"
+    },
+    "short": {
+      "FRIDAY": "vi",
+      "MONDAY": "lu",
+      "SATURDAY": "sá",
+      "SUNDAY": "do",
+      "THURSDAY": "ju",
+      "TUESDAY": "ma",
+      "WEDNESDAY": "mi"
+    }
+  },
+  "editor": {
+    "addHoliday": "Añadir un festivo",
+    "appliesFromNow": "Se aplica a partir de ahora.",
+    "closes": "Cierre del {day}",
+    "coverage": {
+      "ok": "Cobertura correcta por encima de (%)",
+      "short": "Hay que ampliar por debajo de (%)",
+      "tight": "Cobertura ajustada por encima de (%)"
+    },
+    "dayOfWeek": "Día de la semana",
+    "defaultLocaleRequired": "Debe completarse el texto en el idioma predeterminado del club.",
+    "holidayDate": "Fecha del festivo {index}",
+    "holidayLabel": "Nombre del festivo {index}",
+    "invalidCoverage": "Los umbrales deben ir de mayor a menor.",
+    "invalidJson": "El JSON no es válido.",
+    "invalidOpeningHours": "La apertura debe ser anterior al cierre y usar intervalos de 5 minutos.",
+    "noHolidays": "Todavía no hay festivos.",
+    "open": "Editar {label}",
+    "opens": "Apertura del {day}",
+    "reason": "Motivo del cambio (opcional)",
+    "removeHoliday": "Eliminar el festivo {index}",
+    "reset": "Restablecer el valor de producto",
+    "time": "Hora"
+  },
+  "enum": {
+    "billing": {
+      "accountingExportFormat": {
+        "CSV": "CSV",
+        "XLSX": "XLSX"
+      },
+      "cashInvoicing": {
+        "MONTHLY": "Mensual",
+        "SEMESTER": "Semestral"
+      },
+      "singleClassCancelPolicy": {
+        "CREDIT": "Crédito",
+        "NONE": "Sin devolución",
+        "REFUND": "Devolución"
+      }
+    },
+    "bookings": {
+      "limitUnit": {
+        "DOG": "Perro",
+        "MEMBER": "Abonado"
+      }
+    },
+    "waitlist": {
+      "mode": {
+        "ALL_AT_ONCE": "Aviso simultáneo",
+        "FIFO": "Por orden de entrada"
+      }
+    }
+  },
+  "history": {
+    "globalTitle": "Historial de parámetros",
+    "open": "Mostrar el historial de {label}",
+    "parameterTitle": "Historial · {label}"
+  },
+  "lastChange": "último cambio: {key} · {date} · {actor} — con historial",
+  "modules": {
+    "FAQ": {
+      "help": "Muestra la página de preguntas frecuentes en la app.",
+      "label": "Preguntas frecuentes"
+    },
+    "LEARN_LINK": {
+      "help": "Muestra el acceso a Learn en el menú de la app.",
+      "label": "Enlace a Learn"
+    },
+    "PUSH": {
+      "help": "Permite recibir notificaciones web en el dispositivo.",
+      "label": "Notificaciones push"
+    }
+  },
+  "pages": {
+    "faq": "Preguntas frecuentes",
+    "navigation": "Editores de páginas del club",
+    "rules": "Normas del club"
+  },
+  "param": {
+    "activities": {
+      "cancelDeadline": {
+        "help": "Momento límite para cancelar una inscripción.",
+        "label": "Cancelación de actividades hasta"
+      },
+      "publicUrlTemplate": {
+        "help": "Plantilla del enlace público de cada actividad.",
+        "label": "Enlace público de las actividades"
+      }
+    },
+    "attendance": {
+      "editDays": {
+        "help": "Días disponibles para corregir la asistencia.",
+        "label": "Plazo para editar asistencias"
+      }
+    },
+    "audit": {
+      "retentionYears": {
+        "help": "Años durante los que se conserva la auditoría.",
+        "label": "Conservación de la auditoría"
+      }
+    },
+    "billing": {
+      "accountingExportFormat": {
+        "help": "Formato predeterminado de las exportaciones contables.",
+        "label": "Formato de exportación contable"
+      },
+      "cashInvoicing": {
+        "help": "Periodicidad de facturación de los pagos en efectivo.",
+        "label": "Facturación en efectivo"
+      },
+      "cashPeriodMonths": {
+        "help": "Meses incluidos en cada período de pago en efectivo.",
+        "label": "Período de pago en efectivo"
+      },
+      "entryFeePerDog": {
+        "help": "Importe de entrada aplicado a cada perro.",
+        "label": "Entrada por perro (matrícula)"
+      },
+      "familyDiscountPercentFromSecondDog": {
+        "help": "Descuento propuesto desde el segundo perro del grupo familiar.",
+        "label": "Descuento familiar desde el segundo perro"
+      },
+      "inactivityFeeFirstMonth": {
+        "help": "Cuota de inactividad del primer mes.",
+        "label": "Cuota de inactividad · primer mes"
+      },
+      "inactivityFeeFollowingMonths": {
+        "help": "Cuota de inactividad de los meses siguientes.",
+        "label": "Cuota de inactividad · meses siguientes"
+      },
+      "invoiceResetYearly": {
+        "help": "Reinicia la numeración de los recibos cada año.",
+        "label": "Reinicio anual de la numeración"
+      },
+      "invoiceSeriesPattern": {
+        "help": "Patrón de la serie anual de recibos.",
+        "label": "Serie y numeración de recibos"
+      },
+      "nextInvoiceDayOfMonth": {
+        "help": "Día del mes del próximo recibo.",
+        "label": "Día del próximo recibo"
+      },
+      "packExpiryWarningDays": {
+        "help": "Días de antelación del aviso de caducidad del bono.",
+        "label": "Aviso de caducidad del bono"
+      },
+      "packLowBalanceSessions": {
+        "help": "Sesiones restantes que activan el aviso de saldo bajo.",
+        "label": "Aviso de saldo bajo del bono"
+      },
+      "packToMemberEntryDiscountPercent": {
+        "help": "Descuento de entrada al pasar de bono a abono.",
+        "label": "Descuento de entrada después de un bono"
+      },
+      "packToMemberMinSessions": {
+        "help": "Sesiones mínimas del bono para obtener el descuento.",
+        "label": "Sesiones mínimas para el descuento"
+      },
+      "remittanceReminderDay": {
+        "help": "Día del aviso para preparar la remesa; 0 lo desactiva.",
+        "label": "Recordatorio de la remesa"
+      },
+      "sepa": {
+        "collectionDayOfMonth": {
+          "help": "Día del mes en que se cobra la cuota.",
+          "label": "Día de cobro SEPA"
+        },
+        "schema": {
+          "help": "Esquema del archivo de remesa SEPA.",
+          "label": "Esquema SEPA"
+        },
+        "useFrst": {
+          "help": "Usa la secuencia inicial antes de los cobros recurrentes.",
+          "label": "Secuencia inicial SEPA"
+        }
+      },
+      "singleClassCancelPolicy": {
+        "help": "Tratamiento del pago al cancelar dentro del plazo.",
+        "label": "Política de cancelación de clase individual"
+      },
+      "stripeMaxAttempts": {
+        "help": "Número máximo de intentos de cobro.",
+        "label": "Intentos máximos de cobro"
+      },
+      "stripeReceiptEmail": {
+        "help": "Envía el recibo de Stripe por correo.",
+        "label": "Recibo de Stripe por correo"
+      },
+      "taxIncluded": {
+        "help": "Indica si los importes ya incluyen impuestos.",
+        "label": "Impuestos incluidos"
+      },
+      "upfrontCutoffDay": {
+        "help": "Día límite para pedir un alta para el mes siguiente.",
+        "label": "Día límite de altas del mes siguiente"
+      }
+    },
+    "bookings": {
+      "instructorLastMinuteNotice": {
+        "help": "Permite que el instructor indique que el alumno ha avisado.",
+        "label": "Aviso de última hora por el instructor"
+      },
+      "lateCancelThresholdMinutes": {
+        "help": "A partir de este umbral la cancelación cuenta como clase realizada.",
+        "label": "Umbral de cancelación tardía («clase realizada»)"
+      },
+      "limitUnit": {
+        "help": "Unidad a la que se aplican los límites de reserva.",
+        "label": "Unidad de los límites de reserva"
+      },
+      "maxCurrentWeek": {
+        "help": "Máximo de clases reservables durante la semana actual.",
+        "label": "Máx. clases semana actual (por perro)"
+      },
+      "maxNextWeek": {
+        "help": "Máximo de clases reservables durante la semana siguiente.",
+        "label": "Máx. clases semana siguiente"
+      },
+      "paymentPendingMinutes": {
+        "help": "Tiempo disponible para completar el pago de una reserva.",
+        "label": "Tiempo para completar el pago"
+      },
+      "seatHoldSeconds": {
+        "help": "Tiempo durante el que una plaza queda retenida.",
+        "label": "Retención temporal de una plaza"
+      },
+      "showInstructorHoursBefore": {
+        "help": "Antelación con que el abonado ve al instructor.",
+        "label": "Mostrar instructor al abonado"
+      },
+      "weekOpensAt": {
+        "help": "Hora local en que se abren las reservas de la semana siguiente.",
+        "label": "Apertura de inscripciones y cambio de semana"
+      }
+    },
+    "census": {
+      "bookingBlockReasons": {
+        "help": "Motivos disponibles para bloquear las reservas.",
+        "label": "Motivos de bloqueo de reservas"
+      },
+      "dogDocumentTypes": {
+        "help": "Documentos disponibles para los perros y obligatoriedad.",
+        "label": "Documentos de los perros"
+      }
+    },
+    "classes": {
+      "defaultCapacity": {
+        "help": "Aforo predeterminado; cada clase usa el mínimo de sus niveles.",
+        "label": "Aforo por nivel"
+      },
+      "finishGraceMinutes": {
+        "help": "Margen después de la hora final antes de cerrar la clase.",
+        "label": "Margen para finalizar clases"
+      },
+      "maxInstructorsPerClass": {
+        "help": "Número máximo de instructores asignables a una clase.",
+        "label": "Máx. instructores por clase"
+      },
+      "minDogs": {
+        "help": "Número mínimo de perros para que una clase no esté en riesgo.",
+        "label": "Mínimo de perros por clase"
+      },
+      "riskAutoCancelSameDay": {
+        "help": "Cancela automáticamente las clases en riesgo del mismo día.",
+        "label": "Cancelación automática el mismo día"
+      },
+      "riskLookaheadDays": {
+        "help": "Días incluidos en la revisión de clases en riesgo.",
+        "label": "Revisión de clases en riesgo · alcance"
+      },
+      "riskReviewTime": {
+        "help": "Hora local de la revisión de clases en riesgo.",
+        "label": "Revisión de clases en riesgo · hora"
+      },
+      "slotMinutes": {
+        "help": "Granularidad de la cuadrícula de plantillas.",
+        "label": "Duración de la franja de plantilla"
+      }
+    },
+    "club": {
+      "holidays": {
+        "help": "Fechas locales en las que no se generan clases ni entrenamientos.",
+        "label": "Festivos"
+      },
+      "openingHours": {
+        "help": "Horario semanal del club con intervalos de 5 minutos.",
+        "label": "Horario de apertura"
+      },
+      "privacyPolicyUrl": {
+        "help": "Enlace a la política de privacidad del club.",
+        "label": "Política de privacidad"
+      }
+    },
+    "courses": {
+      "allowInstructorPublish": {
+        "help": "Permite que el instructor publique montajes.",
+        "label": "Publicación de montajes por los instructores"
+      },
+      "buildSessionMaxHours": {
+        "help": "Duración máxima de una sesión de montaje.",
+        "label": "Duración máxima de la sesión de montaje"
+      },
+      "gateClearanceMeters": {
+        "help": "Distancia mínima de seguridad en las puertas.",
+        "label": "Margen de seguridad en puertas"
+      },
+      "obstacleClearanceMeters": {
+        "help": "Distancia mínima entre obstáculos.",
+        "label": "Margen entre obstáculos"
+      },
+      "placementMarginMeters": {
+        "help": "Margen mínimo entre un obstáculo y el límite de la pista.",
+        "label": "Margen de colocación de obstáculos"
+      },
+      "setupAutoExpireDays": {
+        "help": "Días hasta que un recorrido montado caduca automáticamente.",
+        "label": "Caducidad del recorrido montado"
+      },
+      "showSetupToMembers": {
+        "help": "Muestra a los abonados el recorrido montado.",
+        "label": "Mostrar el recorrido a los abonados"
+      }
+    },
+    "coverage": {
+      "activeDogWeeks": {
+        "help": "Semanas consideradas para determinar los perros activos.",
+        "label": "Período de perros activos"
+      },
+      "thresholds": {
+        "help": "Umbrales porcentuales de cobertura correcta, ajustada y corta.",
+        "label": "Umbrales de cobertura"
+      }
+    },
+    "inactivity": {
+      "cancelBookingsOnApproval": {
+        "help": "Cancela las reservas al aprobar una inactividad.",
+        "label": "Cancelar reservas al aprobar la inactividad"
+      },
+      "maxStartMonthsAhead": {
+        "help": "Meses máximos de antelación para iniciar una inactividad.",
+        "label": "Antelación máxima de una inactividad"
+      },
+      "requestDeadlineDay": {
+        "help": "Día límite del mes anterior para solicitar cambios.",
+        "label": "Día límite de solicitud de inactividad"
+      }
+    },
+    "learn": {
+      "linkText": {
+        "help": "Texto del enlace a Learn mostrado en la app.",
+        "label": "Texto del enlace a Learn"
+      }
+    },
+    "leave": {
+      "fullMonthIfLater": {
+        "help": "Cobra el mes completo cuando la baja está fuera de plazo.",
+        "label": "Mes completo en bajas fuera de plazo"
+      },
+      "npsEnabled": {
+        "help": "Solicita una valoración al completar la baja.",
+        "label": "Valoración en la baja"
+      },
+      "packExpiryGraceDays": {
+        "help": "Días de margen después de caducar el bono.",
+        "label": "Margen de caducidad del bono"
+      },
+      "reasons": {
+        "help": "Motivos disponibles en el proceso de baja.",
+        "label": "Motivos de baja"
+      }
+    },
+    "legal": {
+      "maxPostpones": {
+        "help": "Veces que puede aplazarse la aceptación de una política nueva.",
+        "label": "Aplazamientos de la política"
+      }
+    },
+    "levels": {
+      "enabled": {
+        "help": "Activa el catálogo local de niveles.",
+        "label": "Niveles activos"
+      }
+    },
+    "messaging": {
+      "documentReminderDays": {
+        "help": "Días de antelación de los recordatorios de documentación; 0 deja solo el envío manual.",
+        "label": "Recordatorio de documentación"
+      },
+      "email": {
+        "fromAddress": {
+          "help": "Dirección verificada desde la que se envían los correos.",
+          "label": "Dirección remitente"
+        },
+        "fromName": {
+          "help": "Nombre del club que aparece como remitente.",
+          "label": "Nombre del remitente"
+        },
+        "replyTo": {
+          "help": "Dirección de respuesta; en blanco se usa el contacto del club.",
+          "label": "Dirección de respuesta"
+        }
+      },
+      "noShowNoticeTime": {
+        "help": "Hora de envío de los avisos de no asistencia del día siguiente.",
+        "label": "Envío de avisos de no asistencia"
+      },
+      "notifyNewRingSetup": {
+        "help": "Avisa cuando hay un recorrido nuevo montado.",
+        "label": "Aviso de recorrido nuevo"
+      },
+      "notifyWeekOpening": {
+        "help": "Avisa cuando se abre la semana siguiente.",
+        "label": "Aviso de apertura de semana"
+      },
+      "reminderOptionsMinutes": {
+        "help": "Antelaciones que cada abonado puede elegir para el recordatorio de clase.",
+        "label": "Opciones del recordatorio de clase"
+      },
+      "sms": {
+        "monthlyCap": {
+          "help": "Límite mensual de seguridad de los SMS.",
+          "label": "Límite mensual de SMS"
+        },
+        "senderId": {
+          "help": "Identificador que aparece como remitente de los SMS.",
+          "label": "Remitente de los SMS"
+        },
+        "transliterateToGsm7": {
+          "help": "Adapta los mensajes al alfabeto GSM-7.",
+          "label": "Adaptación de los SMS a GSM-7"
+        }
+      }
+    },
+    "rgpd": {
+      "erasureMinDaysAfterLeave": {
+        "help": "Días mínimos después de la baja antes de poder borrar datos.",
+        "label": "Espera mínima antes del borrado"
+      },
+      "rejectedSignupRetentionDays": {
+        "help": "Días de conservación de las solicitudes rechazadas.",
+        "label": "Conservación de altas rechazadas"
+      },
+      "retentionYearsAfterLeave": {
+        "help": "Años de conservación de datos después de la baja.",
+        "label": "Conservación después de la baja"
+      }
+    },
+    "ringBlocks": {
+      "maxHorizonDays": {
+        "help": "Días máximos de antelación para crear bloqueos de pista.",
+        "label": "Antelación máxima de los bloqueos"
+      }
+    },
+    "signup": {
+      "allowFamilyGroupPending": {
+        "help": "Permite continuar el alta con el grupo familiar pendiente.",
+        "label": "Grupo familiar pendiente"
+      },
+      "enabled": {
+        "help": "Abre o cierra el formulario público de alta.",
+        "label": "Altas públicas"
+      },
+      "firstMonthSplitDay": {
+        "help": "Día que separa la cuota inicial completa de la media cuota.",
+        "label": "Corte de la cuota del primer mes"
+      },
+      "onboardingFields": {
+        "help": "Campos solicitados a las cuentas importadas en el primer acceso.",
+        "label": "Campos para completar el perfil"
+      },
+      "pendingExpiryDays": {
+        "help": "Días hasta que una solicitud pendiente genera un recordatorio.",
+        "label": "Caducidad de las altas pendientes"
+      },
+      "requireDogDocumentAtSignup": {
+        "help": "Solicita documentación del perro antes de terminar el alta.",
+        "label": "Documentación obligatoria durante el alta"
+      },
+      "text": {
+        "cashConditions": {
+          "help": "Condiciones mostradas para el pago en efectivo.",
+          "label": "Texto del pago en efectivo"
+        },
+        "closed": {
+          "help": "Mensaje mostrado cuando las altas están cerradas.",
+          "label": "Texto de altas cerradas"
+        },
+        "familyGroupIntro": {
+          "help": "Introducción del paso de grupo familiar.",
+          "label": "Texto del grupo familiar"
+        },
+        "freeTrainingConditions": {
+          "help": "Condiciones de entrenamiento libre mostradas durante el alta.",
+          "label": "Texto de entrenamiento libre"
+        },
+        "imageConsent": {
+          "help": "Texto de la autorización de imagen.",
+          "label": "Autorización de imagen"
+        },
+        "monthlyPaymentIntro": {
+          "help": "Introducción sobre el cobro de las cuotas mensuales.",
+          "label": "Texto del pago mensual"
+        },
+        "paymentDay": {
+          "help": "Información sobre el día de cobro y el plazo de cambios.",
+          "label": "Texto del día de cobro"
+        },
+        "therapyIntro": {
+          "help": "Introducción de la modalidad de terapia.",
+          "label": "Texto de terapia"
+        }
+      }
+    },
+    "training": {
+      "bookingWindowDays": {
+        "help": "Días naturales de antelación disponibles para reservar.",
+        "label": "Antelación máxima (días naturales)"
+      },
+      "cancelThresholdMinutes": {
+        "help": "Antelación mínima para cancelar un entrenamiento.",
+        "label": "Cancelación hasta"
+      },
+      "capacityPerRingSlot": {
+        "help": "Número de perros que pueden entrenar a la vez en cada pista.",
+        "label": "Perros a la vez por pista"
+      },
+      "freeTrainingRequiresLicense": {
+        "help": "Indica de forma informativa si se necesita licencia deportiva.",
+        "label": "Licencia para entrenamiento libre"
+      },
+      "maxPerWeek": {
+        "help": "Máximo de entrenamientos por semana y perro.",
+        "label": "Máx. entrenamientos/semana (reinicio do 20:00)"
+      },
+      "slotMinutes": {
+        "help": "Duración de cada franja de entrenamiento.",
+        "label": "Duración del slot"
+      }
+    },
+    "waitlist": {
+      "fifoConfirmMinutes": {
+        "help": "Tiempo para confirmar una plaza cuando el aviso es por orden.",
+        "label": "Tiempo de confirmación por orden"
+      },
+      "maxPerClass": {
+        "help": "Número máximo de personas en la lista de cada clase.",
+        "label": "Máx. por clase"
+      },
+      "maxPerDogPerWeek": {
+        "help": "Número máximo de listas por perro y semana.",
+        "label": "Máx. listas por perro y semana"
+      },
+      "maxPerDogPerWeekIfAttended": {
+        "help": "Límite aplicado si el perro ya ha hecho clase esa semana.",
+        "label": "Máx. listas si ya ha hecho clase"
+      },
+      "mode": {
+        "help": "Forma de ofrecer una plaza cuando queda libre.",
+        "label": "Modo de aviso de la lista de espera"
+      },
+      "notifyThresholdMinutes": {
+        "help": "Solo se avisa si la plaza se libera con más antelación que este umbral.",
+        "label": "Umbral de aviso a la lista de espera"
+      }
+    }
+  },
+  "title": "Parámetros",
+  "value": {
+    "always": "Siempre",
+    "closed": "Cerrado",
+    "coverageSummary": "correcta > {ok}% · ajustada {tight}–{ok}% · corta {short}–{tight}%",
+    "dayBefore": "El día anterior",
+    "dayHours": "{day} {open}–{close}",
+    "everyDayHours": "lu–do {open}–{close}",
+    "holidayCount": "{count, plural, one {# festivo} other {# festivos}}",
+    "invoiceSeries": "{year}-····",
+    "no": "No",
+    "noHolidays": "Ningún festivo",
+    "notConfigured": "No configurado",
+    "system": "Sistema",
+    "todayPlusDays": "día actual + {count} días",
+    "weekOpensAt": "{day} {time}",
+    "yes": "Sí"
+  }
+}

@@ -33,6 +33,12 @@ import {
   type MeProfile,
 } from "./fixtures/member-self-service";
 import {
+  findParameter,
+  replaceParameter,
+  resetSettingsState,
+  settingsState,
+} from "./fixtures/settings";
+import {
   currentMockScenario,
   currentMockScenarioName,
   mockScenario,
@@ -68,6 +74,10 @@ type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
 type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
 type Parameter = components["schemas"]["Parameter"];
+type ParameterUpdate = components["schemas"]["ParameterUpdate"];
+type OpeningHoursUpdate = components["schemas"]["OpeningHoursUpdate"];
+type HolidaysUpdate = components["schemas"]["HolidaysUpdate"];
+type ModuleUpdate = components["schemas"]["ModuleUpdate"];
 type AdministratorCreate = components["schemas"]["AdministratorCreate"];
 type AdministratorPatch = components["schemas"]["AdministratorPatch"];
 type FaqCreate = components["schemas"]["FaqCreate"];
@@ -179,6 +189,41 @@ function resetOnboardingMockState(): void {
 function resetMemberSelfServiceState(): void {
   memberDogsState = structuredClone(meDogsFixture);
   memberProfileState = structuredClone(meProfileFixture);
+}
+
+function changedParameter(current: Parameter, value: unknown, reason?: string): Parameter {
+  const changedAt = "2026-09-09T17:00:00Z";
+  return {
+    ...current,
+    history: [
+      ...current.history,
+      {
+        changedAt,
+        changedByAccountId: "00000000-0000-4000-8000-000000000001",
+        ...(reason === undefined || reason === "" ? {} : { reason }),
+        value: structuredClone(value),
+      },
+    ],
+    isOverride: true,
+    lastChange: { action: current.key, actorName: "Jordi", at: changedAt },
+    value: structuredClone(value),
+    version: current.version + 1,
+  };
+}
+
+function visibleParameters(): components["schemas"]["Parameters"] {
+  const modules = currentMockScenario().branding.modules;
+  return {
+    ...settingsState.parameters,
+    blocks: settingsState.parameters.blocks
+      .map((block) => ({
+        ...block,
+        rows: block.rows.filter(
+          (item) => item.module === undefined || modules.includes(item.module),
+        ),
+      }))
+      .filter((block) => block.rows.length > 0),
+  };
 }
 
 const memberFilterLabels: Readonly<Record<string, string>> = {
@@ -821,12 +866,28 @@ export const handlers = [
     const code = String(params.code);
     return HttpResponse.json(postalTownFixtures[code] ?? []);
   }),
+  http.get("*/api/v1/parameters", ({ request }) => {
+    const block = new URL(request.url).searchParams.get("block");
+    const response = visibleParameters();
+    return HttpResponse.json({
+      ...response,
+      blocks:
+        block === null ? response.blocks : response.blocks.filter((item) => item.key === block),
+    });
+  }),
   http.get<{ key: string }, never, Parameter | ApiErrorResponse>(
     "*/api/v1/parameters/:key",
     ({ params, request }) => {
       const key = params.key;
       const locale = request.headers.get("Accept-Language")?.split(/[-,]/u)[0] ?? "ca";
       const scenario = currentMockScenario();
+      const configured = findParameter(key);
+      if (configured !== undefined) {
+        if (configured.module !== undefined && !scenario.branding.modules.includes(configured.module)) {
+          return apiError("MODULE_DISABLED", "Module disabled", 404);
+        }
+        return HttpResponse.json(configured);
+      }
       const base: Omit<Parameter, "key" | "label" | "type" | "value" | "version"> = {
         block: "general",
         constraints: {},
@@ -896,6 +957,98 @@ export const handlers = [
       return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
     },
   ),
+  http.put("*/api/v1/parameters/:key", async ({ params, request }) => {
+    const current = findParameter(String(params.key));
+    if (current === undefined) {
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
+    }
+    if (current.editableBy !== "CLUB") {
+      return apiError("PLATFORM_ONLY", "Platform-only parameter", 403);
+    }
+    if (
+      current.module !== undefined &&
+      !currentMockScenario().branding.modules.includes(current.module)
+    ) {
+      return apiError("MODULE_DISABLED", "Module disabled", 404);
+    }
+    const body = (await request.json()) as ParameterUpdate;
+    if (body.version !== current.version) {
+      return apiError("STALE_VERSION", "Stale parameter version", 409);
+    }
+    const next = changedParameter(current, body.value, body.reason);
+    replaceParameter(next);
+    return HttpResponse.json(next);
+  }),
+  http.delete("*/api/v1/parameters/:key", ({ params }) => {
+    const current = findParameter(String(params.key));
+    if (current === undefined) {
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
+    }
+    if (current.editableBy !== "CLUB") {
+      return apiError("PLATFORM_ONLY", "Platform-only parameter", 403);
+    }
+    const next = changedParameter(current, current.default);
+    next.isOverride = false;
+    replaceParameter(next);
+    return HttpResponse.json(next);
+  }),
+  http.get("*/api/v1/parameters/:key/history", ({ params }) => {
+    const current = findParameter(String(params.key));
+    return current === undefined
+      ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
+      : HttpResponse.json(current.history);
+  }),
+  http.get("*/api/v1/club/opening-hours", () => {
+    const current = findParameter("club.openingHours");
+    return current === undefined
+      ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
+      : HttpResponse.json(current);
+  }),
+  http.put("*/api/v1/club/opening-hours", async ({ request }) => {
+    const current = findParameter("club.openingHours");
+    if (current === undefined) {
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
+    }
+    const body = (await request.json()) as OpeningHoursUpdate;
+    if (body.version !== current.version) {
+      return apiError("STALE_VERSION", "Stale opening-hours version", 409);
+    }
+    const next = changedParameter(current, body.value, body.reason);
+    replaceParameter(next);
+    return HttpResponse.json(next);
+  }),
+  http.get("*/api/v1/club/holidays", () => {
+    const current = findParameter("club.holidays");
+    return current === undefined
+      ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
+      : HttpResponse.json(current);
+  }),
+  http.put("*/api/v1/club/holidays", async ({ request }) => {
+    const current = findParameter("club.holidays");
+    if (current === undefined) {
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
+    }
+    const body = (await request.json()) as HolidaysUpdate;
+    if (body.version !== current.version) {
+      return apiError("STALE_VERSION", "Stale holidays version", 409);
+    }
+    const next = changedParameter(current, body.value, body.reason);
+    replaceParameter(next);
+    return HttpResponse.json(next);
+  }),
+  http.put("*/api/v1/club/modules/:module", async ({ params, request }) => {
+    const module = String(params.module);
+    if (!["FAQ", "PUSH", "LEARN_LINK"].includes(module)) {
+      return apiError("PLATFORM_ONLY", "Platform-only module", 403);
+    }
+    const body = (await request.json()) as ModuleUpdate;
+    const modules = currentMockScenario().branding.modules;
+    return HttpResponse.json({
+      modules: body.enabled
+        ? [...new Set([...modules, module])]
+        : modules.filter((candidate) => candidate !== module),
+    });
+  }),
   http.get("*/api/v1/me/sessions", () => HttpResponse.json(currentMockScenario().sessions)),
   http.delete("*/api/v1/me/sessions/:id", () => new HttpResponse(null, { status: 200 })),
   http.post("*/auth/magic-link", async ({ request }) => {
@@ -1485,11 +1638,16 @@ export const handlers = [
     ) {
       return apiError("RING_IN_USE", "Ring in use", 409);
     }
+    const { trainingCapacity: requestedCapacity, ...bodyWithoutCapacity } = body;
+    const { trainingCapacity: currentCapacity, ...ringWithoutCapacity } = ring;
     const updated: Ring = {
-      ...ring,
-      ...body,
+      ...ringWithoutCapacity,
+      ...bodyWithoutCapacity,
+      ...(requestedCapacity === undefined || requestedCapacity === null
+        ? {}
+        : { trainingCapacity: requestedCapacity }),
       effectiveTrainingCapacity:
-        body.trainingCapacity ?? ring.trainingCapacity ?? ring.effectiveTrainingCapacity,
+        requestedCapacity ?? currentCapacity ?? ring.effectiveTrainingCapacity,
       version: ring.version + 1,
     };
     return HttpResponse.json(replaceCatalogItem(catalogState.rings, updated));
@@ -1953,5 +2111,6 @@ export {
   resetCensusRecordState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
+  resetSettingsState,
   type MockScenario,
 };

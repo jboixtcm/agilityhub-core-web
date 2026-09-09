@@ -24,7 +24,7 @@
       "AccountPatchRequest" : {
         "properties" : {
           "locale" : {
-            "enum" : [ "ca", "es", "en" ],
+            "enum" : [ "ca", "es", "en", "fr", "de", "no", "pt" ],
             "type" : "string"
           },
           "name" : {
@@ -45,7 +45,7 @@
             "type" : "string"
           },
           "locale" : {
-            "enum" : [ "ca", "es", "en" ],
+            "enum" : [ "ca", "es", "en", "fr", "de", "no", "pt" ],
             "type" : "string"
           },
           "name" : {
@@ -1378,6 +1378,9 @@
           "freeTraining" : {
             "$ref" : "#/components/schemas/FreeTraining"
           },
+          "handler" : {
+            "type" : "string"
+          },
           "id" : {
             "format" : "uuid",
             "type" : "string"
@@ -2255,7 +2258,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "active", "color", "id", "memberId", "shortName", "version" ],
+        "required" : [ "active", "color", "id", "shortName", "version" ],
         "type" : "object"
       },
       "InstructorCreate" : {
@@ -2425,10 +2428,6 @@
           "active" : {
             "type" : "boolean"
           },
-          "agilityhubLevel" : {
-            "enum" : [ "EASY", "MEDIUM", "HARD" ],
-            "type" : "string"
-          },
           "capacity" : {
             "format" : "int32",
             "type" : "integer"
@@ -2470,10 +2469,7 @@
             "type" : "integer"
           },
           "warnings" : {
-            "items" : {
-              "type" : "string"
-            },
-            "type" : "array"
+            "$ref" : "#/components/schemas/LevelUsage"
           }
         },
         "required" : [ "active", "capacity", "code", "color", "grantsFreeTraining", "id", "name", "order", "version" ],
@@ -2500,10 +2496,6 @@
           "active" : {
             "type" : "boolean"
           },
-          "agilityhubLevel" : {
-            "enum" : [ "EASY", "MEDIUM", "HARD" ],
-            "type" : "string"
-          },
           "capacity" : {
             "format" : "int32",
             "maximum" : 99,
@@ -2513,7 +2505,7 @@
           "code" : {
             "maxLength" : 8,
             "minLength" : 1,
-            "pattern" : "[A-Z0-9_]+",
+            "pattern" : "[A-Za-z0-9_]+",
             "type" : "string"
           },
           "color" : {
@@ -2577,10 +2569,6 @@
           "active" : {
             "type" : "boolean"
           },
-          "agilityhubLevel" : {
-            "enum" : [ "EASY", "MEDIUM", "HARD" ],
-            "type" : "string"
-          },
           "capacity" : {
             "format" : "int32",
             "maximum" : 99,
@@ -2590,7 +2578,7 @@
           "code" : {
             "maxLength" : 8,
             "minLength" : 1,
-            "pattern" : "[A-Z0-9_]+",
+            "pattern" : "[A-Za-z0-9_]+",
             "type" : "string"
           },
           "color" : {
@@ -2623,10 +2611,6 @@
         "properties" : {
           "active" : {
             "type" : "boolean"
-          },
-          "agilityhubLevel" : {
-            "enum" : [ "EASY", "MEDIUM", "HARD" ],
-            "type" : "string"
           },
           "capacity" : {
             "format" : "int32",
@@ -3072,7 +3056,7 @@
             "type" : "string"
           },
           "locale" : {
-            "enum" : [ "ca", "es", "en" ],
+            "enum" : [ "ca", "es", "en", "fr", "de", "no", "pt" ],
             "type" : "string"
           },
           "name" : {
@@ -3799,7 +3783,7 @@
       "OnboardingFields" : {
         "properties" : {
           "locale" : {
-            "enum" : [ "ca", "es", "en" ],
+            "enum" : [ "ca", "es", "en", "fr", "de", "no", "pt" ],
             "type" : "string"
           },
           "name" : {
@@ -4760,7 +4744,7 @@
             "type" : "string"
           },
           "locale" : {
-            "enum" : [ "ca", "es", "en" ],
+            "enum" : [ "ca", "es", "en", "fr", "de", "no", "pt" ],
             "minLength" : 1,
             "type" : "string"
           },
@@ -5198,7 +5182,7 @@
           "shortName" : {
             "maxLength" : 4,
             "minLength" : 2,
-            "pattern" : "[A-Z0-9]+",
+            "pattern" : "[A-Za-z0-9]+",
             "type" : "string"
           },
           "trainingCapacity" : {
@@ -5248,14 +5232,14 @@
           "shortName" : {
             "maxLength" : 4,
             "minLength" : 2,
-            "pattern" : "[A-Z0-9]+",
+            "pattern" : "[A-Za-z0-9]+",
             "type" : "string"
           },
           "trainingCapacity" : {
             "format" : "int32",
             "maximum" : 20,
             "minimum" : 1,
-            "type" : "integer"
+            "type" : [ "integer", "null" ]
           },
           "version" : {
             "format" : "int64",
@@ -7047,7 +7031,7 @@
     },
     "/api/v1/administrators/{membershipId}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.",
         "operationId" : "deleteAdministrator",
         "parameters" : [ {
           "in" : "path",
@@ -7185,7 +7169,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.",
         "operationId" : "updateAdministrator",
         "parameters" : [ {
           "in" : "path",
@@ -10180,7 +10164,7 @@
     },
     "/api/v1/dogs" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-22. Tenant-scoped universal list, with literal search and role/module-safe projections; fields selects a sparse response.",
         "operationId" : "listDogs",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -10250,7 +10234,7 @@
                 }
               }
             },
-            "description" : "ListPage<DogListItem>"
+            "description" : "ListPage<DogListItem>; fields selects a sparse projection"
           },
           "400" : {
             "content" : {
@@ -10388,6 +10372,9 @@
           "defaultVisible" : true,
           "key" : "owner"
         }, {
+          "defaultVisible" : false,
+          "key" : "handler"
+        }, {
           "defaultVisible" : true,
           "key" : "freeTraining",
           "module" : "FREE_TRAINING"
@@ -10423,16 +10410,17 @@
         "x-exportable" : true,
         "x-filter-operators" : {
           "breed" : [ "contains" ],
+          "handlerName" : [ "contains" ],
           "name" : [ "contains" ],
           "ownerName" : [ "contains" ]
         },
-        "x-filterable" : [ "name", "breed", "levelId", "memberId", "ownerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
+        "x-filterable" : [ "id", "name", "breed", "levelId", "memberId", "ownerName", "handlerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
         "x-sortable" : [ "name", "breed", "levelOrder", "ownerLastName", "registeredAt", "levelAssignedAt" ]
       }
     },
     "/api/v1/dogs/export" : {
       "get" : {
-        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.",
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.",
         "operationId" : "exportDogs",
         "parameters" : [ {
           "in" : "query",
@@ -10680,6 +10668,9 @@
           "defaultVisible" : true,
           "key" : "owner"
         }, {
+          "defaultVisible" : false,
+          "key" : "handler"
+        }, {
           "defaultVisible" : true,
           "key" : "freeTraining",
           "module" : "FREE_TRAINING"
@@ -10715,16 +10706,17 @@
         "x-exportable" : false,
         "x-filter-operators" : {
           "breed" : [ "contains" ],
+          "handlerName" : [ "contains" ],
           "name" : [ "contains" ],
           "ownerName" : [ "contains" ]
         },
-        "x-filterable" : [ "name", "breed", "levelId", "memberId", "ownerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
+        "x-filterable" : [ "id", "name", "breed", "levelId", "memberId", "ownerName", "handlerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
         "x-sortable" : [ "name", "breed", "levelOrder", "ownerLastName", "registeredAt", "levelAssignedAt" ]
       }
     },
     "/api/v1/dogs/filter-values" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.",
         "operationId" : "dogFilterValues",
         "parameters" : [ {
           "in" : "query",
@@ -10888,10 +10880,11 @@
         "x-exportable" : false,
         "x-filter-operators" : {
           "breed" : [ "contains" ],
+          "handlerName" : [ "contains" ],
           "name" : [ "contains" ],
           "ownerName" : [ "contains" ]
         },
-        "x-filterable" : [ "name", "breed", "levelId", "memberId", "ownerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
+        "x-filterable" : [ "id", "name", "breed", "levelId", "memberId", "ownerName", "handlerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
         "x-sortable" : [ ]
       }
     },
@@ -13846,7 +13839,7 @@
         "x-sortable" : [ "order" ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "createFaq",
         "requestBody" : {
           "content" : {
@@ -13995,7 +13988,7 @@
     },
     "/api/v1/faq-entries/filter-values" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "faqCategoryValues",
         "parameters" : [ {
           "in" : "query",
@@ -14165,7 +14158,7 @@
     },
     "/api/v1/faq-entries/order" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "orderFaqs",
         "requestBody" : {
           "content" : {
@@ -14314,7 +14307,7 @@
     },
     "/api/v1/faq-entries/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "deleteFaq",
         "parameters" : [ {
           "in" : "path",
@@ -14452,7 +14445,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "updateFaq",
         "parameters" : [ {
           "in" : "path",
@@ -14531,7 +14524,7 @@
                 }
               }
             },
-            "description" : "STALE_VERSION, STALE_VERSION"
+            "description" : "STALE_VERSION"
           },
           "422" : {
             "content" : {
@@ -15066,7 +15059,7 @@
     },
     "/api/v1/instructors/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.",
         "operationId" : "deleteInstructor",
         "parameters" : [ {
           "in" : "path",
@@ -15204,7 +15197,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "S05 team mutation. Tenant comes from the JWT; ADMIN endpoints reject impersonation.",
         "operationId" : "updateInstructor",
         "parameters" : [ {
           "in" : "path",
@@ -15774,7 +15767,7 @@
         "x-sortable" : [ "order" ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "createLevel",
         "requestBody" : {
           "content" : {
@@ -15923,7 +15916,7 @@
     },
     "/api/v1/levels/order" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "orderLevels",
         "requestBody" : {
           "content" : {
@@ -16072,7 +16065,7 @@
     },
     "/api/v1/levels/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "deleteLevel",
         "parameters" : [ {
           "in" : "path",
@@ -16210,7 +16203,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "getLevel",
         "parameters" : [ {
           "in" : "path",
@@ -16355,7 +16348,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "updateLevel",
         "parameters" : [ {
           "in" : "path",
@@ -19210,7 +19203,7 @@
                 }
               }
             },
-            "description" : "ListPage<MemberListItem>"
+            "description" : "ListPage<MemberListItem>; fields selects a sparse projection"
           },
           "400" : {
             "content" : {
@@ -19407,13 +19400,13 @@
           "dogName" : [ "contains" ],
           "fullName" : [ "contains" ]
         },
-        "x-filterable" : [ "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
+        "x-filterable" : [ "id", "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
         "x-sortable" : [ "lastName", "firstName", "memberNumber", "joinedAt", "leaveDate", "nextInvoiceDate", "city" ]
       }
     },
     "/api/v1/members/export" : {
       "get" : {
-        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.",
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.",
         "operationId" : "exportMembers",
         "parameters" : [ {
           "in" : "query",
@@ -19720,13 +19713,13 @@
           "dogName" : [ "contains" ],
           "fullName" : [ "contains" ]
         },
-        "x-filterable" : [ "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
+        "x-filterable" : [ "id", "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
         "x-sortable" : [ "lastName", "firstName", "memberNumber", "joinedAt", "leaveDate", "nextInvoiceDate", "city" ]
       }
     },
     "/api/v1/members/filter-values" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.",
         "operationId" : "memberFilterValues",
         "parameters" : [ {
           "in" : "query",
@@ -19892,7 +19885,7 @@
           "dogName" : [ "contains" ],
           "fullName" : [ "contains" ]
         },
-        "x-filterable" : [ "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
+        "x-filterable" : [ "id", "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
         "x-sortable" : [ ]
       }
     },
@@ -22110,7 +22103,7 @@
     },
     "/api/v1/members/{id}/roles" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "S03 R-03-10. Synchronizes S05 profiles; MEMBER is required and ADMIN cannot be removed from oneself.",
         "operationId" : "updateMemberRoles",
         "parameters" : [ {
           "in" : "path",
@@ -26485,7 +26478,7 @@
         "x-sortable" : [ "order" ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "createRing",
         "requestBody" : {
           "content" : {
@@ -26634,7 +26627,7 @@
     },
     "/api/v1/rings/order" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "orderRings",
         "requestBody" : {
           "content" : {
@@ -26783,7 +26776,7 @@
     },
     "/api/v1/rings/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "deleteRing",
         "parameters" : [ {
           "in" : "path",
@@ -26921,7 +26914,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "getRing",
         "parameters" : [ {
           "in" : "path",
@@ -27066,7 +27059,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "updateRing",
         "parameters" : [ {
           "in" : "path",
@@ -27223,7 +27216,7 @@
     },
     "/api/v1/saved-views" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.",
         "operationId" : "savedViews",
         "parameters" : [ {
           "in" : "query",
@@ -27391,7 +27384,7 @@
         "x-sortable" : [ ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.",
         "operationId" : "createSavedView",
         "requestBody" : {
           "content" : {
@@ -27540,7 +27533,7 @@
     },
     "/api/v1/saved-views/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.",
         "operationId" : "deleteSavedView",
         "parameters" : [ {
           "in" : "path",
@@ -27678,7 +27671,7 @@
         "tags" : [ "clubs.common" ]
       },
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.",
         "operationId" : "savedView",
         "parameters" : [ {
           "in" : "path",

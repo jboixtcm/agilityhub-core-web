@@ -9,6 +9,7 @@ const loaders = {
   ca: {
     "admin-catalogs": () => import("./locales/ca/admin-catalogs.json"),
     "admin-census": () => import("./locales/ca/admin-census.json"),
+    "admin-settings": () => import("./locales/ca/admin-settings.json"),
     auth: () => import("./locales/ca/auth.json"),
     census: () => import("./locales/ca/census.json"),
     common: () => import("./locales/ca/common.json"),
@@ -19,6 +20,7 @@ const loaders = {
   en: {
     "admin-catalogs": () => import("./locales/en/admin-catalogs.json"),
     "admin-census": () => import("./locales/en/admin-census.json"),
+    "admin-settings": () => import("./locales/en/admin-settings.json"),
     auth: () => import("./locales/en/auth.json"),
     census: () => import("./locales/en/census.json"),
     common: () => import("./locales/en/common.json"),
@@ -29,6 +31,7 @@ const loaders = {
   es: {
     "admin-catalogs": () => import("./locales/es/admin-catalogs.json"),
     "admin-census": () => import("./locales/es/admin-census.json"),
+    "admin-settings": () => import("./locales/es/admin-settings.json"),
     auth: () => import("./locales/es/auth.json"),
     census: () => import("./locales/es/census.json"),
     common: () => import("./locales/es/common.json"),

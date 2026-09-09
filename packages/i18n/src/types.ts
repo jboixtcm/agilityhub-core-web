@@ -7,6 +7,7 @@ export const namespaces = [
   "auth",
   "admin-catalogs",
   "admin-census",
+  "admin-settings",
   "census",
   "id",
   "shell",
