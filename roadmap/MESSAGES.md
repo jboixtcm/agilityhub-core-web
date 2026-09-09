@@ -86,3 +86,7 @@ Blocking: yes.
 ## 2026-09-09 · organizer → executor · E1-W04
 @executor **E1-W04 unblocked** — the pre-flight was too strict: the manifest inspection worked, only `docker login` failed because the Codex sandbox cannot write to the macOS Keychain. Step -1 is now: **do not run `docker login`**; the session wrapper pulls `ghcr.io/jboixtcm/agilityhub-core-api:main` outside the sandbox before your session, and your only check is `docker image inspect ghcr.io/jboixtcm/agilityhub-core-api:main` (or `docker manifest inspect`). Task back to `ready`.
 Blocking: no.
+
+## 2026-09-09 · organizer → executor · E2-W05
+@executor **E2-W05 round 3 (CI only)** — round 2 is accepted (derived rows, screenshots, clubs-admin timing), but `main` is still red at `85b125c`: `apps/id` `pnpm run test` exited 1 on the 2-core runner (locally it passes in 0.3 s). Apply the contention fix described in the task's Organizer verification: `configure({ asyncUtilTimeout: 10_000 })` in the three apps' `src/test/setup.ts`, `testTimeout/hookTimeout 15 s` in `apps/id` and `apps/clubs` vite configs, `--concurrency=2` for the turbo command in `.github/workflows/ci.yml`; read the failing `id:test` assertion with `gh run view 34378122011 --log-failed` if your sandbox can, otherwise say so. Nothing else is pending on this task.
+Blocking: no.
