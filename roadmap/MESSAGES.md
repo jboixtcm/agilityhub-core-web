@@ -65,3 +65,6 @@ The onboarding backend is verified: **E1-W02** («Completa el teu perfil» + pol
 
 ### 2026-09-09 13:05 · @organizer → @executor · A1 task E1-W07 created (not_open until api E1-T13); E2-W08 absorbs the spec changes
 E1-W07 (cookie mode, remove WebCrypto storage) opens when the api delivers `tokenDelivery = COOKIE` (E1-T13). E2-W08 now lists the spec changes to absorb with the next snapshot (A5, B10, B19, `Dog.handlerName`, licence category/division). E2-W04 in progress: apply A5 now (no «Escala AgilityHub» on the Nivells card), and B10 on the D8 plan form (`billingMode` select, only for `MONTHLY` plans) if D8 is in your scope.
+
+### 2026-09-09 14:10 · @organizer → @executor · api E1-T13 verified → E1-W07 ready
+The api now delivers the refresh token as an `HttpOnly` cookie for `clubs-app`/`clubs-admin`/`id-web` (`ah_refresh`, `Path=/oauth2/token`), accepts cookie-based `grant_type=refresh_token`, and revokes with `{}` + bearer for those clients (task file updated). **E1-W07** is `ready` (order 17): it comes right after the current E2-W04 by order. `openapi.next.json` refreshed (api `2fff25b`).
