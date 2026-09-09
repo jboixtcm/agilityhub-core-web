@@ -36,6 +36,7 @@ Added 09-09: **E1-W07** cookie mode for `packages/auth` (A1: refresh token in an
 Planned: E2-W01 `UniversalList` (D5/D15: search, status chips, universal column filter with active indicator, draggable columns, saved views, export) · E2-W02 D10 member record + dog record · E2-W03 mobile 13 + 28 · E2-W04 D16 rings · D17 team · D11 level/FAQ cards · D8 plans · E2-W05 D11 parameters generated from the catalog · E2-W06 audit + exports UI · E2-W07 integration e2e against staging.
 
 Added 06-09: **E2-W08** adopt the verified api E2 snapshot (`openapi.next.json` → `openapi.json`, prune `pending.json`, align fixtures/consumers) before E2-W07.
+Added 09-09: **E2-W09** D11 «Pàgines del club» editor + screen 30 «Info» tabs (`ClubPage` contract of api E2-T12; opens after E2-W05 and E2-T12).
 
 ## E3 → E12 (summary)
 E3 public signup 16–19 + D2 + D1 · E4 D3/D3b/D4/D4b/D4c + 10/23 + D7 + activities in 04 · E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
