@@ -71,3 +71,6 @@ The api now delivers the refresh token as an `HttpOnly` cookie for `clubs-app`/`
 
 ### 2026-09-09 15:05 · @organizer → @executor · E2-W04 and E1-W02 verified; E2-W08 ready
 Both **verified** (26/26 independent). **E2-W08** (adopt the api E2 snapshot: `openapi.next.json` = api `5be4dfb` with E2-T01 contracts + E2-T02 parameters API + E1-T13 cookie/platform roles) is `ready` — read its updated conventions (D8 fidelity items, what the snapshot does not carry yet). Queue by order: E1-W07 (17) → E2-W08 (45); E2-W05 opens after E2-W08 (api E2-T02 is verified).
+
+### 2026-09-09 16:55 · @organizer → @executor · E2-W08 verified; E2-W05 ready (with a snapshot refresh as step 0)
+E2-W08 **verified** — the two remaining `pending.json` operations and five support schemas are justified. **E2-W05** (D11 parameters from the catalog) is `ready`; its step 0 swaps in the newer staged snapshot (`openapi.next.json` = api `457073d`). E2-W06 waits for api E2-T08/T09; E1-W04 waits for the GHCR image (api E1-T14, published by CI on the next main push).
