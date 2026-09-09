@@ -39,5 +39,13 @@ Added 06-09: **E2-W08** adopt the verified api E2 snapshot (`openapi.next.json` 
 Added 09-09: **E2-W09** D11 «Pàgines del club» editor + screen 30 «Info» tabs (`ClubPage` contract of api E2-T12; opens after E2-W05 and E2-T12).
 Added 09-09: **E2-W10** CI e2e independence (each Playwright project starts the servers it needs; `pnpm e2e` deterministic on the runner) — the last step to a green `main`.
 
-## E3 → E12 (summary)
-E3 public signup 16–19 + D2 + D1 · E4 D3/D3b/D4/D4b/D4c + 10/23 + D7 + activities in 04 · E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
+## E3 · Public signup + dashboard (thread B) — task files installed 09-09 (`not_open`; the organizer opens E3-W01 at gate E2 or as soon as api E3-T01 publishes the contract)
+Planned: E3-W01 public stepper 16–19 (`/apuntat-hi/*`) + «add a dog» (`/gossos/nou*`), mocks-first on the S04 contract (T-04-29…32) · E3-W02 D2 `/preinscripcions/:id` + D1 `/tauler` (KPIs, risk card, pending card, dogs-by-level chart, menu counters; T-04-33, T-14-25) · E3-W03 integration against the real core (adopt the E3 snapshot; T-04-34 scenarios; gate E3 front).
+
+### Gate E3 (front — checked by the organizer)
+- [ ] `pnpm e2e:core` green with the E3 scenarios (public signup → D1 → D2 → welcome mail → screen 03; rejection; add-dog → N-37; closed form).
+- [ ] Screenshots of 16–19, enviada, D1, D2 against the mockups; `signup`, `admin-dashboard`, `admin-census` keys complete in ca/es/en; vocabulary lint green.
+- [ ] No S04/S14 operation left in `pending.json`; CI green.
+
+## E4 → E12 (summary)
+E4 D3/D3b/D4/D4b/D4c + 10/23 + D7 + activities in 04 · E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
