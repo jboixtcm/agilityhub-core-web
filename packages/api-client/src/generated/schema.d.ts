@@ -868,11 +868,267 @@ export interface paths {
         };
         get: operations["listLevels"];
         put?: never;
+        post: operations["createLevel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/levels/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["orderLevels"];
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/levels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteLevel"];
+        options?: never;
+        head?: never;
+        patch: operations["updateLevel"];
+        trace?: never;
+    };
+    "/rings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listRings"];
+        put?: never;
+        post: operations["createRing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/rings/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["orderRings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/rings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteRing"];
+        options?: never;
+        head?: never;
+        patch: operations["updateRing"];
+        trace?: never;
+    };
+    "/instructors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listInstructors"];
+        put?: never;
+        post: operations["createInstructor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instructors/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteInstructor"];
+        options?: never;
+        head?: never;
+        patch: operations["updateInstructor"];
+        trace?: never;
+    };
+    "/administrators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listAdministrators"];
+        put?: never;
+        post: operations["createAdministrator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/administrators/{membershipId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteAdministrator"];
+        options?: never;
+        head?: never;
+        patch: operations["updateAdministrator"];
+        trace?: never;
+    };
+    "/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listPlans"];
+        put?: never;
+        post: operations["createPlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updatePlan"];
+        trace?: never;
+    };
+    "/prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createPrice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faq-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listFaqs"];
+        put?: never;
+        post: operations["createFaq"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faq-entries/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["faqCategoryValues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faq-entries/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["orderFaqs"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/faq-entries/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteFaq"];
+        options?: never;
+        head?: never;
+        patch: operations["updateFaq"];
         trace?: never;
     };
     "/country-profile/postal-codes/{code}": {
@@ -1679,6 +1935,392 @@ export interface components {
         };
         LevelList: {
             items: components["schemas"]["LevelSummary"][];
+            totalItems: number;
+        };
+        Level: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            nameI18n?: {
+                [key: string]: string;
+            };
+            order: number;
+            capacity: number;
+            color: string;
+            grantsFreeTraining: boolean;
+            /** @enum {string} */
+            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            usage?: components["schemas"]["LevelUsage"];
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        LevelCreate: {
+            code: string;
+            name: {
+                [key: string]: string;
+            };
+            order?: number;
+            capacity?: number;
+            color?: string;
+            grantsFreeTraining?: boolean;
+            /** @enum {string} */
+            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
+            active?: boolean;
+        };
+        LevelPatch: {
+            /** Format: int64 */
+            version: number;
+            code?: string;
+            name?: {
+                [key: string]: string;
+            };
+            order?: number;
+            capacity?: number;
+            color?: string;
+            grantsFreeTraining?: boolean;
+            /** @enum {string} */
+            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
+            active?: boolean;
+        };
+        LevelOrder: {
+            levelIds: string[];
+        };
+        LevelUsage: {
+            activeDogs: number;
+            futureClassSessions: number;
+            templateClasses: number;
+        };
+        CatalogItemsLevel: {
+            items: components["schemas"]["Level"][];
+            totalItems: number;
+        };
+        Ring: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            shortName: string;
+            color: string;
+            allowsFreeTraining: boolean;
+            trainingCapacity?: number;
+            effectiveTrainingCapacity: number;
+            order: number;
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            usage?: components["schemas"]["RingUsage"];
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        RingCreate: {
+            name: string;
+            shortName: string;
+            color?: string;
+            allowsFreeTraining?: boolean;
+            trainingCapacity?: number;
+            order?: number;
+            active?: boolean;
+        };
+        RingPatch: {
+            /** Format: int64 */
+            version: number;
+            name?: string;
+            shortName?: string;
+            color?: string;
+            allowsFreeTraining?: boolean;
+            trainingCapacity?: number;
+            order?: number;
+            active?: boolean;
+        };
+        RingOrder: {
+            ringIds: string[];
+        };
+        RingUsage: {
+            futureClassSessions: number;
+            futureTrainingBookings: number;
+            ringBlocks: number;
+            templateClasses: number;
+        };
+        CatalogItemsRing: {
+            items: components["schemas"]["Ring"][];
+            totalItems: number;
+        };
+        Instructor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            memberId: string;
+            shortName: string;
+            color: string;
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            usage?: components["schemas"]["InstructorUsage"];
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        InstructorCreate: {
+            memberId: string;
+            shortName: string;
+            color: string;
+        };
+        InstructorPatch: {
+            /** Format: int64 */
+            version: number;
+            shortName?: string;
+            color?: string;
+            active?: boolean;
+        };
+        InstructorUsage: {
+            futureClassSessions: number;
+            templateClasses: number;
+        };
+        CatalogItemsInstructor: {
+            items: components["schemas"]["Instructor"][];
+            totalItems: number;
+        };
+        Administrator: {
+            /** Format: uuid */
+            membershipId: string;
+            /** Format: uuid */
+            memberId: string;
+            shortName: string;
+            /** Format: date */
+            since: string;
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        AdministratorCreate: {
+            memberId: string;
+            shortName: string;
+            /** Format: date */
+            since: string;
+        };
+        AdministratorPatch: {
+            /** Format: int64 */
+            version: number;
+            shortName?: string;
+            /** Format: date */
+            since?: string;
+            active?: boolean;
+        };
+        CatalogItemsAdministrator: {
+            items: components["schemas"]["Administrator"][];
+            totalItems: number;
+        };
+        Money: {
+            /** Format: int64 */
+            amountMinor: number;
+            currency: string;
+        };
+        EntryFee: {
+            /** @enum {string} */
+            mode: "STANDARD" | "AMOUNT" | "PERCENT" | "NONE";
+            amount?: components["schemas"]["Money"];
+            percent?: number;
+        };
+        PackSettings: {
+            sessions: number;
+            validityMonths: number;
+        };
+        SingleClassSettings: {
+            /** @enum {string} */
+            chargeMode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
+            /** @enum {string} */
+            cancelPolicy: "REFUND" | "CREDIT" | "NONE";
+        };
+        PlanTexts: {
+            description?: string;
+            descriptionI18n?: {
+                [key: string]: string;
+            };
+            offerLabel?: string;
+            offerLabelI18n?: {
+                [key: string]: string;
+            };
+            priceLabel?: string;
+            priceLabelI18n?: {
+                [key: string]: string;
+            };
+        };
+        PlanTextsInput: {
+            description?: {
+                [key: string]: string;
+            };
+            offerLabel?: {
+                [key: string]: string;
+            };
+            priceLabel?: {
+                [key: string]: string;
+            };
+        };
+        Price: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            planId: string;
+            /** @enum {string} */
+            concept: "MONTHLY_FEE" | "MAINTENANCE_FEE" | "PACK" | "SINGLE_CLASS";
+            amount: components["schemas"]["Money"];
+            taxPercent: number;
+            /** Format: date */
+            validFrom: string;
+            /** Format: date */
+            validTo?: string;
+            locked: boolean;
+            /** @enum {string} */
+            status: "SCHEDULED" | "CURRENT" | "EXPIRED";
+            /** Format: int64 */
+            version: number;
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        PriceCreate: {
+            planId: string;
+            /** @enum {string} */
+            concept: "MONTHLY_FEE" | "MAINTENANCE_FEE" | "PACK" | "SINGLE_CLASS";
+            amount: components["schemas"]["Money"];
+            taxPercent: number;
+            /** Format: date */
+            validFrom: string;
+            /** Format: date */
+            validTo?: string;
+        };
+        PriceCreated: {
+            price: components["schemas"]["Price"];
+            /** Format: uuid */
+            closedPriceId?: string;
+        };
+        Plan: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            nameI18n?: {
+                [key: string]: string;
+            };
+            /** @enum {string} */
+            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            dogsIncluded: number;
+            entryFee: components["schemas"]["EntryFee"];
+            pack?: components["schemas"]["PackSettings"];
+            singleClass?: components["schemas"]["SingleClassSettings"];
+            conditions?: string;
+            conditionsI18n?: {
+                [key: string]: string;
+            };
+            texts?: components["schemas"]["PlanTexts"];
+            prices?: components["schemas"]["Price"][];
+            currentPrices?: components["schemas"]["Price"][];
+            order: number;
+            showOnSignup: boolean;
+            showOnWeb: boolean;
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        PlanCreate: {
+            code: string;
+            name: {
+                [key: string]: string;
+            };
+            /** @enum {string} */
+            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            dogsIncluded?: number;
+            entryFee?: components["schemas"]["EntryFee"];
+            pack?: components["schemas"]["PackSettings"];
+            singleClass?: components["schemas"]["SingleClassSettings"];
+            conditions?: {
+                [key: string]: string;
+            };
+            texts?: components["schemas"]["PlanTextsInput"];
+            order?: number;
+            showOnSignup?: boolean;
+            showOnWeb?: boolean;
+            active?: boolean;
+        };
+        PlanPatch: {
+            /** Format: int64 */
+            version: number;
+            code?: string;
+            name?: {
+                [key: string]: string;
+            };
+            /** @enum {string} */
+            type?: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            dogsIncluded?: number;
+            entryFee?: components["schemas"]["EntryFee"];
+            pack?: components["schemas"]["PackSettings"];
+            singleClass?: components["schemas"]["SingleClassSettings"];
+            conditions?: {
+                [key: string]: string;
+            };
+            texts?: components["schemas"]["PlanTextsInput"];
+            order?: number;
+            showOnSignup?: boolean;
+            showOnWeb?: boolean;
+            active?: boolean;
+        };
+        CatalogItemsPlan: {
+            items: components["schemas"]["Plan"][];
+            totalItems: number;
+        };
+        FaqEntry: {
+            /** Format: uuid */
+            id: string;
+            category: string;
+            categoryI18n?: {
+                [key: string]: string;
+            };
+            question: string;
+            questionI18n?: {
+                [key: string]: string;
+            };
+            answer: string;
+            answerI18n?: {
+                [key: string]: string;
+            };
+            order: number;
+            active: boolean;
+            /** Format: int64 */
+            version: number;
+            lastChange?: components["schemas"]["LastChange"];
+        };
+        FaqCreate: {
+            category: {
+                [key: string]: string;
+            };
+            question: {
+                [key: string]: string;
+            };
+            answer: {
+                [key: string]: string;
+            };
+            order?: number;
+            active?: boolean;
+        };
+        FaqPatch: {
+            /** Format: int64 */
+            version: number;
+            category?: {
+                [key: string]: string;
+            };
+            question?: {
+                [key: string]: string;
+            };
+            answer?: {
+                [key: string]: string;
+            };
+            order?: number;
+            active?: boolean;
+        };
+        FaqOrder: {
+            faqEntryIds: string[];
+        };
+        CatalogItemsFaqEntry: {
+            items: components["schemas"]["FaqEntry"][];
             totalItems: number;
         };
         FreeTraining: {
@@ -5993,7 +6635,662 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LevelList"];
+                    "application/json": components["schemas"]["CatalogItemsLevel"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LevelCreate"];
+            };
+        };
+        responses: {
+            /** @description Created level */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Level"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    orderLevels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LevelOrder"];
+            };
+        };
+        responses: {
+            /** @description Ordered levels */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsLevel"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted level */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LevelPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated level */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Level"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listRings: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ordered ring catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsRing"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createRing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RingCreate"];
+            };
+        };
+        responses: {
+            /** @description Created ring */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ring"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    orderRings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RingOrder"];
+            };
+        };
+        responses: {
+            /** @description Ordered rings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsRing"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteRing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted ring */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateRing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RingPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated ring */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ring"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listInstructors: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Instructor catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsInstructor"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createInstructor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstructorCreate"];
+            };
+        };
+        responses: {
+            /** @description Created instructor */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Instructor"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteInstructor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted instructor */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateInstructor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstructorPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated instructor */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Instructor"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listAdministrators: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Administrator catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsAdministrator"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createAdministrator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdministratorCreate"];
+            };
+        };
+        responses: {
+            /** @description Created administrator */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Administrator"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteAdministrator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membershipId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted administrator */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateAdministrator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membershipId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdministratorPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated administrator */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Administrator"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listPlans: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Plan catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsPlan"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createPlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanCreate"];
+            };
+        };
+        responses: {
+            /** @description Created plan */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Plan"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updatePlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated plan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Plan"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createPrice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PriceCreate"];
+            };
+        };
+        responses: {
+            /** @description Created price */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PriceCreated"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    listFaqs: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FAQ catalogue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsFaqEntry"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createFaq: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FaqCreate"];
+            };
+        };
+        responses: {
+            /** @description Created FAQ entry */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaqEntry"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    faqCategoryValues: {
+        parameters: {
+            query: {
+                field: "category";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FAQ category suggestions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    orderFaqs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FaqOrder"];
+            };
+        };
+        responses: {
+            /** @description Ordered FAQ entries */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsFaqEntry"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    deleteFaq: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted FAQ entry */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    updateFaq: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FaqPatch"];
+            };
+        };
+        responses: {
+            /** @description Updated FAQ entry */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaqEntry"];
                 };
             };
             default: components["responses"]["ApiError"];

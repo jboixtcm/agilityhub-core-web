@@ -975,9 +975,570 @@
           "200": {
             "description": "Ordered level catalogue",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/LevelList" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsLevel" }
+              }
             }
           },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createLevel",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LevelCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created level",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Level" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/levels/order": {
+      "put": {
+        "operationId": "orderLevels",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LevelOrder" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ordered levels",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsLevel" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/levels/{id}": {
+      "patch": {
+        "operationId": "updateLevel",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LevelPatch" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated level",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Level" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteLevel",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deleted level" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/rings": {
+      "get": {
+        "operationId": "listRings",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ordered ring catalogue",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CatalogItemsRing" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createRing",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RingCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created ring",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Ring" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/rings/order": {
+      "put": {
+        "operationId": "orderRings",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RingOrder" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ordered rings",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CatalogItemsRing" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/rings/{id}": {
+      "patch": {
+        "operationId": "updateRing",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RingPatch" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated ring",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Ring" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteRing",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deleted ring" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/instructors": {
+      "get": {
+        "operationId": "listInstructors",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Instructor catalogue",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsInstructor" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createInstructor",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/InstructorCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created instructor",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Instructor" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/instructors/{id}": {
+      "patch": {
+        "operationId": "updateInstructor",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/InstructorPatch" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated instructor",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Instructor" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteInstructor",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deleted instructor" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/administrators": {
+      "get": {
+        "operationId": "listAdministrators",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Administrator catalogue",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsAdministrator" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createAdministrator",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdministratorCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created administrator",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Administrator" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/administrators/{membershipId}": {
+      "patch": {
+        "operationId": "updateAdministrator",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdministratorPatch" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated administrator",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Administrator" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteAdministrator",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Deleted administrator" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/plans": {
+      "get": {
+        "operationId": "listPlans",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plan catalogue",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CatalogItemsPlan" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createPlan",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PlanCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created plan",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Plan" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/plans/{id}": {
+      "patch": {
+        "operationId": "updatePlan",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PlanPatch" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated plan",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Plan" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/prices": {
+      "post": {
+        "operationId": "createPrice",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PriceCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created price",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/PriceCreated" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/faq-entries": {
+      "get": {
+        "operationId": "listFaqs",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "FAQ catalogue",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsFaqEntry" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "createFaq",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/FaqCreate" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created FAQ entry",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/FaqEntry" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/faq-entries/filter-values": {
+      "get": {
+        "operationId": "faqCategoryValues",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "enum": ["category"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "FAQ category suggestions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/faq-entries/order": {
+      "put": {
+        "operationId": "orderFaqs",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/FaqOrder" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ordered FAQ entries",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CatalogItemsFaqEntry" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/faq-entries/{id}": {
+      "patch": {
+        "operationId": "updateFaq",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/FaqPatch" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated FAQ entry",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/FaqEntry" } }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteFaq",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deleted FAQ entry" },
           "default": { "$ref": "#/components/responses/ApiError" }
         }
       }
@@ -2218,6 +2779,553 @@
             "items": { "$ref": "#/components/schemas/LevelSummary" }
           },
           "totalItems": { "type": "integer" }
+        }
+      },
+      "Level": {
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "name",
+          "order",
+          "capacity",
+          "color",
+          "grantsFreeTraining",
+          "active",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "nameI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "order": { "type": "integer" },
+          "capacity": { "type": "integer" },
+          "color": { "type": "string" },
+          "grantsFreeTraining": { "type": "boolean" },
+          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "usage": { "$ref": "#/components/schemas/LevelUsage" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "LevelCreate": {
+        "type": "object",
+        "required": ["code", "name"],
+        "properties": {
+          "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 8 },
+          "name": { "type": "object", "additionalProperties": { "type": "string" } },
+          "order": { "type": "integer", "minimum": 0 },
+          "capacity": { "type": "integer", "minimum": 1, "maximum": 99 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
+          "grantsFreeTraining": { "type": "boolean" },
+          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
+          "active": { "type": "boolean" }
+        }
+      },
+      "LevelPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 8 },
+          "name": { "type": "object", "additionalProperties": { "type": "string" } },
+          "order": { "type": "integer", "minimum": 0 },
+          "capacity": { "type": "integer", "minimum": 1, "maximum": 99 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
+          "grantsFreeTraining": { "type": "boolean" },
+          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
+          "active": { "type": "boolean" }
+        }
+      },
+      "LevelOrder": {
+        "type": "object",
+        "required": ["levelIds"],
+        "properties": {
+          "levelIds": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "LevelUsage": {
+        "type": "object",
+        "required": ["activeDogs", "futureClassSessions", "templateClasses"],
+        "properties": {
+          "activeDogs": { "type": "integer" },
+          "futureClassSessions": { "type": "integer" },
+          "templateClasses": { "type": "integer" }
+        }
+      },
+      "CatalogItemsLevel": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Level" } },
+          "totalItems": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "Ring": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "shortName",
+          "color",
+          "allowsFreeTraining",
+          "effectiveTrainingCapacity",
+          "order",
+          "active",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "shortName": { "type": "string" },
+          "color": { "type": "string" },
+          "allowsFreeTraining": { "type": "boolean" },
+          "trainingCapacity": { "type": "integer" },
+          "effectiveTrainingCapacity": { "type": "integer" },
+          "order": { "type": "integer" },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "usage": { "$ref": "#/components/schemas/RingUsage" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "RingCreate": {
+        "type": "object",
+        "required": ["name", "shortName"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 40 },
+          "shortName": { "type": "string", "minLength": 2, "maxLength": 4 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
+          "allowsFreeTraining": { "type": "boolean" },
+          "trainingCapacity": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "order": { "type": "integer", "minimum": 0 },
+          "active": { "type": "boolean" }
+        }
+      },
+      "RingPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "name": { "type": "string", "maxLength": 40 },
+          "shortName": { "type": "string", "minLength": 2, "maxLength": 4 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
+          "allowsFreeTraining": { "type": "boolean" },
+          "trainingCapacity": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "order": { "type": "integer", "minimum": 0 },
+          "active": { "type": "boolean" }
+        }
+      },
+      "RingOrder": {
+        "type": "object",
+        "required": ["ringIds"],
+        "properties": {
+          "ringIds": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "RingUsage": {
+        "type": "object",
+        "required": [
+          "futureClassSessions",
+          "futureTrainingBookings",
+          "ringBlocks",
+          "templateClasses"
+        ],
+        "properties": {
+          "futureClassSessions": { "type": "integer" },
+          "futureTrainingBookings": { "type": "integer" },
+          "ringBlocks": { "type": "integer" },
+          "templateClasses": { "type": "integer" }
+        }
+      },
+      "CatalogItemsRing": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Ring" } },
+          "totalItems": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "Instructor": {
+        "type": "object",
+        "required": ["id", "memberId", "shortName", "color", "active", "version"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "memberId": { "type": "string", "format": "uuid" },
+          "shortName": { "type": "string" },
+          "color": { "type": "string" },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "usage": { "$ref": "#/components/schemas/InstructorUsage" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "InstructorCreate": {
+        "type": "object",
+        "required": ["memberId", "shortName", "color"],
+        "properties": {
+          "memberId": { "type": "string", "minLength": 1 },
+          "shortName": { "type": "string", "maxLength": 12 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" }
+        }
+      },
+      "InstructorPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "shortName": { "type": "string", "maxLength": 12 },
+          "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "InstructorUsage": {
+        "type": "object",
+        "required": ["futureClassSessions", "templateClasses"],
+        "properties": {
+          "futureClassSessions": { "type": "integer" },
+          "templateClasses": { "type": "integer" }
+        }
+      },
+      "CatalogItemsInstructor": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Instructor" } },
+          "totalItems": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "Administrator": {
+        "type": "object",
+        "required": [
+          "membershipId",
+          "memberId",
+          "shortName",
+          "since",
+          "active",
+          "version"
+        ],
+        "properties": {
+          "membershipId": { "type": "string", "format": "uuid" },
+          "memberId": { "type": "string", "format": "uuid" },
+          "shortName": { "type": "string" },
+          "since": { "type": "string", "format": "date" },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "AdministratorCreate": {
+        "type": "object",
+        "required": ["memberId", "shortName", "since"],
+        "properties": {
+          "memberId": { "type": "string", "minLength": 1 },
+          "shortName": { "type": "string", "maxLength": 12 },
+          "since": { "type": "string", "format": "date" }
+        }
+      },
+      "AdministratorPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "shortName": { "type": "string", "maxLength": 12 },
+          "since": { "type": "string", "format": "date" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "CatalogItemsAdministrator": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Administrator" }
+          },
+          "totalItems": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "Money": {
+        "type": "object",
+        "required": ["amountMinor", "currency"],
+        "properties": {
+          "amountMinor": { "type": "integer", "format": "int64" },
+          "currency": { "type": "string" }
+        }
+      },
+      "EntryFee": {
+        "type": "object",
+        "required": ["mode"],
+        "properties": {
+          "mode": { "type": "string", "enum": ["STANDARD", "AMOUNT", "PERCENT", "NONE"] },
+          "amount": { "$ref": "#/components/schemas/Money" },
+          "percent": { "type": "integer" }
+        }
+      },
+      "PackSettings": {
+        "type": "object",
+        "required": ["sessions", "validityMonths"],
+        "properties": {
+          "sessions": { "type": "integer" },
+          "validityMonths": { "type": "integer" }
+        }
+      },
+      "SingleClassSettings": {
+        "type": "object",
+        "required": ["chargeMode", "cancelPolicy"],
+        "properties": {
+          "chargeMode": {
+            "type": "string",
+            "enum": ["CHARGE_ON_ATTENDANCE", "PAY_TO_BOOK"]
+          },
+          "cancelPolicy": { "type": "string", "enum": ["REFUND", "CREDIT", "NONE"] }
+        }
+      },
+      "PlanTexts": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "descriptionI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "offerLabel": { "type": "string" },
+          "offerLabelI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "priceLabel": { "type": "string" },
+          "priceLabelI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      },
+      "PlanTextsInput": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "object", "additionalProperties": { "type": "string" } },
+          "offerLabel": { "type": "object", "additionalProperties": { "type": "string" } },
+          "priceLabel": { "type": "object", "additionalProperties": { "type": "string" } }
+        }
+      },
+      "Price": {
+        "type": "object",
+        "required": [
+          "id",
+          "planId",
+          "concept",
+          "amount",
+          "taxPercent",
+          "validFrom",
+          "locked",
+          "status",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "planId": { "type": "string", "format": "uuid" },
+          "concept": {
+            "type": "string",
+            "enum": ["MONTHLY_FEE", "MAINTENANCE_FEE", "PACK", "SINGLE_CLASS"]
+          },
+          "amount": { "$ref": "#/components/schemas/Money" },
+          "taxPercent": { "type": "number" },
+          "validFrom": { "type": "string", "format": "date" },
+          "validTo": { "type": "string", "format": "date" },
+          "locked": { "type": "boolean" },
+          "status": { "type": "string", "enum": ["SCHEDULED", "CURRENT", "EXPIRED"] },
+          "version": { "type": "integer", "format": "int64" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "PriceCreate": {
+        "type": "object",
+        "required": ["planId", "concept", "amount", "taxPercent", "validFrom"],
+        "properties": {
+          "planId": { "type": "string", "minLength": 1 },
+          "concept": {
+            "type": "string",
+            "enum": ["MONTHLY_FEE", "MAINTENANCE_FEE", "PACK", "SINGLE_CLASS"]
+          },
+          "amount": { "$ref": "#/components/schemas/Money" },
+          "taxPercent": { "type": "number", "minimum": 0, "maximum": 100 },
+          "validFrom": { "type": "string", "format": "date" },
+          "validTo": { "type": "string", "format": "date" }
+        }
+      },
+      "PriceCreated": {
+        "type": "object",
+        "required": ["price"],
+        "properties": {
+          "price": { "$ref": "#/components/schemas/Price" },
+          "closedPriceId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "Plan": {
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "name",
+          "type",
+          "dogsIncluded",
+          "entryFee",
+          "order",
+          "showOnSignup",
+          "showOnWeb",
+          "active",
+          "version"
+        ],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "nameI18n": { "type": "object", "additionalProperties": { "type": "string" } },
+          "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "dogsIncluded": { "type": "integer" },
+          "entryFee": { "$ref": "#/components/schemas/EntryFee" },
+          "pack": { "$ref": "#/components/schemas/PackSettings" },
+          "singleClass": { "$ref": "#/components/schemas/SingleClassSettings" },
+          "conditions": { "type": "string" },
+          "conditionsI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "texts": { "$ref": "#/components/schemas/PlanTexts" },
+          "prices": { "type": "array", "items": { "$ref": "#/components/schemas/Price" } },
+          "currentPrices": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Price" }
+          },
+          "order": { "type": "integer" },
+          "showOnSignup": { "type": "boolean" },
+          "showOnWeb": { "type": "boolean" },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "PlanCreate": {
+        "type": "object",
+        "required": ["code", "name", "type"],
+        "properties": {
+          "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 16 },
+          "name": { "type": "object", "additionalProperties": { "type": "string" } },
+          "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "dogsIncluded": { "type": "integer", "minimum": 1, "maximum": 9 },
+          "entryFee": { "$ref": "#/components/schemas/EntryFee" },
+          "pack": { "$ref": "#/components/schemas/PackSettings" },
+          "singleClass": { "$ref": "#/components/schemas/SingleClassSettings" },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "texts": { "$ref": "#/components/schemas/PlanTextsInput" },
+          "order": { "type": "integer", "minimum": 0 },
+          "showOnSignup": { "type": "boolean" },
+          "showOnWeb": { "type": "boolean" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "PlanPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 16 },
+          "name": { "type": "object", "additionalProperties": { "type": "string" } },
+          "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "dogsIncluded": { "type": "integer", "minimum": 1, "maximum": 9 },
+          "entryFee": { "$ref": "#/components/schemas/EntryFee" },
+          "pack": { "$ref": "#/components/schemas/PackSettings" },
+          "singleClass": { "$ref": "#/components/schemas/SingleClassSettings" },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "texts": { "$ref": "#/components/schemas/PlanTextsInput" },
+          "order": { "type": "integer", "minimum": 0 },
+          "showOnSignup": { "type": "boolean" },
+          "showOnWeb": { "type": "boolean" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "CatalogItemsPlan": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/Plan" } },
+          "totalItems": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "FaqEntry": {
+        "type": "object",
+        "required": ["id", "category", "question", "answer", "order", "active", "version"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "category": { "type": "string" },
+          "categoryI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "question": { "type": "string" },
+          "questionI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "answer": { "type": "string" },
+          "answerI18n": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "order": { "type": "integer" },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "format": "int64" },
+          "lastChange": { "$ref": "#/components/schemas/LastChange" }
+        }
+      },
+      "FaqCreate": {
+        "type": "object",
+        "required": ["category", "question", "answer"],
+        "properties": {
+          "category": { "type": "object", "additionalProperties": { "type": "string" } },
+          "question": { "type": "object", "additionalProperties": { "type": "string" } },
+          "answer": { "type": "object", "additionalProperties": { "type": "string" } },
+          "order": { "type": "integer", "minimum": 0 },
+          "active": { "type": "boolean" }
+        }
+      },
+      "FaqPatch": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "format": "int64" },
+          "category": { "type": "object", "additionalProperties": { "type": "string" } },
+          "question": { "type": "object", "additionalProperties": { "type": "string" } },
+          "answer": { "type": "object", "additionalProperties": { "type": "string" } },
+          "order": { "type": "integer", "minimum": 0 },
+          "active": { "type": "boolean" }
+        }
+      },
+      "FaqOrder": {
+        "type": "object",
+        "required": ["faqEntryIds"],
+        "properties": {
+          "faqEntryIds": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "CatalogItemsFaqEntry": {
+        "type": "object",
+        "required": ["items", "totalItems"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/FaqEntry" } },
+          "totalItems": { "type": "integer", "minimum": 0 }
         }
       },
       "FreeTraining": {

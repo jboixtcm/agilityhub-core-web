@@ -3,7 +3,6 @@ import { delay, http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import {
-  censusLevels,
   censusRecordState,
   censusDogs,
   censusMembers,
@@ -14,6 +13,16 @@ import {
   type MemberListItem,
   type SavedView,
 } from "./fixtures/census";
+import {
+  catalogState,
+  type Administrator,
+  type FaqEntry,
+  type Instructor,
+  type Level,
+  type Plan,
+  type Price,
+  type Ring,
+} from "./fixtures/catalogs";
 import {
   meDogsFixture,
   meProfileFixture,
@@ -47,6 +56,22 @@ type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
 type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
 type Parameter = components["schemas"]["Parameter"];
+type AdministratorCreate = components["schemas"]["AdministratorCreate"];
+type AdministratorPatch = components["schemas"]["AdministratorPatch"];
+type FaqCreate = components["schemas"]["FaqCreate"];
+type FaqOrder = components["schemas"]["FaqOrder"];
+type FaqPatch = components["schemas"]["FaqPatch"];
+type InstructorCreate = components["schemas"]["InstructorCreate"];
+type InstructorPatch = components["schemas"]["InstructorPatch"];
+type LevelCreate = components["schemas"]["LevelCreate"];
+type LevelOrder = components["schemas"]["LevelOrder"];
+type LevelPatch = components["schemas"]["LevelPatch"];
+type PlanCreate = components["schemas"]["PlanCreate"];
+type PlanPatch = components["schemas"]["PlanPatch"];
+type PriceCreate = components["schemas"]["PriceCreate"];
+type RingCreate = components["schemas"]["RingCreate"];
+type RingOrder = components["schemas"]["RingOrder"];
+type RingPatch = components["schemas"]["RingPatch"];
 
 const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   ...view,
@@ -480,6 +505,43 @@ function mockTokens() {
   };
 }
 
+function orderedCatalog<Item extends { active: boolean; order: number }>(items: readonly Item[]) {
+  return [...items].sort(
+    (left, right) => Number(right.active) - Number(left.active) || left.order - right.order,
+  );
+}
+
+function catalogResponse<Item>(items: readonly Item[]) {
+  return { items, totalItems: items.length };
+}
+
+function localizedDefault(values: Record<string, string> | undefined, fallback: string): string {
+  return values?.ca ?? Object.values(values ?? {})[0] ?? fallback;
+}
+
+function replaceCatalogItem<Item extends { id: string }>(items: Item[], item: Item): Item {
+  const index = items.findIndex((candidate) => candidate.id === item.id);
+  if (index >= 0) {
+    items[index] = item;
+  }
+  return item;
+}
+
+function orderedIds<Item extends { id: string; order: number }>(
+  items: Item[],
+  ids: readonly string[],
+): Item[] | undefined {
+  if (ids.length !== items.length || new Set(ids).size !== items.length) {
+    return undefined;
+  }
+  const existing = new Set(items.map((item) => item.id));
+  if (ids.some((id) => !existing.has(id))) {
+    return undefined;
+  }
+  const byId = new Map(items.map((item) => [item.id, item]));
+  return ids.map((id, index) => ({ ...byId.get(id)!, order: index * 10 }));
+}
+
 export const handlers = [
   http.get("*/api/v1/branding", () =>
     HttpResponse.json(currentMockScenario().branding, {
@@ -633,6 +695,16 @@ export const handlers = [
           label: "Nivells",
           type: "BOOLEAN",
           value: true,
+          version: 1,
+        });
+      }
+      if (key === "billing.entryFeePerDog") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          key,
+          label: "Entrada per gos",
+          type: "MONEY",
+          value: { amountMinor: 10000, currency: "EUR" },
           version: 1,
         });
       }
@@ -1186,9 +1258,432 @@ export const handlers = [
     );
   }),
   http.put("https://uploads.example.test/:fileKey", () => new HttpResponse(null, { status: 200 })),
-  http.get("*/api/v1/levels", () =>
-    HttpResponse.json({ items: censusLevels, totalItems: censusLevels.length }),
-  ),
+  http.get("*/api/v1/rings", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const rings = orderedCatalog(
+      includeInactive ? catalogState.rings : catalogState.rings.filter((ring) => ring.active),
+    );
+    return HttpResponse.json(catalogResponse(rings));
+  }),
+  http.post("*/api/v1/rings", async ({ request }) => {
+    const body = (await request.json()) as RingCreate;
+    const duplicate = catalogState.rings.some(
+      (ring) => ring.shortName.toLocaleUpperCase() === body.shortName.toLocaleUpperCase(),
+    );
+    if (duplicate) {
+      return apiError("DUPLICATE_NAME", "Duplicate ring short name", 409);
+    }
+    const item: Ring = {
+      active: body.active ?? true,
+      allowsFreeTraining: body.allowsFreeTraining ?? false,
+      color: body.color ?? catalogState.rings[0]?.color ?? "currentColor",
+      effectiveTrainingCapacity: body.trainingCapacity ?? 1,
+      id: `ring-${Date.now()}`,
+      name: body.name,
+      order: body.order ?? catalogState.rings.length * 10,
+      shortName: body.shortName,
+      ...(body.trainingCapacity === undefined ? {} : { trainingCapacity: body.trainingCapacity }),
+      version: 1,
+    };
+    catalogState.rings.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.put("*/api/v1/rings/order", async ({ request }) => {
+    const body = (await request.json()) as RingOrder;
+    const ordered = orderedIds(catalogState.rings, body.ringIds);
+    if (ordered === undefined) {
+      return apiError("ORDER_INCOMPLETE", "Ring order is incomplete", 422);
+    }
+    catalogState.rings = ordered;
+    return HttpResponse.json(catalogResponse(orderedCatalog(catalogState.rings)));
+  }),
+  http.patch("*/api/v1/rings/:id", async ({ params, request }) => {
+    const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));
+    if (ring === undefined) {
+      return apiError("NOT_FOUND", "Ring not found", 404);
+    }
+    const body = (await request.json()) as RingPatch;
+    if (body.version !== ring.version) {
+      return apiError("STALE_VERSION", "Stale ring version", 409);
+    }
+    if (
+      (body.active === false && (ring.usage?.futureClassSessions ?? 0) > 0) ||
+      (body.allowsFreeTraining === false && (ring.usage?.futureTrainingBookings ?? 0) > 0)
+    ) {
+      return apiError("RING_IN_USE", "Ring in use", 409);
+    }
+    const updated: Ring = {
+      ...ring,
+      ...body,
+      effectiveTrainingCapacity:
+        body.trainingCapacity ?? ring.trainingCapacity ?? ring.effectiveTrainingCapacity,
+      version: ring.version + 1,
+    };
+    return HttpResponse.json(replaceCatalogItem(catalogState.rings, updated));
+  }),
+  http.delete("*/api/v1/rings/:id", ({ params }) => {
+    const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));
+    if (ring === undefined) {
+      return apiError("NOT_FOUND", "Ring not found", 404);
+    }
+    if (
+      (ring.usage?.futureClassSessions ?? 0) > 0 ||
+      (ring.usage?.futureTrainingBookings ?? 0) > 0
+    ) {
+      return apiError("RING_IN_USE", "Ring in use", 409);
+    }
+    catalogState.rings = catalogState.rings.filter((candidate) => candidate.id !== ring.id);
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("*/api/v1/levels", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const levels = orderedCatalog(
+      includeInactive ? catalogState.levels : catalogState.levels.filter((level) => level.active),
+    );
+    return HttpResponse.json(catalogResponse(levels));
+  }),
+  http.post("*/api/v1/levels", async ({ request }) => {
+    const body = (await request.json()) as LevelCreate;
+    const item: Level = {
+      active: body.active ?? true,
+      ...(body.agilityhubLevel === undefined ? {} : { agilityhubLevel: body.agilityhubLevel }),
+      capacity: body.capacity ?? 1,
+      code: body.code,
+      color: body.color ?? catalogState.levels[0]?.color ?? "currentColor",
+      grantsFreeTraining: body.grantsFreeTraining ?? false,
+      id: `level-${Date.now()}`,
+      name: localizedDefault(body.name, body.code),
+      nameI18n: body.name,
+      order: body.order ?? catalogState.levels.length * 10,
+      version: 1,
+    };
+    catalogState.levels.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.put("*/api/v1/levels/order", async ({ request }) => {
+    const body = (await request.json()) as LevelOrder;
+    const ordered = orderedIds(catalogState.levels, body.levelIds);
+    if (ordered === undefined) {
+      return apiError("ORDER_INCOMPLETE", "Level order is incomplete", 422);
+    }
+    catalogState.levels = ordered;
+    return HttpResponse.json(catalogResponse(orderedCatalog(catalogState.levels)));
+  }),
+  http.patch("*/api/v1/levels/:id", async ({ params, request }) => {
+    const level = catalogState.levels.find((candidate) => candidate.id === String(params.id));
+    if (level === undefined) {
+      return apiError("NOT_FOUND", "Level not found", 404);
+    }
+    const body = (await request.json()) as LevelPatch;
+    if (body.version !== level.version) {
+      return apiError("STALE_VERSION", "Stale level version", 409);
+    }
+    const updated: Level = {
+      ...level,
+      ...body,
+      name: localizedDefault(body.name, level.name),
+      ...(body.name === undefined ? {} : { nameI18n: body.name }),
+      version: level.version + 1,
+    };
+    return HttpResponse.json(replaceCatalogItem(catalogState.levels, updated));
+  }),
+  http.delete("*/api/v1/levels/:id", ({ params }) => {
+    const level = catalogState.levels.find((candidate) => candidate.id === String(params.id));
+    if (level === undefined) {
+      return apiError("NOT_FOUND", "Level not found", 404);
+    }
+    if ((level.usage?.activeDogs ?? 0) > 0) {
+      return apiError("LEVEL_IN_USE", "Level in use", 409);
+    }
+    catalogState.levels = catalogState.levels.filter((candidate) => candidate.id !== level.id);
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("*/api/v1/instructors", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const items = includeInactive
+      ? catalogState.instructors
+      : catalogState.instructors.filter((instructor) => instructor.active);
+    return HttpResponse.json(catalogResponse(items));
+  }),
+  http.post("*/api/v1/instructors", async ({ request }) => {
+    const body = (await request.json()) as InstructorCreate;
+    const existing = catalogState.instructors.find(
+      (instructor) => instructor.memberId === body.memberId,
+    );
+    if (existing !== undefined) {
+      existing.active = true;
+      existing.shortName = body.shortName;
+      existing.color = body.color;
+      existing.version += 1;
+      return HttpResponse.json(existing);
+    }
+    const item: Instructor = {
+      active: true,
+      color: body.color,
+      id: `instructor-${Date.now()}`,
+      memberId: body.memberId,
+      shortName: body.shortName,
+      version: 1,
+    };
+    catalogState.instructors.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.patch("*/api/v1/instructors/:id", async ({ params, request }) => {
+    const instructor = catalogState.instructors.find(
+      (candidate) => candidate.id === String(params.id),
+    );
+    if (instructor === undefined) {
+      return apiError("NOT_FOUND", "Instructor not found", 404);
+    }
+    const body = (await request.json()) as InstructorPatch;
+    if (body.version !== instructor.version) {
+      return apiError("STALE_VERSION", "Stale instructor version", 409);
+    }
+    if (body.active === false && (instructor.usage?.futureClassSessions ?? 0) > 0) {
+      return apiError("INSTRUCTOR_IN_USE", "Instructor in use", 409);
+    }
+    const updated = { ...instructor, ...body, version: instructor.version + 1 };
+    return HttpResponse.json(replaceCatalogItem(catalogState.instructors, updated));
+  }),
+  http.delete("*/api/v1/instructors/:id", ({ params }) => {
+    const instructor = catalogState.instructors.find(
+      (candidate) => candidate.id === String(params.id),
+    );
+    if (instructor === undefined) {
+      return apiError("NOT_FOUND", "Instructor not found", 404);
+    }
+    if ((instructor.usage?.futureClassSessions ?? 0) > 0) {
+      return apiError("INSTRUCTOR_IN_USE", "Instructor in use", 409);
+    }
+    catalogState.instructors = catalogState.instructors.filter(
+      (candidate) => candidate.id !== instructor.id,
+    );
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("*/api/v1/administrators", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const items = includeInactive
+      ? catalogState.administrators
+      : catalogState.administrators.filter((administrator) => administrator.active);
+    return HttpResponse.json(catalogResponse(items));
+  }),
+  http.post("*/api/v1/administrators", async ({ request }) => {
+    const body = (await request.json()) as AdministratorCreate;
+    const existing = catalogState.administrators.find(
+      (administrator) => administrator.memberId === body.memberId,
+    );
+    if (existing !== undefined) {
+      existing.active = true;
+      existing.shortName = body.shortName;
+      existing.since = body.since;
+      existing.version += 1;
+      return HttpResponse.json(existing);
+    }
+    const item: Administrator = {
+      active: true,
+      memberId: body.memberId,
+      membershipId: `membership-${Date.now()}`,
+      shortName: body.shortName,
+      since: body.since,
+      version: 1,
+    };
+    catalogState.administrators.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.patch("*/api/v1/administrators/:membershipId", async ({ params, request }) => {
+    const administrator = catalogState.administrators.find(
+      (candidate) => candidate.membershipId === String(params.membershipId),
+    );
+    if (administrator === undefined) {
+      return apiError("NOT_FOUND", "Administrator not found", 404);
+    }
+    const body = (await request.json()) as AdministratorPatch;
+    if (body.version !== administrator.version) {
+      return apiError("STALE_VERSION", "Stale administrator version", 409);
+    }
+    const activeCount = catalogState.administrators.filter((candidate) => candidate.active).length;
+    if (body.active === false && administrator.active && activeCount <= 1) {
+      return apiError("LAST_ADMIN", "Last administrator", 409);
+    }
+    const updated = { ...administrator, ...body, version: administrator.version + 1 };
+    const index = catalogState.administrators.findIndex(
+      (candidate) => candidate.membershipId === administrator.membershipId,
+    );
+    catalogState.administrators[index] = updated;
+    return HttpResponse.json(updated);
+  }),
+  http.delete("*/api/v1/administrators/:membershipId", ({ params }) => {
+    const administrator = catalogState.administrators.find(
+      (candidate) => candidate.membershipId === String(params.membershipId),
+    );
+    if (administrator === undefined) {
+      return apiError("NOT_FOUND", "Administrator not found", 404);
+    }
+    const activeCount = catalogState.administrators.filter((candidate) => candidate.active).length;
+    if (administrator.active && activeCount <= 1) {
+      return apiError("LAST_ADMIN", "Last administrator", 409);
+    }
+    catalogState.administrators = catalogState.administrators.filter(
+      (candidate) => candidate.membershipId !== administrator.membershipId,
+    );
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("*/api/v1/plans", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const plans = orderedCatalog(
+      includeInactive ? catalogState.plans : catalogState.plans.filter((plan) => plan.active),
+    );
+    return HttpResponse.json(catalogResponse(plans));
+  }),
+  http.post("*/api/v1/plans", async ({ request }) => {
+    const body = (await request.json()) as PlanCreate;
+    const item: Plan = {
+      active: body.active ?? true,
+      code: body.code,
+      conditions: localizedDefault(body.conditions, ""),
+      ...(body.conditions === undefined ? {} : { conditionsI18n: body.conditions }),
+      dogsIncluded: body.dogsIncluded ?? 1,
+      entryFee: body.entryFee ?? { mode: "STANDARD" },
+      id: `plan-${Date.now()}`,
+      name: localizedDefault(body.name, body.code),
+      nameI18n: body.name,
+      order: body.order ?? catalogState.plans.length * 10,
+      prices: [],
+      showOnSignup: body.showOnSignup ?? false,
+      showOnWeb: body.showOnWeb ?? false,
+      ...(body.pack === undefined ? {} : { pack: body.pack }),
+      ...(body.singleClass === undefined ? {} : { singleClass: body.singleClass }),
+      type: body.type,
+      version: 1,
+    };
+    catalogState.plans.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.patch("*/api/v1/plans/:id", async ({ params, request }) => {
+    const plan = catalogState.plans.find((candidate) => candidate.id === String(params.id));
+    if (plan === undefined) {
+      return apiError("NOT_FOUND", "Plan not found", 404);
+    }
+    const body = (await request.json()) as PlanPatch;
+    if (body.version !== plan.version) {
+      return apiError("STALE_VERSION", "Stale plan version", 409);
+    }
+    const updated: Plan = {
+      ...plan,
+      ...body,
+      conditions: localizedDefault(body.conditions, plan.conditions ?? ""),
+      ...(body.conditions === undefined ? {} : { conditionsI18n: body.conditions }),
+      name: localizedDefault(body.name, plan.name),
+      ...(body.name === undefined ? {} : { nameI18n: body.name }),
+      texts:
+        body.texts === undefined
+          ? plan.texts
+          : {
+              description: localizedDefault(body.texts.description, plan.texts?.description ?? ""),
+              descriptionI18n: body.texts.description,
+              offerLabel: localizedDefault(body.texts.offerLabel, plan.texts?.offerLabel ?? ""),
+              offerLabelI18n: body.texts.offerLabel,
+              priceLabel: localizedDefault(body.texts.priceLabel, plan.texts?.priceLabel ?? ""),
+              priceLabelI18n: body.texts.priceLabel,
+            },
+      version: plan.version + 1,
+    };
+    return HttpResponse.json(replaceCatalogItem(catalogState.plans, updated));
+  }),
+  http.post("*/api/v1/prices", async ({ request }) => {
+    const body = (await request.json()) as PriceCreate;
+    const now = new Date();
+    const monthStart = `${String(now.getUTCFullYear())}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
+    if (body.validFrom < monthStart) {
+      return apiError("PRICE_LOCKED", "Price date is locked", 409);
+    }
+    const plan = catalogState.plans.find((candidate) => candidate.id === body.planId);
+    if (plan === undefined) {
+      return apiError("NOT_FOUND", "Plan not found", 404);
+    }
+    const price: Price = {
+      ...body,
+      id: `price-${Date.now()}`,
+      locked: false,
+      status: body.validFrom > monthStart ? "SCHEDULED" : "CURRENT",
+      version: 1,
+    };
+    plan.prices = [...(plan.prices ?? []), price];
+    plan.currentPrices = price.status === "CURRENT" ? [price] : plan.currentPrices;
+    return HttpResponse.json({ price }, { status: 201 });
+  }),
+  http.get("*/api/v1/faq-entries", ({ request }) => {
+    const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "true";
+    const entries = orderedCatalog(
+      includeInactive
+        ? catalogState.faqEntries
+        : catalogState.faqEntries.filter((entry) => entry.active),
+    );
+    return HttpResponse.json(catalogResponse(entries));
+  }),
+  http.get("*/api/v1/faq-entries/filter-values", ({ request }) => {
+    const field = new URL(request.url).searchParams.get("field");
+    if (field !== "category") {
+      return apiError("INVALID_FILTER", "Invalid FAQ filter", 400);
+    }
+    return HttpResponse.json([...new Set(catalogState.faqEntries.map((entry) => entry.category))]);
+  }),
+  http.post("*/api/v1/faq-entries", async ({ request }) => {
+    const body = (await request.json()) as FaqCreate;
+    const item: FaqEntry = {
+      active: body.active ?? true,
+      answer: localizedDefault(body.answer, ""),
+      answerI18n: body.answer,
+      category: localizedDefault(body.category, ""),
+      categoryI18n: body.category,
+      id: `faq-${Date.now()}`,
+      order: body.order ?? catalogState.faqEntries.length * 10,
+      question: localizedDefault(body.question, ""),
+      questionI18n: body.question,
+      version: 1,
+    };
+    catalogState.faqEntries.push(item);
+    return HttpResponse.json(item, { status: 201 });
+  }),
+  http.put("*/api/v1/faq-entries/order", async ({ request }) => {
+    const body = (await request.json()) as FaqOrder;
+    const ordered = orderedIds(catalogState.faqEntries, body.faqEntryIds);
+    if (ordered === undefined) {
+      return apiError("ORDER_INCOMPLETE", "FAQ order is incomplete", 422);
+    }
+    catalogState.faqEntries = ordered;
+    return HttpResponse.json(catalogResponse(orderedCatalog(catalogState.faqEntries)));
+  }),
+  http.patch("*/api/v1/faq-entries/:id", async ({ params, request }) => {
+    const entry = catalogState.faqEntries.find((candidate) => candidate.id === String(params.id));
+    if (entry === undefined) {
+      return apiError("NOT_FOUND", "FAQ entry not found", 404);
+    }
+    const body = (await request.json()) as FaqPatch;
+    if (body.version !== entry.version) {
+      return apiError("STALE_VERSION", "Stale FAQ version", 409);
+    }
+    const updated: FaqEntry = {
+      ...entry,
+      ...body,
+      answer: localizedDefault(body.answer, entry.answer),
+      ...(body.answer === undefined ? {} : { answerI18n: body.answer }),
+      category: localizedDefault(body.category, entry.category),
+      ...(body.category === undefined ? {} : { categoryI18n: body.category }),
+      question: localizedDefault(body.question, entry.question),
+      ...(body.question === undefined ? {} : { questionI18n: body.question }),
+      version: entry.version + 1,
+    };
+    return HttpResponse.json(replaceCatalogItem(catalogState.faqEntries, updated));
+  }),
+  http.delete("*/api/v1/faq-entries/:id", ({ params }) => {
+    const id = String(params.id);
+    if (!catalogState.faqEntries.some((entry) => entry.id === id)) {
+      return apiError("NOT_FOUND", "FAQ entry not found", 404);
+    }
+    catalogState.faqEntries = catalogState.faqEntries.filter((entry) => entry.id !== id);
+    return new HttpResponse(null, { status: 204 });
+  }),
   http.get("*/api/v1/saved-views", ({ request }) => {
     const listKey = new URL(request.url).searchParams.get("listKey");
     return HttpResponse.json(savedViews.filter((view) => view.listKey === listKey));
