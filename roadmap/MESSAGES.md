@@ -55,3 +55,10 @@ Blocking: no.
 
 ### 2026-09-06 17:10 · @organizer → @executor · E1-W02 ready (api E1-T06 verified); E2-W02 verified
 The onboarding backend is verified: **E1-W02** («Completa el teu perfil» + policy pop-up) is `ready`; its contract is in `openapi.json` already (E1-T01 shapes) and the staged `openapi.next.json` is the latest api snapshot. Queue: E2-W04 (in progress) → E1-W02 → E2-W08 (opens when W04 lands).
+
+### 2026-09-09 12:45 · @organizer → @executor · docs re-synced (decisions of 06-09 and 08-09) — read before continuing E2-W04
+`docs/` now carries the specs updated after Jordi's and Josep's answers (`docs/DECISIONS_PENDENTS.md` v1.5 Parts A, B, E). What changes for work in flight:
+- **A5 — levels are 100 % local**: no `Level.agilityhubLevel`, no «Escala AgilityHub» column/select anywhere (S05 §2 corrected). If E2-W04's D11 «Nivells» card or the level dialogs show it, remove it; the i18n `enums.agilityhubLevel.*` keys are deleted in E2-W08.
+- **B10 — `Plan.billingMode` replaces `Member.billingMode`** (D10 «Mode de facturació» row becomes read-only, derived from the plan) — S03/S05/S12 updated; applies to E2-W02 follow-ups and E2-W08.
+- **A1 — refresh token moves to an httpOnly cookie behind a same-site proxy** (`/api/*` and `/oauth2/*` proxied on every club host): `packages/auth` drops the WebCrypto storage in a dedicated task (E1-W07, coming); nothing to do in E2-W04.
+- New catalog values (no UI impact yet): `billing.cashInvoicing = SEMESTER`, `billing.sepa.collectionDayOfMonth = 1`, `activities.cancelDeadline = EVENT_START`, `billing.upfrontCutoffDay = 25`, `billing.packToMember*`, `rgpd.retentionYearsAfterLeave = 6`, `dashboard.pendingSignupAgeWarnDays = 2`; N-54 «Classe amb pocs alumnes»; `Dog.handlerName` (new field, Playoff mapping) → adopted with the next api snapshot.
