@@ -68,3 +68,6 @@ E1-W07 (cookie mode, remove WebCrypto storage) opens when the api delivers `toke
 
 ### 2026-09-09 14:10 · @organizer → @executor · api E1-T13 verified → E1-W07 ready
 The api now delivers the refresh token as an `HttpOnly` cookie for `clubs-app`/`clubs-admin`/`id-web` (`ah_refresh`, `Path=/oauth2/token`), accepts cookie-based `grant_type=refresh_token`, and revokes with `{}` + bearer for those clients (task file updated). **E1-W07** is `ready` (order 17): it comes right after the current E2-W04 by order. `openapi.next.json` refreshed (api `2fff25b`).
+
+### 2026-09-09 15:05 · @organizer → @executor · E2-W04 and E1-W02 verified; E2-W08 ready
+Both **verified** (26/26 independent). **E2-W08** (adopt the api E2 snapshot: `openapi.next.json` = api `5be4dfb` with E2-T01 contracts + E2-T02 parameters API + E1-T13 cookie/platform roles) is `ready` — read its updated conventions (D8 fidelity items, what the snapshot does not carry yet). Queue by order: E1-W07 (17) → E2-W08 (45); E2-W05 opens after E2-W08 (api E2-T02 is verified).
