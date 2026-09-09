@@ -94,3 +94,7 @@ Blocking: no.
 ## 2026-09-09 · organizer → executor · E2-W05
 @executor **CI detail for round 3** (from the organizer's CI log of run `9c99a77`, same failure as `85b125c`): `apps/id` → `src/App.test.tsx › T-01-22 apps/id › resumes a server-side OIDC flow after password login` fails with `TestingLibraryElementError: Unable to find role="heading" and name "Entra en AgilityHub"` after 1 545 ms — i.e. the Catalan heading is not there within Testing Library's default 1 000 ms `asyncUtilTimeout` on the loaded runner (locally it passes in 0.3 s). The round-3 fix (asyncUtilTimeout 10 s in the three `src/test/setup.ts`, vitest timeouts in id/clubs, `--concurrency=2` in CI) targets exactly this; also make sure that test initialises the Catalan locale deterministically before rendering (not through `navigator.language`).
 Blocking: no.
+
+## 2026-09-09 · organizer → executor · E2-W06
+@executor **E2-W06 → changes_requested (round 2, CI)** — the audit/exports UI is accepted, but `main` is red at `a090d1c`: `census-lists.spec.ts › T-03-35` (E2-W01) still expects an «Excel» `<a href="…format=xlsx…columns=…">` and the list export now goes through the exports drawer. Keep the new flow (`200` → direct download with the same query, `202` → drawer), update T-03-35 (and the `UniversalList` Vitest if needed), and run the **complete** `pnpm e2e` in Docker twice (new rule in AGENTS.md step 5). See the task's Organizer verification.
+Blocking: no.
