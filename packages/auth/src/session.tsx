@@ -81,6 +81,7 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
         setSession(anonymousSession);
       }
     };
+    const stopSlidingRefresh = client.startSlidingRefresh();
 
     client.addEventListener("signedIn", signedIn);
     client.addEventListener("signedOut", signedOut);
@@ -103,6 +104,7 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
       mounted = false;
       client.removeEventListener("signedIn", signedIn);
       client.removeEventListener("signedOut", signedOut);
+      stopSlidingRefresh();
     };
   }, [client]);
 

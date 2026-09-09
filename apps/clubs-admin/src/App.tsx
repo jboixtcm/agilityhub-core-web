@@ -533,7 +533,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
   const client = useMemo(
     () =>
       createAuthenticatedApiClient(authClient, {
-        baseUrl: new URL("/api/v1", window.location.origin).href,
+        baseUrl: "/api/v1",
       }),
     [authClient],
   );

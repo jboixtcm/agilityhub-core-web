@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -9,7 +11,7 @@ import {
   type OnboardingState,
   type TokenResponse,
 } from "./auth-client";
-import { MemoryRefreshTokenStore } from "./crypto-store";
+import { MemoryRefreshTokenStore } from "./mock-refresh-token";
 import { createAuthenticatedApiClient } from "./refresh-interceptor";
 
 const API_BASE_URL = "https://club.example.test/api/v1";
@@ -41,11 +43,11 @@ const memberMe: Me = {
   features: ["FREE_TRAINING", "COURSES"],
 };
 
-function tokens(accessToken: string, refreshToken: string): TokenResponse {
+function tokens(accessToken: string, refreshToken?: string): TokenResponse {
   return {
     access_token: accessToken,
     expires_in: 900,
-    refresh_token: refreshToken,
+    ...(refreshToken === undefined ? {} : { refresh_token: refreshToken }),
     scope: "openid profile",
     token_type: "Bearer",
   };
@@ -59,6 +61,8 @@ beforeAll(() => {
 
 afterEach(() => {
   server.resetHandlers();
+  localStorage.clear();
+  sessionStorage.clear();
 });
 
 afterAll(() => {
@@ -83,7 +87,8 @@ describe("T-01-21 AuthClient session flow", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: refreshStore,
+      mockMode: true,
+      mockRefreshTokenStore: refreshStore,
     });
 
     await expect(client.login("biel.roca@example.test", "secret-password")).resolves.toEqual(
@@ -95,7 +100,9 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(loginForm?.get("password")).toBe("secret-password");
     expect(meAuthorization).toBe("Bearer access-login");
     expect(client.getAccessToken()).toBe("access-login");
-    await expect(refreshStore.get()).resolves.toBe("refresh-login");
+    expect(refreshStore.get()).toBe("refresh-login");
+    expect(localStorage).toHaveLength(0);
+    expect(sessionStorage).toHaveLength(0);
   });
 
   it("routes OAuth2 requests to identity and application auth requests to core", async () => {
@@ -126,7 +133,8 @@ describe("T-01-21 AuthClient session flow", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: refreshStore,
+      mockMode: true,
+      mockRefreshTokenStore: refreshStore,
     });
 
     await client.login("biel.roca@example.test", "secret-password");
@@ -154,7 +162,8 @@ describe("T-01-21 AuthClient session flow", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: new MemoryRefreshTokenStore(),
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
     });
 
     await expect(client.exchangeHandoff("handoff-code")).resolves.toEqual(memberMe);
@@ -164,7 +173,7 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(handoffForm?.has("code")).toBe(false);
   });
 
-  it("queues concurrent 401 responses behind one refresh and retries every request once", async () => {
+  it("T-01-04 refreshes via the cookie and coalesces concurrent 401 responses", async () => {
     const refreshStore = new MemoryRefreshTokenStore();
     let loginComplete = false;
     let protectedRequests = 0;
@@ -177,7 +186,8 @@ describe("T-01-21 AuthClient session flow", () => {
         }
         refreshRequests += 1;
         expect(form.get("grant_type")).toBe("refresh_token");
-        expect(form.get("refresh_token")).toBe("refresh-original");
+        expect(form.has("refresh_token")).toBe(false);
+        expect(request.credentials).toBe("include");
         await delay(20);
         return HttpResponse.json(tokens("access-rotated", "refresh-rotated"));
       }),
@@ -197,7 +207,8 @@ describe("T-01-21 AuthClient session flow", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: refreshStore,
+      mockMode: true,
+      mockRefreshTokenStore: refreshStore,
     });
     await client.login("biel.roca@example.test", "secret-password");
     loginComplete = true;
@@ -210,7 +221,30 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(refreshRequests).toBe(1);
     expect(protectedRequests).toBe(4);
     expect(client.getAccessToken()).toBe("access-rotated");
-    await expect(refreshStore.get()).resolves.toBe("refresh-rotated");
+    expect(refreshStore.get()).toBe("refresh-rotated");
+    expect(localStorage).toHaveLength(0);
+    expect(sessionStorage).toHaveLength(0);
+  });
+
+  it("preserves mutation bodies while adding cookie credentials and 401 retry support", async () => {
+    let receivedBody: unknown;
+    server.use(
+      http.put(`${API_BASE_URL}/me/profile`, async ({ request }) => {
+        receivedBody = await request.json();
+        return HttpResponse.json(tokens("access-profile"));
+      }),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+    const apiClient = createAuthenticatedApiClient(client, { baseUrl: API_BASE_URL });
+
+    await apiClient.PUT("/me/profile", {
+      body: { activeProfile: "MEMBER", remember: true },
+    });
+
+    expect(receivedBody).toEqual({ activeProfile: "MEMBER", remember: true });
   });
 
   it("emits signedOut and redirects to /entrar when refresh fails", async () => {
@@ -240,7 +274,8 @@ describe("T-01-21 AuthClient session flow", () => {
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
       navigate,
-      refreshTokenStore: refreshStore,
+      mockMode: true,
+      mockRefreshTokenStore: refreshStore,
     });
     await client.login("biel.roca@example.test", "secret-password");
     loginComplete = true;
@@ -257,25 +292,28 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(navigate).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith("/entrar");
     expect(client.getAccessToken()).toBeNull();
-    await expect(refreshStore.get()).resolves.toBeNull();
+    expect(refreshStore.get()).toBeNull();
   });
 
-  it("revokes the refresh token and clears the local session on logout", async () => {
+  it("revokes the cookie session with an empty body and bearer access token", async () => {
     const refreshStore = new MemoryRefreshTokenStore();
-    let revokedToken = "";
+    let revokeAuthorization = "";
+    let revokeBody: unknown;
     server.use(
       http.post(TOKEN_ENDPOINT, () => HttpResponse.json(tokens("access-login", "refresh-login"))),
       http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
       http.post(REVOKE_ENDPOINT, async ({ request }) => {
-        const body = (await request.json()) as { token: string };
-        revokedToken = body.token;
+        revokeAuthorization = request.headers.get("Authorization") ?? "";
+        revokeBody = await request.json();
+        expect(request.credentials).toBe("include");
         return new HttpResponse(null, { status: 200 });
       }),
     );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: refreshStore,
+      mockMode: true,
+      mockRefreshTokenStore: refreshStore,
     });
     await client.login("biel.roca@example.test", "secret-password");
     const signedOut = vi.fn();
@@ -283,10 +321,67 @@ describe("T-01-21 AuthClient session flow", () => {
 
     await client.logout();
 
-    expect(revokedToken).toBe("refresh-login");
+    expect(revokeBody).toEqual({});
+    expect(revokeAuthorization).toBe("Bearer access-login");
     expect(client.getAccessToken()).toBeNull();
-    await expect(refreshStore.get()).resolves.toBeNull();
+    expect(refreshStore.get()).toBeNull();
     expect(signedOut).toHaveBeenCalledOnce();
+  });
+
+  it("T-01-04 restores a session from the HttpOnly cookie without a body token", async () => {
+    let refreshForm: FormData | undefined;
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        refreshForm = await request.formData();
+        return HttpResponse.json(tokens("access-restored"));
+      }),
+      http.get(`${API_BASE_URL}/me`, ({ request }) => {
+        expect(request.credentials).toBe("include");
+        return HttpResponse.json(memberMe);
+      }),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+
+    await expect(client.restoreSession()).resolves.toEqual(memberMe);
+
+    expect(refreshForm?.get("grant_type")).toBe("refresh_token");
+    expect(refreshForm?.has("refresh_token")).toBe(false);
+    expect(client.getAccessToken()).toBe("access-restored");
+    expect(localStorage).toHaveLength(0);
+    expect(sessionStorage).toHaveLength(0);
+  });
+
+  it.each([400, 401])(
+    "T-01-04 treats a %i cookie refresh response as an anonymous session",
+    async (status) => {
+      server.use(
+        http.post(TOKEN_ENDPOINT, () =>
+          HttpResponse.json(
+            { code: "REFRESH_EXPIRED", message: "Refresh unavailable" },
+            { status },
+          ),
+        ),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+
+      await expect(client.restoreSession()).resolves.toBeNull();
+      expect(client.getAccessToken()).toBeNull();
+    },
+  );
+
+  it("rejects a mock refresh store unless the build-time mock flag is enabled", () => {
+    expect(
+      () =>
+        new AuthClient({
+          mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+        }),
+    ).toThrow("only available in mock mode");
   });
 });
 
@@ -322,7 +417,8 @@ describe("T-01-26 onboarding contract", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: new MemoryRefreshTokenStore(),
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
     });
     await client.login("biel.roca@example.test", "secret-password");
 

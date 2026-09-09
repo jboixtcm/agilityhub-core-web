@@ -7,36 +7,43 @@ shape, parameter, error code, event, or notification.
 ## Client ownership
 
 Create the client at the app boundary and pass or provide the same instance to feature
-hooks. Application API paths use the core base URL; OAuth2/OIDC paths use the identity
-base URL. The app bootstraps accept these deployment variables:
+hooks. Browser builds use same-origin relative URLs so the reverse proxy owns routing
+and the refresh cookie remains first-party:
 
-- `VITE_API_BASE_URL`: core API base including `/api/v1`; defaults to `/api/v1` on the
-  current origin for local and MSW development.
-- `VITE_IDENTITY_BASE_URL`: identity origin without a path; `AuthClient` defaults to
-  `https://id.agilitydoghub.com`, while MSW mode uses the current origin.
+- `AuthClient.apiBaseUrl` defaults to `/api/v1`.
+- `AuthClient.identityBaseUrl` defaults to the empty string, so `/oauth2/*`,
+  `/.well-known/*`, and `/connect/*` remain relative to the current host.
+- `VITE_API_BASE_URL` and `VITE_IDENTITY_BASE_URL` are optional overrides for tests or
+  non-browser clients; deployed browser apps leave them unset.
 
+Every request to `/api/*` or an identity route uses `credentials: "include"`.
 `AuthClient` routes `/oauth2/*`, `/.well-known/*`, and `/connect/logout` to the identity
-origin. It routes `/auth/magic-link`, `/auth/handoff`, and every other application path
-to the core API. The current bootstrap shape is:
+base. It routes `/auth/magic-link`, `/auth/handoff`, and every other application path
+to the core API base. The current bootstrap shape is:
 
 ```ts
-const apiBaseUrl =
-  import.meta.env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
-const identityBaseUrl =
-  import.meta.env.VITE_IDENTITY_BASE_URL ??
-  (import.meta.env.VITE_MOCK === "1" ? window.location.origin : undefined);
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
+const identityBaseUrl = import.meta.env.VITE_IDENTITY_BASE_URL ?? "";
 const source = await refreshBranding(
-  createApiClient({ baseUrl: apiBaseUrl }),
+  createApiClient({ baseUrl: apiBaseUrl, credentials: "include" }),
   window.location.host,
 );
 const authClient = new AuthClient({
   apiBaseUrl,
-  ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
+  identityBaseUrl,
 });
 ```
 
-The auth package owns tokens and refresh. Do not read, persist, log, or place tokens in
-query keys. The generated operation owns serialization and response typing.
+In development, all three Vite apps proxy `/api` to `VITE_CORE_URL` (default
+`http://localhost:8080`) and `/oauth2`, `/.well-known`, and `/connect` to `VITE_ID_URL`
+(default: the core target). These rules mirror the deployed same-site proxy. They are
+disabled only for `VITE_MOCK=1`, when the MSW service worker owns those requests.
+
+The auth package keeps the access token in memory. The refresh token exists only in the
+server-issued `HttpOnly; Secure; SameSite=Strict` cookie. MSW cannot issue that cookie,
+so `VITE_MOCK=1` explicitly enables a mock-only memory store; the `AuthClient` guard
+rejects that store unless mock mode is enabled. Do not read, persist, log, or place
+tokens in query keys. The generated operation owns serialization and response typing.
 
 ## Query hooks
 

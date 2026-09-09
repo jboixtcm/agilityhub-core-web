@@ -9,7 +9,7 @@ import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { AuthClient, type Me } from "./auth-client";
-import { MemoryRefreshTokenStore } from "./crypto-store";
+import { MemoryRefreshTokenStore } from "./mock-refresh-token";
 import { RequireAuth, RequireModule, RequireRole, SessionProvider, useSession } from "./session";
 
 vi.mock("react-i18next", () => ({
@@ -94,6 +94,7 @@ beforeAll(() => {
 
 afterEach(() => {
   cleanup();
+  server.resetHandlers();
 });
 
 afterAll(() => {
@@ -108,10 +109,19 @@ function SessionDetails() {
 describe("T-01-21 session and guards", () => {
   it("redirects anonymous users to /entrar without rendering protected content", async () => {
     const navigate = vi.fn();
+    server.use(
+      http.post(TOKEN_ENDPOINT, () =>
+        HttpResponse.json(
+          { code: "REFRESH_EXPIRED", message: "Refresh unavailable" },
+          { status: 401 },
+        ),
+      ),
+    );
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: new MemoryRefreshTokenStore(),
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
     });
 
     render(
@@ -132,7 +142,8 @@ describe("T-01-21 session and guards", () => {
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
-      refreshTokenStore: new MemoryRefreshTokenStore(),
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
     });
     await client.login("biel.roca@example.test", "secret-password");
 

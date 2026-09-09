@@ -6,10 +6,11 @@ import {
   type components,
 } from "@agilityhub/api-client";
 
-import { createRefreshTokenStore, type RefreshTokenStore } from "./crypto-store";
+import type { MockRefreshTokenStore } from "./mock-refresh-token";
 
-const DEFAULT_API_BASE_URL = "https://core.agilitydoghub.com/api/v1";
-const DEFAULT_IDENTITY_BASE_URL = "https://id.agilitydoghub.com";
+const DEFAULT_API_BASE_URL = "/api/v1";
+const DEFAULT_IDENTITY_BASE_URL = "";
+const REFRESH_MARGIN_MS = 60_000;
 
 export type Me = components["schemas"]["Me"];
 export type Role = components["schemas"]["Profile"];
@@ -28,8 +29,9 @@ export interface AuthClientOptions {
   clientId?: string;
   fetch?: typeof globalThis.fetch;
   identityBaseUrl?: string;
+  mockMode?: boolean;
+  mockRefreshTokenStore?: MockRefreshTokenStore;
   navigate?: (path: string) => void;
-  refreshTokenStore?: RefreshTokenStore;
 }
 
 function defaultNavigate(path: string): void {
@@ -64,10 +66,13 @@ export class AuthClient extends EventTarget {
   private currentMe: Me | null = null;
   private readonly fetcher: typeof globalThis.fetch;
   private readonly identityBaseUrl: string;
+  private readonly mockRefreshTokenStore: MockRefreshTokenStore | undefined;
   private readonly navigate: (path: string) => void;
+  private refreshAt: number | null = null;
   private refreshInFlight: Promise<TokenResponse> | null = null;
-  private readonly refreshTokenStore: RefreshTokenStore;
+  private refreshTimer: ReturnType<typeof setTimeout> | undefined;
   private signedOutNotified = false;
+  private slidingRefreshActive = false;
 
   constructor(options: AuthClientOptions = {}) {
     super();
@@ -75,10 +80,14 @@ export class AuthClient extends EventTarget {
     this.clientId = options.clientId ?? "clubs-app";
     this.fetcher = options.fetch ?? globalThis.fetch.bind(globalThis);
     this.identityBaseUrl = options.identityBaseUrl ?? DEFAULT_IDENTITY_BASE_URL;
+    if (options.mockRefreshTokenStore !== undefined && options.mockMode !== true) {
+      throw new TypeError("The memory refresh-token store is only available in mock mode");
+    }
+    this.mockRefreshTokenStore = options.mockRefreshTokenStore;
     this.navigate = options.navigate ?? defaultNavigate;
-    this.refreshTokenStore = options.refreshTokenStore ?? createRefreshTokenStore();
     this.apiClient = createApiClient({
       baseUrl: this.apiBaseUrl,
+      credentials: "include",
       fetch: this.fetcher,
       getAccessToken: () => this.accessToken,
     });
@@ -92,6 +101,28 @@ export class AuthClient extends EventTarget {
     return this.currentMe;
   }
 
+  /** Keeps the cookie-backed session sliding while a SessionProvider is mounted. */
+  startSlidingRefresh(): () => void {
+    this.slidingRefreshActive = true;
+    const refreshOnFocus = () => {
+      if (this.accessToken !== null) {
+        this.refreshInBackground();
+      }
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", refreshOnFocus);
+    }
+    this.scheduleRefresh();
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("focus", refreshOnFocus);
+      }
+      this.slidingRefreshActive = false;
+      this.cancelScheduledRefresh();
+    };
+  }
+
   async login(email: string, password: string): Promise<Me> {
     const form = new URLSearchParams({
       client_id: this.clientId,
@@ -100,7 +131,7 @@ export class AuthClient extends EventTarget {
       username: email,
     });
     const tokens = await this.issueToken(form);
-    await this.acceptTokens(tokens);
+    this.acceptTokens(tokens);
 
     try {
       const me = await this.loadMe();
@@ -108,7 +139,7 @@ export class AuthClient extends EventTarget {
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      await this.clearLocalSession();
+      this.clearLocalSession();
       throw error;
     }
   }
@@ -151,7 +182,7 @@ export class AuthClient extends EventTarget {
   }
 
   async acceptImpersonation(token: string): Promise<Me> {
-    await this.refreshTokenStore.clear();
+    this.mockRefreshTokenStore?.clear();
     this.accessToken = token;
     try {
       const me = await this.loadMe();
@@ -160,7 +191,7 @@ export class AuthClient extends EventTarget {
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      await this.clearLocalSession();
+      this.clearLocalSession();
       throw error;
     }
   }
@@ -292,10 +323,6 @@ export class AuthClient extends EventTarget {
     if (this.currentMe !== null && this.accessToken !== null) {
       return this.currentMe;
     }
-    if ((await this.refreshTokenStore.get()) === null) {
-      return null;
-    }
-
     try {
       await this.refresh();
       const me = await this.loadMe();
@@ -303,27 +330,23 @@ export class AuthClient extends EventTarget {
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      if (isApiError(error) && error.status >= 400 && error.status < 500) {
-        await this.clearLocalSession();
+      if (isApiError(error) && (error.status === 400 || error.status === 401)) {
+        this.clearLocalSession();
+        return null;
       }
       throw error;
     }
   }
 
   async logout(): Promise<void> {
-    const refreshToken = await this.refreshTokenStore.get();
-    const tokenToRevoke =
-      refreshToken ?? (this.currentMe?.impersonation === undefined ? null : this.accessToken);
     let failure: Error | undefined;
 
     try {
-      if (tokenToRevoke !== null) {
+      if (this.accessToken !== null) {
         const headers = new Headers({ "Content-Type": "application/json" });
-        if (this.accessToken !== null) {
-          headers.set("Authorization", `Bearer ${this.accessToken}`);
-        }
+        headers.set("Authorization", `Bearer ${this.accessToken}`);
         const response = await this.routedRequest("/oauth2/revoke", {
-          body: JSON.stringify({ token: tokenToRevoke }),
+          body: JSON.stringify({}),
           headers,
           method: "POST",
         });
@@ -334,7 +357,7 @@ export class AuthClient extends EventTarget {
     } catch (error) {
       failure = isApiError(error) ? error : ApiError.network(error);
     } finally {
-      await this.clearLocalSession();
+      this.clearLocalSession();
       this.emitSignedOut();
     }
 
@@ -343,23 +366,25 @@ export class AuthClient extends EventTarget {
     }
   }
 
-  async handleRefreshFailure(): Promise<void> {
+  handleRefreshFailure(): void {
     if (this.signedOutNotified) {
       return;
     }
-    await this.clearLocalSession();
+    this.clearLocalSession();
     this.emitSignedOut();
     this.navigate("/entrar");
   }
 
-  private async acceptTokens(tokens: TokenResponse): Promise<void> {
+  private acceptTokens(tokens: TokenResponse): void {
     this.accessToken = tokens.access_token;
-    if (tokens.refresh_token === undefined) {
-      await this.refreshTokenStore.clear();
-    } else {
-      await this.refreshTokenStore.set(tokens.refresh_token);
+    const lifetimeMs = tokens.expires_in * 1_000;
+    this.refreshAt =
+      Date.now() + Math.max(1_000, lifetimeMs - Math.min(REFRESH_MARGIN_MS, lifetimeMs / 2));
+    if (this.mockRefreshTokenStore !== undefined && tokens.refresh_token !== undefined) {
+      this.mockRefreshTokenStore.set(tokens.refresh_token);
     }
     this.signedOutNotified = false;
+    this.scheduleRefresh();
   }
 
   private applyOnboardingState(state: OnboardingState, request?: OnboardingRequest): void {
@@ -378,10 +403,19 @@ export class AuthClient extends EventTarget {
     this.dispatchEvent(new Event("signedIn"));
   }
 
-  private async clearLocalSession(): Promise<void> {
+  private clearLocalSession(): void {
     this.accessToken = null;
     this.currentMe = null;
-    await this.refreshTokenStore.clear();
+    this.refreshAt = null;
+    this.cancelScheduledRefresh();
+    this.mockRefreshTokenStore?.clear();
+  }
+
+  private cancelScheduledRefresh(): void {
+    if (this.refreshTimer !== undefined) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = undefined;
+    }
   }
 
   private emitSignedOut(): void {
@@ -396,6 +430,7 @@ export class AuthClient extends EventTarget {
     try {
       response = await this.fetcher(this.endpointFor("/oauth2/token"), {
         body: form,
+        credentials: "include",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         method: "POST",
       });
@@ -422,32 +457,53 @@ export class AuthClient extends EventTarget {
   }
 
   private async performRefresh(): Promise<TokenResponse> {
-    const refreshToken = await this.refreshTokenStore.get();
-    if (refreshToken === null) {
-      throw new TypeError("No refresh token is available");
-    }
     const tokens = await this.issueToken(
       new URLSearchParams({
         client_id: this.clientId,
         grant_type: "refresh_token",
-        refresh_token: refreshToken,
       }),
     );
-    await this.acceptTokens(tokens);
+    this.acceptTokens(tokens);
     return tokens;
+  }
+
+  private refreshInBackground(): void {
+    void this.refresh().catch(() => {
+      this.handleRefreshFailure();
+    });
+  }
+
+  private scheduleRefresh(): void {
+    this.cancelScheduledRefresh();
+    if (!this.slidingRefreshActive || this.refreshAt === null) {
+      return;
+    }
+    this.refreshTimer = setTimeout(
+      () => {
+        this.refreshTimer = undefined;
+        this.refreshInBackground();
+      },
+      Math.max(0, this.refreshAt - Date.now()),
+    );
   }
 
   private endpointFor(path: string): string {
     const identityPath =
       path.startsWith("/oauth2/") || path.startsWith("/.well-known/") || path === "/connect/logout";
     const baseUrl = identityPath ? this.identityBaseUrl : this.apiBaseUrl;
+    if (baseUrl === "") {
+      return path;
+    }
+    if (baseUrl.startsWith("/")) {
+      return `${baseUrl.replace(/\/$/u, "")}/${path.replace(/^\//u, "")}`;
+    }
     return new URL(path.replace(/^\//u, ""), `${baseUrl.replace(/\/$/u, "")}/`).href;
   }
 
   private async routedRequest(path: string, init: RequestInit): Promise<Response> {
     let response: Response;
     try {
-      response = await this.fetcher(this.endpointFor(path), init);
+      response = await this.fetcher(this.endpointFor(path), { ...init, credentials: "include" });
     } catch (error) {
       throw ApiError.network(error);
     }
@@ -459,14 +515,14 @@ export class AuthClient extends EventTarget {
 
   private async exchangeOneTimeCode(form: URLSearchParams): Promise<Me> {
     const tokens = await this.issueToken(form);
-    await this.acceptTokens(tokens);
+    this.acceptTokens(tokens);
     try {
       const me = await this.loadMe();
       this.currentMe = me;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      await this.clearLocalSession();
+      this.clearLocalSession();
       throw error;
     }
   }

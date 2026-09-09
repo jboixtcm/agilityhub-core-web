@@ -1,4 +1,4 @@
-import { AuthClient, SessionProvider } from "@agilityhub/auth";
+import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -25,9 +25,8 @@ async function bootstrap(root: HTMLElement) {
     await startMockWorker();
   }
 
-  const apiBaseUrl = env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
-  const identityBaseUrl =
-    env.VITE_IDENTITY_BASE_URL ?? (mockEnabled ? window.location.origin : undefined);
+  const apiBaseUrl = env.VITE_API_BASE_URL ?? "/api/v1";
+  const identityBaseUrl = env.VITE_IDENTITY_BASE_URL ?? "";
   const i18n = await createI18n({
     branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
     initialNamespaces: ["common", "errors", "id"],
@@ -35,7 +34,9 @@ async function bootstrap(root: HTMLElement) {
   const authClient = new AuthClient({
     apiBaseUrl,
     clientId: "id-web",
-    ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
+    identityBaseUrl,
+    mockMode: mockEnabled,
+    ...(mockEnabled ? { mockRefreshTokenStore: new MemoryRefreshTokenStore() } : {}),
   });
 
   createRoot(root).render(

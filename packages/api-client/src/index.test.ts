@@ -32,11 +32,13 @@ describe("typed API client", () => {
     let requestUrl = "";
     let language = "";
     let authorization = "";
+    let credentials: RequestCredentials | undefined;
     server.use(
       http.get("https://club.example.test/api/v1/branding", ({ request }) => {
         requestUrl = request.url;
         language = request.headers.get("Accept-Language") ?? "";
         authorization = request.headers.get("Authorization") ?? "";
+        credentials = request.credentials;
         return HttpResponse.json(brandingCanic);
       }),
     );
@@ -53,6 +55,7 @@ describe("typed API client", () => {
     expect(requestUrl).toBe("https://club.example.test/api/v1/branding");
     expect(language).toBe("es");
     expect(authorization).toBe("Bearer test-access-token");
+    expect(credentials).toBe("include");
     if (data === undefined) {
       throw new TypeError("Expected a branding payload");
     }

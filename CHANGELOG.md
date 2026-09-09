@@ -31,5 +31,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Apply placement-aware tenant branding—mark plus club name in compact shells, theme-aware full logos on access screens, and initial/name fallbacks—and align D10 access-role chips with the approved student terminology.
 - Adopt the verified S01 OpenAPI snapshot as the generated client source, retain unpublished E2 operations in `pending.json`, validate JSON mocks against component schemas, and route core authentication APIs separately from identity-host OAuth2 endpoints.
 - Align mobile screen 28 with its approved mockup by keeping language on screen 12 and consent management out of the member data form.
+- Replace browser-readable refresh-token storage with the same-site HttpOnly cookie flow, relative API/identity routes, credentialed requests, cookie-session bootstrap and logout, guarded memory-only MSW support, and local Vite proxies.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

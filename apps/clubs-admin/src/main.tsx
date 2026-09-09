@@ -1,5 +1,5 @@
 import { createApiClient, normalizeBranding, refreshBranding } from "@agilityhub/api-client";
-import { AuthClient, SessionProvider } from "@agilityhub/auth";
+import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { applyBrandingTheme, BrandingProvider } from "@agilityhub/ui";
 import { StrictMode } from "react";
@@ -27,11 +27,10 @@ async function bootstrap(root: HTMLElement) {
     await startMockWorker();
   }
 
-  const apiBaseUrl = env.VITE_API_BASE_URL ?? new URL("/api/v1", window.location.origin).href;
-  const identityBaseUrl =
-    env.VITE_IDENTITY_BASE_URL ?? (mockEnabled ? window.location.origin : undefined);
+  const apiBaseUrl = env.VITE_API_BASE_URL ?? "/api/v1";
+  const identityBaseUrl = env.VITE_IDENTITY_BASE_URL ?? "";
   const source = await refreshBranding(
-    createApiClient({ baseUrl: apiBaseUrl }),
+    createApiClient({ baseUrl: apiBaseUrl, credentials: "include" }),
     window.location.host,
   );
   const branding = normalizeBranding(source);
@@ -52,7 +51,9 @@ async function bootstrap(root: HTMLElement) {
   const authClient = new AuthClient({
     apiBaseUrl,
     clientId: "clubs-admin",
-    ...(identityBaseUrl === undefined ? {} : { identityBaseUrl }),
+    identityBaseUrl,
+    mockMode: mockEnabled,
+    ...(mockEnabled ? { mockRefreshTokenStore: new MemoryRefreshTokenStore() } : {}),
   });
 
   createRoot(root).render(

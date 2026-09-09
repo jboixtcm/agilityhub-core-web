@@ -13,8 +13,18 @@ export function createRefreshInterceptor(
 ): typeof globalThis.fetch {
   return async (input, init) => {
     const request = new Request(input, init);
-    const retrySource = request.clone();
-    const response = await requestFetch(request);
+    const body =
+      request.method === "GET" || request.method === "HEAD"
+        ? undefined
+        : await request.clone().arrayBuffer();
+    const requestInit: RequestInit = {
+      ...(body === undefined ? {} : { body }),
+      credentials: "include",
+      headers: new Headers(request.headers),
+      method: request.method,
+      signal: request.signal,
+    };
+    const response = await requestFetch(request.url, requestInit);
 
     if (response.status !== 401) {
       return response;
@@ -23,16 +33,16 @@ export function createRefreshInterceptor(
     try {
       await authClient.refresh();
     } catch {
-      await authClient.handleRefreshFailure();
+      authClient.handleRefreshFailure();
       return response;
     }
 
-    const headers = new Headers(retrySource.headers);
+    const headers = new Headers(request.headers);
     const accessToken = authClient.getAccessToken();
     if (accessToken !== null) {
       headers.set("Authorization", `Bearer ${accessToken}`);
     }
-    return requestFetch(new Request(retrySource, { headers }));
+    return requestFetch(request.url, { ...requestInit, headers });
   };
 }
 
@@ -43,6 +53,7 @@ export function createAuthenticatedApiClient(
   const requestFetch = options.fetch ?? globalThis.fetch;
   return createApiClient({
     ...options,
+    credentials: "include",
     fetch: createRefreshInterceptor(authClient, requestFetch),
     getAccessToken: () => authClient.getAccessToken(),
   });

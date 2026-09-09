@@ -15,6 +15,7 @@ type MaybePromise<T> = Promise<T> | T;
 
 export interface ApiClientOptions {
   baseUrl?: string;
+  credentials?: RequestCredentials;
   createIdempotencyKey?: () => string;
   fetch?: typeof globalThis.fetch;
   getAccessToken?: () => MaybePromise<null | string | undefined>;
@@ -82,6 +83,7 @@ const errorMiddleware: Middleware = {
 export function createApiClient(options: ApiClientOptions = {}): ApiClient {
   const client = createClient<paths>({
     baseUrl: options.baseUrl ?? viteApiUrl() ?? DEFAULT_API_URL,
+    credentials: options.credentials ?? "include",
     ...(options.fetch === undefined ? {} : { fetch: options.fetch }),
   });
 

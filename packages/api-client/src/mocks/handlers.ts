@@ -582,6 +582,8 @@ function replaceDog(dog: DogDetail): DogDetail {
 }
 
 function mockTokens() {
+  // MSW cannot issue the production HttpOnly cookie. Browser mock builds keep this
+  // token only in the AuthClient's guarded, memory-only mock store.
   return {
     access_token: "mock-access-token",
     refresh_token: "mock-refresh-token",

@@ -21,7 +21,6 @@
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "fake-indexeddb": "catalog:",
     "jsdom": "catalog:",
     "msw": "catalog:",
     "react": "catalog:",

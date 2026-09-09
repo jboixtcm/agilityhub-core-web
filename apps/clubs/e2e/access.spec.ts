@@ -44,6 +44,26 @@ async function passwordLogin(page: Page) {
 }
 
 test.describe("T-01-18 access screen", () => {
+  test("T-01-04 keeps refresh-token material out of browser storage after login", async ({
+    page,
+  }) => {
+    await passwordLogin(page);
+    await page.waitForURL("**/perfil-acces");
+
+    const browserStorage = await page.evaluate(async () => ({
+      databases: (await indexedDB.databases()).map((database) => database.name ?? ""),
+      local: Object.entries(localStorage),
+      session: Object.entries(sessionStorage),
+    }));
+    const entries = [...browserStorage.local, ...browserStorage.session];
+
+    for (const [key, value] of entries) {
+      expect(key.toLowerCase()).not.toContain("refresh");
+      expect(value).not.toContain("mock-refresh-token");
+    }
+    expect(browserStorage.databases.some((name) => /auth|refresh/iu.test(name))).toBe(false);
+  });
+
   test("renders screen 01, focuses missing email and sends a neutral response", async ({
     page,
   }) => {

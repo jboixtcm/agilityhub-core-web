@@ -111,7 +111,8 @@ function createClient(fetcher: typeof fetch) {
     clientId: "id-web",
     fetch: fetcher,
     identityBaseUrl: "http://id.test",
-    refreshTokenStore: new MemoryRefreshTokenStore(),
+    mockMode: true,
+    mockRefreshTokenStore: new MemoryRefreshTokenStore(),
   });
 }
 
@@ -170,7 +171,11 @@ describe("T-01-22 apps/id", () => {
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith(continuation);
     });
-    const tokenRequest = requests.find((request) => request.url.endsWith("/oauth2/token"));
+    const tokenRequest = requests.find(
+      (request) =>
+        request.url.endsWith("/oauth2/token") &&
+        new URLSearchParams(request.body).get("grant_type") === "password",
+    );
     expect(tokenRequest?.body).toContain("client_id=id-web");
     expect(tokenRequest?.body).toContain("username=biel.roca%40example.test");
   });

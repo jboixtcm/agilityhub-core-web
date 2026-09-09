@@ -36,7 +36,8 @@ function authClient() {
     apiBaseUrl: `${window.location.origin}/api/v1`,
     clientId: "clubs-admin",
     identityBaseUrl: window.location.origin,
-    refreshTokenStore: new MemoryRefreshTokenStore(),
+    mockMode: true,
+    mockRefreshTokenStore: new MemoryRefreshTokenStore(),
   });
 }
 
