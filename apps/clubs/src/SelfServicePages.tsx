@@ -21,8 +21,9 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-type MeDog = components["schemas"]["MeDog"];
-type MeDogs = components["schemas"]["MeDogs"];
+type License = components["schemas"]["LicenseWithPendingFields"];
+type MeDog = Omit<components["schemas"]["MeDog"], "licenses"> & { licenses: License[] };
+type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
 type MeProfile = components["schemas"]["MeProfile"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
 type Parameter = components["schemas"]["Parameter"];
@@ -68,19 +69,15 @@ type CountryField = "DNI" | "NIE" | "PHONE" | "POSTAL_CODE";
 
 function countryProfile(value: unknown): CountryProfile {
   if (typeof value !== "object" || value === null) {
-    return {};
+    return { code: "", idDocumentTypes: [], phonePrefix: "" };
   }
   const candidate = value as Record<string, unknown>;
   return {
-    ...(typeof candidate.code === "string" ? { code: candidate.code } : {}),
-    ...(Array.isArray(candidate.idDocumentTypes)
-      ? {
-          idDocumentTypes: candidate.idDocumentTypes.filter(
-            (item): item is string => typeof item === "string",
-          ),
-        }
-      : {}),
-    ...(typeof candidate.phonePrefix === "string" ? { phonePrefix: candidate.phonePrefix } : {}),
+    code: typeof candidate.code === "string" ? candidate.code : "",
+    idDocumentTypes: Array.isArray(candidate.idDocumentTypes)
+      ? candidate.idDocumentTypes.filter((item): item is string => typeof item === "string")
+      : [],
+    phonePrefix: typeof candidate.phonePrefix === "string" ? candidate.phonePrefix : "",
   };
 }
 
@@ -117,12 +114,6 @@ export function isCountryFieldValid(
     return /^\d{9}$/u.test(normalized.replaceAll(/\D/gu, ""));
   }
   return /^\d{5}$/u.test(normalized);
-}
-
-function shortDate(value: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit" }).format(
-    new Date(value),
-  );
 }
 
 function fullDate(value: string, locale: string): string {
@@ -309,56 +300,16 @@ function DogPhoto({
 }
 
 function DogTasks({ dog }: { dog: MeDog }) {
-  const { i18n, t } = useTranslation("census");
-  const [tasks, setTasks] = useState(() => dog.tasks?.items ?? []);
+  const { t } = useTranslation("census");
+
+  if (dog.tasks === undefined) {
+    return null;
+  }
 
   return (
     <section className="dog-card__section dog-tasks" aria-label={t("census:myDogs.tasksTitle")}>
-      <h3>
-        {t("census:myDogs.tasksTitle")} <span>{t("census:myDogs.tasksHelp")}</span>
-      </h3>
-      {tasks.map((task) => {
-        const done = task.doneAt !== undefined;
-        return (
-          <div className="dog-task" data-done={done || undefined} key={task.id}>
-            <button
-              aria-checked={done}
-              aria-label={t("census:myDogs.markTask", { task: task.text })}
-              className="dog-task__check"
-              disabled={done}
-              onClick={() => {
-                setTasks((current) =>
-                  current.map((item) =>
-                    item.id === task.id ? { ...item, doneAt: new Date().toISOString() } : item,
-                  ),
-                );
-              }}
-              role="checkbox"
-              type="button"
-            >
-              {done ? <Icon aria-hidden="true" name="check" /> : null}
-            </button>
-            <div>
-              <p>{task.text}</p>
-              <small>
-                {shortDate(task.createdAt, i18n.resolvedLanguage ?? "ca")} · {task.instructorName}
-                {task.attachmentsCount > 0 ? (
-                  <>
-                    {" · "}
-                    <Icon aria-hidden="true" name="clip" />
-                    {t("census:myDogs.attachments", { count: task.attachmentsCount })}
-                  </>
-                ) : null}
-                {task.doneAt === undefined
-                  ? null
-                  : ` · ${t("census:myDogs.doneOn", {
-                      date: shortDate(task.doneAt, i18n.resolvedLanguage ?? "ca"),
-                    })}`}
-              </small>
-            </div>
-          </div>
-        );
-      })}
+      <h3>{t("census:myDogs.tasksTitle")}</h3>
+      <p>{t("census:myDogs.tasksSummary", dog.tasks)}</p>
       <a className="self-link" href="/historic">
         {t("census:myDogs.history")}
       </a>
@@ -533,7 +484,9 @@ function DogCard({
       {dog.licenses.map((license) => (
         <p className="dog-card__license" key={license.organisation}>
           {license.organisation} · {t("census:myDogs.license", { number: license.number })}
-          {license.grade === undefined ? null : ` · ${license.grade}`}
+          {[license.category, license.grade, license.division]
+            .filter((value): value is string => typeof value === "string" && value !== "")
+            .map((value) => ` · ${value}`)}
         </p>
       ))}
       {packsEnabled && dog.pack !== undefined ? (
@@ -937,7 +890,7 @@ export function MyDataPage({ client }: { client: ApiClient }) {
     profile.phones[index] ?? {
       label: "",
       number: "",
-      prefix: profileCountry.phonePrefix ?? "",
+      prefix: profileCountry.phonePrefix,
     };
   const updateEmail = (index: number, value: string) => {
     const contactEmails = [...profile.contactEmails];
@@ -981,7 +934,7 @@ export function MyDataPage({ client }: { client: ApiClient }) {
       address: profile.address,
       contactEmails: contactEmails.map((item) => ({ email: item.email.trim() })),
       phones: phones.map((item) => ({
-        label: item.label.trim(),
+        label: item.label?.trim() ?? "",
         number: item.number.replaceAll(/\D/gu, ""),
         prefix: item.prefix,
       })),

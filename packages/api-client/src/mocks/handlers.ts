@@ -47,20 +47,23 @@ type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 type UpdateProfileRequest = components["schemas"]["ProfileRequest"];
 type OnboardingRequest = components["schemas"]["OnboardingRequest"];
 type OnboardingState = components["schemas"]["OnboardingState"];
-type ListFilter = components["schemas"]["ListFilter"];
-type SavedViewRequest = components["schemas"]["SavedViewRequest"];
-type MemberPatchRequest = components["schemas"]["MemberPatchRequest"];
-type PaymentMethodRequest = components["schemas"]["PaymentMethodRequest"];
+type ListFilter = components["schemas"]["Filter"] & { value: string };
+type SavedViewCreate = components["schemas"]["SavedViewCreate"];
+type SavedViewUpdate = components["schemas"]["SavedViewUpdate"];
+type MemberPatchRequest = components["schemas"]["MemberPatch"];
+type PaymentMethodRequest = components["schemas"]["PaymentMethodPatch"];
 type BookingBlockRequest = components["schemas"]["BookingBlockRequest"];
 type RolesRequest = components["schemas"]["RolesRequest"];
+type NotificationPreferences = components["schemas"]["NotificationPreferences"];
 type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesPatch"];
-type DogPatchRequest = components["schemas"]["DogPatchRequest"];
+type DogPatchRequest = components["schemas"]["DogPatch"] &
+  components["schemas"]["DogPatchPendingFields"];
 type DogLevelRequest = components["schemas"]["DogLevelRequest"];
 type FreeTrainingRequest = components["schemas"]["FreeTrainingRequest"];
 type DogTransferRequest = components["schemas"]["DogTransferRequest"];
-type PhotoRequest = components["schemas"]["PhotoRequest"];
-type DogDocumentUploadRequest = components["schemas"]["DogDocumentUploadRequest"];
-type DogDocumentReminderRequest = components["schemas"]["DogDocumentReminderRequest"];
+type PhotoRequest = components["schemas"]["FileKeyRequest"];
+type DogDocumentUploadRequest = components["schemas"]["DogDocumentRequest"];
+type DogDocumentReminderRequest = components["schemas"]["DocumentReminderRequest"];
 type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
 type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
@@ -75,8 +78,12 @@ type InstructorPatch = components["schemas"]["InstructorPatch"];
 type LevelCreate = components["schemas"]["LevelCreate"];
 type LevelOrder = components["schemas"]["LevelOrder"];
 type LevelPatch = components["schemas"]["LevelPatch"];
-type PlanCreate = components["schemas"]["PlanCreate"];
-type PlanPatch = components["schemas"]["PlanPatch"];
+type PlanCreate = components["schemas"]["PlanCreate"] & {
+  billingMode?: components["schemas"]["PlanBillingMode"];
+};
+type PlanPatch = components["schemas"]["PlanPatch"] & {
+  billingMode?: components["schemas"]["PlanBillingMode"];
+};
 type PriceCreate = components["schemas"]["PriceCreate"];
 type RingCreate = components["schemas"]["RingCreate"];
 type RingOrder = components["schemas"]["RingOrder"];
@@ -205,6 +212,7 @@ const dogFilterLabels: Readonly<Record<string, string>> = {
   breed: "Raça",
   chip: "Xip",
   freeTrainingAllowed: "Entrenament lliure",
+  handlerName: "Guia",
   hasLicense: "Llicència",
   hasPendingDocuments: "Documents pendents",
   levelAssignedAt: "Al nivell des de",
@@ -304,56 +312,57 @@ function matchesValues(values: readonly string[], filter: ListFilter): boolean {
       );
     }
   }
+  return false;
 }
 
 function memberValues(item: MemberListItem, field: string): string[] | undefined {
   switch (field) {
     case "birthDate":
-      return [item.birthDate];
+      return item.birthDate === undefined ? [] : [item.birthDate];
     case "bookingBlocked":
       return [String(item.bookingBlocked)];
     case "city":
-      return [item.city];
+      return item.city === undefined ? [] : [item.city];
     case "displayStatus":
       return [item.displayStatus.kind];
     case "dogLevelId":
-      return item.dogs.map((dog) => `level-${dog.levelCode.toLocaleLowerCase()}`);
+      return item.dogs.flatMap((dog) => (dog.level === undefined ? [] : [dog.level.id]));
     case "dogName":
       return item.dogs.map((dog) => dog.name);
     case "familyGroupId":
-      return item.familyGroup === undefined ? [] : [item.familyGroup];
+      return item.familyGroup === undefined ? [] : [item.familyGroup.id];
     case "freeTrainingAllowed":
-      return [String(item.freeTrainingAllowed)];
+      return [String(item.freeTraining)];
     case "fullName":
       return [item.fullName];
     case "gender":
-      return [item.gender];
+      return item.gender === undefined ? [] : [item.gender];
     case "hasPendingDocuments":
-      return [String(item.pendingDocuments > 0)];
+      return [String((item.pendingDocuments?.length ?? 0) > 0)];
     case "imageRightsGranted":
-      return [String(item.imageRightsGranted)];
+      return [String(item.imageRights?.granted ?? false)];
     case "joinedAt":
-      return [item.joinedAt];
+      return item.joinedAt === undefined ? [] : [item.joinedAt];
     case "lastName":
-      return [item.lastName];
+      return [item.fullName.split(" ").slice(1).join(" ")];
     case "leaveDate":
       return item.leaveDate === undefined ? [] : [item.leaveDate];
     case "memberNumber":
-      return [String(item.memberNumber)];
+      return item.memberNumber === undefined ? [] : [String(item.memberNumber)];
     case "nextInvoiceDate":
       return item.nextInvoiceDate === undefined ? [] : [item.nextInvoiceDate];
     case "paymentMethodType":
-      return [item.paymentMethod?.includes("····") === true ? "SEPA_DD" : "MANUAL"];
+      return item.paymentMethod === undefined ? [] : [item.paymentMethod.type];
     case "planId":
-      return [item.plan.id];
+      return item.plan === undefined ? [] : [item.plan.id];
     case "postalCode":
-      return [item.postalCode];
+      return item.postalCode === undefined ? [] : [item.postalCode];
     case "priceId":
-      return item.priceId === undefined ? [] : [item.priceId];
+      return [];
     case "roles":
-      return item.roles;
+      return item.roles ?? [];
     case "status":
-      return [item.status];
+      return [item.displayStatus.kind === "LEFT" ? "LEFT" : "ACTIVE"];
     default:
       return undefined;
   }
@@ -362,21 +371,23 @@ function memberValues(item: MemberListItem, field: string): string[] | undefined
 function dogValues(item: DogListItem, field: string): string[] | undefined {
   switch (field) {
     case "birthDate":
-      return [item.birthDate ?? ""];
+      return [];
     case "breed":
       return [item.breed];
     case "chip":
-      return [item.chip];
+      return item.chip === undefined ? [] : [item.chip];
     case "freeTrainingAllowed":
-      return [String(item.freeTrainingAllowed)];
+      return [String(item.freeTraining?.allowed ?? false)];
+    case "handlerName":
+      return item.handlerName === undefined ? [] : [item.handlerName];
     case "hasLicense":
       return [String(item.licenses.length > 0)];
     case "hasPendingDocuments":
-      return [String(item.pendingDocuments > 0)];
+      return [String(item.pendingDocuments.length > 0)];
     case "levelAssignedAt":
-      return [item.levelAssignedAt];
+      return item.levelAssignedAt === undefined ? [] : [item.levelAssignedAt];
     case "levelId":
-      return [item.level.id];
+      return item.level === undefined ? [] : [item.level.id];
     case "licenseOrganisation":
       return item.licenses.map((license) => license.organisation);
     case "memberId":
@@ -390,7 +401,7 @@ function dogValues(item: DogListItem, field: string): string[] | undefined {
     case "sex":
       return [item.sex];
     case "status":
-      return [item.status];
+      return [item.displayStatus.kind === "INACTIVE" ? "INACTIVE" : "ACTIVE"];
     default:
       return undefined;
   }
@@ -416,9 +427,13 @@ function filterMembersBySearch(items: readonly MemberListItem[], query: string):
     return [...items];
   }
   return items.filter((item) =>
-    [item.fullName, item.idDocument, item.contact, ...item.dogs.map((dog) => dog.name)].some(
-      (value) => normalized(value).includes(target),
-    ),
+    [
+      item.fullName,
+      item.idDocument ?? "",
+      ...(item.contact?.emails.map((entry) => entry.email) ?? []),
+      ...(item.contact?.phones.map((entry) => `${entry.prefix}${entry.number}`) ?? []),
+      ...item.dogs.map((dog) => dog.name),
+    ].some((value) => normalized(value).includes(target)),
   );
 }
 
@@ -428,7 +443,9 @@ function filterDogsBySearch(items: readonly DogListItem[], query: string): DogLi
     return [...items];
   }
   return items.filter((item) =>
-    [item.name, item.owner.fullName, item.chip].some((value) => normalized(value).includes(target)),
+    [item.name, item.owner.fullName, item.handlerName ?? "", item.chip ?? ""].some((value) =>
+      normalized(value).includes(target),
+    ),
   );
 }
 
@@ -446,10 +463,10 @@ function labelForValue<Item>(
   }
   const member = items.find((item) => values(item, field)?.includes(value));
   if (member !== undefined && field === "planId") {
-    return (member as MemberListItem).plan.name;
+    return (member as MemberListItem).plan?.name ?? value;
   }
   if (member !== undefined && field === "levelId") {
-    return (member as DogListItem).level.name;
+    return (member as unknown as DogListItem).level?.name ?? value;
   }
   return value;
 }
@@ -477,12 +494,12 @@ function sortMembers(items: MemberListItem[], values: readonly string[]): Member
   const field = sort?.[0] ?? "";
   const direction = sort?.[1] === "desc" ? -1 : 1;
   const getters: Readonly<Record<string, (item: MemberListItem) => string | number>> = {
-    city: (item) => item.city,
-    firstName: (item) => item.firstName,
-    joinedAt: (item) => item.joinedAt,
-    lastName: (item) => item.lastName,
+    city: (item) => item.city ?? "",
+    firstName: (item) => item.fullName.split(" ")[0] ?? "",
+    joinedAt: (item) => item.joinedAt ?? "",
+    lastName: (item) => item.fullName.split(" ").slice(1).join(" "),
     leaveDate: (item) => item.leaveDate ?? "",
-    memberNumber: (item) => item.memberNumber,
+    memberNumber: (item) => item.memberNumber ?? 0,
     nextInvoiceDate: (item) => item.nextInvoiceDate ?? "",
   };
   const getter = getters[field];
@@ -501,10 +518,10 @@ function sortDogs(items: DogListItem[], values: readonly string[]): DogListItem[
   const direction = sort?.[1] === "desc" ? -1 : 1;
   const getters: Readonly<Record<string, (item: DogListItem) => string | number>> = {
     breed: (item) => item.breed,
-    levelAssignedAt: (item) => item.levelAssignedAt,
-    levelOrder: (item) => item.level.order,
+    levelAssignedAt: (item) => item.levelAssignedAt ?? "",
+    levelOrder: (item) => item.level?.code ?? "",
     name: (item) => item.name,
-    ownerLastName: (item) => item.owner.lastName,
+    ownerLastName: (item) => item.owner.fullName.split(" ").slice(1).join(" "),
     registeredAt: (item) => item.registeredAt,
   };
   const getter = getters[field];
@@ -565,16 +582,15 @@ function currentDog(id: string): DogDetail | undefined {
 }
 
 function replaceDog(dog: DogDetail): DogDetail {
-  censusRecordState.dogs[dog.id] = dog;
+  censusRecordState.dogs[dog.dog.id] = dog;
   censusRecordState.memberOverview.dogs = censusRecordState.memberOverview.dogs.map((summary) =>
-    summary.id === dog.id
+    summary.id === dog.dog.id
       ? {
           ...summary,
-          breed: dog.breed,
+          breed: dog.dog.breed,
           freeTrainingAllowed: dog.freeTraining.allowed,
-          ...(dog.instructorNote === undefined ? {} : { instructorNote: dog.instructorNote }),
           ...(dog.level === undefined ? {} : { level: dog.level }),
-          name: dog.name,
+          name: dog.dog.name,
         }
       : summary,
   );
@@ -643,8 +659,8 @@ export const handlers = [
     const branding = currentMockScenario().branding;
     return HttpResponse.json({
       display: "standalone",
-      name: branding.club?.name ?? "AgilityHub",
-      short_name: branding.club?.name ?? "AgilityHub",
+      name: branding.club.name,
+      short_name: branding.club.name,
       start_url: "/inici",
     });
   }),
@@ -666,7 +682,7 @@ export const handlers = [
       onboardingState = {
         ...state,
         requiredConsent:
-          state.requiredConsent === null
+          state.requiredConsent == null
             ? null
             : { ...state.requiredConsent, version: "2026-09-02" },
       };
@@ -695,7 +711,7 @@ export const handlers = [
   http.patch("*/api/v1/me", async ({ request }) => {
     const body = (await request.json()) as UpdateMeRequest;
     const scenario = currentMockScenario();
-    if (body.locale !== undefined && scenario.branding.locales?.includes(body.locale) !== true) {
+    if (body.locale !== undefined && !scenario.branding.locales.includes(body.locale)) {
       return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
     }
     return HttpResponse.json({
@@ -747,7 +763,7 @@ export const handlers = [
   }),
   http.get("*/api/v1/me/dogs", () => HttpResponse.json(memberDogsState)),
   http.put("*/api/v1/me/dogs/:id/instructor-note", async ({ params, request }) => {
-    if (!currentMockScenario().branding.modules?.includes("TASKS")) {
+    if (!currentMockScenario().branding.modules.includes("TASKS")) {
       return apiError("MODULE_DISABLED", "Module disabled", 404);
     }
     const dog = currentMemberDog(String(params.id));
@@ -812,9 +828,12 @@ export const handlers = [
       const locale = request.headers.get("Accept-Language")?.split(/[-,]/u)[0] ?? "ca";
       const scenario = currentMockScenario();
       const base: Omit<Parameter, "key" | "label" | "type" | "value" | "version"> = {
+        block: "general",
         constraints: {},
+        default: null,
         editableBy: "CLUB",
         help: "",
+        history: [],
         isOverride: true,
       };
       if (key === "levels.enabled") {
@@ -857,8 +876,8 @@ export const handlers = [
         });
       }
       if (key === "signup.text.imageConsent") {
-        const club = scenario.branding.club?.name ?? "AgilityHub";
-        const contact = `contact@${scenario.branding.club?.slug ?? "club"}.example.test`;
+        const club = scenario.branding.club.name;
+        const contact = `contact@${scenario.branding.club.slug}.example.test`;
         const text =
           locale === "es"
             ? `Autorizo a ${club} a tomar fotografías y vídeos en los que aparezcamos mi perro o yo durante las clases, entrenamientos y actividades del club, y a publicarlos en los canales del club con la única finalidad de dar a conocer su actividad. Puedo retirar esta autorización en cualquier momento desde mi perfil o escribiendo a ${contact}; la retirada no afecta a publicaciones anteriores.`
@@ -1012,9 +1031,27 @@ export const handlers = [
     ]
       .filter((part): part is string => part !== undefined && part !== "")
       .join(" ");
-    const updated = {
+    const { consents, contactEmails, ...memberPatch } = body;
+    const updated: components["schemas"]["Member"] = {
       ...member,
-      ...body,
+      ...memberPatch,
+      ...(contactEmails === undefined
+        ? {}
+        : { contactEmails: contactEmails.map((entry) => ({ ...entry, bounced: false })) }),
+      ...(consents?.imageRights === undefined
+        ? {}
+        : {
+            consents: {
+              imageRights: {
+                ...member.consents?.imageRights,
+                granted: consents.imageRights.granted,
+              },
+              privacyPolicy: member.consents?.privacyPolicy ?? {
+                acceptedAt: "2026-02-03T09:00:00Z",
+                version: "2026-01",
+              },
+            },
+          }),
       fullName,
       version: member.version + 1,
     };
@@ -1114,8 +1151,9 @@ export const handlers = [
       return apiError("NOT_FOUND", "Member not found", 404);
     }
     const body = (await request.json()) as NotificationPreferencesPatch;
-    const preferences = censusRecordState.memberOverview.notificationPreferences;
-    censusRecordState.memberOverview.notificationPreferences = {
+    const preferences = censusRecordState.memberOverview
+      .notificationPreferences as NotificationPreferences;
+    const updatedPreferences: NotificationPreferences = {
       ...preferences,
       ...body,
       emailByCategory: {
@@ -1123,7 +1161,8 @@ export const handlers = [
         ...body.emailByCategory,
       },
     };
-    return HttpResponse.json(censusRecordState.memberOverview.notificationPreferences);
+    censusRecordState.memberOverview.notificationPreferences = updatedPreferences;
+    return HttpResponse.json(updatedPreferences);
   }),
   http.get("*/api/v1/dogs", async ({ request }) => {
     await delay(120);
@@ -1196,12 +1235,14 @@ export const handlers = [
       return apiError("STALE_VERSION", "Stale version", 409);
     }
     const duplicateChip = Object.values(censusRecordState.dogs).some(
-      (candidate) => candidate.id !== dog.id && candidate.chip === body.chip,
+      (candidate) => candidate.dog.id !== dog.dog.id && candidate.dog.chip === body.chip,
     );
     if (duplicateChip) {
       return apiError("CHIP_ALREADY_EXISTS", "Chip already exists", 409);
     }
-    return HttpResponse.json(replaceDog({ ...dog, ...body, version: dog.version + 1 }));
+    dog.dog = { ...dog.dog, ...body, version: dog.dog.version + 1 };
+    dog.version = dog.dog.version;
+    return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.patch("*/api/v1/dogs/:id/level", async ({ params, request }) => {
     const dog = currentDog(String(params.id));
@@ -1210,7 +1251,8 @@ export const handlers = [
     }
     const body = (await request.json()) as DogLevelRequest;
     const level = censusLevels.find((candidate) => candidate.id === body.levelId);
-    if (!level?.active) {
+    const levelDefinition = catalogState.levels.find((candidate) => candidate.id === body.levelId);
+    if (level === undefined || levelDefinition?.active !== true) {
       return apiError("LEVEL_NOT_ACTIVE", "Level not active", 422);
     }
     if (level.id === dog.level?.id) {
@@ -1224,15 +1266,15 @@ export const handlers = [
       {
         byAccountId: "account-admin",
         from: assignedAt,
-        levelCode: level.code,
         levelId: level.id,
       },
     ];
     dog.level = level;
-    dog.levelAssignedAt = assignedAt;
+    dog.dog.levelAssignedAt = assignedAt;
+    dog.dog.levelId = level.id;
     if (dog.freeTraining.override === null) {
       dog.freeTraining = {
-        allowed: level.grantsFreeTraining,
+        allowed: levelDefinition.grantsFreeTraining,
         override: null,
         source: "LEVEL",
       };
@@ -1241,7 +1283,7 @@ export const handlers = [
     return HttpResponse.json({
       level,
       levelAssignedAt: assignedAt,
-      warnings: { futureBookingsOutsideLevel: dog.id === "dog-duna" ? 1 : 0 },
+      warnings: { futureBookingsOutsideLevel: 0 },
     });
   }),
   http.patch("*/api/v1/dogs/:id/free-training", async ({ params, request }) => {
@@ -1250,11 +1292,12 @@ export const handlers = [
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
     const body = (await request.json()) as FreeTrainingRequest;
-    const allowed = body.override ?? dog.level?.grantsFreeTraining ?? false;
+    const levelDefinition = catalogState.levels.find((candidate) => candidate.id === dog.level?.id);
+    const allowed = body.override ?? levelDefinition?.grantsFreeTraining ?? false;
     dog.freeTraining = {
       allowed,
       override: body.override,
-      source: body.override === null ? "LEVEL" : "MANUAL",
+      source: body.override === null ? "LEVEL" : "OVERRIDE",
     };
     replaceDog(dog);
     return HttpResponse.json(dog.freeTraining);
@@ -1269,7 +1312,7 @@ export const handlers = [
       return apiError("SAME_MEMBER", "Same member", 422);
     }
     const target = censusMembers.find(
-      (member) => member.id === body.toMemberId && member.status === "ACTIVE",
+      (member) => member.id === body.toMemberId && member.displayStatus.kind !== "LEFT",
     );
     if (target === undefined) {
       return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
@@ -1277,23 +1320,24 @@ export const handlers = [
     dog.owner = {
       fullName: target.fullName,
       id: target.id,
-      memberNumber: target.memberNumber,
-      status: target.status,
+      ...(target.memberNumber === undefined ? {} : { memberNumber: target.memberNumber }),
+      status: "ACTIVE",
     };
-    return HttpResponse.json(replaceDog(dog));
+    dog.dog.memberId = target.id;
+    return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.post("*/api/v1/dogs/:id/deactivation", ({ params }) => {
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
-    if (dog.status !== "ACTIVE") {
+    if (dog.dog.status !== "ACTIVE") {
       return apiError("DOG_NOT_ACTIVE", "Dog not active", 409);
     }
-    dog.status = "INACTIVE";
-    dog.deactivatedAt = "2026-09-06T15:00:00Z";
-    dog.deactivationReason = "CLUB";
-    return HttpResponse.json(replaceDog(dog));
+    dog.dog.status = "INACTIVE";
+    dog.dog.deactivatedAt = "2026-09-06T15:00:00Z";
+    dog.dog.deactivationReason = "CLUB";
+    return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.post("*/api/v1/dogs/:id/reactivation", ({ params }) => {
     const dog = currentDog(String(params.id));
@@ -1303,10 +1347,10 @@ export const handlers = [
     if (dog.owner.status !== "ACTIVE") {
       return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
     }
-    dog.status = "ACTIVE";
-    delete dog.deactivatedAt;
-    delete dog.deactivationReason;
-    return HttpResponse.json(replaceDog(dog));
+    dog.dog.status = "ACTIVE";
+    delete dog.dog.deactivatedAt;
+    delete dog.dog.deactivationReason;
+    return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.put("*/api/v1/dogs/:id/photo", async ({ params, request }) => {
     const dog = currentDog(String(params.id));
@@ -1314,8 +1358,8 @@ export const handlers = [
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
     const body = (await request.json()) as PhotoRequest;
-    dog.photoUrl = `https://files.example.test/${body.fileKey}`;
-    return HttpResponse.json({ photoUrl: dog.photoUrl });
+    dog.dog.photoUrl = `https://files.example.test/${body.fileKey}`;
+    return HttpResponse.json({ photoUrl: dog.dog.photoUrl });
   }),
   http.get("*/api/v1/dogs/:id/documents", ({ params }) => {
     const dog = currentDog(String(params.id));
@@ -1334,7 +1378,7 @@ export const handlers = [
       return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
     }
     const file = {
-      id: `file-${String(document.files.length + 1)}-${dog.id}`,
+      id: `file-${String(document.files.length + 1)}-${dog.dog.id}`,
       name: body.name,
       uploadedAt: "2026-09-06T15:00:00Z",
       url: `https://files.example.test/${body.fileKey}`,
@@ -1845,7 +1889,7 @@ export const handlers = [
     return HttpResponse.json(savedViews.filter((view) => view.listKey === listKey));
   }),
   http.post("*/api/v1/saved-views", async ({ request }) => {
-    const body = (await request.json()) as SavedViewRequest;
+    const body = (await request.json()) as SavedViewCreate;
     if (
       savedViews.some(
         (view) => view.listKey === body.listKey && normalized(view.name) === normalized(body.name),
@@ -1857,12 +1901,13 @@ export const handlers = [
       ...body,
       id: `view-${body.listKey}-${String(savedViews.length + 1)}`,
       ownerAccountId: "account-admin",
+      version: 1,
     };
     savedViews.push(view);
     return HttpResponse.json(view, { status: 201 });
   }),
   http.put("*/api/v1/saved-views/:id", async ({ params, request }) => {
-    const body = (await request.json()) as SavedViewRequest;
+    const body = (await request.json()) as SavedViewUpdate;
     const id = String(params.id);
     const index = savedViews.findIndex((view) => view.id === id);
     if (index < 0) {

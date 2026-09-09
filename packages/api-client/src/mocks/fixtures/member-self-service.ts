@@ -2,8 +2,11 @@ import type { components } from "../../generated/schema";
 
 import { censusLevels } from "./census";
 
-export type MeDogs = components["schemas"]["MeDogs"];
-export type MeDog = components["schemas"]["MeDog"];
+type License = components["schemas"]["LicenseWithPendingFields"];
+export type MeDog = Omit<components["schemas"]["MeDog"], "licenses"> & {
+  licenses: License[];
+};
+export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
 export type MeProfile = components["schemas"]["MeProfile"];
 type PostalTown = components["schemas"]["PostalTown"];
 
@@ -69,30 +72,6 @@ export const meDogsFixture: MeDogs = {
       sex: "FEMALE",
       tasks: {
         completed: 1,
-        items: [
-          {
-            attachmentsCount: 1,
-            createdAt: "2026-08-12T09:00:00Z",
-            id: "task-duna-balance",
-            instructorName: "Estel",
-            text: "Aquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses",
-          },
-          {
-            attachmentsCount: 0,
-            createdAt: "2026-08-10T09:00:00Z",
-            id: "task-duna-contacts",
-            instructorName: "Marc",
-            text: "Repasseu la taula de contactes al jardí, 5 minuts al dia",
-          },
-          {
-            attachmentsCount: 0,
-            createdAt: "2026-07-28T09:00:00Z",
-            doneAt: "2026-08-02T09:00:00Z",
-            id: "task-duna-wait",
-            instructorName: "Estel",
-            text: "Treballar l'«espera» a la línia de sortida",
-          },
-        ],
         open: 2,
       },
     },
@@ -104,8 +83,12 @@ export const meDogsFixture: MeDogs = {
       id: "dog-rock",
       level: level(3),
       licenses: [
-        { grade: "Iniciació", number: "3241", organisation: "FCAG" },
-        { grade: "G2", number: "13298", organisation: "RSCE" },
+        {
+          grade: "Iniciació",
+          number: "3241",
+          organisation: "FCAG",
+        },
+        { category: "M", division: "2D", grade: "2", number: "13298", organisation: "RSCE" },
       ],
       name: "Rock",
       pack: {
@@ -131,13 +114,6 @@ export const meProfileFixture: MeProfile = {
     { bounced: false, email: "laura@example.cat" },
     { bounced: false, email: "feina@example.cat" },
   ],
-  consents: {
-    imageRights: {
-      at: "2026-02-03T09:00:00Z",
-      granted: false,
-      version: "2026-01",
-    },
-  },
   firstName: "Laura",
   idDocumentMasked: "38······1P",
   lastName1: "Serra",

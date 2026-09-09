@@ -124,7 +124,9 @@ test.describe("E2-W02 census records", () => {
     await page.goto(`${baseUrl}/gossos/dog-duna`);
 
     await expect(page.getByRole("heading", { name: "Duna" })).toBeVisible();
-    await expect(page.locator("strong").filter({ hasText: /^Cartilla de vacunes$/u })).toBeVisible();
+    await expect(
+      page.locator("strong").filter({ hasText: /^Cartilla de vacunes$/u }),
+    ).toBeVisible();
     await expect(page.getByText("Treballar la calma a la sortida.")).toBeVisible();
     await expect(page.getByRole("button", { name: "Canvia el nivell" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Transfereix" })).toBeVisible();
@@ -138,7 +140,8 @@ test.describe("E2-W02 census records", () => {
     const levelDialog = page.getByRole("dialog", { name: "Canvia el nivell" });
     await levelDialog.getByLabel("Nivell nou").selectOption("level-d");
     await levelDialog.getByRole("button", { name: "Desa" }).click();
-    await expect(page.getByText(/1 reserva futura queda fora del nivell nou/u)).toBeVisible();
+    await expect(page.getByText("Nivell D", { exact: true })).toBeVisible();
+    await expect(page.getByText(/reserva futura queda fora del nivell nou/u)).toHaveCount(0);
 
     await page.getByRole("button", { name: "Dona de baixa" }).click();
     await page

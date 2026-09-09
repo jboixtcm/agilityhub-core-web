@@ -45,7 +45,7 @@ async function login(page: Page, scenario = "member", branding: unknown = brandi
 }
 
 test.describe("T-03-40 mobile own dogs", () => {
-  test("edits the note, completes a task and uploads photo and document", async ({ page }) => {
+  test("edits the note, shows task totals and uploads photo and document", async ({ page }) => {
     await login(page);
     await page.goto(`${baseUrl}/gossos`);
 
@@ -54,7 +54,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     await expect(page.getByText("Nivell C")).toBeVisible();
     await expect(page.getByText("Pot entrenar sol")).toHaveCount(1);
     await expect(page.getByText("FCAG · llicència 3241 · Iniciació")).toBeVisible();
-    await expect(page.getByText("RSCE · llicència 13298 · G2")).toBeVisible();
+    await expect(page.getByText("RSCE · llicència 13298 · M · 2 · 2D")).toBeVisible();
 
     const noteRequest = page.waitForRequest(
       (request) =>
@@ -71,11 +71,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     });
     await expect(page.getByText("Nota de Duna desada")).toBeVisible();
 
-    const task = page.getByRole("checkbox", {
-      name: /Marca la tasca com a feta: Aquesta setmana practiqueu el balancí/u,
-    });
-    await task.click();
-    await expect(task).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByText("2 pendents · 1 fetes")).toBeVisible();
 
     const photoRequest = page.waitForRequest(
       (request) =>

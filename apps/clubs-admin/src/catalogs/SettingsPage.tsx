@@ -240,7 +240,11 @@ function FaqForm({
       .GET("/faq-entries/filter-values", { params: { query: { field: "category" } } })
       .then((result) => {
         if (current && result.data !== undefined) {
-          setSuggestions(result.data);
+          setSuggestions(
+            result.data.values.flatMap((item) =>
+              typeof item.value === "string" ? [item.value] : [],
+            ),
+          );
         }
       });
     return () => {

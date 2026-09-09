@@ -40,9 +40,9 @@ function isOnboardingFieldKey(value: string): value is OnboardingFieldKey {
 function initialFields(state: OnboardingState, accountLocale: Locale): OnboardingFields {
   const values: OnboardingFields = {};
   for (const field of state.fields) {
-    if (field.key === "name" && field.value !== null) {
+    if (field.key === "name" && typeof field.value === "string") {
       values.name = field.value;
-    } else if (field.key === "phone" && field.value !== null) {
+    } else if (field.key === "phone" && typeof field.value === "string") {
       values.phone = field.value;
     } else if (field.key === "locale") {
       values.locale = isLocale(field.value) ? field.value : accountLocale;
@@ -124,6 +124,7 @@ function OnboardingForm({
   const [error, setError] = useState<string>();
   const profileCompletion = state.fields.length > 0;
   const canPostponePolicy = !profileCompletion && state.postponeRemaining > 0;
+  const requiredConsent = state.requiredConsent ?? null;
 
   useEffect(() => {
     if (presentation === "modal") {
@@ -137,7 +138,7 @@ function OnboardingForm({
       document.querySelector<HTMLInputElement>("#onboarding-consent")?.focus();
       return;
     }
-    if (state.requiredConsent === null) {
+    if (requiredConsent === null) {
       setError(t("auth:onboarding.loadError"));
       return;
     }
@@ -147,7 +148,7 @@ function OnboardingForm({
       const selectedFields = includeFields ? nonEmptyFields(fields) : undefined;
       const updated = await authClient.completeOnboarding({
         consentAccepted: true,
-        consentVersion: state.requiredConsent.version,
+        consentVersion: requiredConsent.version,
         ...(selectedFields === undefined ? {} : { fields: selectedFields }),
         ...(profileCompletion ? { imageConsent } : {}),
       });
@@ -274,7 +275,7 @@ function OnboardingForm({
           <span>{t("auth:onboarding.imageConsent")}</span>
         </label>
       ) : null}
-      {state.requiredConsent === null ? (
+      {requiredConsent === null ? (
         <p className="onboarding-form__error" role="alert">
           {t("auth:onboarding.loadError")}
         </p>
@@ -290,7 +291,7 @@ function OnboardingForm({
           />
           <label htmlFor="onboarding-consent">
             {t("auth:onboarding.consentLead")}{" "}
-            <a href={state.requiredConsent.url} rel="noreferrer" target="_blank">
+            <a href={requiredConsent.url} rel="noreferrer" target="_blank">
               {t("auth:onboarding.privacyPolicy")}
             </a>
           </label>

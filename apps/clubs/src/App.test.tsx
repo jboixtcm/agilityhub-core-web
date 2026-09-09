@@ -542,7 +542,7 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
 });
 
 describe("T-03-40 mobile own dogs", () => {
-  it("renders own dogs, saves the note, completes a task and gates TASKS", async () => {
+  it("renders own dogs, saves the note, shows task totals and gates TASKS", async () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");
     window.history.pushState(null, "", "/gossos");
@@ -553,7 +553,7 @@ describe("T-03-40 mobile own dogs", () => {
     expect(screen.getByText("Nivell C")).toBeVisible();
     expect(screen.getByText("Pot entrenar sol")).toBeVisible();
     expect(screen.getByText(/FCAG · llicència 3241 · Iniciació/u)).toBeVisible();
-    expect(screen.getByText(/RSCE · llicència 13298 · G2/u)).toBeVisible();
+    expect(screen.getByText(/RSCE · llicència 13298 · M · 2 · 2D/u)).toBeVisible();
     expect(
       screen.getByText(
         "El nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club",
@@ -565,11 +565,7 @@ describe("T-03-40 mobile own dogs", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "DESA" })[0] as HTMLButtonElement);
     expect(await screen.findByRole("status")).toHaveTextContent("Nota de Duna desada");
 
-    const task = screen.getByRole("checkbox", {
-      name: /Marca la tasca com a feta: Aquesta setmana practiqueu el balancí/u,
-    });
-    fireEvent.click(task);
-    expect(task).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByText("2 pendents · 1 fetes")).toBeVisible();
     fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
     expect(screen.getByRole("dialog", { name: "Afegeix un document de Duna" })).toBeVisible();
     expect(screen.getByLabelText("Tipus")).toBeVisible();

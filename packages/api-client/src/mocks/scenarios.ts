@@ -70,7 +70,7 @@ const scenarios = {
   catalogsNoFaq: {
     branding: {
       ...canic,
-      modules: (canic.modules ?? []).filter((module) => module !== "FAQ"),
+      modules: canic.modules.filter((module) => module !== "FAQ"),
     },
     me: meAdmin as Me,
     sessions: accountSessions,

@@ -95,6 +95,7 @@
     "empty": "Encara no hi ha cap modalitat",
     "emptyPrices": "Encara no hi ha cap tarifa",
     "entryFeeSummary": "entrada per gos (matrícula): {amount}",
+    "familySubtitle": "(familiar)",
     "entryMode": {
       "amount": "Import",
       "none": "Sense",
@@ -125,11 +126,13 @@
       "validTo": "Data de fi"
     },
     "monthlyPrice": "{amount}/mes",
+    "monthlyPriceWithEntry": "{amount}/mes + entrada {entry}",
     "new": "Nova modalitat",
     "newPrice": "Nou preu",
     "noPrice": "segons tarifa",
     "presentationTitle": "Textos de presentació — {name} (surten a l'alta)",
     "previewTitle": "Vista prèvia (com ho veu qui es dona d'alta)",
+    "previewConditionsWithEntry": "{conditions} · entrada {entry}",
     "priceLocked": "No es pot afegir: la data correspon a un període de preu bloquejat.",
     "priceStatus": {
       "current": "vigent",

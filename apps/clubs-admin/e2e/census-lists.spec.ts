@@ -86,7 +86,7 @@ test.describe("E2-W01 census universal lists", () => {
     await expect(page.getByRole("heading", { name: /Gossos/u })).toBeVisible();
     await expect(page.getByText("242 actius")).toBeVisible();
     await expect(page.getByRole("columnheader", { name: "Entrenament lliure" })).toBeVisible();
-    await expect(page.getByText("FCAG 3241 (Iniciació) · RSCE 13298 (G2)")).toBeVisible();
+    await expect(page.getByText("FCAG 3241 (Iniciació) · RSCE 13298 (2)")).toBeVisible();
     await page.evaluate(() => {
       window.scrollTo(0, 0);
     });

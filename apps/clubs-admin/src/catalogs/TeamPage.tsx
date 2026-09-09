@@ -275,7 +275,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
     if (result.data === undefined) {
       throw new TypeError("Instructor response did not contain data");
     }
-    return result.data.items;
+    return result.data.items as Instructor[];
   }, [client]);
   const loadAdministrators = useCallback(async () => {
     const result = await client.GET("/administrators", {

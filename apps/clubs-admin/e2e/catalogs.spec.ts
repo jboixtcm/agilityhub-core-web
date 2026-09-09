@@ -148,6 +148,11 @@ test.describe("E2-W04 club catalogs", () => {
 
     await expect(page.getByRole("heading", { name: "Modalitats i tarifes" })).toBeVisible();
     await expect(page.getByText(/entrada per gos \(matrícula\): 100/u)).toBeVisible();
+    await expect(page.getByText(/60\s*€\/mes \+ entrada 100\s*€/u).first()).toBeVisible();
+    await expect(page.getByText("(familiar)")).toBeVisible();
+    await expect(page.locator(".catalog-plan-preview")).toContainText(
+      /Fins a dues classes per setmana · entrada 100\s*€/u,
+    );
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "D8-modalitats-1280.png"),

@@ -95,6 +95,7 @@
     "empty": "There are no plans yet",
     "emptyPrices": "There are no prices yet",
     "entryFeeSummary": "entry fee per dog: {amount}",
+    "familySubtitle": "(family)",
     "entryMode": {
       "amount": "Amount",
       "none": "None",
@@ -125,11 +126,13 @@
       "validTo": "End date"
     },
     "monthlyPrice": "{amount}/month",
+    "monthlyPriceWithEntry": "{amount}/month + {entry} entry fee",
     "new": "New plan",
     "newPrice": "New price",
     "noPrice": "price on request",
     "presentationTitle": "Presentation text — {name} (shown at signup)",
     "previewTitle": "Preview (as seen by the person signing up)",
+    "previewConditionsWithEntry": "{conditions} · {entry} entry fee",
     "priceLocked": "This price cannot be added because the date is in a locked price period.",
     "priceStatus": {
       "current": "current",

@@ -19,12 +19,16 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react
 import { useTranslation } from "react-i18next";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
-type DogListItem = components["schemas"]["DogListItem"];
-type ListFilter = components["schemas"]["ListFilter"];
-type MemberListResponse = components["schemas"]["MemberListResponse"];
-type DogListResponse = components["schemas"]["DogListResponse"];
+type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
+  components["schemas"]["DogPendingFields"] & {
+    licenses: components["schemas"]["LicenseWithPendingFields"][];
+  };
+type ListFilter = components["schemas"]["Filter"];
+type MemberListResponse = components["schemas"]["ListPageMemberListItem"];
+type DogListResponse = components["schemas"]["ListPageDogListItem"];
 type SavedView = components["schemas"]["SavedView"];
-type SavedViewRequest = components["schemas"]["SavedViewRequest"];
+type SavedViewCreate = components["schemas"]["SavedViewCreate"];
+type SavedViewUpdate = components["schemas"]["SavedViewUpdate"];
 
 type CensusKind = "dogs" | "members";
 
@@ -55,6 +59,12 @@ const DOG_DEFAULT_FILTERS: UniversalFilter[] = [
   { field: "status", operator: "eq", value: "ACTIVE" },
 ];
 
+function filterValue(value: unknown): string {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+    ? String(value)
+    : "";
+}
+
 function apiFilters(filters: readonly UniversalFilter[]): string[] {
   return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
 }
@@ -71,7 +81,7 @@ function universalFilters(filters: readonly ListFilter[]): UniversalFilter[] {
   return filters.map((filter) => ({
     field: filter.field,
     operator: filter.op,
-    value: filter.value,
+    value: filterValue(filter.value),
   }));
 }
 
@@ -215,7 +225,7 @@ function useSavedViews(
     shared: boolean,
     state: UniversalListState,
   ): Promise<UniversalListSavedView> => {
-    const body: SavedViewRequest = {
+    const body: SavedViewCreate = {
       columns: state.columns,
       filters: savedViewFilters(state.filters),
       listKey,
@@ -235,13 +245,18 @@ function useSavedViews(
     view: UniversalListSavedView,
     name: string,
   ): Promise<UniversalListSavedView> => {
-    const body: SavedViewRequest = {
+    const source = views.find((item) => item.id === view.id);
+    if (source === undefined) {
+      throw new TypeError("Saved view version is unavailable");
+    }
+    const body: SavedViewUpdate = {
       columns: view.columns,
       filters: savedViewFilters(view.filters),
       listKey,
       name,
       shared: view.shared,
       sort: view.sort,
+      version: source.version,
     };
     const result = await client.PUT("/saved-views/{id}", {
       body,
@@ -323,7 +338,10 @@ function useFilterValues(client: ApiClient, kind: CensusKind, state: UniversalLi
       if (result.data === undefined) {
         throw new TypeError("Filter values response did not contain data");
       }
-      return result.data.values;
+      return result.data.values.map((item) => ({
+        ...item,
+        value: filterValue(item.value),
+      }));
     },
     [client, kind, state.filters, state.q],
   );
@@ -425,36 +443,24 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
 
   const memberStatus = useCallback(
     (item: MemberListItem) => {
-      const date = item.displayStatus.date;
       const label =
         item.displayStatus.kind === "ACTIVE"
           ? t("census:values.activeMember")
-          : item.displayStatus.kind === "INACTIVE_PERIOD" && date !== undefined
-            ? t("census:values.inactiveUntil", { date: formatDate(date, locale) })
-            : item.displayStatus.kind === "LEAVE_SCHEDULED" && date !== undefined
-              ? t("census:values.leaveOn", { date: formatDate(date, locale) })
-              : item.displayStatus.kind === "LEFT"
-                ? t("census:values.leftMember")
-                : t("census:values.pending");
+          : item.displayStatus.label;
       return <Badge tone={toneForStatus(item.displayStatus.kind)}>{label}</Badge>;
     },
-    [locale, t],
+    [t],
   );
 
   const dogStatus = useCallback(
     (item: DogListItem) => {
-      const date = item.displayStatus.date;
       const label =
         item.displayStatus.kind === "ACTIVE"
           ? t("census:values.activeDog")
-          : item.displayStatus.kind === "LEAVE_SCHEDULED" && date !== undefined
-            ? t("census:values.leaveOn", { date: formatDate(date, locale) })
-            : item.displayStatus.kind === "PENDING"
-              ? t("census:values.pending")
-              : t("census:values.inactiveDog");
+          : item.displayStatus.label;
       return <Badge tone={toneForStatus(item.displayStatus.kind)}>{label}</Badge>;
     },
-    [locale, t],
+    [t],
   );
 
   const memberColumns = useMemo<UniversalListColumn<MemberListItem>[]>(
@@ -473,7 +479,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
             <span className="census-dogs-cell">
               {item.dogs.map((dog) => (
                 <span key={dog.id}>
-                  {dog.name} {levelChip(dog.levelCode)}
+                  {dog.name} {dog.level === undefined ? null : levelChip(dog.level.code)}
                 </span>
               ))}
             </span>
@@ -484,7 +490,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "plan",
                 label: t("census:members.columns.plan"),
-                render: (item: MemberListItem) => item.plan.summary,
+                render: (item: MemberListItem) => item.plan?.name ?? t("census:values.empty"),
               },
             ]
           : []),
@@ -502,14 +508,22 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "contact",
           label: t("census:members.columns.contact"),
-          render: (item) => item.contact,
+          render: (item) =>
+            [
+              ...(item.contact?.emails.map((entry) => entry.email) ?? []),
+              ...(item.contact?.phones.map((entry) => `${entry.prefix}${entry.number}`) ?? []),
+            ].join(" · "),
         },
         ...(modules.includes("BILLING")
           ? [
               {
                 key: "paymentMethod",
                 label: t("census:members.columns.paymentMethod"),
-                render: (item: MemberListItem) => item.paymentMethod ?? t("census:values.empty"),
+                render: (item: MemberListItem) =>
+                  item.paymentMethod?.maskedAccount ??
+                  item.paymentMethod?.channel ??
+                  item.paymentMethod?.type ??
+                  t("census:values.empty"),
               },
               {
                 key: "nextInvoiceDate",
@@ -527,14 +541,18 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "familyGroup",
                 label: t("census:members.columns.familyGroup"),
-                render: (item: MemberListItem) => item.familyGroup ?? t("census:values.empty"),
+                render: (item: MemberListItem) =>
+                  item.familyGroup?.name ?? t("census:values.empty"),
               },
             ]
           : []),
         {
           key: "joinedAt",
           label: t("census:members.columns.joinedAt"),
-          render: (item) => new Date(item.joinedAt).getUTCFullYear(),
+          render: (item) =>
+            item.joinedAt === undefined
+              ? t("census:values.empty")
+              : new Date(item.joinedAt).getUTCFullYear(),
           sortKey: "joinedAt",
         },
         {
@@ -555,13 +573,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "imageRights",
           label: t("census:members.columns.imageRights"),
           render: (item) =>
-            item.imageRightsGranted ? t("census:values.yes") : t("census:values.no"),
+            item.imageRights?.granted === true ? t("census:values.yes") : t("census:values.no"),
         },
         {
           key: "roles",
           label: t("census:members.columns.roles"),
           render: (item) =>
-            item.roles
+            (item.roles ?? [])
               .map((role) =>
                 role === "INSTRUCTOR"
                   ? t("census:values.instructor")
@@ -585,7 +603,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "pendingDocuments",
           label: t("census:members.columns.pendingDocuments"),
-          render: (item) => item.pendingDocuments,
+          render: (item) => item.pendingDocuments?.join(" · ") ?? t("census:values.empty"),
         },
         ...(modules.includes("FREE_TRAINING")
           ? [
@@ -593,14 +611,17 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 key: "freeTraining",
                 label: t("census:members.columns.freeTraining"),
                 render: (item: MemberListItem) =>
-                  item.freeTrainingAllowed ? t("census:values.yes") : t("census:values.no"),
+                  item.freeTraining === true ? t("census:values.yes") : t("census:values.no"),
               },
             ]
           : []),
         {
           key: "birthDate",
           label: t("census:members.columns.birthDate"),
-          render: (item) => formatDate(item.birthDate, locale),
+          render: (item) =>
+            item.birthDate === undefined
+              ? t("census:values.empty")
+              : formatDate(item.birthDate, locale),
         },
         {
           key: "gender",
@@ -639,7 +660,8 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "level",
           label: t("census:dogs.columns.level"),
-          render: (item) => levelChip(item.level.code),
+          render: (item) =>
+            item.level === undefined ? t("census:values.empty") : levelChip(item.level.code),
           sortKey: "levelOrder",
         },
         {
@@ -648,13 +670,18 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) => item.owner.fullName,
           sortKey: "ownerLastName",
         },
+        {
+          key: "handler",
+          label: t("census:dogs.columns.handler"),
+          render: (item) => item.handlerName ?? t("census:values.empty"),
+        },
         ...(modules.includes("FREE_TRAINING")
           ? [
               {
                 key: "freeTraining",
                 label: t("census:dogs.columns.freeTraining"),
                 render: (item: DogListItem) =>
-                  item.freeTrainingAllowed ? (
+                  item.freeTraining?.allowed === true ? (
                     <Badge tone="success">{t("census:values.freeTraining")}</Badge>
                   ) : (
                     t("census:values.empty")
@@ -684,16 +711,12 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "sex",
           label: t("census:dogs.columns.sex"),
           render: (item) =>
-            item.sex === "FEMALE"
-              ? t("census:values.female")
-              : item.sex === "MALE"
-                ? t("census:values.male")
-                : t("census:values.unspecified"),
+            item.sex === "FEMALE" ? t("census:values.female") : t("census:values.male"),
         },
         {
           key: "age",
           label: t("census:dogs.columns.age"),
-          render: (item) => t("census:values.years", { count: item.ageYears }),
+          render: (item) => t("census:values.years", { count: item.age }),
         },
         {
           key: "chip",
@@ -703,12 +726,15 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "pendingDocuments",
           label: t("census:dogs.columns.pendingDocuments"),
-          render: (item) => item.pendingDocuments,
+          render: (item) => item.pendingDocuments.join(" · "),
         },
         {
           key: "levelAssignedAt",
           label: t("census:dogs.columns.levelAssignedAt"),
-          render: (item) => formatDate(item.levelAssignedAt, locale),
+          render: (item) =>
+            item.levelAssignedAt === undefined
+              ? t("census:values.empty")
+              : formatDate(item.levelAssignedAt, locale),
           sortKey: "levelAssignedAt",
         },
         ...(modules.includes("PACKS")
@@ -716,7 +742,10 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "pack",
                 label: t("census:dogs.columns.pack"),
-                render: (item: DogListItem) => item.pack ?? t("census:values.empty"),
+                render: (item: DogListItem) =>
+                  item.pack === undefined
+                    ? t("census:values.empty")
+                    : `${String(item.pack.remaining)}/${String(item.pack.total)}`,
               },
             ]
           : []),
@@ -805,6 +834,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     { key: "levelId", label: t("census:dogs.columns.level"), type: "relation" },
     { key: "memberId", label: t("census:dogs.filters.memberId"), type: "relation" },
     { key: "ownerName", label: t("census:dogs.filters.ownerName"), type: "text" },
+    { key: "handlerName", label: t("census:dogs.filters.handlerName"), type: "text" },
     { key: "status", label: t("census:dogs.filters.status"), type: "enum" },
     ...(modules.includes("FREE_TRAINING")
       ? [
@@ -856,15 +886,28 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         : t("census:list.genericError");
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const definitions = kind === "members" ? memberFilterColumns : dogFilterColumns;
+    const value = filterValue(filter.value);
+    const memberItems = (data?.items ?? []) as MemberListItem[];
+    const dogItems = (data?.items ?? []) as DogListItem[];
+    const valueLabel =
+      kind === "members" && filter.field === "planId"
+        ? (memberItems.find((item) => item.plan?.id === value)?.plan?.name ?? value)
+        : kind === "dogs" && filter.field === "levelId"
+          ? (dogItems.find((item) => item.level?.id === value)?.level?.name ?? value)
+          : kind === "dogs" && filter.field === "memberId"
+            ? (dogItems.find((item) => item.owner.id === value)?.owner.fullName ?? value)
+            : value === "true"
+              ? t("census:values.yes")
+              : value === "false"
+                ? t("census:values.no")
+                : value;
     return {
       field: filter.field,
       fieldLabel:
-        filter.label ??
-        definitions.find((definition) => definition.key === filter.field)?.label ??
-        filter.field,
+        definitions.find((definition) => definition.key === filter.field)?.label ?? filter.field,
       operator: filter.op,
-      value: filter.value,
-      valueLabel: filter.valueLabel ?? filter.value,
+      value,
+      valueLabel,
     };
   });
 

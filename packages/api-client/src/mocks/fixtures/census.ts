@@ -1,52 +1,45 @@
 import type { components } from "../../generated/schema";
 
 export type MemberListItem = components["schemas"]["MemberListItem"];
-export type DogListItem = components["schemas"]["DogListItem"];
+type License = components["schemas"]["LicenseWithPendingFields"];
+type DogPendingFields = components["schemas"]["DogPendingFields"];
+type ApiDog = components["schemas"]["Dog"];
+type Dog = Omit<ApiDog, "licenses"> & DogPendingFields & { licenses: License[] };
+export type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
+  DogPendingFields & { licenses: License[] };
 export type SavedView = components["schemas"]["SavedView"];
 export type MemberOverview = components["schemas"]["MemberOverview"];
-export type DogDetail = components["schemas"]["DogDetail"];
+export type DogDetail = Omit<components["schemas"]["DogDetail"], "dog" | "licenses"> & {
+  dog: Dog;
+  licenses: License[];
+};
 export type LevelSummary = components["schemas"]["LevelSummary"];
 
 export const censusLevels: readonly LevelSummary[] = [
   {
-    active: true,
     code: "A",
-    grantsFreeTraining: false,
     id: "level-a",
     name: "Nivell A",
-    order: 1,
   },
   {
-    active: true,
     code: "B",
-    grantsFreeTraining: false,
     id: "level-b",
     name: "Nivell B",
-    order: 2,
   },
   {
-    active: true,
     code: "C",
-    grantsFreeTraining: false,
     id: "level-c",
     name: "Nivell C",
-    order: 3,
   },
   {
-    active: true,
     code: "D",
-    grantsFreeTraining: true,
     id: "level-d",
     name: "Nivell D",
-    order: 4,
   },
   {
-    active: true,
     code: "E",
-    grantsFreeTraining: true,
     id: "level-e",
     name: "Nivell E",
-    order: 5,
   },
 ];
 
@@ -64,7 +57,6 @@ const memberOverviewFixture: MemberOverview = {
       breed: "border collie",
       freeTrainingAllowed: false,
       id: "dog-duna",
-      instructorNote: "Treballar la calma a la sortida.",
       level: levelAt(2),
       name: "Duna",
       pendingDocuments: [],
@@ -73,20 +65,35 @@ const memberOverviewFixture: MemberOverview = {
       breed: "mestís",
       freeTrainingAllowed: true,
       id: "dog-rock",
-      instructorNote: "Vigilar l'espatlla esquerra.",
       level: levelAt(3),
       name: "Rock",
-      pack: "Pack 10: 6/4 · caduca 12-11",
+      pack: {
+        expiresOn: "2026-11-12",
+        id: "pack-rock-10",
+        remaining: 4,
+        total: 10,
+      },
       pendingDocuments: [],
     },
   ],
   familyGroup: {
     holderMemberId: "member-laura",
     id: "family-laura",
+    memberIds: ["member-laura", "member-joan"],
     members: [
-      { fullName: "Laura Serra Vidal", id: "member-laura", memberNumber: 87 },
-      { fullName: "Joan Antoni Serra", id: "member-joan", memberNumber: 112 },
+      {
+        dogs: [
+          { id: "dog-duna", name: "Duna" },
+          { id: "dog-rock", name: "Rock" },
+        ],
+        fullName: "Laura Serra Vidal",
+        id: "member-laura",
+        memberNumber: 87,
+      },
+      { dogs: [], fullName: "Joan Antoni Serra", id: "member-joan", memberNumber: 112 },
     ],
+    status: "ACTIVE",
+    version: 1,
   },
   invoicesCount: 38,
   member: {
@@ -107,11 +114,16 @@ const memberOverviewFixture: MemberOverview = {
         granted: false,
         version: "2026-01",
       },
+      privacyPolicy: {
+        acceptedAt: "2026-02-03T09:00:00Z",
+        version: "2026-01",
+      },
     },
     contactEmails: [
       { bounced: false, email: "laura.serra@example.test" },
       { bounced: false, email: "feina.laura@example.test" },
     ],
+    displayStatus: { kind: "ACTIVE", label: "alta" },
     firstName: "Laura",
     fullName: "Laura Serra Vidal",
     gender: "FEMALE",
@@ -128,21 +140,18 @@ const memberOverviewFixture: MemberOverview = {
       maskedAccount: "···· ···· ···· ···· 2231",
       type: "SEPA_DD",
     },
+    planId: "plan-family",
     phones: [
       { label: "Laura", number: "655100101", prefix: "+34" },
       { label: "Joan", number: "617100102", prefix: "+34" },
     ],
-    plan: {
-      id: "plan-member",
-      name: "Abonat",
-      summary: "Abonat · 2 gossos — 90 €/mes (tarifa familiar)",
-    },
+    priceId: "price-family",
     remarks: "Contactar preferentment per correu.",
     roles: ["MEMBER"],
     status: "ACTIVE",
     version: 7,
   },
-  nextInvoice: { amount: 90, date: "2026-09-01" },
+  nextInvoice: { amount: { amountMinor: 9000, currency: "EUR" }, date: "2026-09-01" },
   notificationPreferences: {
     availableLocales: ["ca", "es", "en"],
     emailByCategory: {
@@ -160,19 +169,33 @@ const memberOverviewFixture: MemberOverview = {
   },
   recentAudit: [
     {
-      changedAt: "2026-08-03T11:15:00Z",
+      action: "canvi d'IBAN",
+      actorName: "Jordi",
+      actorRole: "ADMIN",
+      at: "2026-08-03T11:15:00Z",
       id: "audit-iban",
-      summary: "canvi d'IBAN (admin Jordi)",
     },
     {
-      changedAt: "2026-07-26T09:30:00Z",
+      action: "canvi de tarifa",
+      actorName: "Jordi",
+      actorRole: "ADMIN",
+      at: "2026-07-26T09:30:00Z",
       id: "audit-plan",
-      summary: "canvi de tarifa (admin Jordi)",
     },
   ],
   recentInvoices: [
-    { amount: 90, id: "invoice-september", label: "2026-0912 · Setembre", status: "REMITTED" },
-    { amount: 90, id: "invoice-august", label: "2026-0744 · Agost", status: "PAID" },
+    {
+      amount: { amountMinor: 9000, currency: "EUR" },
+      date: "2026-09-01",
+      id: "invoice-september",
+      status: "REMITTED",
+    },
+    {
+      amount: { amountMinor: 9000, currency: "EUR" },
+      date: "2026-08-01",
+      id: "invoice-august",
+      status: "PAID",
+    },
   ],
 };
 
@@ -180,9 +203,6 @@ function dogDetailFixture(id: "dog-duna" | "dog-rock"): DogDetail {
   const rock = id === "dog-rock";
   const level = levelAt(rock ? 3 : 2);
   return {
-    birthDate: rock ? "2020-05-20" : "2022-03-12",
-    breed: rock ? "mestís" : "border collie",
-    chip: rock ? "941000000000002" : "941000000000001",
     documents: [
       {
         files: rock
@@ -213,36 +233,75 @@ function dogDetailFixture(id: "dog-duna" | "dog-rock"): DogDetail {
       override: null,
       source: "LEVEL",
     },
-    id,
-    instructorNote: rock ? "Vigilar l'espatlla esquerra." : "Treballar la calma a la sortida.",
+    dog: {
+      birthDate: rock ? "2020-05-20" : "2022-03-12",
+      breed: rock ? "mestís" : "border collie",
+      chip: rock ? "941000000000002" : "941000000000001",
+      ...(rock ? { handlerName: "Júlia Roca" } : {}),
+      id,
+      instructorNote: {
+        text: rock ? "Vigilar l'espatlla esquerra." : "Treballar la calma a la sortida.",
+        updatedAt: "2026-08-12T09:00:00Z",
+      },
+      levelAssignedAt: rock ? "2025-04-08T09:00:00Z" : "2025-02-01T09:00:00Z",
+      levelId: level.id,
+      licenses: rock
+        ? [
+            {
+              grade: "Iniciació",
+              number: "3241",
+              organisation: "FCAG",
+            },
+            {
+              category: "M",
+              division: "2D",
+              grade: "2",
+              number: "13298",
+              organisation: "RSCE",
+            },
+          ]
+        : [],
+      memberId: "member-laura",
+      name: rock ? "Rock" : "Duna",
+      registeredAt: "2023-02-03T09:00:00Z",
+      sex: rock ? "MALE" : "FEMALE",
+      status: "ACTIVE",
+      version: 4,
+    },
     level,
-    levelAssignedAt: rock ? "2025-04-08T09:00:00Z" : "2025-02-01T09:00:00Z",
     levelHistory: [
       {
         byAccountId: "account-admin",
         from: "2025-02-01T09:00:00Z",
-        levelCode: level.code,
         levelId: level.id,
       },
     ],
     licenses: rock
       ? [
-          { grade: "Iniciació", number: "3241", organisation: "FCAG" },
-          { grade: "G2", number: "13298", organisation: "RSCE" },
+          {
+            grade: "Iniciació",
+            number: "3241",
+            organisation: "FCAG",
+          },
+          {
+            category: "M",
+            division: "2D",
+            grade: "2",
+            number: "13298",
+            organisation: "RSCE",
+          },
         ]
       : [],
-    name: rock ? "Rock" : "Duna",
     owner: {
       fullName: "Laura Serra Vidal",
       id: "member-laura",
       memberNumber: 87,
       status: "ACTIVE",
     },
-    ...(rock ? { pack: "Pack 10: 6/4 · caduca 12-11" } : {}),
-    registeredAt: "2023-02-03T09:00:00Z",
-    sex: rock ? "MALE" : "FEMALE",
-    status: "ACTIVE",
-    tasksSummary: "2 pendents",
+    ...(rock
+      ? { pack: { expiresOn: "2026-11-12", id: "pack-rock-10", remaining: 4, total: 10 } }
+      : {}),
+    tasksSummary: { completed: 1, open: 2 },
     version: 4,
   };
 }
@@ -297,7 +356,7 @@ const dogNames = [
 const levels = ["A", "B", "C", "D", "E", "F", "G"] as const;
 const breeds = ["border collie", "mestís", "xolo", "malinois", "sheltie"] as const;
 
-const featuredMembers: readonly MemberListItem[] = [
+const featuredMembers = [
   {
     birthDate: "1988-04-12",
     bookingBlocked: false,
@@ -454,7 +513,7 @@ const featuredMembers: readonly MemberListItem[] = [
   },
 ];
 
-function generatedMember(index: number): MemberListItem {
+function generatedMember(index: number) {
   const sequence = index + 1;
   const [firstName, lastName] = memberNames[index % memberNames.length] ?? memberNames[0];
   const levelCode = levels[index % levels.length] ?? "A";
@@ -496,12 +555,55 @@ function generatedMember(index: number): MemberListItem {
   };
 }
 
+type MemberFixtureInput = (typeof featuredMembers)[number] | ReturnType<typeof generatedMember>;
+
+function memberListItem(input: MemberFixtureInput): MemberListItem {
+  const [email = "", phone = ""] = input.contact.split(" · ");
+  return {
+    birthDate: input.birthDate,
+    bookingBlocked: input.bookingBlocked,
+    city: input.city,
+    contact: {
+      emails: [{ bounced: false, email }],
+      phones: [{ number: phone.replaceAll(" ", ""), prefix: "+34" }],
+    },
+    displayStatus: input.displayStatus,
+    dogs: input.dogs.map((dog) => ({
+      id: dog.id,
+      level: {
+        code: dog.levelCode,
+        id: `level-${dog.levelCode.toLocaleLowerCase()}`,
+        name: `Nivell ${dog.levelCode}`,
+      },
+      name: dog.name,
+    })),
+    freeTraining: input.freeTrainingAllowed,
+    fullName: input.fullName,
+    gender: input.gender as NonNullable<MemberListItem["gender"]>,
+    id: input.id,
+    idDocument: input.idDocument,
+    imageRights: { granted: input.imageRightsGranted },
+    joinedAt: input.joinedAt,
+    ...("leaveDate" in input ? { leaveDate: input.leaveDate } : {}),
+    memberNumber: input.memberNumber,
+    nextInvoiceDate: input.nextInvoiceDate,
+    paymentMethod: input.paymentMethod.includes("····")
+      ? { maskedAccount: input.paymentMethod, type: "SEPA_DD" }
+      : { channel: input.paymentMethod, type: "MANUAL" },
+    pendingDocuments: input.pendingDocuments === 0 ? [] : ["VACCINATION_CARD"],
+    plan: { id: input.plan.id, name: input.plan.name },
+    postalCode: input.postalCode,
+    roles: input.roles as NonNullable<MemberListItem["roles"]>,
+    version: 1,
+  };
+}
+
 export const censusMembers: readonly MemberListItem[] = [
   ...featuredMembers,
   ...Array.from({ length: 184 - featuredMembers.length }, (_, index) => generatedMember(index)),
-];
+].map(memberListItem);
 
-const featuredDogs: readonly DogListItem[] = [
+const featuredDogs = [
   {
     ageYears: 4,
     birthDate: "2022-03-12",
@@ -527,12 +629,17 @@ const featuredDogs: readonly DogListItem[] = [
     chip: "941000000000002",
     displayStatus: { kind: "ACTIVE", label: "actiu" },
     freeTrainingAllowed: true,
+    handlerName: "Júlia Roca",
     id: "dog-rock",
     level: { code: "D", id: "level-d", name: "Nivell D", order: 4 },
     levelAssignedAt: "2025-04-08",
     licenses: [
-      { grade: "Iniciació", number: "3241", organisation: "FCAG" },
-      { grade: "G2", number: "13298", organisation: "RSCE" },
+      {
+        grade: "Iniciació",
+        number: "3241",
+        organisation: "FCAG",
+      },
+      { category: "M", division: "2D", grade: "2", number: "13298", organisation: "RSCE" },
     ],
     name: "Rock",
     owner: { fullName: "Laura Serra", id: "member-laura", lastName: "Serra" },
@@ -598,7 +705,7 @@ const featuredDogs: readonly DogListItem[] = [
   },
 ];
 
-function generatedDog(index: number): DogListItem {
+function generatedDog(index: number) {
   const sequence = index + 1;
   const levelCode = levels[index % levels.length] ?? "A";
   const [ownerFirstName, ownerLastName] = memberNames[index % memberNames.length] ?? memberNames[0];
@@ -619,7 +726,15 @@ function generatedDog(index: number): DogListItem {
     levelAssignedAt: `202${String(index % 6)}-02-01`,
     licenses:
       index % 7 === 0
-        ? [{ grade: "Iniciació", number: String(4000 + sequence), organisation: "FCAG" }]
+        ? [
+            {
+              category: levels[index % 5] ?? "M",
+              division: "Iniciació",
+              grade: "Iniciació",
+              number: String(4000 + sequence),
+              organisation: "FCAG",
+            },
+          ]
         : [],
     name: `${dogNames[index % dogNames.length] ?? "Duna"} ${String(sequence)}`,
     owner: {
@@ -634,10 +749,57 @@ function generatedDog(index: number): DogListItem {
   };
 }
 
+type DogFixtureInput = (typeof featuredDogs)[number] | ReturnType<typeof generatedDog>;
+
+function dogListItem(input: DogFixtureInput): DogListItem {
+  return {
+    age: input.ageYears,
+    breed: input.breed,
+    chip: input.chip,
+    displayStatus: input.displayStatus,
+    freeTraining: {
+      allowed: input.freeTrainingAllowed,
+      override: null,
+      source: "LEVEL",
+    },
+    id: input.id,
+    ...(typeof Reflect.get(input, "handlerName") === "string"
+      ? { handlerName: Reflect.get(input, "handlerName") as string }
+      : {}),
+    level: {
+      code: input.level.code,
+      id: input.level.id,
+      name: input.level.name,
+    },
+    levelAssignedAt: input.levelAssignedAt,
+    licenses: input.licenses,
+    name: input.name,
+    owner: {
+      fullName: input.owner.fullName,
+      id: input.owner.id,
+      status: "ACTIVE",
+    },
+    ...("pack" in input
+      ? {
+          pack: {
+            expiresOn: "2026-11-12",
+            id: "pack-list-10",
+            remaining: 4,
+            total: 10,
+          },
+        }
+      : {}),
+    pendingDocuments: input.pendingDocuments === 0 ? [] : ["VACCINATION_CARD"],
+    registeredAt: input.registeredAt,
+    sex: input.sex as DogListItem["sex"],
+    version: 1,
+  };
+}
+
 export const censusDogs: readonly DogListItem[] = [
   ...featuredDogs,
   ...Array.from({ length: 242 - featuredDogs.length }, (_, index) => generatedDog(index)),
-];
+].map(dogListItem);
 
 export const initialSavedViews: readonly SavedView[] = [
   {
@@ -649,6 +811,7 @@ export const initialSavedViews: readonly SavedView[] = [
     ownerAccountId: "account-admin",
     shared: true,
     sort: ["leaveDate,asc"],
+    version: 1,
   },
   {
     columns: ["name", "breed", "level", "owner", "freeTraining", "licenses", "displayStatus"],
@@ -659,5 +822,6 @@ export const initialSavedViews: readonly SavedView[] = [
     ownerAccountId: "account-admin",
     shared: true,
     sort: ["name,asc"],
+    version: 1,
   },
 ];

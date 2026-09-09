@@ -93,7 +93,11 @@ describe("T-03-42 D15 translated dog list", () => {
     expect(await screen.findByText("Duna")).toBeVisible();
     expect(screen.getByText("242 actius")).toBeVisible();
     expect(screen.getByRole("columnheader", { name: "Entrenament lliure" })).toBeVisible();
-    expect(screen.getByText("FCAG 3241 (Iniciació) · RSCE 13298 (G2)")).toBeVisible();
+    expect(screen.getByText("FCAG 3241 (Iniciació) · RSCE 13298 (2)")).toBeVisible();
+    fireEvent.click(screen.getByText("Columnes"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Guia" }));
+    expect(screen.getByRole("columnheader", { name: "Guia" })).toBeVisible();
+    expect(await screen.findByText("Júlia Roca")).toBeVisible();
     expect(screen.getAllByRole("link", { name: "Obre la fitxa de Duna" })[0]).toHaveAttribute(
       "href",
       "/gossos/dog-duna",

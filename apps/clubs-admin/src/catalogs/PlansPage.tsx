@@ -29,9 +29,10 @@ import {
 
 type EntryFee = components["schemas"]["EntryFee"];
 type LocalizedText = Record<string, string>;
-type Plan = components["schemas"]["Plan"];
-type PlanCreate = components["schemas"]["PlanCreate"];
-type PlanPatch = components["schemas"]["PlanPatch"];
+type PlanBillingMode = components["schemas"]["PlanBillingMode"];
+type Plan = components["schemas"]["Plan"] & { billingMode?: PlanBillingMode };
+type PlanCreate = components["schemas"]["PlanCreate"] & { billingMode?: PlanBillingMode };
+type PlanPatch = components["schemas"]["PlanPatch"] & { billingMode?: PlanBillingMode };
 type Price = components["schemas"]["Price"];
 type PriceCreate = components["schemas"]["PriceCreate"];
 
@@ -68,6 +69,23 @@ function currentPrice(plan: Plan): Price | undefined {
   return plan.currentPrices?.find((price) => price.status === "CURRENT") ?? plan.currentPrices?.[0];
 }
 
+function entryFeeAmountMinor(plan: Plan, standardAmountMinor: number): number | undefined {
+  if (plan.entryFee.mode === "NONE") {
+    return undefined;
+  }
+  if (plan.entryFee.mode === "AMOUNT") {
+    return plan.entryFee.amount?.amountMinor;
+  }
+  if (plan.entryFee.mode === "PERCENT") {
+    return Math.round((standardAmountMinor * (plan.entryFee.percent ?? 0)) / 100);
+  }
+  return standardAmountMinor;
+}
+
+function sentenceCase(value: string): string {
+  return value === "" ? value : `${value.slice(0, 1).toLocaleUpperCase()}${value.slice(1)}`;
+}
+
 function PlanType({ plan }: { plan: Plan }) {
   const { t } = useTranslation("admin-catalogs");
   if (plan.type === "PACK") {
@@ -90,7 +108,7 @@ function PriceStatus({ status }: { status: Price["status"] }) {
   return <Badge tone="neutral">{t("admin-catalogs:plans.priceStatus.expired")}</Badge>;
 }
 
-function PlanPrice({ plan }: { plan: Plan }) {
+function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan }) {
   const { formatMoney } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const price = currentPrice(plan);
@@ -99,7 +117,17 @@ function PlanPrice({ plan }: { plan: Plan }) {
   }
   const amount = compactMoney(formatMoney(price.amount.amountMinor / 100));
   if (plan.type === "MONTHLY") {
-    return <strong>{t("admin-catalogs:plans.monthlyPrice", { amount })}</strong>;
+    const planEntryFee = entryFeeAmountMinor(plan, entryFeeMinor);
+    return (
+      <strong>
+        {planEntryFee === undefined
+          ? t("admin-catalogs:plans.monthlyPrice", { amount })
+          : t("admin-catalogs:plans.monthlyPriceWithEntry", {
+              amount,
+              entry: compactMoney(formatMoney(planEntryFee / 100)),
+            })}
+      </strong>
+    );
   }
   if (plan.type === "SINGLE_CLASS") {
     return <strong>{t("admin-catalogs:plans.singleClassPrice", { amount })}</strong>;
@@ -615,17 +643,20 @@ function PlanForm({
 function PlanCopyCards({
   billingEnabled,
   client,
+  entryFeeMinor,
   onFeedback,
   onSaved,
   plan,
 }: {
   billingEnabled: boolean;
   client: ApiClient;
+  entryFeeMinor: number;
   onFeedback: (message: string) => void;
   onSaved: () => void;
   plan: Plan;
 }) {
   const branding = useBranding();
+  const { formatMoney } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [textLocale, setTextLocale] = useState(branding.defaultLocale);
@@ -636,6 +667,7 @@ function PlanCopyCards({
     localized(plan.texts?.offerLabelI18n, plan.texts?.offerLabel ?? "", branding.defaultLocale),
   );
   const [saving, setSaving] = useState(false);
+  const previewEntryFee = entryFeeAmountMinor(plan, entryFeeMinor);
 
   const save = async () => {
     setSaving(true);
@@ -706,10 +738,17 @@ function PlanCopyCards({
         <div className="catalog-plan-preview">
           <div className="catalog-plan-preview__title">
             <strong>{plan.name}</strong>
-            {billingEnabled ? <PlanPrice plan={plan} /> : null}
+            {billingEnabled ? <PlanPrice entryFeeMinor={entryFeeMinor} plan={plan} /> : null}
           </div>
           <p>{description[textLocale] ?? ""}</p>
-          <p>{plan.conditions}</p>
+          <p>
+            {previewEntryFee === undefined
+              ? sentenceCase(plan.conditions ?? "")
+              : t("admin-catalogs:plans.previewConditionsWithEntry", {
+                  conditions: sentenceCase(plan.conditions ?? ""),
+                  entry: compactMoney(formatMoney(previewEntryFee / 100)),
+                })}
+          </p>
           <p>{offerLabel[textLocale] ?? ""}</p>
         </div>
         <p className="catalog-plan-footnote">{t("admin-catalogs:plans.validityNote")}</p>
@@ -727,7 +766,7 @@ export function PlansPage({ client }: { client: ApiClient }) {
     if (result.data === undefined) {
       throw new TypeError("Plan response did not contain data");
     }
-    return result.data.items;
+    return result.data.items as Plan[];
   }, [client]);
   const data = useCatalogData(load, client);
   const [entryFeeMinor, setEntryFeeMinor] = useState(0);
@@ -807,7 +846,14 @@ export function PlansPage({ client }: { client: ApiClient }) {
           {
             header: t("admin-catalogs:plans.columns.name"),
             key: "name",
-            render: (plan) => <strong>{plan.name}</strong>,
+            render: (plan) => (
+              <span className="catalog-plan-name">
+                <strong>{plan.name}</strong>
+                {plan.dogsIncluded > 1 ? (
+                  <small>{t("admin-catalogs:plans.familySubtitle")}</small>
+                ) : null}
+              </span>
+            ),
           },
           {
             header: t("admin-catalogs:plans.columns.type"),
@@ -819,7 +865,7 @@ export function PlansPage({ client }: { client: ApiClient }) {
                 {
                   header: t("admin-catalogs:plans.columns.price"),
                   key: "price",
-                  render: (plan: Plan) => <PlanPrice plan={plan} />,
+                  render: (plan: Plan) => <PlanPrice entryFeeMinor={entryFeeMinor} plan={plan} />,
                 },
               ]
             : []),
@@ -849,6 +895,7 @@ export function PlansPage({ client }: { client: ApiClient }) {
           key={`${selectedPlan.id}:${String(selectedPlan.version)}`}
           billingEnabled={billingEnabled}
           client={client}
+          entryFeeMinor={entryFeeMinor}
           onFeedback={setFeedback}
           onSaved={data.reload}
           plan={selectedPlan}

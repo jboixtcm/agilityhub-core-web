@@ -95,6 +95,7 @@
     "empty": "Todavía no hay ninguna modalidad",
     "emptyPrices": "Todavía no hay ninguna tarifa",
     "entryFeeSummary": "entrada por perro (matrícula): {amount}",
+    "familySubtitle": "(familiar)",
     "entryMode": {
       "amount": "Importe",
       "none": "Sin entrada",
@@ -125,11 +126,13 @@
       "validTo": "Fecha de fin"
     },
     "monthlyPrice": "{amount}/mes",
+    "monthlyPriceWithEntry": "{amount}/mes + entrada {entry}",
     "new": "Nueva modalidad",
     "newPrice": "Nuevo precio",
     "noPrice": "según tarifa",
     "presentationTitle": "Textos de presentación — {name} (aparecen en el alta)",
     "previewTitle": "Vista previa (como la ve quien se da de alta)",
+    "previewConditionsWithEntry": "{conditions} · entrada {entry}",
     "priceLocked": "No se puede añadir: la fecha corresponde a un periodo de precio bloqueado.",
     "priceStatus": {
       "current": "vigente",

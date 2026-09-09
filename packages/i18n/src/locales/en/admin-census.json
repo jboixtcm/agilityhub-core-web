@@ -39,7 +39,6 @@
       "documentUploaded": "The document was uploaded.",
       "freeTraining": "The free-training permission was updated.",
       "levelSaved": "The level was updated.",
-      "levelWarning": "Level updated. {count, plural, one {# future booking is outside the new level.} other {# future bookings are outside the new level.}}",
       "photo": "The photo was updated.",
       "reactivated": "The dog was reactivated.",
       "reminderSent": "The reminder was sent.",
@@ -49,8 +48,13 @@
     "fields": {
       "birthDate": "Date of birth",
       "breed": "Breed",
+      "category": "Category",
       "chip": "Chip",
+      "division": "Division",
       "grade": "Grade",
+      "handler": "Handler",
+      "licenseCategory": "Licence {number} category",
+      "licenseDivision": "Licence {number} division",
       "licenseGrade": "Licence {number} grade",
       "licenseNumber": "Licence {number} number",
       "licenseOrganisation": "Licence {number} organisation",
@@ -70,7 +74,6 @@
     },
     "level": {
       "current": "current",
-      "futureWarning": "Future bookings are kept even if they do not admit the new level.",
       "select": "New level",
       "since": "since {date}",
       "title": "Change level"
@@ -100,7 +103,10 @@
       "inactive": "inactive",
       "reason": "Reason (optional)"
     },
-    "tasks": { "summary": "Tasks" },
+    "tasks": {
+      "counts": "{open} pending · {completed} completed",
+      "summary": "Tasks"
+    },
     "transfer": {
       "owner": "Destination member",
       "reason": "Reason (optional)",
@@ -120,6 +126,10 @@
       "whatsapp": "WhatsApp"
     },
     "activeSince": "active since {year}",
+    "billingMode": {
+      "maintenance": "Maintenance",
+      "monthlyFee": "Monthly fee"
+    },
     "audit": { "all": "Full audit ›", "recent": "Latest changes" },
     "block": {
       "description": "The block prevents new bookings and shows this reason to the member. Existing bookings are kept.",
@@ -142,6 +152,7 @@
     "fields": {
       "address": "Address",
       "birthDate": "Date of birth",
+      "billingMode": "Billing mode",
       "city": "Town",
       "consents": "Consents",
       "contact": "Contact",
@@ -181,6 +192,7 @@
     },
     "language": "language: {locale}",
     "number": "no. {number}",
+    "pack": "Pack {total}: {used}/{remaining} · expires {date}",
     "payment": {
       "adminOnly": "admin only",
       "holder": "Account holder",

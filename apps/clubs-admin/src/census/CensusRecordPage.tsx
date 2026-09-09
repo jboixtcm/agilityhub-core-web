@@ -19,14 +19,27 @@ import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 type MemberOverview = components["schemas"]["MemberOverview"];
-type MemberDetail = components["schemas"]["MemberDetail"];
-type MemberPatchRequest = components["schemas"]["MemberPatchRequest"];
+type MemberDetail = components["schemas"]["Member"];
+type MemberPatchRequest = components["schemas"]["MemberPatch"];
+type NotificationPreferences = components["schemas"]["NotificationPreferences"];
 type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesPatch"];
-type DogDetail = components["schemas"]["DogDetail"];
+type ApiDogDetail = components["schemas"]["DogDetail"];
+type License = components["schemas"]["LicenseWithPendingFields"];
+type Dog = Omit<components["schemas"]["Dog"], "licenses"> &
+  components["schemas"]["DogPendingFields"] & { licenses: License[] };
+type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
+  Dog & {
+    dog: Dog;
+    licenses: License[];
+  };
 type DogListItem = components["schemas"]["DogListItem"];
-type DogPatchRequest = components["schemas"]["DogPatchRequest"];
+type DogPatchRequest = components["schemas"]["DogPatch"] &
+  components["schemas"]["DogPatchPendingFields"];
 type LevelSummary = components["schemas"]["LevelSummary"];
 type DogDocument = components["schemas"]["DogDocument"];
+type Plan = components["schemas"]["Plan"] & {
+  billingMode?: components["schemas"]["PlanBillingMode"];
+};
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
 type MemberDialog = "block" | "impersonate" | "payment" | "resend" | "roles" | null;
 
@@ -57,6 +70,15 @@ function formatMoney(value: number, locale: string, currency: string): string {
     maximumFractionDigits: 2,
     style: "currency",
   }).format(value);
+}
+
+function dogDetailView(value: ApiDogDetail): DogDetail {
+  const dog = value.dog as Dog;
+  return { ...value, ...dog, dog, licenses: value.licenses };
+}
+
+function mergeDogDetail(current: DogDetail, dog: Dog): DogDetail {
+  return { ...current, ...dog, dog, licenses: dog.licenses, version: dog.version };
 }
 
 function errorText(error: unknown, t: TranslationFunction): string {
@@ -148,11 +170,17 @@ function MemberEditDrawer({
           const body: MemberPatchRequest = {
             address: draft.address,
             birthDate: draft.birthDate,
-            consents: draft.consents,
+            ...(draft.consents === undefined
+              ? {}
+              : {
+                  consents: {
+                    imageRights: { granted: draft.consents.imageRights.granted },
+                  },
+                }),
             contactEmails: draft.contactEmails.filter((item) => item.email.trim() !== ""),
             firstName: draft.firstName,
             gender: draft.gender,
-            idDocument: draft.idDocument,
+            ...(draft.idDocument === undefined ? {} : { idDocument: draft.idDocument }),
             ...(draft.internalNotes === undefined ? {} : { internalNotes: draft.internalNotes }),
             lastName1: draft.lastName1,
             ...(draft.lastName2 === undefined ? {} : { lastName2: draft.lastName2 }),
@@ -183,10 +211,13 @@ function MemberEditDrawer({
               onChange={(event) => {
                 setDraft({
                   ...draft,
-                  idDocument: { ...draft.idDocument, type: event.currentTarget.value },
+                  idDocument: {
+                    number: draft.idDocument?.number ?? "",
+                    type: event.currentTarget.value,
+                  },
                 });
               }}
-              value={draft.idDocument.type}
+              value={draft.idDocument?.type ?? ""}
             />
           </FormField>
           <FormField id="member-document-number" label={t("admin-census:member.fields.document")}>
@@ -195,10 +226,13 @@ function MemberEditDrawer({
               onChange={(event) => {
                 setDraft({
                   ...draft,
-                  idDocument: { ...draft.idDocument, number: event.currentTarget.value },
+                  idDocument: {
+                    number: event.currentTarget.value,
+                    type: draft.idDocument?.type ?? "",
+                  },
                 });
               }}
-              value={draft.idDocument.number}
+              value={draft.idDocument?.number ?? ""}
             />
           </FormField>
           <FormField id="member-first-name" label={t("admin-census:member.fields.firstName")}>
@@ -392,8 +426,10 @@ function MemberEditDrawer({
         </FormField>
         <label className="census-record__check-row">
           <Checkbox
-            checked={draft.consents.imageRights.granted}
+            checked={draft.consents?.imageRights.granted ?? false}
+            disabled={draft.consents === undefined}
             onChange={(event) => {
+              if (draft.consents === undefined) return;
               setDraft({
                 ...draft,
                 consents: {
@@ -448,6 +484,30 @@ function MemberSummary({
   const [roles, setRoles] = useState<Role[]>(member.roles as Role[]);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
+  const [plan, setPlan] = useState<Plan>();
+  const preferences = overview.notificationPreferences as NotificationPreferences;
+
+  useEffect(() => {
+    let current = true;
+    if (!modules.includes("BILLING") || member.planId === undefined) {
+      return () => {
+        current = false;
+      };
+    }
+    void client
+      .GET("/plans", { params: { query: { includeInactive: true } } })
+      .then((result) => {
+        if (!current) return;
+        const plans = (result.data?.items ?? []) as Plan[];
+        setPlan(plans.find((item) => item.id === member.planId));
+      })
+      .catch(() => {
+        if (current) setPlan(undefined);
+      });
+    return () => {
+      current = false;
+    };
+  }, [client, member.planId, modules]);
 
   const run = async (action: () => Promise<void>) => {
     setPending(true);
@@ -478,7 +538,7 @@ function MemberSummary({
     }
   };
 
-  const imageNotice = member.consents.imageRights.granted
+  const imageNotice = member.consents?.imageRights.granted
     ? null
     : t("admin-census:member.imageNotice", { gender: member.gender });
   const roleLabel = (role: Role) =>
@@ -495,8 +555,12 @@ function MemberSummary({
         : t("admin-census:member.preferences.personal");
   const contact = [
     ...member.contactEmails.map((item) => item.email),
-    ...member.phones.map((phone) => `${phone.prefix} ${phone.number} (${phone.label})`),
+    ...member.phones.map(
+      (phone) =>
+        `${phone.prefix} ${phone.number}${phone.label === undefined ? "" : ` (${phone.label})`}`,
+    ),
   ].join(" · ");
+  const memberPlan = plan?.id === member.planId ? plan : undefined;
 
   return (
     <>
@@ -505,9 +569,16 @@ function MemberSummary({
           <SectionTitle>{t("admin-census:member.sections.dataPayment")}</SectionTitle>
           <dl className="census-record__data-list">
             <DataRow label={t("admin-census:member.fields.contact")}>{contact}</DataRow>
-            {modules.includes("BILLING") && member.plan !== undefined ? (
+            {modules.includes("BILLING") && memberPlan !== undefined ? (
               <DataRow label={t("admin-census:member.fields.plan")}>
-                <strong>{member.plan.summary}</strong>
+                <strong>{memberPlan.name}</strong>
+              </DataRow>
+            ) : null}
+            {modules.includes("BILLING") && memberPlan?.billingMode !== undefined ? (
+              <DataRow label={t("admin-census:member.fields.billingMode")}>
+                {memberPlan.billingMode === "MAINTENANCE"
+                  ? t("admin-census:member.billingMode.maintenance")
+                  : t("admin-census:member.billingMode.monthlyFee")}
               </DataRow>
             ) : null}
             {modules.includes("BILLING") ? (
@@ -533,7 +604,11 @@ function MemberSummary({
             {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
                 <strong>{formatDate(overview.nextInvoice.date, locale)}</strong> ·{" "}
-                {formatMoney(overview.nextInvoice.amount, locale, branding.currency)}
+                {formatMoney(
+                  overview.nextInvoice.amount.amountMinor / 100,
+                  locale,
+                  overview.nextInvoice.amount.currency,
+                )}
               </DataRow>
             ) : null}
             <DataRow label={t("admin-census:member.fields.consents")}>
@@ -544,7 +619,7 @@ function MemberSummary({
                 </Badge>
               )}{" "}
               {t("admin-census:member.language", {
-                locale: overview.notificationPreferences.locale.toUpperCase(),
+                locale: preferences.locale.toUpperCase(),
               })}
             </DataRow>
             <DataRow label={t("admin-census:member.fields.roles")}>
@@ -590,7 +665,9 @@ function MemberSummary({
                     <strong>{dog.name}</strong> · {dog.breed}
                   </span>
                   <span className="census-record__dog-details">
-                    <span className="census-level-chip">{dog.level.code}</span>
+                    {dog.level === undefined ? null : (
+                      <span className="census-level-chip">{dog.level.code}</span>
+                    )}
                     {modules.includes("FREE_TRAINING") && dog.freeTrainingAllowed ? (
                       <Badge tone="success">
                         <Icon aria-hidden="true" name="check" />
@@ -598,7 +675,17 @@ function MemberSummary({
                       </Badge>
                     ) : null}
                     {modules.includes("PACKS") && dog.pack !== undefined ? (
-                      <span>{dog.pack}</span>
+                      <span>
+                        {t("admin-census:member.pack", {
+                          date:
+                            dog.pack.expiresOn === undefined
+                              ? t("admin-census:values.empty")
+                              : formatDate(dog.pack.expiresOn, locale, false).replaceAll("/", "-"),
+                          remaining: dog.pack.remaining,
+                          total: dog.pack.total,
+                          used: dog.pack.total - dog.pack.remaining,
+                        })}
+                      </span>
                     ) : null}
                     {dog.pendingDocuments.map((document) => (
                       <Badge key={document} tone="warning">
@@ -625,11 +712,11 @@ function MemberSummary({
               <span>{preferenceLabel(category)}</span>
               <Icon aria-label={t("admin-census:member.preferences.alwaysOn")} name="check" />
               <span className="census-record__preference-control">
-                {category === "CLUB_CHANGES" && overview.notificationPreferences.modules.sms ? (
+                {category === "CLUB_CHANGES" && preferences.modules.sms ? (
                   <small>{t("admin-census:member.preferences.sms")}</small>
                 ) : null}
                 <Switch
-                  checked={overview.notificationPreferences.emailByCategory[category]}
+                  checked={preferences.emailByCategory[category]}
                   label={t("admin-census:member.preferences.emailToggle", {
                     category: preferenceLabel(category),
                   })}
@@ -651,21 +738,21 @@ function MemberSummary({
                     event.currentTarget.value === "" ? null : Number(event.currentTarget.value),
                 })
               }
-              value={overview.notificationPreferences.reminderMinutesBefore ?? ""}
+              value={preferences.reminderMinutesBefore ?? ""}
             >
               <option value="">{t("admin-census:member.preferences.never")}</option>
-              {overview.notificationPreferences.reminderOptionsMinutes.map((minutes) => (
+              {preferences.reminderOptionsMinutes.map((minutes) => (
                 <option key={minutes} value={minutes}>
                   {t("admin-census:member.preferences.hoursBefore", { count: minutes / 60 })}
                 </option>
               ))}
             </Select>
           </div>
-          {overview.notificationPreferences.modules.push ? (
+          {preferences.modules.push ? (
             <div className="census-record__preference-row">
               <span>{t("admin-census:member.preferences.push")}</span>
               <Switch
-                checked={overview.notificationPreferences.pushClubNews}
+                checked={preferences.pushClubNews}
                 label={t("admin-census:member.preferences.push")}
                 onCheckedChange={(checked) => void updatePreferences({ pushClubNews: checked })}
               />
@@ -680,8 +767,10 @@ function MemberSummary({
             <ul className="census-record__invoice-list">
               {overview.recentInvoices.map((invoice) => (
                 <li key={invoice.id}>
-                  <span>{invoice.label}</span>
-                  <span>{formatMoney(invoice.amount, locale, branding.currency)}</span>
+                  <span>{formatDate(invoice.date, locale)}</span>
+                  <span>
+                    {formatMoney(invoice.amount.amountMinor / 100, locale, invoice.amount.currency)}
+                  </span>
                   <Badge tone={invoice.status === "PAID" ? "success" : "neutral"}>
                     {invoice.status === "PAID"
                       ? t("admin-census:member.invoice.paid")
@@ -703,7 +792,10 @@ function MemberSummary({
             <p className="census-record__muted">
               <Icon aria-hidden="true" name="lock" /> {t("admin-census:member.audit.recent")}:{" "}
               {overview.recentAudit
-                .map((audit) => `${formatDate(audit.changedAt, locale, false)} ${audit.summary}`)
+                .map(
+                  (audit) =>
+                    `${formatDate(audit.at, locale, false)} ${audit.action} (${audit.actorRole})`,
+                )
                 .join(" · ")}
             </p>
             <div className="census-record__footer-actions">
@@ -754,7 +846,7 @@ function MemberSummary({
           <dl className="census-record__data-list">
             {overview.dogs.map((dog) => (
               <DataRow key={dog.id} label={dog.name}>
-                {dog.instructorNote ?? t("admin-census:values.empty")}
+                {t("admin-census:values.empty")}
               </DataRow>
             ))}
           </dl>
@@ -1083,7 +1175,8 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
     return <LoadingRecord />;
   }
   const member = overview.member;
-  const joinedYear = new Date(member.joinedAt).getUTCFullYear();
+  const joinedYear =
+    member.joinedAt === undefined ? undefined : new Date(member.joinedAt).getUTCFullYear();
   const holder = overview.familyGroup?.holderMemberId === member.id;
   const primaryPhone = member.phones[0];
 
@@ -1094,7 +1187,11 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
         <div className="census-record__identity">
           <h1>{member.fullName}</h1>
           <Badge>{t("admin-census:member.number", { number: member.memberNumber })}</Badge>
-          <Badge tone="success">{t("admin-census:member.activeSince", { year: joinedYear })}</Badge>
+          {joinedYear === undefined ? null : (
+            <Badge tone="success">
+              {t("admin-census:member.activeSince", { year: joinedYear })}
+            </Badge>
+          )}
           {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
@@ -1210,7 +1307,7 @@ function DogEditDrawer({
   client: ApiClient;
   dog: DogDetail;
   onClose: () => void;
-  onSaved: (dog: DogDetail) => void;
+  onSaved: (dog: Dog) => void;
   open: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "errors"]);
@@ -1219,7 +1316,7 @@ function DogEditDrawer({
   const [failure, setFailure] = useState<string>();
   const updateLicense = (
     index: number,
-    key: "grade" | "number" | "organisation",
+    key: "category" | "division" | "grade" | "number" | "organisation",
     value: string,
   ) => {
     const licenses = [...draft.licenses];
@@ -1245,6 +1342,7 @@ function DogEditDrawer({
             birthDate: draft.birthDate,
             breed: draft.breed,
             chip: draft.chip,
+            ...(draft.handlerName === undefined ? {} : { handlerName: draft.handlerName }),
             licenses: draft.licenses.filter(
               (license) => license.organisation.trim() !== "" && license.number.trim() !== "",
             ),
@@ -1319,6 +1417,16 @@ function DogEditDrawer({
             value={draft.chip}
           />
         </FormField>
+        <FormField id="dog-handler" label={t("admin-census:dog.fields.handler")}>
+          <Input
+            id="dog-handler"
+            maxLength={80}
+            onChange={(event) => {
+              setDraft({ ...draft, handlerName: event.currentTarget.value });
+            }}
+            value={draft.handlerName ?? ""}
+          />
+        </FormField>
         <fieldset className="census-record__fieldset">
           <legend>{t("admin-census:dog.sections.licenses")}</legend>
           {[0, 1].map((index) => (
@@ -1340,12 +1448,30 @@ function DogEditDrawer({
                 value={draft.licenses[index]?.number ?? ""}
               />
               <Input
+                aria-label={t("admin-census:dog.fields.licenseCategory", { number: index + 1 })}
+                maxLength={10}
+                onChange={(event) => {
+                  updateLicense(index, "category", event.currentTarget.value);
+                }}
+                placeholder={t("admin-census:dog.fields.category")}
+                value={draft.licenses[index]?.category ?? ""}
+              />
+              <Input
                 aria-label={t("admin-census:dog.fields.licenseGrade", { number: index + 1 })}
                 onChange={(event) => {
                   updateLicense(index, "grade", event.currentTarget.value);
                 }}
                 placeholder={t("admin-census:dog.fields.grade")}
                 value={draft.licenses[index]?.grade ?? ""}
+              />
+              <Input
+                aria-label={t("admin-census:dog.fields.licenseDivision", { number: index + 1 })}
+                maxLength={20}
+                onChange={(event) => {
+                  updateLicense(index, "division", event.currentTarget.value);
+                }}
+                placeholder={t("admin-census:dog.fields.division")}
+                value={draft.licenses[index]?.division ?? ""}
               />
             </div>
           ))}
@@ -1603,7 +1729,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
           setFailure(true);
           return;
         }
-        setDog(dogResult.data);
+        setDog(dogDetailView(dogResult.data));
         setFailure(false);
         setSelectedLevel(dogResult.data.level?.id ?? "");
         setFreeOverride(
@@ -1709,6 +1835,9 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 {t("admin-census:member.number", { number: dog.owner.memberNumber })}
               </a>
             </DataRow>
+            <DataRow label={t("admin-census:dog.fields.handler")}>
+              {dog.handlerName ?? t("admin-census:values.empty")}
+            </DataRow>
             <DataRow label={t("admin-census:dog.fields.breed")}>{dog.breed}</DataRow>
             <DataRow label={t("admin-census:dog.fields.sex")}>
               {dog.sex === "FEMALE"
@@ -1752,7 +1881,10 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
           <ul className="census-record__history">
             {dog.levelHistory.map((entry) => (
               <li key={`${entry.levelId}-${entry.from}`}>
-                <strong>{entry.levelCode}</strong> · {formatDate(entry.from, locale)} —{" "}
+                <strong>
+                  {levels.find((level) => level.id === entry.levelId)?.code ?? entry.levelId}
+                </strong>{" "}
+                · {formatDate(entry.from, locale)} —{" "}
                 {entry.to === undefined
                   ? t("admin-census:dog.level.current")
                   : formatDate(entry.to, locale)}
@@ -1795,7 +1927,9 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 <li key={license.organisation}>
                   {license.organisation} ·{" "}
                   {t("admin-census:dog.license.number", { number: license.number })}
-                  {license.grade === undefined ? null : ` · ${license.grade}`}
+                  {[license.category, license.grade, license.division]
+                    .filter((value): value is string => typeof value === "string" && value !== "")
+                    .map((value) => ` · ${value}`)}
                 </li>
               ))}
             </ul>
@@ -1830,10 +1964,13 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
         {branding.modules.includes("TASKS") ? (
           <Card>
             <SectionTitle>{t("admin-census:dog.sections.instructorNotes")}</SectionTitle>
-            <p>{dog.instructorNote ?? t("admin-census:values.empty")}</p>
+            <p>{dog.instructorNote?.text ?? t("admin-census:values.empty")}</p>
             <p className="census-record__muted">
               {t("admin-census:dog.tasks.summary")}:{" "}
-              {dog.tasksSummary ?? t("admin-census:values.empty")}
+              {t("admin-census:dog.tasks.counts", {
+                completed: dog.tasksSummary.completed,
+                open: dog.tasksSummary.open,
+              })}
             </p>
           </Card>
         ) : null}
@@ -1848,7 +1985,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
           setEditOpen(false);
         }}
         onSaved={(saved) => {
-          setDog(saved);
+          setDog(mergeDogDetail(dog, saved));
           setEditOpen(false);
           setFeedback({ message: t("admin-census:dog.feedback.saved"), tone: "success" });
         }}
@@ -1878,7 +2015,6 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             ))}
           </Select>
         </FormField>
-        <p className="census-record__warning">{t("admin-census:dog.level.futureWarning")}</p>
         {dialogError === undefined ? null : <p role="alert">{dialogError}</p>}
         <div className="census-record__dialog-actions">
           <Button
@@ -1901,16 +2037,16 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                   throw new TypeError("Level response did not contain data");
                 setDog({
                   ...dog,
+                  dog: {
+                    ...dog.dog,
+                    levelAssignedAt: result.data.levelAssignedAt,
+                    levelId: result.data.level.id,
+                  },
                   level: result.data.level,
                   levelAssignedAt: result.data.levelAssignedAt,
                 });
                 setFeedback({
-                  message:
-                    result.data.warnings.futureBookingsOutsideLevel > 0
-                      ? t("admin-census:dog.feedback.levelWarning", {
-                          count: result.data.warnings.futureBookingsOutsideLevel,
-                        })
-                      : t("admin-census:dog.feedback.levelSaved"),
+                  message: t("admin-census:dog.feedback.levelSaved"),
                   tone: "success",
                 });
               })
@@ -2033,7 +2169,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 });
                 if (result.data === undefined)
                   throw new TypeError("Transfer response did not contain data");
-                setDog(result.data);
+                setDog(mergeDogDetail(dog, result.data));
                 setFeedback({
                   message: t("admin-census:dog.feedback.transferred"),
                   tone: "success",
@@ -2103,7 +2239,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                       });
                 if (result.data === undefined)
                   throw new TypeError("Status response did not contain data");
-                setDog(result.data);
+                setDog(mergeDogDetail(dog, result.data));
                 setFeedback({
                   message:
                     action === "/dogs/{id}/deactivation"
@@ -2177,7 +2313,11 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 });
                 if (result.data === undefined)
                   throw new TypeError("Photo response did not contain data");
-                setDog({ ...dog, photoUrl: result.data.photoUrl });
+                setDog({
+                  ...dog,
+                  dog: { ...dog.dog, photoUrl: result.data.photoUrl },
+                  photoUrl: result.data.photoUrl,
+                });
                 setFeedback({ message: t("admin-census:dog.feedback.photo"), tone: "success" });
               })
             }

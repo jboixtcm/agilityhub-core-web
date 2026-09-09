@@ -62,6 +62,8 @@ describe("T-03-39 D10 member record", () => {
     expect(screen.getByText("titular del grup familiar")).toBeVisible();
     expect(screen.getByText("···· ···· ···· ···· 2231", { exact: false })).toBeVisible();
     expect(screen.getByText("canvi només admin")).toBeVisible();
+    expect(await screen.findByText("Quota mensual")).toBeVisible();
+    expect(screen.getByText("Mode de facturació")).toBeVisible();
     expect(screen.getByText("alumne", { exact: true })).toBeVisible();
     expect(
       screen.getByText("No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella."),
@@ -122,12 +124,13 @@ describe("T-03-39 D10 member record", () => {
 });
 
 describe("T-03-38 dog record", () => {
-  it("shows the complete dog record and preserves future bookings on a level change", async () => {
+  it("shows the complete dog record and changes level without a booking warning", async () => {
     await renderRecord("dog");
     expect(await screen.findByRole("heading", { name: "Duna" })).toBeVisible();
     expect(screen.getByText("941000000000001")).toBeVisible();
     expect(screen.getAllByText("Cartilla de vacunes")[0]).toBeVisible();
     expect(screen.getByText("Treballar la calma a la sortida.")).toBeVisible();
+    expect(screen.getByText("Guia")).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Canvia el nivell" }));
     const dialog = screen.getByRole("dialog", { name: "Canvia el nivell" });
@@ -136,9 +139,8 @@ describe("T-03-38 dog record", () => {
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
 
-    expect(
-      await screen.findByText("Nivell actualitzat. 1 reserva futura queda fora del nivell nou."),
-    ).toBeVisible();
+    expect(await screen.findByText("El nivell s'ha actualitzat.")).toBeVisible();
+    expect(screen.queryByText(/reserva futura/u)).not.toBeInTheDocument();
     expect(screen.getByText("Nivell D")).toBeVisible();
   });
 

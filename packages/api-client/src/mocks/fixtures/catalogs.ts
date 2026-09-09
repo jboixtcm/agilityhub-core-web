@@ -6,7 +6,9 @@ export type Administrator = components["schemas"]["Administrator"];
 export type FaqEntry = components["schemas"]["FaqEntry"];
 export type Instructor = components["schemas"]["Instructor"];
 export type Level = components["schemas"]["Level"];
-export type Plan = components["schemas"]["Plan"];
+export type Plan = components["schemas"]["Plan"] & {
+  billingMode?: components["schemas"]["PlanBillingMode"];
+};
 export type Price = components["schemas"]["Price"];
 export type Ring = components["schemas"]["Ring"];
 

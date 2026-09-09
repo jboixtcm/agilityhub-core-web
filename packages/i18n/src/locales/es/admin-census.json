@@ -39,7 +39,6 @@
       "documentUploaded": "El documento se ha subido.",
       "freeTraining": "El derecho de entrenamiento libre se ha actualizado.",
       "levelSaved": "El nivel se ha actualizado.",
-      "levelWarning": "Nivel actualizado. {count, plural, one {# reserva futura queda fuera del nivel nuevo.} other {# reservas futuras quedan fuera del nivel nuevo.}}",
       "photo": "La foto se ha actualizado.",
       "reactivated": "El perro se ha reactivado.",
       "reminderSent": "El recordatorio se ha enviado.",
@@ -49,8 +48,13 @@
     "fields": {
       "birthDate": "Fecha de nacimiento",
       "breed": "Raza",
+      "category": "Categoría",
       "chip": "Chip",
+      "division": "División",
       "grade": "Grado",
+      "handler": "Guía",
+      "licenseCategory": "Categoría de la licencia {number}",
+      "licenseDivision": "División de la licencia {number}",
       "licenseGrade": "Grado de la licencia {number}",
       "licenseNumber": "Número de la licencia {number}",
       "licenseOrganisation": "Organismo de la licencia {number}",
@@ -70,7 +74,6 @@
     },
     "level": {
       "current": "actual",
-      "futureWarning": "Las reservas futuras se mantienen aunque no admitan el nivel nuevo.",
       "select": "Nivel nuevo",
       "since": "desde {date}",
       "title": "Cambiar el nivel"
@@ -100,7 +103,10 @@
       "inactive": "baja",
       "reason": "Motivo (opcional)"
     },
-    "tasks": { "summary": "Tareas" },
+    "tasks": {
+      "counts": "{open} pendientes · {completed} hechas",
+      "summary": "Tareas"
+    },
     "transfer": {
       "owner": "Abonado de destino",
       "reason": "Motivo (opcional)",
@@ -120,6 +126,10 @@
       "whatsapp": "WhatsApp"
     },
     "activeSince": "de alta desde {year}",
+    "billingMode": {
+      "maintenance": "Mantenimiento",
+      "monthlyFee": "Cuota mensual"
+    },
     "audit": { "all": "Toda la auditoría ›", "recent": "Últimos cambios" },
     "block": {
       "description": "El bloqueo impide reservas nuevas y muestra este motivo al abonado. Las reservas existentes se mantienen.",
@@ -142,6 +152,7 @@
     "fields": {
       "address": "Dirección",
       "birthDate": "Fecha de nacimiento",
+      "billingMode": "Modo de facturación",
       "city": "Población",
       "consents": "Consentimientos",
       "contact": "Contacto",
@@ -181,6 +192,7 @@
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",
+    "pack": "Pack {total}: {used}/{remaining} · caduca {date}",
     "payment": {
       "adminOnly": "cambio solo admin",
       "holder": "Titular de la cuenta",

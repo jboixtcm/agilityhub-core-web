@@ -41,7 +41,6 @@
       "documentUploaded": "El document s'ha pujat.",
       "freeTraining": "El dret d'entrenament lliure s'ha actualitzat.",
       "levelSaved": "El nivell s'ha actualitzat.",
-      "levelWarning": "Nivell actualitzat. {count, plural, one {# reserva futura queda fora del nivell nou.} other {# reserves futures queden fora del nivell nou.}}",
       "photo": "La foto s'ha actualitzat.",
       "reactivated": "El gos s'ha reactivat.",
       "reminderSent": "El recordatori s'ha enviat.",
@@ -51,8 +50,13 @@
     "fields": {
       "birthDate": "Data de naixement",
       "breed": "Raça",
+      "category": "Categoria",
       "chip": "Xip",
+      "division": "Divisió",
       "grade": "Grau",
+      "handler": "Guia",
+      "licenseCategory": "Categoria de la llicència {number}",
+      "licenseDivision": "Divisió de la llicència {number}",
       "licenseGrade": "Grau de la llicència {number}",
       "licenseNumber": "Número de la llicència {number}",
       "licenseOrganisation": "Organisme de la llicència {number}",
@@ -72,7 +76,6 @@
     },
     "level": {
       "current": "actual",
-      "futureWarning": "Les reserves futures es mantenen encara que no admetin el nivell nou.",
       "select": "Nivell nou",
       "since": "des de {date}",
       "title": "Canvia el nivell"
@@ -105,6 +108,7 @@
       "reason": "Motiu (opcional)"
     },
     "tasks": {
+      "counts": "{open} pendents · {completed} fetes",
       "summary": "Tasques"
     },
     "transfer": {
@@ -126,6 +130,10 @@
       "whatsapp": "WhatsApp"
     },
     "activeSince": "alta des de {year}",
+    "billingMode": {
+      "maintenance": "Manteniment",
+      "monthlyFee": "Quota mensual"
+    },
     "audit": {
       "all": "Tota l'auditoria ›",
       "recent": "Darrers canvis"
@@ -153,6 +161,7 @@
     "fields": {
       "address": "Adreça",
       "birthDate": "Data de naixement",
+      "billingMode": "Mode de facturació",
       "city": "Població",
       "consents": "Consentiments",
       "contact": "Contacte",
@@ -192,6 +201,7 @@
     },
     "language": "idioma: {locale}",
     "number": "núm. {number}",
+    "pack": "Pack {total}: {used}/{remaining} · caduca {date}",
     "payment": {
       "adminOnly": "canvi només admin",
       "holder": "Titular del compte",

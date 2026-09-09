@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Adopt the verified E2 census, catalog, parameter, audit, and export OpenAPI snapshot; regenerate client types; prune published pending contracts; and align E2 screens, mocks, fixtures, translations, tests, and visual evidence with the real wire shapes plus the staged guide, licence, and billing-mode fields.
 - Align the Clubs access and profile screens with approved mockups 01 and 12: always-visible password entry, full Cànic branding, passwordless/reset actions, ordered profile and preference rows, and account-session management reserved for AgilityHub ID.
 - Drive the Clubs access footer and full-logo treatment from the tenant branding contract, with name-only and mark/name fallbacks when optional branding fields are absent.
 - Apply placement-aware tenant branding—mark plus club name in compact shells, theme-aware full logos on access screens, and initial/name fallbacks—and align D10 access-role chips with the approved student terminology.

@@ -600,6 +600,11 @@ select {
   align-content: start;
 }
 
+.catalog-plan-name {
+  display: flex;
+  flex-direction: column;
+}
+
 .catalog-page__header,
 .catalog-section__header,
 .catalog-page__heading-actions,
