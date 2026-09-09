@@ -1,5 +1,9 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetMemberSelfServiceState } from "@agilityhub/api-client/mocks";
+import {
+  mockScenario,
+  resetMemberSelfServiceState,
+  resetOnboardingMockState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
@@ -7,7 +11,7 @@ import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App, MOBILE_ROUTES, MobileNavigation } from "./App";
 import { isCountryFieldValid } from "./SelfServicePages";
@@ -31,11 +35,15 @@ const minimalBranding: Branding = {
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
+beforeEach(() => {
+  resetOnboardingMockState();
+});
 afterEach(() => {
   cleanup();
   server.resetHandlers();
   mockScenario("member");
   resetMemberSelfServiceState();
+  resetOnboardingMockState();
 });
 afterAll(() => {
   server.close();
@@ -50,10 +58,15 @@ function authClient() {
   });
 }
 
-async function renderApplication(client: AuthClient, branding: Branding = canicBranding) {
+async function renderApplication(
+  client: AuthClient,
+  branding: Branding = canicBranding,
+  locale: "ca" | "es" | "en" = "ca",
+  navigate?: (path: string, replace: boolean) => void,
+) {
   const i18n = await createI18n({
     branding,
-    browserLanguages: ["ca"],
+    browserLanguages: [locale],
     initialNamespaces: ["auth", "census", "errors", "shell"],
     storage: undefined,
   });
@@ -68,6 +81,7 @@ async function renderApplication(client: AuthClient, branding: Branding = canicB
               getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
             })}
             authClient={client}
+            {...(navigate === undefined ? {} : { navigate })}
           />
         </SessionProvider>
       </BrandingProvider>
@@ -129,6 +143,7 @@ describe("T-02-14 clubs shell", () => {
       expect.arrayContaining([
         "/entrar",
         "/activacio",
+        "/benvinguda",
         "/perfil-acces",
         "/inici",
         "/reservar",
@@ -376,6 +391,152 @@ describe("T-01-21 profile access rows and impersonation", () => {
 
     expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     expect(screen.getByRole("button", { name: "Surt" })).toBeVisible();
+  });
+});
+
+describe("T-01-26 imported-account onboarding and policy re-consent", () => {
+  it("renders configured fields and sends consent, profile data and image choice", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Completa el teu perfil" })).toBeVisible();
+    expect(screen.getByLabelText("Nom (obligatori)")).toHaveValue("Biel Roca");
+    const locale = screen.getByRole("combobox", { name: "Idioma (obligatori)" });
+    expect(within(locale).getAllByRole("option")).toHaveLength(3);
+    expect(screen.getByLabelText("Telèfon")).toHaveValue("");
+    expect(screen.getByRole("link", { name: "la política de privacitat" })).toHaveAttribute(
+      "href",
+      "https://club.example.test/legal/privacy",
+    );
+
+    fireEvent.change(screen.getByLabelText("Nom (obligatori)"), {
+      target: { value: "Biel Roca Soler" },
+    });
+    fireEvent.change(locale, { target: { value: "es" } });
+    fireEvent.change(screen.getByLabelText("Telèfon"), { target: { value: "+34600111222" } });
+    fireEvent.click(screen.getByRole("checkbox", { name: "Autoritzo l'ús de la meva imatge" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", {
+        name: "He llegit i accepto la política de privacitat",
+      }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledWith({
+        consentAccepted: true,
+        consentVersion: "2026-09-01",
+        fields: { locale: "es", name: "Biel Roca Soler", phone: "+34600111222" },
+        imageConsent: true,
+      });
+    });
+  });
+
+  it("redirects blocking onboarding and permits a policy postponement", async () => {
+    mockScenario("onboarding");
+    const blockingClient = authClient();
+    await blockingClient.login("biel.roca@example.test", "secret-password");
+    const navigate = vi.fn();
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(blockingClient, canicBranding, "ca", navigate);
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/benvinguda", true);
+    });
+    expect(screen.queryByRole("heading", { name: "El meu perfil" })).not.toBeInTheDocument();
+
+    cleanup();
+    resetOnboardingMockState();
+    mockScenario("policyReconsent");
+    const policyClient = authClient();
+    await policyClient.login("biel.roca@example.test", "secret-password");
+    const postpone = vi.spyOn(policyClient, "postponeOnboarding");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(policyClient);
+
+    expect(
+      await screen.findByRole("dialog", {
+        name: "Hem actualitzat la política de privacitat",
+      }),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Més tard" }));
+    await waitFor(() => {
+      expect(postpone).toHaveBeenCalledOnce();
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole("heading", { name: "El meu perfil" })).toBeVisible();
+  });
+
+  it("reloads an outdated policy version before accepting it", async () => {
+    mockScenario("policyReconsentOutdated");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const complete = vi.spyOn(client, "completeOnboarding");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    const consent = await screen.findByRole("checkbox", {
+      name: "He llegit i accepto la política de privacitat",
+    });
+
+    fireEvent.click(consent);
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(document.querySelector(".onboarding-form__error")).toHaveTextContent(
+        "Accepteu la versió actual del consentiment.",
+      );
+    });
+    const refreshedConsent = screen.getByRole("checkbox", {
+      name: "He llegit i accepto la política de privacitat",
+    });
+    expect(refreshedConsent).not.toBeChecked();
+    fireEvent.click(refreshedConsent);
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    expect(complete).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ consentVersion: "2026-09-01" }),
+    );
+    expect(complete).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ consentVersion: "2026-09-02" }),
+    );
+  });
+
+  it("renders the screen and pop-up in Catalan, Spanish and English", async () => {
+    const copies = {
+      ca: ["Completa el teu perfil", "Hem actualitzat la política de privacitat"],
+      en: ["Complete your profile", "We have updated the privacy policy"],
+      es: ["Completa tu perfil", "Hemos actualizado la política de privacidad"],
+    } as const;
+
+    for (const locale of ["ca", "es", "en"] as const) {
+      resetOnboardingMockState();
+      mockScenario("onboarding");
+      const pageClient = authClient();
+      await pageClient.login("biel.roca@example.test", "secret-password");
+      window.history.pushState(null, "", "/benvinguda");
+      await renderApplication(pageClient, minimalBranding, locale);
+      expect(await screen.findByRole("heading", { name: copies[locale][0] })).toBeVisible();
+      cleanup();
+
+      resetOnboardingMockState();
+      mockScenario("policyReconsent");
+      const modalClient = authClient();
+      await modalClient.login("biel.roca@example.test", "secret-password");
+      window.history.pushState(null, "", "/perfil");
+      await renderApplication(modalClient, minimalBranding, locale);
+      expect(await screen.findByRole("dialog", { name: copies[locale][1] })).toBeVisible();
+      cleanup();
+    }
   });
 });
 

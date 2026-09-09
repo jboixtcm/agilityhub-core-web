@@ -1,0 +1,216 @@
+{
+  "common": {
+    "active": "Activa",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "deactivate": "Desactivar",
+    "dismiss": "Descartar",
+    "drag": "Arrastrar para reordenar",
+    "editNamed": "Editar {name}",
+    "genericError": "No se ha podido completar la acción.",
+    "languages": "Idiomas",
+    "loadError": "No se han podido cargar los datos.",
+    "loading": "Cargando",
+    "no": "no",
+    "remove": "Eliminar",
+    "removeNamed": "Eliminar {name}",
+    "retry": "Volver a intentarlo",
+    "save": "GUARDAR",
+    "saving": "Guardando",
+    "stale": "Alguien ha modificado este registro; vuelve a cargar",
+    "yes": "sí"
+  },
+  "faq": {
+    "caption": "Preguntas frecuentes",
+    "columns": {
+      "category": "Categoría",
+      "question": "Pregunta"
+    },
+    "createTitle": "Nueva pregunta",
+    "editTitle": "Editar la pregunta",
+    "empty": "Todavía no hay ninguna pregunta",
+    "fields": {
+      "answer": "Respuesta",
+      "category": "Categoría",
+      "order": "Orden",
+      "question": "Pregunta"
+    },
+    "new": "Nueva pregunta",
+    "removeQuestion": "¿Eliminar la pregunta «{question}»?",
+    "removeTitle": "Eliminar la pregunta",
+    "rowHelp": "Haz clic en una pregunta para editar su respuesta.",
+    "title": "Preguntas frecuentes — página «Info» de la app"
+  },
+  "levels": {
+    "caption": "Niveles del club",
+    "columns": {
+      "active": "Activo",
+      "capacity": "Aforo",
+      "code": "Código",
+      "color": "Color",
+      "freeTraining": "Entrenamiento libre",
+      "name": "Nombre"
+    },
+    "createTitle": "Nuevo nivel",
+    "editTitle": "Editar el nivel",
+    "empty": "Todavía no hay ningún nivel",
+    "fields": {
+      "capacity": "Aforo",
+      "code": "Código",
+      "color": "Color",
+      "freeTraining": "Da derecho a entrenamiento libre",
+      "name": "Nombre"
+    },
+    "inUse": "Este nivel tiene datos relacionados: solo se puede desactivar",
+    "new": "Nuevo nivel",
+    "removeQuestion": "¿Eliminar el nivel {name}?",
+    "removeTitle": "Eliminar el nivel",
+    "title": "Niveles"
+  },
+  "plans": {
+    "addPrice": "Añadir el precio",
+    "billingMode": {
+      "maintenance": "Cuota de mantenimiento",
+      "monthlyFee": "Cuota mensual"
+    },
+    "cancelPolicy": {
+      "credit": "Crédito",
+      "none": "Sin devolución",
+      "refund": "Devolución"
+    },
+    "caption": "Modalidades y tarifas",
+    "chargeMode": {
+      "attendance": "Cobro al asistir",
+      "booking": "Pago al reservar"
+    },
+    "columns": {
+      "active": "Activa",
+      "conditions": "Condiciones",
+      "name": "Modalidad",
+      "price": "Precio",
+      "type": "Tipo"
+    },
+    "createTitle": "Nueva modalidad",
+    "editTitle": "Editar {name}",
+    "empty": "Todavía no hay ninguna modalidad",
+    "emptyPrices": "Todavía no hay ninguna tarifa",
+    "entryFeeSummary": "entrada por perro (matrícula): {amount}",
+    "entryMode": {
+      "amount": "Importe",
+      "none": "Sin entrada",
+      "percent": "% del estándar",
+      "standard": "Estándar · {amount}"
+    },
+    "fields": {
+      "billingMode": "Modo de facturación",
+      "cancelPolicy": "Política de cancelación",
+      "chargeMode": "Modo de cobro",
+      "code": "Código",
+      "conditions": "Condiciones",
+      "description": "Texto de presentación",
+      "dogsIncluded": "Perros incluidos",
+      "entryAmount": "Importe de la entrada",
+      "entryMode": "Entrada",
+      "entryPercent": "% del estándar",
+      "name": "Nombre",
+      "offerLabel": "Etiqueta de oferta",
+      "packSessions": "Sesiones",
+      "packValidity": "Meses de vigencia",
+      "priceAmount": "Importe",
+      "showOnSignup": "Mostrar en el alta",
+      "showOnWeb": "Mostrar en la web",
+      "taxPercent": "Impuesto (%)",
+      "type": "Tipo",
+      "validFrom": "Fecha de inicio",
+      "validTo": "Fecha de fin"
+    },
+    "monthlyPrice": "{amount}/mes",
+    "new": "Nueva modalidad",
+    "newPrice": "Nuevo precio",
+    "noPrice": "según tarifa",
+    "presentationTitle": "Textos de presentación — {name} (aparecen en el alta)",
+    "previewTitle": "Vista previa (como la ve quien se da de alta)",
+    "priceLocked": "No se puede añadir: la fecha corresponde a un periodo de precio bloqueado.",
+    "priceStatus": {
+      "current": "vigente",
+      "expired": "caducada",
+      "scheduled": "programada"
+    },
+    "priceUntil": " · hasta {date}",
+    "prices": "Tarifas",
+    "saveTexts": "GUARDAR",
+    "singleClassPrice": "{amount}/clase",
+    "textsSaved": "Textos guardados",
+    "title": "Modalidades y tarifas",
+    "types": {
+      "monthly": "cuota mensual",
+      "pack": "pack · {count} sesiones",
+      "packOption": "pack",
+      "singleClass": "clase individual"
+    },
+    "validityNote": "Las tarifas tienen vigencia: cambiar un precio no altera los recibos ya emitidos. Los packs caducan por meses de vigencia y generan la baja prevista automáticamente."
+  },
+  "rings": {
+    "caption": "Pistas del club",
+    "columns": {
+      "color": "Color",
+      "freeTraining": "Reservable para entrenamientos",
+      "name": "Nombre",
+      "shortName": "Nombre corto"
+    },
+    "createTitle": "Nueva pista",
+    "editTitle": "Editar la pista {name}",
+    "empty": "Todavía no hay ninguna pista",
+    "fields": {
+      "capacity": "Perros a la vez por pista",
+      "capacityHelp": "En blanco, se aplica el valor general de los entrenamientos.",
+      "color": "Color",
+      "freeTraining": "Reservable para entrenamientos",
+      "name": "Nombre",
+      "shortName": "Nombre corto"
+    },
+    "geometry": "Geometría del ring",
+    "inUse": "Esta pista tiene clases o reservas: solo se puede desactivar",
+    "new": "Nueva pista",
+    "removeQuestion": "¿Eliminar la pista {name}?",
+    "removeTitle": "Eliminar la pista",
+    "title": "Pistas"
+  },
+  "settings": {
+    "title": "Parámetros"
+  },
+  "team": {
+    "administratorCaption": "Administradores del club",
+    "administrators": "Administradores",
+    "columns": {
+      "active": "Activo",
+      "color": "Color",
+      "member": "Abonado",
+      "shortName": "Nombre corto",
+      "since": "Desde"
+    },
+    "createAdministratorTitle": "Nuevo administrador",
+    "createInstructorTitle": "Nuevo instructor",
+    "editAdministratorTitle": "Editar el administrador",
+    "editInstructorTitle": "Editar el instructor",
+    "emptyAdministrators": "Todavía no hay ningún administrador",
+    "emptyInstructors": "Todavía no hay ningún instructor",
+    "fields": {
+      "color": "Color",
+      "member": "Abonado",
+      "memberHelp": "Busca un abonado activo con cuenta.",
+      "shortName": "Nombre corto",
+      "since": "Desde"
+    },
+    "instructorCaption": "Instructores del club",
+    "instructorInUse": "Tiene {count} clases futuras asignadas: reasígnalas en el calendario antes de desactivarlo",
+    "instructors": "Instructores",
+    "lastAdmin": "Debe haber al menos un administrador activo",
+    "memberWithDog": "{name} ({dog})",
+    "newAdministrator": "Nuevo administrador",
+    "newInstructor": "Nuevo instructor",
+    "removeQuestion": "¿Eliminar a {name}?",
+    "removeTitle": "Eliminar el miembro del equipo",
+    "title": "Instructores y administradores"
+  }
+}

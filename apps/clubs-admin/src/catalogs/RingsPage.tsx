@@ -1,14 +1,6 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
-import {
-  Button,
-  FormField,
-  Icon,
-  Input,
-  Modal,
-  Switch,
-  useBranding,
-} from "@agilityhub/ui";
-import { type FormEvent, useCallback, useState } from "react";
+import { Button, FormField, Icon, Input, Modal, Switch, useBranding } from "@agilityhub/ui";
+import { type SyntheticEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -34,7 +26,7 @@ function RingForm({
   onSaved,
 }: {
   client: ApiClient;
-  item?: Ring;
+  item?: Ring | undefined;
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -43,10 +35,8 @@ function RingForm({
   const messageForError = useCatalogError();
   const [name, setName] = useState(item?.name ?? "");
   const [shortName, setShortName] = useState(item?.shortName ?? "");
-  const [color, setColor] = useState(item?.color ?? branding.theme.ringPalette[0] ?? "");
-  const [allowsFreeTraining, setAllowsFreeTraining] = useState(
-    item?.allowsFreeTraining ?? false,
-  );
+  const [color, setColor] = useState(item?.color ?? branding.theme.ringPalette?.[0] ?? "");
+  const [allowsFreeTraining, setAllowsFreeTraining] = useState(item?.allowsFreeTraining ?? false);
   const [trainingCapacity, setTrainingCapacity] = useState(
     item?.trainingCapacity === undefined ? "" : String(item.trainingCapacity),
   );
@@ -54,7 +44,7 @@ function RingForm({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPending(true);
     setError(undefined);
@@ -119,7 +109,7 @@ function RingForm({
       </div>
       <FormField id="ring-color" label={t("admin-catalogs:rings.fields.color")}>
         <div className="catalog-color-picker">
-          {branding.theme.ringPalette.map((candidate) => (
+          {(branding.theme.ringPalette ?? []).map((candidate) => (
             <button
               aria-label={candidate}
               aria-pressed={candidate.toLocaleLowerCase() === color.toLocaleLowerCase()}
@@ -188,11 +178,7 @@ function RingForm({
         <Button onClick={onClose} variant="ghost">
           {t("admin-catalogs:common.cancel")}
         </Button>
-        <Button
-          loading={pending}
-          loadingLabel={t("admin-catalogs:common.saving")}
-          type="submit"
-        >
+        <Button loading={pending} loadingLabel={t("admin-catalogs:common.saving")} type="submit">
           {t("admin-catalogs:common.save")}
         </Button>
       </div>

@@ -213,9 +213,10 @@ interface OverlayProps {
   onClose: () => void;
   open: boolean;
   title: string;
+  dismissible?: boolean;
 }
 
-function useOverlay(open: boolean, onClose: () => void) {
+function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -226,24 +227,33 @@ function useOverlay(open: boolean, onClose: () => void) {
     const previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (dismissible && event.key === "Escape") {
         onClose();
       }
     };
     document.addEventListener("keydown", onKeyDown);
-    closeRef.current?.focus();
+    if (dismissible) {
+      closeRef.current?.focus();
+    }
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       previousFocus?.focus();
     };
-  }, [onClose, open]);
+  }, [dismissible, onClose, open]);
 
   return closeRef;
 }
 
-export function Modal({ children, closeLabel, onClose, open, title }: OverlayProps) {
+export function Modal({
+  children,
+  closeLabel,
+  dismissible = true,
+  onClose,
+  open,
+  title,
+}: OverlayProps) {
   const titleId = useId();
-  const closeRef = useOverlay(open, onClose);
+  const closeRef = useOverlay(open, onClose, dismissible);
   if (!open) {
     return null;
   }
@@ -253,14 +263,16 @@ export function Modal({ children, closeLabel, onClose, open, title }: OverlayPro
       <section aria-labelledby={titleId} aria-modal="true" className="ah-modal" role="dialog">
         <div className="ah-overlay__header">
           <h2 id={titleId}>{title}</h2>
-          <button
-            aria-label={closeLabel}
-            className="ah-overlay__close"
-            onClick={onClose}
-            ref={closeRef}
-          >
-            <Icon aria-hidden="true" name="x" />
-          </button>
+          {dismissible ? (
+            <button
+              aria-label={closeLabel}
+              className="ah-overlay__close"
+              onClick={onClose}
+              ref={closeRef}
+            >
+              <Icon aria-hidden="true" name="x" />
+            </button>
+          ) : null}
         </div>
         <div className="ah-overlay__body">{children}</div>
       </section>
@@ -270,7 +282,7 @@ export function Modal({ children, closeLabel, onClose, open, title }: OverlayPro
 
 export function Drawer({ children, closeLabel, onClose, open, title }: OverlayProps) {
   const titleId = useId();
-  const closeRef = useOverlay(open, onClose);
+  const closeRef = useOverlay(open, onClose, true);
   if (!open) {
     return null;
   }

@@ -1,0 +1,216 @@
+{
+  "common": {
+    "active": "Activa",
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "deactivate": "Desactiva",
+    "dismiss": "Descarta",
+    "drag": "Arrossega per reordenar",
+    "editNamed": "Edita {name}",
+    "genericError": "No s'ha pogut completar l'acció.",
+    "languages": "Idiomes",
+    "loadError": "No s'han pogut carregar les dades.",
+    "loading": "Carregant",
+    "no": "no",
+    "remove": "Elimina",
+    "removeNamed": "Elimina {name}",
+    "retry": "Torna-ho a provar",
+    "save": "DESA",
+    "saving": "Desant",
+    "stale": "Algú ha modificat aquest registre; torna a carregar",
+    "yes": "sí"
+  },
+  "faq": {
+    "caption": "Preguntes freqüents",
+    "columns": {
+      "category": "Categoria",
+      "question": "Pregunta"
+    },
+    "createTitle": "Nova pregunta",
+    "editTitle": "Edita la pregunta",
+    "empty": "Encara no hi ha cap pregunta",
+    "fields": {
+      "answer": "Resposta",
+      "category": "Categoria",
+      "order": "Ordre",
+      "question": "Pregunta"
+    },
+    "new": "Nova pregunta",
+    "removeQuestion": "Eliminar la pregunta «{question}»?",
+    "removeTitle": "Elimina la pregunta",
+    "rowHelp": "Clica una pregunta per editar-ne la resposta.",
+    "title": "Preguntes freqüents — pàgina «Info» de l'app"
+  },
+  "levels": {
+    "caption": "Nivells del club",
+    "columns": {
+      "active": "Actiu",
+      "capacity": "Aforament",
+      "code": "Codi",
+      "color": "Color",
+      "freeTraining": "Entrenament lliure",
+      "name": "Nom"
+    },
+    "createTitle": "Nou nivell",
+    "editTitle": "Edita el nivell",
+    "empty": "Encara no hi ha cap nivell",
+    "fields": {
+      "capacity": "Aforament",
+      "code": "Codi",
+      "color": "Color",
+      "freeTraining": "Dona dret a entrenament lliure",
+      "name": "Nom"
+    },
+    "inUse": "Aquest nivell té dades relacionades: només es pot desactivar",
+    "new": "Nou nivell",
+    "removeQuestion": "Eliminar el nivell {name}?",
+    "removeTitle": "Elimina el nivell",
+    "title": "Nivells"
+  },
+  "plans": {
+    "addPrice": "Afegeix el preu",
+    "billingMode": {
+      "maintenance": "Quota de manteniment",
+      "monthlyFee": "Quota mensual"
+    },
+    "cancelPolicy": {
+      "credit": "Crèdit",
+      "none": "Sense retorn",
+      "refund": "Devolució"
+    },
+    "caption": "Modalitats i tarifes",
+    "chargeMode": {
+      "attendance": "Càrrec en assistir",
+      "booking": "Pagament en reservar"
+    },
+    "columns": {
+      "active": "Activa",
+      "conditions": "Condicions",
+      "name": "Modalitat",
+      "price": "Preu",
+      "type": "Tipus"
+    },
+    "createTitle": "Nova modalitat",
+    "editTitle": "Edita {name}",
+    "empty": "Encara no hi ha cap modalitat",
+    "emptyPrices": "Encara no hi ha cap tarifa",
+    "entryFeeSummary": "entrada per gos (matrícula): {amount}",
+    "entryMode": {
+      "amount": "Import",
+      "none": "Sense",
+      "percent": "% de l'estàndard",
+      "standard": "Estàndard · {amount}"
+    },
+    "fields": {
+      "billingMode": "Mode de facturació",
+      "cancelPolicy": "Política d'anul·lació",
+      "chargeMode": "Mode de càrrec",
+      "code": "Codi",
+      "conditions": "Condicions",
+      "description": "Text de presentació",
+      "dogsIncluded": "Gossos inclosos",
+      "entryAmount": "Import de l'entrada",
+      "entryMode": "Entrada",
+      "entryPercent": "% de l'estàndard",
+      "name": "Nom",
+      "offerLabel": "Etiqueta d'oferta",
+      "packSessions": "Sessions",
+      "packValidity": "Mesos de vigència",
+      "priceAmount": "Import",
+      "showOnSignup": "Mostra a l'alta",
+      "showOnWeb": "Mostra al web",
+      "taxPercent": "Impost (%)",
+      "type": "Tipus",
+      "validFrom": "Data d'inici",
+      "validTo": "Data de fi"
+    },
+    "monthlyPrice": "{amount}/mes",
+    "new": "Nova modalitat",
+    "newPrice": "Nou preu",
+    "noPrice": "segons tarifa",
+    "presentationTitle": "Textos de presentació — {name} (surten a l'alta)",
+    "previewTitle": "Vista prèvia (com ho veu qui es dona d'alta)",
+    "priceLocked": "No es pot afegir: la data correspon a un període de preu bloquejat.",
+    "priceStatus": {
+      "current": "vigent",
+      "expired": "caducada",
+      "scheduled": "programada"
+    },
+    "priceUntil": " · fins a {date}",
+    "prices": "Tarifes",
+    "saveTexts": "DESA",
+    "singleClassPrice": "{amount}/classe",
+    "textsSaved": "Textos desats",
+    "title": "Modalitats i tarifes",
+    "types": {
+      "monthly": "quota mensual",
+      "pack": "pack · {count} sessions",
+      "packOption": "pack",
+      "singleClass": "classe individual"
+    },
+    "validityNote": "Les tarifes tenen vigència: canviar un preu no altera els rebuts ja emesos. Els packs caduquen per mesos de vigència i generen la baixa prevista automàtica."
+  },
+  "rings": {
+    "caption": "Pistes del club",
+    "columns": {
+      "color": "Color",
+      "freeTraining": "Reservable per entrenaments",
+      "name": "Nom",
+      "shortName": "Nom curt"
+    },
+    "createTitle": "Nova pista",
+    "editTitle": "Edita la pista {name}",
+    "empty": "Encara no hi ha cap pista",
+    "fields": {
+      "capacity": "Gossos alhora per pista",
+      "capacityHelp": "En blanc, s'aplica el valor general dels entrenaments.",
+      "color": "Color",
+      "freeTraining": "Reservable per entrenaments",
+      "name": "Nom",
+      "shortName": "Nom curt"
+    },
+    "geometry": "Geometria del ring",
+    "inUse": "Aquesta pista té classes o reserves: només es pot desactivar",
+    "new": "Nova pista",
+    "removeQuestion": "Eliminar la pista {name}?",
+    "removeTitle": "Elimina la pista",
+    "title": "Pistes"
+  },
+  "settings": {
+    "title": "Paràmetres"
+  },
+  "team": {
+    "administratorCaption": "Administradors del club",
+    "administrators": "Administradors",
+    "columns": {
+      "active": "Actiu",
+      "color": "Color",
+      "member": "Abonat",
+      "shortName": "Nom curt",
+      "since": "Des de"
+    },
+    "createAdministratorTitle": "Nou administrador",
+    "createInstructorTitle": "Nou instructor",
+    "editAdministratorTitle": "Edita l'administrador",
+    "editInstructorTitle": "Edita l'instructor",
+    "emptyAdministrators": "Encara no hi ha cap administrador",
+    "emptyInstructors": "Encara no hi ha cap instructor",
+    "fields": {
+      "color": "Color",
+      "member": "Abonat",
+      "memberHelp": "Cerca un abonat en alta amb compte.",
+      "shortName": "Nom curt",
+      "since": "Des de"
+    },
+    "instructorCaption": "Instructors del club",
+    "instructorInUse": "Té {count} classes futures assignades: reassigna-les al calendari abans de desactivar-lo",
+    "instructors": "Instructors",
+    "lastAdmin": "Hi ha d'haver almenys un administrador actiu",
+    "memberWithDog": "{name} ({dog})",
+    "newAdministrator": "Nou administrador",
+    "newInstructor": "Nou instructor",
+    "removeQuestion": "Eliminar {name}?",
+    "removeTitle": "Elimina el membre de l'equip",
+    "title": "Instructors i administradors"
+  }
+}

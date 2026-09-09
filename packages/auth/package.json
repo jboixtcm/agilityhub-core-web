@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@agilityhub/api-client": "workspace:*",
+    "@agilityhub/i18n": "workspace:*",
     "@agilityhub/ui": "workspace:*",
     "react-i18next": "catalog:"
   },

@@ -1,4 +1,4 @@
-import { mockScenario } from "@agilityhub/api-client/mocks";
+import { mockScenario, resetOnboardingMockState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
@@ -6,7 +6,7 @@ import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ADMIN_ROUTES, AdminNavigation, App } from "./App";
 
@@ -18,10 +18,14 @@ const branding: Branding = {
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
+beforeEach(() => {
+  resetOnboardingMockState();
+});
 afterEach(() => {
   cleanup();
   server.resetHandlers();
   mockScenario("admin");
+  resetOnboardingMockState();
 });
 afterAll(() => {
   server.close();
@@ -165,5 +169,40 @@ describe("T-01-20 clubs-admin handoff", () => {
     await waitFor(() => {
       expect(exchange).toHaveBeenCalledWith("mock-handoff-code");
     });
+  });
+});
+
+describe("T-01-26 clubs-admin onboarding", () => {
+  it("shows profile completion as a non-dismissible backoffice modal", async () => {
+    mockScenario("onboardingAdmin");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+
+    const dialog = await screen.findByRole("dialog", { name: "Completa el teu perfil" });
+    expect(dialog).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Configuració" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Tanca" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ho faré més tard" })).toBeVisible();
+  });
+
+  it("removes the postpone action when the policy limit is exhausted", async () => {
+    mockScenario("policyReconsent");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    await client.postponeOnboarding();
+    await client.postponeOnboarding();
+    await client.postponeOnboarding();
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+
+    expect(
+      await screen.findByRole("dialog", {
+        name: "Hem actualitzat la política de privacitat",
+      }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Més tard" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tanca" })).not.toBeInTheDocument();
   });
 });

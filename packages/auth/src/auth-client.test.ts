@@ -2,7 +2,13 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-import { AuthClient, type Me, type TokenResponse } from "./auth-client";
+import {
+  AuthClient,
+  type Me,
+  type OnboardingRequest,
+  type OnboardingState,
+  type TokenResponse,
+} from "./auth-client";
 import { MemoryRefreshTokenStore } from "./crypto-store";
 import { createAuthenticatedApiClient } from "./refresh-interceptor";
 
@@ -281,5 +287,64 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(client.getAccessToken()).toBeNull();
     await expect(refreshStore.get()).resolves.toBeNull();
     expect(signedOut).toHaveBeenCalledOnce();
+  });
+});
+
+describe("T-01-26 onboarding contract", () => {
+  it("loads, postpones and completes onboarding through the generated operations", async () => {
+    const pendingMe: Me = {
+      ...memberMe,
+      account: { ...memberMe.account, onboardingPending: true },
+    };
+    const pending: OnboardingState = {
+      fields: [{ key: "locale", required: true, value: "ca" }],
+      pending: true,
+      postponeRemaining: 3,
+      requiredConsent: {
+        policy: "PLATFORM",
+        url: "https://club.example.test/legal/privacy",
+        version: "2026-09-01",
+      },
+    };
+    let completion: OnboardingRequest | undefined;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => HttpResponse.json(tokens("access-login", "refresh-login"))),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(pendingMe)),
+      http.get(`${API_BASE_URL}/me/onboarding`, () => HttpResponse.json(pending)),
+      http.post(`${API_BASE_URL}/me/onboarding/postpone`, () =>
+        HttpResponse.json({ ...pending, postponeRemaining: 2 }),
+      ),
+      http.put(`${API_BASE_URL}/me/onboarding`, async ({ request }) => {
+        completion = (await request.json()) as OnboardingRequest;
+        return HttpResponse.json({ ...pending, pending: false, requiredConsent: null });
+      }),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      refreshTokenStore: new MemoryRefreshTokenStore(),
+    });
+    await client.login("biel.roca@example.test", "secret-password");
+
+    await expect(client.getOnboarding()).resolves.toEqual(pending);
+    await expect(client.postponeOnboarding()).resolves.toMatchObject({ postponeRemaining: 2 });
+    await client.completeOnboarding({
+      consentAccepted: true,
+      consentVersion: "2026-09-01",
+      fields: { locale: "es", name: "Biel Roca" },
+      imageConsent: true,
+    });
+
+    expect(completion).toEqual({
+      consentAccepted: true,
+      consentVersion: "2026-09-01",
+      fields: { locale: "es", name: "Biel Roca" },
+      imageConsent: true,
+    });
+    expect(client.getMe()?.account).toMatchObject({
+      locale: "es",
+      name: "Biel Roca",
+      onboardingPending: false,
+    });
   });
 });

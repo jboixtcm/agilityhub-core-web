@@ -7,6 +7,7 @@ type ResourceLoader = () => Promise<{ default: Messages }>;
 
 const loaders = {
   ca: {
+    "admin-catalogs": () => import("./locales/ca/admin-catalogs.json"),
     "admin-census": () => import("./locales/ca/admin-census.json"),
     auth: () => import("./locales/ca/auth.json"),
     census: () => import("./locales/ca/census.json"),
@@ -16,6 +17,7 @@ const loaders = {
     shell: () => import("./locales/ca/shell.json"),
   },
   en: {
+    "admin-catalogs": () => import("./locales/en/admin-catalogs.json"),
     "admin-census": () => import("./locales/en/admin-census.json"),
     auth: () => import("./locales/en/auth.json"),
     census: () => import("./locales/en/census.json"),
@@ -25,6 +27,7 @@ const loaders = {
     shell: () => import("./locales/en/shell.json"),
   },
   es: {
+    "admin-catalogs": () => import("./locales/es/admin-catalogs.json"),
     "admin-census": () => import("./locales/es/admin-census.json"),
     auth: () => import("./locales/es/auth.json"),
     census: () => import("./locales/es/census.json"),

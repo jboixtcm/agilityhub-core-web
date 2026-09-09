@@ -1949,8 +1949,6 @@ export interface components {
             capacity: number;
             color: string;
             grantsFreeTraining: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             active: boolean;
             /** Format: int64 */
             version: number;
@@ -1966,8 +1964,6 @@ export interface components {
             capacity?: number;
             color?: string;
             grantsFreeTraining?: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             active?: boolean;
         };
         LevelPatch: {
@@ -1981,8 +1977,6 @@ export interface components {
             capacity?: number;
             color?: string;
             grantsFreeTraining?: boolean;
-            /** @enum {string} */
-            agilityhubLevel?: "EASY" | "MEDIUM" | "HARD";
             active?: boolean;
         };
         LevelOrder: {
@@ -2202,6 +2196,8 @@ export interface components {
             };
             /** @enum {string} */
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             dogsIncluded: number;
             entryFee: components["schemas"]["EntryFee"];
             pack?: components["schemas"]["PackSettings"];
@@ -2228,6 +2224,8 @@ export interface components {
             };
             /** @enum {string} */
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             dogsIncluded?: number;
             entryFee?: components["schemas"]["EntryFee"];
             pack?: components["schemas"]["PackSettings"];
@@ -2250,6 +2248,8 @@ export interface components {
             };
             /** @enum {string} */
             type?: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             dogsIncluded?: number;
             entryFee?: components["schemas"]["EntryFee"];
             pack?: components["schemas"]["PackSettings"];

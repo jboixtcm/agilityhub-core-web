@@ -1,14 +1,5 @@
 import { isApiError } from "@agilityhub/api-client";
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  IconButton,
-  Skeleton,
-  Toast,
-  type Tone,
-} from "@agilityhub/ui";
+import { Badge, Button, Card, Icon, IconButton, Skeleton, Toast, type Tone } from "@agilityhub/ui";
 import {
   type CSSProperties,
   type DragEvent,
@@ -101,7 +92,9 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                   colSpan={
                     columns.length +
                     (onReorder === undefined ? 0 : 1) +
-                    (actions === undefined && onEdit === undefined && onRemove === undefined ? 0 : 1)
+                    (actions === undefined && onEdit === undefined && onRemove === undefined
+                      ? 0
+                      : 1)
                   }
                 >
                   <Skeleton label={t("admin-catalogs:common.loading")} />
@@ -114,7 +107,9 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                   colSpan={
                     columns.length +
                     (onReorder === undefined ? 0 : 1) +
-                    (actions === undefined && onEdit === undefined && onRemove === undefined ? 0 : 1)
+                    (actions === undefined && onEdit === undefined && onRemove === undefined
+                      ? 0
+                      : 1)
                   }
                 >
                   {empty}
@@ -126,7 +121,13 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                   className={row.active === false ? "catalog-table__row--inactive" : undefined}
                   draggable={onReorder !== undefined}
                   key={row.id}
-                  onClick={actionable ? () => onActivate(row) : undefined}
+                  onClick={
+                    actionable
+                      ? () => {
+                          onActivate(row);
+                        }
+                      : undefined
+                  }
                   onDragEnd={() => {
                     setDragging(undefined);
                   }}
@@ -147,18 +148,26 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                     }
                     setDragging(undefined);
                   }}
-                  onKeyDown={actionable ? (event) => keyDown(event, row) : undefined}
+                  onKeyDown={
+                    actionable
+                      ? (event) => {
+                          keyDown(event, row);
+                        }
+                      : undefined
+                  }
                   tabIndex={actionable ? 0 : undefined}
                 >
                   {onReorder === undefined ? null : (
-                    <td className="catalog-table__drag" title={t("admin-catalogs:common.drag") }>
+                    <td className="catalog-table__drag" title={t("admin-catalogs:common.drag")}>
                       <Icon aria-hidden="true" name="swap" />
                     </td>
                   )}
                   {columns.map((column) => (
                     <td key={column.key}>{column.render(row)}</td>
                   ))}
-                  {actions === undefined && onEdit === undefined && onRemove === undefined ? null : (
+                  {actions === undefined &&
+                  onEdit === undefined &&
+                  onRemove === undefined ? null : (
                     <td className="catalog-table__actions">
                       {actions?.(row)}
                       {onEdit === undefined ? null : (
@@ -222,7 +231,11 @@ export function LocaleTabs({
 }) {
   const { t } = useTranslation("admin-catalogs");
   return (
-    <div aria-label={t("admin-catalogs:common.languages")} className="catalog-locale-tabs" role="tablist">
+    <div
+      aria-label={t("admin-catalogs:common.languages")}
+      className="catalog-locale-tabs"
+      role="tablist"
+    >
       {locales.map((candidate) => (
         <button
           aria-selected={candidate === locale}
@@ -245,7 +258,7 @@ export function CatalogFeedback({
   onDismiss,
   tone = "danger",
 }: {
-  message?: string;
+  message?: string | undefined;
   onDismiss: () => void;
   tone?: Tone;
 }) {
@@ -259,25 +272,24 @@ export function CatalogFeedback({
 
 export function useCatalogData<Item>(load: () => Promise<Item[]>, dependency: unknown) {
   const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>();
   const [reloadKey, setReloadKey] = useState(0);
+  const [completedKey, setCompletedKey] = useState(-1);
 
   useEffect(() => {
     let current = true;
-    setLoading(true);
     void load().then(
       (result) => {
         if (current) {
           setItems(result);
           setError(undefined);
-          setLoading(false);
+          setCompletedKey(reloadKey);
         }
       },
       (reason: unknown) => {
         if (current) {
           setError(reason);
-          setLoading(false);
+          setCompletedKey(reloadKey);
         }
       },
     );
@@ -289,7 +301,7 @@ export function useCatalogData<Item>(load: () => Promise<Item[]>, dependency: un
   return {
     error,
     items,
-    loading,
+    loading: completedKey !== reloadKey,
     reload: () => {
       setReloadKey((value) => value + 1);
     },

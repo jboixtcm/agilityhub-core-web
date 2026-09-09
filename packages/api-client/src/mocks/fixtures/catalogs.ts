@@ -1,5 +1,7 @@
 import type { components } from "../../generated/schema";
 
+import brandingCanic from "./branding-canic.json";
+
 export type Administrator = components["schemas"]["Administrator"];
 export type FaqEntry = components["schemas"]["FaqEntry"];
 export type Instructor = components["schemas"]["Instructor"];
@@ -8,11 +10,14 @@ export type Plan = components["schemas"]["Plan"];
 export type Price = components["schemas"]["Price"];
 export type Ring = components["schemas"]["Ring"];
 
+const ringColor = (index: number): string =>
+  brandingCanic.theme.ringPalette[index] ?? "currentColor";
+
 const initialRings: Ring[] = [
   {
     active: true,
     allowsFreeTraining: true,
-    color: "#F2B58C",
+    color: ringColor(0),
     effectiveTrainingCapacity: 1,
     id: "ring-muntanya",
     name: "Muntanya",
@@ -29,7 +34,7 @@ const initialRings: Ring[] = [
   {
     active: true,
     allowsFreeTraining: true,
-    color: "#8FCE8F",
+    color: ringColor(1),
     effectiveTrainingCapacity: 1,
     id: "ring-central",
     name: "Central",
@@ -40,7 +45,7 @@ const initialRings: Ring[] = [
   {
     active: true,
     allowsFreeTraining: true,
-    color: "#C9CDD3",
+    color: ringColor(2),
     effectiveTrainingCapacity: 1,
     id: "ring-carretera",
     name: "Carretera",
@@ -51,7 +56,7 @@ const initialRings: Ring[] = [
   {
     active: true,
     allowsFreeTraining: false,
-    color: "#F5D67A",
+    color: ringColor(3),
     effectiveTrainingCapacity: 1,
     id: "ring-cadells",
     name: "Cadells",
@@ -62,7 +67,7 @@ const initialRings: Ring[] = [
   {
     active: true,
     allowsFreeTraining: false,
-    color: "#85B8E8",
+    color: ringColor(4),
     effectiveTrainingCapacity: 1,
     id: "ring-petita",
     name: "Petita",
@@ -79,10 +84,8 @@ const level = (
   capacity: number,
   order: number,
   grantsFreeTraining: boolean,
-  agilityhubLevel?: Level["agilityhubLevel"],
 ): Level => ({
   active: true,
-  ...(agilityhubLevel === undefined ? {} : { agilityhubLevel }),
   capacity,
   code,
   color,
@@ -95,21 +98,21 @@ const level = (
 });
 
 const initialLevels: Level[] = [
-  level("P", "Cadells", "#F5D67A", 5, 0, false, "EASY"),
-  level("A", "Nivell A", "#F2B58C", 5, 10, false, "EASY"),
-  level("B", "Nivell B", "#F2B58C", 5, 20, false, "EASY"),
-  level("C", "Nivell C", "#8FCE8F", 5, 30, false, "MEDIUM"),
-  level("D", "Nivell D", "#8FCE8F", 5, 40, true, "MEDIUM"),
-  level("E", "Nivell E", "#85B8E8", 4, 50, true, "HARD"),
-  level("F", "Nivell F", "#85B8E8", 4, 60, true, "HARD"),
-  level("G", "Nivell G", "#C9CDD3", 4, 70, true, "HARD"),
-  level("T", "Teràpia", "#C9CDD3", 1, 80, false),
+  level("P", "Cadells", ringColor(3), 5, 0, false),
+  level("A", "Nivell A", ringColor(0), 5, 10, false),
+  level("B", "Nivell B", ringColor(0), 5, 20, false),
+  level("C", "Nivell C", ringColor(1), 5, 30, false),
+  level("D", "Nivell D", ringColor(1), 5, 40, true),
+  level("E", "Nivell E", ringColor(4), 4, 50, true),
+  level("F", "Nivell F", ringColor(4), 4, 60, true),
+  level("G", "Nivell G", ringColor(2), 4, 70, true),
+  level("T", "Teràpia", ringColor(2), 1, 80, false),
 ];
 
 const initialInstructors: Instructor[] = [
   {
     active: true,
-    color: "#E26A2A",
+    color: brandingCanic.theme.colors.primary,
     id: "instructor-laura",
     memberId: "member-laura",
     shortName: "Laura",
@@ -117,7 +120,7 @@ const initialInstructors: Instructor[] = [
   },
   {
     active: true,
-    color: "#8FCE8F",
+    color: ringColor(1),
     id: "instructor-marc",
     memberId: "member-marc",
     shortName: "Marc",
@@ -125,7 +128,7 @@ const initialInstructors: Instructor[] = [
   },
   {
     active: true,
-    color: "#85B8E8",
+    color: ringColor(4),
     id: "instructor-anna",
     memberId: "member-anna",
     shortName: "Anna",
@@ -133,7 +136,7 @@ const initialInstructors: Instructor[] = [
   },
   {
     active: true,
-    color: "#F5D67A",
+    color: ringColor(3),
     id: "instructor-sergio",
     memberId: "member-sergio",
     shortName: "Sergio",
@@ -197,6 +200,7 @@ const price = (
 const initialPlans: Plan[] = [
   {
     active: true,
+    billingMode: "MONTHLY_FEE",
     code: "MEMBER",
     conditions: "fins a dues classes per setmana",
     conditionsI18n: {
@@ -204,7 +208,9 @@ const initialPlans: Plan[] = [
       en: "up to two classes per week",
       es: "hasta dos clases por semana",
     },
-    currentPrices: [price("price-member", "plan-member", 6000, "MONTHLY_FEE", "CURRENT", "2026-01-01")],
+    currentPrices: [
+      price("price-member", "plan-member", 6000, "MONTHLY_FEE", "CURRENT", "2026-01-01"),
+    ],
     dogsIncluded: 1,
     entryFee: { mode: "STANDARD" },
     id: "plan-member",
@@ -212,7 +218,15 @@ const initialPlans: Plan[] = [
     nameI18n: { ca: "Abonat", en: "Member", es: "Abonado" },
     order: 0,
     prices: [
-      price("price-member-old", "plan-member", 5500, "MONTHLY_FEE", "EXPIRED", "2025-01-01", "2025-12-31"),
+      price(
+        "price-member-old",
+        "plan-member",
+        5500,
+        "MONTHLY_FEE",
+        "EXPIRED",
+        "2025-01-01",
+        "2025-12-31",
+      ),
       price("price-member", "plan-member", 6000, "MONTHLY_FEE", "CURRENT", "2026-01-01"),
       price("price-member-next", "plan-member", 6500, "MONTHLY_FEE", "SCHEDULED", "2026-10-01"),
     ],
@@ -238,9 +252,12 @@ const initialPlans: Plan[] = [
   },
   {
     active: true,
+    billingMode: "MONTHLY_FEE",
     code: "FAMILY_TWO",
     conditions: "50% de la quota a partir del 2n gos · pagador únic del grup",
-    currentPrices: [price("price-family", "plan-family", 9000, "MONTHLY_FEE", "CURRENT", "2026-01-01")],
+    currentPrices: [
+      price("price-family", "plan-family", 9000, "MONTHLY_FEE", "CURRENT", "2026-01-01"),
+    ],
     dogsIncluded: 2,
     entryFee: { mode: "PERCENT", percent: 50 },
     id: "plan-family",
@@ -288,6 +305,7 @@ const initialPlans: Plan[] = [
   },
   {
     active: true,
+    billingMode: "MAINTENANCE",
     code: "THERAPY",
     conditions:
       "pagament inicial a compte del 50% de l'entrada i quota manteniment en tant no es faci classe en grup",

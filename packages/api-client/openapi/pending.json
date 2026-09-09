@@ -2806,7 +2806,6 @@
           "capacity": { "type": "integer" },
           "color": { "type": "string" },
           "grantsFreeTraining": { "type": "boolean" },
-          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
           "active": { "type": "boolean" },
           "version": { "type": "integer", "format": "int64" },
           "usage": { "$ref": "#/components/schemas/LevelUsage" },
@@ -2823,7 +2822,6 @@
           "capacity": { "type": "integer", "minimum": 1, "maximum": 99 },
           "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
           "grantsFreeTraining": { "type": "boolean" },
-          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
           "active": { "type": "boolean" }
         }
       },
@@ -2838,7 +2836,6 @@
           "capacity": { "type": "integer", "minimum": 1, "maximum": 99 },
           "color": { "type": "string", "pattern": "#[0-9A-Fa-f]{6}" },
           "grantsFreeTraining": { "type": "boolean" },
-          "agilityhubLevel": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] },
           "active": { "type": "boolean" }
         }
       },
@@ -3002,14 +2999,7 @@
       },
       "Administrator": {
         "type": "object",
-        "required": [
-          "membershipId",
-          "memberId",
-          "shortName",
-          "since",
-          "active",
-          "version"
-        ],
+        "required": ["membershipId", "memberId", "shortName", "since", "active", "version"],
         "properties": {
           "membershipId": { "type": "string", "format": "uuid" },
           "memberId": { "type": "string", "format": "uuid" },
@@ -3188,6 +3178,7 @@
           "name": { "type": "string" },
           "nameI18n": { "type": "object", "additionalProperties": { "type": "string" } },
           "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "billingMode": { "type": "string", "enum": ["MONTHLY_FEE", "MAINTENANCE"] },
           "dogsIncluded": { "type": "integer" },
           "entryFee": { "$ref": "#/components/schemas/EntryFee" },
           "pack": { "$ref": "#/components/schemas/PackSettings" },
@@ -3218,6 +3209,7 @@
           "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 16 },
           "name": { "type": "object", "additionalProperties": { "type": "string" } },
           "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "billingMode": { "type": "string", "enum": ["MONTHLY_FEE", "MAINTENANCE"] },
           "dogsIncluded": { "type": "integer", "minimum": 1, "maximum": 9 },
           "entryFee": { "$ref": "#/components/schemas/EntryFee" },
           "pack": { "$ref": "#/components/schemas/PackSettings" },
@@ -3241,6 +3233,7 @@
           "code": { "type": "string", "pattern": "[A-Z0-9_]+", "maxLength": 16 },
           "name": { "type": "object", "additionalProperties": { "type": "string" } },
           "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "billingMode": { "type": "string", "enum": ["MONTHLY_FEE", "MAINTENANCE"] },
           "dogsIncluded": { "type": "integer", "minimum": 1, "maximum": 9 },
           "entryFee": { "$ref": "#/components/schemas/EntryFee" },
           "pack": { "$ref": "#/components/schemas/PackSettings" },

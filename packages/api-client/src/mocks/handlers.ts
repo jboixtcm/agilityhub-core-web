@@ -3,17 +3,6 @@ import { delay, http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import {
-  censusRecordState,
-  censusDogs,
-  censusMembers,
-  initialSavedViews,
-  resetCensusRecordState,
-  type DogListItem,
-  type DogDetail,
-  type MemberListItem,
-  type SavedView,
-} from "./fixtures/census";
-import {
   catalogState,
   type Administrator,
   type FaqEntry,
@@ -24,6 +13,18 @@ import {
   type Ring,
 } from "./fixtures/catalogs";
 import {
+  censusRecordState,
+  censusDogs,
+  censusLevels,
+  censusMembers,
+  initialSavedViews,
+  resetCensusRecordState,
+  type DogListItem,
+  type DogDetail,
+  type MemberListItem,
+  type SavedView,
+} from "./fixtures/census";
+import {
   meDogsFixture,
   meProfileFixture,
   postalTownFixtures,
@@ -31,13 +32,21 @@ import {
   type MeDogs,
   type MeProfile,
 } from "./fixtures/member-self-service";
-import { currentMockScenario, mockScenario, type MockScenario } from "./scenarios";
+import {
+  currentMockScenario,
+  currentMockScenarioName,
+  mockScenario,
+  type MockScenario,
+  type MockScenarioDefinition,
+} from "./scenarios";
 
 type ApiErrorResponse = components["schemas"]["ApiError"];
 type MagicLinkRequest = components["schemas"]["MagicLinkRequest"];
 type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
 type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 type UpdateProfileRequest = components["schemas"]["ProfileRequest"];
+type OnboardingRequest = components["schemas"]["OnboardingRequest"];
+type OnboardingState = components["schemas"]["OnboardingState"];
 type ListFilter = components["schemas"]["ListFilter"];
 type SavedViewRequest = components["schemas"]["SavedViewRequest"];
 type MemberPatchRequest = components["schemas"]["MemberPatchRequest"];
@@ -82,6 +91,83 @@ const savedViews: SavedView[] = initialSavedViews.map((view) => ({
 
 let memberDogsState: MeDogs = structuredClone(meDogsFixture);
 let memberProfileState: MeProfile = structuredClone(meProfileFixture);
+let activeOnboardingScenario: MockScenarioDefinition | undefined;
+let activeOnboardingScenarioName: MockScenario | undefined;
+const completedOnboardingState: OnboardingState = {
+  fields: [],
+  pending: false,
+  postponeRemaining: 0,
+  requiredConsent: null,
+};
+let onboardingState: OnboardingState = completedOnboardingState;
+let outdatedConsentReturned = false;
+
+function onboardingStorageKey(name: MockScenario): string {
+  return `agilityhub.mockOnboarding:${name}`;
+}
+
+function mockStorage(): Storage | undefined {
+  const storage: unknown = Reflect.get(globalThis, "localStorage");
+  return typeof storage === "object" && storage !== null ? (storage as Storage) : undefined;
+}
+
+function readStoredOnboarding(name: MockScenario): OnboardingState | undefined {
+  try {
+    const serialized = mockStorage()?.getItem(onboardingStorageKey(name));
+    return serialized === null || serialized === undefined
+      ? undefined
+      : (JSON.parse(serialized) as OnboardingState);
+  } catch {
+    return undefined;
+  }
+}
+
+function persistOnboarding(state: OnboardingState): void {
+  if (activeOnboardingScenarioName === undefined) {
+    return;
+  }
+  try {
+    mockStorage()?.setItem(
+      onboardingStorageKey(activeOnboardingScenarioName),
+      JSON.stringify(state),
+    );
+  } catch {
+    // Node tests and privacy-restricted browsers can run without persistent mock state.
+  }
+}
+
+function currentOnboardingState(): OnboardingState {
+  const scenario = currentMockScenario();
+  if (scenario !== activeOnboardingScenario) {
+    const scenarioName = currentMockScenarioName();
+    activeOnboardingScenario = scenario;
+    activeOnboardingScenarioName = scenarioName;
+    onboardingState =
+      readStoredOnboarding(scenarioName) ??
+      structuredClone(scenario.onboarding ?? completedOnboardingState);
+    outdatedConsentReturned = onboardingState.requiredConsent?.version === "2026-09-02";
+  }
+  return onboardingState;
+}
+
+function resetOnboardingMockState(): void {
+  for (const scenario of [
+    "onboarding",
+    "onboardingAdmin",
+    "policyReconsent",
+    "policyReconsentOutdated",
+  ] as const satisfies readonly MockScenario[]) {
+    try {
+      mockStorage()?.removeItem(onboardingStorageKey(scenario));
+    } catch {
+      // Node tests can run without local storage.
+    }
+  }
+  activeOnboardingScenario = undefined;
+  activeOnboardingScenarioName = undefined;
+  onboardingState = completedOnboardingState;
+  outdatedConsentReturned = false;
+}
 
 function resetMemberSelfServiceState(): void {
   memberDogsState = structuredClone(meDogsFixture);
@@ -539,7 +625,10 @@ function orderedIds<Item extends { id: string; order: number }>(
     return undefined;
   }
   const byId = new Map(items.map((item) => [item.id, item]));
-  return ids.map((id, index) => ({ ...byId.get(id)!, order: index * 10 }));
+  return ids.flatMap((id, index) => {
+    const item = byId.get(id);
+    return item === undefined ? [] : [{ ...item, order: index * 10 }];
+  });
 }
 
 export const handlers = [
@@ -562,6 +651,44 @@ export const handlers = [
       mockScenario("impersonated");
     }
     return HttpResponse.json(currentMockScenario().me);
+  }),
+  http.get("*/api/v1/me/onboarding", () => HttpResponse.json(currentOnboardingState())),
+  http.put("*/api/v1/me/onboarding", async ({ request }) => {
+    const body = (await request.json()) as OnboardingRequest;
+    const state = currentOnboardingState();
+    if (!body.consentAccepted) {
+      return validationError([{ code: "REQUIRED", field: "consentAccepted" }]);
+    }
+    if (currentMockScenario().outdatedConsentOnce === true && !outdatedConsentReturned) {
+      outdatedConsentReturned = true;
+      onboardingState = {
+        ...state,
+        requiredConsent:
+          state.requiredConsent === null
+            ? null
+            : { ...state.requiredConsent, version: "2026-09-02" },
+      };
+      persistOnboarding(onboardingState);
+      return apiError("CONSENT_VERSION_OUTDATED", "Consent version is outdated", 422);
+    }
+    if (state.requiredConsent?.version !== body.consentVersion) {
+      return apiError("CONSENT_VERSION_OUTDATED", "Consent version is outdated", 422);
+    }
+    if (body.fields?.locale !== undefined && !["ca", "es", "en"].includes(body.fields.locale)) {
+      return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
+    }
+    onboardingState = { ...state, pending: false, requiredConsent: null };
+    persistOnboarding(onboardingState);
+    return HttpResponse.json(onboardingState);
+  }),
+  http.post("*/api/v1/me/onboarding/postpone", () => {
+    const state = currentOnboardingState();
+    onboardingState = {
+      ...state,
+      postponeRemaining: Math.max(0, state.postponeRemaining - 1),
+    };
+    persistOnboarding(onboardingState);
+    return HttpResponse.json(onboardingState);
   }),
   http.patch("*/api/v1/me", async ({ request }) => {
     const body = (await request.json()) as UpdateMeRequest;
@@ -1278,7 +1405,7 @@ export const handlers = [
       allowsFreeTraining: body.allowsFreeTraining ?? false,
       color: body.color ?? catalogState.rings[0]?.color ?? "currentColor",
       effectiveTrainingCapacity: body.trainingCapacity ?? 1,
-      id: `ring-${Date.now()}`,
+      id: `ring-${String(Date.now())}`,
       name: body.name,
       order: body.order ?? catalogState.rings.length * 10,
       shortName: body.shortName,
@@ -1346,12 +1473,11 @@ export const handlers = [
     const body = (await request.json()) as LevelCreate;
     const item: Level = {
       active: body.active ?? true,
-      ...(body.agilityhubLevel === undefined ? {} : { agilityhubLevel: body.agilityhubLevel }),
       capacity: body.capacity ?? 1,
       code: body.code,
       color: body.color ?? catalogState.levels[0]?.color ?? "currentColor",
       grantsFreeTraining: body.grantsFreeTraining ?? false,
-      id: `level-${Date.now()}`,
+      id: `level-${String(Date.now())}`,
       name: localizedDefault(body.name, body.code),
       nameI18n: body.name,
       order: body.order ?? catalogState.levels.length * 10,
@@ -1420,7 +1546,7 @@ export const handlers = [
     const item: Instructor = {
       active: true,
       color: body.color,
-      id: `instructor-${Date.now()}`,
+      id: `instructor-${String(Date.now())}`,
       memberId: body.memberId,
       shortName: body.shortName,
       version: 1,
@@ -1482,7 +1608,7 @@ export const handlers = [
     const item: Administrator = {
       active: true,
       memberId: body.memberId,
-      membershipId: `membership-${Date.now()}`,
+      membershipId: `membership-${String(Date.now())}`,
       shortName: body.shortName,
       since: body.since,
       version: 1,
@@ -1539,12 +1665,13 @@ export const handlers = [
     const body = (await request.json()) as PlanCreate;
     const item: Plan = {
       active: body.active ?? true,
+      ...(body.billingMode === undefined ? {} : { billingMode: body.billingMode }),
       code: body.code,
       conditions: localizedDefault(body.conditions, ""),
       ...(body.conditions === undefined ? {} : { conditionsI18n: body.conditions }),
       dogsIncluded: body.dogsIncluded ?? 1,
       entryFee: body.entryFee ?? { mode: "STANDARD" },
-      id: `plan-${Date.now()}`,
+      id: `plan-${String(Date.now())}`,
       name: localizedDefault(body.name, body.code),
       nameI18n: body.name,
       order: body.order ?? catalogState.plans.length * 10,
@@ -1568,24 +1695,49 @@ export const handlers = [
     if (body.version !== plan.version) {
       return apiError("STALE_VERSION", "Stale plan version", 409);
     }
+    const { texts: inputTexts, ...planPatch } = body;
     const updated: Plan = {
       ...plan,
-      ...body,
+      ...planPatch,
       conditions: localizedDefault(body.conditions, plan.conditions ?? ""),
       ...(body.conditions === undefined ? {} : { conditionsI18n: body.conditions }),
       name: localizedDefault(body.name, plan.name),
       ...(body.name === undefined ? {} : { nameI18n: body.name }),
-      texts:
-        body.texts === undefined
-          ? plan.texts
-          : {
-              description: localizedDefault(body.texts.description, plan.texts?.description ?? ""),
-              descriptionI18n: body.texts.description,
-              offerLabel: localizedDefault(body.texts.offerLabel, plan.texts?.offerLabel ?? ""),
-              offerLabelI18n: body.texts.offerLabel,
-              priceLabel: localizedDefault(body.texts.priceLabel, plan.texts?.priceLabel ?? ""),
-              priceLabelI18n: body.texts.priceLabel,
+      ...(inputTexts === undefined
+        ? plan.texts === undefined
+          ? {}
+          : { texts: plan.texts }
+        : {
+            texts: {
+              ...(inputTexts.description === undefined
+                ? {}
+                : {
+                    description: localizedDefault(
+                      inputTexts.description,
+                      plan.texts?.description ?? "",
+                    ),
+                    descriptionI18n: inputTexts.description,
+                  }),
+              ...(inputTexts.offerLabel === undefined
+                ? {}
+                : {
+                    offerLabel: localizedDefault(
+                      inputTexts.offerLabel,
+                      plan.texts?.offerLabel ?? "",
+                    ),
+                    offerLabelI18n: inputTexts.offerLabel,
+                  }),
+              ...(inputTexts.priceLabel === undefined
+                ? {}
+                : {
+                    priceLabel: localizedDefault(
+                      inputTexts.priceLabel,
+                      plan.texts?.priceLabel ?? "",
+                    ),
+                    priceLabelI18n: inputTexts.priceLabel,
+                  }),
             },
+          }),
       version: plan.version + 1,
     };
     return HttpResponse.json(replaceCatalogItem(catalogState.plans, updated));
@@ -1603,13 +1755,15 @@ export const handlers = [
     }
     const price: Price = {
       ...body,
-      id: `price-${Date.now()}`,
+      id: `price-${String(Date.now())}`,
       locked: false,
       status: body.validFrom > monthStart ? "SCHEDULED" : "CURRENT",
       version: 1,
     };
     plan.prices = [...(plan.prices ?? []), price];
-    plan.currentPrices = price.status === "CURRENT" ? [price] : plan.currentPrices;
+    if (price.status === "CURRENT") {
+      plan.currentPrices = [price];
+    }
     return HttpResponse.json({ price }, { status: 201 });
   }),
   http.get("*/api/v1/faq-entries", ({ request }) => {
@@ -1636,7 +1790,7 @@ export const handlers = [
       answerI18n: body.answer,
       category: localizedDefault(body.category, ""),
       categoryI18n: body.category,
-      id: `faq-${Date.now()}`,
+      id: `faq-${String(Date.now())}`,
       order: body.order ?? catalogState.faqEntries.length * 10,
       question: localizedDefault(body.question, ""),
       questionI18n: body.question,
@@ -1747,4 +1901,10 @@ export const handlers = [
   ),
 ];
 
-export { mockScenario, resetCensusRecordState, resetMemberSelfServiceState, type MockScenario };
+export {
+  mockScenario,
+  resetCensusRecordState,
+  resetMemberSelfServiceState,
+  resetOnboardingMockState,
+  type MockScenario,
+};

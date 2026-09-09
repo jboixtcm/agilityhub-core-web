@@ -1,6 +1,7 @@
 import {
   type AuthClient,
   createAuthenticatedApiClient,
+  OnboardingExperience,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -26,6 +27,10 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { PlansPage } from "./catalogs/PlansPage";
+import { RingsPage } from "./catalogs/RingsPage";
+import { SettingsPage } from "./catalogs/SettingsPage";
+import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { Gallery } from "./dev/gallery";
@@ -343,6 +348,18 @@ function routeContent(
   if (route.path === "/gossos/:id") {
     return <DogRecordPage client={client} />;
   }
+  if (route.path === "/pistes") {
+    return <RingsPage client={client} />;
+  }
+  if (route.path === "/equip") {
+    return <TeamPage client={client} />;
+  }
+  if (route.path === "/parametres") {
+    return <SettingsPage client={client} />;
+  }
+  if (route.path === "/modalitats") {
+    return <PlansPage client={client} />;
+  }
   return <Placeholder />;
 }
 
@@ -533,6 +550,8 @@ export function App({ authClient }: { authClient: AuthClient }) {
 
   const route = currentRoute(window.location.pathname) ?? currentRoute("/tauler");
   return route === undefined ? null : (
-    <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+    <OnboardingExperience authClient={authClient} presentation="modal">
+      <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+    </OnboardingExperience>
   );
 }

@@ -7,17 +7,21 @@ import meImpersonated from "./fixtures/me-impersonated.json";
 import meInstructor from "./fixtures/me-instructor.json";
 import meMember from "./fixtures/me-member.json";
 import meMultiProfile from "./fixtures/me-multi-profile.json";
+import { importedAccountOnboarding, policyReconsentOnboarding } from "./fixtures/onboarding";
 import sessions from "./fixtures/sessions.json";
 
 type Branding = components["schemas"]["BrandingResponse"];
 type Me = components["schemas"]["Me"];
 type SessionList = components["schemas"]["Session"][];
+type OnboardingState = components["schemas"]["OnboardingState"];
 
 export interface MockScenarioDefinition {
   branding: Branding;
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
+  onboarding?: OnboardingState;
+  outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
 }
 
@@ -60,6 +64,14 @@ const scenarios = {
   },
   minimalAdmin: {
     branding: minimal,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  catalogsNoFaq: {
+    branding: {
+      ...canic,
+      modules: (canic.modules ?? []).filter((module) => module !== "FAQ"),
+    },
     me: meAdmin as Me,
     sessions: accountSessions,
   },
@@ -113,6 +125,48 @@ const scenarios = {
     me: meImpersonated as Me,
     sessions: accountSessions,
   },
+  onboarding: {
+    branding: canic,
+    me: {
+      ...member,
+      account: { ...member.account, onboardingPending: true },
+    },
+    onboarding: importedAccountOnboarding,
+    sessions: accountSessions,
+  },
+  onboardingAdmin: {
+    branding: canic,
+    me: {
+      ...(meAdmin as Me),
+      account: { ...(meAdmin as Me).account, onboardingPending: true },
+    },
+    onboarding: {
+      ...importedAccountOnboarding,
+      fields: importedAccountOnboarding.fields.map((field) =>
+        field.key === "name" ? { ...field, value: "Aina Serra" } : field,
+      ),
+    },
+    sessions: accountSessions,
+  },
+  policyReconsent: {
+    branding: canic,
+    me: {
+      ...member,
+      account: { ...member.account, onboardingPending: true },
+    },
+    onboarding: policyReconsentOnboarding,
+    sessions: accountSessions,
+  },
+  policyReconsentOutdated: {
+    branding: canic,
+    me: {
+      ...member,
+      account: { ...member.account, onboardingPending: true },
+    },
+    onboarding: policyReconsentOnboarding,
+    outdatedConsentOnce: true,
+    sessions: accountSessions,
+  },
 } as const satisfies Record<string, MockScenarioDefinition>;
 
 export type MockScenario = keyof typeof scenarios;
@@ -127,4 +181,8 @@ export function mockScenario(name: MockScenario): void {
 
 export function currentMockScenario(): MockScenarioDefinition {
   return scenarios[selectedScenario];
+}
+
+export function currentMockScenarioName(): MockScenario {
+  return selectedScenario;
 }

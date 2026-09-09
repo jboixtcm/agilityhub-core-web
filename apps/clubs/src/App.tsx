@@ -2,6 +2,7 @@ import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agil
 import {
   type AuthClient,
   type Me,
+  OnboardingExperience,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -42,6 +43,7 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // Screens 01 and 02.
   { path: "/entrar", public: true },
   { path: "/activacio", public: true },
+  { path: "/benvinguda" },
   // Screen 03b.
   { path: "/perfil-acces" },
   // Screen 03.
@@ -118,7 +120,7 @@ function profileRoles(me: CurrentMe): readonly Role[] {
   return me.membership.profiles;
 }
 
-function routeAfterLogin(me: Me): string {
+function routeAfterOnboarding(me: Me): string {
   if (!isCurrentClubMe(me)) {
     throw new TypeError("The club session did not contain a membership");
   }
@@ -126,6 +128,20 @@ function routeAfterLogin(me: Me): string {
     return "/perfil-acces";
   }
   return me.membership.activeProfile === "INSTRUCTOR" ? "/instructor/avui" : "/inici";
+}
+
+async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> {
+  if (me.account.onboardingPending) {
+    try {
+      const onboarding = await authClient.getOnboarding();
+      if (onboarding.pending && onboarding.postponeRemaining === 0) {
+        return "/benvinguda";
+      }
+    } catch {
+      return "/benvinguda";
+    }
+  }
+  return routeAfterOnboarding(me);
 }
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
@@ -416,7 +432,7 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
     setPending("login");
     try {
       const me = await authClient.login(email, password);
-      window.location.assign(routeAfterLogin(me));
+      window.location.assign(await routeAfterLogin(me, authClient));
     } catch (loginError) {
       if (isApiError(loginError) && loginError.status === 429) {
         countdown.start(loginError.retryAfter ?? 60);
@@ -639,7 +655,9 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         <Button
           className="auth-form__primary"
           onClick={() => {
-            window.location.assign(routeAfterLogin(me));
+            void routeAfterLogin(me, authClient).then((path) => {
+              window.location.assign(path);
+            });
           }}
           type="button"
         >
@@ -1074,9 +1092,17 @@ function LegacyAccessRedirect() {
 export function App({
   apiClient = defaultApiClient,
   authClient,
+  navigate = (path, replace) => {
+    if (replace) {
+      window.location.replace(path);
+    } else {
+      window.location.assign(path);
+    }
+  },
 }: {
   apiClient?: ApiClient;
   authClient: AuthClient;
+  navigate?: (path: string, replace: boolean) => void;
 }) {
   const pathname = window.location.pathname;
   if (pathname === "/acces") {
@@ -1088,11 +1114,35 @@ export function App({
   if (pathname === "/activacio") {
     return <ActivationPage authClient={authClient} />;
   }
-  if (pathname === "/perfil-acces") {
+  if (pathname === "/benvinguda") {
     return (
       <RequireAuth>
-        <ProfileChoicePage authClient={authClient} />
+        <OnboardingExperience
+          authClient={authClient}
+          onAccepted={() => {
+            const me = authClient.getMe();
+            if (me !== null) {
+              navigate(routeAfterOnboarding(me), false);
+            }
+          }}
+          presentation="page"
+        />
       </RequireAuth>
+    );
+  }
+  if (pathname === "/perfil-acces") {
+    return (
+      <OnboardingExperience
+        authClient={authClient}
+        onBlockingRequired={() => {
+          navigate("/benvinguda", true);
+        }}
+        presentation="modal"
+      >
+        <RequireAuth>
+          <ProfileChoicePage authClient={authClient} />
+        </RequireAuth>
+      </OnboardingExperience>
     );
   }
 
@@ -1121,8 +1171,16 @@ export function App({
   return route.public === true ? (
     content
   ) : (
-    <MobileShell authClient={authClient} detail={pathname === "/gossos" || pathname === "/dades"}>
-      {content}
-    </MobileShell>
+    <OnboardingExperience
+      authClient={authClient}
+      onBlockingRequired={() => {
+        navigate("/benvinguda", true);
+      }}
+      presentation="modal"
+    >
+      <MobileShell authClient={authClient} detail={pathname === "/gossos" || pathname === "/dades"}>
+        {content}
+      </MobileShell>
+    </OnboardingExperience>
   );
 }

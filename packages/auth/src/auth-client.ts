@@ -17,6 +17,8 @@ export type TokenResponse = components["schemas"]["TokenResponse"];
 export type AccountSession = components["schemas"]["Session"];
 export type HandoffResponse = components["schemas"]["HandoffResponse"];
 export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
+export type OnboardingRequest = components["schemas"]["OnboardingRequest"];
+export type OnboardingState = components["schemas"]["OnboardingState"];
 export type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
 export type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 type AccountLocale = NonNullable<UpdateMeRequest["locale"]>;
@@ -213,6 +215,39 @@ export class AuthClient extends EventTarget {
     return this.updateAccount({ locale });
   }
 
+  async getOnboarding(): Promise<OnboardingState> {
+    const result = await this.apiClient.GET("/me/onboarding");
+    if (result.data === undefined) {
+      throw new TypeError("The onboarding response did not contain data", {
+        cause: result.error,
+      });
+    }
+    this.applyOnboardingState(result.data);
+    return result.data;
+  }
+
+  async completeOnboarding(request: OnboardingRequest): Promise<OnboardingState> {
+    const result = await this.apiClient.PUT("/me/onboarding", { body: request });
+    if (result.data === undefined) {
+      throw new TypeError("The onboarding response did not contain data", {
+        cause: result.error,
+      });
+    }
+    this.applyOnboardingState(result.data, request);
+    return result.data;
+  }
+
+  async postponeOnboarding(): Promise<OnboardingState> {
+    const result = await this.apiClient.POST("/me/onboarding/postpone");
+    if (result.data === undefined) {
+      throw new TypeError("The onboarding response did not contain data", {
+        cause: result.error,
+      });
+    }
+    this.applyOnboardingState(result.data);
+    return result.data;
+  }
+
   async listSessions(): Promise<AccountSession[]> {
     const result = await this.apiClient.GET("/me/sessions");
     if (result.data === undefined) {
@@ -325,6 +360,22 @@ export class AuthClient extends EventTarget {
       await this.refreshTokenStore.set(tokens.refresh_token);
     }
     this.signedOutNotified = false;
+  }
+
+  private applyOnboardingState(state: OnboardingState, request?: OnboardingRequest): void {
+    if (this.currentMe === null) {
+      return;
+    }
+    this.currentMe = {
+      ...this.currentMe,
+      account: {
+        ...this.currentMe.account,
+        onboardingPending: state.pending,
+        ...(request?.fields?.locale === undefined ? {} : { locale: request.fields.locale }),
+        ...(request?.fields?.name === undefined ? {} : { name: request.fields.name }),
+      },
+    };
+    this.dispatchEvent(new Event("signedIn"));
   }
 
   private async clearLocalSession(): Promise<void> {

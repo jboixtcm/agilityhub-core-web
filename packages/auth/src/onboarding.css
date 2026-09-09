@@ -1,0 +1,107 @@
+.onboarding-page {
+  display: grid;
+  min-height: 100dvh;
+  padding: var(--ah-space-5);
+  background: var(--ah-color-background);
+  place-items: center;
+}
+
+.onboarding-card {
+  display: grid;
+  width: min(100%, 30rem);
+  gap: var(--ah-space-5);
+  padding: var(--ah-space-6);
+}
+
+.onboarding-card h1 {
+  margin: 0;
+  font: 800 1.5rem/1.2 var(--ah-font-display);
+  text-align: center;
+}
+
+.onboarding-card--status {
+  justify-items: center;
+  text-align: center;
+}
+
+.onboarding-card--status p {
+  margin: 0;
+}
+
+.onboarding-brand {
+  display: grid;
+  justify-items: center;
+  gap: var(--ah-space-2);
+}
+
+.onboarding-brand img {
+  width: min(15rem, 100%);
+  height: 6rem;
+  object-fit: contain;
+}
+
+.onboarding-brand__initial {
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  color: var(--ah-color-primary-fg);
+  font: 800 2.5rem/1 var(--ah-font-display);
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-lg);
+  place-items: center;
+}
+
+.onboarding-form {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.onboarding-form__description {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  line-height: 1.5;
+}
+
+.onboarding-form__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ah-space-3);
+  line-height: 1.45;
+}
+
+.onboarding-form__check .ah-checkbox {
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+
+.onboarding-form__check a {
+  color: var(--ah-color-primary);
+}
+
+.onboarding-form__error {
+  margin: 0;
+  color: var(--ah-color-danger);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.onboarding-form__actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  gap: var(--ah-space-3);
+}
+
+.onboarding-form__actions .ah-button {
+  flex: 1 1 10rem;
+}
+
+@media (max-width: 30rem) {
+  .onboarding-card {
+    padding: var(--ah-space-5);
+  }
+
+  .onboarding-form__actions {
+    display: grid;
+  }
+}

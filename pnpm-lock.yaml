@@ -432,6 +432,9 @@ importers:
       '@agilityhub/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@agilityhub/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@agilityhub/ui':
         specifier: workspace:*
         version: link:../ui

@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the reusable UniversalList pattern and the Clubs Admin member and dog census screens with URL-synced filters, configurable columns, saved views, bulk selection, exports, and three-locale coverage.
 - Add the Clubs Admin member and dog records with D10 actions, optimistic concurrency, payment and role management, booking controls, consent and notification settings, dog level and document workflows, translated mocks, and browser evidence.
 - Add the Clubs member self-service dog and personal-data screens with country-aware validation, postal locality lookup, uploads, task and module gating, translated mocks, and mobile browser evidence.
+- Add Clubs Admin catalog maintenance for rings, instructors, administrators, local levels, FAQ entries, plans, and price validity, with tenant-module gates, three-locale copy, MSW contracts, and desktop browser evidence.
+- Add imported-account onboarding and versioned privacy re-consent across Clubs and Clubs Admin, with postponement limits, route blocking, typed API mocks, and three-locale coverage.
 
 ### Changed
 

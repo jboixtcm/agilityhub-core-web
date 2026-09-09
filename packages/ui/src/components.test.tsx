@@ -132,6 +132,30 @@ describe("base components", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  it("Modal can require an explicit in-dialog action", () => {
+    const onClose = vi.fn();
+    render(
+      <Modal closeLabel="Tanca" dismissible={false} onClose={onClose} open title="Consentiment">
+        <button>Accepta</button>
+      </Modal>,
+    );
+    expect(screen.queryByRole("button", { name: "Tanca" })).not.toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("Modal can require an explicit action", () => {
+    const onClose = vi.fn();
+    render(
+      <Modal closeLabel="Tanca" dismissible={false} onClose={onClose} open title="Confirmació">
+        Segur?
+      </Modal>,
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("button", { name: "Tanca" })).not.toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it("Drawer renders a desktop side panel", () => {
     const onClose = vi.fn();
     render(
