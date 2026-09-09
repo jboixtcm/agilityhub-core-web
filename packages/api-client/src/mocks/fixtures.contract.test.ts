@@ -17,6 +17,10 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
   "branding-minim.json": {
     $ref: `${openapiSchemaId}#/components/schemas/BrandingResponse`,
   },
+  "club-pages.json": {
+    items: { $ref: `${openapiSchemaId}#/components/schemas/ClubPage` },
+    type: "array",
+  },
   "me-admin.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },
   "me-impersonated.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },
   "me-instructor.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },

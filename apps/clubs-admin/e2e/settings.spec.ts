@@ -105,7 +105,8 @@ test.describe("E2-W05 generated club settings", () => {
     await expect(
       page.getByText("configurat · edició a la consola de clubs", { exact: true }),
     ).toBeVisible();
-    await expect(page.getByText("Disponible aviat", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Normes del club/u })).toBeVisible();
+    await expect(page.getByText("sense contingut", { exact: true })).toBeVisible();
 
     await page.screenshot({
       fullPage: true,

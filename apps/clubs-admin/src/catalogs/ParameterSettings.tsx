@@ -17,6 +17,7 @@ import {
 import { Fragment, type SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ClubPagesCard } from "./ClubPagesCard";
 import { buildDerivedSettingRows, type DerivedSettingRow } from "./derived-settings";
 import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
 
@@ -1119,16 +1120,7 @@ export function ParameterSettings({
             </Card>
           ))}
           <ModulesCard client={client} modules={modules} onModulesChange={onModulesChange} />
-          <Card className="settings-card" id="club-pages">
-            <h2>{t("admin-settings:blocks.clubPages")}</h2>
-            <nav aria-label={t("admin-settings:pages.navigation")} className="settings-page-links">
-              <span aria-disabled="true">
-                <span>{t("admin-settings:pages.rules")}</span>
-                <small>{t("admin-settings:pages.availableSoon")}</small>
-              </span>
-              {modules.includes("FAQ") ? <a href="#faq">{t("admin-settings:pages.faq")}</a> : null}
-            </nav>
-          </Card>
+          <ClubPagesCard client={client} />
           <Card className="settings-card settings-card--placeholder">
             <h2>{t("admin-settings:blocks.automatedProcesses")}</h2>
           </Card>

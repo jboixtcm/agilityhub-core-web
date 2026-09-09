@@ -20,6 +20,38 @@
     "save": "DESA",
     "saving": "Desant"
   },
+  "clubPages": {
+    "bodyField": "Contingut",
+    "deactivate": "Desactiva",
+    "defaultLocaleRequired": "Cal completar el títol i el contingut en l'idioma predeterminat del club.",
+    "draft": "esborrany",
+    "duplicateKey": "Ja hi ha una pàgina amb aquesta clau.",
+    "editorTitle": "Edita la pàgina",
+    "fixed": {
+      "IMAGE_CONSENT": "Consentiment d'imatge",
+      "PRIVACY": "Privacitat",
+      "RULES": "Normes del club",
+      "WELCOME_GUIDE": "Guia de benvinguda"
+    },
+    "invalidBody": "Revisa el contingut: només s'admet Markdown limitat i un màxim de 20.000 caràcters.",
+    "key": "Clau de la pàgina",
+    "keyHelp": "Entre 2 i 40 caràcters: minúscules, números i guions.",
+    "loadError": "No s'han pogut carregar les pàgines del club.",
+    "markdownHelp": "Admet títols, paràgrafs, negreta, cursiva, llistes i enllaços.",
+    "new": "Pàgina",
+    "noContent": "sense contingut",
+    "preview": "Vista prèvia",
+    "previewEmpty": "La vista prèvia apareixerà aquí.",
+    "provisional": "Text provisional — pendent d'omplir",
+    "publish": "Publica",
+    "publishConfirmation": "Es publicarà la versió {version} — els consentiments futurs hi faran referència",
+    "published": "publicada",
+    "publishTitle": "Publica la pàgina",
+    "saveDraft": "Desa l'esborrany",
+    "stale": "Un altre administrador ha editat aquesta pàgina — recarrega",
+    "titleField": "Títol",
+    "versionDate": "versió {version} · {date}"
+  },
   "days": {
     "long": {
       "FRIDAY": "Divendres",
@@ -129,12 +161,6 @@
       "help": "Permet rebre notificacions web al dispositiu.",
       "label": "Notificacions push"
     }
-  },
-  "pages": {
-    "availableSoon": "Disponible aviat",
-    "faq": "Preguntes freqüents",
-    "navigation": "Editors de pàgines del club",
-    "rules": "Normes del club"
   },
   "param": {
     "activities": {

@@ -1165,6 +1165,132 @@ select {
   font-size: 0.68rem;
 }
 
+.club-pages-card__header,
+.club-pages-list button,
+.club-pages-list__meta,
+.club-page-provisional,
+.club-page-editor__actions {
+  display: flex;
+  align-items: center;
+}
+
+.club-pages-card__header {
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  margin-bottom: var(--ah-space-2);
+}
+
+.club-pages-card__header h2 {
+  margin: 0;
+}
+
+.club-pages-card [role="alert"] {
+  color: var(--ah-color-danger);
+}
+
+.club-pages-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.club-pages-list li + li {
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.club-pages-list button {
+  width: 100%;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  min-height: 3.25rem;
+  padding: var(--ah-space-2);
+  color: var(--ah-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.club-pages-list button:hover,
+.club-pages-list button:focus-visible {
+  background: var(--ah-color-surface-2);
+}
+
+.club-pages-list__title {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.club-pages-list__meta {
+  flex: 0 0 auto;
+  gap: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-size: 0.72rem;
+}
+
+.club-page-provisional {
+  gap: var(--ah-space-1);
+  margin: 0;
+  color: var(--ah-color-warning);
+  font-size: 0.72rem;
+}
+
+.club-page-editor {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.club-page-editor__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--ah-space-4);
+}
+
+.club-page-editor__columns .ah-form-field {
+  align-content: start;
+}
+
+.club-page-editor__columns textarea {
+  min-height: 22rem;
+  resize: vertical;
+}
+
+.club-page-preview {
+  min-height: 22rem;
+  padding: var(--ah-space-4);
+  overflow-wrap: anywhere;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.club-page-preview h3 {
+  margin-top: 0;
+}
+
+.club-page-preview a {
+  color: var(--ah-color-primary);
+}
+
+.club-page-editor__actions {
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+}
+
+.club-page-editor__actions > :first-child {
+  margin-right: auto;
+}
+
+.club-page-editor [role="alert"] {
+  margin: 0;
+  color: var(--ah-color-danger);
+}
+
+.ah-drawer:has(.club-page-editor) {
+  width: min(72rem, 100%);
+}
+
 .settings-card--placeholder {
   min-height: 5.5rem;
 }
@@ -1191,6 +1317,7 @@ select {
 
   .settings-grid,
   .settings-editor__grid,
+  .club-page-editor__columns,
   .settings-editor__grid--three {
     grid-template-columns: 1fr;
   }

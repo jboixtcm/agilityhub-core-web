@@ -45,41 +45,6 @@
           }
         }
       }
-    },
-    "/attachments/upload-url": {
-      "post": {
-        "operationId": "createAttachmentUploadUrl",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AttachmentUploadRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Signed upload URL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AttachmentUploadResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/ApiError"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -178,38 +143,6 @@
           },
           "pushClubNews": {
             "type": "boolean"
-          }
-        }
-      },
-      "AttachmentUploadRequest": {
-        "type": "object",
-        "required": ["purpose", "fileName", "mimeType", "sizeBytes"],
-        "properties": {
-          "purpose": {
-            "type": "string",
-            "enum": ["DOG_DOCUMENT", "DOG_PHOTO"]
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "sizeBytes": {
-            "type": "integer"
-          }
-        }
-      },
-      "AttachmentUploadResponse": {
-        "type": "object",
-        "required": ["fileKey", "uploadUrl"],
-        "properties": {
-          "fileKey": {
-            "type": "string"
-          },
-          "uploadUrl": {
-            "type": "string",
-            "format": "uri"
           }
         }
       },

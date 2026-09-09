@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add Clubs Admin catalog maintenance for rings, instructors, administrators, local levels, FAQ entries, plans, and price validity, with tenant-module gates, three-locale copy, MSW contracts, and desktop browser evidence.
 - Add the catalog-driven Clubs Admin parameters workspace with typed editors, reset and audit history, module controls, opening hours, holidays, translated copy, and desktop browser evidence.
 - Add imported-account onboarding and versioned privacy re-consent across Clubs and Clubs Admin, with postponement limits, route blocking, typed API mocks, and three-locale coverage.
+- Add versioned, multilingual club-page editing with limited-Markdown previews in Clubs Admin and active club-page tabs on the Clubs Info screen.
 
 ### Changed
 

@@ -1,0 +1,48 @@
+[
+  {
+    "active": true,
+    "body": {
+      "ca": "[Text pendent — el club l'omplirà des de Paràmetres]\n\n## Convivència\n\nRespecteu els espais compartits i seguiu les indicacions de l'equip.",
+      "en": "[Text pendent — el club l'omplirà des de Paràmetres]\n\n## At the club\n\nRespect shared spaces and follow the team's directions.",
+      "es": "[Text pendent — el club l'omplirà des de Paràmetres]\n\n## Convivencia\n\nRespeta los espacios compartidos y las indicaciones del equipo."
+    },
+    "history": [],
+    "key": "RULES",
+    "lastChange": { "at": "2026-09-09T18:00:00Z", "by": "account-admin" },
+    "publishedAt": "2026-09-09T18:00:00Z",
+    "title": { "ca": "Normes del club", "en": "Club rules", "es": "Normas del club" },
+    "version": 1
+  },
+  {
+    "active": true,
+    "body": {
+      "ca": "## Ús d'imatges\n\nLes imatges només s'utilitzen per comunicar l'activitat del club.",
+      "en": "## Image use\n\nImages are only used to communicate the club's activity.",
+      "es": "## Uso de imágenes\n\nLas imágenes solo se utilizan para comunicar la actividad del club."
+    },
+    "history": [],
+    "key": "IMAGE_CONSENT",
+    "lastChange": { "at": "2026-09-09T18:05:00Z", "by": "account-admin" },
+    "publishedAt": "2026-09-09T18:05:00Z",
+    "title": {
+      "ca": "Consentiment d'imatge",
+      "en": "Image consent",
+      "es": "Consentimiento de imagen"
+    },
+    "version": 1
+  },
+  {
+    "active": false,
+    "body": {
+      "ca": "## Privacitat\n\nEsborrany de la informació de privacitat.",
+      "en": "## Privacy\n\nDraft privacy information.",
+      "es": "## Privacidad\n\nBorrador de la información de privacidad."
+    },
+    "history": [],
+    "key": "PRIVACY",
+    "lastChange": { "at": "2026-09-09T18:10:00Z", "by": "account-admin" },
+    "publishedAt": null,
+    "title": { "ca": "Privacitat", "en": "Privacy", "es": "Privacidad" },
+    "version": 1
+  }
+]

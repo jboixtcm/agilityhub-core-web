@@ -70,7 +70,7 @@ function currentPrice(plan: Plan): Price | undefined {
 }
 
 function entryFeeAmountMinor(plan: Plan, standardAmountMinor: number): number | undefined {
-  if (plan.entryFee.mode === "NONE") {
+  if (plan.entryFee === undefined || plan.entryFee.mode === "NONE") {
     return undefined;
   }
   if (plan.entryFee.mode === "AMOUNT") {
@@ -277,12 +277,12 @@ function PlanForm({
     item?.billingMode ?? "MONTHLY_FEE",
   );
   const [dogsIncluded, setDogsIncluded] = useState(item?.dogsIncluded ?? 1);
-  const [entryMode, setEntryMode] = useState<EntryFee["mode"]>(item?.entryFee.mode ?? "STANDARD");
+  const [entryMode, setEntryMode] = useState<EntryFee["mode"]>(item?.entryFee?.mode ?? "STANDARD");
   const [entryAmount, setEntryAmount] = useState(
-    item?.entryFee.amount === undefined ? "" : String(item.entryFee.amount.amountMinor / 100),
+    item?.entryFee?.amount === undefined ? "" : String(item.entryFee.amount.amountMinor / 100),
   );
   const [entryPercent, setEntryPercent] = useState(
-    item?.entryFee.percent === undefined ? "" : String(item.entryFee.percent),
+    item?.entryFee?.percent === undefined ? "" : String(item.entryFee.percent),
   );
   const [packSessions, setPackSessions] = useState(item?.pack?.sessions ?? 6);
   const [packValidity, setPackValidity] = useState(item?.pack?.validityMonths ?? 3);

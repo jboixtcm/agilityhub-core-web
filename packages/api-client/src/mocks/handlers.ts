@@ -5,12 +5,14 @@ import type { components } from "../generated/schema";
 import {
   catalogState,
   type Administrator,
+  type ClubPage,
   type FaqEntry,
   type Instructor,
   type Level,
   type Plan,
   type Price,
   type Ring,
+  resetCatalogState,
 } from "./fixtures/catalogs";
 import {
   censusRecordState,
@@ -70,7 +72,7 @@ type DogTransferRequest = components["schemas"]["DogTransferRequest"];
 type PhotoRequest = components["schemas"]["FileKeyRequest"];
 type DogDocumentUploadRequest = components["schemas"]["DogDocumentRequest"];
 type DogDocumentReminderRequest = components["schemas"]["DocumentReminderRequest"];
-type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
+type AttachmentUploadRequest = components["schemas"]["UploadRequest"];
 type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
 type ClubSettings = components["schemas"]["ClubSettings"];
@@ -81,6 +83,8 @@ type HolidaysUpdate = components["schemas"]["HolidaysUpdate"];
 type ModuleUpdate = components["schemas"]["ModuleUpdate"];
 type AdministratorCreate = components["schemas"]["AdministratorCreate"];
 type AdministratorPatch = components["schemas"]["AdministratorPatch"];
+type ClubPageCreate = components["schemas"]["ClubPageCreate"];
+type ClubPagePatch = components["schemas"]["ClubPagePatch"];
 type FaqCreate = components["schemas"]["FaqCreate"];
 type FaqOrder = components["schemas"]["FaqOrder"];
 type FaqPatch = components["schemas"]["FaqPatch"];
@@ -99,6 +103,19 @@ type PriceCreate = components["schemas"]["PriceCreate"];
 type RingCreate = components["schemas"]["RingCreate"];
 type RingOrder = components["schemas"]["RingOrder"];
 type RingPatch = components["schemas"]["RingPatch"];
+
+function pageText(source: Record<string, string>, locale: string): string {
+  const normalized = locale.split("-")[0] ?? locale;
+  return source[normalized] ?? source.ca ?? Object.values(source)[0] ?? "";
+}
+
+function invalidClubPageBody(body: Record<string, string> | undefined) {
+  if (body === undefined) return undefined;
+  const entry = Object.entries(body).find(
+    ([, value]) => value.length > 20_000 || /<[^>]+>|!\[[^\]]*\]\([^)]+\)/u.test(value),
+  );
+  return entry === undefined ? undefined : `body.${entry[0]}`;
+}
 
 const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   ...view,
@@ -634,7 +651,7 @@ function replaceDog(dog: DogDetail): DogDetail {
       ? {
           ...summary,
           breed: dog.dog.breed,
-          freeTrainingAllowed: dog.freeTraining.allowed,
+          freeTrainingAllowed: dog.freeTraining?.allowed ?? false,
           ...(dog.level === undefined ? {} : { level: dog.level }),
           name: dog.dog.name,
         }
@@ -792,7 +809,7 @@ export const handlers = [
   http.get("*/api/v1/me/profile", () => HttpResponse.json(memberProfileState)),
   http.patch("*/api/v1/me/profile", async ({ request }) => {
     const body = (await request.json()) as MeProfilePatch;
-    if (body.contactEmails[0]?.email === "readonly@example.test") {
+    if (body.contactEmails?.[0]?.email === "readonly@example.test") {
       return validationError([{ code: "READ_ONLY", field: "firstName" }]);
     }
     if (body.version !== memberProfileState.version) {
@@ -800,9 +817,11 @@ export const handlers = [
     }
     memberProfileState = {
       ...memberProfileState,
-      address: body.address,
-      contactEmails: body.contactEmails.map((email) => ({ ...email, bounced: false })),
-      phones: body.phones,
+      ...(body.address === undefined ? {} : { address: body.address }),
+      ...(body.contactEmails === undefined
+        ? {}
+        : { contactEmails: body.contactEmails.map((email) => ({ ...email, bounced: false })) }),
+      ...(body.phones === undefined ? {} : { phones: body.phones }),
       version: memberProfileState.version + 1,
     };
     return HttpResponse.json(memberProfileState);
@@ -1442,7 +1461,7 @@ export const handlers = [
     }
     const assignedAt = "2026-09-06T15:00:00Z";
     dog.levelHistory = [
-      ...dog.levelHistory.map((entry) =>
+      ...(dog.levelHistory ?? []).map((entry) =>
         entry.to === undefined ? { ...entry, to: assignedAt } : entry,
       ),
       {
@@ -1454,7 +1473,7 @@ export const handlers = [
     dog.level = level;
     dog.dog.levelAssignedAt = assignedAt;
     dog.dog.levelId = level.id;
-    if (dog.freeTraining.override === null) {
+    if (dog.freeTraining?.override == null) {
       dog.freeTraining = {
         allowed: levelDefinition.grantsFreeTraining,
         override: null,
@@ -1479,7 +1498,7 @@ export const handlers = [
     dog.freeTraining = {
       allowed,
       override: body.override,
-      source: body.override === null ? "LEVEL" : "OVERRIDE",
+      source: body.override === null ? "LEVEL" : "MANUAL",
     };
     replaceDog(dog);
     return HttpResponse.json(dog.freeTraining);
@@ -1608,7 +1627,12 @@ export const handlers = [
     }
     const fileKey = `mock-${body.purpose.toLocaleLowerCase()}-${body.fileName}`;
     return HttpResponse.json(
-      { fileKey, uploadUrl: `https://uploads.example.test/${fileKey}` },
+      {
+        expiresAt: "2026-09-09T22:00:00Z",
+        fileKey,
+        headers: { "Content-Type": body.mimeType },
+        uploadUrl: `https://uploads.example.test/${fileKey}`,
+      },
       { status: 201 },
     );
   }),
@@ -1990,6 +2014,10 @@ export const handlers = [
       ...body,
       id: `price-${String(Date.now())}`,
       locked: false,
+      periodicity:
+        body.concept === "MONTHLY_FEE" || body.concept === "MAINTENANCE_FEE"
+          ? "MONTHLY"
+          : "ONE_OFF",
       status: body.validFrom > monthStart ? "SCHEDULED" : "CURRENT",
       version: 1,
     };
@@ -2071,6 +2099,103 @@ export const handlers = [
     catalogState.faqEntries = catalogState.faqEntries.filter((entry) => entry.id !== id);
     return new HttpResponse(null, { status: 204 });
   }),
+  http.get("*/api/v1/club-pages", ({ request }) => {
+    const active = new URL(request.url).searchParams.get("active");
+    const pages =
+      active === null
+        ? catalogState.clubPages
+        : catalogState.clubPages.filter((page) => page.active === (active === "true"));
+    return HttpResponse.json(catalogResponse(pages));
+  }),
+  http.get("*/api/v1/club-pages/:key", ({ params }) => {
+    const page = catalogState.clubPages.find((candidate) => candidate.key === String(params.key));
+    return page === undefined
+      ? apiError("NOT_FOUND", "Club page not found", 404)
+      : HttpResponse.json(page);
+  }),
+  http.post("*/api/v1/club-pages", async ({ request }) => {
+    const body = (await request.json()) as ClubPageCreate;
+    if (!/^(?:RULES|PRIVACY|IMAGE_CONSENT|WELCOME_GUIDE|[a-z0-9-]{2,40})$/u.test(body.key)) {
+      return validationError([{ code: "INVALID", field: "key" }]);
+    }
+    if (catalogState.clubPages.some((page) => page.key === body.key)) {
+      return apiError("DUPLICATE_NAME", "Club page key already exists", 409);
+    }
+    const invalidBody = invalidClubPageBody(body.body);
+    if (invalidBody !== undefined) {
+      return validationError([{ code: "INVALID", field: invalidBody }]);
+    }
+    const now = "2026-09-09T19:00:00Z";
+    const page: ClubPage = {
+      ...body,
+      history: [],
+      lastChange: { at: now, by: "account-admin" },
+      publishedAt: body.active ? now : null,
+      version: 1,
+    };
+    catalogState.clubPages.push(page);
+    return HttpResponse.json(page, { status: 201 });
+  }),
+  http.patch("*/api/v1/club-pages/:key", async ({ params, request }) => {
+    const page = catalogState.clubPages.find((candidate) => candidate.key === String(params.key));
+    if (page === undefined) {
+      return apiError("NOT_FOUND", "Club page not found", 404);
+    }
+    const body = (await request.json()) as ClubPagePatch;
+    if (body.version !== page.version) {
+      return apiError("STALE_VERSION", "Stale club page version", 409);
+    }
+    const invalidBody = invalidClubPageBody(body.body);
+    if (invalidBody !== undefined) {
+      return validationError([{ code: "INVALID", field: invalidBody }]);
+    }
+    const now = "2026-09-09T19:10:00Z";
+    const bodyChanged =
+      body.body !== undefined && JSON.stringify(body.body) !== JSON.stringify(page.body);
+    const publishes = (body.active === true && !page.active) || (page.active && bodyChanged);
+    const history =
+      publishes && page.active && page.publishedAt !== null
+        ? [
+            {
+              body: page.body,
+              by: page.lastChange.by,
+              publishedAt: page.publishedAt,
+              title: page.title,
+              version: page.version,
+            },
+            ...(page.history ?? []),
+          ].slice(0, 10)
+        : page.history;
+    const updated: ClubPage = {
+      ...page,
+      ...body,
+      ...(history === undefined ? {} : { history }),
+      lastChange: { at: now, by: "account-admin" },
+      publishedAt: publishes ? now : page.publishedAt,
+      version: publishes ? page.version + 1 : page.version,
+    };
+    catalogState.clubPages = catalogState.clubPages.map((candidate) =>
+      candidate.key === updated.key ? updated : candidate,
+    );
+    return HttpResponse.json(updated);
+  }),
+  http.get("*/api/v1/public/:clubSlug/pages/:key", ({ params, request }) => {
+    const page = catalogState.clubPages.find(
+      (candidate) => candidate.key === String(params.key) && candidate.active,
+    );
+    if (page?.publishedAt == null) {
+      return apiError("NOT_FOUND", "Club page not found", 404);
+    }
+    const locale = request.headers.get("Accept-Language") ?? "ca";
+    return HttpResponse.json({
+      active: true,
+      body: pageText(page.body, locale),
+      key: page.key,
+      publishedAt: page.publishedAt,
+      title: pageText(page.title, locale),
+      version: page.version,
+    });
+  }),
   http.get("*/api/v1/saved-views", ({ request }) => {
     const listKey = new URL(request.url).searchParams.get("listKey");
     return HttpResponse.json(savedViews.filter((view) => view.listKey === listKey));
@@ -2137,6 +2262,7 @@ export const handlers = [
 
 export {
   mockScenario,
+  resetCatalogState,
   resetCensusRecordState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,

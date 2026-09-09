@@ -190,6 +190,56 @@
         "required" : [ "code", "message", "traceId" ],
         "type" : "object"
       },
+      "AttachmentRequest" : {
+        "properties" : {
+          "entityId" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "entityType" : {
+            "enum" : [ "INSTRUCTOR_NOTE" ],
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "fileKey" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "name" : {
+            "maxLength" : 80,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "required" : [ "entityId", "entityType", "fileKey", "name" ],
+        "type" : "object"
+      },
+      "AttachmentResponse" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "mimeType" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "sizeBytes" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "uploadedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "mimeType", "name", "sizeBytes", "uploadedAt", "url" ],
+        "type" : "object"
+      },
       "AuditAction" : {
         "enum" : [ "MEMBER_VALIDATED", "SIGNUP_REJECTED", "SIGNUP_EDITED", "MEMBER_UPDATED", "MEMBER_PAYMENT_METHOD_CHANGED", "MEMBER_STATUS_CHANGED", "MEMBER_ROLES_CHANGED", "MEMBER_CONSENT_CHANGED", "BOOKING_BLOCK_SET", "BOOKING_BLOCK_CLEARED", "ACCESS_RESENT", "DOG_UPDATED", "DOG_LEVEL_CHANGED", "DOG_FREE_TRAINING_CHANGED", "DOG_TRANSFERRED", "DOG_DEACTIVATED", "DOG_REACTIVATED", "DOG_DOCUMENT_FILE_REMOVED", "FAMILY_GROUP_CHANGED", "MEMBER_PLAN_CHANGED", "INVOICE_MARKED_PAID", "INVOICE_MARKED_FAILED", "INVOICE_CANCELLED", "REMITTANCE_GENERATED", "REMITTANCE_ROLLED_BACK", "UPFRONT_PAYMENT_RECORDED", "PAYMENT_REFUNDED", "IMPERSONATION_STARTED", "ACCOUNT_EMAIL_STATUS_CHANGED", "PLATFORM_ROLES_CHANGED", "BOOKING_CREATED_BY_CLUB", "BOOKING_CANCELLED_BY_CLUB", "BOOKING_CANCELLED_LATE", "TRAINING_BOOKED_BY_CLUB", "TRAINING_CANCELLED_BY_CLUB", "ATTENDANCE_OVERRIDDEN", "WEEK_VALIDATED", "CLASS_CANCELLED", "CLASS_UPDATED_WITH_BOOKINGS", "CLASS_RISK_EXEMPTION_CHANGED", "RING_BLOCK_CREATED", "RING_BLOCK_CANCELLED", "TEMPLATE_CLASS_DELETED", "ACTIVITY_PUBLISHED", "ACTIVITY_CANCELLED", "INACTIVITY_RESOLVED", "LEAVE_RESOLVED", "LEAVE_CANCELLED", "PARAMETER_CHANGED", "CLUB_UPDATED", "CLUB_MODULES_CHANGED", "CLUB_STATUS_CHANGED", "CATALOG_CHANGED", "ANNOUNCEMENT_SENT", "DATA_EXPORTED", "MEMBER_DATA_EXPORTED", "ERASURE_REQUESTED", "ERASURE_CANCELLED", "MEMBER_ERASED", "ACCOUNT_ERASED" ],
         "type" : "string"
@@ -485,6 +535,23 @@
         "required" : [ "items", "totalItems" ],
         "type" : "object"
       },
+      "CatalogItemsClubPage" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ClubPage"
+            },
+            "type" : "array"
+          },
+          "totalItems" : {
+            "format" : "int64",
+            "minimum" : 0,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "items", "totalItems" ],
+        "type" : "object"
+      },
       "CatalogItemsFaqEntry" : {
         "properties" : {
           "items" : {
@@ -693,6 +760,141 @@
           }
         },
         "required" : [ "legalTextsVersion", "privacyPolicyUrl" ],
+        "type" : "object"
+      },
+      "ClubPage" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "body" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "history" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ClubPageHistory"
+            },
+            "type" : "array"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "lastChange" : {
+            "$ref" : "#/components/schemas/ClubPageLastChange"
+          },
+          "publishedAt" : {
+            "format" : "date-time",
+            "type" : [ "string", "null" ]
+          },
+          "title" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "active", "body", "key", "lastChange", "publishedAt", "title", "version" ],
+        "type" : "object"
+      },
+      "ClubPageCreate" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "body" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "key" : {
+            "minLength" : 1,
+            "pattern" : "(?:RULES|PRIVACY|IMAGE_CONSENT|WELCOME_GUIDE|[a-z0-9-]{2,40})",
+            "type" : "string"
+          },
+          "title" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          }
+        },
+        "required" : [ "active", "body", "key", "title" ],
+        "type" : "object"
+      },
+      "ClubPageHistory" : {
+        "properties" : {
+          "body" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "by" : {
+            "type" : [ "string", "null" ]
+          },
+          "publishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "title" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "body", "by", "publishedAt", "title", "version" ],
+        "type" : "object"
+      },
+      "ClubPageLastChange" : {
+        "properties" : {
+          "at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "by" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "required" : [ "at", "by" ],
+        "type" : "object"
+      },
+      "ClubPagePatch" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "body" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "title" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "version" : {
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "version" ],
         "type" : "object"
       },
       "ClubPwa" : {
@@ -1141,6 +1343,10 @@
       "DisplayStatus" : {
         "description" : "Derived presentation status; includes ERASED under S14.",
         "properties" : {
+          "date" : {
+            "format" : "date",
+            "type" : "string"
+          },
           "kind" : {
             "type" : "string"
           },
@@ -1203,6 +1409,10 @@
           },
           "freeTrainingOverride" : {
             "type" : "boolean"
+          },
+          "handlerName" : {
+            "maxLength" : 80,
+            "type" : "string"
           },
           "id" : {
             "format" : "uuid",
@@ -1298,7 +1508,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "documents", "dog", "freeTraining", "levelHistory", "licenses", "owner", "tasksSummary", "version" ],
+        "required" : [ "documents", "dog", "licenses", "owner", "version" ],
         "type" : "object"
       },
       "DogDocument" : {
@@ -1381,6 +1591,10 @@
           "handler" : {
             "type" : "string"
           },
+          "handlerName" : {
+            "maxLength" : 80,
+            "type" : "string"
+          },
           "id" : {
             "format" : "uuid",
             "type" : "string"
@@ -1445,6 +1659,11 @@
             "minLength" : 0,
             "type" : "string"
           },
+          "handlerName" : {
+            "maxLength" : 80,
+            "minLength" : 0,
+            "type" : "string"
+          },
           "licenses" : {
             "items" : {
               "$ref" : "#/components/schemas/License"
@@ -1482,6 +1701,26 @@
           }
         },
         "required" : [ "id", "name" ],
+        "type" : "object"
+      },
+      "DogTasks" : {
+        "properties" : {
+          "completed" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/TaskItem"
+            },
+            "type" : "array"
+          },
+          "open" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "completed", "items", "open" ],
         "type" : "object"
       },
       "DogTransferRequest" : {
@@ -1657,7 +1896,7 @@
         "type" : "object"
       },
       "ExportJob" : {
-        "description" : "Only caller-owned jobs; signed download URLs last five minutes. No storage keys or query credentials.",
+        "description" : "Only caller-owned jobs; signed download URLs expire with the file after seven days. No storage keys or query credentials.",
         "properties" : {
           "createdAt" : {
             "format" : "date-time",
@@ -1767,8 +2006,6 @@
             "items" : {
               "type" : "string"
             },
-            "maxItems" : 2147483647,
-            "minItems" : 2,
             "type" : "array"
           }
         },
@@ -1785,8 +2022,6 @@
             "items" : {
               "type" : "string"
             },
-            "maxItems" : 2147483647,
-            "minItems" : 2,
             "type" : "array"
           },
           "version" : {
@@ -2045,7 +2280,7 @@
             "type" : [ "boolean", "null" ]
           },
           "source" : {
-            "enum" : [ "LEVEL", "OVERRIDE" ],
+            "enum" : [ "LEVEL", "MANUAL" ],
             "type" : "string"
           }
         },
@@ -2283,6 +2518,12 @@
       },
       "InstructorNote" : {
         "properties" : {
+          "attachments" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NoteAttachment"
+            },
+            "type" : "array"
+          },
           "text" : {
             "type" : "string"
           },
@@ -2483,12 +2724,9 @@
           "levelAssignedAt" : {
             "format" : "date-time",
             "type" : "string"
-          },
-          "warnings" : {
-            "$ref" : "#/components/schemas/LevelWarnings"
           }
         },
-        "required" : [ "level", "levelAssignedAt", "warnings" ],
+        "required" : [ "level", "levelAssignedAt" ],
         "type" : "object"
       },
       "LevelCreate" : {
@@ -2681,25 +2919,26 @@
         "required" : [ "activeDogs", "futureClassSessions", "templateClasses" ],
         "type" : "object"
       },
-      "LevelWarnings" : {
-        "properties" : {
-          "futureBookingsOutsideLevel" : {
-            "format" : "int32",
-            "type" : "integer"
-          }
-        },
-        "required" : [ "futureBookingsOutsideLevel" ],
-        "type" : "object"
-      },
       "License" : {
         "properties" : {
+          "category" : {
+            "maxLength" : 10,
+            "type" : "string"
+          },
+          "division" : {
+            "maxLength" : 20,
+            "type" : "string"
+          },
           "grade" : {
+            "maxLength" : 30,
             "type" : "string"
           },
           "number" : {
+            "maxLength" : 30,
             "type" : "string"
           },
           "organisation" : {
+            "maxLength" : 20,
             "type" : "string"
           }
         },
@@ -3126,10 +3365,10 @@
             "type" : "string"
           },
           "tasks" : {
-            "$ref" : "#/components/schemas/TasksSummary"
+            "$ref" : "#/components/schemas/DogTasks"
           }
         },
-        "required" : [ "ageYears", "breed", "documents", "freeTrainingAllowed", "id", "licenses", "name", "sex" ],
+        "required" : [ "ageYears", "breed", "documents", "id", "licenses", "name", "sex" ],
         "type" : "object"
       },
       "MeDogs" : {
@@ -3232,7 +3471,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "address", "contactEmails", "phones", "version" ],
+        "required" : [ "version" ],
         "type" : "object"
       },
       "Member" : {
@@ -3247,6 +3486,10 @@
           },
           "address" : {
             "$ref" : "#/components/schemas/Address"
+          },
+          "billedViaMemberId" : {
+            "format" : "uuid",
+            "type" : "string"
           },
           "birthDate" : {
             "format" : "date",
@@ -3333,6 +3576,9 @@
             },
             "type" : "array"
           },
+          "plan" : {
+            "$ref" : "#/components/schemas/PlanReference"
+          },
           "planId" : {
             "format" : "uuid",
             "type" : "string"
@@ -3352,7 +3598,7 @@
             "type" : "array"
           },
           "status" : {
-            "enum" : [ "PENDING", "ACTIVE", "LEFT" ],
+            "enum" : [ "PENDING", "ACTIVE", "INACTIVE", "LEFT" ],
             "type" : "string"
           },
           "version" : {
@@ -3426,7 +3672,7 @@
             "type" : "array"
           },
           "status" : {
-            "enum" : [ "PENDING", "ACTIVE", "LEFT" ],
+            "enum" : [ "PENDING", "ACTIVE", "INACTIVE", "LEFT" ],
             "type" : "string"
           },
           "version" : {
@@ -3574,7 +3820,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "dogs", "invoicesCount", "member", "notificationPreferences", "recentAudit", "recentInvoices" ],
+        "required" : [ "dogs", "member", "notificationPreferences", "recentAudit" ],
         "type" : "object"
       },
       "MemberPatch" : {
@@ -3662,6 +3908,14 @@
             "format" : "uuid",
             "type" : "string"
           },
+          "lastDogForClass" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lastDogForTraining" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
           "memberId" : {
             "format" : "uuid",
             "type" : "string"
@@ -3744,6 +3998,32 @@
           }
         },
         "required" : [ "amount", "date" ],
+        "type" : "object"
+      },
+      "NoteAttachment" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "mimeType" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "sizeBytes" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "uploadedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "mimeType", "name", "sizeBytes", "uploadedAt", "url" ],
         "type" : "object"
       },
       "OidcSessionRequest" : {
@@ -3958,7 +4238,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "breed", "freeTrainingAllowed", "id", "name", "pendingDocuments" ],
+        "required" : [ "breed", "id", "name", "pendingDocuments" ],
         "type" : "object"
       },
       "OwnerSummary" : {
@@ -3975,7 +4255,7 @@
             "type" : "integer"
           },
           "status" : {
-            "enum" : [ "PENDING", "ACTIVE", "LEFT" ],
+            "enum" : [ "PENDING", "ACTIVE", "INACTIVE", "LEFT" ],
             "type" : "string"
           }
         },
@@ -4373,6 +4653,11 @@
           "active" : {
             "type" : "boolean"
           },
+          "billingMode" : {
+            "description" : "Present for MONTHLY plans",
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
+          },
           "code" : {
             "type" : "string"
           },
@@ -4424,6 +4709,9 @@
           "pack" : {
             "$ref" : "#/components/schemas/PackSettings"
           },
+          "priceLine" : {
+            "type" : "string"
+          },
           "prices" : {
             "items" : {
               "$ref" : "#/components/schemas/Price"
@@ -4454,19 +4742,21 @@
             "type" : "integer"
           },
           "warnings" : {
-            "items" : {
-              "type" : "string"
-            },
-            "type" : "array"
+            "$ref" : "#/components/schemas/PlanUsage"
           }
         },
-        "required" : [ "active", "code", "dogsIncluded", "entryFee", "id", "name", "order", "showOnSignup", "showOnWeb", "type", "version" ],
+        "required" : [ "active", "code", "dogsIncluded", "id", "name", "order", "showOnSignup", "showOnWeb", "type", "version" ],
         "type" : "object"
       },
       "PlanCreate" : {
         "properties" : {
           "active" : {
             "type" : "boolean"
+          },
+          "billingMode" : {
+            "description" : "MONTHLY plans only; defaults to MONTHLY_FEE",
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
           },
           "code" : {
             "maxLength" : 16,
@@ -4540,6 +4830,10 @@
           "active" : {
             "type" : "boolean"
           },
+          "billingMode" : {
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
+          },
           "code" : {
             "maxLength" : 16,
             "minLength" : 1,
@@ -4604,6 +4898,11 @@
           "active" : {
             "type" : "boolean"
           },
+          "billingMode" : {
+            "description" : "Present for MONTHLY plans",
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
+          },
           "code" : {
             "type" : "string"
           },
@@ -4637,6 +4936,9 @@
           "pack" : {
             "$ref" : "#/components/schemas/PackSettings"
           },
+          "priceLine" : {
+            "type" : "string"
+          },
           "showOnSignup" : {
             "type" : "boolean"
           },
@@ -4658,7 +4960,28 @@
             "type" : "integer"
           }
         },
-        "required" : [ "active", "code", "dogsIncluded", "entryFee", "id", "name", "order", "showOnSignup", "showOnWeb", "type", "version" ],
+        "required" : [ "active", "code", "dogsIncluded", "id", "name", "order", "showOnSignup", "showOnWeb", "type", "version" ],
+        "type" : "object"
+      },
+      "PlanReference" : {
+        "properties" : {
+          "billingMode" : {
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "type" : {
+            "enum" : [ "MONTHLY", "PACK", "SINGLE_CLASS" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "name", "type" ],
         "type" : "object"
       },
       "PlanTexts" : {
@@ -4731,9 +5054,13 @@
           "packBalances" : {
             "format" : "int32",
             "type" : "integer"
+          },
+          "upfrontCollections" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         },
-        "required" : [ "invoiceLines", "members", "packBalances" ],
+        "required" : [ "invoiceLines", "members", "packBalances", "upfrontCollections" ],
         "type" : "object"
       },
       "PlatformAccountRequest" : {
@@ -4806,6 +5133,10 @@
           "locked" : {
             "type" : "boolean"
           },
+          "periodicity" : {
+            "enum" : [ "MONTHLY", "ONE_OFF" ],
+            "type" : "string"
+          },
           "planId" : {
             "format" : "uuid",
             "type" : "string"
@@ -4830,7 +5161,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "amount", "concept", "id", "locked", "planId", "status", "taxPercent", "validFrom", "version" ],
+        "required" : [ "amount", "concept", "id", "locked", "periodicity", "planId", "status", "taxPercent", "validFrom", "version" ],
         "type" : "object"
       },
       "PriceCreate" : {
@@ -4896,7 +5227,7 @@
           },
           "validTo" : {
             "format" : "date",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "version" : {
             "format" : "int64",
@@ -4944,6 +5275,32 @@
         "required" : [ "access_token" ],
         "type" : "object"
       },
+      "PublicClubPage" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "body" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "publishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "active", "body", "key", "publishedAt", "title", "version" ],
+        "type" : "object"
+      },
       "PublicJwk" : {
         "properties" : {
           "alg" : {
@@ -4972,11 +5329,22 @@
       "PublicPlan" : {
         "description" : "Only active showOnWeb plans; prices omitted when BILLING is disabled.",
         "properties" : {
+          "billingMode" : {
+            "description" : "Present for MONTHLY plans",
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
+            "type" : "string"
+          },
           "code" : {
             "type" : "string"
           },
           "conditions" : {
             "type" : "string"
+          },
+          "conditionsI18n" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
           },
           "currentPrices" : {
             "items" : {
@@ -4998,19 +5366,34 @@
           "name" : {
             "type" : "string"
           },
+          "nameI18n" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
           "order" : {
             "format" : "int32",
             "type" : "integer"
           },
+          "pack" : {
+            "$ref" : "#/components/schemas/PackSettings"
+          },
+          "priceLine" : {
+            "type" : "string"
+          },
+          "singleClass" : {
+            "$ref" : "#/components/schemas/SingleClassSettings"
+          },
           "texts" : {
-            "$ref" : "#/components/schemas/PublicPlanTexts"
+            "$ref" : "#/components/schemas/PlanTexts"
           },
           "type" : {
             "enum" : [ "MONTHLY", "PACK", "SINGLE_CLASS" ],
             "type" : "string"
           }
         },
-        "required" : [ "code", "dogsIncluded", "id", "name", "order", "type" ],
+        "required" : [ "code", "dogsIncluded", "id", "name", "nameI18n", "order", "type" ],
         "type" : "object"
       },
       "PublicPlanTexts" : {
@@ -5066,9 +5449,12 @@
           "concept" : {
             "enum" : [ "MONTHLY_FEE", "MAINTENANCE_FEE", "PACK", "SINGLE_CLASS" ],
             "type" : "string"
+          },
+          "taxPercent" : {
+            "type" : "number"
           }
         },
-        "required" : [ "amount", "concept" ],
+        "required" : [ "amount", "concept", "taxPercent" ],
         "type" : "object"
       },
       "ReasonRequest" : {
@@ -5673,6 +6059,34 @@
         "required" : [ "cancelPolicy", "chargeMode" ],
         "type" : "object"
       },
+      "TaskItem" : {
+        "properties" : {
+          "attachmentsCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "doneAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "instructorName" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "attachmentsCount", "createdAt", "id", "instructorName", "text" ],
+        "type" : "object"
+      },
       "TasksSummary" : {
         "properties" : {
           "completed" : {
@@ -5811,6 +6225,51 @@
           }
         },
         "required" : [ "distinctMembers", "value" ],
+        "type" : "object"
+      },
+      "Upload" : {
+        "properties" : {
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "fileKey" : {
+            "type" : "string"
+          },
+          "headers" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "uploadUrl" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "expiresAt", "fileKey", "headers", "uploadUrl" ],
+        "type" : "object"
+      },
+      "UploadRequest" : {
+        "properties" : {
+          "fileName" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "mimeType" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "purpose" : {
+            "enum" : [ "DOG_DOCUMENT", "DOG_PHOTO", "INSTRUCTOR_NOTE" ],
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "sizeBytes" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "fileName", "mimeType", "purpose", "sizeBytes" ],
         "type" : "object"
       },
       "UserInfo" : {
@@ -7322,6 +7781,304 @@
         },
         "summary" : "Update administrator",
         "tags" : [ "clubs.catalogs" ]
+      }
+    },
+    "/api/v1/attachments" : {
+      "post" : {
+        "description" : "Minimal S10 INSTRUCTOR_NOTE attachment. Task and observation attachments remain owned by S10.",
+        "operationId" : "add",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AttachmentRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AttachmentResponse"
+                }
+              }
+            },
+            "description" : "Attachment with signed download URL"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "MEMBER_ERASED"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "ATTACHMENT_LIMIT_REACHED, ATTACHMENT_ENTITY_MISMATCH"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Attach a file to the owner's instructor note",
+        "tags" : [ "clubs.followup" ]
+      }
+    },
+    "/api/v1/attachments/upload-url" : {
+      "post" : {
+        "description" : "S03/S10 minimal upload contract. Upload using the returned headers; URLs last five minutes. Ownership is checked when attaching the uploaded file.",
+        "operationId" : "upload",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UploadRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Upload"
+                }
+              }
+            },
+            "description" : "Upload URL, opaque file key, required headers and expiry"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "ATTACHMENT_ENTITY_MISMATCH"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Create an attachment upload URL",
+        "tags" : [ "clubs.followup" ]
       }
     },
     "/api/v1/audit-entries" : {
@@ -8851,6 +9608,616 @@
         },
         "summary" : "Update club settings",
         "tags" : [ "platform" ]
+      }
+    },
+    "/api/v1/club-pages" : {
+      "get" : {
+        "description" : "S05 §6. Non-admin readers see active pages regardless of the active flag; admins can filter either state. Translation maps are returned.",
+        "operationId" : "list",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "active",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CatalogItemsClubPage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "UNAUTHENTICATED"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FORBIDDEN, TENANT_MISMATCH"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "List club pages",
+        "tags" : [ "clubs.content" ],
+        "x-columns" : [ {
+          "defaultVisible" : true,
+          "key" : "key"
+        }, {
+          "defaultVisible" : true,
+          "key" : "title"
+        }, {
+          "defaultVisible" : true,
+          "key" : "active"
+        } ],
+        "x-exportable" : false,
+        "x-filter-operators" : { },
+        "x-filterable" : [ "active" ],
+        "x-sortable" : [ ]
+      },
+      "post" : {
+        "description" : "S05 §6. Starts at version 1. Limited CommonMark: headings, paragraphs, emphasis, lists and links; no HTML, images, code or block quotes. At most 20000 body characters per locale.",
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClubPageCreate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ClubPage"
+                }
+              }
+            },
+            "description" : "Created"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "VALIDATION_ERROR"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "UNAUTHENTICATED"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FORBIDDEN, TENANT_MISMATCH"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "DUPLICATE_NAME"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Create a club page",
+        "tags" : [ "clubs.content" ]
+      }
+    },
+    "/api/v1/club-pages/{key}" : {
+      "get" : {
+        "description" : "S05 §6. Drafts and the last ten published snapshots are available only to ADMIN.",
+        "operationId" : "get",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "key",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ClubPage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "UNAUTHENTICATED"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FORBIDDEN, TENANT_MISMATCH"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "NOT_FOUND"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Read a club page",
+        "tags" : [ "clubs.content" ]
+      },
+      "patch" : {
+        "description" : "S05 §6. Supply the publication version. Activation or a body change while active increments it and sets publishedAt. Draft and title-only edits preserve it. Supplied translation maps replace that whole field.",
+        "operationId" : "patch",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "key",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClubPagePatch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ClubPage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "VALIDATION_ERROR"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "UNAUTHENTICATED"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "FORBIDDEN, TENANT_MISMATCH"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "NOT_FOUND"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "STALE_VERSION"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Edit or publish a club page",
+        "tags" : [ "clubs.content" ]
       }
     },
     "/api/v1/club/holidays" : {
@@ -10420,8 +11787,302 @@
     },
     "/api/v1/dogs/export" : {
       "get" : {
-        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.",
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.",
         "operationId" : "exportDogs",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "required" : true,
+          "schema" : {
+            "enum" : [ "xlsx", "pdf" ],
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "columns",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Zero-based page index.",
+          "in" : "query",
+          "name" : "page",
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Requested page size.",
+          "in" : "query",
+          "name" : "size",
+          "schema" : {
+            "default" : 50,
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Repeat field,asc or field,desc; only x-sortable fields.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "sort",
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Free-text search within the caller's permitted projection.",
+          "in" : "query",
+          "name" : "q",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filter",
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Comma-separated response column keys.",
+          "in" : "query",
+          "name" : "fields",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Export file",
+            "headers" : {
+              "Content-Disposition" : {
+                "schema" : {
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExportAccepted"
+                }
+              }
+            },
+            "description" : "Queued export"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "INVALID_FILTER"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "EXPORT_TOO_LARGE, EXPORT_LIMIT"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "RATE_LIMITED",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Export dogs",
+        "tags" : [ "clubs.common" ],
+        "x-columns" : [ {
+          "defaultVisible" : true,
+          "key" : "name"
+        }, {
+          "defaultVisible" : true,
+          "key" : "breed"
+        }, {
+          "defaultVisible" : true,
+          "key" : "level",
+          "parameter" : "levels.enabled"
+        }, {
+          "defaultVisible" : true,
+          "key" : "owner"
+        }, {
+          "defaultVisible" : false,
+          "key" : "handler"
+        }, {
+          "defaultVisible" : true,
+          "key" : "freeTraining",
+          "module" : "FREE_TRAINING"
+        }, {
+          "defaultVisible" : true,
+          "key" : "licenses"
+        }, {
+          "defaultVisible" : true,
+          "key" : "displayStatus"
+        }, {
+          "defaultVisible" : false,
+          "key" : "sex"
+        }, {
+          "defaultVisible" : false,
+          "key" : "age"
+        }, {
+          "defaultVisible" : false,
+          "key" : "chip"
+        }, {
+          "defaultVisible" : false,
+          "key" : "pendingDocuments"
+        }, {
+          "defaultVisible" : false,
+          "key" : "levelAssignedAt"
+        }, {
+          "defaultVisible" : false,
+          "key" : "pack",
+          "module" : "PACKS"
+        }, {
+          "defaultVisible" : false,
+          "key" : "registeredAt"
+        } ],
+        "x-exportable" : false,
+        "x-filter-operators" : {
+          "breed" : [ "contains" ],
+          "handlerName" : [ "contains" ],
+          "name" : [ "contains" ],
+          "ownerName" : [ "contains" ]
+        },
+        "x-filterable" : [ "id", "name", "breed", "levelId", "memberId", "ownerName", "handlerName", "status", "freeTrainingAllowed", "hasLicense", "licenseOrganisation", "hasPendingDocuments", "sex", "birthDate", "chip", "registeredAt", "levelAssignedAt" ],
+        "x-sortable" : [ "name", "breed", "levelOrder", "ownerLastName", "registeredAt", "levelAssignedAt" ]
+      },
+      "post" : {
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.",
+        "operationId" : "exportDogs_1",
         "parameters" : [ {
           "in" : "query",
           "name" : "format",
@@ -10890,7 +12551,7 @@
     },
     "/api/v1/dogs/{id}" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "getDog",
         "parameters" : [ {
           "in" : "path",
@@ -11035,7 +12696,7 @@
         "tags" : [ "clubs.census" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updateDog",
         "parameters" : [ {
           "in" : "path",
@@ -11114,7 +12775,7 @@
                 }
               }
             },
-            "description" : "CHIP_ALREADY_EXISTS, STALE_VERSION"
+            "description" : "CHIP_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -11192,7 +12853,7 @@
     },
     "/api/v1/dogs/{id}/deactivation" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "deactivationDog",
         "parameters" : [ {
           "in" : "path",
@@ -11271,7 +12932,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -11349,7 +13010,7 @@
     },
     "/api/v1/dogs/{id}/documents" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "dogDocuments",
         "parameters" : [ {
           "in" : "path",
@@ -11511,7 +13172,7 @@
         "x-sortable" : [ ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "uploadDogDocument",
         "parameters" : [ {
           "in" : "path",
@@ -11590,7 +13251,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -11668,7 +13329,7 @@
     },
     "/api/v1/dogs/{id}/documents/reminder" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "remindDogDocument",
         "parameters" : [ {
           "in" : "path",
@@ -11740,7 +13401,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -11818,7 +13479,7 @@
     },
     "/api/v1/dogs/{id}/documents/{docId}/files/{fileId}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "removeDogDocumentFile",
         "parameters" : [ {
           "in" : "path",
@@ -11894,7 +13555,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED: census mutations are unavailable after erasure"
           },
           "422" : {
             "content" : {
@@ -11972,7 +13633,7 @@
     },
     "/api/v1/dogs/{id}/free-training" : {
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updateDogFreeTraining",
         "parameters" : [ {
           "in" : "path",
@@ -12051,7 +13712,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED: census mutations are unavailable after erasure"
           },
           "422" : {
             "content" : {
@@ -12129,7 +13790,7 @@
     },
     "/api/v1/dogs/{id}/level" : {
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updateDogLevel",
         "parameters" : [ {
           "in" : "path",
@@ -12208,7 +13869,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -12286,7 +13947,7 @@
     },
     "/api/v1/dogs/{id}/photo" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updateDogPhoto",
         "parameters" : [ {
           "in" : "path",
@@ -12365,7 +14026,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -12443,7 +14104,7 @@
     },
     "/api/v1/dogs/{id}/reactivation" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "reactivationDog",
         "parameters" : [ {
           "in" : "path",
@@ -12522,7 +14183,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -12600,7 +14261,7 @@
     },
     "/api/v1/dogs/{id}/transfer" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "transferDog",
         "parameters" : [ {
           "in" : "path",
@@ -12679,7 +14340,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -12757,7 +14418,7 @@
     },
     "/api/v1/exports" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Up to 100 recent caller-owned jobs, newest first. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "exports",
         "parameters" : [ {
           "in" : "query",
@@ -13085,9 +14746,172 @@
         "tags" : [ "clubs.common" ]
       }
     },
+    "/api/v1/exports/{id}/download" : {
+      "get" : {
+        "description" : "Local/test storage: caller-owned job, bearer authentication and signed URL required. Expires with the file after seven days. S3 deployments return a direct signed URL instead.",
+        "operationId" : "download",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "expires",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "signature",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Export file"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "INVALID_STATE"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "EXPORT_EXPIRED"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Download a local export",
+        "tags" : [ "clubs.common" ]
+      }
+    },
     "/api/v1/family-groups" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "createFamilyGroup",
         "requestBody" : {
           "content" : {
@@ -13158,7 +14982,7 @@
                 }
               }
             },
-            "description" : "FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP"
+            "description" : "FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -13236,7 +15060,7 @@
     },
     "/api/v1/family-groups/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "dissolveFamilyGroup",
         "parameters" : [ {
           "in" : "path",
@@ -13298,7 +15122,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED: census mutations are unavailable after erasure"
           },
           "422" : {
             "content" : {
@@ -13374,7 +15198,7 @@
         "tags" : [ "clubs.census" ]
       },
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "getFamilyGroup",
         "parameters" : [ {
           "in" : "path",
@@ -13519,7 +15343,7 @@
         "tags" : [ "clubs.census" ]
       },
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updateFamilyGroup",
         "parameters" : [ {
           "in" : "path",
@@ -13598,7 +15422,7 @@
                 }
               }
             },
-            "description" : "FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP"
+            "description" : "FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -17071,7 +18895,7 @@
     },
     "/api/v1/me/dogs" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "myDogs",
         "responses" : {
           "200" : {
@@ -17238,7 +19062,7 @@
     },
     "/api/v1/me/dogs/{id}/documents" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "uploadMyDogDocument",
         "parameters" : [ {
           "in" : "path",
@@ -17317,7 +19141,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -17395,7 +19219,7 @@
     },
     "/api/v1/me/dogs/{id}/instructor-note" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "updateInstructorNote",
         "parameters" : [ {
           "in" : "path",
@@ -17474,7 +19298,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED: census mutations are unavailable after erasure"
           },
           "422" : {
             "content" : {
@@ -17552,7 +19376,7 @@
     },
     "/api/v1/me/dogs/{id}/photo" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "updateMyDogPhoto",
         "parameters" : [ {
           "in" : "path",
@@ -17631,7 +19455,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -17709,7 +19533,7 @@
     },
     "/api/v1/me/family-group" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "myFamilyGroup",
         "responses" : {
           "200" : {
@@ -18418,7 +20242,7 @@
     },
     "/api/v1/me/profile" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Tenant-scoped S03 response with role and ownership checks.",
         "operationId" : "myCensusProfile",
         "responses" : {
           "200" : {
@@ -18626,7 +20450,7 @@
                 }
               }
             },
-            "description" : "STALE_VERSION"
+            "description" : "STALE_VERSION, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -19406,8 +21230,319 @@
     },
     "/api/v1/members/export" : {
       "get" : {
-        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.",
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.",
         "operationId" : "exportMembers",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "required" : true,
+          "schema" : {
+            "enum" : [ "xlsx", "pdf" ],
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "columns",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Zero-based page index.",
+          "in" : "query",
+          "name" : "page",
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Requested page size.",
+          "in" : "query",
+          "name" : "size",
+          "schema" : {
+            "default" : 50,
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Repeat field,asc or field,desc; only x-sortable fields.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "sort",
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Free-text search within the caller's permitted projection.",
+          "in" : "query",
+          "name" : "q",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filter",
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Comma-separated response column keys.",
+          "in" : "query",
+          "name" : "fields",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Export file",
+            "headers" : {
+              "Content-Disposition" : {
+                "schema" : {
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExportAccepted"
+                }
+              }
+            },
+            "description" : "Queued export"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "INVALID_FILTER"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "EXPORT_TOO_LARGE, EXPORT_LIMIT"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "RATE_LIMITED",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Export members",
+        "tags" : [ "clubs.common" ],
+        "x-columns" : [ {
+          "defaultVisible" : true,
+          "key" : "fullName"
+        }, {
+          "defaultVisible" : true,
+          "key" : "dogs"
+        }, {
+          "defaultVisible" : true,
+          "key" : "plan"
+        }, {
+          "defaultVisible" : true,
+          "key" : "displayStatus"
+        }, {
+          "defaultVisible" : false,
+          "key" : "memberNumber"
+        }, {
+          "defaultVisible" : false,
+          "key" : "contact"
+        }, {
+          "defaultVisible" : false,
+          "key" : "paymentMethod",
+          "module" : "BILLING"
+        }, {
+          "defaultVisible" : false,
+          "key" : "nextInvoiceDate",
+          "module" : "BILLING"
+        }, {
+          "defaultVisible" : false,
+          "key" : "familyGroup",
+          "module" : "FAMILY_GROUP"
+        }, {
+          "defaultVisible" : false,
+          "key" : "joinedAt"
+        }, {
+          "defaultVisible" : false,
+          "key" : "leaveDate"
+        }, {
+          "defaultVisible" : false,
+          "key" : "bookingBlocked"
+        }, {
+          "defaultVisible" : false,
+          "key" : "imageRights"
+        }, {
+          "defaultVisible" : false,
+          "key" : "roles"
+        }, {
+          "defaultVisible" : false,
+          "key" : "city"
+        }, {
+          "defaultVisible" : false,
+          "key" : "postalCode"
+        }, {
+          "defaultVisible" : false,
+          "key" : "pendingDocuments"
+        }, {
+          "defaultVisible" : false,
+          "key" : "freeTraining",
+          "module" : "FREE_TRAINING"
+        }, {
+          "defaultVisible" : false,
+          "key" : "birthDate"
+        }, {
+          "defaultVisible" : false,
+          "key" : "gender"
+        }, {
+          "defaultVisible" : false,
+          "key" : "idDocument"
+        } ],
+        "x-exportable" : false,
+        "x-filter-operators" : {
+          "dogName" : [ "contains" ],
+          "fullName" : [ "contains" ]
+        },
+        "x-filterable" : [ "id", "memberNumber", "lastName", "fullName", "status", "displayStatus", "planId", "priceId", "paymentMethodType", "nextInvoiceDate", "joinedAt", "leaveDate", "bookingBlocked", "familyGroupId", "imageRightsGranted", "roles", "city", "postalCode", "dogLevelId", "dogName", "hasPendingDocuments", "freeTrainingAllowed", "gender", "birthDate" ],
+        "x-sortable" : [ "lastName", "firstName", "memberNumber", "joinedAt", "leaveDate", "nextInvoiceDate", "city" ]
+      },
+      "post" : {
+        "description" : "S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.",
+        "operationId" : "exportMembers_1",
         "parameters" : [ {
           "in" : "query",
           "name" : "format",
@@ -20119,7 +22254,7 @@
                 }
               }
             },
-            "description" : "ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION"
+            "description" : "ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -20197,7 +22332,7 @@
     },
     "/api/v1/members/{id}/access-resend" : {
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "resendAccess",
         "parameters" : [ {
           "in" : "path",
@@ -20266,7 +22401,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -20577,7 +22712,7 @@
     },
     "/api/v1/members/{id}/booking-block" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "removeBookingBlock",
         "parameters" : [ {
           "in" : "path",
@@ -20639,7 +22774,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -20715,7 +22850,7 @@
         "tags" : [ "clubs.census" ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "activateBookingBlock",
         "parameters" : [ {
           "in" : "path",
@@ -20794,7 +22929,7 @@
                 }
               }
             },
-            "description" : "BOOKING_BLOCK_ALREADY_ACTIVE"
+            "description" : "BOOKING_BLOCK_ALREADY_ACTIVE, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -21721,7 +23856,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -21799,7 +23934,7 @@
     },
     "/api/v1/members/{id}/overview" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "memberOverview",
         "parameters" : [ {
           "in" : "path",
@@ -21946,7 +24081,7 @@
     },
     "/api/v1/members/{id}/payment-method" : {
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.",
         "operationId" : "updatePaymentMethod",
         "parameters" : [ {
           "in" : "path",
@@ -22025,7 +24160,7 @@
                 }
               }
             },
-            "description" : "Conflict"
+            "description" : "MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -22182,7 +24317,7 @@
                 }
               }
             },
-            "description" : "LAST_ADMIN"
+            "description" : "LAST_ADMIN, MEMBER_ERASED"
           },
           "422" : {
             "content" : {
@@ -23478,7 +25613,7 @@
         "x-sortable" : [ "order" ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "createPlan",
         "requestBody" : {
           "content" : {
@@ -23627,7 +25762,7 @@
     },
     "/api/v1/plans/order" : {
       "put" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "orderPlans",
         "requestBody" : {
           "content" : {
@@ -23776,7 +25911,7 @@
     },
     "/api/v1/plans/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "deletePlan",
         "parameters" : [ {
           "in" : "path",
@@ -23914,7 +26049,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "getPlan",
         "parameters" : [ {
           "in" : "path",
@@ -24059,7 +26194,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "updatePlan",
         "parameters" : [ {
           "in" : "path",
@@ -25506,7 +27641,7 @@
     },
     "/api/v1/prices" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "listPrices",
         "parameters" : [ {
           "in" : "query",
@@ -25682,7 +27817,7 @@
         "x-sortable" : [ ]
       },
       "post" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "createPrice",
         "requestBody" : {
           "content" : {
@@ -25831,7 +27966,7 @@
     },
     "/api/v1/prices/{id}" : {
       "delete" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "deletePrice",
         "parameters" : [ {
           "in" : "path",
@@ -25969,7 +28104,7 @@
         "tags" : [ "clubs.catalogs" ]
       },
       "patch" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
         "operationId" : "updatePrice",
         "parameters" : [ {
           "in" : "path",
@@ -26048,7 +28183,7 @@
                 }
               }
             },
-            "description" : "PRICE_LOCKED, STALE_VERSION"
+            "description" : "PRICE_LOCKED, STALE_VERSION, PRICE_OVERLAP"
           },
           "422" : {
             "content" : {
@@ -26058,7 +28193,7 @@
                 }
               }
             },
-            "description" : "Unprocessable Entity"
+            "description" : "CURRENCY_MISMATCH"
           },
           "429" : {
             "content" : {
@@ -26124,6 +28259,177 @@
         "tags" : [ "clubs.catalogs" ]
       }
     },
+    "/api/v1/public/{clubSlug}/pages/{key}" : {
+      "get" : {
+        "description" : "S05 §6. X-Api-Key authenticates the slug-selected club independently of Host. Accept-Language selects an enabled locale, falling back to the club default. Drafts return NOT_FOUND.",
+        "operationId" : "get_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "clubSlug",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "key",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Api-Key",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PublicClubPage"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "INVALID_API_KEY, CLUB_SUSPENDED"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "CLUB_NOT_FOUND, NOT_FOUND"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "RATE_LIMITED",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "security" : [ {
+          "clubApiKey" : [ ]
+        } ],
+        "summary" : "Read a published club page",
+        "tags" : [ "clubs.content" ]
+      }
+    },
     "/api/v1/public/{clubSlug}/plans" : {
       "get" : {
         "description" : "S05 §6, R-05-21. Anonymous bearer access; X-Api-Key is required. Resolve club from slug and validate its key. Prices appear only with BILLING; never require a club host.",
@@ -26138,7 +28444,7 @@
         }, {
           "in" : "header",
           "name" : "X-Api-Key",
-          "required" : true,
+          "required" : false,
           "schema" : {
             "type" : "string"
           }

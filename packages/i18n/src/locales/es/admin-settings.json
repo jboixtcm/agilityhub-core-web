@@ -20,6 +20,38 @@
     "save": "GUARDAR",
     "saving": "Guardando"
   },
+  "clubPages": {
+    "bodyField": "Contenido",
+    "deactivate": "Desactiva",
+    "defaultLocaleRequired": "Es necesario completar el título y el contenido en el idioma predeterminado del club.",
+    "draft": "borrador",
+    "duplicateKey": "Ya existe una página con esta clave.",
+    "editorTitle": "Edita la página",
+    "fixed": {
+      "IMAGE_CONSENT": "Consentimiento de imagen",
+      "PRIVACY": "Privacidad",
+      "RULES": "Normas del club",
+      "WELCOME_GUIDE": "Guía de bienvenida"
+    },
+    "invalidBody": "Revisa el contenido: solo se admite Markdown limitado y un máximo de 20.000 caracteres.",
+    "key": "Clave de la página",
+    "keyHelp": "Entre 2 y 40 caracteres: minúsculas, números y guiones.",
+    "loadError": "No se han podido cargar las páginas del club.",
+    "markdownHelp": "Admite títulos, párrafos, negrita, cursiva, listas y enlaces.",
+    "new": "Página",
+    "noContent": "sin contenido",
+    "preview": "Vista previa",
+    "previewEmpty": "La vista previa aparecerá aquí.",
+    "provisional": "Texto provisional — pendiente de completar",
+    "publish": "Publica",
+    "publishConfirmation": "Se publicará la versión {version} — los consentimientos futuros harán referencia a ella",
+    "published": "publicada",
+    "publishTitle": "Publica la página",
+    "saveDraft": "Guarda el borrador",
+    "stale": "Otro administrador ha editado esta página — vuelve a cargarla",
+    "titleField": "Título",
+    "versionDate": "versión {version} · {date}"
+  },
   "days": {
     "long": {
       "FRIDAY": "Viernes",
@@ -129,12 +161,6 @@
       "help": "Permite recibir notificaciones web en el dispositivo.",
       "label": "Notificaciones push"
     }
-  },
-  "pages": {
-    "availableSoon": "Disponible próximamente",
-    "faq": "Preguntas frecuentes",
-    "navigation": "Editores de páginas del club",
-    "rules": "Normas del club"
   },
   "param": {
     "activities": {

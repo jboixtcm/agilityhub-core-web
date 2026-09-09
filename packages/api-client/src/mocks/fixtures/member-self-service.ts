@@ -72,6 +72,30 @@ export const meDogsFixture: MeDogs = {
       sex: "FEMALE",
       tasks: {
         completed: 1,
+        items: [
+          {
+            attachmentsCount: 0,
+            createdAt: "2026-08-10T09:00:00Z",
+            id: "task-duna-balance",
+            instructorName: "Laura",
+            text: "Treballar l'entrada al balancí",
+          },
+          {
+            attachmentsCount: 1,
+            createdAt: "2026-08-12T09:00:00Z",
+            id: "task-duna-weave",
+            instructorName: "Marc",
+            text: "Revisar l'entrada a l'eslàlom",
+          },
+          {
+            attachmentsCount: 0,
+            createdAt: "2026-07-20T09:00:00Z",
+            doneAt: "2026-08-01T09:00:00Z",
+            id: "task-duna-start",
+            instructorName: "Laura",
+            text: "Consolidar la sortida quieta",
+          },
+        ],
         open: 2,
       },
     },

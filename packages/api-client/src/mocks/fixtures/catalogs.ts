@@ -1,8 +1,10 @@
 import type { components } from "../../generated/schema";
 
 import brandingCanic from "./branding-canic.json";
+import clubPagesFixture from "./club-pages.json";
 
 export type Administrator = components["schemas"]["Administrator"];
+export type ClubPage = components["schemas"]["ClubPage"];
 export type FaqEntry = components["schemas"]["FaqEntry"];
 export type Instructor = components["schemas"]["Instructor"];
 export type Level = components["schemas"]["Level"];
@@ -191,6 +193,7 @@ const price = (
   concept,
   id,
   locked: status !== "SCHEDULED",
+  periodicity: concept === "MONTHLY_FEE" || concept === "MAINTENANCE_FEE" ? "MONTHLY" : "ONE_OFF",
   planId,
   status,
   taxPercent: 21,
@@ -379,8 +382,11 @@ const initialFaqEntries: FaqEntry[] = [
   },
 ];
 
+const initialClubPages = clubPagesFixture as ClubPage[];
+
 export const catalogState: {
   administrators: Administrator[];
+  clubPages: ClubPage[];
   faqEntries: FaqEntry[];
   instructors: Instructor[];
   levels: Level[];
@@ -388,6 +394,7 @@ export const catalogState: {
   rings: Ring[];
 } = {
   administrators: structuredClone(initialAdministrators),
+  clubPages: structuredClone(initialClubPages),
   faqEntries: structuredClone(initialFaqEntries),
   instructors: structuredClone(initialInstructors),
   levels: structuredClone(initialLevels),
@@ -397,6 +404,7 @@ export const catalogState: {
 
 export function resetCatalogState(): void {
   catalogState.administrators = structuredClone(initialAdministrators);
+  catalogState.clubPages = structuredClone(initialClubPages);
   catalogState.faqEntries = structuredClone(initialFaqEntries);
   catalogState.instructors = structuredClone(initialInstructors);
   catalogState.levels = structuredClone(initialLevels);

@@ -31,6 +31,7 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { InfoPage } from "./InfoPage";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 
 interface RouteDefinition {
@@ -1164,6 +1165,10 @@ export function App({
       <RequireAuth>
         <MyDataPage client={apiClient} />
       </RequireAuth>
+    ) : pathname === "/info" ? (
+      <RequireAuth>
+        <InfoPage client={apiClient} />
+      </RequireAuth>
     ) : (
       routePlaceholder(route)
     );
@@ -1178,7 +1183,10 @@ export function App({
       }}
       presentation="modal"
     >
-      <MobileShell authClient={authClient} detail={pathname === "/gossos" || pathname === "/dades"}>
+      <MobileShell
+        authClient={authClient}
+        detail={pathname === "/gossos" || pathname === "/dades" || pathname === "/info"}
+      >
         {content}
       </MobileShell>
     </OnboardingExperience>

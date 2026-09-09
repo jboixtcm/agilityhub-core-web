@@ -6,6 +6,16 @@
     "language": "Idioma",
     "userMenu": "Menú d’usuari"
   },
+  "info": {
+    "empty": "Encara no hi ha informació publicada.",
+    "faq": "FAQ",
+    "loadError": "No s'ha pogut carregar la informació.",
+    "loading": "Carregant la informació",
+    "noFaq": "Encara no hi ha preguntes freqüents publicades.",
+    "rules": "Normes",
+    "tabs": "Informació del club",
+    "updated": "Actualitzat el {date}"
+  },
   "language": {
     "ca": "Català",
     "en": "Anglès",

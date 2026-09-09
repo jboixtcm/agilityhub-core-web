@@ -224,7 +224,7 @@ async function uploadFile(client: ApiClient, file: File, purpose: "DOG_DOCUMENT"
   }
   const response = await fetch(upload.data.uploadUrl, {
     body: file,
-    headers: { "Content-Type": file.type },
+    headers: upload.data.headers,
     method: "PUT",
   });
   if (!response.ok) {

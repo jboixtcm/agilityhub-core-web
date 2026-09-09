@@ -6,6 +6,16 @@
     "language": "Language",
     "userMenu": "User menu"
   },
+  "info": {
+    "empty": "There is no published information yet.",
+    "faq": "FAQ",
+    "loadError": "The information could not be loaded.",
+    "loading": "Loading information",
+    "noFaq": "There are no published frequently asked questions yet.",
+    "rules": "Rules",
+    "tabs": "Club information",
+    "updated": "Updated on {date}"
+  },
   "language": {
     "ca": "Catalan",
     "en": "English",

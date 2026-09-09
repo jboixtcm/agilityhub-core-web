@@ -58,7 +58,7 @@ export const moduleUi = {
     routes: ["/seguiment", "/instructor/tasques"],
     tabs: [],
   },
-  FAQ: { menuEntries: [], routes: ["/info"], tabs: ["info"] },
+  FAQ: { menuEntries: [], routes: [], tabs: [] },
   SMS: { menuEntries: [], routes: [], tabs: [] },
   PUSH: { menuEntries: [], routes: [], tabs: [] },
   INACTIVITY: {

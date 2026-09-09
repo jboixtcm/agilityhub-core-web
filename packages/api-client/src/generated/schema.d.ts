@@ -147,6 +147,46 @@ export interface paths {
         patch: operations["updateAdministrator"];
         trace?: never;
     };
+    "/attachments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach a file to the owner's instructor note
+         * @description Minimal S10 INSTRUCTOR_NOTE attachment. Task and observation attachments remain owned by S10.
+         */
+        post: operations["add"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create an attachment upload URL
+         * @description S03/S10 minimal upload contract. Upload using the returned headers; URLs last five minutes. Ownership is checked when attaching the uploaded file.
+         */
+        post: operations["upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/audit-entries": {
         parameters: {
             query?: never;
@@ -305,6 +345,54 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/club-pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List club pages
+         * @description S05 §6. Non-admin readers see active pages regardless of the active flag; admins can filter either state. Translation maps are returned.
+         */
+        get: operations["list"];
+        put?: never;
+        /**
+         * Create a club page
+         * @description S05 §6. Starts at version 1. Limited CommonMark: headings, paragraphs, emphasis, lists and links; no HTML, images, code or block quotes. At most 20000 body characters per locale.
+         */
+        post: operations["create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/club-pages/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read a club page
+         * @description S05 §6. Drafts and the last ten published snapshots are available only to ADMIN.
+         */
+        get: operations["get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Edit or publish a club page
+         * @description S05 §6. Supply the publication version. Activation or a body change while active increments it and sets publishedAt. Draft and title-only edits preserve it. Supplied translation maps replace that whole field.
+         */
+        patch: operations["patch"];
         trace?: never;
     };
     "/club/holidays": {
@@ -484,11 +572,15 @@ export interface paths {
         };
         /**
          * Export dogs
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.
          */
         get: operations["exportDogs"];
         put?: never;
-        post?: never;
+        /**
+         * Export dogs
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.
+         */
+        post: operations["exportDogs_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -524,7 +616,7 @@ export interface paths {
         };
         /**
          * Get dog
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["getDog"];
         put?: never;
@@ -534,7 +626,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         patch: operations["updateDog"];
         trace?: never;
@@ -550,7 +642,7 @@ export interface paths {
         put?: never;
         /**
          * Deactivation dog
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["deactivationDog"];
         delete?: never;
@@ -568,13 +660,13 @@ export interface paths {
         };
         /**
          * Dog documents
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["dogDocuments"];
         put?: never;
         /**
          * Upload dog document
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["uploadDogDocument"];
         delete?: never;
@@ -594,7 +686,7 @@ export interface paths {
         put?: never;
         /**
          * Remind dog document
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["remindDogDocument"];
         delete?: never;
@@ -615,7 +707,7 @@ export interface paths {
         post?: never;
         /**
          * Remove dog document file
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         delete: operations["removeDogDocumentFile"];
         options?: never;
@@ -638,7 +730,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog free training
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         patch: operations["updateDogFreeTraining"];
         trace?: never;
@@ -658,7 +750,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog level
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         patch: operations["updateDogLevel"];
         trace?: never;
@@ -673,7 +765,7 @@ export interface paths {
         get?: never;
         /**
          * Update dog photo
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         put: operations["updateDogPhoto"];
         post?: never;
@@ -694,7 +786,7 @@ export interface paths {
         put?: never;
         /**
          * Reactivation dog
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["reactivationDog"];
         delete?: never;
@@ -714,7 +806,7 @@ export interface paths {
         put?: never;
         /**
          * Transfer dog
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["transferDog"];
         delete?: never;
@@ -732,7 +824,7 @@ export interface paths {
         };
         /**
          * Exports
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Up to 100 recent caller-owned jobs, newest first. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["exports"];
         put?: never;
@@ -763,6 +855,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/exports/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download a local export
+         * @description Local/test storage: caller-owned job, bearer authentication and signed URL required. Expires with the file after seven days. S3 deployments return a direct signed URL instead.
+         */
+        get: operations["download"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/family-groups": {
         parameters: {
             query?: never;
@@ -774,7 +886,7 @@ export interface paths {
         put?: never;
         /**
          * Create family group
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["createFamilyGroup"];
         delete?: never;
@@ -792,18 +904,18 @@ export interface paths {
         };
         /**
          * Get family group
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["getFamilyGroup"];
         /**
          * Update family group
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         put: operations["updateFamilyGroup"];
         post?: never;
         /**
          * Dissolve family group
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         delete: operations["dissolveFamilyGroup"];
         options?: never;
@@ -1124,7 +1236,7 @@ export interface paths {
         };
         /**
          * My dogs
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["myDogs"];
         put?: never;
@@ -1146,7 +1258,7 @@ export interface paths {
         put?: never;
         /**
          * Upload my dog document
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         post: operations["uploadMyDogDocument"];
         delete?: never;
@@ -1165,7 +1277,7 @@ export interface paths {
         get?: never;
         /**
          * Update instructor note
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         put: operations["updateInstructorNote"];
         post?: never;
@@ -1185,7 +1297,7 @@ export interface paths {
         get?: never;
         /**
          * Update my dog photo
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         put: operations["updateMyDogPhoto"];
         post?: never;
@@ -1204,7 +1316,7 @@ export interface paths {
         };
         /**
          * My family group
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["myFamilyGroup"];
         put?: never;
@@ -1288,7 +1400,7 @@ export interface paths {
         };
         /**
          * My census profile
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Tenant-scoped S03 response with role and ownership checks.
          */
         get: operations["myCensusProfile"];
         /**
@@ -1376,11 +1488,15 @@ export interface paths {
         };
         /**
          * Export members
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests persist a QUEUED handoff for E2-T08.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.
          */
         get: operations["exportMembers"];
         put?: never;
-        post?: never;
+        /**
+         * Export members
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Up to 5,000 rows inline; larger requests queue a background export, capped at 100,000 rows. Catalog EXPORT_LIMIT is HTTP 422. Files and signed links last seven days.
+         */
+        post: operations["exportMembers_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1442,7 +1558,7 @@ export interface paths {
         put?: never;
         /**
          * Resend access
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["resendAccess"];
         delete?: never;
@@ -1482,12 +1598,12 @@ export interface paths {
         put?: never;
         /**
          * Activate booking block
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         post: operations["activateBookingBlock"];
         /**
          * Remove booking block
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         delete: operations["removeBookingBlock"];
         options?: never;
@@ -1592,7 +1708,7 @@ export interface paths {
         };
         /**
          * Member overview
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         get: operations["memberOverview"];
         put?: never;
@@ -1618,7 +1734,7 @@ export interface paths {
         head?: never;
         /**
          * Update payment method
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
          */
         patch: operations["updatePaymentMethod"];
         trace?: never;
@@ -1746,7 +1862,7 @@ export interface paths {
         put?: never;
         /**
          * Create plan
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         post: operations["createPlan"];
         delete?: never;
@@ -1765,7 +1881,7 @@ export interface paths {
         get?: never;
         /**
          * Order plans
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         put: operations["orderPlans"];
         post?: never;
@@ -1784,21 +1900,21 @@ export interface paths {
         };
         /**
          * Get plan
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["getPlan"];
         put?: never;
         post?: never;
         /**
          * Delete plan
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["deletePlan"];
         options?: never;
         head?: never;
         /**
          * Update plan
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         patch: operations["updatePlan"];
         trace?: never;
@@ -1936,13 +2052,13 @@ export interface paths {
         };
         /**
          * List prices
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         get: operations["listPrices"];
         put?: never;
         /**
          * Create price
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         post: operations["createPrice"];
         delete?: never;
@@ -1963,16 +2079,36 @@ export interface paths {
         post?: never;
         /**
          * Delete price
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["deletePrice"];
         options?: never;
         head?: never;
         /**
          * Update price
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         patch: operations["updatePrice"];
+        trace?: never;
+    };
+    "/public/{clubSlug}/pages/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read a published club page
+         * @description S05 §6. X-Api-Key authenticates the slug-selected club independently of Host. Accept-Language selects an enabled locale, falling back to the club default. Drafts return NOT_FOUND.
+         */
+        get: operations["get_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/public/{clubSlug}/plans": {
@@ -2295,22 +2431,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/upload-url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createAttachmentUploadUrl"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2384,6 +2504,23 @@ export interface components {
             };
             message: string;
             traceId: string;
+        };
+        AttachmentRequest: {
+            entityId: string;
+            /** @enum {string} */
+            entityType: "INSTRUCTOR_NOTE";
+            fileKey: string;
+            name: string;
+        };
+        AttachmentResponse: {
+            id: string;
+            mimeType: string;
+            name: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            /** Format: date-time */
+            uploadedAt: string;
+            url: string;
         };
         /** @enum {string} */
         AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED";
@@ -2496,6 +2633,11 @@ export interface components {
             /** Format: int64 */
             totalItems: number;
         };
+        CatalogItemsClubPage: {
+            items: components["schemas"]["ClubPage"][];
+            /** Format: int64 */
+            totalItems: number;
+        };
         CatalogItemsFaqEntry: {
             items: (components["schemas"]["FaqEntry"] | components["schemas"]["FaqReaderView"])[];
             /** Format: int64 */
@@ -2557,6 +2699,61 @@ export interface components {
             };
             legalTextsVersion: string;
             privacyPolicyUrl: string;
+        };
+        ClubPage: {
+            active: boolean;
+            body: {
+                [key: string]: string;
+            };
+            history?: components["schemas"]["ClubPageHistory"][];
+            key: string;
+            lastChange: components["schemas"]["ClubPageLastChange"];
+            /** Format: date-time */
+            publishedAt: string | null;
+            title: {
+                [key: string]: string;
+            };
+            /** Format: int32 */
+            version: number;
+        };
+        ClubPageCreate: {
+            active: boolean;
+            body: {
+                [key: string]: string;
+            };
+            key: string;
+            title: {
+                [key: string]: string;
+            };
+        };
+        ClubPageHistory: {
+            body: {
+                [key: string]: string;
+            };
+            by: string | null;
+            /** Format: date-time */
+            publishedAt: string;
+            title: {
+                [key: string]: string;
+            };
+            /** Format: int32 */
+            version: number;
+        };
+        ClubPageLastChange: {
+            /** Format: date-time */
+            at: string;
+            by: string | null;
+        };
+        ClubPagePatch: {
+            active?: boolean;
+            body?: {
+                [key: string]: string;
+            };
+            title?: {
+                [key: string]: string;
+            };
+            /** Format: int32 */
+            version: number;
         };
         ClubPwa: {
             iconUrls?: {
@@ -2715,6 +2912,8 @@ export interface components {
         };
         /** @description Derived presentation status; includes ERASED under S14. */
         DisplayStatus: {
+            /** Format: date */
+            date?: string;
             kind: string;
             label: string;
         };
@@ -2739,6 +2938,7 @@ export interface components {
             deactivatedAt?: string;
             deactivationReason?: string;
             freeTrainingOverride?: boolean;
+            handlerName?: string;
             /** Format: uuid */
             id: string;
             instructorNote?: components["schemas"]["InstructorNote"];
@@ -2763,13 +2963,13 @@ export interface components {
         DogDetail: {
             documents: components["schemas"]["DogDocument"][];
             dog: components["schemas"]["Dog"];
-            freeTraining: components["schemas"]["FreeTraining"];
+            freeTraining?: components["schemas"]["FreeTraining"];
             level?: components["schemas"]["LevelSummary"];
-            levelHistory: components["schemas"]["LevelHistoryEntry"][];
+            levelHistory?: components["schemas"]["LevelHistoryEntry"][];
             licenses: components["schemas"]["License"][];
             owner: components["schemas"]["OwnerSummary"];
             pack?: components["schemas"]["PackSummary"];
-            tasksSummary: components["schemas"]["TasksSummary"];
+            tasksSummary?: components["schemas"]["TasksSummary"];
             /** Format: int64 */
             version: number;
         };
@@ -2800,6 +3000,7 @@ export interface components {
             displayStatus: components["schemas"]["DisplayStatus"];
             freeTraining?: components["schemas"]["FreeTraining"];
             handler?: string;
+            handlerName?: string;
             /** Format: uuid */
             id: string;
             level?: components["schemas"]["LevelSummary"];
@@ -2822,6 +3023,7 @@ export interface components {
             birthDate?: string;
             breed?: string;
             chip?: string;
+            handlerName?: string;
             licenses?: components["schemas"]["License"][];
             name?: string;
             /** @enum {string} */
@@ -2834,6 +3036,13 @@ export interface components {
             id: string;
             level?: components["schemas"]["LevelSummary"];
             name: string;
+        };
+        DogTasks: {
+            /** Format: int64 */
+            completed: number;
+            items: components["schemas"]["TaskItem"][];
+            /** Format: int64 */
+            open: number;
         };
         DogTransferRequest: {
             reason?: string;
@@ -2900,7 +3109,7 @@ export interface components {
             code: string;
             message: string;
         };
-        /** @description Only caller-owned jobs; signed download URLs last five minutes. No storage keys or query credentials. */
+        /** @description Only caller-owned jobs; signed download URLs expire with the file after seven days. No storage keys or query credentials. */
         ExportJob: {
             /** Format: date-time */
             createdAt: string;
@@ -3050,7 +3259,7 @@ export interface components {
             allowed: boolean;
             override: boolean | null;
             /** @enum {string} */
-            source: "LEVEL" | "OVERRIDE";
+            source: "LEVEL" | "MANUAL";
         };
         FreeTrainingRequest: {
             override: boolean | null;
@@ -3137,6 +3346,7 @@ export interface components {
             shortName: string;
         };
         InstructorNote: {
+            attachments?: components["schemas"]["NoteAttachment"][];
             text: string;
             /** Format: date-time */
             updatedAt: string;
@@ -3213,7 +3423,6 @@ export interface components {
             level: components["schemas"]["LevelSummary"];
             /** Format: date-time */
             levelAssignedAt: string;
-            warnings: components["schemas"]["LevelWarnings"];
         };
         LevelCreate: {
             active?: boolean;
@@ -3286,11 +3495,9 @@ export interface components {
             /** Format: int32 */
             templateClasses: number;
         };
-        LevelWarnings: {
-            /** Format: int32 */
-            futureBookingsOutsideLevel: number;
-        };
         License: {
+            category?: string;
+            division?: string;
             grade?: string;
             number: string;
             organisation: string;
@@ -3419,7 +3626,7 @@ export interface components {
             ageYears: number;
             breed: string;
             documents: components["schemas"]["DogDocument"][];
-            freeTrainingAllowed: boolean;
+            freeTrainingAllowed?: boolean;
             /** Format: uuid */
             id: string;
             instructorNote?: components["schemas"]["InstructorNote"];
@@ -3430,7 +3637,7 @@ export interface components {
             photoUrl?: string;
             /** @enum {string} */
             sex: "MALE" | "FEMALE";
-            tasks?: components["schemas"]["TasksSummary"];
+            tasks?: components["schemas"]["DogTasks"];
         };
         MeDogs: {
             canAddDog: boolean;
@@ -3455,9 +3662,9 @@ export interface components {
             version: number;
         };
         MeProfilePatch: {
-            address: components["schemas"]["Address"];
-            contactEmails: components["schemas"]["ContactEmailInput"][];
-            phones: components["schemas"]["Phone"][];
+            address?: components["schemas"]["Address"];
+            contactEmails?: components["schemas"]["ContactEmailInput"][];
+            phones?: components["schemas"]["Phone"][];
             /** Format: int64 */
             version: number;
         };
@@ -3467,6 +3674,8 @@ export interface components {
             accountId?: string;
             accountMissing?: boolean;
             address: components["schemas"]["Address"];
+            /** Format: uuid */
+            billedViaMemberId?: string;
             /** Format: date */
             birthDate: string;
             bookingBlock: components["schemas"]["BookingBlock"];
@@ -3500,6 +3709,7 @@ export interface components {
             nextInvoiceDate?: string;
             paymentMethod?: components["schemas"]["PaymentMethodView"];
             phones: components["schemas"]["Phone"][];
+            plan?: components["schemas"]["PlanReference"];
             /** Format: uuid */
             planId?: string;
             /** Format: uuid */
@@ -3507,7 +3717,7 @@ export interface components {
             remarks?: string;
             roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
             /** @enum {string} */
-            status: "PENDING" | "ACTIVE" | "LEFT";
+            status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
             /** Format: int64 */
             version: number;
         };
@@ -3532,7 +3742,7 @@ export interface components {
             memberNumber?: number;
             phones: components["schemas"]["Phone"][];
             /** @enum {string} */
-            status: "PENDING" | "ACTIVE" | "LEFT";
+            status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
             /** Format: int64 */
             version: number;
         };
@@ -3575,14 +3785,14 @@ export interface components {
             dogs: components["schemas"]["OverviewDog"][];
             familyGroup?: components["schemas"]["FamilyGroup"];
             /** Format: int64 */
-            invoicesCount: number;
+            invoicesCount?: number;
             member: components["schemas"]["Member"];
             nextInvoice?: components["schemas"]["NextInvoice"];
             notificationPreferences: {
                 [key: string]: unknown;
             };
             recentAudit: components["schemas"]["AuditSummary"][];
-            recentInvoices: components["schemas"]["InvoiceSummary"][];
+            recentInvoices?: components["schemas"]["InvoiceSummary"][];
         };
         MemberPatch: {
             address?: components["schemas"]["Address"];
@@ -3615,6 +3825,10 @@ export interface components {
             /** Format: uuid */
             instructorId?: string;
             /** Format: uuid */
+            lastDogForClass?: string;
+            /** Format: uuid */
+            lastDogForTraining?: string;
+            /** Format: uuid */
             memberId?: string;
             profiles: components["schemas"]["Profile"][];
             rememberProfile: boolean;
@@ -3640,6 +3854,16 @@ export interface components {
             amount: components["schemas"]["Money"];
             /** Format: date */
             date: string;
+        };
+        NoteAttachment: {
+            id: string;
+            mimeType: string;
+            name: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            /** Format: date-time */
+            uploadedAt: string;
+            url: string;
         };
         OidcSessionRequest: {
             flow: string;
@@ -3701,7 +3925,7 @@ export interface components {
         };
         OverviewDog: {
             breed: string;
-            freeTrainingAllowed: boolean;
+            freeTrainingAllowed?: boolean;
             /** Format: uuid */
             id: string;
             level?: components["schemas"]["LevelSummary"];
@@ -3716,7 +3940,7 @@ export interface components {
             /** Format: int32 */
             memberNumber?: number;
             /** @enum {string} */
-            status: "PENDING" | "ACTIVE" | "LEFT";
+            status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
         };
         PackSettings: {
             /** Format: int32 */
@@ -3864,6 +4088,11 @@ export interface components {
         };
         Plan: {
             active: boolean;
+            /**
+             * @description Present for MONTHLY plans
+             * @enum {string}
+             */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             code: string;
             conditions?: string;
             conditionsI18n?: {
@@ -3872,7 +4101,7 @@ export interface components {
             currentPrices?: components["schemas"]["Price"][];
             /** Format: int32 */
             dogsIncluded: number;
-            entryFee: components["schemas"]["EntryFee"];
+            entryFee?: components["schemas"]["EntryFee"];
             entryFeeAmount?: components["schemas"]["Money"];
             /** Format: uuid */
             id: string;
@@ -3884,6 +4113,7 @@ export interface components {
             /** Format: int32 */
             order: number;
             pack?: components["schemas"]["PackSettings"];
+            priceLine?: string;
             prices?: components["schemas"]["Price"][];
             showOnSignup: boolean;
             showOnWeb: boolean;
@@ -3894,10 +4124,15 @@ export interface components {
             usage?: components["schemas"]["PlanUsage"];
             /** Format: int64 */
             version: number;
-            warnings?: string[];
+            warnings?: components["schemas"]["PlanUsage"];
         };
         PlanCreate: {
             active?: boolean;
+            /**
+             * @description MONTHLY plans only; defaults to MONTHLY_FEE
+             * @enum {string}
+             */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             code: string;
             conditions?: {
                 [key: string]: string;
@@ -3923,6 +4158,8 @@ export interface components {
         };
         PlanPatch: {
             active?: boolean;
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             code?: string;
             conditions?: {
                 [key: string]: string;
@@ -3947,18 +4184,24 @@ export interface components {
         };
         PlanReaderView: {
             active: boolean;
+            /**
+             * @description Present for MONTHLY plans
+             * @enum {string}
+             */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             code: string;
             conditions?: string;
             currentPrices?: components["schemas"]["PublicPrice"][];
             /** Format: int32 */
             dogsIncluded: number;
-            entryFee: components["schemas"]["EntryFee"];
+            entryFee?: components["schemas"]["EntryFee"];
             /** Format: uuid */
             id: string;
             name: string;
             /** Format: int32 */
             order: number;
             pack?: components["schemas"]["PackSettings"];
+            priceLine?: string;
             showOnSignup: boolean;
             showOnWeb: boolean;
             singleClass?: components["schemas"]["SingleClassSettings"];
@@ -3967,6 +4210,15 @@ export interface components {
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
             /** Format: int64 */
             version: number;
+        };
+        PlanReference: {
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
+            /** Format: uuid */
+            id: string;
+            name: string;
+            /** @enum {string} */
+            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
         };
         PlanTexts: {
             description?: string;
@@ -4000,6 +4252,8 @@ export interface components {
             members: number;
             /** Format: int32 */
             packBalances: number;
+            /** Format: int32 */
+            upfrontCollections: number;
         };
         PlatformAccountRequest: {
             /** Format: email */
@@ -4025,6 +4279,8 @@ export interface components {
             id: string;
             lastChange?: components["schemas"]["LastChange"];
             locked: boolean;
+            /** @enum {string} */
+            periodicity: "MONTHLY" | "ONE_OFF";
             /** Format: uuid */
             planId: string;
             /** @enum {string} */
@@ -4061,7 +4317,7 @@ export interface components {
             /** Format: date */
             validFrom?: string;
             /** Format: date */
-            validTo?: string;
+            validTo?: string | null;
             /** Format: int64 */
             version: number;
         };
@@ -4079,6 +4335,16 @@ export interface components {
         ProfileResponse: {
             access_token: string;
         };
+        PublicClubPage: {
+            active: boolean;
+            body: string;
+            key: string;
+            /** Format: date-time */
+            publishedAt: string;
+            title: string;
+            /** Format: int32 */
+            version: number;
+        };
         PublicJwk: {
             alg?: string;
             e: string;
@@ -4090,8 +4356,16 @@ export interface components {
         };
         /** @description Only active showOnWeb plans; prices omitted when BILLING is disabled. */
         PublicPlan: {
+            /**
+             * @description Present for MONTHLY plans
+             * @enum {string}
+             */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             code: string;
             conditions?: string;
+            conditionsI18n?: {
+                [key: string]: string;
+            };
             currentPrices?: components["schemas"]["PublicPrice"][];
             /** Format: int32 */
             dogsIncluded: number;
@@ -4099,9 +4373,15 @@ export interface components {
             /** Format: uuid */
             id: string;
             name: string;
+            nameI18n: {
+                [key: string]: string;
+            };
             /** Format: int32 */
             order: number;
-            texts?: components["schemas"]["PublicPlanTexts"];
+            pack?: components["schemas"]["PackSettings"];
+            priceLine?: string;
+            singleClass?: components["schemas"]["SingleClassSettings"];
+            texts?: components["schemas"]["PlanTexts"];
             /** @enum {string} */
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
         };
@@ -4123,6 +4403,7 @@ export interface components {
             amount: components["schemas"]["Money"];
             /** @enum {string} */
             concept: "MONTHLY_FEE" | "MAINTENANCE_FEE" | "PACK" | "SINGLE_CLASS";
+            taxPercent: number;
         };
         ReasonRequest: {
             reason?: string;
@@ -4331,6 +4612,18 @@ export interface components {
             /** @enum {string} */
             chargeMode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
         };
+        TaskItem: {
+            /** Format: int64 */
+            attachmentsCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            doneAt?: string;
+            /** Format: uuid */
+            id: string;
+            instructorName: string;
+            text: string;
+        };
         TasksSummary: {
             /** Format: int32 */
             completed: number;
@@ -4383,6 +4676,23 @@ export interface components {
             /** Format: int32 */
             value: number;
         };
+        Upload: {
+            /** Format: date-time */
+            expiresAt: string;
+            fileKey: string;
+            headers: {
+                [key: string]: string;
+            };
+            uploadUrl: string;
+        };
+        UploadRequest: {
+            fileName: string;
+            mimeType: string;
+            /** @enum {string} */
+            purpose: "DOG_DOCUMENT" | "DOG_PHOTO" | "INSTRUCTOR_NOTE";
+            /** Format: int64 */
+            sizeBytes: number;
+        };
         UserInfo: {
             email?: string;
             email_verified?: boolean;
@@ -4424,18 +4734,6 @@ export interface components {
             };
             reminderMinutesBefore?: number | null;
             pushClubNews?: boolean;
-        };
-        AttachmentUploadRequest: {
-            /** @enum {string} */
-            purpose: "DOG_DOCUMENT" | "DOG_PHOTO";
-            fileName: string;
-            mimeType: string;
-            sizeBytes: number;
-        };
-        AttachmentUploadResponse: {
-            fileKey: string;
-            /** Format: uri */
-            uploadUrl: string;
         };
         DogPendingFields: {
             handlerName?: string;
@@ -5618,6 +5916,256 @@ export interface operations {
             };
         };
     };
+    add: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentRequest"];
+            };
+        };
+        responses: {
+            /** @description Attachment with signed download URL */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentResponse"];
+                };
+            };
+            /** @description FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description ATTACHMENT_LIMIT_REACHED, ATTACHMENT_ENTITY_MISMATCH */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Upload URL, opaque file key, required headers and expiry */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Upload"];
+                };
+            };
+            /** @description FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description ATTACHMENT_ENTITY_MISMATCH */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     auditEntries: {
         parameters: {
             query?: {
@@ -6712,6 +7260,504 @@ export interface operations {
                 };
             };
             /** @description TIMEZONE_CHANGE_BLOCKED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    list: {
+        parameters: {
+            query?: {
+                active?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogItemsClubPage"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, TENANT_MISMATCH */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClubPageCreate"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClubPage"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, TENANT_MISMATCH */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description DUPLICATE_NAME */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClubPage"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, TENANT_MISMATCH */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClubPagePatch"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClubPage"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, TENANT_MISMATCH */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description STALE_VERSION */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -8155,6 +9201,153 @@ export interface operations {
             };
         };
     };
+    exportDogs_1: {
+        parameters: {
+            query: {
+                format: "xlsx" | "pdf";
+                columns?: string;
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export file */
+            200: {
+                headers: {
+                    "Content-Disposition"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            /** @description Queued export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportAccepted"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_TOO_LARGE, EXPORT_LIMIT */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     dogFilterValues: {
         parameters: {
             query: {
@@ -8463,7 +9656,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CHIP_ALREADY_EXISTS, STALE_VERSION */
+            /** @description CHIP_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -8590,7 +9783,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -8840,7 +10033,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -8965,7 +10158,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9088,7 +10281,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9215,7 +10408,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9342,7 +10535,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9469,7 +10662,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9596,7 +10789,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -9723,7 +10916,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -10036,6 +11229,132 @@ export interface operations {
             };
         };
     };
+    download: {
+        parameters: {
+            query: {
+                expires: number;
+                signature: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_EXPIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     createFamilyGroup: {
         parameters: {
             query?: never;
@@ -10094,7 +11413,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP */
+            /** @description FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -10344,7 +11663,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP */
+            /** @description FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -10465,7 +11784,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13471,7 +14790,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13598,7 +14917,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13725,7 +15044,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -14714,7 +16033,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description STALE_VERSION */
+            /** @description STALE_VERSION, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -15304,6 +16623,153 @@ export interface operations {
             };
         };
     };
+    exportMembers_1: {
+        parameters: {
+            query: {
+                format: "xlsx" | "pdf";
+                columns?: string;
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export file */
+            200: {
+                headers: {
+                    "Content-Disposition"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            /** @description Queued export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportAccepted"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_TOO_LARGE, EXPORT_LIMIT */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     memberFilterValues: {
         parameters: {
             query: {
@@ -15612,7 +17078,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION */
+            /** @description ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -15735,7 +17201,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -15998,7 +17464,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description BOOKING_BLOCK_ALREADY_ACTIVE */
+            /** @description BOOKING_BLOCK_ALREADY_ACTIVE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -16119,7 +17585,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -16867,7 +18333,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -17117,7 +18583,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -17244,7 +18710,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LAST_ADMIN */
+            /** @description LAST_ADMIN, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -20155,7 +21621,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description PRICE_LOCKED, STALE_VERSION */
+            /** @description PRICE_LOCKED, STALE_VERSION, PRICE_OVERLAP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -20164,7 +21630,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description CURRENCY_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -20222,11 +21688,138 @@ export interface operations {
             };
         };
     };
+    get_1: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Api-Key"?: string;
+                "Accept-Language"?: string;
+            };
+            path: {
+                clubSlug: string;
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicClubPage"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_API_KEY, CLUB_SUSPENDED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLUB_NOT_FOUND, NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     publicPlans: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Key": string;
+            header?: {
+                "X-Api-Key"?: string;
                 "Accept-Language"?: string;
             };
             path: {
@@ -22731,31 +24324,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["NotificationPreferences"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    createAttachmentUploadUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AttachmentUploadRequest"];
-            };
-        };
-        responses: {
-            /** @description Signed upload URL */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AttachmentUploadResponse"];
                 };
             };
             default: components["responses"]["ApiError"];

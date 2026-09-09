@@ -48,7 +48,9 @@ function requestMiddleware(options: ApiClientOptions): Middleware {
 
   return {
     async onRequest({ request, schemaPath }) {
-      request.headers.set("Accept-Language", await getLocale());
+      if (!request.headers.has("Accept-Language")) {
+        request.headers.set("Accept-Language", await getLocale());
+      }
 
       const accessToken = await options.getAccessToken?.();
       if (accessToken !== undefined && accessToken !== null && accessToken !== "") {

@@ -1038,6 +1038,117 @@ select {
   min-height: 3.5rem;
 }
 
+.info-page {
+  display: grid;
+  width: 100%;
+  align-self: start;
+  align-content: start;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-3) var(--ah-space-4) var(--ah-space-5);
+}
+
+.info-page > h1 {
+  margin: 0 0 var(--ah-space-1);
+  font: 700 1.35rem/1.2 var(--ah-font-display);
+}
+
+.info-page > [role="alert"] {
+  color: var(--ah-color-danger);
+}
+
+.info-page .ah-tabs__list {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.info-page .ah-tabs__tab {
+  flex: 0 0 auto;
+}
+
+.info-faq,
+.info-faq section,
+.info-faq__items {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.info-faq {
+  gap: var(--ah-space-4);
+}
+
+.info-faq h2 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font: 800 0.75rem/1.25 var(--ah-font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.info-faq__item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.info-faq__item button {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-2);
+  min-height: 2.9rem;
+  padding: var(--ah-space-3);
+  color: var(--ah-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.info-faq__item button[aria-expanded="true"] {
+  color: var(--ah-color-primary);
+}
+
+.info-faq__item button[aria-expanded="true"] .ah-icon {
+  transform: rotate(-90deg);
+}
+
+.info-faq__item button[aria-expanded="false"] .ah-icon {
+  transform: rotate(90deg);
+}
+
+.info-faq__item > p {
+  margin: 0;
+  padding: 0 var(--ah-space-3) var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.info-club-page {
+  padding: var(--ah-space-2) 0;
+  overflow-wrap: anywhere;
+}
+
+.info-club-page > h2 {
+  margin: 0 0 var(--ah-space-3);
+  font-size: 1.05rem;
+}
+
+.info-club-page a {
+  color: var(--ah-color-primary);
+}
+
+.info-club-page__updated,
+.info-page__empty {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.info-club-page__updated {
+  margin-top: var(--ah-space-5);
+}
+
 @media (min-width: 30rem) {
   .clubs-shell,
   .auth-page {

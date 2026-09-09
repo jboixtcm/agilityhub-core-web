@@ -20,6 +20,38 @@
     "save": "SAVE",
     "saving": "Saving"
   },
+  "clubPages": {
+    "bodyField": "Content",
+    "deactivate": "Deactivate",
+    "defaultLocaleRequired": "Complete the title and content in the club's default language.",
+    "draft": "draft",
+    "duplicateKey": "A page with this key already exists.",
+    "editorTitle": "Edit page",
+    "fixed": {
+      "IMAGE_CONSENT": "Image consent",
+      "PRIVACY": "Privacy",
+      "RULES": "Club rules",
+      "WELCOME_GUIDE": "Welcome guide"
+    },
+    "invalidBody": "Review the content: only limited Markdown and up to 20,000 characters are allowed.",
+    "key": "Page key",
+    "keyHelp": "Between 2 and 40 characters: lowercase letters, numbers and hyphens.",
+    "loadError": "The club pages could not be loaded.",
+    "markdownHelp": "Supports headings, paragraphs, bold, italics, lists and links.",
+    "new": "Page",
+    "noContent": "no content",
+    "preview": "Preview",
+    "previewEmpty": "The preview will appear here.",
+    "provisional": "Provisional text — awaiting completion",
+    "publish": "Publish",
+    "publishConfirmation": "Version {version} will be published — future consents will refer to it",
+    "published": "published",
+    "publishTitle": "Publish page",
+    "saveDraft": "Save draft",
+    "stale": "Another administrator edited this page — reload it",
+    "titleField": "Title",
+    "versionDate": "version {version} · {date}"
+  },
   "days": {
     "long": {
       "FRIDAY": "Friday",
@@ -129,12 +161,6 @@
       "help": "Allows web notifications on the device.",
       "label": "Push notifications"
     }
-  },
-  "pages": {
-    "availableSoon": "Available soon",
-    "faq": "Frequently asked questions",
-    "navigation": "Club page editors",
-    "rules": "Club rules"
   },
   "param": {
     "activities": {

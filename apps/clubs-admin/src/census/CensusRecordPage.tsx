@@ -765,7 +765,7 @@ function MemberSummary({
           <Card>
             <SectionTitle>{t("admin-census:member.sections.invoicesAudit")}</SectionTitle>
             <ul className="census-record__invoice-list">
-              {overview.recentInvoices.map((invoice) => (
+              {(overview.recentInvoices ?? []).map((invoice) => (
                 <li key={invoice.id}>
                   <span>{formatDate(invoice.date, locale)}</span>
                   <span>
@@ -1523,7 +1523,7 @@ function DocumentList({
       if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
       const response = await fetch(signed.data.uploadUrl, {
         body: file,
-        headers: { "Content-Type": file.type },
+        headers: signed.data.headers,
         method: "PUT",
       });
       if (!response.ok) throw new TypeError("File upload failed");
@@ -1733,7 +1733,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
         setFailure(false);
         setSelectedLevel(dogResult.data.level?.id ?? "");
         setFreeOverride(
-          dogResult.data.freeTraining.override === null
+          dogResult.data.freeTraining?.override == null
             ? "level"
             : dogResult.data.freeTraining.override
               ? "true"
@@ -1790,7 +1790,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
               : t("admin-census:dog.status.inactive")}
           </Badge>
           {dog.level === undefined ? null : <Badge tone="info">{dog.level.code}</Badge>}
-          {branding.modules.includes("FREE_TRAINING") && dog.freeTraining.allowed ? (
+          {branding.modules.includes("FREE_TRAINING") && dog.freeTraining?.allowed ? (
             <Badge tone="success">{t("admin-census:values.freeTraining")}</Badge>
           ) : null}
         </div>
@@ -1879,7 +1879,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             </p>
           )}
           <ul className="census-record__history">
-            {dog.levelHistory.map((entry) => (
+            {(dog.levelHistory ?? []).map((entry) => (
               <li key={`${entry.levelId}-${entry.from}`}>
                 <strong>
                   {levels.find((level) => level.id === entry.levelId)?.code ?? entry.levelId}
@@ -1892,7 +1892,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             ))}
           </ul>
         </Card>
-        {branding.modules.includes("FREE_TRAINING") ? (
+        {branding.modules.includes("FREE_TRAINING") && dog.freeTraining !== undefined ? (
           <Card>
             <div className="census-record__section-heading">
               <SectionTitle>{t("admin-census:dog.sections.freeTraining")}</SectionTitle>
@@ -1961,7 +1961,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             />
           )}
         </Card>
-        {branding.modules.includes("TASKS") ? (
+        {branding.modules.includes("TASKS") && dog.tasksSummary !== undefined ? (
           <Card>
             <SectionTitle>{t("admin-census:dog.sections.instructorNotes")}</SectionTitle>
             <p>{dog.instructorNote?.text ?? t("admin-census:values.empty")}</p>
@@ -2303,7 +2303,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                   throw new TypeError("Upload response did not contain data");
                 const uploaded = await fetch(signed.data.uploadUrl, {
                   body: photo,
-                  headers: { "Content-Type": photo.type },
+                  headers: signed.data.headers,
                   method: "PUT",
                 });
                 if (!uploaded.ok) throw new TypeError("Photo upload failed");
