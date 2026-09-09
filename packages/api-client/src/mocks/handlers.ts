@@ -2,6 +2,7 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import auditEntriesFixture from "./fixtures/audit-entries.json";
 import {
   catalogState,
   type Administrator,
@@ -26,6 +27,7 @@ import {
   type MemberListItem,
   type SavedView,
 } from "./fixtures/census";
+import exportJobsFixture from "./fixtures/export-jobs.json";
 import {
   meDogsFixture,
   meProfileFixture,
@@ -103,6 +105,10 @@ type PriceCreate = components["schemas"]["PriceCreate"];
 type RingCreate = components["schemas"]["RingCreate"];
 type RingOrder = components["schemas"]["RingOrder"];
 type RingPatch = components["schemas"]["RingPatch"];
+type AuditEntry = components["schemas"]["AuditEntry"];
+type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
+type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
+type ExportJob = components["schemas"]["ExportJob"];
 
 function pageText(source: Record<string, string>, locale: string): string {
   const normalized = locale.split("-")[0] ?? locale;
@@ -123,6 +129,10 @@ const savedViews: SavedView[] = initialSavedViews.map((view) => ({
   filters: view.filters.map((filter) => ({ ...filter })),
   sort: [...view.sort],
 }));
+const auditEntries = structuredClone(auditEntriesFixture) as AuditEntryListItem[];
+const initialExportJobs = structuredClone(exportJobsFixture) as ExportJob[];
+let exportJobsState = structuredClone(initialExportJobs);
+let exportPolls = 0;
 
 let memberDogsState: MeDogs = structuredClone(meDogsFixture);
 let memberProfileState: MeProfile = structuredClone(meProfileFixture);
@@ -209,6 +219,11 @@ function resetMemberSelfServiceState(): void {
   memberProfileState = structuredClone(meProfileFixture);
 }
 
+function resetAuditMockState(): void {
+  exportJobsState = structuredClone(initialExportJobs);
+  exportPolls = 0;
+}
+
 function changedParameter(current: Parameter, value: unknown, reason?: string): Parameter {
   const changedAt = "2026-09-09T17:00:00Z";
   return {
@@ -287,6 +302,18 @@ const dogFilterLabels: Readonly<Record<string, string>> = {
   registeredAt: "Data d'alta",
   sex: "Sexe",
   status: "Estat",
+};
+
+const auditFilterLabels: Readonly<Record<string, string>> = {
+  action: "Acció",
+  actorAccountId: "Actor",
+  actorRole: "Rol de l'actor",
+  at: "Data",
+  entityId: "Identificador de l'entitat",
+  entityType: "Tipus d'entitat",
+  impersonatedMemberId: "Abonat suplantat",
+  memberId: "Abonat",
+  origin: "Origen",
 };
 
 function parseFilters(url: URL): ListFilter[] | undefined {
@@ -468,6 +495,67 @@ function dogValues(item: DogListItem, field: string): string[] | undefined {
     default:
       return undefined;
   }
+}
+
+function auditValues(item: AuditEntryListItem, field: string): string[] | undefined {
+  switch (field) {
+    case "action":
+      return [item.action];
+    case "actorAccountId":
+      return item.actorAccountId === undefined ? [] : [item.actorAccountId];
+    case "actorRole":
+      return [item.actorRole];
+    case "at":
+      return [item.at];
+    case "entityId":
+      return [item.entityId];
+    case "entityType":
+      return [item.entityType];
+    case "impersonatedMemberId":
+      return item.impersonatedMemberId === undefined ? [] : [item.impersonatedMemberId];
+    case "memberId":
+      return item.memberId === undefined ? [] : [item.memberId];
+    case "origin":
+      return [item.origin];
+    default:
+      return undefined;
+  }
+}
+
+function auditPage(
+  request: Request,
+  source: readonly AuditEntryListItem[],
+): AuditListResponse | undefined {
+  const url = new URL(request.url);
+  const filters = parseFilters(url);
+  if (
+    filters === undefined ||
+    filters.some((filter) => auditFilterLabels[filter.field] === undefined)
+  ) {
+    return undefined;
+  }
+  const query = normalized(url.searchParams.get("q") ?? "");
+  const searched =
+    query === ""
+      ? [...source]
+      : source.filter((entry) =>
+          [entry.action, entry.actorName ?? "", entry.entityLabel ?? "", entry.entityType].some(
+            (value) => normalized(value).includes(query),
+          ),
+        );
+  const filtered = filterItems(searched, filters, auditValues);
+  if (filtered === undefined) return undefined;
+  const direction = url.searchParams.getAll("sort")[0]?.endsWith(",asc") === true ? 1 : -1;
+  const sorted = [...filtered].sort((left, right) => left.at.localeCompare(right.at) * direction);
+  const { page, size } = pagination(url);
+  return {
+    appliedFilters: filters,
+    items: sorted.slice(page * size, (page + 1) * size),
+    page,
+    size,
+    totalItems: sorted.length,
+    totalPages: Math.ceil(sorted.length / size),
+  };
 }
 
 function filterItems<Item>(
@@ -1148,6 +1236,112 @@ export const handlers = [
       }
     }
     return HttpResponse.json(mockTokens());
+  }),
+  http.get("*/api/v1/audit-entries", async ({ request }) => {
+    await delay(80);
+    const page = auditPage(request, auditEntries);
+    return page === undefined
+      ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
+      : HttpResponse.json(page);
+  }),
+  http.get("*/api/v1/audit-entries/filter-values", ({ request }) => {
+    const url = new URL(request.url);
+    const field = url.searchParams.get("field") ?? "";
+    const filters = parseFilters(url);
+    if (
+      auditFilterLabels[field] === undefined ||
+      filters === undefined ||
+      filters.some((filter) => auditFilterLabels[filter.field] === undefined)
+    ) {
+      return apiError("INVALID_FILTER", "Invalid audit filter", 400);
+    }
+    const filtered = filterItems(
+      auditEntries,
+      filters.filter((filter) => filter.field !== field),
+      auditValues,
+    );
+    return filtered === undefined
+      ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
+      : HttpResponse.json({ field, values: facetValues(filtered, field, auditValues) });
+  }),
+  http.get("*/api/v1/audit-entries/export", ({ request }) => {
+    const requestedFormat = new URL(request.url).searchParams.get("format");
+    const format = requestedFormat === "pdf" ? "PDF" : "XLSX";
+    const job: ExportJob = {
+      createdAt: "2026-08-03T10:25:00Z",
+      format,
+      id: "00000000-0000-4000-8000-000000000402",
+      kind: "LIST",
+      listKey: "audit-entries",
+      progressPct: 0,
+      status: "QUEUED",
+    };
+    exportPolls = 0;
+    exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
+    return HttpResponse.json(
+      { jobId: job.id, statusUrl: `/api/v1/exports/${job.id}` },
+      { status: 202 },
+    );
+  }),
+  http.get("*/api/v1/audit-entries/:id", ({ params }) => {
+    const item = auditEntries.find((entry) => entry.id === String(params.id));
+    if (item === undefined) return apiError("NOT_FOUND", "Audit entry not found", 404);
+    const detail: AuditEntry = {
+      ...item,
+      eventIds: ["00000000-0000-4000-8000-000000000501"],
+      traceId: "00000000-0000-4000-8000-000000000601",
+    };
+    return HttpResponse.json(detail);
+  }),
+  http.get("*/api/v1/members/:id/audit-entries", async ({ request }) => {
+    await delay(80);
+    const memberEntries = auditEntries.filter(
+      (entry) =>
+        entry.memberId === "00000000-0000-4000-8000-000000000087" ||
+        entry.impersonatedMemberId === "00000000-0000-4000-8000-000000000087",
+    );
+    const page = auditPage(request, memberEntries);
+    return page === undefined
+      ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
+      : HttpResponse.json(page);
+  }),
+  http.get("*/api/v1/exports", () => {
+    exportPolls += 1;
+    if (exportPolls >= 2) {
+      exportJobsState = exportJobsState.map((job) =>
+        job.status === "QUEUED" || job.status === "RUNNING"
+          ? {
+              ...job,
+              downloadUrl: `/api/v1/exports/${job.id}/download`,
+              expiresAt: "2026-08-10T10:25:00Z",
+              fileName: `auditoria_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
+              progressPct: 100,
+              rows: auditEntries.length,
+              status: "READY",
+            }
+          : job,
+      );
+    }
+    return HttpResponse.json(exportJobsState);
+  }),
+  http.get("*/api/v1/exports/:id/download", ({ params }) => {
+    const job = exportJobsState.find((item) => item.id === String(params.id));
+    const pdf = job?.format === "PDF";
+    const fileName = `auditoria_20260803-1025.${pdf ? "pdf" : "xlsx"}`;
+    return new HttpResponse("mock audit export", {
+      headers: {
+        "Content-Disposition": `attachment; filename="${fileName}"`,
+        "Content-Type": pdf
+          ? "application/pdf"
+          : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
+  }),
+  http.get("*/api/v1/exports/:id", ({ params }) => {
+    const job = exportJobsState.find((item) => item.id === String(params.id));
+    return job === undefined
+      ? apiError("NOT_FOUND", "Export not found", 404)
+      : HttpResponse.json(job);
   }),
   http.get("*/api/v1/members", async ({ request }) => {
     await delay(120);
@@ -2262,6 +2456,7 @@ export const handlers = [
 
 export {
   mockScenario,
+  resetAuditMockState,
   resetCatalogState,
   resetCensusRecordState,
   resetMemberSelfServiceState,

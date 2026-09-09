@@ -11,6 +11,10 @@ const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
 const openapiSchemaId = "https://agilityhub.local/openapi.json";
 
 const schemasByFixture: Readonly<Record<string, AnySchema>> = {
+  "audit-entries.json": {
+    items: { $ref: `${openapiSchemaId}#/components/schemas/AuditEntryListItem` },
+    type: "array",
+  },
   "branding-canic.json": {
     $ref: `${openapiSchemaId}#/components/schemas/BrandingResponse`,
   },
@@ -19,6 +23,10 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
   },
   "club-pages.json": {
     items: { $ref: `${openapiSchemaId}#/components/schemas/ClubPage` },
+    type: "array",
+  },
+  "export-jobs.json": {
+    items: { $ref: `${openapiSchemaId}#/components/schemas/ExportJob` },
     type: "array",
   },
   "me-admin.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },

@@ -18,6 +18,8 @@ import {
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useOptionalExportsDrawer } from "../audit/ExportsDrawer";
+
 type MemberListItem = components["schemas"]["MemberListItem"];
 type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
   components["schemas"]["DogPendingFields"] & {
@@ -29,6 +31,7 @@ type DogListResponse = components["schemas"]["ListPageDogListItem"];
 type SavedView = components["schemas"]["SavedView"];
 type SavedViewCreate = components["schemas"]["SavedViewCreate"];
 type SavedViewUpdate = components["schemas"]["SavedViewUpdate"];
+type ExportAccepted = components["schemas"]["ExportAccepted"];
 
 type CensusKind = "dogs" | "members";
 
@@ -387,6 +390,8 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   const savedViews = useSavedViews(client, kind, applySavedView);
   const loadFilterValues = useFilterValues(client, kind, state);
   const activeCount = useActiveCount(client, kind);
+  const exportsDrawer = useOptionalExportsDrawer();
+  const [exportError, setExportError] = useState<string>();
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
 
   const operatorLabels: Record<UniversalFilterOperator, string> = {
@@ -879,11 +884,56 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   };
 
   const errorMessage =
-    error === undefined
+    exportError ??
+    (error === undefined
       ? undefined
       : isApiError(error, "INVALID_FILTER")
         ? t("errors:INVALID_FILTER")
-        : t("census:list.genericError");
+        : t("census:list.genericError"));
+
+  const runExport = async (format: "pdf" | "xlsx", current: UniversalListState) => {
+    setExportError(undefined);
+    const query = {
+      columns: current.columns.join(","),
+      filter: apiFilters(current.filters),
+      format,
+      ...(current.q === "" ? {} : { q: current.q }),
+      sort: current.sort,
+    };
+    try {
+      const result =
+        kind === "members"
+          ? await client.GET("/members/export", { params: { query } })
+          : await client.GET("/dogs/export", { params: { query } });
+      if (result.response.status === 202) {
+        const accepted = result.data as ExportAccepted | undefined;
+        if (accepted === undefined || typeof accepted !== "object" || !("jobId" in accepted)) {
+          throw new TypeError("Queued export response did not contain a job id");
+        }
+        exportsDrawer?.openExports({ jobId: accepted.jobId });
+        return;
+      }
+      const contents = typeof result.data === "string" ? result.data : "";
+      const url = URL.createObjectURL(
+        new Blob([contents], {
+          type: result.response.headers.get("Content-Type") ?? "application/octet-stream",
+        }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        result.response.headers.get("Content-Disposition")?.match(/filename="?([^";]+)"?/u)?.[1] ??
+        `${kind}.${format}`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (reason) {
+      if (isApiError(reason, "EXPORT_LIMIT")) {
+        exportsDrawer?.openExports({ errorCode: "EXPORT_LIMIT" });
+      } else {
+        setExportError(t("census:list.genericError"));
+      }
+    }
+  };
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const definitions = kind === "members" ? memberFilterColumns : dogFilterColumns;
     const value = filterValue(filter.value);
@@ -966,6 +1016,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           loading={loading}
           onCreateView={savedViews.create}
           onDeleteView={savedViews.remove}
+          {...(exportsDrawer === undefined
+            ? {}
+            : { onExport: (format, current) => void runExport(format, current) })}
           onRenameView={savedViews.rename}
           onRetry={retry}
           onStateChange={setState}
@@ -1000,6 +1053,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           loading={loading}
           onCreateView={savedViews.create}
           onDeleteView={savedViews.remove}
+          {...(exportsDrawer === undefined
+            ? {}
+            : { onExport: (format, current) => void runExport(format, current) })}
           onRenameView={savedViews.rename}
           onRetry={retry}
           onStateChange={setState}

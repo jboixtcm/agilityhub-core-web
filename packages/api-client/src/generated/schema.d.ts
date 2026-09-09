@@ -196,7 +196,7 @@ export interface paths {
         };
         /**
          * Audit entries
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-11. Tenant-scoped audit, newest first; ADMIN only and impersonation is rejected. Member history includes direct and impersonated entries. Sensitive details and changes are masked.
          */
         get: operations["auditEntries"];
         put?: never;
@@ -216,11 +216,15 @@ export interface paths {
         };
         /**
          * Export audit entries
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Nested sensitive details and changes are masked. Up to 5,000 rows inline; larger exports queue the existing background worker.
          */
         get: operations["exportAuditEntries"];
         put?: never;
-        post?: never;
+        /**
+         * Export audit entries
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Nested sensitive details and changes are masked. Up to 5,000 rows inline; larger exports queue the existing background worker.
+         */
+        post: operations["exportAuditEntries_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -236,7 +240,7 @@ export interface paths {
         };
         /**
          * Audit filter values
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-11. Tenant-scoped audit, newest first; ADMIN only and impersonation is rejected. Member history includes direct and impersonated entries. Sensitive details and changes are masked.
          */
         get: operations["auditFilterValues"];
         put?: never;
@@ -256,7 +260,7 @@ export interface paths {
         };
         /**
          * Audit entry
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-11. Tenant-scoped audit, newest first; ADMIN only and impersonation is rejected. Member history includes direct and impersonated entries. Sensitive details and changes are masked.
          */
         get: operations["auditEntry"];
         put?: never;
@@ -1576,7 +1580,7 @@ export interface paths {
         };
         /**
          * Member audit entries
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-11. Tenant-scoped audit, newest first; ADMIN only and impersonation is rejected. Member history includes direct and impersonated entries. Sensitive details and changes are masked.
          */
         get: operations["memberAuditEntries"];
         put?: never;
@@ -2523,7 +2527,7 @@ export interface components {
             url: string;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -2577,6 +2581,9 @@ export interface components {
             changes: components["schemas"]["AuditChange"][];
             /** Format: uuid */
             clubId?: string;
+            details?: {
+                [key: string]: unknown;
+            };
             /** Format: uuid */
             entityId: string;
             entityLabel?: string;
@@ -3393,7 +3400,7 @@ export interface components {
             actorName?: string;
             /** Format: date-time */
             at: string;
-        };
+        } | null;
         Legal: {
             privacyPolicyUrl: string;
         };
@@ -6188,7 +6195,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<AuditEntryListItem> */
+            /** @description ListPage<AuditEntryListItem>; fields selects a sparse projection */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -6301,6 +6308,153 @@ export interface operations {
         };
     };
     exportAuditEntries: {
+        parameters: {
+            query: {
+                format: "xlsx" | "pdf";
+                columns?: string;
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export file */
+            200: {
+                headers: {
+                    "Content-Disposition"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            /** @description Queued export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportAccepted"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_TOO_LARGE, EXPORT_LIMIT */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    exportAuditEntries_1: {
         parameters: {
             query: {
                 format: "xlsx" | "pdf";
@@ -17292,7 +17446,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<AuditEntryListItem> */
+            /** @description ListPage<AuditEntryListItem>; fields selects a sparse projection */
             200: {
                 headers: {
                     [name: string]: unknown;

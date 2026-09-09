@@ -18,6 +18,7 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { AuditTrail } from "../audit/AuditPage";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -784,7 +785,7 @@ function MemberSummary({
                 <Icon aria-hidden="true" name="doc" />
                 {t("admin-census:member.invoice.all", { count: overview.invoicesCount })}
               </a>
-              <a href="/auditoria">
+              <a href={`/abonats/${member.id}/auditoria`}>
                 <Icon aria-hidden="true" name="lock" />
                 {t("admin-census:member.audit.all")}
               </a>
@@ -1272,7 +1273,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               ]
             : []),
           {
-            content: <p>{t("admin-census:member.tabs.auditPlaceholder")}</p>,
+            content: <AuditTrail client={client} memberId={member.id} />,
             label: t("admin-census:member.tabs.audit"),
             value: "audit",
           },

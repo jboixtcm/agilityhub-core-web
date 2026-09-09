@@ -95,6 +95,11 @@ const level = (
   color,
   grantsFreeTraining,
   id: `level-${code.toLocaleLowerCase()}`,
+  lastChange: {
+    action: "CATALOG_CHANGED",
+    actorName: "Jordi",
+    at: "2026-09-09T16:30:00Z",
+  },
   name,
   nameI18n: { ca: name, en: name, es: name },
   order,

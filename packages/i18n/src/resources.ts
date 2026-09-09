@@ -7,6 +7,7 @@ type ResourceLoader = () => Promise<{ default: Messages }>;
 
 const loaders = {
   ca: {
+    "admin-audit": () => import("./locales/ca/admin-audit.json"),
     "admin-catalogs": () => import("./locales/ca/admin-catalogs.json"),
     "admin-census": () => import("./locales/ca/admin-census.json"),
     "admin-settings": () => import("./locales/ca/admin-settings.json"),
@@ -18,6 +19,7 @@ const loaders = {
     shell: () => import("./locales/ca/shell.json"),
   },
   en: {
+    "admin-audit": () => import("./locales/en/admin-audit.json"),
     "admin-catalogs": () => import("./locales/en/admin-catalogs.json"),
     "admin-census": () => import("./locales/en/admin-census.json"),
     "admin-settings": () => import("./locales/en/admin-settings.json"),
@@ -29,6 +31,7 @@ const loaders = {
     shell: () => import("./locales/en/shell.json"),
   },
   es: {
+    "admin-audit": () => import("./locales/es/admin-audit.json"),
     "admin-catalogs": () => import("./locales/es/admin-catalogs.json"),
     "admin-census": () => import("./locales/es/admin-census.json"),
     "admin-settings": () => import("./locales/es/admin-settings.json"),

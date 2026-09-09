@@ -1,0 +1,84 @@
+[
+  {
+    "action": "MEMBER_PAYMENT_METHOD_CHANGED",
+    "actorAccountId": "00000000-0000-4000-8000-000000000001",
+    "actorName": "Jordi Soler",
+    "actorRole": "ADMIN",
+    "at": "2026-08-03T10:15:00Z",
+    "changes": [
+      {
+        "after": "···· ···· ···· ···· 8867",
+        "before": "···· ···· ···· ···· 2231",
+        "path": "paymentMethod.iban"
+      }
+    ],
+    "entityId": "00000000-0000-4000-8000-000000000087",
+    "entityLabel": "Laura Serra Vidal",
+    "entityType": "Member",
+    "id": "00000000-0000-4000-8000-000000000101",
+    "memberId": "00000000-0000-4000-8000-000000000087",
+    "origin": "BACKOFFICE"
+  },
+  {
+    "action": "MEMBER_PLAN_CHANGED",
+    "actorAccountId": "00000000-0000-4000-8000-000000000001",
+    "actorName": "Jordi Soler",
+    "actorRole": "ADMIN",
+    "at": "2026-08-02T17:40:00Z",
+    "changes": [
+      {
+        "after": "Pack 10",
+        "before": "Abonat",
+        "path": "plan.name"
+      }
+    ],
+    "entityId": "00000000-0000-4000-8000-000000000087",
+    "entityLabel": "Laura Serra Vidal",
+    "entityType": "Member",
+    "id": "00000000-0000-4000-8000-000000000102",
+    "impersonatedMemberId": "00000000-0000-4000-8000-000000000087",
+    "impersonatedName": "Laura Serra Vidal",
+    "memberId": "00000000-0000-4000-8000-000000000087",
+    "origin": "BACKOFFICE"
+  },
+  {
+    "action": "DOG_LEVEL_CHANGED",
+    "actorRole": "SYSTEM",
+    "at": "2026-08-01T08:00:00Z",
+    "changes": [
+      {
+        "after": "Nivell D",
+        "before": "Nivell C",
+        "path": "level.name"
+      }
+    ],
+    "entityId": "00000000-0000-4000-8000-000000000201",
+    "entityLabel": "Duna",
+    "entityType": "Dog",
+    "id": "00000000-0000-4000-8000-000000000103",
+    "memberId": "00000000-0000-4000-8000-000000000087",
+    "origin": "SYSTEM"
+  },
+  {
+    "action": "PARAMETER_CHANGED",
+    "actorAccountId": "00000000-0000-4000-8000-000000000002",
+    "actorName": "Aina Serra",
+    "actorRole": "ADMIN",
+    "at": "2026-07-31T16:30:00Z",
+    "changes": [
+      {
+        "after": 5,
+        "before": 4,
+        "path": "classes.levelCapacity"
+      }
+    ],
+    "details": {
+      "scope": "CLUB"
+    },
+    "entityId": "00000000-0000-4000-8000-000000000301",
+    "entityLabel": "Capacitat per nivell",
+    "entityType": "Parameter",
+    "id": "00000000-0000-4000-8000-000000000104",
+    "origin": "BACKOFFICE"
+  }
+]

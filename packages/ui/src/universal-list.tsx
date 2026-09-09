@@ -1,6 +1,7 @@
 import {
   type ChangeEvent,
   type DragEvent,
+  type MouseEvent,
   type ReactNode,
   useEffect,
   useMemo,
@@ -157,8 +158,10 @@ export interface UniversalListProps<Row> {
     state: UniversalListState,
   ) => Promise<UniversalListSavedView>;
   onDeleteView: (id: string) => Promise<void>;
+  onExport?: (format: "pdf" | "xlsx", state: UniversalListState) => void;
   onRenameView: (view: UniversalListSavedView, name: string) => Promise<UniversalListSavedView>;
   onRetry: () => void;
+  onRowActivate?: (row: Row) => void;
   onStateChange: (state: UniversalListState) => void;
   rowHref: (row: Row) => string;
   rowKey: (row: Row) => string;
@@ -277,8 +280,10 @@ export function UniversalList<Row>({
   loading = false,
   onCreateView,
   onDeleteView,
+  onExport,
   onRenameView,
   onRetry,
+  onRowActivate,
   onStateChange,
   rowHref,
   rowKey,
@@ -373,6 +378,21 @@ export function UniversalList<Row>({
   const selectedIds = [...selected];
   const selectedView = savedViews.find((view) => view.id === selectedViewId);
   const statusValue = currentStatus(state, statusFilter.field);
+
+  const activateRow = (event: MouseEvent<HTMLAnchorElement>, row: Row) => {
+    if (
+      onRowActivate === undefined ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    event.preventDefault();
+    onRowActivate(row);
+  };
 
   const changeFilterField = (event: ChangeEvent<HTMLSelectElement>) => {
     const field = event.currentTarget.value;
@@ -766,12 +786,35 @@ export function UniversalList<Row>({
             {labels.export}
           </summary>
           <div className="ah-universal-list__menu-panel">
-            <a download href={getExportHref("xlsx", state)}>
-              {labels.formatXlsx}
-            </a>
-            <a download href={getExportHref("pdf", state)}>
-              {labels.formatPdf}
-            </a>
+            {onExport === undefined ? (
+              <>
+                <a download href={getExportHref("xlsx", state)}>
+                  {labels.formatXlsx}
+                </a>
+                <a download href={getExportHref("pdf", state)}>
+                  {labels.formatPdf}
+                </a>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    onExport("xlsx", state);
+                  }}
+                  type="button"
+                >
+                  {labels.formatXlsx}
+                </button>
+                <button
+                  onClick={() => {
+                    onExport("pdf", state);
+                  }}
+                  type="button"
+                >
+                  {labels.formatPdf}
+                </button>
+              </>
+            )}
           </div>
         </details>
       </div>
@@ -862,11 +905,23 @@ export function UniversalList<Row>({
                       ) : null}
                       {visibleColumns.map((column) => (
                         <td key={column.key}>
-                          <a href={href}>{column.render(row)}</a>
+                          <a
+                            href={href}
+                            onClick={(event) => {
+                              activateRow(event, row);
+                            }}
+                          >
+                            {column.render(row)}
+                          </a>
                         </td>
                       ))}
                       <td className="ah-universal-list__chevron">
-                        <a href={href}>
+                        <a
+                          href={href}
+                          onClick={(event) => {
+                            activateRow(event, row);
+                          }}
+                        >
                           <Icon aria-hidden="true" name="chev" />
                           <span className="ah-sr-only">{labels.selectRow(row)}</span>
                         </a>

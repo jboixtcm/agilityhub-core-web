@@ -27,6 +27,8 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
+import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
 import { PlansPage } from "./catalogs/PlansPage";
 import { RingsPage } from "./catalogs/RingsPage";
 import { SettingsPage } from "./catalogs/SettingsPage";
@@ -53,6 +55,7 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screens D5 and D10.
   { path: "/abonats", roles: ["ADMIN"] },
   { path: "/abonats/:id", roles: ["ADMIN"] },
+  { path: "/abonats/:id/auditoria", roles: ["ADMIN"] },
   // Screen D15.
   { path: "/gossos", roles: ["ADMIN"] },
   { path: "/gossos/:id", roles: ["ADMIN"] },
@@ -345,6 +348,9 @@ function routeContent(
   if (route.path === "/abonats/:id") {
     return <MemberRecordPage client={client} />;
   }
+  if (route.path === "/abonats/:id/auditoria") {
+    return <MemberAuditPage client={client} />;
+  }
   if (route.path === "/gossos/:id") {
     return <DogRecordPage client={client} />;
   }
@@ -359,6 +365,9 @@ function routeContent(
   }
   if (route.path === "/modalitats") {
     return <PlansPage client={client} />;
+  }
+  if (route.path === "/auditoria") {
+    return <AuditPage client={client} />;
   }
   return <Placeholder />;
 }
@@ -376,7 +385,8 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
 function AdminShell({ children }: { children: ReactNode }) {
   const branding = useBranding();
   const session = useSession();
-  const { t } = useTranslation("shell");
+  const { t } = useTranslation(["shell", "admin-audit"]);
+  const { openExports } = useExportsDrawer();
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
 
   return (
@@ -394,6 +404,15 @@ function AdminShell({ children }: { children: ReactNode }) {
         </div>
         <div className="admin-shell__actions">
           <LanguageSelector />
+          <button
+            aria-label={t("admin-audit:exports.open")}
+            onClick={() => {
+              openExports();
+            }}
+            type="button"
+          >
+            <Icon aria-hidden="true" name="export" />
+          </button>
           <button aria-label={t("shell:header.userMenu")} type="button">
             <Icon aria-hidden="true" name="user" />
           </button>
@@ -551,7 +570,9 @@ export function App({ authClient }: { authClient: AuthClient }) {
   const route = currentRoute(window.location.pathname) ?? currentRoute("/tauler");
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
-      <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+      <ExportJobsProvider client={client}>
+        <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+      </ExportJobsProvider>
     </OnboardingExperience>
   );
 }

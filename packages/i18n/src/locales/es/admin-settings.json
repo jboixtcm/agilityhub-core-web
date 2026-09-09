@@ -143,11 +143,9 @@
     }
   },
   "history": {
-    "globalTitle": "Historial de parámetros",
     "open": "Mostrar el historial de {label}",
     "parameterTitle": "Historial · {label}"
   },
-  "lastChange": "último cambio: {key} · {date} · {actor} — con historial",
   "modules": {
     "FAQ": {
       "help": "Muestra la página de preguntas frecuentes en la app.",
@@ -663,7 +661,6 @@
     "no": "No",
     "noHolidays": "Ningún festivo",
     "notConfigured": "No configurado",
-    "system": "Sistema",
     "todayPlusDays": "día actual + {count} días",
     "weekOpensAt": "{day} {time}",
     "yes": "Sí"

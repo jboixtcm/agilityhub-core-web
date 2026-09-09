@@ -1,0 +1,15 @@
+[
+  {
+    "createdAt": "2026-08-03T10:20:00Z",
+    "downloadUrl": "/api/v1/exports/00000000-0000-4000-8000-000000000401/download",
+    "expiresAt": "2026-08-10T10:20:00Z",
+    "fileName": "auditoria_20260803.xlsx",
+    "format": "XLSX",
+    "id": "00000000-0000-4000-8000-000000000401",
+    "kind": "LIST",
+    "listKey": "audit-entries",
+    "progressPct": 100,
+    "rows": 4,
+    "status": "READY"
+  }
+]

@@ -1,0 +1,103 @@
+{
+  "actions": {
+    "CATALOG_CHANGED": "Catàleg modificat",
+    "DATA_EXPORTED": "Dades exportades",
+    "DOG_LEVEL_CHANGED": "Nivell del gos modificat",
+    "IMPERSONATION_STARTED": "Suplantació iniciada",
+    "MEMBER_PAYMENT_METHOD_CHANGED": "Mètode de pagament modificat",
+    "MEMBER_PLAN_CHANGED": "Modalitat modificada",
+    "MEMBER_UPDATED": "Dades de l'abonat modificades",
+    "PARAMETER_CHANGED": "Configuració modificada"
+  },
+  "asMember": "com l'abonat: {name}",
+  "caption": "Entrades d'auditoria",
+  "changesCount": "{count, plural, =0 {Cap canvi} one {# canvi} other {# canvis}}",
+  "columns": {
+    "action": "Acció",
+    "actor": "Actor",
+    "asMember": "Com l'abonat",
+    "at": "Data",
+    "changes": "Canvis",
+    "details": "Detalls",
+    "entity": "Entitat",
+    "origin": "Origen"
+  },
+  "drawer": {
+    "action": "Acció",
+    "actor": "Actor",
+    "after": "Després",
+    "before": "Abans",
+    "changes": "Canvis",
+    "close": "Tanca el detall del canvi",
+    "details": "Detalls",
+    "entity": "Entitat",
+    "genericError": "No s'ha pogut carregar el detall del canvi.",
+    "loading": "Carregant el detall del canvi…",
+    "noChanges": "Aquesta entrada no conté canvis de camps.",
+    "origin": "Origen",
+    "title": "Detall del canvi"
+  },
+  "emptyDescription": "Prova de canviar la cerca o els filtres.",
+  "emptyTitle": "No hi ha entrades d'auditoria",
+  "exports": {
+    "close": "Tanca les exportacions",
+    "created": "Creada el {date}",
+    "description": "Els fitxers preparats es poden descarregar durant set dies.",
+    "download": "Descarrega {fileName}",
+    "empty": "Encara no hi ha exportacions.",
+    "error": "No s'han pogut carregar les exportacions.",
+    "failed": "No s'ha pogut preparar el fitxer.",
+    "limit": "S'ha assolit el límit d'exportacions simultànies. Espera que en finalitzi una i torna-ho a provar.",
+    "loading": "Carregant les exportacions…",
+    "open": "Exportacions",
+    "progress": "{progress}% completat",
+    "queuedNotice": "Preparant l'exportació…",
+    "rows": "{count, plural, one {# fila} other {# files}}",
+    "status": {
+      "EXPIRED": "Caducada",
+      "FAILED": "Error",
+      "QUEUED": "En cua",
+      "READY": "Preparada",
+      "RUNNING": "En preparació"
+    },
+    "title": "Exportacions"
+  },
+  "filters": {
+    "action": "Acció",
+    "actor": "Actor",
+    "actorRole": "Rol de l'actor",
+    "allActions": "Totes les accions",
+    "asMember": "Abonat suplantat",
+    "at": "Data",
+    "entity": "Tipus d'entitat",
+    "entityId": "Identificador de l'entitat",
+    "origin": "Origen"
+  },
+  "genericError": "No s'ha pogut carregar l'auditoria.",
+  "lastChange": {
+    "compact": "{date} · {actor}",
+    "history": "amb històric",
+    "summary": "últim canvi: {action} · {date} · {actor}",
+    "system": "Sistema"
+  },
+  "memberCaption": "Entrades d'auditoria de l'abonat",
+  "memberTitle": "Auditoria de l'abonat",
+  "none": "—",
+  "origins": {
+    "APP": "App",
+    "BACKOFFICE": "Backoffice",
+    "SYSTEM": "Sistema",
+    "WEBHOOK": "Webhook"
+  },
+  "roles": {
+    "ADMIN": "Administrador",
+    "INSTRUCTOR": "Instructor",
+    "MEMBER": "Abonat",
+    "PLATFORM": "Plataforma",
+    "SYSTEM": "Sistema",
+    "WEBHOOK": "Webhook"
+  },
+  "rowLabel": "Obre el canvi «{action}»",
+  "search": "Cerca per acció, actor o entitat",
+  "title": "Auditoria"
+}

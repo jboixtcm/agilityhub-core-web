@@ -17,6 +17,8 @@ import {
 import { Fragment, type SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { LastChange } from "../audit/LastChange";
+
 import { ClubPagesCard } from "./ClubPagesCard";
 import { buildDerivedSettingRows, type DerivedSettingRow } from "./derived-settings";
 import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
@@ -911,7 +913,6 @@ export function ParameterSettings({
   onModulesChange: (modules: string[]) => void;
   plans: readonly Plan[];
 }) {
-  const branding = useBranding();
   const formats = useClubFormats();
   const { i18n, t } = useTranslation("admin-settings");
   const messageForError = useCatalogError();
@@ -963,17 +964,6 @@ export function ParameterSettings({
         .filter((block) => block.key !== "system" && block.rows.length > 0),
     [data?.blocks, modules],
   );
-  const allHistory = useMemo(
-    () =>
-      blocks
-        .flatMap((block) =>
-          block.rows.flatMap((parameter) =>
-            parameter.history.map((item) => ({ ...item, key: parameter.key })),
-          ),
-        )
-        .sort((left, right) => right.changedAt.localeCompare(left.changedAt)),
-    [blocks],
-  );
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const derivedRows = useMemo(
     () => buildDerivedSettingRows({ clubSettings, levels, locale, modules, plans }),
@@ -1015,41 +1005,12 @@ export function ParameterSettings({
   };
 
   const lastChange = data?.lastChange;
-  const lastChangeAction =
-    lastChange === undefined
-      ? undefined
-      : blocks.flatMap((block) => block.rows).find((item) => item.key === lastChange.action);
 
   return (
     <>
       <header className="catalog-page__header settings-page__header">
         <h1>{t("admin-settings:title")}</h1>
-        {lastChange === undefined ? null : (
-          <button
-            className="settings-last-change"
-            onClick={() => {
-              setHistory({
-                items: allHistory,
-                loading: false,
-                title: t("admin-settings:history.globalTitle"),
-              });
-            }}
-            type="button"
-          >
-            {t("admin-settings:lastChange", {
-              actor: lastChange.actorName ?? t("admin-settings:value.system"),
-              date: new Intl.DateTimeFormat(locale, {
-                day: "2-digit",
-                month: "2-digit",
-                timeZone: branding.timeZone,
-              }).format(new Date(lastChange.at)),
-              key:
-                lastChangeAction === undefined
-                  ? lastChange.action
-                  : parameterLabel(t, lastChangeAction.key),
-            })}
-          </button>
-        )}
+        <LastChange entityType="Parameter" value={lastChange} />
       </header>
       {error === undefined ? null : (
         <LoadFailure

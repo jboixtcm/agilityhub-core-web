@@ -203,16 +203,24 @@
   padding: var(--ah-space-2);
 }
 
-.ah-universal-list__export a {
+.ah-universal-list__export a,
+.ah-universal-list__export button {
+  width: 100%;
   padding: var(--ah-space-2);
   color: var(--ah-color-text);
+  font: inherit;
   font-size: 0.8rem;
   font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
   text-decoration: none;
   border-radius: var(--ah-radius-sm);
 }
 
-.ah-universal-list__export a:hover {
+.ah-universal-list__export a:hover,
+.ah-universal-list__export button:hover {
   color: var(--ah-color-primary);
   background: var(--ah-color-surface-2);
 }

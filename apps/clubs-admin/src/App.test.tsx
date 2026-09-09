@@ -45,7 +45,7 @@ async function renderApplication(client: AuthClient) {
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["auth", "shell"],
+    initialNamespaces: ["admin-audit", "auth", "shell"],
     storage: undefined,
   });
   render(

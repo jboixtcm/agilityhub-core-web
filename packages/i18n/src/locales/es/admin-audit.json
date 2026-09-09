@@ -1,0 +1,103 @@
+{
+  "actions": {
+    "CATALOG_CHANGED": "Catálogo modificado",
+    "DATA_EXPORTED": "Datos exportados",
+    "DOG_LEVEL_CHANGED": "Nivel del perro modificado",
+    "IMPERSONATION_STARTED": "Suplantación iniciada",
+    "MEMBER_PAYMENT_METHOD_CHANGED": "Método de pago modificado",
+    "MEMBER_PLAN_CHANGED": "Modalidad modificada",
+    "MEMBER_UPDATED": "Datos del abonado modificados",
+    "PARAMETER_CHANGED": "Configuración modificada"
+  },
+  "asMember": "como el abonado: {name}",
+  "caption": "Entradas de auditoría",
+  "changesCount": "{count, plural, =0 {Ningún cambio} one {# cambio} other {# cambios}}",
+  "columns": {
+    "action": "Acción",
+    "actor": "Actor",
+    "asMember": "Como el abonado",
+    "at": "Fecha",
+    "changes": "Cambios",
+    "details": "Detalles",
+    "entity": "Entidad",
+    "origin": "Origen"
+  },
+  "drawer": {
+    "action": "Acción",
+    "actor": "Actor",
+    "after": "Después",
+    "before": "Antes",
+    "changes": "Cambios",
+    "close": "Cierra el detalle del cambio",
+    "details": "Detalles",
+    "entity": "Entidad",
+    "genericError": "No se ha podido cargar el detalle del cambio.",
+    "loading": "Cargando el detalle del cambio…",
+    "noChanges": "Esta entrada no contiene cambios de campos.",
+    "origin": "Origen",
+    "title": "Detalle del cambio"
+  },
+  "emptyDescription": "Prueba a cambiar la búsqueda o los filtros.",
+  "emptyTitle": "No hay entradas de auditoría",
+  "exports": {
+    "close": "Cierra las exportaciones",
+    "created": "Creada el {date}",
+    "description": "Los archivos preparados se pueden descargar durante siete días.",
+    "download": "Descarga {fileName}",
+    "empty": "Todavía no hay exportaciones.",
+    "error": "No se han podido cargar las exportaciones.",
+    "failed": "No se ha podido preparar el archivo.",
+    "limit": "Se ha alcanzado el límite de exportaciones simultáneas. Espera a que termine una y vuelve a intentarlo.",
+    "loading": "Cargando las exportaciones…",
+    "open": "Exportaciones",
+    "progress": "{progress}% completado",
+    "queuedNotice": "Preparando la exportación…",
+    "rows": "{count, plural, one {# fila} other {# filas}}",
+    "status": {
+      "EXPIRED": "Caducada",
+      "FAILED": "Error",
+      "QUEUED": "En cola",
+      "READY": "Preparada",
+      "RUNNING": "En preparación"
+    },
+    "title": "Exportaciones"
+  },
+  "filters": {
+    "action": "Acción",
+    "actor": "Actor",
+    "actorRole": "Rol del actor",
+    "allActions": "Todas las acciones",
+    "asMember": "Abonado suplantado",
+    "at": "Fecha",
+    "entity": "Tipo de entidad",
+    "entityId": "Identificador de la entidad",
+    "origin": "Origen"
+  },
+  "genericError": "No se ha podido cargar la auditoría.",
+  "lastChange": {
+    "compact": "{date} · {actor}",
+    "history": "con histórico",
+    "summary": "último cambio: {action} · {date} · {actor}",
+    "system": "Sistema"
+  },
+  "memberCaption": "Entradas de auditoría del abonado",
+  "memberTitle": "Auditoría del abonado",
+  "none": "—",
+  "origins": {
+    "APP": "App",
+    "BACKOFFICE": "Backoffice",
+    "SYSTEM": "Sistema",
+    "WEBHOOK": "Webhook"
+  },
+  "roles": {
+    "ADMIN": "Administrador",
+    "INSTRUCTOR": "Instructor",
+    "MEMBER": "Abonado",
+    "PLATFORM": "Plataforma",
+    "SYSTEM": "Sistema",
+    "WEBHOOK": "Webhook"
+  },
+  "rowLabel": "Abre el cambio «{action}»",
+  "search": "Busca por acción, actor o entidad",
+  "title": "Auditoría"
+}

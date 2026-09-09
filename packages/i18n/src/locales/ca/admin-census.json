@@ -240,7 +240,6 @@
     },
     "tabs": {
       "audit": "Auditoria",
-      "auditPlaceholder": "La consulta completa de l'auditoria s'incorpora a la fase d'auditoria.",
       "label": "Apartats de la fitxa",
       "summary": "Fitxa",
       "tasks": "Tasques",

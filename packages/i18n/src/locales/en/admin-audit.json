@@ -1,0 +1,103 @@
+{
+  "actions": {
+    "CATALOG_CHANGED": "Catalogue changed",
+    "DATA_EXPORTED": "Data exported",
+    "DOG_LEVEL_CHANGED": "Dog level changed",
+    "IMPERSONATION_STARTED": "Impersonation started",
+    "MEMBER_PAYMENT_METHOD_CHANGED": "Payment method changed",
+    "MEMBER_PLAN_CHANGED": "Plan changed",
+    "MEMBER_UPDATED": "Member details changed",
+    "PARAMETER_CHANGED": "Settings changed"
+  },
+  "asMember": "as member: {name}",
+  "caption": "Audit entries",
+  "changesCount": "{count, plural, =0 {No changes} one {# change} other {# changes}}",
+  "columns": {
+    "action": "Action",
+    "actor": "Actor",
+    "asMember": "As member",
+    "at": "Date",
+    "changes": "Changes",
+    "details": "Details",
+    "entity": "Entity",
+    "origin": "Origin"
+  },
+  "drawer": {
+    "action": "Action",
+    "actor": "Actor",
+    "after": "After",
+    "before": "Before",
+    "changes": "Changes",
+    "close": "Close change details",
+    "details": "Details",
+    "entity": "Entity",
+    "genericError": "The change details could not be loaded.",
+    "loading": "Loading change details…",
+    "noChanges": "This entry contains no field changes.",
+    "origin": "Origin",
+    "title": "Change details"
+  },
+  "emptyDescription": "Try changing the search or filters.",
+  "emptyTitle": "No audit entries",
+  "exports": {
+    "close": "Close exports",
+    "created": "Created on {date}",
+    "description": "Prepared files can be downloaded for seven days.",
+    "download": "Download {fileName}",
+    "empty": "There are no exports yet.",
+    "error": "Exports could not be loaded.",
+    "failed": "The file could not be prepared.",
+    "limit": "The concurrent export limit has been reached. Wait for one to finish and try again.",
+    "loading": "Loading exports…",
+    "open": "Exports",
+    "progress": "{progress}% complete",
+    "queuedNotice": "Preparing the export…",
+    "rows": "{count, plural, one {# row} other {# rows}}",
+    "status": {
+      "EXPIRED": "Expired",
+      "FAILED": "Failed",
+      "QUEUED": "Queued",
+      "READY": "Ready",
+      "RUNNING": "Preparing"
+    },
+    "title": "Exports"
+  },
+  "filters": {
+    "action": "Action",
+    "actor": "Actor",
+    "actorRole": "Actor role",
+    "allActions": "All actions",
+    "asMember": "Impersonated member",
+    "at": "Date",
+    "entity": "Entity type",
+    "entityId": "Entity identifier",
+    "origin": "Origin"
+  },
+  "genericError": "The audit trail could not be loaded.",
+  "lastChange": {
+    "compact": "{date} · {actor}",
+    "history": "view history",
+    "summary": "last change: {action} · {date} · {actor}",
+    "system": "System"
+  },
+  "memberCaption": "Member audit entries",
+  "memberTitle": "Member audit",
+  "none": "—",
+  "origins": {
+    "APP": "App",
+    "BACKOFFICE": "Back office",
+    "SYSTEM": "System",
+    "WEBHOOK": "Webhook"
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "INSTRUCTOR": "Instructor",
+    "MEMBER": "Member",
+    "PLATFORM": "Platform",
+    "SYSTEM": "System",
+    "WEBHOOK": "Webhook"
+  },
+  "rowLabel": "Open the “{action}” change",
+  "search": "Search by action, actor or entity",
+  "title": "Audit"
+}

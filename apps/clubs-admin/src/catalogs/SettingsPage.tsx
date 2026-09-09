@@ -12,6 +12,8 @@ import {
 import { type SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { LastChange } from "../audit/LastChange";
+
 import { ParameterSettings } from "./ParameterSettings";
 import {
   CatalogFeedback,
@@ -563,7 +565,17 @@ export function SettingsPage({ client }: { client: ApiClient }) {
               {
                 header: t("admin-catalogs:levels.columns.name"),
                 key: "name",
-                render: (item) => <strong>{item.name}</strong>,
+                render: (item) => (
+                  <span className="catalog-level-name">
+                    <strong>{item.name}</strong>
+                    <LastChange
+                      compact
+                      entityId={item.id}
+                      entityType="Level"
+                      value={"lastChange" in item ? item.lastChange : undefined}
+                    />
+                  </span>
+                ),
               },
               {
                 header: t("admin-catalogs:levels.columns.code"),

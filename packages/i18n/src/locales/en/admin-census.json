@@ -229,7 +229,6 @@
     },
     "tabs": {
       "audit": "Audit",
-      "auditPlaceholder": "The full audit view will be added in the audit stage.",
       "label": "Record sections",
       "summary": "Record",
       "tasks": "Tasks",

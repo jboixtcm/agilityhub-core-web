@@ -229,7 +229,6 @@
     },
     "tabs": {
       "audit": "Auditoría",
-      "auditPlaceholder": "La consulta completa de la auditoría se incorpora en la fase de auditoría.",
       "label": "Apartados de la ficha",
       "summary": "Ficha",
       "tasks": "Tareas",

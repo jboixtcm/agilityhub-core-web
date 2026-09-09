@@ -143,11 +143,9 @@
     }
   },
   "history": {
-    "globalTitle": "Històric de paràmetres",
     "open": "Mostra l'històric de {label}",
     "parameterTitle": "Històric · {label}"
   },
-  "lastChange": "últim canvi: {key} · {date} · {actor} — amb històric",
   "modules": {
     "FAQ": {
       "help": "Mostra la pàgina de preguntes freqüents a l'app.",
@@ -663,7 +661,6 @@
     "no": "No",
     "noHolidays": "Cap festiu",
     "notConfigured": "No configurat",
-    "system": "Sistema",
     "todayPlusDays": "dia en curs + {count} dies",
     "weekOpensAt": "{day} {time}",
     "yes": "Sí"
