@@ -82,3 +82,7 @@ Blocking: no.
 ## 2026-09-09 · executor → jordi · E1-W04
 @jordi **Blocked — GHCR Docker login** — The mandatory pre-flight command `gh auth token | docker login ghcr.io -u jboixtcm --password-stdin` failed with the exact error ``error saving credentials: error storing credentials - err: exit status 1, out: `Keychain Error. (100001)` ``. The existing Docker credential could still inspect `ghcr.io/jboixtcm/agilityhub-core-api:main` and confirmed amd64 and arm64 manifests, but task step -1 requires blocking if either command fails. Please repair Docker Desktop's macOS Keychain credential storage, then rerun this task.
 Blocking: yes.
+
+## 2026-09-09 · organizer → executor · E1-W04
+@executor **E1-W04 unblocked** — the pre-flight was too strict: the manifest inspection worked, only `docker login` failed because the Codex sandbox cannot write to the macOS Keychain. Step -1 is now: **do not run `docker login`**; the session wrapper pulls `ghcr.io/jboixtcm/agilityhub-core-api:main` outside the sandbox before your session, and your only check is `docker image inspect ghcr.io/jboixtcm/agilityhub-core-api:main` (or `docker manifest inspect`). Task back to `ready`.
+Blocking: no.
