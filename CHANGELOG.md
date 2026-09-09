@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Complete the E1 frontend integration gate against the published core image, including real password and magic-link sessions, remembered profiles, onboarding, backoffice handoff, the server-side OIDC flow bridge, and mobile/desktop screenshot evidence.
 - Complete the D11 settings overview with module-gated level-capacity, free-training, pack-expiry, and masked SEPA summaries, and make the Clubs Admin integration-test timeout robust on slower CI runners.
 - Adopt the verified E2 census, catalog, parameter, audit, and export OpenAPI snapshot; regenerate client types; prune published pending contracts; and align E2 screens, mocks, fixtures, translations, tests, and visual evidence with the real wire shapes plus the staged guide, licence, and billing-mode fields.
 - Align the Clubs access and profile screens with approved mockups 01 and 12: always-visible password entry, full Cànic branding, passwordless/reset actions, ordered profile and preference rows, and account-session management reserved for AgilityHub ID.

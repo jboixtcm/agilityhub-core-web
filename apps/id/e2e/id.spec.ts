@@ -14,16 +14,8 @@ test.describe("T-01-22 AgilityHub ID", () => {
   });
 
   test("logs in and continues the OIDC authorize flow", async ({ page }) => {
-    await page.route("**/oauth2/authorize**", async (route) => {
-      await route.fulfill({
-        headers: { location: "/products?authorization=complete" },
-        status: 302,
-      });
-    });
-    const continuation =
-      "/oauth2/authorize?response_type=code&client_id=ar-app&redirect_uri=https%3A%2F%2Far.example.test%2Fcallback&scope=openid%20profile&state=state-1&code_challenge=challenge&code_challenge_method=S256";
     await page.goto(
-      `${baseUrl}/login?login_hint=biel.roca%40example.test&ui_locales=ca&continue=${encodeURIComponent(continuation)}`,
+      `${baseUrl}/login?flow=mock-flow&login_hint=biel.roca%40example.test&ui_locales=ca`,
     );
 
     await expect(page.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
@@ -33,13 +25,12 @@ test.describe("T-01-22 AgilityHub ID", () => {
       path: resolve(evidenceDirectory, "login-1280.png"),
     });
 
-    const authorizeRequest = page.waitForRequest(
-      (request) =>
-        request.url().includes("/oauth2/authorize") && request.url().includes("state=state-1"),
+    const oidcSessionRequest = page.waitForRequest(
+      (request) => request.url().endsWith("/oauth2/session") && request.method() === "POST",
     );
     await page.getByLabel("Contrasenya").fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
-    await authorizeRequest;
+    expect((await oidcSessionRequest).postDataJSON()).toEqual({ flow: "mock-flow" });
     await page.waitForURL("**/products?authorization=complete");
     await expect(page.getByRole("heading", { name: "Els teus productes" })).toBeVisible();
 

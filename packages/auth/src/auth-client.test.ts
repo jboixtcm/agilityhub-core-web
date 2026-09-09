@@ -105,6 +105,28 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(sessionStorage).toHaveLength(0);
   });
 
+  it("normalizes the core's omitted empty scope before loading /me", async () => {
+    server.use(
+      http.post(TOKEN_ENDPOINT, () =>
+        HttpResponse.json({
+          access_token: "access-with-empty-scope",
+          expires_in: 900,
+          token_type: "Bearer",
+        }),
+      ),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+
+    await expect(client.login("biel.roca@example.test", "secret-password")).resolves.toEqual(
+      memberMe,
+    );
+    expect(client.getAccessToken()).toBe("access-with-empty-scope");
+  });
+
   it("routes OAuth2 requests to identity and application auth requests to core", async () => {
     const refreshStore = new MemoryRefreshTokenStore();
     const requestedUrls: string[] = [];
@@ -352,6 +374,44 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(client.getAccessToken()).toBe("access-restored");
     expect(localStorage).toHaveLength(0);
     expect(sessionStorage).toHaveLength(0);
+  });
+
+  it("T-01-04 coalesces restore calls until both refresh and /me complete", async () => {
+    let completeMe: (() => void) | undefined;
+    let meRequests = 0;
+    let notifyMeStarted: (() => void) | undefined;
+    let refreshRequests = 0;
+    const meStarted = new Promise<void>((resolve) => {
+      notifyMeStarted = resolve;
+    });
+    const meCanComplete = new Promise<void>((resolve) => {
+      completeMe = resolve;
+    });
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        refreshRequests += 1;
+        return HttpResponse.json(tokens("access-restored"));
+      }),
+      http.get(`${API_BASE_URL}/me`, async () => {
+        meRequests += 1;
+        notifyMeStarted?.();
+        await meCanComplete;
+        return HttpResponse.json(memberMe);
+      }),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+
+    const first = client.restoreSession();
+    await meStarted;
+    const second = client.restoreSession();
+    completeMe?.();
+
+    await expect(Promise.all([first, second])).resolves.toEqual([memberMe, memberMe]);
+    expect(refreshRequests).toBe(1);
+    expect(meRequests).toBe(1);
   });
 
   it.each([400, 401])(

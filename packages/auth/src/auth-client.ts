@@ -17,6 +17,7 @@ export type Role = components["schemas"]["Profile"];
 export type TokenResponse = components["schemas"]["TokenResponse"];
 export type AccountSession = components["schemas"]["Session"];
 export type HandoffResponse = components["schemas"]["HandoffResponse"];
+export type OidcSessionResponse = components["schemas"]["OidcSessionResponse"];
 export type MagicLinkPurpose = components["schemas"]["MagicLinkRequest"]["purpose"];
 export type OnboardingRequest = components["schemas"]["OnboardingRequest"];
 export type OnboardingState = components["schemas"]["OnboardingState"];
@@ -44,7 +45,7 @@ function isAccountLocale(locale: string): locale is AccountLocale {
   return locale === "ca" || locale === "es" || locale === "en";
 }
 
-function isTokenResponse(value: unknown): value is TokenResponse {
+function matchesTokenResponse(value: unknown): boolean {
   if (typeof value !== "object" || value === null) {
     return false;
   }
@@ -54,7 +55,7 @@ function isTokenResponse(value: unknown): value is TokenResponse {
     (token.refresh_token === undefined || typeof token.refresh_token === "string") &&
     typeof token.token_type === "string" &&
     typeof token.expires_in === "number" &&
-    typeof token.scope === "string"
+    (token.scope === undefined || typeof token.scope === "string")
   );
 }
 
@@ -71,6 +72,7 @@ export class AuthClient extends EventTarget {
   private refreshAt: number | null = null;
   private refreshInFlight: Promise<TokenResponse> | null = null;
   private refreshTimer: ReturnType<typeof setTimeout> | undefined;
+  private restoreInFlight: Promise<Me | null> | null = null;
   private signedOutNotified = false;
   private slidingRefreshActive = false;
 
@@ -303,6 +305,26 @@ export class AuthClient extends EventTarget {
     return (await response.json()) as HandoffResponse;
   }
 
+  async resumeOidcFlow(flow: string): Promise<OidcSessionResponse> {
+    const response = await this.routedRequest("/oauth2/session", {
+      body: JSON.stringify({ flow } satisfies components["schemas"]["OidcSessionRequest"]),
+      headers: {
+        Authorization: `Bearer ${this.accessToken ?? ""}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+    const payload: unknown = await response.json();
+    if (
+      typeof payload !== "object" ||
+      payload === null ||
+      typeof (payload as Partial<OidcSessionResponse>).redirectUrl !== "string"
+    ) {
+      throw new TypeError("The OIDC session response did not match the OpenAPI contract");
+    }
+    return payload as OidcSessionResponse;
+  }
+
   async refresh(): Promise<TokenResponse> {
     if (this.refreshInFlight !== null) {
       return this.refreshInFlight;
@@ -323,6 +345,22 @@ export class AuthClient extends EventTarget {
     if (this.currentMe !== null && this.accessToken !== null) {
       return this.currentMe;
     }
+    if (this.restoreInFlight !== null) {
+      return this.restoreInFlight;
+    }
+
+    const operation = this.performRestoreSession();
+    this.restoreInFlight = operation;
+    try {
+      return await operation;
+    } finally {
+      if (this.restoreInFlight === operation) {
+        this.restoreInFlight = null;
+      }
+    }
+  }
+
+  private async performRestoreSession(): Promise<Me | null> {
     try {
       await this.refresh();
       const me = await this.loadMe();
@@ -442,10 +480,12 @@ export class AuthClient extends EventTarget {
       throw await ApiError.fromResponse(response);
     }
     const payload: unknown = await response.json();
-    if (!isTokenResponse(payload)) {
+    if (!matchesTokenResponse(payload)) {
       throw new TypeError("The token response did not match the OpenAPI contract");
     }
-    return payload;
+    const tokens = payload as Omit<TokenResponse, "scope"> & { scope?: string };
+    // The core currently omits the OpenAPI-required field when the granted scope set is empty.
+    return { ...tokens, scope: tokens.scope ?? "" };
   }
 
   private async loadMe(): Promise<Me> {

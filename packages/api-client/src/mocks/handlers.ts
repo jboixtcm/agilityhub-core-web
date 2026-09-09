@@ -1093,6 +1093,9 @@ export const handlers = [
       { status: 201 },
     ),
   ),
+  http.post("*/oauth2/session", () =>
+    HttpResponse.json({ redirectUrl: "/products?authorization=complete" }),
+  ),
   http.post("*/oauth2/revoke", () => new HttpResponse(null, { status: 200 })),
   http.get("*/oauth2/authorize", ({ request }) =>
     HttpResponse.redirect(new URL("/products?authorization=complete", request.url), 302),

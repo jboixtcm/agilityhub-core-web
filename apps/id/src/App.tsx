@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 
 type Navigate = (destination: string) => void;
 type Translate = ReturnType<typeof useTranslation>["t"];
+const PENDING_OIDC_FLOW_KEY = "agilityhub.id.pendingOidcFlow";
+const PENDING_OIDC_CONTINUATION_KEY = "agilityhub.id.pendingOidcContinuation";
 
 interface PageProps {
   authClient: AuthClient;
@@ -37,11 +39,56 @@ function authorizeUrl(search = window.location.search): URL | null {
   }
 }
 
+function oidcFlow(search = window.location.search): string | null {
+  const flow = new URLSearchParams(search).get("flow")?.trim();
+  return flow === undefined || flow === "" ? null : flow;
+}
+
 export function oidcContinuation(search = window.location.search): string | null {
   const destination = authorizeUrl(search);
   return destination === null
     ? null
     : `${destination.pathname}${destination.search}${destination.hash}`;
+}
+
+function storedOidcFlow(): string | null {
+  const flow = localStorage.getItem(PENDING_OIDC_FLOW_KEY)?.trim();
+  return flow === undefined || flow === "" ? null : flow;
+}
+
+function storedOidcContinuation(): string | null {
+  const continuation = localStorage.getItem(PENDING_OIDC_CONTINUATION_KEY);
+  return continuation === null
+    ? null
+    : oidcContinuation(`?continue=${encodeURIComponent(continuation)}`);
+}
+
+function rememberOidcRequest(flow: string | null, continuation: string | null): void {
+  if (flow !== null) {
+    localStorage.setItem(PENDING_OIDC_FLOW_KEY, flow);
+  }
+  if (continuation !== null) {
+    localStorage.setItem(PENDING_OIDC_CONTINUATION_KEY, continuation);
+  }
+}
+
+function clearOidcRequest(): void {
+  localStorage.removeItem(PENDING_OIDC_FLOW_KEY);
+  localStorage.removeItem(PENDING_OIDC_CONTINUATION_KEY);
+}
+
+async function destinationAfterLogin(
+  authClient: AuthClient,
+  flow: string | null,
+  continuation: string | null,
+): Promise<string> {
+  if (flow !== null) {
+    const { redirectUrl } = await authClient.resumeOidcFlow(flow);
+    clearOidcRequest();
+    return redirectUrl;
+  }
+  clearOidcRequest();
+  return continuation ?? "/account";
 }
 
 function authorizationParameter(name: "login_hint" | "ui_locales"): string | null {
@@ -209,6 +256,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
   const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
   const [error, setError] = useState<string>();
   const [message, setMessage] = useState<string>();
+  const flow = oidcFlow();
   const continuation = oidcContinuation();
 
   const requireEmail = (): boolean => {
@@ -230,7 +278,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
     setPending("login");
     try {
       await authClient.login(email, password);
-      navigate(continuation ?? "/account");
+      navigate(await destinationAfterLogin(authClient, flow, continuation));
     } catch (loginFailure) {
       setError(loginError(loginFailure, t));
       setPending(null);
@@ -245,9 +293,8 @@ function LoginPage({ authClient, navigate }: PageProps) {
     setMessage(undefined);
     setPending(purpose === "LOGIN" ? "magic" : "reset");
     try {
-      const redirectUri =
-        continuation === null ? undefined : new URL(continuation, location.origin).href;
-      await authClient.requestMagicLink(email, purpose, redirectUri);
+      rememberOidcRequest(flow, continuation);
+      await authClient.requestMagicLink(email, purpose);
       setMessage(t("id:login.magicSent"));
     } catch (requestFailure) {
       setError(loginError(requestFailure, t));
@@ -329,14 +376,16 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
     if (token === null || token === "") {
       return;
     }
-    void authClient.exchangeMagicLink(token).then(
-      () => {
-        navigate(oidcContinuation() ?? "/account");
-      },
-      () => {
+    void authClient
+      .exchangeMagicLink(token)
+      .then(async () => {
+        const flow = oidcFlow() ?? storedOidcFlow();
+        const continuation = oidcContinuation() ?? storedOidcContinuation();
+        navigate(await destinationAfterLogin(authClient, flow, continuation));
+      })
+      .catch(() => {
         setFailure(true);
-      },
-    );
+      });
   }, [authClient, navigate, token]);
 
   return (

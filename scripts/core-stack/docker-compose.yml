@@ -1,0 +1,113 @@
+name: agilityhub-e1-w04
+
+x-core-environment: &core-environment
+  SPRING_PROFILES_ACTIVE: local
+  EXPORT_LOCAL_DIRECTORY: /app/exports
+  MONGODB_HOST: mongo
+  MONGODB_PORT: 27017
+  MONGODB_DATABASE: agilityhub_e1_web
+  MONGODB_REPLICA_SET: rs0
+  OIDC_MASTER_KEY: ""
+  AUTH_ISSUER: https://id.example.test
+  OIDC_LOGIN_URL: https://id.example.test/login
+  OIDC_ID_WEB_REDIRECT_URI: https://id.example.test/oidc/callback
+  OIDC_ID_WEB_LOGOUT_URI: https://id.example.test/
+  OIDC_CLUBS_APP_REDIRECT_URI: https://app.example.test/oidc/callback
+  OIDC_CLUBS_APP_LOGOUT_URI: https://app.example.test/
+  OIDC_CLUBS_ADMIN_REDIRECT_URI: https://admin.example.test/oidc/callback
+  OIDC_CLUBS_ADMIN_LOGOUT_URI: https://admin.example.test/
+  CORS_PLATFORM_HOSTS: id.example.test
+  SHARED_SCHEDULING_ENABLED: "false"
+  LOGGING_LEVEL_ROOT: WARN
+  SPRING_MAIN_BANNER_MODE: "off"
+
+services:
+  mongo:
+    image: mongo:7
+    command: [mongod, --replSet, rs0, --bind_ip_all]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - >-
+          try { rs.status(); } catch (error) {
+            if (error.code !== 94) { throw error; }
+            rs.initiate({_id:"rs0",members:[{_id:0,host:"mongo:27017"}]});
+          }
+          if (!db.hello().isWritablePrimary) { quit(1); }
+      interval: 5s
+      timeout: 5s
+      start_period: 30s
+      retries: 12
+
+  seed:
+    image: ghcr.io/jboixtcm/agilityhub-core-api:main
+    environment:
+      <<: *core-environment
+      SEED_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        java -jar /app/app.jar --core.command=club:apply /consumer-seeds/club-canic.yaml
+        java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
+    volumes:
+      - ./club-canic.yaml:/consumer-seeds/club-canic.yaml:ro
+      - export-files:/app/exports
+    healthcheck:
+      disable: true
+    restart: "no"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  core:
+    image: ghcr.io/jboixtcm/agilityhub-core-api:main
+    environment:
+      <<: *core-environment
+      SERVER_PORT: 8080
+      MAIL_LOCAL_DIRECTORY: /app/mailbox
+    ports:
+      - "127.0.0.1:${CONSUMER_PORT:-18080}:8080"
+    volumes:
+      - mailbox:/app/mailbox
+      - export-files:/app/exports
+    depends_on:
+      mongo:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+
+  playwright:
+    profiles: [e2e]
+    image: mcr.microsoft.com/playwright:v1.63.0-noble
+    working_dir: /work
+    environment:
+      CI: "1"
+      CORE_URL: ${CORE_URL:?CORE_URL is required}
+      E1_CORE_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
+      E1_EVIDENCE_DIRECTORY: /evidence/E1-W04
+      E1_MAILBOX_DIRECTORY: /mailbox
+    volumes:
+      - ../..:/src:ro
+      - ../../roadmap/evidence:/evidence
+      - mailbox:/mailbox:ro
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        tar --exclude=.git --exclude=.turbo --exclude=dist --exclude=node_modules --exclude=playwright-report --exclude=test-results -cf - -C /src . | tar -xf - -C /work
+        corepack enable
+        pnpm install --frozen-lockfile
+        pnpm exec playwright test --config=e2e/core/playwright.config.ts
+    depends_on:
+      core:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
+  mailbox:
+  export-files:

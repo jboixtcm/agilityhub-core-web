@@ -99,6 +99,10 @@ function testFetcher() {
     if (pathname === "/api/v1/auth/magic-link") {
       return new Response(null, { status: 202 });
     }
+    if (pathname === "/oauth2/session") {
+      const request = JSON.parse(body) as components["schemas"]["OidcSessionRequest"];
+      return json({ redirectUrl: `/oidc/callback?flow=${request.flow}` });
+    }
     return json({ code: "NOT_FOUND", message: "Not found" }, 404);
   }) as typeof fetch;
 
@@ -148,13 +152,11 @@ afterEach(() => {
 });
 
 describe("T-01-22 apps/id", () => {
-  it("honours OIDC login_hint, ui_locales and the safe authorize continuation", async () => {
-    const continuation =
-      "/oauth2/authorize?client_id=ar-app&redirect_uri=https%3A%2F%2Far.example.test%2Fcallback&ui_locales=es&state=state-1";
+  it("resumes a server-side OIDC flow after password login", async () => {
     window.history.replaceState(
       null,
       "",
-      `/login?login_hint=biel.roca%40example.test&continue=${encodeURIComponent(continuation)}`,
+      "/login?flow=flow-1&login_hint=biel.roca%40example.test&ui_locales=es",
     );
     const { fetcher, requests } = testFetcher();
     const client = createClient(fetcher);
@@ -169,7 +171,7 @@ describe("T-01-22 apps/id", () => {
     fireEvent.click(screen.getByRole("button", { name: "ENTRAR" }));
 
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith(continuation);
+      expect(navigate).toHaveBeenCalledWith("/oidc/callback?flow=flow-1");
     });
     const tokenRequest = requests.find(
       (request) =>
@@ -178,11 +180,17 @@ describe("T-01-22 apps/id", () => {
     );
     expect(tokenRequest?.body).toContain("client_id=id-web");
     expect(tokenRequest?.body).toContain("username=biel.roca%40example.test");
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        body: JSON.stringify({ flow: "flow-1" }),
+        method: "POST",
+        url: "http://id.test/oauth2/session",
+      }),
+    );
   });
 
-  it("sends the authorize continuation with a neutral magic-link request", async () => {
-    const continuation = "/oauth2/authorize?client_id=ar-app&state=state-2";
-    window.history.replaceState(null, "", `/login?continue=${encodeURIComponent(continuation)}`);
+  it("remembers the OIDC flow while sending a neutral magic-link request", async () => {
+    window.history.replaceState(null, "", "/login?flow=flow-2");
     const { fetcher, requests } = testFetcher();
     await renderApp(createClient(fetcher));
 
@@ -199,7 +207,47 @@ describe("T-01-22 apps/id", () => {
       client_id: "id-web",
       email: "biel.roca@example.test",
       purpose: "LOGIN",
-      redirect_uri: `${window.location.origin}${continuation}`,
+    });
+    expect(localStorage.getItem("agilityhub.id.pendingOidcFlow")).toBe("flow-2");
+  });
+
+  it("resumes the remembered OIDC flow after magic-link exchange", async () => {
+    localStorage.setItem("agilityhub.id.pendingOidcFlow", "flow-magic");
+    window.history.replaceState(null, "", "/magic-link?t=valid");
+    const { fetcher, requests } = testFetcher();
+    const navigate = vi.fn<(destination: string) => void>();
+    await renderApp(createClient(fetcher), "ca", navigate);
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/oidc/callback?flow=flow-magic");
+    });
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        body: JSON.stringify({ flow: "flow-magic" }),
+        method: "POST",
+        url: "http://id.test/oauth2/session",
+      }),
+    );
+    expect(localStorage.getItem("agilityhub.id.pendingOidcFlow")).toBeNull();
+  });
+
+  it("keeps a same-origin authorize continuation as a fallback", async () => {
+    const continuation = "/oauth2/authorize?client_id=ar-app&state=state-fallback";
+    window.history.replaceState(null, "", `/login?continue=${encodeURIComponent(continuation)}`);
+    const { fetcher } = testFetcher();
+    const navigate = vi.fn<(destination: string) => void>();
+    await renderApp(createClient(fetcher), "ca", navigate);
+
+    fireEvent.change(await screen.findByLabelText("Correu electrònic"), {
+      target: { value: "biel.roca@example.test" },
+    });
+    fireEvent.change(screen.getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith(continuation);
     });
   });
 

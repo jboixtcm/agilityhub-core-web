@@ -8,6 +8,17 @@ export default defineConfig(({ mode }) => {
   const coreUrl = process.env.VITE_CORE_URL ?? env.VITE_CORE_URL ?? "http://localhost:8080";
   const idUrl = process.env.VITE_ID_URL ?? env.VITE_ID_URL ?? coreUrl;
   const mockEnabled = (process.env.VITE_MOCK ?? env.VITE_MOCK) === "1";
+  const proxyHost = process.env.VITE_PROXY_HOST ?? env.VITE_PROXY_HOST;
+  const proxyOrigin = process.env.VITE_PROXY_ORIGIN ?? env.VITE_PROXY_ORIGIN;
+  const proxyHeaders =
+    proxyHost === undefined
+      ? {}
+      : {
+          headers: {
+            Host: proxyHost,
+            ...(proxyOrigin === undefined ? {} : { Origin: proxyOrigin }),
+          },
+        };
 
   return {
     plugins: [react(), tailwindcss()],
@@ -15,10 +26,10 @@ export default defineConfig(({ mode }) => {
       ? {}
       : {
           proxy: {
-            "/.well-known": { changeOrigin: true, target: idUrl },
-            "/api": { changeOrigin: true, target: coreUrl },
-            "/connect": { changeOrigin: true, target: idUrl },
-            "/oauth2": { changeOrigin: true, target: idUrl },
+            "/.well-known": { changeOrigin: true, target: idUrl, ...proxyHeaders },
+            "/api": { changeOrigin: true, target: coreUrl, ...proxyHeaders },
+            "/connect": { changeOrigin: true, target: idUrl, ...proxyHeaders },
+            "/oauth2": { changeOrigin: true, target: idUrl, ...proxyHeaders },
           },
         },
     test: {
