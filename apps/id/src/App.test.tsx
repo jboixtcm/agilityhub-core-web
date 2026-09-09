@@ -161,9 +161,12 @@ describe("T-01-22 apps/id", () => {
     const { fetcher, requests } = testFetcher();
     const client = createClient(fetcher);
     const navigate = vi.fn<(destination: string) => void>();
-    await renderApp(client, "ca", navigate);
+    const { i18n } = await renderApp(client, "ca", navigate);
 
-    expect(await screen.findByRole("heading", { name: "Entra en AgilityHub" })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(i18n.resolvedLanguage).toBe("es");
+    });
+    expect(screen.getByRole("heading", { name: "Entra en AgilityHub" })).toBeInTheDocument();
     expect(screen.getByLabelText("Correo electrónico")).toHaveValue("biel.roca@example.test");
     fireEvent.change(screen.getByLabelText("Contraseña"), {
       target: { value: "secret-password" },

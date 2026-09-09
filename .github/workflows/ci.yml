@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint, typecheck, test, and build
-        run: pnpm turbo run lint typecheck test build
+        run: pnpm turbo run lint typecheck test build --concurrency=2
 
       - name: Check translations
         run: pnpm i18n:check

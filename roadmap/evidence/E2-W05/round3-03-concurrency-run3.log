@@ -1,0 +1,281 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/i18n, @agilityhub/ui, clubs, clubs-admin, id
+   • Running test in 8 packages
+   • Remote caching disabled
+
+@agilityhub/ui:typecheck: cache bypass, force executing 1f47db1fe04d67b9
+@agilityhub/api-client:test: cache bypass, force executing 07aa31a920894cbc
+@agilityhub/api-client:typecheck: cache bypass, force executing 296e7db0bd8b99e0
+@agilityhub/ui:test: cache bypass, force executing 73eff3c2bdbf77ac
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (9 tests) 171ms
+@agilityhub/api-client:test:  ✓ src/index.test.ts (10 tests) 436ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  2 passed (2)
+@agilityhub/api-client:test:       Tests  19 passed (19)
+@agilityhub/api-client:test:    Start at  20:28:48
+@agilityhub/api-client:test:    Duration  963ms (tests 50%, import 28%, transform 22%)
+@agilityhub/api-client:test: 
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (5 tests) 4ms
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 3ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (4 tests) 30ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 80ms
+@agilityhub/ui:test:  ✓ src/components.test.tsx (27 tests) 214ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  5 passed (5)
+@agilityhub/ui:test:       Tests  39 passed (39)
+@agilityhub/ui:test:    Start at  20:28:48
+@agilityhub/ui:test:    Duration  1.18s (environment 69%, setup 14%, transform 9%, tests 7%, import 1%)
+@agilityhub/ui:test: 
+@agilityhub/i18n:typecheck: cache bypass, force executing 40f196efc1f1be42
+@agilityhub/i18n:test: cache bypass, force executing 2b413c89687db6f3
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 3ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (8 tests) 16ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (3 tests) 25ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  3 passed (3)
+@agilityhub/i18n:test:       Tests  14 passed (14)
+@agilityhub/i18n:test:    Start at  20:28:50
+@agilityhub/i18n:test:    Duration  242ms (transform 60%, import 23%, tests 14%, worker 2%)
+@agilityhub/i18n:test: 
+@agilityhub/auth:test: cache bypass, force executing f5ad5b89aa0c8539
+@agilityhub/auth:typecheck: cache bypass, force executing 72df18edf695bfc7
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  ✓ src/auth-client.test.ts (14 tests) 79ms
+@agilityhub/auth:test:  ✓ src/session.test.tsx (3 tests) 144ms
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  Test Files  2 passed (2)
+@agilityhub/auth:test:       Tests  17 passed (17)
+@agilityhub/auth:test:    Start at  20:28:51
+@agilityhub/auth:test:    Duration  930ms (environment 54%, import 17%, tests 15%, transform 13%)
+@agilityhub/auth:test: 
+id:test: cache bypass, force executing 350b86523e61ebea
+clubs-admin:test: cache bypass, force executing 5bbb9042330b4843
+clubs:test: cache bypass, force executing b86a94e4ca613384
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+id:test: 
+clubs-admin:test: 
+id:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: 
+clubs-admin:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: 
+clubs:test: 
+clubs:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: 
+clubs-admin:test:  ✓ src/catalogs/derived-settings.test.ts (2 tests) 4ms
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > renders applied filters and preserves selection when page size changes
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > uses the compact mark with the runtime club name
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > hides the Configuració group from instructors
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > shows the fixed sidebar groups to administrators
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+id:test:  ✓ src/App.test.tsx (9 tests) 435ms
+id:test: 
+id:test:  Test Files  1 passed (1)
+id:test:       Tests  9 passed (9)
+id:test:    Start at  20:28:53
+id:test:    Duration  1.45s (environment 36%, tests 32%, transform 17%, setup 9%, import 5%)
+id:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-18 clubs-admin access > offers magic-link and password entry with the shared auth components
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-20 clubs-admin handoff > exchanges the one-time handoff code on the landing route
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > shows profile completion as a non-dismissible backoffice modal
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > removes the postpone action when the policy limit is exhausted
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test:  ✓ src/App.test.tsx (8 tests) 326ms
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > toggles visible columns and synchronizes the ordered fields to the URL
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-42 D15 translated dog list > renders the approved columns and dog record links
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test:  ✓ src/census/CensusRecordPage.test.tsx (5 tests) 950ms
+clubs:test: stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  ✓ src/App.test.tsx (17 tests) 980ms
+clubs:test: 
+clubs:test:  Test Files  1 passed (1)
+clubs:test:       Tests  17 passed (17)
+clubs:test:    Start at  20:28:53
+clubs:test:    Duration  2.21s (tests 47%, environment 24%, transform 16%, import 8%, setup 6%)
+clubs:test: 
+clubs-admin:test:  ✓ src/census/CensusListPage.test.tsx (3 tests) 1696ms
+clubs-admin:test:    ✓ T-03-38 D5 universal member list (2)
+clubs-admin:test:      ✓ renders applied filters and preserves selection when page size changes 504ms
+clubs-admin:test:      ✓ toggles visible columns and synchronizes the ordered fields to the URL 323ms
+clubs-admin:test:    ✓ T-03-42 D15 translated dog list (1)
+clubs-admin:test:      ✓ renders the approved columns and dog record links 864ms
+clubs-admin:test: 
+clubs-admin:test:  Test Files  4 passed (4)
+clubs-admin:test:       Tests  18 passed (18)
+clubs-admin:test:    Start at  20:28:53
+clubs-admin:test:    Duration  2.85s (tests 43%, environment 28%, transform 14%, setup 7%, import 7%)
+clubs-admin:test: 
+
+ Tasks:    11 successful, 11 total
+Cached:    0 cached, 11 total
+  Time:    8.082s 
+
