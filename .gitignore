@@ -8,6 +8,7 @@ test-results/
 *.local
 *.log
 !roadmap/evidence/E2-W05/round3-*.log
+!roadmap/evidence/E2-W10/*.log
 .DS_Store
 .env
 .env.*

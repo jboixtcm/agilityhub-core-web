@@ -1,0 +1,314 @@
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +849
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 849, reused 0, downloaded 139, added 136
+
+   ╭──────────────────────────────────────────────────────────────────╮
+   │                                                                  │
+   │                Update available! 9.15.9 → 12.3.4.                │
+   │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v12.3.4   │
+   │            Run "corepack use pnpm@12.3.4" to update.             │
+   │                                                                  │
+   ╰──────────────────────────────────────────────────────────────────╯
+
+Progress: resolved 849, reused 0, downloaded 427, added 427
+Progress: resolved 849, reused 0, downloaded 554, added 554
+Progress: resolved 849, reused 0, downloaded 619, added 619
+Progress: resolved 849, reused 0, downloaded 828, added 828
+Progress: resolved 849, reused 0, downloaded 849, added 849, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: Done
+Done in 6.2s using pnpm v9.15.9
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+
+> agilityhub-core-web@0.0.0 e2e /work
+> turbo run e2e
+
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/i18n, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 8 packages
+   • Remote caching disabled
+
+clubs-admin:build: cache hit, replaying logs b02f66f04bd4fd07
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 409 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/index-BvzMnv-u.css           50.31 kB │ gzip:   8.88 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+clubs-admin:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/admin-census-BSoecT2d.js      6.14 kB │ gzip:   2.50 kB
+clubs-admin:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-census-DHvDNkec.js      6.47 kB │ gzip:   2.73 kB
+clubs-admin:build: dist/assets/admin-census-BW4Murfu.js      6.70 kB │ gzip:   2.78 kB
+clubs-admin:build: dist/assets/admin-settings-wBTpVZKi.js   16.10 kB │ gzip:   5.61 kB
+clubs-admin:build: dist/assets/admin-settings-CJTXmuoN.js   17.15 kB │ gzip:   6.15 kB
+clubs-admin:build: dist/assets/admin-settings-BRF-EWGv.js   17.48 kB │ gzip:   6.15 kB
+clubs-admin:build: dist/assets/errors-B-2jHom9.js           21.29 kB │ gzip:   6.91 kB
+clubs-admin:build: dist/assets/errors-DGqtH-UW.js           22.59 kB │ gzip:   7.33 kB
+clubs-admin:build: dist/assets/errors-DKrbhN8m.js           22.59 kB │ gzip:   7.28 kB
+clubs-admin:build: dist/assets/browser-BNMIb_JM.js         496.70 kB │ gzip: 177.77 kB
+clubs-admin:build: dist/assets/index-CDcXdWZ8.js           676.07 kB │ gzip: 280.04 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 165ms
+clubs-admin:e2e: cache bypass, force executing ea6d22a50cb29533
+id:build: cache hit, replaying logs 8ad00e346e94ee53
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 397 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/index-Bg97lRLi.css           30.76 kB │ gzip:   6.27 kB
+id:build: dist/assets/shell-D99NszLS.js             1.03 kB │ gzip:   0.56 kB
+id:build: dist/assets/shell-BBtJPrvA.js             1.06 kB │ gzip:   0.62 kB
+id:build: dist/assets/shell-CR7vHz8v.js             1.09 kB │ gzip:   0.63 kB
+id:build: dist/assets/common-wYdVdxup.js            1.31 kB │ gzip:   0.70 kB
+id:build: dist/assets/common-CDNUIZ07.js            1.40 kB │ gzip:   0.78 kB
+id:build: dist/assets/common-swo0lJlA.js            1.43 kB │ gzip:   0.79 kB
+id:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+id:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+id:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+id:build: dist/assets/admin-census-BSoecT2d.js      6.14 kB │ gzip:   2.50 kB
+id:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+id:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+id:build: dist/assets/admin-census-DHvDNkec.js      6.47 kB │ gzip:   2.73 kB
+id:build: dist/assets/admin-census-BW4Murfu.js      6.70 kB │ gzip:   2.78 kB
+id:build: dist/assets/admin-settings-wBTpVZKi.js   16.10 kB │ gzip:   5.61 kB
+id:build: dist/assets/admin-settings-CJTXmuoN.js   17.15 kB │ gzip:   6.15 kB
+id:build: dist/assets/admin-settings-BRF-EWGv.js   17.48 kB │ gzip:   6.15 kB
+id:build: dist/assets/errors-B-2jHom9.js           21.29 kB │ gzip:   6.91 kB
+id:build: dist/assets/errors-DGqtH-UW.js           22.59 kB │ gzip:   7.33 kB
+id:build: dist/assets/errors-DKrbhN8m.js           22.59 kB │ gzip:   7.28 kB
+id:build: dist/assets/index-Dvish3F_.js           319.27 kB │ gzip:  99.11 kB
+id:build: dist/assets/browser-De3Ui-d6.js         684.92 kB │ gzip: 320.27 kB
+id:build: 
+id:build: ✓ built in 209ms
+id:build: [plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+id:e2e: cache bypass, force executing c43efb6e3447f602
+clubs:build: cache hit, replaying logs 9be412e0730d44ea
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 398 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                        0.13 kB
+clubs:build: dist/index.html                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/index-BXtoknoA.css           42.79 kB │ gzip:   7.93 kB
+clubs:build: dist/assets/shell-D99NszLS.js             1.03 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/shell-BBtJPrvA.js             1.06 kB │ gzip:   0.62 kB
+clubs:build: dist/assets/shell-CR7vHz8v.js             1.09 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/common-wYdVdxup.js            1.31 kB │ gzip:   0.70 kB
+clubs:build: dist/assets/common-CDNUIZ07.js            1.40 kB │ gzip:   0.78 kB
+clubs:build: dist/assets/common-swo0lJlA.js            1.43 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/admin-census-BSoecT2d.js      6.14 kB │ gzip:   2.50 kB
+clubs:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/admin-census-DHvDNkec.js      6.47 kB │ gzip:   2.73 kB
+clubs:build: dist/assets/admin-census-BW4Murfu.js      6.70 kB │ gzip:   2.78 kB
+clubs:build: dist/assets/admin-settings-wBTpVZKi.js   16.10 kB │ gzip:   5.61 kB
+clubs:build: dist/assets/admin-settings-CJTXmuoN.js   17.15 kB │ gzip:   6.15 kB
+clubs:build: dist/assets/admin-settings-BRF-EWGv.js   17.48 kB │ gzip:   6.15 kB
+clubs:build: dist/assets/errors-B-2jHom9.js           21.29 kB │ gzip:   6.91 kB
+clubs:build: dist/assets/errors-DGqtH-UW.js           22.59 kB │ gzip:   7.33 kB
+clubs:build: dist/assets/errors-DKrbhN8m.js           22.59 kB │ gzip:   7.28 kB
+clubs:build: dist/assets/index-EXD1xYcw.js           361.03 kB │ gzip: 110.77 kB
+clubs:build: dist/assets/browser-De3Ui-d6.js         684.92 kB │ gzip: 320.27 kB
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: ✓ built in 189ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  33 entries (1272.70 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs:e2e: cache bypass, force executing a31cefce769a314a
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test
+clubs-admin:e2e: 
+clubs:e2e: 
+clubs:e2e: > clubs@0.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test
+clubs:e2e: 
+id:e2e: 
+id:e2e: > id@0.0.0 e2e /work/apps/id
+id:e2e: > playwright test
+id:e2e: 
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+id:e2e: 
+clubs:e2e: 
+clubs:e2e: Running 19 tests using 4 workers
+clubs:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 21 tests using 6 workers
+clubs-admin:e2e: 
+clubs:e2e:   ✓   2 e2e/access.spec.ts:47:3 › T-01-18 access screen › T-01-04 keeps refresh-token material out of browser storage after login (3.2s)
+clubs:e2e:   ✓   3 e2e/shell.spec.ts:57:3 › T-02-14 clubs shell › applies cached Cànic branding before React and exposes the dynamic manifest (5.5s)
+clubs-admin:e2e:   ✓   6 e2e/shell.spec.ts:52:3 › T-02-14 clubs-admin shell › shows the Cànic administrator sidebar (5.4s)
+clubs-admin:e2e:   ✓   5 e2e/onboarding.spec.ts:33:3 › T-01-26 clubs-admin onboarding › shows the equivalent modal and can defer only the optional profile data (5.6s)
+clubs:e2e:   ✓   5 e2e/access.spec.ts:67:3 › T-01-18 access screen › renders screen 01, focuses missing email and sends a neutral response (3.7s)
+clubs-admin:e2e:   ✓   4 e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout (7.1s)
+clubs:e2e:   ✓   1 e2e/member-self-service.spec.ts:48:3 › T-03-40 mobile own dogs › edits the note, shows task totals and uploads photo and document (7.2s)
+clubs:e2e:   ✓   6 e2e/shell.spec.ts:86:3 › T-02-14 clubs shell › uses the AgilityHub theme and hides FREE_TRAINING UI for the minimal club (2.1s)
+clubs-admin:e2e:   ✓   3 e2e/census-records.spec.ts:33:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action (7.8s)
+clubs:e2e:   ✓   4 e2e/onboarding.spec.ts:37:3 › T-01-26 first-access onboarding › pending account completes the screen once and enters the app (8.0s)
+clubs-admin:e2e:   ✓   7 e2e/shell.spec.ts:63:3 › T-02-14 clubs-admin shell › renders the minimal club with its module-filtered sidebar (3.0s)
+clubs-admin:e2e:   ✓   2 e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module (8.7s)
+id:e2e:   ✓  1 e2e/id.spec.ts:16:3 › T-01-22 AgilityHub ID › logs in and continues the OIDC authorize flow (8.7s)
+id:e2e: 
+id:e2e:   1 passed (11.7s)
+clubs:e2e:   ✓   8 e2e/member-self-service.spec.ts:119:3 › T-03-40 mobile own dogs › hides instructor notes and tasks when TASKS is disabled (2.4s)
+clubs-admin:e2e:   ✓   9 e2e/census-records.spec.ts:72:3 › E2-W02 census records › T-03-37 surfaces one stale edit and one booking conflict for concurrent D10 writes (1.9s)
+clubs:e2e:   ✓   7 e2e/access.spec.ts:104:3 › T-01-18 access screen › uses Retry-After as a visible countdown (3.0s)
+clubs-admin:e2e:   ✓  10 e2e/shell.spec.ts:76:3 › T-02-14 clubs-admin shell › does not show Configuració to an instructor (1.6s)
+clubs:e2e:   ✓   9 e2e/onboarding.spec.ts:72:3 › T-01-26 first-access onboarding › three policy postponements make the next consent blocking (2.5s)
+clubs:e2e:   ✓  11 e2e/access.spec.ts:119:3 › T-01-18 access screen › hides signup when the club has disabled it (569ms)
+clubs-admin:e2e:   ✓  13 e2e/shell.spec.ts:87:3 › T-01-18 clubs-admin access › offers magic-link and password sign-in (993ms)
+clubs-admin:e2e:   ✓   8 e2e/census-lists.spec.ts:46:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view (4.3s)
+clubs:e2e:   ✓  12 e2e/access.spec.ts:127:3 › T-01-19 activation screen › renders screen 02 with continue before the optional password (868ms)
+clubs:e2e:   ✓  10 e2e/member-self-service.spec.ts:129:3 › T-03-41 mobile own data › keeps identity read-only, looks up towns and maps field errors (2.2s)
+clubs-admin:e2e:   ✓  11 e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards (3.4s)
+clubs-admin:e2e:   ✓  12 e2e/census-records.spec.ts:122:3 › E2-W02 census records › T-03-38 completes the dog record actions and captures its 1280 layout (2.7s)
+clubs-admin:e2e:   ✓  14 e2e/shell.spec.ts:102:3 › T-01-20 clubs-admin handoff › exchanges the one-time code and opens the backoffice session (1.3s)
+clubs-admin:e2e:   ✓   1 e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates (12.8s)
+clubs:e2e:   ✓  13 e2e/access.spec.ts:143:3 › T-01-19 activation screen › uses masculine greeting for male and non-binary accounts (1.8s)
+clubs:e2e:   ✓  14 e2e/member-self-service.spec.ts:165:3 › T-03-41 mobile own data › hides direct debit when BILLING is disabled (1.6s)
+clubs-admin:e2e:   ✓  15 e2e/census-lists.spec.ts:65:3 › E2-W01 census universal lists › T-03-33 changes rows per page without losing the page selection (2.8s)
+clubs:e2e:   ✓  15 e2e/access.spec.ts:156:3 › T-01-19 activation screen › renders reset and invalid-link variants (1.4s)
+clubs-admin:e2e:   ✓  17 e2e/census-records.spec.ts:156:3 › E2-W02 census records › T-03-39 matches the D10 literals and both booking-block states at 1280 (2.4s)
+clubs-admin:e2e:   ✓  16 e2e/catalogs.spec.ts:141:3 › E2-W04 club catalogs › T-05-24 edits plan copy, billing modes and pricing while respecting module gates (3.9s)
+clubs:e2e:   ✓  16 e2e/access.spec.ts:176:3 › T-01-20 profile choice › renders screen 03b and sends the selected profile with remember (1.4s)
+clubs-admin:e2e:   ✓  19 e2e/census-lists.spec.ts:82:3 › E2-W01 census universal lists › T-03-34 D15 opens a dog record and matches the approved 1280 layout (2.2s)
+clubs-admin:e2e:   ✓  18 e2e/settings.spec.ts:186:3 › E2-W05 generated club settings › T-02-17 localizes every catalog row and formats durations in Spanish and English (4.2s)
+clubs:e2e:   ✓  17 e2e/access.spec.ts:198:3 › T-01-20 profile choice › administrator selection creates a clubs-admin handoff (1.1s)
+clubs:e2e:   ✓  18 e2e/access.spec.ts:216:3 › T-01-21 profile rows and impersonation › renders screen 12 rows in order and changes password and locale (1.3s)
+clubs:e2e:   ✓  19 e2e/access.spec.ts:252:3 › T-01-21 profile rows and impersonation › keeps the impersonation banner and revokes on exit (772ms)
+clubs:e2e: 
+clubs:e2e:   19 passed (22.0s)
+clubs-admin:e2e:   ✓  21 e2e/census-lists.spec.ts:101:3 › E2-W01 census universal lists › T-03-35 exposes empty, error recovery, and visible-column export states (3.2s)
+clubs-admin:e2e:   ✓  20 e2e/catalogs.spec.ts:193:3 › E2-W04 club catalogs › T-05-25 manages local levels and FAQ CRUD/reorder with FAQ module gating (3.6s)
+clubs-admin:e2e: 
+clubs-admin:e2e:   21 passed (22.3s)
+
+ Tasks:    6 successful, 6 total
+Cached:    3 cached, 6 total
+  Time:    22.873s 
+

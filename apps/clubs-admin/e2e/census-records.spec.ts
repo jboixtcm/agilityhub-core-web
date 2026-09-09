@@ -54,7 +54,9 @@ test.describe("E2-W02 census records", () => {
     const popupPromise = page.waitForEvent("popup");
     await impersonationDialog.getByRole("button", { name: "Entra com l'abonat" }).click();
     const clubsPage = await popupPromise;
-    await clubsPage.waitForURL("http://127.0.0.1:4173/perfil");
+    await clubsPage.waitForURL((url) => url.pathname === "/perfil");
+    await clubsPage.waitForLoadState("load");
+    await expect(clubsPage.locator(".clubs-shell")).toBeVisible();
     await expect(clubsPage.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     await clubsPage.close();
 

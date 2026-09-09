@@ -49,7 +49,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Playwright with MSW
-        run: pnpm e2e
+        run: pnpm turbo run e2e --concurrency=1
 
       - name: Check Clubs bundle size
         run: pnpm size-limit
