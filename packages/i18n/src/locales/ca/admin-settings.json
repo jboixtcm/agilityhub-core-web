@@ -40,6 +40,23 @@
       "WEDNESDAY": "dc"
     }
   },
+  "derived": {
+    "capacityByLevel": {
+      "label": "Aforament: per nivell (classe = mínim dels seus nivells)"
+    },
+    "freeTrainingLevels": {
+      "label": "Nivells amb entrenament lliure:"
+    },
+    "packExpiry": {
+      "label": "Caducitat {plans}",
+      "months": "{count, plural, one {# mes} other {# mesos}}"
+    },
+    "sepaCreditor": {
+      "configured": "configurat · edició a la consola de clubs",
+      "label": "Dades SEPA del creditor",
+      "notConfigured": "no configurat"
+    }
+  },
   "editor": {
     "addHoliday": "Afegeix un festiu",
     "appliesFromNow": "S'aplica a partir d'ara.",
@@ -114,6 +131,7 @@
     }
   },
   "pages": {
+    "availableSoon": "Disponible aviat",
     "faq": "Preguntes freqüents",
     "navigation": "Editors de pàgines del club",
     "rules": "Normes del club"

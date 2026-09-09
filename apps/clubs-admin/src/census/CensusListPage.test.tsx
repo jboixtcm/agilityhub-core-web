@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -49,7 +49,7 @@ async function renderPage(kind: "dogs" | "members") {
 
 describe("T-03-38 D5 universal member list", () => {
   it("renders applied filters and preserves selection when page size changes", async () => {
-    window.history.pushState(null, "", "/abonats");
+    window.history.pushState(null, "", "/abonats?size=20");
     await renderPage("members");
 
     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
@@ -59,13 +59,11 @@ describe("T-03-38 D5 universal member list", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }));
     expect(screen.getByText("1 seleccionat — accions massives:")).toBeVisible();
     fireEvent.change(screen.getByRole("combobox", { name: "files per pàgina" }), {
-      target: { value: "20" },
+      target: { value: "50" },
     });
 
     expect(screen.getByText("1 seleccionat — accions massives:")).toBeVisible();
-    await waitFor(() => {
-      expect(new URLSearchParams(window.location.search).get("size")).toBe("20");
-    });
+    expect(new URLSearchParams(window.location.search).get("size")).toBe("50");
   });
 
   it("toggles visible columns and synchronizes the ordered fields to the URL", async () => {

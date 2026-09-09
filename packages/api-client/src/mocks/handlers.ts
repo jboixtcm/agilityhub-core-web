@@ -73,6 +73,7 @@ type DogDocumentReminderRequest = components["schemas"]["DocumentReminderRequest
 type AttachmentUploadRequest = components["schemas"]["AttachmentUploadRequest"];
 type InstructorNoteRequest = components["schemas"]["InstructorNoteRequest"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
+type ClubSettings = components["schemas"]["ClubSettings"];
 type Parameter = components["schemas"]["Parameter"];
 type ParameterUpdate = components["schemas"]["ParameterUpdate"];
 type OpeningHoursUpdate = components["schemas"]["OpeningHoursUpdate"];
@@ -883,7 +884,10 @@ export const handlers = [
       const scenario = currentMockScenario();
       const configured = findParameter(key);
       if (configured !== undefined) {
-        if (configured.module !== undefined && !scenario.branding.modules.includes(configured.module)) {
+        if (
+          configured.module !== undefined &&
+          !scenario.branding.modules.includes(configured.module)
+        ) {
           return apiError("MODULE_DISABLED", "Module disabled", 404);
         }
         return HttpResponse.json(configured);
@@ -997,6 +1001,28 @@ export const handlers = [
     return current === undefined
       ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
       : HttpResponse.json(current.history);
+  }),
+  http.get("*/api/v1/club", () => {
+    const branding = currentMockScenario().branding;
+    const settings: ClubSettings = {
+      countryProfile: branding.countryProfile.code,
+      currency: branding.currency,
+      defaultLocale: branding.defaultLocale,
+      domains: [],
+      id: "00000000-0000-4000-8000-000000000002",
+      locales: branding.locales,
+      modules: branding.modules,
+      name: branding.club.name,
+      paymentProviders: {
+        SEPA_XML: { configured: true, enabled: true },
+      },
+      slug: branding.club.slug,
+      status: branding.status,
+      theme: branding.theme,
+      timeZone: branding.timeZone,
+      version: 1,
+    };
+    return HttpResponse.json(settings);
   }),
   http.get("*/api/v1/club/opening-hours", () => {
     const current = findParameter("club.openingHours");

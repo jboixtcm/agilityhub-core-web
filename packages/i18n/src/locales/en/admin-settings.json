@@ -40,6 +40,23 @@
       "WEDNESDAY": "Wed"
     }
   },
+  "derived": {
+    "capacityByLevel": {
+      "label": "Capacity: by level (class = minimum of its levels)"
+    },
+    "freeTrainingLevels": {
+      "label": "Levels with free training:"
+    },
+    "packExpiry": {
+      "label": "Expiry {plans}",
+      "months": "{count, plural, one {# month} other {# months}}"
+    },
+    "sepaCreditor": {
+      "configured": "configured · edit in the clubs console",
+      "label": "SEPA creditor details",
+      "notConfigured": "not configured"
+    }
+  },
   "editor": {
     "addHoliday": "Add a holiday",
     "appliesFromNow": "Applies from now on.",
@@ -114,6 +131,7 @@
     }
   },
   "pages": {
+    "availableSoon": "Available soon",
     "faq": "Frequently asked questions",
     "navigation": "Club page editors",
     "rules": "Club rules"

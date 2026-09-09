@@ -29,9 +29,11 @@ import {
 type FaqEntry = components["schemas"]["FaqEntry"];
 type FaqCreate = components["schemas"]["FaqCreate"];
 type FaqPatch = components["schemas"]["FaqPatch"];
+type ClubSettings = components["schemas"]["ClubSettings"];
 type Level = components["schemas"]["Level"];
 type LevelCreate = components["schemas"]["LevelCreate"];
 type LevelPatch = components["schemas"]["LevelPatch"];
+type Plan = components["schemas"]["Plan"];
 type LocalizedText = Record<string, string>;
 
 function localized(
@@ -366,6 +368,9 @@ export function SettingsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
+  const [activeModules, setActiveModules] = useState<string[]>([...branding.modules]);
+  const faqEnabled = activeModules.includes("FAQ");
+  const packsEnabled = activeModules.includes("PACKS");
   const loadLevels = useCallback(async () => {
     const result = await client.GET("/levels", {
       params: { query: { includeInactive: true } },
@@ -375,8 +380,6 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     }
     return result.data.items;
   }, [client]);
-  const [activeModules, setActiveModules] = useState<string[]>([...branding.modules]);
-  const faqEnabled = activeModules.includes("FAQ");
   const loadFaq = useCallback(async () => {
     if (!faqEnabled) {
       return [];
@@ -389,8 +392,29 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     }
     return result.data.items;
   }, [client, faqEnabled]);
+  const loadPlans = useCallback(async (): Promise<Plan[]> => {
+    if (!packsEnabled) {
+      return [];
+    }
+    const result = await client.GET("/plans", {
+      params: { query: { includeInactive: true } },
+    });
+    if (result.data === undefined) {
+      throw new TypeError("Plan response did not contain data");
+    }
+    return result.data.items as Plan[];
+  }, [client, packsEnabled]);
+  const loadClubSettings = useCallback(async (): Promise<ClubSettings[]> => {
+    const result = await client.GET("/club", {});
+    if (result.data === undefined) {
+      throw new TypeError("Club response did not contain data");
+    }
+    return [result.data];
+  }, [client]);
   const levels = useCatalogData(loadLevels, client);
   const faq = useCatalogData(loadFaq, client);
+  const plans = useCatalogData(loadPlans, packsEnabled);
+  const clubSettings = useCatalogData(loadClubSettings, client);
   const [levelsEnabled, setLevelsEnabled] = useState(true);
   const [editingLevel, setEditingLevel] = useState<{ item?: Level }>();
   const [editingFaq, setEditingFaq] = useState<{ item?: FaqEntry }>();
@@ -483,12 +507,19 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     }
   };
 
-  if (levels.error !== undefined || faq.error !== undefined) {
+  if (
+    levels.error !== undefined ||
+    faq.error !== undefined ||
+    plans.error !== undefined ||
+    clubSettings.error !== undefined
+  ) {
     return (
       <LoadFailure
         onRetry={() => {
           levels.reload();
           faq.reload();
+          plans.reload();
+          clubSettings.reload();
         }}
       />
     );
@@ -498,8 +529,11 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     <section className="catalog-page">
       <ParameterSettings
         client={client}
+        clubSettings={clubSettings.items[0]}
+        levels={levels.items}
         modules={activeModules}
         onModulesChange={setActiveModules}
+        plans={plans.items}
       />
       <CatalogFeedback
         message={feedback}

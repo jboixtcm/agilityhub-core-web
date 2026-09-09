@@ -14,15 +14,19 @@ import {
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import { type SyntheticEvent, useEffect, useMemo, useState } from "react";
+import { Fragment, type SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { buildDerivedSettingRows, type DerivedSettingRow } from "./derived-settings";
 import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
 
+type ClubSettings = components["schemas"]["ClubSettings"];
 type Holiday = components["schemas"]["Holiday"];
+type Level = components["schemas"]["Level"];
 type Parameter = components["schemas"]["Parameter"];
 type ParameterHistoryEntry = components["schemas"]["ParameterHistoryEntry"];
 type Parameters = components["schemas"]["Parameters"];
+type Plan = components["schemas"]["Plan"];
 
 const dayKeys = [
   "MONDAY",
@@ -221,9 +225,11 @@ function valueSummary(
             }
             const record = objectValue(item);
             const labels = localizedValue(record.label);
-            return labels[locale] ??
+            return (
+              labels[locale] ??
               (typeof record.label === "string" ? record.label : undefined) ??
-              JSON.stringify(item);
+              JSON.stringify(item)
+            );
           })
           .join(" · ");
   }
@@ -613,9 +619,12 @@ function ParameterEditor({
     let value = draft;
     if (
       ["json", "list"].includes(parameterType(parameter.type)) &&
-      !["bookings.weekOpensAt", "club.openingHours", "club.holidays", "coverage.thresholds"].includes(
-        parameter.key,
-      )
+      ![
+        "bookings.weekOpensAt",
+        "club.openingHours",
+        "club.holidays",
+        "coverage.thresholds",
+      ].includes(parameter.key)
     ) {
       try {
         value = JSON.parse(jsonText) as unknown;
@@ -844,14 +853,62 @@ function ModulesCard({
   );
 }
 
+function DerivedSetting({ row }: { row: DerivedSettingRow }) {
+  const { t } = useTranslation("admin-settings");
+  const label =
+    row.key === "packExpiry"
+      ? t("admin-settings:derived.packExpiry.label", { plans: row.planNames })
+      : t(`admin-settings:derived.${row.key}.label`);
+  const value =
+    row.key === "packExpiry"
+      ? row.validityMonths.length === 0
+        ? t("admin-settings:value.notConfigured")
+        : row.validityMonths
+            .map((count) => t("admin-settings:derived.packExpiry.months", { count }))
+            .join(" · ")
+      : row.key === "sepaCreditor"
+        ? t(
+            row.configured
+              ? "admin-settings:derived.sepaCreditor.configured"
+              : "admin-settings:derived.sepaCreditor.notConfigured",
+          )
+        : row.summary || t("admin-settings:value.notConfigured");
+  const content = (
+    <>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </>
+  );
+
+  return (
+    <div className="settings-parameter settings-parameter--derived" data-derived-setting={row.key}>
+      {"href" in row ? (
+        <a className="settings-parameter__main" href={row.href}>
+          {content}
+        </a>
+      ) : (
+        <div className="settings-parameter__main settings-parameter__main--read-only">
+          {content}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ParameterSettings({
   client,
+  clubSettings,
+  levels,
   modules,
   onModulesChange,
+  plans,
 }: {
   client: ApiClient;
+  clubSettings?: ClubSettings | undefined;
+  levels: readonly Level[];
   modules: readonly string[];
   onModulesChange: (modules: string[]) => void;
+  plans: readonly Plan[];
 }) {
   const branding = useBranding();
   const formats = useClubFormats();
@@ -899,8 +956,7 @@ export function ParameterSettings({
         .map((block) => ({
           ...block,
           rows: block.rows.filter(
-            (parameter) =>
-              parameter.module === undefined || modules.includes(parameter.module),
+            (parameter) => parameter.module === undefined || modules.includes(parameter.module),
           ),
         }))
         .filter((block) => block.key !== "system" && block.rows.length > 0),
@@ -918,6 +974,10 @@ export function ParameterSettings({
     [blocks],
   );
   const locale = i18n.resolvedLanguage ?? i18n.language;
+  const derivedRows = useMemo(
+    () => buildDerivedSettingRows({ clubSettings, levels, locale, modules, plans }),
+    [clubSettings, levels, locale, modules, plans],
+  );
 
   const openHistory = async (parameter: Parameter) => {
     setHistory({
@@ -1010,35 +1070,51 @@ export function ParameterSettings({
                 {block.rows.map((parameter) => {
                   const label = parameterLabel(t, parameter.key);
                   return (
-                    <div className="settings-parameter" key={`${parameter.key}-${parameter.scopeRef ?? "club"}`}>
-                      <button
-                        className="settings-parameter__main"
-                        disabled={parameter.editableBy !== "CLUB"}
-                        onClick={() => {
-                          setEditing(parameter);
-                        }}
-                        type="button"
-                      >
-                        <span>{label}</span>
-                        <strong>{valueSummary(parameter, locale, formats, t)}</strong>
-                      </button>
-                      <IconButton
-                        icon="list"
-                        label={t("admin-settings:history.open", { label })}
-                        onClick={() => void openHistory(parameter)}
-                      />
-                      {parameter.editableBy === "CLUB" ? (
-                        <IconButton
-                          icon="edit"
-                          label={t("admin-settings:editor.open", { label })}
+                    <Fragment key={`${parameter.key}-${parameter.scopeRef ?? "club"}`}>
+                      <div className="settings-parameter">
+                        <button
+                          className="settings-parameter__main"
+                          disabled={parameter.editableBy !== "CLUB"}
                           onClick={() => {
                             setEditing(parameter);
                           }}
+                          type="button"
+                        >
+                          <span>{label}</span>
+                          <strong>{valueSummary(parameter, locale, formats, t)}</strong>
+                        </button>
+                        <IconButton
+                          icon="list"
+                          label={t("admin-settings:history.open", { label })}
+                          onClick={() => void openHistory(parameter)}
                         />
-                      ) : null}
-                    </div>
+                        {parameter.editableBy === "CLUB" ? (
+                          <IconButton
+                            icon="edit"
+                            label={t("admin-settings:editor.open", { label })}
+                            onClick={() => {
+                              setEditing(parameter);
+                            }}
+                          />
+                        ) : null}
+                      </div>
+                      {derivedRows
+                        .filter((row) => row.block === block.key && row.afterKey === parameter.key)
+                        .map((row) => (
+                          <DerivedSetting key={row.key} row={row} />
+                        ))}
+                    </Fragment>
                   );
                 })}
+                {derivedRows
+                  .filter(
+                    (row) =>
+                      row.block === block.key &&
+                      !block.rows.some((parameter) => parameter.key === row.afterKey),
+                  )
+                  .map((row) => (
+                    <DerivedSetting key={row.key} row={row} />
+                  ))}
               </div>
             </Card>
           ))}
@@ -1046,10 +1122,11 @@ export function ParameterSettings({
           <Card className="settings-card" id="club-pages">
             <h2>{t("admin-settings:blocks.clubPages")}</h2>
             <nav aria-label={t("admin-settings:pages.navigation")} className="settings-page-links">
-              <span aria-disabled="true">{t("admin-settings:pages.rules")}</span>
-              {modules.includes("FAQ") ? (
-                <a href="#faq">{t("admin-settings:pages.faq")}</a>
-              ) : null}
+              <span aria-disabled="true">
+                <span>{t("admin-settings:pages.rules")}</span>
+                <small>{t("admin-settings:pages.availableSoon")}</small>
+              </span>
+              {modules.includes("FAQ") ? <a href="#faq">{t("admin-settings:pages.faq")}</a> : null}
             </nav>
           </Card>
           <Card className="settings-card settings-card--placeholder">

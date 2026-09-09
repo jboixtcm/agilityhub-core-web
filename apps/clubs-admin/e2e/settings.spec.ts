@@ -59,10 +59,7 @@ async function prepareAdmin(
     ({ initialBranding, initialLocale, mockScenario }) => {
       localStorage.setItem("agilityhub.locale", initialLocale);
       localStorage.setItem("agilityhub.mockScenario", mockScenario);
-      localStorage.setItem(
-        `agilityhub.branding:${location.host}`,
-        JSON.stringify(initialBranding),
-      );
+      localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(initialBranding));
     },
     { initialBranding: brandingWithEnglish, initialLocale: locale, mockScenario: scenario },
   );
@@ -99,15 +96,23 @@ test.describe("E2-W05 generated club settings", () => {
     await expect(page.getByText(/últim canvi:.*amb històric/u)).toBeVisible();
     await expect(page.getByText("2 h abans", { exact: true })).toBeVisible();
     await expect(page.getByText("dl–dg 07:00–22:00", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Cadells 5 · A–D 5 · E–G 4 · Teràpia 1", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("D · E · F · G", { exact: true })).toBeVisible();
+    await expect(page.getByText("Caducitat Pack 6 · Pack 10", { exact: true })).toBeVisible();
+    await expect(page.getByText("3 mesos · 5 mesos", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("configurat · edició a la consola de clubs", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("Disponible aviat", { exact: true })).toBeVisible();
 
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "D11-parametres-1280.png"),
     });
 
-    await page
-      .getByRole("button", { exact: true, name: "Edita Anul·lació fins a" })
-      .click();
+    await page.getByRole("button", { exact: true, name: "Edita Anul·lació fins a" }).click();
     let drawer = page.getByRole("dialog", { name: "Anul·lació fins a" });
     await expect(drawer.getByText("S'aplica a partir d'ara.")).toBeVisible();
     await expect(drawer.getByLabel("Anul·lació fins a")).toHaveAttribute("type", "number");
@@ -167,9 +172,14 @@ test.describe("E2-W05 generated club settings", () => {
     await prepareAdmin(minimalPage, "ca", minimalBranding, "minimalAdmin");
     await minimalPage.goto(`${baseUrl}/parametres`);
     await expect(minimalPage.getByRole("heading", { name: "Entrenaments lliures" })).toHaveCount(0);
-    await expect(minimalPage.getByRole("heading", { name: "Quotes, packs i remesa" })).toHaveCount(0);
+    await expect(minimalPage.getByRole("heading", { name: "Quotes, packs i remesa" })).toHaveCount(
+      0,
+    );
     await expect(minimalPage.getByRole("heading", { name: "Recorreguts" })).toHaveCount(0);
     await expect(minimalPage.getByRole("heading", { name: "Llista d'espera" })).toBeVisible();
+    await expect(minimalPage.locator('[data-derived-setting="freeTrainingLevels"]')).toHaveCount(0);
+    await expect(minimalPage.locator('[data-derived-setting="packExpiry"]')).toHaveCount(0);
+    await expect(minimalPage.locator('[data-derived-setting="sepaCreditor"]')).toHaveCount(0);
     await minimalContext.close();
   });
 

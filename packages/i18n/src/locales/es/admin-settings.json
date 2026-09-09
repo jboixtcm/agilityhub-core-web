@@ -40,6 +40,23 @@
       "WEDNESDAY": "mi"
     }
   },
+  "derived": {
+    "capacityByLevel": {
+      "label": "Aforo: por nivel (clase = mínimo de sus niveles)"
+    },
+    "freeTrainingLevels": {
+      "label": "Niveles con entrenamiento libre:"
+    },
+    "packExpiry": {
+      "label": "Caducidad {plans}",
+      "months": "{count, plural, one {# mes} other {# meses}}"
+    },
+    "sepaCreditor": {
+      "configured": "configurado · edición en la consola de clubes",
+      "label": "Datos SEPA del acreedor",
+      "notConfigured": "no configurado"
+    }
+  },
   "editor": {
     "addHoliday": "Añadir un festivo",
     "appliesFromNow": "Se aplica a partir de ahora.",
@@ -114,6 +131,7 @@
     }
   },
   "pages": {
+    "availableSoon": "Disponible próximamente",
     "faq": "Preguntas frecuentes",
     "navigation": "Editores de páginas del club",
     "rules": "Normas del club"

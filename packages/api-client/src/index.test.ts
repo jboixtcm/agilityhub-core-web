@@ -185,7 +185,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(97);
+    expect(handlers).toHaveLength(98);
 
     const [authorizeResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
@@ -205,15 +205,17 @@ describe("MSW bootstrap handlers", () => {
     expect(logoutResponse.headers.get("location")).toBe("https://id.agilitydoghub.com/login");
   });
 
-  it("serves branding, current account, token, and health fixtures", async () => {
+  it("serves branding, current account, club settings, token, and health fixtures", async () => {
     mockScenario("member");
 
-    const [brandingResponse, meResponse, tokenResponse, healthResponse] = await Promise.all([
-      fetch("https://core.agilitydoghub.com/api/v1/branding"),
-      fetch("https://core.agilitydoghub.com/api/v1/me"),
-      fetch("https://id.agilitydoghub.com/oauth2/token", { method: "POST" }),
-      fetch("https://core.agilitydoghub.com/api/v1/health"),
-    ]);
+    const [brandingResponse, meResponse, clubResponse, tokenResponse, healthResponse] =
+      await Promise.all([
+        fetch("https://core.agilitydoghub.com/api/v1/branding"),
+        fetch("https://core.agilitydoghub.com/api/v1/me"),
+        fetch("https://core.agilitydoghub.com/api/v1/club"),
+        fetch("https://id.agilitydoghub.com/oauth2/token", { method: "POST" }),
+        fetch("https://core.agilitydoghub.com/api/v1/health"),
+      ]);
 
     await expect(brandingResponse.json()).resolves.toMatchObject({
       club: { slug: "canic" },
@@ -222,6 +224,11 @@ describe("MSW bootstrap handlers", () => {
     await expect(meResponse.json()).resolves.toMatchObject({
       membership: { roles: ["MEMBER"] },
     });
+    const clubSettings = (await clubResponse.json()) as unknown;
+    expect(clubSettings).toMatchObject({
+      paymentProviders: { SEPA_XML: { configured: true, enabled: true } },
+    });
+    expect(JSON.stringify(clubSettings).toLocaleLowerCase()).not.toContain("iban");
     await expect(tokenResponse.json()).resolves.toMatchObject({
       token_type: "Bearer",
       expires_in: 900,

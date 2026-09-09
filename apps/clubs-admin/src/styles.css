@@ -990,6 +990,19 @@ select {
   background: var(--ah-color-surface-2);
 }
 
+.settings-parameter--derived .settings-parameter__main {
+  grid-column: 1 / -1;
+  text-decoration: none;
+}
+
+.settings-parameter__main--read-only {
+  cursor: default;
+}
+
+.settings-parameter__main--read-only:hover {
+  background: transparent;
+}
+
 .settings-parameter > .ah-button {
   align-self: center;
   min-height: 1.8rem;
@@ -1143,7 +1156,13 @@ select {
 }
 
 .settings-page-links [aria-disabled="true"] {
+  display: grid;
+  gap: var(--ah-space-1);
   color: var(--ah-color-text-muted);
+}
+
+.settings-page-links small {
+  font-size: 0.68rem;
 }
 
 .settings-card--placeholder {

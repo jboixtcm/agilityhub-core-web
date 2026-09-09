@@ -141,6 +141,7 @@ for (const [key, file] of usedKeys) {
 const dynamicKeyPrefixes = [
   "admin-settings:blocks.",
   "admin-settings:days.",
+  "admin-settings:derived.",
   "admin-settings:editor.coverage.",
   "admin-settings:enum.",
   "admin-settings:modules.",
