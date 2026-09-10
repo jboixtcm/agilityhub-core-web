@@ -2419,6 +2419,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSignupConfig"];
+        put?: never;
+        post: operations["submitSignup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/identity-checks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["checkSignupIdentity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/towns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSignupTowns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/upload-urls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createSignupUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/family-group-lookups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["lookupSignupFamilyGroup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["submitMemberDogSignup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/checkout-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/notification-preferences": {
         parameters: {
             query?: never;
@@ -4713,6 +4825,232 @@ export interface components {
             clubId: string;
             clubName: string;
             roles: components["schemas"]["Profile"][];
+        };
+        SignupConfig: {
+            enabled: boolean;
+            closedText?: string;
+            requireDogDocumentAtSignup: boolean;
+            allowFamilyGroupPending: boolean;
+            steps: ("PERSON" | "DOG" | "FAMILY" | "PAYMENT")[];
+            plans: components["schemas"]["SignupPlan"][];
+            paymentMethods: components["schemas"]["SignupPaymentMethod"][];
+            texts: components["schemas"]["SignupTexts"];
+            legal: components["schemas"]["SignupLegal"];
+            upfront?: components["schemas"]["SignupUpfront"];
+            member?: components["schemas"]["SignupMember"];
+        };
+        SignupPlan: {
+            id: string;
+            /** @enum {string} */
+            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            name: string;
+            description?: string;
+            conditions?: string;
+            offerLabel?: string;
+            price?: components["schemas"]["Money"];
+            entryFee?: components["schemas"]["Money"];
+            maintenanceFee?: components["schemas"]["Money"];
+            pack?: components["schemas"]["SignupPack"];
+        };
+        SignupPack: {
+            months: number;
+            discountLabel?: string;
+        };
+        SignupPaymentMethod: {
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+            label: string;
+            mandateText?: string;
+            instructions?: string;
+        };
+        SignupTexts: {
+            freeTrainingConditions: string;
+            therapyIntro: string;
+            familyGroupIntro: string;
+            monthlyPaymentIntro: string;
+            paymentDay: string;
+            cashConditions: string;
+        };
+        SignupLegal: {
+            /** Format: uri */
+            privacyPolicyUrl: string;
+            legalTextsVersion: string;
+            imageConsentText: string;
+        };
+        SignupMember: {
+            planId: string;
+            paymentMethodMasked: string;
+            consentsUpToDate: boolean;
+            fullName: string;
+        };
+        SignupUpfront: {
+            firstMonthSplitDay: number;
+            /** Format: date */
+            today: string;
+            firstMonthOptions: components["schemas"]["SignupUpfrontOption"][];
+            lines: components["schemas"]["SignupUpfrontLine"][];
+            totalDue: components["schemas"]["Money"];
+        };
+        SignupUpfrontOption: {
+            /** @enum {string} */
+            option: "TODAY" | "ALTERNATIVE";
+            label: string;
+            /** Format: date */
+            startDate: string;
+            amountDue: components["schemas"]["Money"];
+        };
+        SignupUpfrontLine: {
+            /** @enum {string} */
+            type: "ENTRY_FEE" | "FIRST_MONTH" | "PACK" | "ADDITIONAL_DOG_FEE";
+            label: string;
+            amount: components["schemas"]["Money"];
+        };
+        SignupIdentityDocument: {
+            /** @enum {string} */
+            type: "DNI" | "NIE" | "PASSPORT" | "OTHER";
+            value: string;
+        };
+        SignupIdentityCheckRequest: {
+            idDocument: components["schemas"]["SignupIdentityDocument"];
+            emails: string[];
+        };
+        SignupIdentityCheckResponse: {
+            /** @enum {string} */
+            result: "NEW" | "VERIFICATION_SENT" | "SIGNUP_ALREADY_PENDING" | "CONTACT_CLUB";
+            maskedEmail?: string;
+        };
+        SignupTown: {
+            name: string;
+            region: string;
+        };
+        SignupUploadRequest: {
+            fileName: string;
+            contentType: string;
+            sizeBytes: number;
+        };
+        SignupUploadResponse: {
+            /** Format: uri */
+            uploadUrl: string;
+            fileKey: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        SignupFamilyLookupRequest: {
+            holderName: string;
+            dogName: string;
+        };
+        SignupFamilyLookupResponse: {
+            /** @enum {string} */
+            result: "FOUND" | "NOT_FOUND";
+            holderDisplayName?: string;
+        };
+        SignupPhone: {
+            prefix: string;
+            number: string;
+            label: string;
+        };
+        SignupAddress: {
+            street: string;
+            postalCode: string;
+            town: string;
+        };
+        SignupPerson: {
+            idDocument: components["schemas"]["SignupIdentityDocument"];
+            firstName: string;
+            lastName1: string;
+            lastName2: string;
+            /** Format: date */
+            birthDate: string;
+            /** @enum {string} */
+            gender: "MALE" | "FEMALE" | "OTHER";
+            emails: string[];
+            phones: components["schemas"]["SignupPhone"][];
+            address: components["schemas"]["SignupAddress"];
+        };
+        SignupDocumentFile: {
+            fileKey: string;
+            name: string;
+        };
+        SignupDogDocument: {
+            /** @enum {string} */
+            type: "VACCINATION_CARD";
+            files: components["schemas"]["SignupDocumentFile"][];
+        };
+        SignupDog: {
+            name: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+            breed: string;
+            birthMonth: string;
+            chip: string;
+            notesToInstructors?: string;
+            documents: components["schemas"]["SignupDogDocument"][];
+        };
+        SignupFamilyClaim: {
+            holderName: string;
+            dogName: string;
+            leavePending: boolean;
+        };
+        SignupPayment: {
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+            iban?: string | null;
+            holderName?: string;
+            holderTaxId?: string | null;
+            /** @enum {string} */
+            firstMonthOption: "TODAY" | "ALTERNATIVE";
+        };
+        SignupConsentChoice: {
+            accepted?: boolean;
+            granted?: boolean;
+            version: string;
+        };
+        SignupConsents: {
+            privacyPolicy: components["schemas"]["SignupConsentChoice"];
+            imageUse: components["schemas"]["SignupConsentChoice"];
+        };
+        SignupRequest: {
+            locale: string;
+            website: string;
+            person: components["schemas"]["SignupPerson"];
+            dog: components["schemas"]["SignupDog"];
+            planId?: string | null;
+            familyGroupClaim?: components["schemas"]["SignupFamilyClaim"];
+            payment?: components["schemas"]["SignupPayment"];
+            consents: components["schemas"]["SignupConsents"];
+        };
+        SignupCheckout: {
+            required: boolean;
+        };
+        SignupSubmission: {
+            memberId: string;
+            signupToken: string;
+            upfront: components["schemas"]["SignupUpfront"];
+            checkout: components["schemas"]["SignupCheckout"];
+        };
+        MemberDogSignupRequest: {
+            dog: components["schemas"]["SignupDog"];
+            documents: components["schemas"]["SignupDogDocument"][];
+            planIdRequested?: string;
+            consents?: components["schemas"]["SignupConsents"];
+        };
+        MemberDogSignupSubmission: {
+            dogId: string;
+            upfront: components["schemas"]["SignupUpfront"];
+            checkout: components["schemas"]["SignupCheckout"];
+        };
+        CheckoutSessionRequest: {
+            memberId: string;
+            signupToken?: string;
+            /** Format: uri */
+            successUrl: string;
+            /** Format: uri */
+            cancelUrl: string;
+        };
+        CheckoutSessionResponse: {
+            /** Format: uri */
+            checkoutUrl: string;
+            checkoutSessionId: string;
         };
         NotificationPreferences: {
             emailByCategory: {
@@ -24454,6 +24792,217 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+        };
+    };
+    getSignupConfig: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signup form configuration */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupConfig"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    submitSignup: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Signup submitted */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupSubmission"];
+                };
+            };
+            /** @description Honeypot accepted without processing */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["ApiError"];
+            409: components["responses"]["ApiError"];
+            422: components["responses"]["ApiError"];
+            429: components["responses"]["ApiError"];
+            default: components["responses"]["ApiError"];
+        };
+    };
+    checkSignupIdentity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupIdentityCheckRequest"];
+            };
+        };
+        responses: {
+            /** @description Identity check result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupIdentityCheckResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    getSignupTowns: {
+        parameters: {
+            query: {
+                postalCode: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Towns for a postal code */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupTown"][];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createSignupUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Signed upload URL */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupUploadResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    lookupSignupFamilyGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupFamilyLookupRequest"];
+            };
+        };
+        responses: {
+            /** @description Family-group lookup result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupFamilyLookupResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    submitMemberDogSignup: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberDogSignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Dog signup submitted */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDogSignupSubmission"];
+                };
+            };
+            default: components["responses"]["ApiError"];
+        };
+    };
+    createCheckoutSession: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckoutSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Checkout session created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckoutSessionResponse"];
+                };
+            };
+            default: components["responses"]["ApiError"];
         };
     };
     updateMemberNotificationPreferences: {

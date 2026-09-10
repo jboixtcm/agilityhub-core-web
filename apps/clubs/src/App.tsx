@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 
 import { InfoPage } from "./InfoPage";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
+import { SignupPage } from "./SignupPage";
 
 interface RouteDefinition {
   path: string;
@@ -68,6 +69,7 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/baixa" },
   // Screens 16–19.
   { path: "/apuntat-hi/*", public: true },
+  { path: "/gossos/nou*" },
   // Screens 20, 21, 22, 24 and 26.
   { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR"] },
   { path: "/instructor/tasques", roles: ["INSTRUCTOR"] },
@@ -1100,10 +1102,12 @@ export function App({
       window.location.assign(path);
     }
   },
+  publicApiClient = defaultApiClient,
 }: {
   apiClient?: ApiClient;
   authClient: AuthClient;
   navigate?: (path: string, replace: boolean) => void;
+  publicApiClient?: ApiClient;
 }) {
   const pathname = window.location.pathname;
   if (pathname === "/acces") {
@@ -1142,6 +1146,37 @@ export function App({
       >
         <RequireAuth>
           <ProfileChoicePage authClient={authClient} />
+        </RequireAuth>
+      </OnboardingExperience>
+    );
+  }
+  if (pathname === "/apuntat-hi" || pathname.startsWith("/apuntat-hi/")) {
+    return (
+      <SignupPage
+        client={publicApiClient}
+        onNavigate={(path) => {
+          navigate(path, false);
+        }}
+      />
+    );
+  }
+  if (pathname === "/gossos/nou" || pathname.startsWith("/gossos/nou/")) {
+    return (
+      <OnboardingExperience
+        authClient={authClient}
+        onBlockingRequired={() => {
+          navigate("/benvinguda", true);
+        }}
+        presentation="modal"
+      >
+        <RequireAuth>
+          <SignupPage
+            addDog
+            client={apiClient}
+            onNavigate={(path) => {
+              navigate(path, false);
+            }}
+          />
         </RequireAuth>
       </OnboardingExperience>
     );

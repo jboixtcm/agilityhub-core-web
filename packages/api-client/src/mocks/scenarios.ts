@@ -23,6 +23,8 @@ export interface MockScenarioDefinition {
   onboarding?: OnboardingState;
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
+  signupStripe?: boolean;
+  signupFamilyPending?: boolean;
 }
 
 const canic = brandingCanic as Branding;
@@ -170,6 +172,50 @@ const scenarios = {
     },
     onboarding: policyReconsentOnboarding,
     outdatedConsentOnce: true,
+    sessions: accountSessions,
+  },
+  signup: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+  },
+  signupNoBilling: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "BILLING"),
+    },
+    me: member,
+    sessions: accountSessions,
+  },
+  signupNoFamily: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "FAMILY_GROUP"),
+    },
+    me: member,
+    sessions: accountSessions,
+  },
+  signupStripe: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupStripe: true,
+  },
+  signupNoFamilyPending: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupFamilyPending: false,
+  },
+  signupClosed: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      signup: { enabled: false },
+    },
+    me: member,
     sessions: accountSessions,
   },
 } as const satisfies Record<string, MockScenarioDefinition>;

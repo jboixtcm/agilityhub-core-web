@@ -9,6 +9,8 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly (string | RegExp)[] = [
   "/training-bookings",
   /^\/waitlist-entries\/[^/]+\/claim$/,
   "/checkout-sessions",
+  "/signup",
+  "/me/dogs/signup",
 ];
 
 type MaybePromise<T> = Promise<T> | T;

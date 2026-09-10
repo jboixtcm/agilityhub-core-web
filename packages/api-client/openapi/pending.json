@@ -6,6 +6,223 @@
     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
   },
   "paths": {
+    "/signup": {
+      "get": {
+        "operationId": "getSignupConfig",
+        "responses": {
+          "200": {
+            "description": "Signup form configuration",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupConfig" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      },
+      "post": {
+        "operationId": "submitSignup",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signup submitted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupSubmission" }
+              }
+            }
+          },
+          "202": {
+            "description": "Honeypot accepted without processing"
+          },
+          "400": { "$ref": "#/components/responses/ApiError" },
+          "409": { "$ref": "#/components/responses/ApiError" },
+          "422": { "$ref": "#/components/responses/ApiError" },
+          "429": { "$ref": "#/components/responses/ApiError" },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/signup/identity-checks": {
+      "post": {
+        "operationId": "checkSignupIdentity",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupIdentityCheckRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Identity check result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupIdentityCheckResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/signup/towns": {
+      "get": {
+        "operationId": "getSignupTowns",
+        "parameters": [
+          {
+            "name": "postalCode",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Towns for a postal code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SignupTown" }
+                }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/signup/upload-urls": {
+      "post": {
+        "operationId": "createSignupUploadUrl",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupUploadRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed upload URL",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupUploadResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/signup/family-group-lookups": {
+      "post": {
+        "operationId": "lookupSignupFamilyGroup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupFamilyLookupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Family-group lookup result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupFamilyLookupResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/me/dogs/signup": {
+      "post": {
+        "operationId": "submitMemberDogSignup",
+        "security": [{ "bearer": [] }],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MemberDogSignupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dog signup submitted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MemberDogSignupSubmission" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
+    "/checkout-sessions": {
+      "post": {
+        "operationId": "createCheckoutSession",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CheckoutSessionRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutSessionResponse" }
+              }
+            }
+          },
+          "default": { "$ref": "#/components/responses/ApiError" }
+        }
+      }
+    },
     "/members/{id}/notification-preferences": {
       "put": {
         "operationId": "updateMemberNotificationPreferences",
@@ -49,6 +266,406 @@
   },
   "components": {
     "schemas": {
+      "SignupConfig": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "requireDogDocumentAtSignup",
+          "allowFamilyGroupPending",
+          "steps",
+          "plans",
+          "paymentMethods",
+          "texts",
+          "legal"
+        ],
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "closedText": { "type": "string" },
+          "requireDogDocumentAtSignup": { "type": "boolean" },
+          "allowFamilyGroupPending": { "type": "boolean" },
+          "steps": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["PERSON", "DOG", "FAMILY", "PAYMENT"] }
+          },
+          "plans": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupPlan" }
+          },
+          "paymentMethods": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupPaymentMethod" }
+          },
+          "texts": { "$ref": "#/components/schemas/SignupTexts" },
+          "legal": { "$ref": "#/components/schemas/SignupLegal" },
+          "upfront": { "$ref": "#/components/schemas/SignupUpfront" },
+          "member": { "$ref": "#/components/schemas/SignupMember" }
+        }
+      },
+      "SignupPlan": {
+        "type": "object",
+        "required": ["id", "type", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["MONTHLY", "PACK", "SINGLE_CLASS"] },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "conditions": { "type": "string" },
+          "offerLabel": { "type": "string" },
+          "price": { "$ref": "#/components/schemas/Money" },
+          "entryFee": { "$ref": "#/components/schemas/Money" },
+          "maintenanceFee": { "$ref": "#/components/schemas/Money" },
+          "pack": { "$ref": "#/components/schemas/SignupPack" }
+        }
+      },
+      "SignupPack": {
+        "type": "object",
+        "required": ["months"],
+        "properties": {
+          "months": { "type": "integer", "minimum": 1 },
+          "discountLabel": { "type": "string" }
+        }
+      },
+      "SignupPaymentMethod": {
+        "type": "object",
+        "required": ["type", "label"],
+        "properties": {
+          "type": { "type": "string", "enum": ["SEPA_DD", "CARD", "MANUAL"] },
+          "label": { "type": "string" },
+          "mandateText": { "type": "string" },
+          "instructions": { "type": "string" }
+        }
+      },
+      "SignupTexts": {
+        "type": "object",
+        "required": [
+          "freeTrainingConditions",
+          "therapyIntro",
+          "familyGroupIntro",
+          "monthlyPaymentIntro",
+          "paymentDay",
+          "cashConditions"
+        ],
+        "properties": {
+          "freeTrainingConditions": { "type": "string" },
+          "therapyIntro": { "type": "string" },
+          "familyGroupIntro": { "type": "string" },
+          "monthlyPaymentIntro": { "type": "string" },
+          "paymentDay": { "type": "string" },
+          "cashConditions": { "type": "string" }
+        }
+      },
+      "SignupLegal": {
+        "type": "object",
+        "required": ["privacyPolicyUrl", "legalTextsVersion", "imageConsentText"],
+        "properties": {
+          "privacyPolicyUrl": { "type": "string", "format": "uri" },
+          "legalTextsVersion": { "type": "string" },
+          "imageConsentText": { "type": "string" }
+        }
+      },
+      "SignupMember": {
+        "type": "object",
+        "required": ["planId", "paymentMethodMasked", "consentsUpToDate", "fullName"],
+        "properties": {
+          "planId": { "type": "string" },
+          "paymentMethodMasked": { "type": "string" },
+          "consentsUpToDate": { "type": "boolean" },
+          "fullName": { "type": "string" }
+        }
+      },
+      "SignupUpfront": {
+        "type": "object",
+        "required": ["firstMonthSplitDay", "today", "firstMonthOptions", "lines", "totalDue"],
+        "properties": {
+          "firstMonthSplitDay": { "type": "integer" },
+          "today": { "type": "string", "format": "date" },
+          "firstMonthOptions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupUpfrontOption" }
+          },
+          "lines": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupUpfrontLine" }
+          },
+          "totalDue": { "$ref": "#/components/schemas/Money" }
+        }
+      },
+      "SignupUpfrontOption": {
+        "type": "object",
+        "required": ["option", "label", "startDate", "amountDue"],
+        "properties": {
+          "option": { "type": "string", "enum": ["TODAY", "ALTERNATIVE"] },
+          "label": { "type": "string" },
+          "startDate": { "type": "string", "format": "date" },
+          "amountDue": { "$ref": "#/components/schemas/Money" }
+        }
+      },
+      "SignupUpfrontLine": {
+        "type": "object",
+        "required": ["type", "label", "amount"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["ENTRY_FEE", "FIRST_MONTH", "PACK", "ADDITIONAL_DOG_FEE"]
+          },
+          "label": { "type": "string" },
+          "amount": { "$ref": "#/components/schemas/Money" }
+        }
+      },
+      "SignupIdentityDocument": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": { "type": "string", "enum": ["DNI", "NIE", "PASSPORT", "OTHER"] },
+          "value": { "type": "string" }
+        }
+      },
+      "SignupIdentityCheckRequest": {
+        "type": "object",
+        "required": ["idDocument", "emails"],
+        "properties": {
+          "idDocument": { "$ref": "#/components/schemas/SignupIdentityDocument" },
+          "emails": { "type": "array", "items": { "type": "string", "format": "email" } }
+        }
+      },
+      "SignupIdentityCheckResponse": {
+        "type": "object",
+        "required": ["result"],
+        "properties": {
+          "result": {
+            "type": "string",
+            "enum": ["NEW", "VERIFICATION_SENT", "SIGNUP_ALREADY_PENDING", "CONTACT_CLUB"]
+          },
+          "maskedEmail": { "type": "string" }
+        }
+      },
+      "SignupTown": {
+        "type": "object",
+        "required": ["name", "region"],
+        "properties": {
+          "name": { "type": "string" },
+          "region": { "type": "string" }
+        }
+      },
+      "SignupUploadRequest": {
+        "type": "object",
+        "required": ["fileName", "contentType", "sizeBytes"],
+        "properties": {
+          "fileName": { "type": "string", "maxLength": 80 },
+          "contentType": { "type": "string" },
+          "sizeBytes": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "SignupUploadResponse": {
+        "type": "object",
+        "required": ["uploadUrl", "fileKey", "expiresAt"],
+        "properties": {
+          "uploadUrl": { "type": "string", "format": "uri" },
+          "fileKey": { "type": "string" },
+          "expiresAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SignupFamilyLookupRequest": {
+        "type": "object",
+        "required": ["holderName", "dogName"],
+        "properties": {
+          "holderName": { "type": "string" },
+          "dogName": { "type": "string" }
+        }
+      },
+      "SignupFamilyLookupResponse": {
+        "type": "object",
+        "required": ["result"],
+        "properties": {
+          "result": { "type": "string", "enum": ["FOUND", "NOT_FOUND"] },
+          "holderDisplayName": { "type": "string" }
+        }
+      },
+      "SignupPhone": {
+        "type": "object",
+        "required": ["prefix", "number", "label"],
+        "properties": {
+          "prefix": { "type": "string" },
+          "number": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      },
+      "SignupAddress": {
+        "type": "object",
+        "required": ["street", "postalCode", "town"],
+        "properties": {
+          "street": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "town": { "type": "string" }
+        }
+      },
+      "SignupPerson": {
+        "type": "object",
+        "required": [
+          "idDocument",
+          "firstName",
+          "lastName1",
+          "lastName2",
+          "birthDate",
+          "gender",
+          "emails",
+          "phones",
+          "address"
+        ],
+        "properties": {
+          "idDocument": { "$ref": "#/components/schemas/SignupIdentityDocument" },
+          "firstName": { "type": "string" },
+          "lastName1": { "type": "string" },
+          "lastName2": { "type": "string" },
+          "birthDate": { "type": "string", "format": "date" },
+          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
+          "emails": { "type": "array", "items": { "type": "string", "format": "email" } },
+          "phones": { "type": "array", "items": { "$ref": "#/components/schemas/SignupPhone" } },
+          "address": { "$ref": "#/components/schemas/SignupAddress" }
+        }
+      },
+      "SignupDocumentFile": {
+        "type": "object",
+        "required": ["fileKey", "name"],
+        "properties": {
+          "fileKey": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      },
+      "SignupDogDocument": {
+        "type": "object",
+        "required": ["type", "files"],
+        "properties": {
+          "type": { "type": "string", "enum": ["VACCINATION_CARD"] },
+          "files": {
+            "type": "array",
+            "maxItems": 10,
+            "items": { "$ref": "#/components/schemas/SignupDocumentFile" }
+          }
+        }
+      },
+      "SignupDog": {
+        "type": "object",
+        "required": ["name", "sex", "breed", "birthMonth", "chip", "documents"],
+        "properties": {
+          "name": { "type": "string" },
+          "sex": { "type": "string", "enum": ["MALE", "FEMALE"] },
+          "breed": { "type": "string" },
+          "birthMonth": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+          "chip": { "type": "string" },
+          "notesToInstructors": { "type": "string" },
+          "documents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupDogDocument" }
+          }
+        }
+      },
+      "SignupFamilyClaim": {
+        "type": "object",
+        "required": ["holderName", "dogName", "leavePending"],
+        "properties": {
+          "holderName": { "type": "string" },
+          "dogName": { "type": "string" },
+          "leavePending": { "type": "boolean" }
+        }
+      },
+      "SignupPayment": {
+        "type": "object",
+        "required": ["type", "firstMonthOption"],
+        "properties": {
+          "type": { "type": "string", "enum": ["SEPA_DD", "CARD", "MANUAL"] },
+          "iban": { "type": ["string", "null"] },
+          "holderName": { "type": "string" },
+          "holderTaxId": { "type": ["string", "null"] },
+          "firstMonthOption": { "type": "string", "enum": ["TODAY", "ALTERNATIVE"] }
+        }
+      },
+      "SignupConsentChoice": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "accepted": { "type": "boolean" },
+          "granted": { "type": "boolean" },
+          "version": { "type": "string" }
+        }
+      },
+      "SignupConsents": {
+        "type": "object",
+        "required": ["privacyPolicy", "imageUse"],
+        "properties": {
+          "privacyPolicy": { "$ref": "#/components/schemas/SignupConsentChoice" },
+          "imageUse": { "$ref": "#/components/schemas/SignupConsentChoice" }
+        }
+      },
+      "SignupRequest": {
+        "type": "object",
+        "required": ["locale", "website", "person", "dog", "consents"],
+        "properties": {
+          "locale": { "type": "string" },
+          "website": { "type": "string" },
+          "person": { "$ref": "#/components/schemas/SignupPerson" },
+          "dog": { "$ref": "#/components/schemas/SignupDog" },
+          "planId": { "type": ["string", "null"] },
+          "familyGroupClaim": { "$ref": "#/components/schemas/SignupFamilyClaim" },
+          "payment": { "$ref": "#/components/schemas/SignupPayment" },
+          "consents": { "$ref": "#/components/schemas/SignupConsents" }
+        }
+      },
+      "SignupCheckout": {
+        "type": "object",
+        "required": ["required"],
+        "properties": { "required": { "type": "boolean" } }
+      },
+      "SignupSubmission": {
+        "type": "object",
+        "required": ["memberId", "signupToken", "upfront", "checkout"],
+        "properties": {
+          "memberId": { "type": "string" },
+          "signupToken": { "type": "string" },
+          "upfront": { "$ref": "#/components/schemas/SignupUpfront" },
+          "checkout": { "$ref": "#/components/schemas/SignupCheckout" }
+        }
+      },
+      "MemberDogSignupRequest": {
+        "type": "object",
+        "required": ["dog", "documents"],
+        "properties": {
+          "dog": { "$ref": "#/components/schemas/SignupDog" },
+          "documents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SignupDogDocument" }
+          },
+          "planIdRequested": { "type": "string" },
+          "consents": { "$ref": "#/components/schemas/SignupConsents" }
+        }
+      },
+      "MemberDogSignupSubmission": {
+        "type": "object",
+        "required": ["dogId", "upfront", "checkout"],
+        "properties": {
+          "dogId": { "type": "string" },
+          "upfront": { "$ref": "#/components/schemas/SignupUpfront" },
+          "checkout": { "$ref": "#/components/schemas/SignupCheckout" }
+        }
+      },
+      "CheckoutSessionRequest": {
+        "type": "object",
+        "required": ["memberId", "successUrl", "cancelUrl"],
+        "properties": {
+          "memberId": { "type": "string" },
+          "signupToken": { "type": "string" },
+          "successUrl": { "type": "string", "format": "uri" },
+          "cancelUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "CheckoutSessionResponse": {
+        "type": "object",
+        "required": ["checkoutUrl", "checkoutSessionId"],
+        "properties": {
+          "checkoutUrl": { "type": "string", "format": "uri" },
+          "checkoutSessionId": { "type": "string" }
+        }
+      },
       "NotificationPreferences": {
         "type": "object",
         "required": [

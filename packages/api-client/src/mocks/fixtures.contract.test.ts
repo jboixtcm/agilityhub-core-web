@@ -6,6 +6,7 @@ import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
 
 import openapiDocument from "../../openapi/openapi.json";
+import pendingDocument from "../../openapi/pending.json";
 
 const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
 const openapiSchemaId = "https://agilityhub.local/openapi.json";
@@ -38,6 +39,21 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
     items: { $ref: `${openapiSchemaId}#/components/schemas/Session` },
     type: "array",
   },
+  "signup-config-canic.json": {
+    $ref: `${openapiSchemaId}#/components/schemas/SignupConfig`,
+  },
+};
+
+const mergedDocument = {
+  ...openapiDocument,
+  paths: { ...openapiDocument.paths, ...pendingDocument.paths },
+  components: {
+    ...openapiDocument.components,
+    schemas: {
+      ...openapiDocument.components.schemas,
+      ...pendingDocument.components.schemas,
+    },
+  },
 };
 
 describe("T-01-25 OpenAPI mock fixture contract", () => {
@@ -56,7 +72,7 @@ describe("T-01-25 OpenAPI mock fixture contract", () => {
     }
     const ajv = new Ajv2020({ allErrors: true, strict: false });
     addFormats(ajv);
-    ajv.addSchema(openapiDocument, openapiSchemaId);
+    ajv.addSchema(mergedDocument, openapiSchemaId);
     const validate = ajv.compile(fixtureSchema);
     const fixture: unknown = JSON.parse(
       readFileSync(new URL(`./fixtures/${fixtureFile}`, import.meta.url), "utf8"),

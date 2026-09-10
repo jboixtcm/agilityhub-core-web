@@ -12,6 +12,7 @@ export const namespaces = [
   "census",
   "id",
   "shell",
+  "signup",
   "errors",
 ] as const;
 

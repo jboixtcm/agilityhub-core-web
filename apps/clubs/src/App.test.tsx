@@ -68,7 +68,7 @@ async function renderApplication(
   const i18n = await createI18n({
     branding,
     browserLanguages: [locale],
-    initialNamespaces: ["auth", "census", "errors", "shell"],
+    initialNamespaces: ["auth", "census", "errors", "shell", "signup"],
     storage: undefined,
   });
   render(
@@ -159,6 +159,7 @@ describe("T-02-14 clubs shell", () => {
         "/inactivitat",
         "/baixa",
         "/apuntat-hi/*",
+        "/gossos/nou*",
         "/instructor/pistes/:ringId/reservar",
         "/instructor/tasques",
         "/instructor/*",

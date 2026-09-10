@@ -1,0 +1,97 @@
+{
+  "enabled": true,
+  "requireDogDocumentAtSignup": false,
+  "allowFamilyGroupPending": true,
+  "steps": ["PERSON", "DOG", "FAMILY", "PAYMENT"],
+  "plans": [
+    {
+      "id": "plan-member",
+      "type": "MONTHLY",
+      "name": "Abonat",
+      "price": { "amountMinor": 6000, "currency": "EUR" },
+      "entryFee": { "amountMinor": 10000, "currency": "EUR" },
+      "offerLabel": "Ofertes si es porta més d'un gos per família"
+    },
+    {
+      "id": "plan-pack-6",
+      "type": "PACK",
+      "name": "Pack 6",
+      "price": { "amountMinor": 13500, "currency": "EUR" },
+      "conditions": "Només un cop",
+      "pack": { "months": 3 }
+    },
+    {
+      "id": "plan-pack-10",
+      "type": "PACK",
+      "name": "Pack 10",
+      "price": { "amountMinor": 18000, "currency": "EUR" },
+      "conditions": "Només un cop",
+      "pack": { "months": 5, "discountLabel": "després 40% dte. en matrícula" }
+    },
+    {
+      "id": "plan-therapy",
+      "type": "MONTHLY",
+      "name": "Teràpia",
+      "description": "condicions i cost segons cada cas",
+      "entryFee": { "amountMinor": 5000, "currency": "EUR" },
+      "maintenanceFee": { "amountMinor": 1000, "currency": "EUR" }
+    }
+  ],
+  "paymentMethods": [
+    {
+      "type": "SEPA_DD",
+      "label": "Domiciliació",
+      "mandateText": "Autoritzo el club a emetre rebuts sobre aquest compte mentre es mantingui la meva relació amb l'entitat (llei 16/2009, de 13 de novembre, de serveis de pagament)."
+    },
+    {
+      "type": "MANUAL",
+      "label": "Efectiu",
+      "instructions": "El pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud."
+    }
+  ],
+  "texts": {
+    "freeTrainingConditions": "Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana. A més hi ha la possibilitat d'entrenament lliure fora d'hores de classe a partir de nivell D amb llicència esportiva.",
+    "therapyIntro": "Es poden fer també classes de teràpia individual, combinades amb les classes en grup o com a pas previ. Si la teràpia es combina amb classes en grup, selecciona l'opció d'Abonat o Pack; si d'entrada no faràs classes en grup, selecciona l'opció Teràpia.",
+    "familyGroupIntro": "Quan s'inscriu més d'un gos d'una família, pot aplicar-se una quota mensual reduïda a partir del segon gos. L'entrada sí que és per cada gos.",
+    "monthlyPaymentIntro": "La quota mensual es cobrarà normalment el dia 1. En el cas de packs no es genera cap càrrec.",
+    "paymentDay": "Quan ja no vulguis seguir fent activitats al club o vulguis estar un temps sense venir, indica'ns-ho abans del dia 25 per modificar l'emissió de rebuts del mes següent.",
+    "cashConditions": "Els pagaments es fan per períodes naturals complets. Posa't en contacte amb el club per coordinar-los."
+  },
+  "legal": {
+    "privacyPolicyUrl": "https://canic.example.test/privacitat",
+    "legalTextsVersion": "2026-09",
+    "imageConsentText": "Autoritzo la publicació de fotos meves i del meu gos dins l'àmbit de les activitats del club."
+  },
+  "upfront": {
+    "firstMonthSplitDay": 16,
+    "today": "2026-08-17",
+    "firstMonthOptions": [
+      {
+        "option": "TODAY",
+        "label": "Alta avui, 17 d'agost (mig mes)",
+        "startDate": "2026-08-17",
+        "amountDue": { "amountMinor": 3000, "currency": "EUR" }
+      },
+      {
+        "option": "ALTERNATIVE",
+        "label": "Alta l'1 de setembre (mes complet)",
+        "startDate": "2026-09-01",
+        "amountDue": { "amountMinor": 6000, "currency": "EUR" }
+      }
+    ],
+    "lines": [
+      {
+        "type": "ENTRY_FEE",
+        "label": "Entrada (1 gos)",
+        "amount": { "amountMinor": 10000, "currency": "EUR" }
+      }
+    ],
+    "totalDue": { "amountMinor": 13000, "currency": "EUR" }
+  },
+  "member": {
+    "planId": "plan-member",
+    "paymentMethodMasked": "Domiciliació · ···· 2231",
+    "consentsUpToDate": false,
+    "fullName": "Laura Serra Vidal"
+  }
+}

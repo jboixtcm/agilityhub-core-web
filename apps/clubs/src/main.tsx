@@ -41,7 +41,10 @@ async function bootstrap(root: HTMLElement) {
   const branding = normalizeBranding(source);
   applyBrandingTheme(branding.theme);
   document.title = branding.club.name;
-  const i18n = await createI18n({ branding, initialNamespaces: ["common", "auth", "shell"] });
+  const i18n = await createI18n({
+    branding,
+    initialNamespaces: ["common", "auth", "shell", "signup"],
+  });
   const authClient = new AuthClient({
     apiBaseUrl,
     clientId: "clubs-app",
@@ -51,6 +54,11 @@ async function bootstrap(root: HTMLElement) {
   });
   const apiClient = createAuthenticatedApiClient(authClient, {
     baseUrl: apiBaseUrl,
+    getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
+  });
+  const publicApiClient = createApiClient({
+    baseUrl: apiBaseUrl,
+    credentials: "omit",
     getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
   });
   if (window.location.hash.startsWith("#impersonation=")) {
@@ -66,7 +74,7 @@ async function bootstrap(root: HTMLElement) {
       <I18nextProvider i18n={i18n}>
         <BrandingProvider branding={branding}>
           <SessionProvider client={authClient}>
-            <App apiClient={apiClient} authClient={authClient} />
+            <App apiClient={apiClient} authClient={authClient} publicApiClient={publicApiClient} />
           </SessionProvider>
         </BrandingProvider>
       </I18nextProvider>

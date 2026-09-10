@@ -749,6 +749,505 @@ select {
   clip-path: inset(50%);
 }
 
+.signup-page {
+  width: min(100%, 28.125rem);
+  min-height: 100dvh;
+  margin: 0 auto;
+  color: var(--ah-color-text);
+  background: var(--ah-color-background);
+  border-inline: 1px solid var(--ah-color-border);
+  box-shadow: 0 1.125rem 2.5rem color-mix(in srgb, var(--ah-color-text) 15%, transparent);
+}
+
+.signup-header {
+  display: flex;
+  gap: var(--ah-space-3);
+  align-items: center;
+  padding: var(--ah-space-4) var(--ah-space-4) var(--ah-space-3);
+}
+
+.signup-header h1 {
+  flex: 1;
+  margin: 0;
+  font: 700 1.35rem/1.1 var(--ah-font-display);
+}
+
+.signup-header__logo,
+.signup-header__fallback {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-sm);
+  font-weight: 800;
+  place-items: center;
+}
+
+.signup-language {
+  width: auto;
+}
+
+.signup-language .ah-select {
+  width: auto;
+  min-height: 2.25rem;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.signup-page__body {
+  padding: 0 var(--ah-space-4);
+}
+
+.signup-footer {
+  padding: var(--ah-space-4);
+  color: var(--ah-color-text-muted);
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.signup-form {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.signup-form .ah-form-field {
+  gap: var(--ah-space-1);
+}
+
+.signup-form .ah-form-field__label {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.signup-form .ah-input,
+.signup-form .ah-select {
+  width: 100%;
+  min-width: 0;
+  min-height: 3.25rem;
+  box-sizing: border-box;
+  background: var(--ah-color-surface-2);
+}
+
+.signup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-3);
+}
+
+.signup-grid > * {
+  min-width: 0;
+}
+
+.signup-grid--identity {
+  grid-template-columns: 1.2fr 1fr;
+}
+
+.signup-grid--phone {
+  grid-template-columns: 0.65fr 1.2fr 1fr;
+}
+
+.signup-grid--address {
+  grid-template-columns: 0.8fr 1.8fr;
+}
+
+.signup-progress {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.signup-progress__track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ah-space-2);
+}
+
+.signup-progress__track:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.signup-progress__track:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.signup-progress__track span {
+  height: 0.28rem;
+  background: var(--ah-color-surface-2);
+  border-radius: 999px;
+}
+
+.signup-progress__track .signup-progress__done {
+  background: var(--ah-color-primary);
+}
+
+.signup-progress p,
+.signup-copy,
+.signup-family__fields > p,
+.signup-upfront > p,
+.signup-payment__monthly > p,
+.signup-success p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.signup-progress strong {
+  color: var(--ah-color-text);
+}
+
+.signup-progress strong span {
+  color: var(--ah-color-text-muted);
+  font-weight: 400;
+}
+
+.signup-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  align-items: center;
+  padding: 0;
+  border: 0;
+}
+
+.signup-chips legend {
+  float: left;
+  margin-inline-end: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.signup-chips button,
+.signup-segment button {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.signup-chips button[aria-pressed="true"],
+.signup-segment button[aria-pressed="true"] {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.signup-chips > span {
+  flex-basis: 100%;
+  color: var(--ah-color-danger);
+  font-size: 0.75rem;
+}
+
+.signup-chips--dog {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.signup-chips--dog button {
+  min-height: 3.25rem;
+  border-radius: var(--ah-radius-sm);
+}
+
+.signup-note,
+.signup-message,
+.signup-recognition {
+  padding: var(--ah-space-3);
+  color: color-mix(in srgb, var(--ah-color-primary) 55%, var(--ah-color-text));
+  background: color-mix(in srgb, var(--ah-color-primary) 12%, var(--ah-color-surface));
+  border: 1px solid color-mix(in srgb, var(--ah-color-primary) 38%, var(--ah-color-border));
+  border-radius: var(--ah-radius-sm);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.signup-note--neutral {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface);
+  border-color: var(--ah-color-border);
+}
+
+.signup-note--success,
+.signup-recognition {
+  color: var(--ah-color-success);
+  background: color-mix(in srgb, var(--ah-color-success) 9%, var(--ah-color-surface));
+  border-color: color-mix(in srgb, var(--ah-color-success) 35%, var(--ah-color-border));
+}
+
+.signup-note--danger,
+.signup-message--error {
+  color: var(--ah-color-danger);
+  background: color-mix(in srgb, var(--ah-color-danger) 9%, var(--ah-color-surface));
+  border-color: color-mix(in srgb, var(--ah-color-danger) 35%, var(--ah-color-border));
+}
+
+.signup-message--warning {
+  color: var(--ah-color-warning);
+  background: color-mix(in srgb, var(--ah-color-warning) 9%, var(--ah-color-surface));
+  border-color: color-mix(in srgb, var(--ah-color-warning) 35%, var(--ah-color-border));
+}
+
+.signup-recognition h2,
+.signup-recognition p {
+  margin: 0 0 var(--ah-space-2);
+}
+
+.signup-note button,
+.signup-add-page,
+.signup-consent a,
+.signup-consent button {
+  color: var(--ah-color-primary);
+  background: none;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.signup-primary {
+  width: 100%;
+  min-height: 3.5rem;
+  font-size: 1rem;
+}
+
+.signup-uploaded,
+.signup-add-page {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.signup-plans,
+.signup-payment__monthly,
+.signup-family__fields {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.signup-plans h2,
+.signup-payment h2,
+.signup-family__fields h2 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signup-plans__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-3);
+}
+
+.signup-plan:first-child,
+.signup-plan:last-child {
+  grid-column: 1 / -1;
+}
+
+.signup-plan {
+  padding: 0;
+  overflow: hidden;
+}
+
+.signup-plan--selected {
+  border-color: var(--ah-color-primary);
+}
+
+.signup-plan > button {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3);
+  color: var(--ah-color-text);
+  text-align: start;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.signup-plan__head {
+  display: flex;
+  gap: var(--ah-space-2);
+  justify-content: space-between;
+}
+
+.signup-plan__head b,
+.signup-plan__activate {
+  color: var(--ah-color-primary);
+}
+
+.signup-plan small {
+  color: var(--ah-color-text-muted);
+  line-height: 1.35;
+}
+
+.signup-plan__activate {
+  justify-self: end;
+  padding: var(--ah-space-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.signup-back {
+  padding: 0;
+  color: var(--ah-color-text);
+  text-align: start;
+  background: none;
+  border: 0;
+  font: 700 1.2rem/1.2 var(--ah-font-display);
+  cursor: pointer;
+}
+
+.signup-back span {
+  margin-inline-end: var(--ah-space-2);
+  color: var(--ah-color-primary);
+}
+
+.signup-family__card h2 {
+  margin: 0 0 var(--ah-space-1);
+  font-size: 1rem;
+}
+
+.signup-family__card p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.signup-copy--center {
+  text-align: center;
+}
+
+.signup-segment {
+  display: flex;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-1);
+  background: var(--ah-color-surface-2);
+  border-radius: var(--ah-radius-sm);
+}
+
+.signup-segment button {
+  flex: 1;
+  border-radius: var(--ah-radius-sm);
+}
+
+.signup-upfront {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.signup-upfront__line,
+.signup-upfront__total,
+.signup-upfront__options label {
+  display: flex;
+  gap: var(--ah-space-2);
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.signup-upfront__options {
+  display: grid;
+  gap: var(--ah-space-2);
+  padding: 0;
+  border: 0;
+}
+
+.signup-upfront__options legend {
+  margin-bottom: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.signup-upfront__options label span {
+  flex: 1;
+}
+
+.signup-upfront__total {
+  padding-top: var(--ah-space-2);
+  border-top: 1px solid var(--ah-color-border);
+  font-size: 1rem;
+}
+
+.signup-upfront__total b {
+  color: var(--ah-color-primary);
+}
+
+.signup-consents {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.signup-consent {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--ah-space-3);
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.signup-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.signup-state,
+.signup-success {
+  display: grid;
+  min-height: 60dvh;
+  gap: var(--ah-space-4);
+  align-content: center;
+  justify-items: center;
+  margin: 0;
+  text-align: center;
+}
+
+.signup-success > span {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-success);
+  border-radius: 50%;
+  font-size: 2rem;
+  place-items: center;
+}
+
+.signup-success h2 {
+  margin: 0;
+}
+
+@media (max-width: 26rem) {
+  .signup-grid--phone {
+    grid-template-columns: 0.7fr 1.3fr;
+  }
+
+  .signup-grid--phone .ah-form-field:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .signup-consent {
+    grid-template-columns: auto 1fr;
+  }
+
+  .signup-consent > :last-child {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
 .dog-card__level,
 .dog-card__free,
 .dog-pack > div:first-child span {

@@ -702,7 +702,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
           <EmptyState
             action={
               data.canAddDog ? (
-                <a className="self-button-link" href="/apuntat-hi">
+                <a className="self-button-link" href="/gossos/nou">
                   {t("census:myDogs.addDog")}
                 </a>
               ) : undefined
@@ -726,7 +726,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
               />
             ))}
             {data.canAddDog ? (
-              <a className="self-button-link self-button-link--secondary" href="/apuntat-hi">
+              <a className="self-button-link self-button-link--secondary" href="/gossos/nou">
                 {t("census:myDogs.addDog")}
               </a>
             ) : null}

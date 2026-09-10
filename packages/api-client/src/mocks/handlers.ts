@@ -43,6 +43,13 @@ import {
   settingsState,
 } from "./fixtures/settings";
 import {
+  signupConfig,
+  signupMemberFixture,
+  signupTownFixtures,
+  type MemberDogSignupRequest,
+  type SignupRequest,
+} from "./fixtures/signup";
+import {
   currentMockScenario,
   currentMockScenarioName,
   mockScenario,
@@ -109,6 +116,10 @@ type AuditEntry = components["schemas"]["AuditEntry"];
 type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
 type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
 type ExportJob = components["schemas"]["ExportJob"];
+type SignupIdentityCheckRequest = components["schemas"]["SignupIdentityCheckRequest"];
+type SignupUploadRequest = components["schemas"]["SignupUploadRequest"];
+type SignupFamilyLookupRequest = components["schemas"]["SignupFamilyLookupRequest"];
+type CheckoutSessionRequest = components["schemas"]["CheckoutSessionRequest"];
 
 function pageText(source: Record<string, string>, locale: string): string {
   const normalized = locale.split("-")[0] ?? locale;
@@ -724,6 +735,35 @@ function validationError(fieldErrors: { code: string; field: string }[]) {
   );
 }
 
+function signupConfiguration(request: Request) {
+  const scenario = currentMockScenario();
+  const modules = scenario.branding.modules;
+  const config = signupConfig({
+    acceptLanguage: request.headers.get("Accept-Language"),
+    billing: modules.includes("BILLING"),
+    enabled: scenario.branding.signup.enabled && scenario.branding.status === "ACTIVE",
+    familyGroup: modules.includes("FAMILY_GROUP"),
+    packs: modules.includes("PACKS"),
+    privacyPolicyUrl: scenario.branding.legal.privacyPolicyUrl,
+    stripe: scenario.signupStripe === true,
+    ...(request.headers.has("Authorization") ? { member: signupMemberFixture } : {}),
+  });
+  config.allowFamilyGroupPending = scenario.signupFamilyPending !== false;
+  return config;
+}
+
+function signupUpfront(request: Request) {
+  return (
+    signupConfiguration(request).upfront ?? {
+      firstMonthOptions: [],
+      firstMonthSplitDay: 16,
+      lines: [],
+      today: "2026-08-17",
+      totalDue: { amountMinor: 0, currency: currentMockScenario().branding.currency },
+    }
+  );
+}
+
 function currentMemberDog(id: string): MeDog | undefined {
   return memberDogsState.dogs.find((dog) => dog.id === id);
 }
@@ -915,6 +955,128 @@ export const handlers = [
     return HttpResponse.json(memberProfileState);
   }),
   http.get("*/api/v1/me/dogs", () => HttpResponse.json(memberDogsState)),
+  http.get("*/api/v1/signup", ({ request }) =>
+    HttpResponse.json(signupConfiguration(request)),
+  ),
+  http.post("*/api/v1/signup/identity-checks", async ({ request }) => {
+    const body = (await request.json()) as SignupIdentityCheckRequest;
+    const email = body.emails[0]?.toLocaleLowerCase() ?? "";
+    if (email.startsWith("limit")) {
+      return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "120" });
+    }
+    if (body.idDocument.value.trim() === "" || body.idDocument.value === "12345678A") {
+      return validationError([{ code: "INVALID_ID_DOCUMENT", field: "idDocument.value" }]);
+    }
+    if (email === "existing@example.test") {
+      return HttpResponse.json({ maskedEmail: "e••••••g@e••••••.test", result: "VERIFICATION_SENT" });
+    }
+    if (email === "pending@example.test") {
+      return HttpResponse.json({ result: "SIGNUP_ALREADY_PENDING" });
+    }
+    if (email === "contact@example.test") {
+      return HttpResponse.json({ result: "CONTACT_CLUB" });
+    }
+    return HttpResponse.json({ result: "NEW" });
+  }),
+  http.get("*/api/v1/signup/towns", ({ request }) => {
+    const postalCode = new URL(request.url).searchParams.get("postalCode") ?? "";
+    if (postalCode === "limit") {
+      return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "60" });
+    }
+    return HttpResponse.json(signupTownFixtures[postalCode] ?? []);
+  }),
+  http.post("*/api/v1/signup/upload-urls", async ({ request }) => {
+    const body = (await request.json()) as SignupUploadRequest;
+    if (!body.contentType.startsWith("image/") && body.contentType !== "application/pdf") {
+      return apiError("FILE_TYPE_NOT_ALLOWED", "File type not allowed", 400);
+    }
+    if (body.sizeBytes > 25 * 1024 * 1024) {
+      return apiError("FILE_TOO_LARGE", "File too large", 400);
+    }
+    const fileKey = `signup/mock/202609/mock-upload/${encodeURIComponent(body.fileName)}`;
+    return HttpResponse.json({
+      expiresAt: "2026-09-09T18:15:00Z",
+      fileKey,
+      uploadUrl: `https://uploads.example.test/${fileKey}`,
+    });
+  }),
+  http.put("https://uploads.example.test/*", () => new HttpResponse(null, { status: 200 })),
+  http.post("*/api/v1/signup/family-group-lookups", async ({ request }) => {
+    if (!currentMockScenario().branding.modules.includes("FAMILY_GROUP")) {
+      return apiError("MODULE_DISABLED", "Module disabled", 404);
+    }
+    const body = (await request.json()) as SignupFamilyLookupRequest;
+    const holder = normalized(body.holderName).trim().replaceAll(/\s+/gu, " ");
+    const dog = normalized(body.dogName).trim();
+    return holder === "marta roca" && dog === "kiwi"
+      ? HttpResponse.json({ holderDisplayName: "Marta R.", result: "FOUND" })
+      : HttpResponse.json({ result: "NOT_FOUND" });
+  }),
+  http.post("*/api/v1/signup", async ({ request }) => {
+    const body = (await request.json()) as SignupRequest;
+    if (body.website.trim() !== "") {
+      return new HttpResponse(null, { status: 202 });
+    }
+    const scenario = currentMockScenario();
+    if (!scenario.branding.signup.enabled || scenario.branding.status !== "ACTIVE") {
+      return apiError("SIGNUP_CLOSED", "Signup closed", 409);
+    }
+    if (body.person.emails[0]?.startsWith("limit") === true) {
+      return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "120" });
+    }
+    if (!body.consents.privacyPolicy.accepted) {
+      return validationError([{ code: "REQUIRED", field: "consents.privacyPolicy.accepted" }]);
+    }
+    if (body.consents.privacyPolicy.version !== "2026-09") {
+      return apiError("CONSENT_VERSION_OUTDATED", "Consent version outdated", 422);
+    }
+    if (body.dog.chip === "registered") {
+      return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
+    }
+    if (body.person.emails[0] === "pending@example.test") {
+      return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 409);
+    }
+    const checkoutRequired = scenario.signupStripe === true;
+    return HttpResponse.json(
+      {
+        checkout: { required: checkoutRequired },
+        memberId: "member-signup-357",
+        signupToken: "mock-signup-token",
+        upfront: signupUpfront(request),
+      },
+      { status: 201 },
+    );
+  }),
+  http.post("*/api/v1/me/dogs/signup", async ({ request }) => {
+    if (!request.headers.has("Authorization")) {
+      return apiError("UNAUTHENTICATED", "Authentication required", 401);
+    }
+    const body = (await request.json()) as MemberDogSignupRequest;
+    if (body.dog.chip === "registered") {
+      return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
+    }
+    return HttpResponse.json(
+      {
+        checkout: { required: false },
+        dogId: "dog-pending-new",
+        upfront: signupUpfront(request),
+      },
+      { status: 201 },
+    );
+  }),
+  http.post("*/api/v1/checkout-sessions", async ({ request }) => {
+    await request.json() as CheckoutSessionRequest;
+    if (currentMockScenario().signupStripe !== true) {
+      return apiError("PAYMENT_PROVIDER_NOT_ENABLED", "Payment provider not enabled", 422);
+    }
+    return HttpResponse.json(
+      {
+        checkoutSessionId: "cs_mock_signup",
+        checkoutUrl: "https://checkout.test/cs_mock_signup",
+      },
+      { status: 201 },
+    );
+  }),
   http.put("*/api/v1/me/dogs/:id/instructor-note", async ({ params, request }) => {
     if (!currentMockScenario().branding.modules.includes("TASKS")) {
       return apiError("MODULE_DISABLED", "Module disabled", 404);
