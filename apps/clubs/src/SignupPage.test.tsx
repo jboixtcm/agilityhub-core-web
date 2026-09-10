@@ -4,7 +4,8 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -78,14 +79,18 @@ async function renderSignup({
   return { i18n, navigate };
 }
 
-function fillPerson(idDocument = "12345678Z", email = "new@example.test") {
+function fillPerson(
+  idDocument = "12345678Z",
+  email = "new@example.test",
+  birthDate = "05/04/1992",
+) {
   fireEvent.change(screen.getByLabelText("DNI / NIE"), { target: { value: idDocument } });
   fireEvent.change(screen.getByLabelText("Nom", { exact: true }), {
     target: { value: "Nora" },
   });
   fireEvent.change(screen.getByLabelText("Cognom 1"), { target: { value: "Soler" } });
   fireEvent.change(screen.getByLabelText("Data de naixement"), {
-    target: { value: "1992-04-05" },
+    target: { value: birthDate },
   });
   fireEvent.click(screen.getByRole("button", { name: "Altres / No binari" }));
   fireEvent.change(screen.getByLabelText("Email", { exact: true }), { target: { value: email } });
@@ -160,6 +165,18 @@ describe("T-04-29 signup person and draft", () => {
     expect(screen.getByLabelText("Nombre del perro")).toHaveValue("Kiwi");
     expect(localStorage.getItem("agilityhub.locale")).toBe("es");
   });
+
+  it("masks and validates the browser-independent birth date control", async () => {
+    await renderSignup({ path: "/apuntat-hi" });
+    const birthDate = screen.getByLabelText("Data de naixement");
+    expect(birthDate).toHaveAttribute("type", "text");
+    expect(birthDate).toHaveAttribute("placeholder", "dd/mm/aaaa");
+
+    fillPerson("12345678Z", "new@example.test", "31021992");
+    expect(birthDate).toHaveValue("31/02/1992");
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(await screen.findByText("La data no és vàlida.")).toBeVisible();
+  });
 });
 
 describe("T-04-30 signup dog, uploads, plans and module gates", () => {
@@ -167,14 +184,24 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
     await renderSignup({ path: "/apuntat-hi/gos" });
     fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
     fireEvent.change(screen.getByLabelText("Raça"), { target: { value: "Mestís" } });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "2022-03" } });
+    const birthMonth = screen.getByLabelText("Naix.");
+    expect(birthMonth).toHaveAttribute("type", "text");
+    expect(birthMonth).toHaveAttribute("placeholder", "mm/aaaa");
+    fireEvent.change(birthMonth, { target: { value: "032022" } });
+    expect(birthMonth).toHaveValue("03/2022");
     fireEvent.change(screen.getByLabelText("Núm. de xip"), { target: { value: "chip-kiwi" } });
 
-    fireEvent.change(screen.getByLabelText("Cartilla de vacunes"), {
+    const vaccinationCard = screen.getByLabelText("Cartilla de vacunes");
+    expect(vaccinationCard).toHaveAttribute("type", "file");
+    expect(vaccinationCard).toHaveClass("signup-file-input");
+    expect(
+      screen.getByText("Cartilla de vacunes", { selector: ".signup-file-control span" }),
+    ).toBeVisible();
+    fireEvent.change(vaccinationCard, {
       target: { files: [new File(["page-1"], "scan.jpg", { type: "image/jpeg" })] },
     });
     expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
-    fireEvent.change(screen.getByLabelText("Cartilla de vacunes"), {
+    fireEvent.change(vaccinationCard, {
       target: { files: [new File(["page-2"], "scan.pdf", { type: "application/pdf" })] },
     });
     expect(await screen.findByText("cartilla_Kiwi_2.pdf pujada")).toBeVisible();
@@ -183,6 +210,16 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
     expect(screen.getByText("Pack 6")).toBeVisible();
     expect(screen.getByText("Pack 10")).toBeVisible();
     expect(screen.getByText("Teràpia")).toBeVisible();
+    const memberPlan = screen.getByRole("button", { name: "Selecciona Abonat" });
+    expect(within(memberPlan).getByText("Abonat").closest(".signup-plan__head")).toContainElement(
+      within(memberPlan).getByText(/60,00\s€\/mes/u),
+    );
+    expect(
+      within(screen.getByRole("button", { name: "Selecciona Pack 6" })).getByText("Pack 6"),
+    ).toBeVisible();
+    const therapyPlan = screen.getByRole("button", { name: "Selecciona Teràpia" });
+    expect(within(therapyPlan).queryByText(/^Entrada 50,00\s€$/u)).not.toBeInTheDocument();
+    expect(within(therapyPlan).getByText(/Entrada a compte: 50,00\s€/u)).toBeVisible();
     expect(screen.getByText("Ofertes si es porta més d'un gos per família")).toBeVisible();
     expect(screen.getByText(/imprescindible per començar les classes/u)).toBeVisible();
     expect(screen.getByText("＋ Afegir un altre full")).toBeVisible();
@@ -262,7 +299,7 @@ describe("T-04-31 signup family lookup", () => {
     await renderSignup({ path: "/apuntat-hi/gos" });
     fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
     fireEvent.change(screen.getByLabelText("Raça"), { target: { value: "Mestís" } });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "2022-03" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "03/2022" } });
     fireEvent.change(screen.getByLabelText("Núm. de xip"), { target: { value: "chip-kiwi" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(await screen.findByLabelText("Nom del responsable")).toBeVisible();
@@ -274,6 +311,59 @@ describe("T-04-31 signup family lookup", () => {
 describe("T-04-32 signup payment, checkout and add-dog mode", () => {
   it("renders API totals and payment conditions and submits only after privacy consent", async () => {
     const navigate = vi.fn();
+    let submittedBody: unknown;
+    sessionStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({
+        dog: {
+          birthMonth: "03/2022",
+          breed: "Mestís",
+          chip: "chip-kiwi",
+          documents: [{ files: [], type: "VACCINATION_CARD" }],
+          name: "Kiwi",
+          sex: "FEMALE",
+        },
+        familyClaim: { dogName: "", holderName: "", leavePending: false },
+        imageConsent: false,
+        mode: "public",
+        passport: "",
+        payment: { firstMonthOption: "TODAY", type: "SEPA_DD" },
+        person: {
+          address: { postalCode: "08349", street: "Carrer de la Font, 3", town: "Cabrera" },
+          birthDate: "05/04/1992",
+          emails: ["new@example.test", ""],
+          firstName: "Nora",
+          gender: "OTHER",
+          idDocument: { type: "DNI", value: "12345678Z" },
+          lastName1: "Soler",
+          lastName2: "Pons",
+          phones: [{ label: "Mòbil", number: "612345678", prefix: "+34" }],
+        },
+        planId: "plan-member",
+        privacyAccepted: false,
+        savedAt: Date.now(),
+      }),
+    );
+    server.use(
+      http.post("*/api/v1/signup", async ({ request }) => {
+        submittedBody = await request.json();
+        return HttpResponse.json(
+          {
+            checkout: { required: false },
+            memberId: "member-signup-iso-test",
+            signupToken: "mock-signup-token",
+            upfront: {
+              firstMonthOptions: [],
+              firstMonthSplitDay: 16,
+              lines: [],
+              today: "2026-08-17",
+              totalDue: { amountMinor: 0, currency: "EUR" },
+            },
+          },
+          { status: 201 },
+        );
+      }),
+    );
     await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
     const submit = screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" });
 
@@ -301,6 +391,10 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     fireEvent.click(submit);
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
+    });
+    expect(submittedBody).toMatchObject({
+      dog: { birthMonth: "2022-03" },
+      person: { birthDate: "1992-04-05" },
     });
     expect(sessionStorage.getItem(DRAFT_KEY)).toBeNull();
   });

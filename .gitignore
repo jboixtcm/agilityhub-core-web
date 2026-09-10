@@ -9,6 +9,10 @@ test-results/
 *.log
 !roadmap/evidence/E2-W05/round3-*.log
 !roadmap/evidence/E2-W10/*.log
+!roadmap/evidence/E3-W01/04-turbo-final.log
+!roadmap/evidence/E3-W01/05-i18n.log
+!roadmap/evidence/E3-W01/06-vitest.log
+!roadmap/evidence/E3-W01/07-playwright-final.log
 .DS_Store
 .env
 .env.*

@@ -847,11 +847,13 @@ select {
 }
 
 .signup-grid--phone {
-  grid-template-columns: 0.65fr 1.2fr 1fr;
+  grid-template-columns: 4.75rem minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--ah-space-2);
 }
 
 .signup-grid--address {
   grid-template-columns: 0.8fr 1.8fr;
+  gap: var(--ah-space-2);
 }
 
 .signup-progress {
@@ -1021,6 +1023,57 @@ select {
   font-size: 0.75rem;
 }
 
+.signup-file-field {
+  position: relative;
+}
+
+.signup-file-control {
+  display: flex;
+  min-height: 3.25rem;
+  align-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  cursor: pointer;
+}
+
+.signup-file-control .ah-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.signup-file-field:focus-within .signup-file-control {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.signup-file-field.ah-form-field--error .signup-file-control {
+  border-color: var(--ah-color-danger);
+}
+
+.signup-form .signup-file-input {
+  position: absolute;
+  width: 1px;
+  min-height: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.signup-upload-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1) var(--ah-space-2);
+  align-items: baseline;
+}
+
 .signup-plans,
 .signup-payment__monthly,
 .signup-family__fields {
@@ -1073,8 +1126,35 @@ select {
 
 .signup-plan__head {
   display: flex;
+  align-items: baseline;
   gap: var(--ah-space-2);
   justify-content: space-between;
+}
+
+.signup-plan__head strong,
+.signup-plan__head b {
+  white-space: nowrap;
+}
+
+.signup-plan__head small {
+  text-align: end;
+}
+
+.signup-plan--pack > button {
+  align-content: start;
+  text-align: center;
+}
+
+.signup-plan--pack .signup-plan__head {
+  justify-content: center;
+}
+
+.signup-plan__pack-price {
+  white-space: nowrap;
+}
+
+.signup-plan--therapy .signup-plan__head {
+  align-items: start;
 }
 
 .signup-plan__head b,
@@ -1189,10 +1269,38 @@ select {
 
 .signup-consent {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--ah-space-3);
+  grid-template-columns: auto minmax(0, 1fr) max-content;
+  gap: var(--ah-space-2);
   align-items: center;
   font-size: 0.8rem;
+}
+
+.signup-consent .ah-checkbox {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  appearance: none;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: 50%;
+  place-content: center;
+}
+
+.signup-consent .ah-checkbox:checked {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.signup-consent .ah-checkbox:checked::after {
+  content: "✓";
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.signup-consent a,
+.signup-consent button {
+  white-space: nowrap;
 }
 
 .signup-honeypot {
@@ -1230,21 +1338,9 @@ select {
 }
 
 @media (max-width: 26rem) {
-  .signup-grid--phone {
-    grid-template-columns: 0.7fr 1.3fr;
-  }
-
-  .signup-grid--phone .ah-form-field:last-child {
-    grid-column: 1 / -1;
-  }
-
-  .signup-consent {
-    grid-template-columns: auto 1fr;
-  }
-
-  .signup-consent > :last-child {
-    grid-column: 2;
-    justify-self: start;
+  .signup-form .ah-input,
+  .signup-form .ah-select {
+    padding-inline: var(--ah-space-2);
   }
 }
 

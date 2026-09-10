@@ -40,11 +40,14 @@ async function fillPerson(page: Page) {
   await page.getByLabel("Nom", { exact: true }).fill("Nora");
   await page.getByLabel("Cognom 1").fill("Soler");
   await page.getByLabel("Cognom 2").fill("Pons");
-  await page.getByLabel("Data de naixement").fill("1992-04-05");
+  await page.getByLabel("Data de naixement").fill("05/04/1992");
   await page.getByRole("button", { name: "Altres / No binari" }).click();
   await page.getByLabel("Email", { exact: true }).fill("nora.soler@example.test");
+  await page.getByLabel("Segon email (opcional)").fill("pau.soler@example.test");
   await page.getByLabel("Telèfon", { exact: true }).fill("612345678");
   await page.getByLabel("Descripció", { exact: true }).first().fill("Mòbil");
+  await page.getByLabel("Segon telèfon (opcional)").fill("623456789");
+  await page.getByLabel("Descripció", { exact: true }).nth(1).fill("Feina");
   await page.getByLabel("Carrer i número").fill("Carrer de la Font, 3");
   const postalCode = page.getByLabel("CP", { exact: true });
   await postalCode.fill("08349");
@@ -56,7 +59,7 @@ async function fillDog(page: Page, name: string) {
   await page.getByLabel("Nom del gos").fill(name);
   await page.getByRole("button", { name: "Mascle" }).click();
   await page.getByLabel("Raça").fill("Mestís");
-  await page.getByLabel("Naix.").fill("2022-03");
+  await page.getByLabel("Naix.").fill("03/2022");
   await page.getByLabel("Núm. de xip").fill(`chip-${name.toLocaleLowerCase()}`);
   await page.getByLabel("Cartilla de vacunes").setInputFiles({
     buffer: Buffer.from("mock-vaccination-page"),
@@ -71,21 +74,21 @@ test.describe("T-04-29–32 public signup", () => {
     await prepareScenario(page);
     await page.goto(`${baseUrl}/apuntat-hi`);
     await expect(page.getByText(/Pas 1 de 4/u)).toBeVisible();
+    await fillPerson(page);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "16-person-375.png"),
     });
 
-    await fillPerson(page);
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/gos");
     await expect(page.getByText(/Pas 2 de 4/u)).toBeVisible();
+    await fillDog(page, "Kiwi");
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "17-dog-375.png"),
     });
 
-    await fillDog(page, "Kiwi");
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/familia");
     await expect(page.getByLabel("Nom del responsable")).toBeVisible();
@@ -101,12 +104,14 @@ test.describe("T-04-29–32 public signup", () => {
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/pagament");
     await expect(page.getByText(/Pas 4 de 4/u)).toBeVisible();
+    await page.getByLabel("Accepto la política de privacitat").check();
+    await page.getByLabel("Autoritzo l'ús de la meva imatge").check();
+    await page.getByRole("button", { name: "què vol dir?" }).click();
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "19-payment-375.png"),
     });
 
-    await page.getByLabel("Accepto la política de privacitat").check();
     await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
     await page.waitForURL("**/apuntat-hi/enviada");
     await expect(page.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();

@@ -5,6 +5,7 @@ import {
   Card,
   Checkbox,
   FormField as UiFormField,
+  Icon,
   Input,
   resolveBrandingLogo,
   Select,
@@ -45,6 +46,57 @@ type FieldErrors = Readonly<Record<string, string>>;
 const DRAFT_KEY = "signup.draft.v1";
 const CHECKOUT_KEY = "signup.checkout.v1";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+function maskNumericDate(value: string, segmentLengths: readonly number[]): string {
+  const digits = value.replaceAll(/\D/gu, "").slice(
+    0,
+    segmentLengths.reduce((sum, item) => sum + item, 0),
+  );
+  const segments: string[] = [];
+  let cursor = 0;
+  for (const length of segmentLengths) {
+    const segment = digits.slice(cursor, cursor + length);
+    if (segment === "") break;
+    segments.push(segment);
+    cursor += length;
+  }
+  return segments.join("/");
+}
+
+function birthDateToIso(value: string): string | undefined {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/u.exec(value);
+  if (match === null) return undefined;
+  const [, day = "", month = "", year = ""] = match;
+  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  return Number(year) > 0 &&
+    date.getUTCFullYear() === Number(year) &&
+    date.getUTCMonth() === Number(month) - 1 &&
+    date.getUTCDate() === Number(day)
+    ? `${year}-${month}-${day}`
+    : undefined;
+}
+
+function birthMonthToIso(value: string): string | undefined {
+  const match = /^(\d{2})\/(\d{4})$/u.exec(value);
+  if (match === null) return undefined;
+  const [, month = "", year = ""] = match;
+  const monthNumber = Number(month);
+  return Number(year) > 0 && monthNumber >= 1 && monthNumber <= 12 ? `${year}-${month}` : undefined;
+}
+
+function legacyDateToDisplay(value: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/u.exec(value);
+  if (match === null) return value;
+  const [, year = "", month = "", day = ""] = match;
+  return `${day}/${month}/${year}`;
+}
+
+function legacyMonthToDisplay(value: string): string {
+  const match = /^(\d{4})-(\d{2})$/u.exec(value);
+  if (match === null) return value;
+  const [, year = "", month = ""] = match;
+  return `${month}/${year}`;
+}
 
 function FormField({
   children,
@@ -129,7 +181,17 @@ function readDraft(addDog: boolean, prefix: string): SignupDraft {
         Number.isFinite(candidate.savedAt) &&
         Date.now() - candidate.savedAt <= DRAFT_MAX_AGE_MS
       ) {
-        return candidate;
+        return {
+          ...candidate,
+          dog: {
+            ...candidate.dog,
+            birthMonth: legacyMonthToDisplay(candidate.dog.birthMonth),
+          },
+          person: {
+            ...candidate.person,
+            birthDate: legacyDateToDisplay(candidate.person.birthDate),
+          },
+        };
       }
       sessionStorage.removeItem(DRAFT_KEY);
     }
@@ -311,8 +373,13 @@ function PersonStep({
     const next: Record<string, string> = {};
     const required = t("signup:common.required");
     if (identityDocument().value === "") next.idDocument = required;
-    for (const key of ["firstName", "lastName1", "birthDate"] as const) {
+    for (const key of ["firstName", "lastName1"] as const) {
       if (draft.person[key].trim() === "") next[key] = required;
+    }
+    if (draft.person.birthDate.trim() === "") {
+      next.birthDate = required;
+    } else if (birthDateToIso(draft.person.birthDate) === undefined) {
+      next.birthDate = t("signup:common.invalidDate");
     }
     if (draft.person.gender === "") next.gender = required;
     const primaryEmail = draft.person.emails[0]?.trim() ?? "";
@@ -525,11 +592,15 @@ function PersonStep({
       >
         <Input
           aria-invalid={errors.birthDate === undefined ? undefined : true}
+          autoComplete="bday"
           id="signup-birth-date"
+          inputMode="numeric"
+          maxLength={10}
           onChange={(event) => {
-            patchPerson("birthDate", event.currentTarget.value);
+            patchPerson("birthDate", maskNumericDate(event.currentTarget.value, [2, 2, 4]));
           }}
-          type="date"
+          placeholder={t("signup:person.birthDatePlaceholder")}
+          type="text"
           value={draft.person.birthDate}
         />
       </FormField>
@@ -589,13 +660,17 @@ function PersonStep({
             id={`signup-phone-prefix-${String(index)}`}
             label={t("signup:person.phonePrefix")}
           >
-            <Input
+            <Select
               id={`signup-phone-prefix-${String(index)}`}
               onChange={(event) => {
                 patchPhone(index, "prefix", event.currentTarget.value);
               }}
               value={draft.person.phones[index]?.prefix ?? profile.phonePrefix}
-            />
+            >
+              <option value={draft.person.phones[index]?.prefix ?? profile.phonePrefix}>
+                {draft.person.phones[index]?.prefix ?? profile.phonePrefix}
+              </option>
+            </Select>
           </FormField>
           <FormField
             error={index === 0 ? errors.phones0 : undefined}
@@ -802,8 +877,13 @@ function DogStep({
   const submit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const next: Record<string, string> = {};
-    for (const key of ["name", "breed", "birthMonth", "chip"] as const) {
+    for (const key of ["name", "breed", "chip"] as const) {
       if (draft.dog[key].trim() === "") next[key] = t("signup:common.required");
+    }
+    if (draft.dog.birthMonth.trim() === "") {
+      next.birthMonth = t("signup:common.required");
+    } else if (birthMonthToIso(draft.dog.birthMonth) === undefined) {
+      next.birthMonth = t("signup:common.invalidMonth");
     }
     if (config.requireDogDocumentAtSignup && files.length === 0) {
       next.documents = t("errors:DOG_DOCUMENT_REQUIRED");
@@ -869,11 +949,15 @@ function DogStep({
           label={t("signup:dog.birthMonth")}
         >
           <Input
+            aria-invalid={errors.birthMonth === undefined ? undefined : true}
             id="signup-dog-birth"
+            inputMode="numeric"
+            maxLength={7}
             onChange={(event) => {
-              patchDog("birthMonth", event.currentTarget.value);
+              patchDog("birthMonth", maskNumericDate(event.currentTarget.value, [2, 4]));
             }}
-            type="month"
+            placeholder={t("signup:dog.birthMonthPlaceholder")}
+            type="text"
             value={draft.dog.birthMonth}
           />
         </FormField>
@@ -887,28 +971,39 @@ function DogStep({
           value={draft.dog.chip}
         />
       </FormField>
-      <FormField
-        error={errors.documents}
-        id="signup-dog-document"
-        label={t("signup:dog.vaccinationCard")}
+      <div
+        className={`ah-form-field signup-file-field${errors.documents === undefined ? "" : " ah-form-field--error"}`}
       >
+        <label className="signup-file-control" htmlFor="signup-dog-document">
+          <Icon aria-hidden="true" name="doc" />
+          <span>{t("signup:dog.vaccinationCard")}</span>
+        </label>
         <Input
           accept="application/pdf,image/*"
+          aria-invalid={errors.documents === undefined ? undefined : true}
+          className="signup-file-input"
           disabled={uploading}
           id="signup-dog-document"
           multiple
           onChange={(event) => void upload(event)}
           type="file"
         />
-      </FormField>
-      {files.map((file) => (
-        <p className="signup-uploaded" key={file.fileKey}>
-          {t("signup:dog.uploaded", { name: file.name })}
-        </p>
-      ))}
-      <label className="signup-add-page" htmlFor="signup-dog-document">
-        {uploading ? t("signup:dog.uploading") : t("signup:dog.addPage")}
-      </label>
+        {errors.documents === undefined ? null : (
+          <div className="ah-form-field__error" role="alert">
+            {errors.documents}
+          </div>
+        )}
+      </div>
+      <div className="signup-upload-list">
+        {files.map((file) => (
+          <p className="signup-uploaded" key={file.fileKey}>
+            {t("signup:dog.uploaded", { name: file.name })}
+          </p>
+        ))}
+        <label className="signup-add-page" htmlFor="signup-dog-document">
+          {uploading ? t("signup:dog.uploading") : t("signup:dog.addPage")}
+        </label>
+      </div>
       {!config.requireDogDocumentAtSignup ? (
         <aside className="signup-note signup-note--neutral">
           {t("signup:dog.optionalDocument")}
@@ -924,61 +1019,75 @@ function DogStep({
         <section className="signup-plans" aria-labelledby="signup-plans-title">
           <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
           <div className="signup-plans__grid">
-            {config.plans.map((plan) => (
-              <Card
-                className={
-                  draft.planId === plan.id ? "signup-plan signup-plan--selected" : "signup-plan"
-                }
-                key={plan.id}
-              >
-                <button
-                  aria-label={t("signup:dog.selectPlan", { plan: plan.name })}
-                  aria-pressed={draft.planId === plan.id}
-                  onClick={() => {
-                    onChange({ ...draft, planId: plan.id });
-                  }}
-                  type="button"
-                >
-                  <span className="signup-plan__head">
-                    <strong>{plan.name}</strong>
-                    {plan.price === undefined ? null : (
-                      <b>
-                        {plan.type === "MONTHLY"
-                          ? t("signup:dog.monthlyPrice", {
-                              price: formatMoney(plan.price.amountMinor / 100),
-                            })
-                          : t("signup:dog.packPrice", {
-                              months: plan.pack?.months ?? 1,
-                              price: formatMoney(plan.price.amountMinor / 100),
-                            })}
-                      </b>
+            {config.plans.map((plan) => {
+              const planClassName = [
+                "signup-plan",
+                plan.type === "PACK" ? "signup-plan--pack" : "",
+                plan.maintenanceFee === undefined ? "" : "signup-plan--therapy",
+                draft.planId === plan.id ? "signup-plan--selected" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+              return (
+                <Card className={planClassName} key={plan.id}>
+                  <button
+                    aria-label={t("signup:dog.selectPlan", { plan: plan.name })}
+                    aria-pressed={draft.planId === plan.id}
+                    onClick={() => {
+                      onChange({ ...draft, planId: plan.id });
+                    }}
+                    type="button"
+                  >
+                    <span className="signup-plan__head">
+                      <strong>{plan.name}</strong>
+                      {plan.maintenanceFee !== undefined && plan.description !== undefined ? (
+                        <small>{plan.description}</small>
+                      ) : plan.price === undefined || plan.type === "PACK" ? null : (
+                        <b>
+                          {t("signup:dog.monthlyPrice", {
+                            price: formatMoney(plan.price.amountMinor / 100),
+                          })}
+                        </b>
+                      )}
+                    </span>
+                    {plan.type !== "PACK" || plan.price === undefined ? null : (
+                      <small className="signup-plan__pack-price">
+                        {t("signup:dog.packPrice", {
+                          months: plan.pack?.months ?? 1,
+                          price: formatMoney(plan.price.amountMinor / 100),
+                        })}
+                      </small>
                     )}
-                  </span>
-                  {plan.entryFee === undefined ? null : (
-                    <small>
-                      {t("signup:dog.entryFee", {
-                        price: formatMoney(plan.entryFee.amountMinor / 100),
-                      })}
-                    </small>
-                  )}
-                  {plan.description === undefined ? null : <small>{plan.description}</small>}
-                  {plan.conditions === undefined ? null : <small>{plan.conditions}</small>}
-                  {plan.pack?.discountLabel === undefined ? null : (
-                    <small>{plan.pack.discountLabel}</small>
-                  )}
-                  {plan.maintenanceFee === undefined || plan.entryFee === undefined ? null : (
-                    <small>
-                      {t("signup:dog.maintenance", {
-                        entry: formatMoney(plan.entryFee.amountMinor / 100),
-                        fee: formatMoney(plan.maintenanceFee.amountMinor / 100),
-                      })}
-                    </small>
-                  )}
-                  {plan.offerLabel === undefined ? null : <small>{plan.offerLabel}</small>}
-                  <span className="signup-plan__activate">{t("signup:dog.activate")}</span>
-                </button>
-              </Card>
-            ))}
+                    {plan.entryFee === undefined || plan.maintenanceFee !== undefined ? null : (
+                      <small>
+                        {t("signup:dog.entryFee", {
+                          price: formatMoney(plan.entryFee.amountMinor / 100),
+                        })}
+                      </small>
+                    )}
+                    {plan.description === undefined || plan.maintenanceFee !== undefined ? null : (
+                      <small>{plan.description}</small>
+                    )}
+                    {plan.conditions === undefined ? null : <small>{plan.conditions}</small>}
+                    {plan.pack?.discountLabel === undefined ? null : (
+                      <small>{plan.pack.discountLabel}</small>
+                    )}
+                    {plan.maintenanceFee === undefined || plan.entryFee === undefined ? null : (
+                      <small>
+                        {t("signup:dog.maintenance", {
+                          entry: formatMoney(plan.entryFee.amountMinor / 100),
+                          fee: formatMoney(plan.maintenanceFee.amountMinor / 100),
+                        })}
+                      </small>
+                    )}
+                    {plan.offerLabel === undefined ? null : <small>{plan.offerLabel}</small>}
+                    {draft.planId === plan.id ? (
+                      <span className="signup-plan__activate">{t("signup:dog.activate")}</span>
+                    ) : null}
+                  </button>
+                </Card>
+              );
+            })}
           </div>
         </section>
       )}
@@ -1190,7 +1299,11 @@ function PaymentStep({
       privacyPolicy: { accepted: draft.privacyAccepted, version },
     };
     try {
-      const dog = { ...draft.dog, documents: draft.dog.documents };
+      const dog = {
+        ...draft.dog,
+        birthMonth: birthMonthToIso(draft.dog.birthMonth) ?? draft.dog.birthMonth,
+        documents: draft.dog.documents,
+      };
       if (addDog) {
         const memberResult = await client.POST("/me/dogs/signup", {
           body: {
@@ -1212,7 +1325,11 @@ function PaymentStep({
           ...(draft.familyClaim.holderName === "" ? {} : { familyGroupClaim: draft.familyClaim }),
           locale: i18n.resolvedLanguage ?? branding.defaultLocale,
           ...(billing ? { payment: draft.payment } : {}),
-          person: { ...draft.person, gender: draft.person.gender || "OTHER" },
+          person: {
+            ...draft.person,
+            birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
+            gender: draft.person.gender || "OTHER",
+          },
           planId: draft.planId === "" ? null : draft.planId,
           website,
         },

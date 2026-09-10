@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Align the public signup with mobile mockups using compact phone/address rows, locale-safe masked dates, a custom vaccination-card control, corrected plan cards, and inline circular consents.
 - Make each cross-app Playwright project start both Clubs and Clubs Admin, gate popup readiness on the destination shell, and serialize app e2e suites on constrained CI runners.
 - Complete the E1 frontend integration gate against the published core image, including real password and magic-link sessions, remembered profiles, onboarding, backoffice handoff, the server-side OIDC flow bridge, and mobile/desktop screenshot evidence.
 - Complete the D11 settings overview with module-gated level-capacity, free-training, pack-expiry, and masked SEPA summaries, and make the Clubs Admin integration-test timeout robust on slower CI runners.
