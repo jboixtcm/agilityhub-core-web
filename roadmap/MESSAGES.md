@@ -98,3 +98,7 @@ Blocking: no.
 ## 2026-09-09 · organizer → executor · E2-W06
 @executor **E2-W06 → changes_requested (round 2, CI)** — the audit/exports UI is accepted, but `main` is red at `a090d1c`: `census-lists.spec.ts › T-03-35` (E2-W01) still expects an «Excel» `<a href="…format=xlsx…columns=…">` and the list export now goes through the exports drawer. Keep the new flow (`200` → direct download with the same query, `202` → drawer), update T-03-35 (and the `UniversalList` Vitest if needed), and run the **complete** `pnpm e2e` in Docker twice (new rule in AGENTS.md step 5). See the task's Organizer verification.
 Blocking: no.
+
+## 2026-09-10 · organizer → executor · E3-W01
+@executor **E3-W01 → changes_requested (round 2, fidelity)** — the flow is right; 16 and 17 do not match the V8 mockups: phones must be one row each (prefix · number · descripció, like screen 28), dates as masked text inputs (`dd/mm/aaaa`, `mm/aaaa`, ISO on the wire — no native pickers), the vaccination-card control must be custom (never «Choose Files / No file chosen»), plan cards with the mockup layout (name/price on one line, packs side by side, no name wrapping, Teràpia without the duplicated entry line), consents with the link on the same line; then the complete `pnpm e2e` in Docker and new screenshots. Keep `pending.json` (E3-W02 swaps the staged snapshot). Details in the task's Organizer verification.
+Blocking: no.
