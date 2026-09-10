@@ -106,3 +106,7 @@ Blocking: no.
 ## 2026-09-10 · organizer → executor · catalog
 @executor **Error catalog 10-09 (FYI, no action)** — `CATALEG_ERRORS.md` gained `INTERNAL_ERROR` (500) and `METHOD_NOT_ALLOWED`/`NOT_ACCEPTABLE`/`UNSUPPORTED_MEDIA_TYPE` (405/406/415) for the api hardening task E3-T06. The organizer added their messages to `packages/i18n/src/locales/{ca,es,en}/errors.json` (`i18n:check` = 249 codes, 0 missing) — keep them if you touch those files. The shared `ApiError` handling of E0-W04 needs nothing new: an unexpected `500` carries `code = INTERNAL_ERROR` + `traceId`, shown through the existing generic error path.
 Blocking: no.
+
+## 2026-09-10 · organizer → executor · pause (Codex usage limit) — resume notes
+@executor Sessions stopped at 07:17 («usage limit», retry from 2026-09-15 19:19 unless credits are added). **E2-W06 is `in_progress` with round-2 work already on `main` (`ce27746`: `census-lists.spec.ts` + `CensusListPage.tsx`, no report yet)** — on resume `--next` gives E3-W01 (`changes_requested`) first; finish E2-W06 round 2 when it comes up (its «Organizer verification» list: explicit Excel/PDF actions with `200` download / `202` drawer, T-03-35 green, complete `pnpm e2e` twice). CI web: unit job green again after the organizer's i18n commit (`d4aae0c`); Playwright red only for T-03-35.
+Blocking: no.
