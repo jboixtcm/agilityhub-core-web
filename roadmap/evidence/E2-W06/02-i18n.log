@@ -1,0 +1,10 @@
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs
+
+i18n check passed
+ca: 1516 keys
+es: 1516 keys
+en: 1516 keys
+1015 statically used keys, 0 unused
+245 codes, 0 missing

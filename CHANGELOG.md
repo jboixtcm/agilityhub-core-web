@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Route the member and dog list Excel/PDF actions through the export API, preserving visible-column query parameters while downloading synchronous responses and opening the global drawer for queued jobs.
 - Align the public signup with mobile mockups using compact phone/address rows, locale-safe masked dates, a custom vaccination-card control, corrected plan cards, and inline circular consents.
 - Make each cross-app Playwright project start both Clubs and Clubs Admin, gate popup readiness on the destination shell, and serialize app e2e suites on constrained CI runners.
 - Complete the E1 frontend integration gate against the published core image, including real password and magic-link sessions, remembered profiles, onboarding, backoffice handoff, the server-side OIDC flow bridge, and mobile/desktop screenshot evidence.

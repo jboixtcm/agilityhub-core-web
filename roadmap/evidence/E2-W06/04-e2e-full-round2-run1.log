@@ -1,0 +1,1070 @@
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +849
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 849, reused 0, downloaded 83, added 81
+Progress: resolved 849, reused 0, downloaded 196, added 195
+Progress: resolved 849, reused 0, downloaded 338, added 337
+Progress: resolved 849, reused 0, downloaded 493, added 493
+Progress: resolved 849, reused 0, downloaded 540, added 540
+Progress: resolved 849, reused 0, downloaded 552, added 552
+Progress: resolved 849, reused 0, downloaded 579, added 579
+Progress: resolved 849, reused 0, downloaded 620, added 620
+Progress: resolved 849, reused 0, downloaded 709, added 709
+Progress: resolved 849, reused 0, downloaded 752, added 752
+Progress: resolved 849, reused 0, downloaded 816, added 815
+Progress: resolved 849, reused 0, downloaded 844, added 844
+Progress: resolved 849, reused 0, downloaded 847, added 847
+Progress: resolved 849, reused 0, downloaded 848, added 848
+Progress: resolved 849, reused 0, downloaded 849, added 848
+Progress: resolved 849, reused 0, downloaded 849, added 849, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 16.7s using pnpm v9.15.9
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+
+> agilityhub-core-web@0.0.0 e2e /work
+> turbo run e2e
+
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/i18n, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 8 packages
+   • Remote caching disabled
+
+clubs-admin:build: cache miss, executing 341b2c2fb6448452
+clubs:build: cache miss, executing d1d34022c1e2d333
+id:build: cache miss, executing 3ec2b11507ac258a
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+id:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+id:build: transforming...
+id:build: ✓ 410 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/index-BhKzMAD5.css           30.91 kB │ gzip:   6.29 kB
+id:build: dist/assets/common-wYdVdxup.js            1.31 kB │ gzip:   0.70 kB
+id:build: dist/assets/shell-aHeTXtRj.js             1.31 kB │ gzip:   0.70 kB
+id:build: dist/assets/shell-j-5bNr7h.js             1.36 kB │ gzip:   0.78 kB
+id:build: dist/assets/shell-CFpLUFsp.js             1.39 kB │ gzip:   0.78 kB
+id:build: dist/assets/common-CDNUIZ07.js            1.40 kB │ gzip:   0.78 kB
+id:build: dist/assets/common-swo0lJlA.js            1.43 kB │ gzip:   0.79 kB
+id:build: dist/assets/admin-audit-Cb35gAaM.js       2.80 kB │ gzip:   1.30 kB
+id:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/admin-audit-CraT1vRJ.js       3.03 kB │ gzip:   1.44 kB
+id:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-B6oIqDGk.js       3.11 kB │ gzip:   1.46 kB
+id:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+id:build: dist/assets/signup-Cv_TSzSc.js            4.63 kB │ gzip:   2.18 kB
+id:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+id:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+id:build: dist/assets/signup-42VZPAGy.js            4.89 kB │ gzip:   2.43 kB
+id:build: dist/assets/signup-BEngYmYN.js            4.96 kB │ gzip:   2.44 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+id:build: dist/assets/admin-census-CTIeCmYf.js      6.07 kB │ gzip:   2.47 kB
+id:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+id:build: dist/assets/admin-census-CC5ASpQw.js      6.38 kB │ gzip:   2.70 kB
+id:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+id:build: dist/assets/admin-census-BnUcm8M9.js      6.61 kB │ gzip:   2.76 kB
+id:build: dist/assets/admin-settings-Bw7UELmU.js   16.96 kB │ gzip:   6.02 kB
+id:build: dist/assets/admin-settings-C1VNuHPs.js   18.10 kB │ gzip:   6.60 kB
+id:build: dist/assets/admin-settings-DwmS9dGV.js   18.46 kB │ gzip:   6.59 kB
+id:build: dist/assets/errors-BX3oK7A4.js           21.71 kB │ gzip:   7.06 kB
+id:build: dist/assets/errors-CB3DYjgP.js           23.04 kB │ gzip:   7.47 kB
+id:build: dist/assets/errors-DQYQlfkJ.js           23.05 kB │ gzip:   7.42 kB
+id:build: dist/assets/index-CgRhT83j.js           319.70 kB │ gzip:  99.22 kB
+id:build: dist/assets/browser-BcPIEnbO.js         708.78 kB │ gzip: 327.50 kB
+id:build: 
+id:build: [32m✓ built in 211ms[39m
+id:build: [33m[plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+id:e2e: cache bypass, force executing 3a558131735cfd7d
+id:e2e: 
+id:e2e: > id@0.0.0 e2e /work/apps/id
+id:e2e: > playwright test
+id:e2e: 
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: transforming...
+clubs:build: ✓ 413 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                        0.13 kB
+clubs:build: dist/index.html                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/index-g3xvkhqB.css           56.02 kB │ gzip:   9.71 kB
+clubs:build: dist/assets/admin-audit-Cb35gAaM.js       2.80 kB │ gzip:   1.30 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/admin-audit-CraT1vRJ.js       3.03 kB │ gzip:   1.44 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-B6oIqDGk.js       3.11 kB │ gzip:   1.46 kB
+clubs:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/signup-Cv_TSzSc.js            4.63 kB │ gzip:   2.18 kB
+clubs:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/signup-42VZPAGy.js            4.89 kB │ gzip:   2.43 kB
+clubs:build: dist/assets/signup-BEngYmYN.js            4.96 kB │ gzip:   2.44 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/admin-census-CTIeCmYf.js      6.07 kB │ gzip:   2.47 kB
+clubs:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/admin-census-CC5ASpQw.js      6.38 kB │ gzip:   2.70 kB
+clubs:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/admin-census-BnUcm8M9.js      6.61 kB │ gzip:   2.76 kB
+clubs:build: dist/assets/admin-settings-Bw7UELmU.js   16.96 kB │ gzip:   6.02 kB
+clubs:build: dist/assets/admin-settings-C1VNuHPs.js   18.10 kB │ gzip:   6.60 kB
+clubs:build: dist/assets/admin-settings-DwmS9dGV.js   18.46 kB │ gzip:   6.59 kB
+clubs:build: dist/assets/errors-BX3oK7A4.js           21.71 kB │ gzip:   7.06 kB
+clubs:build: dist/assets/errors-CB3DYjgP.js           23.04 kB │ gzip:   7.47 kB
+clubs:build: dist/assets/errors-DQYQlfkJ.js           23.05 kB │ gzip:   7.42 kB
+clubs:build: dist/assets/index-CXj3pt1x.js           413.31 kB │ gzip: 124.17 kB
+clubs:build: dist/assets/browser-BcPIEnbO.js         708.78 kB │ gzip: 327.50 kB
+clubs:build: 
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [32m✓ built in 194ms[39m
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+clubs-admin:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 426 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/index-B3vtDHw9.css           54.83 kB │ gzip:   9.47 kB
+clubs-admin:build: dist/assets/admin-audit-Cb35gAaM.js       2.80 kB │ gzip:   1.30 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/admin-audit-CraT1vRJ.js       3.03 kB │ gzip:   1.44 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-B6oIqDGk.js       3.11 kB │ gzip:   1.46 kB
+clubs-admin:build: dist/assets/auth-B2g8lbGP.js              4.30 kB │ gzip:   1.88 kB
+clubs-admin:build: dist/assets/signup-Cv_TSzSc.js            4.63 kB │ gzip:   2.18 kB
+clubs-admin:build: dist/assets/auth-CPbUJNgL.js              4.74 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/auth-DjeifVuz.js              4.80 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/signup-42VZPAGy.js            4.89 kB │ gzip:   2.43 kB
+clubs-admin:build: dist/assets/signup-BEngYmYN.js            4.96 kB │ gzip:   2.44 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/census-2y4pkTWD.js            5.96 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/admin-census-CTIeCmYf.js      6.07 kB │ gzip:   2.47 kB
+clubs-admin:build: dist/assets/census-CfjHQ4Uz.js            6.29 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/admin-census-CC5ASpQw.js      6.38 kB │ gzip:   2.70 kB
+clubs-admin:build: dist/assets/census-C9vkPZEn.js            6.47 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-census-BnUcm8M9.js      6.61 kB │ gzip:   2.76 kB
+clubs-admin:build: dist/assets/admin-settings-Bw7UELmU.js   16.96 kB │ gzip:   6.02 kB
+clubs-admin:build: dist/assets/admin-settings-C1VNuHPs.js   18.10 kB │ gzip:   6.60 kB
+clubs-admin:build: dist/assets/admin-settings-DwmS9dGV.js   18.46 kB │ gzip:   6.59 kB
+clubs-admin:build: dist/assets/errors-BX3oK7A4.js           21.71 kB │ gzip:   7.06 kB
+clubs-admin:build: dist/assets/errors-CB3DYjgP.js           23.04 kB │ gzip:   7.47 kB
+clubs-admin:build: dist/assets/errors-DQYQlfkJ.js           23.05 kB │ gzip:   7.42 kB
+clubs-admin:build: dist/assets/browser-C_43ng7Q.js         520.56 kB │ gzip: 184.85 kB
+clubs-admin:build: dist/assets/index-BxI-j5pt.js           705.68 kB │ gzip: 288.01 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [32m✓ built in 1.57s[39m
+clubs-admin:e2e: cache bypass, force executing 07f23eb02c55b7f6
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  33 entries (1379.48 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs:e2e: cache bypass, force executing a2381d91209c1957
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test
+clubs-admin:e2e: 
+clubs:e2e: 
+clubs:e2e: > clubs@0.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test
+clubs:e2e: 
+clubs-admin:e2e: [WebServer] (node:919) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 24 tests using 8 workers
+clubs:e2e: 
+clubs:e2e: Running 21 tests using 5 workers
+id:e2e: T
+id:e2e: 
+id:e2e:   1) e2e/id.spec.ts:16:3 › T-01-22 AgilityHub ID › logs in and continues the OIDC authorize flow ───
+id:e2e: 
+id:e2e:     Test timeout of 30000ms exceeded.
+id:e2e: 
+id:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+id:e2e:     Call log:
+id:e2e:       - navigating to "http://127.0.0.1:4175/magic-link?t=invalid", waiting until "load"
+id:e2e: 
+id:e2e: 
+id:e2e:       69 |     });
+id:e2e:       70 |
+id:e2e:     > 71 |     await page.goto(`${baseUrl}/magic-link?t=invalid`);
+id:e2e:          |                ^
+id:e2e:       72 |     await expect(page.getByRole("heading", { name: "Aquest enllaç ja no és vàlid" })).toBeVisible();
+id:e2e:       73 |     await page.screenshot({
+id:e2e:       74 |       fullPage: true,
+id:e2e:         at /work/apps/id/e2e/id.spec.ts:71:16
+id:e2e: 
+id:e2e:     Error Context: ../../test-results/id/id-T-01-22-AgilityHub-ID-l-b2da1-ues-the-OIDC-authorize-flow/error-context.md
+id:e2e: 
+id:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+id:e2e:     ../../test-results/id/id-T-01-22-AgilityHub-ID-l-b2da1-ues-the-OIDC-authorize-flow/trace.zip
+id:e2e:     Usage:
+id:e2e: 
+id:e2e:         pnpm exec playwright show-trace ../../test-results/id/id-T-01-22-AgilityHub-ID-l-b2da1-ues-the-OIDC-authorize-flow/trace.zip
+id:e2e: 
+id:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+id:e2e: 
+id:e2e:   1 failed
+id:e2e:     e2e/id.spec.ts:16:3 › T-01-22 AgilityHub ID › logs in and continues the OIDC authorize flow ────
+id:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs-admin:e2e: TTTTTTTT
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) e2e/audit.spec.ts:37:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       24 |   }, allLocalesBranding);
+clubs-admin:e2e:       25 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 26 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       27 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       28 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       29 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/audit.spec.ts:26:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:42:3
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 |   );
+clubs-admin:e2e:       43 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 44 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       45 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       46 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       47 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/catalogs.spec.ts:44:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:61:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   3) e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       23 |   }, brandingCanic);
+clubs-admin:e2e:       24 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 25 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       26 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/census-lists.spec.ts:25:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:34:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   4) e2e/census-records.spec.ts:33:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       23 |   }, brandingCanic);
+clubs-admin:e2e:       24 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 25 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       26 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/census-records.spec.ts:25:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:36:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   5) e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       31 |   await prepare(page, "admin");
+clubs-admin:e2e:       32 |   await page.goto(`${adminUrl}/entrar`);
+clubs-admin:e2e:     > 33 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       34 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       35 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       36 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:         at loginAdmin (/work/apps/clubs-admin/e2e/club-pages.spec.ts:33:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/club-pages.spec.ts:58:3
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   6) e2e/onboarding.spec.ts:33:3 › T-01-26 clubs-admin onboarding › shows the equivalent modal and can defer only the optional profile data 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       23 |   }, branding);
+clubs-admin:e2e:       24 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 25 |   await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       26 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/onboarding.spec.ts:25:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/onboarding.spec.ts:36:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/onboarding-T-01-26-clubs-a-60b52-y-the-optional-profile-data/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/onboarding-T-01-26-clubs-a-60b52-y-the-optional-profile-data/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/onboarding-T-01-26-clubs-a-60b52-y-the-optional-profile-data/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   7) e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       65 |   );
+clubs-admin:e2e:       66 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 67 |   await page.getByLabel(accessCopy[locale].email).fill("admin@example.test");
+clubs-admin:e2e:          |                                                   ^
+clubs-admin:e2e:       68 |   await page.getByRole("button", { name: accessCopy[locale].reveal }).click();
+clubs-admin:e2e:       69 |   await page.getByLabel(accessCopy[locale].password).fill("secret-password");
+clubs-admin:e2e:       70 |   await page.getByRole("button", { name: accessCopy[locale].enter }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/settings.spec.ts:67:51)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/settings.spec.ts:84:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8) e2e/shell.spec.ts:52:3 › T-02-14 clubs-admin shell › shows the Cànic administrator sidebar ────
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 | async function login(page: Page) {
+clubs-admin:e2e:       43 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 44 |   await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       45 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       46 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       47 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at login (/work/apps/clubs-admin/e2e/shell.spec.ts:44:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/shell.spec.ts:54:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--68051-Cànic-administrator-sidebar/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--68051-Cànic-administrator-sidebar/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--68051-Cànic-administrator-sidebar/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   9) e2e/audit.spec.ts:103:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       24 |   }, allLocalesBranding);
+clubs-admin:e2e:       25 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 26 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       27 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       28 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       29 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/audit.spec.ts:26:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:108:3
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   10) e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 |   );
+clubs-admin:e2e:       43 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 44 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       45 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       46 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       47 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/catalogs.spec.ts:44:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:101:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   11) e2e/census-lists.spec.ts:46:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:       25 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:       26 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:     > 27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:          |                                        ^
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:       29 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:       30 | }
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/census-lists.spec.ts:27:40)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:47:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   12) e2e/census-records.spec.ts:72:3 › E2-W02 census records › T-03-37 surfaces one stale edit and one booking conflict for concurrent D10 writes 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('button', { name: 'ENTRA' })
+clubs-admin:e2e:         - locator resolved to <button type="submit" class="ah-button ah-button--primary">…</button>
+clubs-admin:e2e:       - attempting click action
+clubs-admin:e2e:         - waiting for element to be visible, enabled and stable
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       26 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:     > 28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:          |                                                     ^
+clubs-admin:e2e:       29 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:       30 | }
+clubs-admin:e2e:       31 |
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/census-records.spec.ts:28:53)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:75:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-records-E2-W02-cens-aa5ee-t-for-concurrent-D10-writes/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-records-E2-W02-cens-aa5ee-t-for-concurrent-D10-writes/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-records-E2-W02-cens-aa5ee-t-for-concurrent-D10-writes/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   13) e2e/settings.spec.ts:187:3 › E2-W05 generated club settings › T-02-17 localizes every catalog row and formats durations in Spanish and English 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('button', { name: 'ENTRA' })
+clubs-admin:e2e:         - locator resolved to <button type="submit" class="ah-button ah-button--primary">…</button>
+clubs-admin:e2e:       - attempting click action
+clubs-admin:e2e:         - waiting for element to be visible, enabled and stable
+clubs-admin:e2e:         - element is visible, enabled and stable
+clubs-admin:e2e:         - scrolling into view if needed
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       68 |   await page.getByRole("button", { name: accessCopy[locale].reveal }).click();
+clubs-admin:e2e:       69 |   await page.getByLabel(accessCopy[locale].password).fill("secret-password");
+clubs-admin:e2e:     > 70 |   await page.getByRole("button", { name: accessCopy[locale].enter }).click();
+clubs-admin:e2e:          |                                                                      ^
+clubs-admin:e2e:       71 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:       72 | }
+clubs-admin:e2e:       73 |
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/settings.spec.ts:70:70)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/settings.spec.ts:194:7
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/settings-E2-W05-generated--3da48-ions-in-Spanish-and-English/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/settings-E2-W05-generated--3da48-ions-in-Spanish-and-English/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   14) e2e/shell.spec.ts:63:3 › T-02-14 clubs-admin shell › renders the minimal club with its module-filtered sidebar 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test was interrupted.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('button', { name: 'ENTRA' })
+clubs-admin:e2e:         - locator resolved to <button type="submit" class="ah-button ah-button--primary">…</button>
+clubs-admin:e2e:       - attempting click action
+clubs-admin:e2e:         - waiting for element to be visible, enabled and stable
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       45 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       46 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:     > 47 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:          |                                                     ^
+clubs-admin:e2e:       48 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:       49 | }
+clubs-admin:e2e:       50 |
+clubs-admin:e2e:         at login (/work/apps/clubs-admin/e2e/shell.spec.ts:47:53)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/shell.spec.ts:65:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--34373-its-module-filtered-sidebar/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--34373-its-module-filtered-sidebar/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--34373-its-module-filtered-sidebar/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8 failed
+clubs-admin:e2e:     e2e/audit.spec.ts:37:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e:     e2e/census-records.spec.ts:33:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e:     e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e:     e2e/onboarding.spec.ts:33:3 › T-01-26 clubs-admin onboarding › shows the equivalent modal and can defer only the optional profile data 
+clubs-admin:e2e:     e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e:     e2e/shell.spec.ts:52:3 › T-02-14 clubs-admin shell › shows the Cànic administrator sidebar ─────
+clubs-admin:e2e:   6 interrupted
+clubs-admin:e2e:     e2e/audit.spec.ts:103:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:46:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e:     e2e/census-records.spec.ts:72:3 › E2-W02 census records › T-03-37 surfaces one stale edit and one booking conflict for concurrent D10 writes 
+clubs-admin:e2e:     e2e/settings.spec.ts:187:3 › E2-W05 generated club settings › T-02-17 localizes every catalog row and formats durations in Spanish and English 
+clubs-admin:e2e:     e2e/shell.spec.ts:63:3 › T-02-14 clubs-admin shell › renders the minimal club with its module-filtered sidebar 
+clubs-admin:e2e:   10 did not run
+clubs:e2e: TTTTT·
+clubs:e2e: 
+clubs:e2e:   1) e2e/access.spec.ts:47:3 › T-01-18 access screen › T-01-04 keeps refresh-token material out of browser storage after login 
+clubs:e2e: 
+clubs:e2e:     Test timeout of 30000ms exceeded.
+clubs:e2e: 
+clubs:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       39 |   await prepareScenario(page, "multiProfile");
+clubs:e2e:       40 |   await page.goto(`${baseUrl}/entrar`);
+clubs:e2e:     > 41 |   await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
+clubs:e2e:          |                                              ^
+clubs:e2e:       42 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs:e2e:       43 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs:e2e:       44 | }
+clubs:e2e:         at passwordLogin (/work/apps/clubs/e2e/access.spec.ts:41:46)
+clubs:e2e:         at /work/apps/clubs/e2e/access.spec.ts:50:5
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/access-T-01-18-access-scre-60362-browser-storage-after-login/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/access-T-01-18-access-scre-60362-browser-storage-after-login/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/access-T-01-18-access-scre-60362-browser-storage-after-login/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   2) e2e/member-self-service.spec.ts:48:3 › T-03-40 mobile own dogs › edits the note, shows task totals and uploads photo and document 
+clubs:e2e: 
+clubs:e2e:     Test timeout of 30000ms exceeded.
+clubs:e2e: 
+clubs:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       39 |   await prepareScenario(page, scenario, branding);
+clubs:e2e:       40 |   await page.goto(`${baseUrl}/entrar`);
+clubs:e2e:     > 41 |   await page.getByLabel("Correu electrònic").fill("laura@example.test");
+clubs:e2e:          |                                              ^
+clubs:e2e:       42 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs:e2e:       43 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs:e2e:       44 |   await page.waitForURL("**/inici");
+clubs:e2e:         at login (/work/apps/clubs/e2e/member-self-service.spec.ts:41:46)
+clubs:e2e:         at /work/apps/clubs/e2e/member-self-service.spec.ts:49:5
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/member-self-service-T-03-4-d65fd--uploads-photo-and-document/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/member-self-service-T-03-4-d65fd--uploads-photo-and-document/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/member-self-service-T-03-4-d65fd--uploads-photo-and-document/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   3) e2e/onboarding.spec.ts:37:3 › T-01-26 first-access onboarding › pending account completes the screen once and enters the app 
+clubs:e2e: 
+clubs:e2e:     Test timeout of 30000ms exceeded.
+clubs:e2e: 
+clubs:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       29 | async function login(page: Page) {
+clubs:e2e:       30 |   await page.goto(`${baseUrl}/entrar`);
+clubs:e2e:     > 31 |   await page.getByLabel("Correu electrònic").fill("biel.roca@example.test");
+clubs:e2e:          |                                              ^
+clubs:e2e:       32 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs:e2e:       33 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs:e2e:       34 | }
+clubs:e2e:         at login (/work/apps/clubs/e2e/onboarding.spec.ts:31:46)
+clubs:e2e:         at /work/apps/clubs/e2e/onboarding.spec.ts:39:5
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/onboarding-T-01-26-first-a-7b373-een-once-and-enters-the-app/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/onboarding-T-01-26-first-a-7b373-een-once-and-enters-the-app/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/onboarding-T-01-26-first-a-7b373-een-once-and-enters-the-app/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   4) e2e/shell.spec.ts:57:3 › T-02-14 clubs shell › applies cached Cànic branding before React and exposes the dynamic manifest 
+clubs:e2e: 
+clubs:e2e:     Test timeout of 30000ms exceeded.
+clubs:e2e: 
+clubs:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       48 | async function login(page: Page) {
+clubs:e2e:       49 |   await page.goto(`${baseUrl}/entrar`);
+clubs:e2e:     > 50 |   await page.getByLabel("Correu electrònic").fill("biel.roca@example.test");
+clubs:e2e:          |                                              ^
+clubs:e2e:       51 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs:e2e:       52 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs:e2e:       53 |   await page.waitForURL("**/inici");
+clubs:e2e:         at login (/work/apps/clubs/e2e/shell.spec.ts:50:46)
+clubs:e2e:         at /work/apps/clubs/e2e/shell.spec.ts:61:5
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/shell-T-02-14-clubs-shell--2d7a4-xposes-the-dynamic-manifest/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/shell-T-02-14-clubs-shell--2d7a4-xposes-the-dynamic-manifest/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/shell-T-02-14-clubs-shell--2d7a4-xposes-the-dynamic-manifest/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   5) e2e/signup.spec.ts:73:3 › T-04-29–32 public signup › completes screens 16–19 and the sent state against MSW 
+clubs:e2e: 
+clubs:e2e:     Test timeout of 30000ms exceeded.
+clubs:e2e: 
+clubs:e2e:     Error: expect(locator).toBeVisible() failed
+clubs:e2e: 
+clubs:e2e:     Locator: getByText('/Pas 1 de 4/u')
+clubs:e2e:     Expected: visible
+clubs:e2e:     Timeout: 5000ms
+clubs:e2e:     Error: element(s) not found
+clubs:e2e: 
+clubs:e2e:     Call log:
+clubs:e2e:       - Expect "toBeVisible" getByText('/Pas 1 de 4/u') with timeout 5000ms
+clubs:e2e:       - waiting for getByText('/Pas 1 de 4/u')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       74 |     await prepareScenario(page);
+clubs:e2e:       75 |     await page.goto(`${baseUrl}/apuntat-hi`);
+clubs:e2e:     > 76 |     await expect(page.getByText(/Pas 1 de 4/u)).toBeVisible();
+clubs:e2e:          |                                                 ^
+clubs:e2e:       77 |     await fillPerson(page);
+clubs:e2e:       78 |     await page.screenshot({
+clubs:e2e:       79 |       fullPage: true,
+clubs:e2e:         at /work/apps/clubs/e2e/signup.spec.ts:76:49
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/signup-T-04-29–32-public-s-9c25a--the-sent-state-against-MSW/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/signup-T-04-29–32-public-s-9c25a--the-sent-state-against-MSW/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/signup-T-04-29–32-public-s-9c25a--the-sent-state-against-MSW/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   6) e2e/access.spec.ts:104:3 › T-01-18 access screen › uses Retry-After as a visible countdown ────
+clubs:e2e: 
+clubs:e2e:     Test was interrupted.
+clubs:e2e: 
+clubs:e2e:     Error: locator.fill: Test ended.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       105 |     await prepareScenario(page, "rateLimited");
+clubs:e2e:       106 |     await page.goto(`${baseUrl}/entrar`);
+clubs:e2e:     > 107 |     await page.getByLabel("Correu electrònic").fill("limit@example.test");
+clubs:e2e:           |                                                ^
+clubs:e2e:       108 |     const magicLink = page.getByRole("button", {
+clubs:e2e:       109 |       name: "Envia'm un enllaç per entrar sense contrasenya",
+clubs:e2e:       110 |     });
+clubs:e2e:         at /work/apps/clubs/e2e/access.spec.ts:107:48
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/access-T-01-18-access-scre-4d370-fter-as-a-visible-countdown/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/access-T-01-18-access-scre-4d370-fter-as-a-visible-countdown/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/access-T-01-18-access-scre-4d370-fter-as-a-visible-countdown/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   7) e2e/member-self-service.spec.ts:119:3 › T-03-40 mobile own dogs › hides instructor notes and tasks when TASKS is disabled 
+clubs:e2e: 
+clubs:e2e:     Test was interrupted.
+clubs:e2e: 
+clubs:e2e:     Error: expect(locator).toBeVisible() failed
+clubs:e2e: 
+clubs:e2e:     Locator:  getByRole('heading', { name: 'Els meus gossos' })
+clubs:e2e:     Expected: visible
+clubs:e2e:     Received: undefined
+clubs:e2e: 
+clubs:e2e:     Call log:
+clubs:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Els meus gossos' }) with timeout 5000ms
+clubs:e2e:       - waiting for getByRole('heading', { name: 'Els meus gossos' })
+clubs:e2e:       - Protocol error (Runtime.evaluate): Internal server error, session closed.
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       120 |     await login(page, "minimal", brandingMinim);
+clubs:e2e:       121 |     await page.goto(`${baseUrl}/gossos`);
+clubs:e2e:     > 122 |     await expect(page.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
+clubs:e2e:           |                                                                          ^
+clubs:e2e:       123 |     await expect(page.getByText("Notes als instructors", { exact: false })).toHaveCount(0);
+clubs:e2e:       124 |     await expect(page.getByText("Tasques", { exact: true })).toHaveCount(0);
+clubs:e2e:       125 |   });
+clubs:e2e:         at /work/apps/clubs/e2e/member-self-service.spec.ts:122:74
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/member-self-service-T-03-4-39c7d-asks-when-TASKS-is-disabled/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/member-self-service-T-03-4-39c7d-asks-when-TASKS-is-disabled/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/member-self-service-T-03-4-39c7d-asks-when-TASKS-is-disabled/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   8) e2e/onboarding.spec.ts:72:3 › T-01-26 first-access onboarding › three policy postponements make the next consent blocking 
+clubs:e2e: 
+clubs:e2e:     Test was interrupted.
+clubs:e2e: 
+clubs:e2e:     Error: page.waitForURL: Test ended.
+clubs:e2e:     =========================== logs ===========================
+clubs:e2e:     waiting for navigation to "**/inici" until "load"
+clubs:e2e:       navigated to "http://127.0.0.1:4173/inici"
+clubs:e2e:     ============================================================
+clubs:e2e: 
+clubs:e2e:       73 |     await prepareScenario(page, "policyReconsent");
+clubs:e2e:       74 |     await login(page);
+clubs:e2e:     > 75 |     await page.waitForURL("**/inici");
+clubs:e2e:          |                ^
+clubs:e2e:       76 |     await expect(
+clubs:e2e:       77 |       page.getByRole("dialog", { name: "Hem actualitzat la política de privacitat" }),
+clubs:e2e:       78 |     ).toBeVisible();
+clubs:e2e:         at /work/apps/clubs/e2e/onboarding.spec.ts:75:16
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/onboarding-T-01-26-first-a-369e0-e-the-next-consent-blocking/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/onboarding-T-01-26-first-a-369e0-e-the-next-consent-blocking/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/onboarding-T-01-26-first-a-369e0-e-the-next-consent-blocking/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   9) e2e/shell.spec.ts:86:3 › T-02-14 clubs shell › uses the AgilityHub theme and hides FREE_TRAINING UI for the minimal club 
+clubs:e2e: 
+clubs:e2e:     Test was interrupted.
+clubs:e2e: 
+clubs:e2e:     Error: page.screenshot: Test ended.
+clubs:e2e:     Call log:
+clubs:e2e:       - taking page screenshot
+clubs:e2e:       - waiting for fonts to load...
+clubs:e2e:       - fonts loaded
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       92 |     await expect(page.getByRole("link", { name: "Entrenaments" })).toHaveCount(0);
+clubs:e2e:       93 |     await expect(page.getByRole("link", { name: "Info" })).toBeVisible();
+clubs:e2e:     > 94 |     await page.screenshot({
+clubs:e2e:          |                ^
+clubs:e2e:       95 |       fullPage: true,
+clubs:e2e:       96 |       path: resolve(evidenceDirectory, "clubs-minim-375.png"),
+clubs:e2e:       97 |     });
+clubs:e2e:         at /work/apps/clubs/e2e/shell.spec.ts:94:16
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/shell-T-02-14-clubs-shell--6f968-ING-UI-for-the-minimal-club/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/shell-T-02-14-clubs-shell--6f968-ING-UI-for-the-minimal-club/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/shell-T-02-14-clubs-shell--6f968-ING-UI-for-the-minimal-club/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   10) e2e/signup.spec.ts:126:3 › T-04-32 add-dog signup › starts from screen 13 and reaches the member payment variant 
+clubs:e2e: 
+clubs:e2e:     Test was interrupted.
+clubs:e2e: 
+clubs:e2e:     Error: locator.click: Test ended.
+clubs:e2e:     Call log:
+clubs:e2e:       - waiting for getByRole('link', { name: '＋ AFEGEIX UN GOS' }).first()
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       127 |     await login(page);
+clubs:e2e:       128 |     await page.goto(`${baseUrl}/gossos`);
+clubs:e2e:     > 129 |     await page.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first().click();
+clubs:e2e:           |                                                                        ^
+clubs:e2e:       130 |     await page.waitForURL("**/gossos/nou");
+clubs:e2e:       131 |     await expect(page.getByText(/Pas 1 de 2/u)).toBeVisible();
+clubs:e2e:       132 |     await fillDog(page, "Neret");
+clubs:e2e:         at /work/apps/clubs/e2e/signup.spec.ts:129:72
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/signup-T-04-32-add-dog-sig-d4d9e--the-member-payment-variant/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/signup-T-04-32-add-dog-sig-d4d9e--the-member-payment-variant/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/signup-T-04-32-add-dog-sig-d4d9e--the-member-payment-variant/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   5 failed
+clubs:e2e:     e2e/access.spec.ts:47:3 › T-01-18 access screen › T-01-04 keeps refresh-token material out of browser storage after login 
+clubs:e2e:     e2e/member-self-service.spec.ts:48:3 › T-03-40 mobile own dogs › edits the note, shows task totals and uploads photo and document 
+clubs:e2e:     e2e/onboarding.spec.ts:37:3 › T-01-26 first-access onboarding › pending account completes the screen once and enters the app 
+clubs:e2e:     e2e/shell.spec.ts:57:3 › T-02-14 clubs shell › applies cached Cànic branding before React and exposes the dynamic manifest 
+clubs:e2e:     e2e/signup.spec.ts:73:3 › T-04-29–32 public signup › completes screens 16–19 and the sent state against MSW 
+clubs:e2e:   5 interrupted
+clubs:e2e:     e2e/access.spec.ts:104:3 › T-01-18 access screen › uses Retry-After as a visible countdown ─────
+clubs:e2e:     e2e/member-self-service.spec.ts:119:3 › T-03-40 mobile own dogs › hides instructor notes and tasks when TASKS is disabled 
+clubs:e2e:     e2e/onboarding.spec.ts:72:3 › T-01-26 first-access onboarding › three policy postponements make the next consent blocking 
+clubs:e2e:     e2e/shell.spec.ts:86:3 › T-02-14 clubs shell › uses the AgilityHub theme and hides FREE_TRAINING UI for the minimal club 
+clubs:e2e:     e2e/signup.spec.ts:126:3 › T-04-32 add-dog signup › starts from screen 13 and reaches the member payment variant 
+clubs:e2e:   10 did not run
+clubs:e2e:   1 passed (47.1s)
+id#e2e:  ERROR  command (/work/apps/id) /usr/bin/pnpm run e2e exited (1)
+
+ Tasks:    3 successful, 6 total
+Cached:    0 cached, 6 total
+  Time:    52.568s 
+Failed:    id#e2e
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

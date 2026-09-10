@@ -8,6 +8,16 @@ test-results/
 *.local
 *.log
 !roadmap/evidence/E2-W05/round3-*.log
+!roadmap/evidence/E2-W06/00-api-generate.log
+!roadmap/evidence/E2-W06/01-turbo.log
+!roadmap/evidence/E2-W06/02-i18n.log
+!roadmap/evidence/E2-W06/03-e2e.log
+!roadmap/evidence/E2-W06/04-e2e-full-round2-run1.log
+!roadmap/evidence/E2-W06/05-e2e-full-round2-run1.log
+!roadmap/evidence/E2-W06/06-e2e-full-round2-pass1.log
+!roadmap/evidence/E2-W06/07-e2e-full-round2-pass2.log
+!roadmap/evidence/E2-W06/08-turbo-round2.log
+!roadmap/evidence/E2-W06/09-i18n-round2.log
 !roadmap/evidence/E2-W10/*.log
 !roadmap/evidence/E3-W01/04-turbo-final.log
 !roadmap/evidence/E3-W01/05-i18n.log
