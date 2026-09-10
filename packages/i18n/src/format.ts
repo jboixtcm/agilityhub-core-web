@@ -7,7 +7,7 @@ import { normalizeLocale } from "./locale";
 import type { Locale } from "./types";
 
 export type DateInput = Date | number | string;
-export type DatePresentation = "long" | "short" | "weekday";
+export type DatePresentation = "dayMonth" | "long" | "monthYear" | "short" | "weekday" | "weekdayShort";
 
 export interface DurationOptions {
   before?: boolean;
@@ -20,9 +20,12 @@ const intlLocales: Record<Locale, string> = {
 };
 
 const dateOptions: Record<DatePresentation, Intl.DateTimeFormatOptions> = {
+  dayMonth: { day: "numeric", month: "long" },
   long: { day: "numeric", month: "long", year: "numeric" },
+  monthYear: { month: "2-digit", year: "numeric" },
   short: { day: "2-digit", month: "2-digit", year: "numeric" },
   weekday: { day: "numeric", month: "long", weekday: "long" },
+  weekdayShort: { weekday: "short" },
 };
 
 function toDate(value: DateInput): Date | number {

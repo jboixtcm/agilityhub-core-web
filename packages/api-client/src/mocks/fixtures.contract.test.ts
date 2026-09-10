@@ -26,6 +26,7 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
     items: { $ref: `${openapiSchemaId}#/components/schemas/ClubPage` },
     type: "array",
   },
+  "dashboard.json": { $ref: `${openapiSchemaId}#/components/schemas/Dashboard` },
   "export-jobs.json": {
     items: { $ref: `${openapiSchemaId}#/components/schemas/ExportJob` },
     type: "array",
@@ -35,6 +36,9 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
   "me-instructor.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },
   "me-member.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },
   "me-multi-profile.json": { $ref: `${openapiSchemaId}#/components/schemas/Me` },
+  "member-signup-review.json": {
+    $ref: `${openapiSchemaId}#/components/schemas/MemberSignupView`,
+  },
   "sessions.json": {
     items: { $ref: `${openapiSchemaId}#/components/schemas/Session` },
     type: "array",

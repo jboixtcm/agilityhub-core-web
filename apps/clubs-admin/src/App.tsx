@@ -1,3 +1,4 @@
+import type { components } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
@@ -24,7 +25,7 @@ import {
   type SidebarGroup,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type ReactNode, type SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
@@ -35,6 +36,8 @@ import { SettingsPage } from "./catalogs/SettingsPage";
 import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
+import { DashboardPage } from "./dashboard/DashboardPage";
+import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
 
 interface AdminRouteDefinition {
@@ -45,7 +48,7 @@ interface AdminRouteDefinition {
 
 export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screen D1.
-  { path: "/tauler", roles: ["ADMIN", "INSTRUCTOR"] },
+  { path: "/tauler", roles: ["ADMIN"] },
   // Screen D2.
   { path: "/preinscripcions/:id", roles: ["ADMIN"] },
   // Screens D3 and D3b.
@@ -161,10 +164,12 @@ interface GatedSidebarGroup {
 }
 
 export function AdminNavigation({
+  counters,
   modules,
   pathname,
   roles,
 }: {
+  counters?: components["schemas"]["DashboardCounters"];
   modules: readonly string[];
   pathname: string;
   roles: readonly Role[];
@@ -175,7 +180,7 @@ export function AdminNavigation({
     {
       label: t("shell:nav.dashboard"),
       entries: [
-        { href: "/tauler", icon: "grid", id: "dashboard", label: t("shell:nav.dashboard") },
+        { href: "/tauler", icon: "grid", id: "dashboard", label: t("shell:nav.dashboard"), roles: ["ADMIN"] },
       ],
     },
     {
@@ -183,8 +188,8 @@ export function AdminNavigation({
       roles: ["ADMIN"],
       entries: [
         {
-          count: 3,
-          href: "/preinscripcions/nova",
+          ...(counters?.pendingSignups === undefined || counters.pendingSignups === 0 ? {} : { count: counters.pendingSignups }),
+          href: "/tauler",
           icon: "user",
           id: "pre-registrations",
           label: t("shell:nav.preRegistrations"),
@@ -192,14 +197,14 @@ export function AdminNavigation({
         { href: "/abonats", icon: "user", id: "members", label: t("shell:nav.members") },
         { href: "/gossos", icon: "paw", id: "dogs", label: t("shell:nav.dogs") },
         {
-          count: 1,
+          ...(counters?.pendingRequests === undefined || counters.pendingRequests === 0 ? {} : { count: counters.pendingRequests }),
           href: "/inactivitats",
           icon: "palm",
           id: "inactivity",
           label: t("shell:nav.inactivity"),
         },
         {
-          count: 5,
+          ...(counters?.followUpUnread === undefined || counters.followUpUnread === 0 ? {} : { count: counters.followUpUnread }),
           href: "/seguiment",
           icon: "list",
           id: "student-follow-up",
@@ -338,7 +343,14 @@ function PlatformRoleGuard({ children }: { children: ReactNode }) {
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
+  onNavigate: (path: string) => void,
 ) {
+  if (route.path === "/tauler") {
+    return <DashboardPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/preinscripcions/:id") {
+    return <SignupReviewPage client={client} onNavigate={onNavigate} />;
+  }
   if (route.path === "/abonats") {
     return <MembersPage client={client} />;
   }
@@ -382,12 +394,29 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
   return <RequireRole roles={route.roles ?? ["ADMIN"]}>{content}</RequireRole>;
 }
 
-function AdminShell({ children }: { children: ReactNode }) {
+function AdminShell({
+  children,
+  client,
+  pathname,
+}: {
+  children: ReactNode;
+  client: ReturnType<typeof createAuthenticatedApiClient>;
+  pathname: string;
+}) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation(["shell", "admin-audit"]);
   const { openExports } = useExportsDrawer();
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
+  const [counters, setCounters] = useState<components["schemas"]["DashboardCounters"]>();
+
+  useEffect(() => {
+    let active = true;
+    void client.GET("/dashboard/counters").then((result) => {
+      if (active && result.data !== undefined) setCounters(result.data);
+    });
+    return () => { active = false; };
+  }, [client, pathname]);
 
   return (
     <div className="admin-shell">
@@ -419,8 +448,9 @@ function AdminShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <AdminNavigation
+        {...(counters === undefined ? {} : { counters })}
         modules={branding.modules}
-        pathname={window.location.pathname}
+        pathname={pathname}
         roles={session.roles}
       />
       <main className="admin-shell__content">{children}</main>
@@ -552,26 +582,38 @@ export function App({ authClient }: { authClient: AuthClient }) {
   const client = useMemo(
     () =>
       createAuthenticatedApiClient(authClient, {
-        baseUrl: "/api/v1",
+        baseUrl: `${window.location.origin}/api/v1`,
       }),
     [authClient],
   );
-  if (import.meta.env.DEV && window.location.pathname === "/_gallery") {
+  const [location, setLocation] = useState(() => `${window.location.pathname}${window.location.search}`);
+  const navigate = useCallback((path: string) => {
+    window.history.pushState(null, "", path);
+    setLocation(path);
+  }, []);
+  useEffect(() => {
+    const handlePopState = () => { setLocation(`${window.location.pathname}${window.location.search}`); };
+    window.addEventListener("popstate", handlePopState);
+    return () => { window.removeEventListener("popstate", handlePopState); };
+  }, []);
+  const pathname = new URL(location, window.location.origin).pathname;
+
+  if (import.meta.env.DEV && pathname === "/_gallery") {
     return <Gallery />;
   }
-  if (window.location.pathname === "/acces") {
+  if (pathname === "/acces") {
     window.location.replace("/entrar");
     return null;
   }
-  if (window.location.pathname === "/entrar") {
+  if (pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
   }
 
-  const route = currentRoute(window.location.pathname) ?? currentRoute("/tauler");
+  const route = currentRoute(pathname) ?? currentRoute("/tauler");
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell>{gatedRoute(route, routeContent(route, client))}</AdminShell>
+        <AdminShell client={client} pathname={pathname}>{gatedRoute(route, routeContent(route, client, navigate))}</AdminShell>
       </ExportJobsProvider>
     </OnboardingExperience>
   );

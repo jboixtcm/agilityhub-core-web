@@ -44,6 +44,7 @@ async function bootstrap(root: HTMLElement) {
       "admin-audit",
       "admin-catalogs",
       "admin-census",
+      "admin-dashboard",
       "census",
       "errors",
       "shell",

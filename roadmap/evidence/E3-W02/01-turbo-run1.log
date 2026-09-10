@@ -1,0 +1,164 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/i18n, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 8 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:test: cache miss, executing 7f0aa7fa348b7a62
+@agilityhub/ui:test: cache miss, executing 7f5088d346ec7cf3
+clubs:lint: cache miss, executing 74584fc78ddab04f
+clubs-admin:lint: cache miss, executing 85acfe524de12607
+@agilityhub/i18n:lint: cache miss, executing 2bae733a904c4c7f
+@agilityhub/api-client:lint: cache miss, executing 36a5e6656160fd75
+@agilityhub/api-client:typecheck: cache miss, executing 014212a221b8179e
+@agilityhub/ui:typecheck: cache hit, replaying logs 3535fbe0b292f018
+id:lint: cache hit, replaying logs e72f0ee3bae6b9fe
+@agilityhub/ui:lint: cache hit, replaying logs 6586a49aac9ef737
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/config:typecheck: cache hit, replaying logs d963af231b5e6a98
+@agilityhub/auth:lint: cache hit, replaying logs 124b2e03cc508bda
+@agilityhub/config:lint: cache hit, replaying logs 9bfae1aac519771f
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/i18n:typecheck: cache miss, executing 4d2be77313b74e00
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/i18n:test: cache miss, executing aa34b385a3133e55
+clubs:build: cache miss, executing cb34d9bfab513019
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 2ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (8 tests) 19ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (3 tests) 27ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  3 passed (3)
+@agilityhub/i18n:test:       Tests  14 passed (14)
+@agilityhub/i18n:test:    Start at  10:43:51
+@agilityhub/i18n:test:    Duration  372ms (transform 68%, import 21%, tests 9%, worker 1%)
+@agilityhub/i18n:test: 
+id:build: cache miss, executing a8d9f4d59959f492
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 18ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (15 tests) 283ms
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/api-client:test:  ❯ src/index.test.ts (10 tests | 1 failed) 434ms
+@agilityhub/api-client:test:    ✓ typed API client (4)
+@agilityhub/api-client:test:      ✓ uses the configured base URL and injects locale and authorization headers 11ms
+@agilityhub/api-client:test:      ✓ maps every non-2xx response to ApiError 4ms
+@agilityhub/api-client:test:      ✓ maps a fetch failure to the NETWORK ApiError 1ms
+@agilityhub/api-client:test:      ✓ adds a UUID idempotency key to configured POST operations 7ms
+@agilityhub/api-client:test:    ✓ TanStack Query defaults (2)
+@agilityhub/api-client:test:      ✓ uses a 30 second stale time and retries only network and 5xx failures 0ms
+@agilityhub/api-client:test:      ✓ namespaces query keys by host 0ms
+@agilityhub/api-client:test:    ❯ MSW bootstrap handlers (2)
+@agilityhub/api-client:test:      × exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers 3ms
+@agilityhub/api-client:test:      ✓ serves branding, current account, club settings, token, and health fixtures 19ms
+@agilityhub/api-client:test:    ✓ R-03-22 census list handlers (2)
+@agilityhub/api-client:test:      ✓ paginates members, reports applied filters, and resolves facet labels 134ms
+@agilityhub/api-client:test:      ✓ serves 242 dogs and rejects unknown filter fields 253ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  FAIL  src/index.test.ts > MSW bootstrap handlers > exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers
+@agilityhub/api-client:test: AssertionError: expected [ HttpHandler{ …(9) }, …(125) ] to have a length of 121 but got 126
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: - Expected
+@agilityhub/api-client:test: + Received
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: - 121
+@agilityhub/api-client:test: + 126
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ❯ src/index.test.ts:188:22
+@agilityhub/api-client:test:     186| describe("MSW bootstrap handlers", () => {
+@agilityhub/api-client:test:     187|   it("exports the bootstrap, identity continuation, onboarding, and dy…
+@agilityhub/api-client:test:     188|     expect(handlers).toHaveLength(121);
+@agilityhub/api-client:test:        |                      ^
+@agilityhub/api-client:test:     189|
+@agilityhub/api-client:test:     190|     const [authorizeResponse, sessionResponse, logoutResponse] = await…
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  1 failed | 2 passed (3)
+@agilityhub/api-client:test:       Tests  1 failed | 25 passed (26)
+@agilityhub/api-client:test:    Start at  10:43:51
+@agilityhub/api-client:test:    Duration  1.06s (tests 38%, import 31%, transform 31%)
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs-admin:build: cache miss, executing 4da9db3a9f292c6a
+@agilityhub/api-client#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    7 successful, 18 total
+Cached:    6 cached, 18 total
+  Time:    1.962s 
+Failed:    @agilityhub/api-client#test
+
+ ERROR  run failed: command  exited (1)

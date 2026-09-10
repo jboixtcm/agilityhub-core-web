@@ -1448,11 +1448,212 @@ select {
   min-height: 5.5rem;
 }
 
+.dashboard-page,
+.signup-review-page {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ah-space-5);
+}
+
+.dashboard-page > h1,
+.signup-review-page h1 {
+  margin: 0;
+  font: 800 1.55rem/1.2 var(--ah-font-display);
+}
+
+.dashboard-kpis,
+.dashboard-skeletons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ah-space-3);
+}
+
+.dashboard-kpi {
+  display: grid;
+  gap: var(--ah-space-1);
+  min-height: 7.25rem;
+}
+
+.dashboard-kpi > strong {
+  color: var(--ah-color-primary);
+  font-size: 2rem;
+}
+
+.dashboard-kpi > span {
+  font-weight: 800;
+}
+
+.dashboard-kpi > small,
+.dashboard-page header small,
+.dashboard-risk__row small,
+.dashboard-signups__row small {
+  color: var(--ah-color-text-muted);
+}
+
+.dashboard-grid,
+.signup-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-4);
+}
+
+.dashboard-page .ah-card > header,
+.signup-review-page__header,
+.signup-review-decision > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.signup-review-decision > footer > :last-child {
+  margin-inline-start: auto;
+}
+
+.dashboard-page h2,
+.signup-review-page h2 {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dashboard-risk__row,
+.dashboard-signups__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-3) 0;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.dashboard-risk__row:last-child,
+.dashboard-signups__row:last-child {
+  border-bottom: 0;
+}
+
+.dashboard-risk__row > div,
+.dashboard-signups__row > div {
+  display: grid;
+  flex: 1;
+  gap: var(--ah-space-1);
+  min-width: 0;
+}
+
+.dashboard-chart {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.signup-review-page__header {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.signup-review-page .ah-card {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.signup-review-data {
+  display: grid;
+  grid-template-columns: minmax(8rem, auto) 1fr;
+  gap: var(--ah-space-2) var(--ah-space-4);
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.signup-review-data dt {
+  color: var(--ah-color-text-muted);
+}
+
+.signup-review-data dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  margin: 0;
+}
+
+.signup-review-data a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-primary);
+}
+
+.signup-review-warning {
+  margin: 0;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border: 1px solid var(--ah-color-warning);
+  border-radius: var(--ah-radius-md);
+  background: color-mix(in srgb, var(--ah-color-warning) 10%, transparent);
+}
+
+.signup-review-warning--danger {
+  color: var(--ah-color-danger);
+  border-color: var(--ah-color-danger);
+  background: color-mix(in srgb, var(--ah-color-danger) 10%, transparent);
+}
+
+.signup-review-decision {
+  grid-template-columns: minmax(14rem, 0.7fr) minmax(18rem, 1.3fr);
+}
+
+.signup-review-decision > div {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-2);
+}
+
+.signup-review-decision label {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.signup-review-decision > footer {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  padding-top: var(--ah-space-3);
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.signup-edit-form,
+.signup-edit-form fieldset {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.signup-edit-form fieldset {
+  margin: var(--ah-space-3) 0;
+  padding: var(--ah-space-4);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
 .ah-modal:has(.catalog-plan-form) {
   width: min(64rem, 100%);
 }
 
 @media (max-width: 60rem) {
+  .dashboard-kpis,
+  .dashboard-skeletons,
+  .dashboard-grid,
+  .signup-review-grid,
+  .signup-review-decision {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-signups__row,
+  .signup-review-decision > footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .signup-review-decision > footer {
+    grid-column: 1;
+  }
+
   .catalog-page__header,
   .catalog-section__header,
   .catalog-page__heading-actions,

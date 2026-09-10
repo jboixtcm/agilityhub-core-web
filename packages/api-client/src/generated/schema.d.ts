@@ -327,6 +327,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/checkout-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create signup checkout session
+         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 implements capability/ownership/redirect checks, anonymous replay protection and limits; standard 501 stub.
+         */
+        post: operations["create_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/club": {
         parameters: {
             query?: never;
@@ -1251,6 +1271,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/dogs/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit an additional dog
+         * @description R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. E3-T03 verifies member ownership and ACTIVE status; standard 501 stub.
+         */
+        post: operations["addDog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/dogs/{id}/documents": {
         parameters: {
             query?: never;
@@ -1472,7 +1512,7 @@ export interface paths {
         };
         /**
          * List members
-         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorView without financial or internal data. Fields/filters are limited by role.
+         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorView without financial or internal data. Fields/filters are limited by role. S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields.
          */
         get: operations["listMembers"];
         put?: never;
@@ -1743,6 +1783,26 @@ export interface paths {
         patch: operations["updatePaymentMethod"];
         trace?: never;
     };
+    "/members/{id}/rejection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reject member signup
+         * @description R-04-23. ADMIN; reason and optimistic version required. New member becomes LEFT; an existing member stays ACTIVE and only pending dogs become INACTIVE. Standard 501 stub.
+         */
+        post: operations["reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/roles": {
         parameters: {
             query?: never;
@@ -1757,6 +1817,46 @@ export interface paths {
          */
         put: operations["updateMemberRoles"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Review member signup
+         * @description S04 §6. ADMIN D2 aggregate with masked payment details and signed document downloads. Other-tenant resource lookup belongs to E3-T03; standard 501 stub.
+         */
+        get: operations["review"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/validation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate member signup
+         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. Standard 501 stub.
+         */
+        post: operations["validate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2259,6 +2359,110 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Signup configuration
+         * @description S04 §6. ANON or MEMBER; member block is returned only for the authenticated add-dog flow. Module-dependent fields are omitted. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        get: operations["config"];
+        put?: never;
+        /**
+         * Submit signup
+         * @description S04 §6, R-04-01–24. ANON; 5/hour and 20/day. Idempotency-Key is a UUID; host-scoped anonymous replay protection is E3-T03. Body at most 64 KB and 10 files. Nonempty website honeypot will return 202 without saving. Client amounts are ignored. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        post: operations["signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/family-group-lookups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find family-group holder
+         * @description R-04-12. ANON; FAMILY_GROUP required; 20/hour. Only holderDisplayName may be disclosed. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        post: operations["familyGroup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/identity-checks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check signup identity
+         * @description R-04-05. ANON; 10/hour. Reveals only result and maskedEmail; recognition sends a verification link in E3-T03. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        post: operations["identityCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/towns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find signup towns
+         * @description R-04-02. ANON; 60/hour. Country-profile postal lookup; an unsupported dataset yields an empty array. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        get: operations["towns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/signup/upload-urls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create signup upload URL
+         * @description R-04-08. ANON or MEMBER; 30/hour. Signed upload constrained by files.allowedTypes/files.maxSizeMb; at most 10 files per signup. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforcement is E3-T03. Standard 501 stub.
+         */
+        post: operations["uploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/connect/logout": {
         parameters: {
             query?: never;
@@ -2419,118 +2623,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/signup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getSignupConfig"];
-        put?: never;
-        post: operations["submitSignup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/signup/identity-checks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["checkSignupIdentity"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/signup/towns": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getSignupTowns"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/signup/upload-urls": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createSignupUploadUrl"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/signup/family-group-lookups": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["lookupSignupFamilyGroup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/dogs/signup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["submitMemberDogSignup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/checkout-sessions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createCheckoutSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/members/{id}/notification-preferences": {
         parameters: {
             query?: never;
@@ -2577,6 +2669,20 @@ export interface components {
             deltaThisMonth: number;
             /** Format: int32 */
             value: number;
+        };
+        AddDogSignupRequest: {
+            consents?: components["schemas"]["SignupConsents"];
+            documents: components["schemas"]["SignupDocument"][];
+            dog: components["schemas"]["SignupDog"];
+            /** Format: uuid */
+            planIdRequested?: string;
+        };
+        AddDogSignupResult: {
+            checkout: components["schemas"]["SignupCheckout"];
+            /** Format: uuid */
+            dogId: string;
+            /** @description Omitted without BILLING */
+            upfront?: components["schemas"]["SignupUpfront"];
         };
         Address: {
             city: string;
@@ -2639,7 +2745,7 @@ export interface components {
             url: string;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -2786,6 +2892,21 @@ export interface components {
             items: (components["schemas"]["Ring"] | components["schemas"]["RingReaderView"])[];
             /** Format: int64 */
             totalItems: number;
+        };
+        CheckoutSession: {
+            checkoutSessionId: string;
+            /** Format: uri */
+            checkoutUrl: string;
+        };
+        CheckoutSessionRequest: {
+            /** Format: uri */
+            cancelUrl: string;
+            /** Format: uuid */
+            memberId: string;
+            /** @description Required for ANON: 24-hour HMAC capability bound to memberId */
+            signupToken?: string;
+            /** Format: uri */
+            successUrl: string;
         };
         ClassOccupancyKpi: {
             /** Format: int32 */
@@ -2983,14 +3104,14 @@ export interface components {
             postalCodeLookup: boolean;
             timeFormat: string;
         };
-        /** @description S14 §6: module/parameter-controlled blocks may be null; contract only. */
+        /** @description S14 §6: module/parameter-controlled blocks are explicitly null when disabled; contract only. */
         Dashboard: {
-            dogsByLevel?: components["schemas"]["DogsByLevel"];
+            dogsByLevel: components["schemas"]["DogsByLevel"];
             /** Format: date-time */
             generatedAt: string;
             kpis: components["schemas"]["DashboardKpis"];
-            pendingSignups?: components["schemas"]["PendingSignups"];
-            riskReview?: components["schemas"]["RiskReview"];
+            pendingSignups: components["schemas"]["PendingSignups"];
+            riskReview: components["schemas"]["RiskReview"];
             /** Format: date */
             today: string;
             week: components["schemas"]["DashboardWeek"];
@@ -3004,10 +3125,10 @@ export interface components {
             pendingSignups: number;
         };
         DashboardKpis: {
-            activeMembers?: components["schemas"]["ActiveMembersKpi"];
-            classOccupancy?: components["schemas"]["ClassOccupancyKpi"];
-            pendingSignups?: components["schemas"]["PendingSignupsKpi"];
-            trainingBookings?: components["schemas"]["TrainingBookingsKpi"];
+            activeMembers: components["schemas"]["ActiveMembersKpi"];
+            classOccupancy: components["schemas"]["ClassOccupancyKpi"];
+            pendingSignups: components["schemas"]["PendingSignupsKpi"];
+            trainingBookings: components["schemas"]["TrainingBookingsKpi"];
         };
         DashboardLevel: {
             code: string;
@@ -3269,6 +3390,15 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        FamilyGroupLookupRequest: {
+            dogName: string;
+            holderName: string;
+        };
+        FamilyGroupLookupResult: {
+            holderDisplayName?: string;
+            /** @enum {string} */
+            result: "FOUND" | "NOT_FOUND";
+        };
         FamilyGroupRequest: {
             holderMemberId: string;
             memberIds: string[];
@@ -3418,6 +3548,15 @@ export interface components {
         IdDocument: {
             number: string;
             type: string;
+        };
+        IdentityCheckRequest: {
+            emails: string[];
+            idDocument: components["schemas"]["SignupIdDocument"];
+        };
+        IdentityCheckResult: {
+            maskedEmail?: string;
+            /** @enum {string} */
+            result: "NEW" | "VERIFICATION_SENT" | "SIGNUP_ALREADY_PENDING" | "CONTACT_CLUB";
         };
         ImageRights: {
             /** Format: date-time */
@@ -3893,11 +4032,20 @@ export interface components {
             nextInvoiceDate?: string;
             paymentMethod?: components["schemas"]["PaymentMethodView"];
             pendingDocuments?: string[];
+            pendingDogs?: components["schemas"]["DogSummary"][];
             plan?: components["schemas"]["NamedReference"];
             postalCode?: string;
             roles?: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
+            signup?: components["schemas"]["MemberListSignup"];
+            /** @description S04 virtual field; E3-T03 projection */
+            signupPending?: boolean;
             /** Format: int64 */
             version: number;
+            warnings?: components["schemas"]["SignupWarning"][];
+        };
+        MemberListSignup: {
+            /** Format: date-time */
+            submittedAt: string;
         };
         /** @description Cross-vertical notification preference payload remains owned by S11. */
         MemberOverview: {
@@ -3930,6 +4078,17 @@ export interface components {
             remarks?: string;
             /** Format: int64 */
             version: number;
+        };
+        MemberSignupView: {
+            dogs: components["schemas"]["SignupDogView"][];
+            familyGroupClaim?: components["schemas"]["SignupFamilyGroupView"];
+            member: components["schemas"]["Member"];
+            proposals: components["schemas"]["SignupProposals"];
+            signup: components["schemas"]["SignupSubmission"];
+            upfront?: components["schemas"]["SignupUpfrontReview"];
+            /** Format: int64 */
+            version: number;
+            warnings: components["schemas"]["SignupWarning"][];
         };
         MembershipSummary: {
             activeProfile?: components["schemas"]["Profile"];
@@ -4170,14 +4329,15 @@ export interface components {
             dogs: components["schemas"]["PendingSignupDog"][];
             /** Format: uuid */
             memberId: string;
-            paymentMethodType?: string;
+            /** @enum {string} */
+            paymentMethodType?: "SEPA_DD" | "CARD" | "MANUAL";
             /** Format: int32 */
             pendingDays: number;
             planName: string;
             shortName: string;
             /** Format: date-time */
             submittedAt: string;
-            warnings: string[];
+            warnings: components["schemas"]["SignupWarning"][];
         };
         PendingSignupDog: {
             breed: string;
@@ -4527,6 +4687,18 @@ export interface components {
         ReasonRequest: {
             reason?: string;
         };
+        RejectionRequest: {
+            reason: string;
+            /** Format: int64 */
+            version: number;
+        };
+        RejectionResult: {
+            dogIds: string[];
+            /** Format: uuid */
+            memberId: string;
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
+        };
         RequiredConsent: {
             /** @enum {string} */
             policy: "PLATFORM" | "CLUB";
@@ -4622,11 +4794,13 @@ export interface components {
             reviewAt: string;
             ringName: string;
             startTime: string;
-            status: string;
+            /** @enum {string} */
+            status: "CANCELLED" | "AT_RISK" | "WILL_CANCEL" | "PENDING_DECISION";
         };
         RiskNotified: {
             dogName: string;
-            gender: string;
+            /** @enum {string} */
+            gender: "MALE" | "FEMALE" | "OTHER";
             memberFirstName: string;
         };
         RiskReview: {
@@ -4725,6 +4899,273 @@ export interface components {
         Signup: {
             enabled: boolean;
         };
+        SignupAddress: {
+            postalCode: string;
+            street: string;
+            town: string;
+        };
+        SignupCheckout: {
+            required: boolean;
+        };
+        SignupConfig: {
+            closedText?: string;
+            countryProfile: components["schemas"]["SignupCountryProfile"];
+            enabled: boolean;
+            legal: components["schemas"]["SignupLegal"];
+            /** @description Only present for an authenticated MEMBER adding a dog */
+            member?: components["schemas"]["SignupMember"];
+            /** @description Omitted without BILLING */
+            paymentMethods?: components["schemas"]["SignupPaymentMethod"][];
+            plans: components["schemas"]["SignupPlan"][];
+            steps: ("PERSON" | "DOG" | "FAMILY_GROUP" | "PAYMENT")[];
+            texts: components["schemas"]["SignupTexts"];
+            /** @description BILLING first-month choices from S04 §6 */
+            upfront?: components["schemas"]["SignupUpfrontConfig"];
+        };
+        SignupConsents: {
+            imageUse: components["schemas"]["SignupImageConsent"];
+            privacyPolicy: components["schemas"]["SignupPrivacyConsent"];
+        };
+        SignupCountryProfile: {
+            code: string;
+            dateFormat: string;
+            idDocumentTypes: ("DNI" | "NIE" | "PASSPORT" | "OTHER")[];
+            phonePrefix: string;
+            postalCodeLookup: boolean;
+            timeFormat: string;
+        };
+        SignupDocument: {
+            files: components["schemas"]["SignupFile"][];
+            /** @description Key from census.dogDocumentTypes; e.g. VACCINATION_CARD, INSURANCE, OTHER */
+            type: string;
+        };
+        SignupDocumentFile: {
+            /** Format: uri */
+            downloadUrl: string;
+            name: string;
+        };
+        SignupDocumentView: {
+            files: components["schemas"]["SignupDocumentFile"][];
+            /** @enum {string} */
+            state: "PENDING" | "RECEIVED";
+            type: string;
+        };
+        SignupDog: {
+            /** @example 2024-04 */
+            birthMonth: string;
+            breed: string;
+            chip: string;
+            /** @description Public signup documents; add-dog uses its top-level documents array */
+            documents?: components["schemas"]["SignupDocument"][];
+            name: string;
+            notesToInstructors?: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+        };
+        SignupDogView: {
+            birthMonth: string;
+            breed: string;
+            chip: string;
+            documents: components["schemas"]["SignupDocumentView"][];
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            levelId?: string;
+            name: string;
+            notesToInstructors?: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "INACTIVE";
+        };
+        SignupFamilyGroupClaim: {
+            dogName: string;
+            holderName: string;
+            leavePending: boolean;
+        };
+        SignupFamilyGroupView: {
+            dogName?: string;
+            holder?: components["schemas"]["FamilyMember"];
+            holderName?: string;
+            /** @enum {string} */
+            status: "NONE" | "FOUND" | "NOT_FOUND_PENDING";
+        };
+        SignupFile: {
+            fileKey: string;
+            name: string;
+        };
+        SignupFirstMonthChoice: {
+            amountDue: components["schemas"]["Money"];
+            /** @enum {string} */
+            option: "TODAY" | "ALTERNATIVE";
+            /** Format: date */
+            startDate: string;
+        };
+        SignupIdDocument: {
+            /** @enum {string} */
+            type: "DNI" | "NIE" | "PASSPORT" | "OTHER";
+            value: string;
+        };
+        SignupImageConsent: {
+            granted: boolean;
+            version: string;
+        };
+        SignupLegal: {
+            imageConsentText: string;
+            legalTextsVersion: string;
+            /** Format: uri */
+            privacyPolicyUrl: string;
+        };
+        SignupMember: {
+            consentsUpToDate: boolean;
+            paymentMethodMasked?: components["schemas"]["PaymentMethodView"];
+            /** Format: uuid */
+            planId?: string;
+        };
+        SignupPack: {
+            /** Format: int32 */
+            sessions: number;
+            /** Format: int32 */
+            validityMonths: number;
+        };
+        SignupPayment: {
+            /**
+             * @description Required for a monthly plan with BILLING
+             * @enum {string}
+             */
+            firstMonthOption?: "TODAY" | "ALTERNATIVE";
+            holderName?: string;
+            holderTaxId?: string;
+            /** @example ES0000000000000000000000 */
+            iban?: string;
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+        };
+        SignupPaymentMethod: {
+            instructions?: string;
+            label: string;
+            mandateText?: string;
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+        };
+        SignupPerson: {
+            address: components["schemas"]["SignupAddress"];
+            /** Format: date */
+            birthDate: string;
+            emails: string[];
+            firstName: string;
+            /** @enum {string} */
+            gender: "MALE" | "FEMALE" | "OTHER";
+            idDocument: components["schemas"]["SignupIdDocument"];
+            lastName1: string;
+            lastName2?: string;
+            phones: components["schemas"]["SignupPhone"][];
+        };
+        SignupPhone: {
+            label?: string;
+            number: string;
+            prefix: string;
+        };
+        SignupPlan: {
+            /** @enum {string} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
+            conditions: string;
+            description: string;
+            entryFee?: components["schemas"]["Money"];
+            /** Format: uuid */
+            id: string;
+            maintenanceFee?: components["schemas"]["Money"];
+            name: string;
+            offerLabel?: string;
+            pack?: components["schemas"]["SignupPack"];
+            price?: components["schemas"]["SignupPrice"];
+            /** @enum {string} */
+            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+        };
+        SignupPrice: {
+            amount: components["schemas"]["Money"];
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            periodicity: "MONTHLY" | "ONE_OFF";
+        };
+        SignupPrivacyConsent: {
+            accepted: boolean;
+            version: string;
+        };
+        SignupProposals: {
+            /** Format: uuid */
+            familyGroupId?: string;
+            levels: components["schemas"]["LevelSummary"][];
+            /** Format: date */
+            nextInvoiceDate?: string;
+            /** Format: uuid */
+            planId: string;
+            /** Format: uuid */
+            priceId?: string;
+        };
+        SignupRequest: {
+            consents: components["schemas"]["SignupConsents"];
+            dog: components["schemas"]["SignupDog"];
+            familyGroupClaim?: components["schemas"]["SignupFamilyGroupClaim"];
+            /** @example en */
+            locale: string;
+            /** @description Omitted without BILLING */
+            payment?: components["schemas"]["SignupPayment"];
+            person: components["schemas"]["SignupPerson"];
+            /** Format: uuid */
+            planId: string;
+            /** @description Honeypot; nonempty input will return 202 without persistence in E3-T03 */
+            website?: string;
+        };
+        SignupResult: {
+            checkout: components["schemas"]["SignupCheckout"];
+            /** Format: uuid */
+            memberId: string;
+            /** @description 24-hour HMAC capability bound to memberId; never log or expose outside the applicant flow */
+            signupToken: string;
+            /** @description Omitted without BILLING */
+            upfront?: components["schemas"]["SignupUpfront"];
+        };
+        SignupSubmission: {
+            locale: string;
+            /** Format: int32 */
+            pendingDays: number;
+            /** Format: uuid */
+            planIdRequested: string;
+            readmission: boolean;
+            /** @enum {string} */
+            source: "PUBLIC" | "APP_ADD_DOG";
+            /** Format: date-time */
+            submittedAt: string;
+        };
+        SignupTexts: {
+            cashConditions: string;
+            familyGroupIntro: string;
+            freeTrainingConditions: string;
+            imageConsent: string;
+            monthlyPaymentIntro: string;
+            paymentDay: string;
+            therapyIntro: string;
+        };
+        SignupUpfront: {
+            lines: components["schemas"]["UpfrontLine"][];
+            totalDue: components["schemas"]["Money"];
+        };
+        SignupUpfrontConfig: {
+            firstMonthOptions: components["schemas"]["SignupFirstMonthChoice"][];
+            /** Format: int32 */
+            firstMonthSplitDay: number;
+            /** Format: date */
+            today: string;
+        };
+        SignupUpfrontReview: {
+            lines: components["schemas"]["UpfrontLine"][];
+            totalDue: components["schemas"]["Money"];
+            totalPaid: components["schemas"]["Money"];
+        };
+        /** @enum {string} */
+        SignupWarning: "NO_IMAGE_CONSENT" | "ACCOUNT_NOT_PROVIDED" | "DOCUMENT_PENDING" | "FAMILY_HOLDER_NOT_FOUND" | "UPFRONT_UNPAID" | "READMISSION";
         SingleClassSettings: {
             /** @enum {string} */
             cancelPolicy: "REFUND" | "CREDIT" | "NONE";
@@ -4789,11 +5230,27 @@ export interface components {
             /** @enum {string} */
             token_type: "Bearer";
         };
+        Town: {
+            name: string;
+            region: string;
+        };
         TrainingBookingsKpi: {
             /** Format: int32 */
             distinctMembers: number;
             /** Format: int32 */
             value: number;
+        };
+        UpfrontLine: {
+            amount: components["schemas"]["Money"];
+            /** @enum {string} */
+            concept: "ENTRY_FEE" | "FIRST_MONTH" | "PACK" | "ADDITIONAL_DOG_FEE";
+            /** Format: uuid */
+            id: string;
+            paidAmount?: components["schemas"]["Money"];
+            /** @enum {string} */
+            provider?: "STRIPE" | "MANUAL";
+            /** @enum {string} */
+            status: "DUE" | "CHECKOUT_PENDING" | "PAID" | "PARTIAL" | "CANCELLED" | "REFUNDED";
         };
         Upload: {
             /** Format: date-time */
@@ -4812,6 +5269,19 @@ export interface components {
             /** Format: int64 */
             sizeBytes: number;
         };
+        UploadUrl: {
+            /** Format: date-time */
+            expiresAt: string;
+            fileKey: string;
+            /** Format: uri */
+            uploadUrl: string;
+        };
+        UploadUrlRequest: {
+            contentType: string;
+            fileName: string;
+            /** Format: int64 */
+            sizeBytes: number;
+        };
         UserInfo: {
             email?: string;
             email_verified?: boolean;
@@ -4826,231 +5296,41 @@ export interface components {
             clubName: string;
             roles: components["schemas"]["Profile"][];
         };
-        SignupConfig: {
-            enabled: boolean;
-            closedText?: string;
-            requireDogDocumentAtSignup: boolean;
-            allowFamilyGroupPending: boolean;
-            steps: ("PERSON" | "DOG" | "FAMILY" | "PAYMENT")[];
-            plans: components["schemas"]["SignupPlan"][];
-            paymentMethods: components["schemas"]["SignupPaymentMethod"][];
-            texts: components["schemas"]["SignupTexts"];
-            legal: components["schemas"]["SignupLegal"];
-            upfront?: components["schemas"]["SignupUpfront"];
-            member?: components["schemas"]["SignupMember"];
-        };
-        SignupPlan: {
-            id: string;
-            /** @enum {string} */
-            type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
-            name: string;
-            description?: string;
-            conditions?: string;
-            offerLabel?: string;
-            price?: components["schemas"]["Money"];
-            entryFee?: components["schemas"]["Money"];
-            maintenanceFee?: components["schemas"]["Money"];
-            pack?: components["schemas"]["SignupPack"];
-        };
-        SignupPack: {
-            months: number;
-            discountLabel?: string;
-        };
-        SignupPaymentMethod: {
-            /** @enum {string} */
-            type: "SEPA_DD" | "CARD" | "MANUAL";
-            label: string;
-            mandateText?: string;
-            instructions?: string;
-        };
-        SignupTexts: {
-            freeTrainingConditions: string;
-            therapyIntro: string;
-            familyGroupIntro: string;
-            monthlyPaymentIntro: string;
-            paymentDay: string;
-            cashConditions: string;
-        };
-        SignupLegal: {
-            /** Format: uri */
-            privacyPolicyUrl: string;
-            legalTextsVersion: string;
-            imageConsentText: string;
-        };
-        SignupMember: {
-            planId: string;
-            paymentMethodMasked: string;
-            consentsUpToDate: boolean;
-            fullName: string;
-        };
-        SignupUpfront: {
-            firstMonthSplitDay: number;
-            /** Format: date */
-            today: string;
-            firstMonthOptions: components["schemas"]["SignupUpfrontOption"][];
-            lines: components["schemas"]["SignupUpfrontLine"][];
-            totalDue: components["schemas"]["Money"];
-        };
-        SignupUpfrontOption: {
-            /** @enum {string} */
-            option: "TODAY" | "ALTERNATIVE";
-            label: string;
-            /** Format: date */
-            startDate: string;
-            amountDue: components["schemas"]["Money"];
-        };
-        SignupUpfrontLine: {
-            /** @enum {string} */
-            type: "ENTRY_FEE" | "FIRST_MONTH" | "PACK" | "ADDITIONAL_DOG_FEE";
-            label: string;
-            amount: components["schemas"]["Money"];
-        };
-        SignupIdentityDocument: {
-            /** @enum {string} */
-            type: "DNI" | "NIE" | "PASSPORT" | "OTHER";
-            value: string;
-        };
-        SignupIdentityCheckRequest: {
-            idDocument: components["schemas"]["SignupIdentityDocument"];
-            emails: string[];
-        };
-        SignupIdentityCheckResponse: {
-            /** @enum {string} */
-            result: "NEW" | "VERIFICATION_SENT" | "SIGNUP_ALREADY_PENDING" | "CONTACT_CLUB";
-            maskedEmail?: string;
-        };
-        SignupTown: {
-            name: string;
-            region: string;
-        };
-        SignupUploadRequest: {
-            fileName: string;
-            contentType: string;
-            sizeBytes: number;
-        };
-        SignupUploadResponse: {
-            /** Format: uri */
-            uploadUrl: string;
-            fileKey: string;
-            /** Format: date-time */
-            expiresAt: string;
-        };
-        SignupFamilyLookupRequest: {
-            holderName: string;
-            dogName: string;
-        };
-        SignupFamilyLookupResponse: {
-            /** @enum {string} */
-            result: "FOUND" | "NOT_FOUND";
-            holderDisplayName?: string;
-        };
-        SignupPhone: {
-            prefix: string;
-            number: string;
-            label: string;
-        };
-        SignupAddress: {
-            street: string;
-            postalCode: string;
-            town: string;
-        };
-        SignupPerson: {
-            idDocument: components["schemas"]["SignupIdentityDocument"];
-            firstName: string;
-            lastName1: string;
-            lastName2: string;
-            /** Format: date */
-            birthDate: string;
-            /** @enum {string} */
-            gender: "MALE" | "FEMALE" | "OTHER";
-            emails: string[];
-            phones: components["schemas"]["SignupPhone"][];
-            address: components["schemas"]["SignupAddress"];
-        };
-        SignupDocumentFile: {
-            fileKey: string;
-            name: string;
-        };
-        SignupDogDocument: {
-            /** @enum {string} */
-            type: "VACCINATION_CARD";
-            files: components["schemas"]["SignupDocumentFile"][];
-        };
-        SignupDog: {
-            name: string;
-            /** @enum {string} */
-            sex: "MALE" | "FEMALE";
-            breed: string;
-            birthMonth: string;
-            chip: string;
-            notesToInstructors?: string;
-            documents: components["schemas"]["SignupDogDocument"][];
-        };
-        SignupFamilyClaim: {
-            holderName: string;
-            dogName: string;
-            leavePending: boolean;
-        };
-        SignupPayment: {
-            /** @enum {string} */
-            type: "SEPA_DD" | "CARD" | "MANUAL";
-            iban?: string | null;
-            holderName?: string;
-            holderTaxId?: string | null;
-            /** @enum {string} */
-            firstMonthOption: "TODAY" | "ALTERNATIVE";
-        };
-        SignupConsentChoice: {
-            accepted?: boolean;
-            granted?: boolean;
-            version: string;
-        };
-        SignupConsents: {
-            privacyPolicy: components["schemas"]["SignupConsentChoice"];
-            imageUse: components["schemas"]["SignupConsentChoice"];
-        };
-        SignupRequest: {
-            locale: string;
-            website: string;
-            person: components["schemas"]["SignupPerson"];
-            dog: components["schemas"]["SignupDog"];
-            planId?: string | null;
-            familyGroupClaim?: components["schemas"]["SignupFamilyClaim"];
-            payment?: components["schemas"]["SignupPayment"];
-            consents: components["schemas"]["SignupConsents"];
-        };
-        SignupCheckout: {
-            required: boolean;
-        };
-        SignupSubmission: {
-            memberId: string;
-            signupToken: string;
-            upfront: components["schemas"]["SignupUpfront"];
-            checkout: components["schemas"]["SignupCheckout"];
-        };
-        MemberDogSignupRequest: {
-            dog: components["schemas"]["SignupDog"];
-            documents: components["schemas"]["SignupDogDocument"][];
-            planIdRequested?: string;
-            consents?: components["schemas"]["SignupConsents"];
-        };
-        MemberDogSignupSubmission: {
+        ValidationDog: {
+            /** Format: uuid */
             dogId: string;
-            upfront: components["schemas"]["SignupUpfront"];
-            checkout: components["schemas"]["SignupCheckout"];
+            /** Format: uuid */
+            levelId?: string;
         };
-        CheckoutSessionRequest: {
+        ValidationDryRun: {
+            /** Format: date */
+            nextInvoiceDate?: string;
+            price?: components["schemas"]["SignupPrice"];
+            upfront?: components["schemas"]["SignupUpfrontReview"];
+            warnings: components["schemas"]["SignupWarning"][];
+        };
+        ValidationRequest: {
+            dogs: components["schemas"]["ValidationDog"][];
+            /** Format: uuid */
+            familyGroupId?: string;
+            /** Format: date */
+            nextInvoiceDate?: string;
+            /** Format: uuid */
+            planId?: string;
+            /** Format: uuid */
+            priceId?: string;
+            upfrontAmountPaid?: components["schemas"]["Money"];
+            /** Format: int64 */
+            version: number;
+        };
+        ValidationResult: {
+            /** Format: uuid */
+            accountId: string;
+            dogIds: string[];
+            /** Format: uuid */
             memberId: string;
-            signupToken?: string;
-            /** Format: uri */
-            successUrl: string;
-            /** Format: uri */
-            cancelUrl: string;
-        };
-        CheckoutSessionResponse: {
-            /** Format: uri */
-            checkoutUrl: string;
-            checkoutSessionId: string;
+            /** Format: int32 */
+            number: number;
         };
         NotificationPreferences: {
             emailByCategory: {
@@ -7515,6 +7795,133 @@ export interface operations {
                 };
             };
             /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    create_1: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckoutSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Checkout session */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckoutSession"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description PAYMENT_PROVIDER_NOT_ENABLED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
             429: {
                 headers: {
                     /** @description Seconds before retrying */
@@ -15222,6 +15629,133 @@ export interface operations {
             };
         };
     };
+    addDog: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddDogSignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Dog submitted */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddDogSignupResult"];
+                };
+            };
+            /** @description FILE_NOT_FOUND */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, CONSENT_VERSION_OUTDATED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     uploadMyDogDocument: {
         parameters: {
             query?: never;
@@ -19142,6 +19676,133 @@ export interface operations {
             };
         };
     };
+    reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectionRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RejectionResult"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     updateMemberRoles: {
         parameters: {
             query?: never;
@@ -19212,6 +19873,258 @@ export interface operations {
                 };
             };
             /** @description MEMBER_NOT_ACTIVE, ROLE_MEMBER_REQUIRED, CANNOT_CHANGE_OWN_ADMIN_ROLE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberSignupView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    validate: {
+        parameters: {
+            query?: {
+                dryRun?: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description ValidationDryRun when dryRun=true; ValidationResult otherwise */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationDryRun"] | components["schemas"]["ValidationResult"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, MEMBERSHIP_EXISTS */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description LEVEL_REQUIRED, NEXT_INVOICE_DATE_REQUIRED, UPFRONT_AMOUNT_EXCEEDS_DUE, PLAN_NOT_AVAILABLE, FAMILY_HOLDER_NOT_FOUND */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -23796,6 +24709,759 @@ export interface operations {
             };
         };
     };
+    config: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupConfig"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    signup: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Signup submitted */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupResult"];
+                };
+            };
+            /** @description Honeypot accepted without persistence (E3-T03) */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description INVALID_ID_DOCUMENT, INVALID_PHONE, FILE_NOT_FOUND */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ALREADY_EXISTS */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SIGNUP_CLOSED, SIGNUP_ALREADY_PENDING, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, CONSENT_VERSION_OUTDATED, FAMILY_HOLDER_NOT_FOUND */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    familyGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FamilyGroupLookupRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FamilyGroupLookupResult"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    identityCheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdentityCheckRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityCheckResult"];
+                };
+            };
+            /** @description INVALID_ID_DOCUMENT */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description ID_DOCUMENT_AMBIGUOUS */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    towns: {
+        parameters: {
+            query: {
+                postalCode: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Town"][];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    uploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UploadUrlRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadUrl"];
+                };
+            };
+            /** @description FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     logout: {
         parameters: {
             query: {
@@ -24792,217 +26458,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-        };
-    };
-    getSignupConfig: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Signup form configuration */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupConfig"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    submitSignup: {
-        parameters: {
-            query?: never;
-            header?: {
-                "Idempotency-Key"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SignupRequest"];
-            };
-        };
-        responses: {
-            /** @description Signup submitted */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupSubmission"];
-                };
-            };
-            /** @description Honeypot accepted without processing */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            400: components["responses"]["ApiError"];
-            409: components["responses"]["ApiError"];
-            422: components["responses"]["ApiError"];
-            429: components["responses"]["ApiError"];
-            default: components["responses"]["ApiError"];
-        };
-    };
-    checkSignupIdentity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SignupIdentityCheckRequest"];
-            };
-        };
-        responses: {
-            /** @description Identity check result */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupIdentityCheckResponse"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    getSignupTowns: {
-        parameters: {
-            query: {
-                postalCode: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Towns for a postal code */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupTown"][];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    createSignupUploadUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SignupUploadRequest"];
-            };
-        };
-        responses: {
-            /** @description Signed upload URL */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupUploadResponse"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    lookupSignupFamilyGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SignupFamilyLookupRequest"];
-            };
-        };
-        responses: {
-            /** @description Family-group lookup result */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SignupFamilyLookupResponse"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    submitMemberDogSignup: {
-        parameters: {
-            query?: never;
-            header?: {
-                "Idempotency-Key"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MemberDogSignupRequest"];
-            };
-        };
-        responses: {
-            /** @description Dog signup submitted */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MemberDogSignupSubmission"];
-                };
-            };
-            default: components["responses"]["ApiError"];
-        };
-    };
-    createCheckoutSession: {
-        parameters: {
-            query?: never;
-            header?: {
-                "Idempotency-Key"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CheckoutSessionRequest"];
-            };
-        };
-        responses: {
-            /** @description Checkout session created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CheckoutSessionResponse"];
-                };
-            };
-            default: components["responses"]["ApiError"];
         };
     };
     updateMemberNotificationPreferences: {

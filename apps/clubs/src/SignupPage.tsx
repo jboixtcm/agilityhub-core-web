@@ -18,11 +18,11 @@ type SignupConfig = components["schemas"]["SignupConfig"];
 type SignupPerson = components["schemas"]["SignupPerson"];
 type SignupDog = components["schemas"]["SignupDog"];
 type SignupPhone = components["schemas"]["SignupPhone"];
-type SignupTown = components["schemas"]["SignupTown"];
-type SignupFamilyLookup = components["schemas"]["SignupFamilyLookupResponse"];
-type SignupIdentityResult = components["schemas"]["SignupIdentityCheckResponse"];
+type SignupTown = components["schemas"]["Town"];
+type SignupFamilyLookup = components["schemas"]["FamilyGroupLookupResult"];
+type SignupIdentityResult = components["schemas"]["IdentityCheckResult"];
 type SignupPayment = components["schemas"]["SignupPayment"];
-type SignupDocumentFile = components["schemas"]["SignupDocumentFile"];
+type SignupDocumentFile = components["schemas"]["SignupFile"];
 
 type DraftPerson = Omit<SignupPerson, "gender"> & {
   gender: SignupPerson["gender"] | "";
@@ -30,7 +30,7 @@ type DraftPerson = Omit<SignupPerson, "gender"> & {
 
 interface SignupDraft {
   dog: SignupDog;
-  familyClaim: components["schemas"]["SignupFamilyClaim"];
+  familyClaim: components["schemas"]["SignupFamilyGroupClaim"];
   imageConsent: boolean;
   mode: "add-dog" | "public";
   passport: string;
@@ -353,7 +353,7 @@ function PersonStep({
     patchPerson("emails", emails);
   };
 
-  const identityDocument = (): components["schemas"]["SignupIdentityDocument"] => {
+  const identityDocument = (): components["schemas"]["SignupIdDocument"] => {
     if (isSpanishProfile && draft.person.idDocument.value.trim() === "") {
       return { type: "PASSPORT", value: draft.passport.trim() };
     }
@@ -401,7 +401,11 @@ function PersonStep({
     ) {
       next.phones0 = t("signup:common.invalidPhone");
     }
-    if (secondPhone?.number.trim() !== "" && secondPhone?.label.trim() === "") {
+    if (
+      secondPhone !== undefined &&
+      secondPhone.number.trim() !== "" &&
+      (secondPhone.label ?? "").trim() === ""
+    ) {
       next.phones1label = required;
     }
     if (draft.person.address.street.trim() === "") next.street = required;
@@ -822,7 +826,7 @@ function DogStep({
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState<string>();
   const [uploading, setUploading] = useState(false);
-  const files = draft.dog.documents[0]?.files ?? [];
+  const files = draft.dog.documents?.[0]?.files ?? [];
 
   const patchDog = <Key extends keyof SignupDog>(key: Key, value: SignupDog[Key]) => {
     onChange({ ...draft, dog: { ...draft.dog, [key]: value } });
@@ -885,15 +889,12 @@ function DogStep({
     } else if (birthMonthToIso(draft.dog.birthMonth) === undefined) {
       next.birthMonth = t("signup:common.invalidMonth");
     }
-    if (config.requireDogDocumentAtSignup && files.length === 0) {
-      next.documents = t("errors:DOG_DOCUMENT_REQUIRED");
-    }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
     onContinue(
       addDog
         ? "/gossos/nou/pagament"
-        : config.steps.includes("FAMILY")
+        : config.steps.includes("FAMILY_GROUP")
           ? "/apuntat-hi/familia"
           : "/apuntat-hi/pagament",
     );
@@ -1004,11 +1005,9 @@ function DogStep({
           {uploading ? t("signup:dog.uploading") : t("signup:dog.addPage")}
         </label>
       </div>
-      {!config.requireDogDocumentAtSignup ? (
-        <aside className="signup-note signup-note--neutral">
-          {t("signup:dog.optionalDocument")}
-        </aside>
-      ) : null}
+      <aside className="signup-note signup-note--neutral">
+        {t("signup:dog.optionalDocument")}
+      </aside>
       {config.texts.freeTrainingConditions === "" ? null : (
         <p className="signup-copy">{config.texts.freeTrainingConditions}</p>
       )}
@@ -1040,12 +1039,12 @@ function DogStep({
                   >
                     <span className="signup-plan__head">
                       <strong>{plan.name}</strong>
-                      {plan.maintenanceFee !== undefined && plan.description !== undefined ? (
+                      {plan.maintenanceFee !== undefined ? (
                         <small>{plan.description}</small>
                       ) : plan.price === undefined || plan.type === "PACK" ? null : (
                         <b>
                           {t("signup:dog.monthlyPrice", {
-                            price: formatMoney(plan.price.amountMinor / 100),
+                            price: formatMoney(plan.price.amount.amountMinor / 100),
                           })}
                         </b>
                       )}
@@ -1053,8 +1052,8 @@ function DogStep({
                     {plan.type !== "PACK" || plan.price === undefined ? null : (
                       <small className="signup-plan__pack-price">
                         {t("signup:dog.packPrice", {
-                          months: plan.pack?.months ?? 1,
-                          price: formatMoney(plan.price.amountMinor / 100),
+                          months: plan.pack?.validityMonths ?? 1,
+                          price: formatMoney(plan.price.amount.amountMinor / 100),
                         })}
                       </small>
                     )}
@@ -1065,13 +1064,10 @@ function DogStep({
                         })}
                       </small>
                     )}
-                    {plan.description === undefined || plan.maintenanceFee !== undefined ? null : (
+                    {plan.maintenanceFee !== undefined ? null : (
                       <small>{plan.description}</small>
                     )}
-                    {plan.conditions === undefined ? null : <small>{plan.conditions}</small>}
-                    {plan.pack?.discountLabel === undefined ? null : (
-                      <small>{plan.pack.discountLabel}</small>
-                    )}
+                    {plan.conditions === "" ? null : <small>{plan.conditions}</small>}
                     {plan.maintenanceFee === undefined || plan.entryFee === undefined ? null : (
                       <small>
                         {t("signup:dog.maintenance", {
@@ -1217,17 +1213,15 @@ function FamilyStep({
       ) : lookup?.result === "NOT_FOUND" ? (
         <aside className="signup-note signup-note--danger" role="alert">
           {t("signup:family.notFound")}{" "}
-          {config.allowFamilyGroupPending ? (
-            <button
-              onClick={() => {
-                onChange({ ...draft, familyClaim: { ...draft.familyClaim, leavePending: true } });
-                onContinue("/apuntat-hi/pagament");
-              }}
-              type="button"
-            >
-              {t("signup:family.leavePending")}
-            </button>
-          ) : null}
+          <button
+            onClick={() => {
+              onChange({ ...draft, familyClaim: { ...draft.familyClaim, leavePending: true } });
+              onContinue("/apuntat-hi/pagament");
+            }}
+            type="button"
+          >
+            {t("signup:family.leavePending")}
+          </button>
         </aside>
       ) : null}
       {message === undefined ? null : (
@@ -1274,17 +1268,18 @@ function PaymentStep({
   totalSteps: number;
 }) {
   const branding = useBranding();
-  const { formatMoney } = useClubFormats();
+  const { formatDate, formatMoney } = useClubFormats();
   const { i18n, t } = useTranslation(["signup", "errors"]);
   const [imageOpen, setImageOpen] = useState(false);
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
   const [website, setWebsite] = useState("");
-  const paymentMethod = config.paymentMethods.find((method) => method.type === draft.payment.type);
+  const paymentMethods = config.paymentMethods ?? [];
+  const paymentMethod = paymentMethods.find((method) => method.type === draft.payment.type);
   const billing = branding.modules.includes("BILLING");
   const needsConsents = !addDog || config.member?.consentsUpToDate === false;
-  const stripe = config.paymentMethods.some((method) => method.type === "CARD");
-  const manualInstructions = config.paymentMethods.find(
+  const stripe = paymentMethods.some((method) => method.type === "CARD");
+  const manualInstructions = paymentMethods.find(
     (method) => method.type === "MANUAL",
   )?.instructions;
 
@@ -1299,19 +1294,20 @@ function PaymentStep({
       privacyPolicy: { accepted: draft.privacyAccepted, version },
     };
     try {
-      const dog = {
+      const dog: SignupDog = {
         ...draft.dog,
         birthMonth: birthMonthToIso(draft.dog.birthMonth) ?? draft.dog.birthMonth,
-        documents: draft.dog.documents,
+        ...(draft.dog.documents === undefined ? {} : { documents: draft.dog.documents }),
       };
       if (addDog) {
         const memberResult = await client.POST("/me/dogs/signup", {
           body: {
             dog,
-            documents: dog.documents,
+            documents: dog.documents ?? [],
             planIdRequested: draft.planId,
             ...(needsConsents ? { consents } : {}),
           },
+          params: { header: { "Idempotency-Key": crypto.randomUUID() } },
         });
         if (memberResult.data === undefined) throw new TypeError("Missing dog-signup response");
         safeSessionRemove(DRAFT_KEY);
@@ -1330,9 +1326,10 @@ function PaymentStep({
             birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
             gender: draft.person.gender || "OTHER",
           },
-          planId: draft.planId === "" ? null : draft.planId,
+          planId: draft.planId,
           website,
         },
+        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
       });
       if (result.data === undefined) throw new TypeError("Missing signup response");
       safeSessionRemove(DRAFT_KEY);
@@ -1345,6 +1342,7 @@ function PaymentStep({
             signupToken: result.data.signupToken,
             successUrl: `${window.location.origin}/apuntat-hi/enviada?cs=success`,
           },
+          params: { header: { "Idempotency-Key": crypto.randomUUID() } },
         });
         if (checkout.data === undefined) throw new TypeError("Missing checkout response");
         onContinue(checkout.data.checkoutUrl);
@@ -1392,7 +1390,18 @@ function PaymentStep({
               <Input
                 id="signup-current-payment"
                 readOnly
-                value={config.member?.paymentMethodMasked ?? ""}
+                value={
+                  config.member?.paymentMethodMasked === undefined
+                    ? ""
+                    : [
+                        paymentMethods.find(
+                          (method) => method.type === config.member?.paymentMethodMasked?.type,
+                        )?.label,
+                        config.member.paymentMethodMasked.maskedAccount,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")
+                }
               />
             </FormField>
           ) : (
@@ -1402,7 +1411,7 @@ function PaymentStep({
                 role="group"
                 aria-label={t("signup:payment.monthlyTitle")}
               >
-                {config.paymentMethods.map((method) => (
+                {paymentMethods.map((method) => (
                   <button
                     aria-pressed={draft.payment.type === method.type}
                     key={method.type}
@@ -1471,12 +1480,17 @@ function PaymentStep({
       {billing && config.upfront !== undefined ? (
         <Card className="signup-upfront">
           <h2>{t("signup:payment.initialTitle")}</h2>
-          {config.upfront.lines.map((line) => (
-            <p className="signup-upfront__line" key={line.type}>
-              <span>{line.label}</span>
-              <strong>{formatMoney(line.amount.amountMinor / 100)}</strong>
+          {config.plans.find((plan) => plan.id === draft.planId)?.entryFee === undefined ? null : (
+            <p className="signup-upfront__line">
+              <span>{t("signup:payment.entryLine")}</span>
+              <strong>
+                {formatMoney(
+                  (config.plans.find((plan) => plan.id === draft.planId)?.entryFee?.amountMinor ??
+                    0) / 100,
+                )}
+              </strong>
             </p>
-          ))}
+          )}
           {config.upfront.firstMonthOptions.length === 0 ? null : (
             <fieldset className="signup-upfront__options">
               <legend>{t("signup:payment.chooseStart")}</legend>
@@ -1493,16 +1507,16 @@ function PaymentStep({
                     }}
                     type="radio"
                   />
-                  <span>{option.label}</span>
+                  <span>
+                    {option.option === "TODAY"
+                      ? t("signup:payment.startToday", { date: formatDate(option.startDate, "dayMonth") })
+                      : t("signup:payment.startAlternative", { date: formatDate(option.startDate, "dayMonth") })}
+                  </span>
                   <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
                 </label>
               ))}
             </fieldset>
           )}
-          <div className="signup-upfront__total">
-            <strong>{t("signup:payment.total")}</strong>
-            <b>{formatMoney(config.upfront.totalDue.amountMinor / 100)}</b>
-          </div>
           <p>{stripe ? t("signup:payment.stripeSubmit") : manualInstructions}</p>
         </Card>
       ) : null}
@@ -1651,18 +1665,17 @@ export function SignupPage({
                 ? (data.member?.planId ?? data.plans[0]?.id ?? "")
                 : (data.plans[0]?.id ?? "")
               : current.planId;
-          const method = data.paymentMethods.some(
+          const paymentMethods = data.paymentMethods ?? [];
+          const method = paymentMethods.some(
             (candidate) => candidate.type === current.payment.type,
           )
             ? current.payment.type
-            : data.paymentMethods[0]?.type;
+            : paymentMethods[0]?.type;
           const holderName =
             (current.payment.holderName?.trim() ?? "") === ""
-              ? addDog
-                ? data.member?.fullName
-                : [current.person.firstName, current.person.lastName1, current.person.lastName2]
-                    .filter((part) => part !== "")
-                    .join(" ")
+              ? [current.person.firstName, current.person.lastName1, current.person.lastName2]
+                  .filter((part) => part !== "")
+                  .join(" ")
               : current.payment.holderName;
           return {
             ...current,

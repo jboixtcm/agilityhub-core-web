@@ -660,3 +660,60 @@ export function DataTable<Row>({
     </div>
   );
 }
+
+export interface BarChartDatum {
+  highlighted: number;
+  label: string;
+  total: number;
+}
+
+export function BarChart({
+  data,
+  highlightedLabel,
+  label,
+  totalLabel,
+  valueLabel = (item) => `${String(item.total)} · ${String(item.highlighted)}`,
+}: {
+  data: readonly BarChartDatum[];
+  highlightedLabel: string;
+  label: string;
+  totalLabel: string;
+  valueLabel?: (item: BarChartDatum) => string;
+}) {
+  const maximum = Math.max(1, ...data.map((item) => item.total));
+  return (
+    <figure aria-label={label} className="ah-bar-chart">
+      <div aria-hidden="true" className="ah-bar-chart__plot">
+        {data.map((item) => (
+          <div className="ah-bar-chart__column" key={item.label}>
+            <div className="ah-bar-chart__bars">
+              <span
+                className="ah-bar-chart__bar ah-bar-chart__bar--total"
+                style={{ height: `${String((item.total / maximum) * 100)}%` }}
+              />
+              <span
+                className="ah-bar-chart__bar ah-bar-chart__bar--highlighted"
+                style={{ height: `${String((item.highlighted / maximum) * 100)}%` }}
+              />
+            </div>
+            <strong>{item.label}</strong>
+            <small>{valueLabel(item)}</small>
+          </div>
+        ))}
+      </div>
+      <table className="ah-sr-only">
+        <caption>{label}</caption>
+        <thead>
+          <tr><th scope="col">{label}</th><th scope="col">{totalLabel}</th><th scope="col">{highlightedLabel}</th></tr>
+        </thead>
+        <tbody>
+          {data.map((item) => (
+            <tr key={item.label}>
+              <th scope="row">{item.label}</th><td>{item.total}</td><td>{item.highlighted}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </figure>
+  );
+}

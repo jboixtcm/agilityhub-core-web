@@ -1,0 +1,46 @@
+{
+  "common": { "empty": "—", "error": "No se ha podido cargar el panel.", "loading": "Cargando el panel", "retry": "Volver a intentarlo" },
+  "greeting": "{period, select, morning {¡Buenos días!} afternoon {¡Buenas tardes!} other {¡Buenas noches!}} {date}",
+  "kpi": {
+    "activeMembers": "Socios de alta",
+    "thisMonth": "+{count} este mes",
+    "occupancy": "Ocupación de clases",
+    "thisWeek": "esta semana",
+    "places": "{booked}/{capacity} plazas",
+    "training": "Entrenamientos reservados",
+    "week": "semana",
+    "distinctMembers": "{count} personas diferentes",
+    "pending": "Preinscripciones pendientes",
+    "older": "{count} de hace más de {days} días"
+  },
+  "risk": {
+    "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",
+    "alerts": "{count} avisos",
+    "empty": "Ninguna clase en riesgo",
+    "booked": "{count} inscritos",
+    "today": "hoy",
+    "tomorrow": "mañana",
+    "notified": "{count, plural, one {{gender, select, female {avisada} other {avisado}} {names}} other {avisados {names}}}",
+    "status": {
+      "CANCELLED": "anulada",
+      "AT_RISK": "en riesgo",
+      "WILL_CANCEL": "se anulará {day} a las {time}",
+      "PENDING_DECISION": "en riesgo · el club decidirá"
+    }
+  },
+  "signups": {
+    "title": "Preinscripciones pendientes",
+    "empty": "Ninguna preinscripción pendiente",
+    "validate": "VALIDA",
+    "validated": "El alta se ha validado.",
+    "accountNotProvided": "Cuenta no informada",
+    "payment": { "SEPA_DD": "domiciliación", "CARD": "tarjeta", "MANUAL": "efectivo" }
+  },
+  "chart": {
+    "title": "Perros por nivel — {count} activos",
+    "legend": "con reserva (sem. actual o anterior) · total activos",
+    "recent": "Con reserva",
+    "total": "Total activos",
+    "value": "{total} · {recent} res."
+  }
+}

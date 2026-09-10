@@ -1,0 +1,116 @@
+{
+  "member": {
+    "accountMissing": false,
+    "address": {
+      "city": "Cabrera de Mar",
+      "country": "ES",
+      "postalCode": "08349",
+      "province": "Barcelona",
+      "street": "Carrer de la Riera, 12"
+    },
+    "birthDate": "1988-04-12",
+    "bookingBlock": { "active": false },
+    "consents": {
+      "imageRights": { "at": "2026-08-09T10:02:00Z", "granted": false, "version": "2026-09" },
+      "privacyPolicy": { "acceptedAt": "2026-08-09T10:02:00Z", "version": "2026-09" }
+    },
+    "contactEmails": [{ "bounced": false, "email": "marta.roca@example.test" }],
+    "displayStatus": { "kind": "PENDING", "label": "pendent" },
+    "firstName": "Marta",
+    "fullName": "Marta Roca Pujol",
+    "gender": "FEMALE",
+    "id": "42000000-0000-4000-8000-000000000001",
+    "idDocument": { "number": "47·····2K", "type": "DNI" },
+    "lastName1": "Roca",
+    "lastName2": "Pujol",
+    "memberNumber": 1042,
+    "maskedAccount": "ES02 ···· 7719",
+    "paymentMethod": { "holderName": "Marta Roca Pujol", "maskedAccount": "ES02 ···· 7719", "type": "SEPA_DD" },
+    "phones": [{ "label": "Mòbil", "number": "655123123", "prefix": "+34" }],
+    "plan": { "id": "10000000-0000-4000-8000-000000000001", "name": "Abonat", "type": "MONTHLY" },
+    "planId": "10000000-0000-4000-8000-000000000001",
+    "priceId": "20000000-0000-4000-8000-000000000001",
+    "roles": ["MEMBER"],
+    "status": "PENDING",
+    "version": 3
+  },
+  "dogs": [
+    {
+      "birthMonth": "2024-04",
+      "breed": "Whippet",
+      "chip": "941·············",
+      "documents": [
+        {
+          "type": "VACCINATION_CARD",
+          "state": "RECEIVED",
+          "files": [
+            { "name": "cartilla_Kiwi_1.jpg", "downloadUrl": "https://files.example.test/cartilla_Kiwi_1.jpg" },
+            { "name": "cartilla_Kiwi_2.jpg", "downloadUrl": "https://files.example.test/cartilla_Kiwi_2.jpg" }
+          ]
+        },
+        {
+          "type": "INSURANCE",
+          "state": "RECEIVED",
+          "files": [{ "name": "Assegurança.pdf", "downloadUrl": "https://files.example.test/asseguranca.pdf" }]
+        }
+      ],
+      "id": "44000000-0000-4000-8000-000000000001",
+      "levelId": "43000000-0000-4000-8000-000000000001",
+      "name": "Kiwi",
+      "notesToInstructors": "Iniciar-nos a l'agility i socialitzar",
+      "sex": "FEMALE",
+      "status": "PENDING"
+    }
+  ],
+  "signup": {
+    "locale": "ca",
+    "pendingDays": 2,
+    "planIdRequested": "10000000-0000-4000-8000-000000000001",
+    "readmission": false,
+    "source": "PUBLIC",
+    "submittedAt": "2026-08-08T10:02:00Z"
+  },
+  "familyGroupClaim": {
+    "dogName": "Kiwi",
+    "holder": {
+      "dogs": [{ "id": "44000000-0000-4000-8000-000000000001", "name": "Kiwi" }],
+      "fullName": "Marta Roca Pujol",
+      "id": "42000000-0000-4000-8000-000000000001"
+    },
+    "holderName": "Marta Roca",
+    "status": "FOUND"
+  },
+  "upfront": {
+    "lines": [
+      {
+        "amount": { "amountMinor": 10000, "currency": "EUR" },
+        "concept": "ENTRY_FEE",
+        "id": "45000000-0000-4000-8000-000000000001",
+        "paidAmount": { "amountMinor": 10000, "currency": "EUR" },
+        "provider": "STRIPE",
+        "status": "PAID"
+      },
+      {
+        "amount": { "amountMinor": 3000, "currency": "EUR" },
+        "concept": "FIRST_MONTH",
+        "id": "45000000-0000-4000-8000-000000000002",
+        "paidAmount": { "amountMinor": 3000, "currency": "EUR" },
+        "provider": "STRIPE",
+        "status": "PAID"
+      }
+    ],
+    "totalDue": { "amountMinor": 13000, "currency": "EUR" },
+    "totalPaid": { "amountMinor": 13000, "currency": "EUR" }
+  },
+  "proposals": {
+    "nextInvoiceDate": "2026-09-01",
+    "planId": "10000000-0000-4000-8000-000000000001",
+    "priceId": "20000000-0000-4000-8000-000000000001",
+    "levels": [
+      { "id": "43000000-0000-4000-8000-000000000001", "code": "CAD", "name": "Cadells" },
+      { "id": "43000000-0000-4000-8000-000000000002", "code": "A", "name": "Nivell A" }
+    ]
+  },
+  "warnings": ["NO_IMAGE_CONSENT"],
+  "version": 3
+}

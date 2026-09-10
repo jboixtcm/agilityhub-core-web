@@ -4,7 +4,7 @@ import signupConfigFixture from "./signup-config-canic.json";
 
 export type SignupConfig = components["schemas"]["SignupConfig"];
 export type SignupRequest = components["schemas"]["SignupRequest"];
-export type MemberDogSignupRequest = components["schemas"]["MemberDogSignupRequest"];
+export type MemberDogSignupRequest = components["schemas"]["AddDogSignupRequest"];
 
 const baseline = signupConfigFixture as SignupConfig;
 
@@ -18,7 +18,6 @@ const content = {
     closed: "Signup requests cannot be submitted at this time.",
     plans: ["Member", "Pack 6", "Pack 10", "Therapy"],
     planConditions: "One time only",
-    planDiscount: "then 40% off the registration fee",
     therapyDescription: "conditions and cost depend on each case",
     offer: "Offers when a family brings more than one dog",
     paymentLabels: ["Direct debit", "Cash"],
@@ -39,18 +38,12 @@ const content = {
     cash: "Payments cover complete calendar periods. Contact the club to arrange them.",
     image:
       "I authorize publication of photographs of me and my dog in connection with club activities.",
-    options: [
-      "Start today, 17 August (half month)",
-      "Start on 1 September (full month)",
-    ],
-    entry: "Joining fee (1 dog)",
   },
   es: {
     additional: "Cuota adicional del perro",
     closed: "En este momento no se pueden enviar solicitudes de alta.",
     plans: ["Socio", "Bono 6", "Bono 10", "Terapia"],
     planConditions: "Una sola vez",
-    planDiscount: "después 40 % de descuento en la matrícula",
     therapyDescription: "condiciones y coste según cada caso",
     offer: "Ofertas si una familia trae más de un perro",
     paymentLabels: ["Domiciliación", "Efectivo"],
@@ -71,11 +64,6 @@ const content = {
     cash: "Los pagos cubren períodos naturales completos. Contacta con el club para coordinarlos.",
     image:
       "Autorizo la publicación de fotografías mías y de mi perro en el ámbito de las actividades del club.",
-    options: [
-      "Alta hoy, 17 de agosto (medio mes)",
-      "Alta el 1 de septiembre (mes completo)",
-    ],
-    entry: "Entrada (1 perro)",
   },
 } as const;
 
@@ -92,12 +80,11 @@ function translatedConfig(locale: keyof typeof content): SignupConfig {
   const translated = content[locale];
   config.plans.forEach((plan, index) => {
     plan.name = translated.plans[index] ?? plan.name;
-    if (plan.conditions !== undefined) plan.conditions = translated.planConditions;
+    plan.conditions = translated.planConditions;
     if (plan.offerLabel !== undefined) plan.offerLabel = translated.offer;
-    if (plan.pack?.discountLabel !== undefined) plan.pack.discountLabel = translated.planDiscount;
-    if (plan.id === "plan-therapy") plan.description = translated.therapyDescription;
+    if (plan.name === "Teràpia") plan.description = translated.therapyDescription;
   });
-  config.paymentMethods.forEach((method, index) => {
+  config.paymentMethods?.forEach((method, index) => {
     method.label = translated.paymentLabels[index] ?? method.label;
     if (method.mandateText !== undefined) method.mandateText = translated.mandate;
     if (method.instructions !== undefined) method.instructions = translated.instructions;
@@ -106,16 +93,12 @@ function translatedConfig(locale: keyof typeof content): SignupConfig {
     cashConditions: translated.cash,
     familyGroupIntro: translated.family,
     freeTrainingConditions: translated.freeTraining,
+    imageConsent: translated.image,
     monthlyPaymentIntro: translated.monthly,
     paymentDay: translated.paymentDay,
     therapyIntro: translated.therapy,
   };
   config.legal.imageConsentText = translated.image;
-  config.upfront?.firstMonthOptions.forEach((option, index) => {
-    option.label = translated.options[index] ?? option.label;
-  });
-  const entry = config.upfront?.lines.find((line) => line.type === "ENTRY_FEE");
-  if (entry !== undefined) entry.label = translated.entry;
   return config;
 }
 
@@ -144,7 +127,7 @@ export function signupConfig({
   config.closedText = content[locale].closed;
   config.legal.privacyPolicyUrl = privacyPolicyUrl;
   if (!familyGroup) {
-    config.steps = config.steps.filter((step) => step !== "FAMILY");
+    config.steps = config.steps.filter((step) => step !== "FAMILY_GROUP");
     config.plans = config.plans.map((plan) => {
       const copy = { ...plan };
       delete copy.offerLabel;
@@ -155,7 +138,7 @@ export function signupConfig({
     config.plans = config.plans.filter((plan) => plan.type !== "PACK");
   }
   if (!billing) {
-    config.paymentMethods = [];
+    delete config.paymentMethods;
     delete config.upfront;
     config.plans = config.plans.map((plan) => {
       const copy = { ...plan };
@@ -165,7 +148,7 @@ export function signupConfig({
       return copy;
     });
   } else if (stripe) {
-    config.paymentMethods.splice(1, 0, {
+    config.paymentMethods?.splice(1, 0, {
       label: locale === "ca" ? "Targeta" : locale === "es" ? "Tarjeta" : "Card",
       type: "CARD",
     });
@@ -174,16 +157,6 @@ export function signupConfig({
     delete config.member;
   } else {
     config.member = member;
-    if (config.upfront !== undefined) {
-      config.upfront.lines = [
-        ...config.upfront.lines,
-        {
-          amount: { amountMinor: 3000, currency: config.upfront.totalDue.currency },
-          label: content[locale].additional,
-          type: "ADDITIONAL_DOG_FEE",
-        },
-      ];
-    }
   }
   return config;
 }
@@ -194,7 +167,7 @@ if (configuredMember === undefined) {
 }
 export const signupMemberFixture = configuredMember;
 
-export const signupTownFixtures: Readonly<Record<string, components["schemas"]["SignupTown"][]>> = {
+export const signupTownFixtures: Readonly<Record<string, components["schemas"]["Town"][]>> = {
   "08001": [
     { name: "Poble Antic", region: "Barcelona" },
     { name: "Poble Centre", region: "Barcelona" },
@@ -202,3 +175,42 @@ export const signupTownFixtures: Readonly<Record<string, components["schemas"]["
   ],
   "08349": [{ name: "Cabrera de Mar", region: "Barcelona" }],
 };
+
+export function signupUpfrontFixture({
+  addDog = false,
+  currency = "EUR",
+}: {
+  addDog?: boolean;
+  currency?: string;
+} = {}): components["schemas"]["SignupUpfront"] {
+  const entryAmount = 10_000;
+  const firstMonthAmount = 3_000;
+  const additionalDogAmount = addDog ? 3_000 : 0;
+  return {
+    lines: [
+      {
+        amount: { amountMinor: entryAmount, currency },
+        concept: "ENTRY_FEE",
+        id: "30000000-0000-4000-8000-000000000001",
+        status: "DUE",
+      },
+      {
+        amount: { amountMinor: firstMonthAmount, currency },
+        concept: "FIRST_MONTH",
+        id: "30000000-0000-4000-8000-000000000002",
+        status: "DUE",
+      },
+      ...(addDog
+        ? [
+            {
+              amount: { amountMinor: additionalDogAmount, currency },
+              concept: "ADDITIONAL_DOG_FEE" as const,
+              id: "30000000-0000-4000-8000-000000000003",
+              status: "DUE" as const,
+            },
+          ]
+        : []),
+    ],
+    totalDue: { amountMinor: entryAmount + firstMonthAmount + additionalDogAmount, currency },
+  };
+}

@@ -27,9 +27,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add versioned, multilingual club-page editing with limited-Markdown previews in Clubs Admin and active club-page tabs on the Clubs Info screen.
 - Add the Clubs Admin audit trail, masked change inspection, entity-scoped last-change links, and global asynchronous export drawer with translated filters, status handling, and browser evidence.
 - Add the public four-step club signup and authenticated add-dog flows with draft recovery, identity and family lookup, signed document uploads, module-aware plans and payments, consent and checkout handling, three-locale copy, MSW contracts, and mobile browser evidence.
+- Add the Clubs Admin operational dashboard and signup-review flow with API-backed KPIs, risk and pending-signup cards, an accessible dogs-by-level chart, validation and rejection actions, live menu counters, three-locale copy, and desktop browser evidence.
 
 ### Changed
 
+- Adopt the verified S04 OpenAPI snapshot, prune its mocks-first overlay, regenerate client types, and align the public-signup fixtures and consumers with the published contract.
 - Route the member and dog list Excel/PDF actions through the export API, preserving visible-column query parameters while downloading synchronous responses and opening the global drawer for queued jobs.
 - Align the public signup with mobile mockups using compact phone/address rows, locale-safe masked dates, a custom vaccination-card control, corrected plan cards, and inline circular consents.
 - Make each cross-app Playwright project start both Clubs and Clubs Admin, gate popup readiness on the destination shell, and serialize app e2e suites on constrained CI runners.

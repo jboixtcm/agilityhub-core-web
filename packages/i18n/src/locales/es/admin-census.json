@@ -240,6 +240,18 @@
     "instructor": "instructor",
     "member": "alumno"
   },
+  "signupReview": {
+    "header": "Preinscripción #{number} — {name} + {dogs}",
+    "pending": "pendiente desde hace {count} días",
+    "readmission": "Readmisión", "newDog": "perro nuevo", "person": "Persona", "dog": "Perro ({current} de {total})",
+    "fields": {
+      "name": "Nombre", "idDocument": "DNI/NIE", "contact": "Contacto", "family": "Grupo familiar", "payment": "Pago", "chip": "Chip", "documents": "Documentos", "notes": "Notas a los instructores", "level": "Nivel inicial", "nextInvoice": "Fecha del próximo recibo", "birthDate": "Fecha de nacimiento", "birthMonth": "Mes de nacimiento", "breed": "Raza", "sex": "Sexo", "email": "Correo electrónico", "phone": "Teléfono", "street": "Dirección", "postalCode": "Código postal", "city": "Población", "firstName": "Nombre", "lastName1": "Primer apellido", "lastName2": "Segundo apellido"
+    },
+    "familyRate": "tarifa familiar al validar", "sameHolder": "titular: la misma", "whatsapp": "WhatsApp", "datePlaceholder": "dd/mm/aaaa", "required": "obligatorio", "plan": "Modalidad y tarifa", "upfront": "Pago inicial (anticipado)", "actuallyPaid": "Importe efectivamente cobrado:", "paid": "cobrado", "nothingPaid": "No se ha cobrado nada: queda pendiente", "confirmNothingPaid": "Confirma que no se ha cobrado ningún importe",
+    "warnings": { "image": "No autoriza el uso de su imagen: no publiquéis fotos donde salga {gender, select, female {ella} other {él}}.", "account": "Cuenta no informada", "document": "Documento pendiente", "family": "No se ha encontrado el titular del grupo familiar", "upfront": "Pago inicial pendiente" },
+    "actions": { "edit": "EDITA LOS DATOS", "reject": "RECHAZA (con motivo)", "validate": "VALIDA EL ALTA", "save": "GUARDA LOS CAMBIOS" },
+    "editTitle": "Edita los datos de la preinscripción", "rejectTitle": "Rechaza la preinscripción", "rejectReason": "Motivo del rechazo", "rejectHelp": "Entre 3 y 500 caracteres.", "cancel": "Cancelar", "loading": "Cargando la preinscripción…", "loadError": "No se ha podido cargar la preinscripción.", "retry": "Volver a intentarlo", "saved": "Los datos se han actualizado.", "stale": "La preinscripción ha cambiado. Vuelve a cargarla.", "invalidState": "La preinscripción ya no se puede validar.", "genericError": "No se ha podido completar la acción.", "levelRequired": "Selecciona el nivel inicial.", "invoiceRequired": "Indica la fecha del próximo recibo."
+  },
   "values": {
     "empty": "—",
     "female": "hembra",

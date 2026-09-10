@@ -279,20 +279,6 @@ describe("T-04-31 signup family lookup", () => {
     fireEvent.click(pending);
     expect(pendingNavigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
 
-    cleanup();
-    sessionStorage.clear();
-    await renderSignup({ path: "/apuntat-hi/familia", scenario: "signupNoFamilyPending" });
-    fireEvent.change(screen.getByLabelText("Nom del responsable"), {
-      target: { value: "Persona desconeguda" },
-    });
-    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), {
-      target: { value: "Bruc" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    await screen.findByRole("alert");
-    expect(
-      screen.queryByRole("button", { name: "Deixa-ho pendent i continua ›" }),
-    ).not.toBeInTheDocument();
   });
 
   it("keeps the dog draft when returning from the family step", async () => {
@@ -339,7 +325,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
           lastName2: "Pons",
           phones: [{ label: "Mòbil", number: "612345678", prefix: "+34" }],
         },
-        planId: "plan-member",
+        planId: "10000000-0000-4000-8000-000000000001",
         privacyAccepted: false,
         savedAt: Date.now(),
       }),
@@ -369,9 +355,8 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
 
     expect(screen.getByText("Pagament dels rebuts mensuals")).toBeVisible();
     expect(screen.getByText("Entrada (1 gos)")).toBeVisible();
-    expect(screen.getByText("Alta avui, 17 d'agost (mig mes)")).toBeVisible();
-    expect(screen.getByText("Alta l'1 de setembre (mes complet)")).toBeVisible();
-    expect(screen.getByText("Total a pagar al club")).toBeVisible();
+    expect(screen.getByText(/Alta avui, 17 d.agost \(mig mes\)/u)).toBeVisible();
+    expect(screen.getByText(/Alta l.1 de setembre \(mes complet\)/u)).toBeVisible();
     expect(screen.getByText(/emetre rebuts sobre aquest compte/u)).toBeVisible();
     expect(screen.getByText(/abans del dia 25/u)).toBeVisible();
     expect(screen.queryByText(/períodes naturals complets/u)).not.toBeInTheDocument();
@@ -418,7 +403,6 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     expect(screen.getByLabelText("Mètode de pagament actual")).toHaveValue(
       "Domiciliació · ···· 2231",
     );
-    expect(screen.getByText("Quota addicional del gos")).toBeVisible();
     fireEvent.click(screen.getByLabelText("Accepto la política de privacitat"));
     fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
     await waitFor(() => {

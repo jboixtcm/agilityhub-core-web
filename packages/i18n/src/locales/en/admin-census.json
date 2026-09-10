@@ -240,6 +240,18 @@
     "instructor": "instructor",
     "member": "student"
   },
+  "signupReview": {
+    "header": "Signup #{number} — {name} + {dogs}",
+    "pending": "pending for {count} days",
+    "readmission": "Readmission", "newDog": "new dog", "person": "Person", "dog": "Dog ({current} of {total})",
+    "fields": {
+      "name": "Name", "idDocument": "ID document", "contact": "Contact", "family": "Family group", "payment": "Payment", "chip": "Chip", "documents": "Documents", "notes": "Notes for instructors", "level": "Initial level", "nextInvoice": "Next invoice date", "birthDate": "Date of birth", "birthMonth": "Birth month", "breed": "Breed", "sex": "Sex", "email": "Email", "phone": "Phone", "street": "Address", "postalCode": "Postal code", "city": "Town", "firstName": "First name", "lastName1": "First surname", "lastName2": "Second surname"
+    },
+    "familyRate": "family rate on validation", "sameHolder": "same account holder", "whatsapp": "WhatsApp", "datePlaceholder": "mm/dd/yyyy", "required": "required", "plan": "Plan and price", "upfront": "Initial payment (advance)", "actuallyPaid": "Amount actually collected:", "paid": "paid", "nothingPaid": "Nothing has been collected: payment remains due", "confirmNothingPaid": "Confirm that no amount has been collected",
+    "warnings": { "image": "Image use was not authorized: do not publish photos showing {gender, select, female {her} other {him}}.", "account": "Account not provided", "document": "Document pending", "family": "The family-group holder was not found", "upfront": "Initial payment pending" },
+    "actions": { "edit": "EDIT DETAILS", "reject": "REJECT (with reason)", "validate": "VALIDATE SIGNUP", "save": "SAVE CHANGES" },
+    "editTitle": "Edit signup details", "rejectTitle": "Reject signup", "rejectReason": "Reason for rejection", "rejectHelp": "Between 3 and 500 characters.", "cancel": "Cancel", "loading": "Loading signup…", "loadError": "The signup could not be loaded.", "retry": "Try again", "saved": "The details were updated.", "stale": "The signup changed. Reload it.", "invalidState": "The signup can no longer be validated.", "genericError": "The action could not be completed.", "levelRequired": "Select the initial level.", "invoiceRequired": "Enter the next invoice date."
+  },
   "values": {
     "empty": "—",
     "female": "female",

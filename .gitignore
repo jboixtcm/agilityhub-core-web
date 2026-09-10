@@ -23,6 +23,13 @@ test-results/
 !roadmap/evidence/E3-W01/05-i18n.log
 !roadmap/evidence/E3-W01/06-vitest.log
 !roadmap/evidence/E3-W01/07-playwright-final.log
+!roadmap/evidence/E3-W02/00-api-generate.log
+!roadmap/evidence/E3-W02/01-ajv.log
+!roadmap/evidence/E3-W02/01-turbo-run1.log
+!roadmap/evidence/E3-W02/02-turbo.log
+!roadmap/evidence/E3-W02/03-i18n.log
+!roadmap/evidence/E3-W02/04-vitest-dashboard-signup.log
+!roadmap/evidence/E3-W02/05-playwright-all-final.log
 .DS_Store
 .env
 .env.*

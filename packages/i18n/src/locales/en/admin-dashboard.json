@@ -1,0 +1,46 @@
+{
+  "common": { "empty": "—", "error": "The dashboard could not be loaded.", "loading": "Loading the dashboard", "retry": "Try again" },
+  "greeting": "{period, select, morning {Good morning!} afternoon {Good afternoon!} other {Good evening!}} {date}",
+  "kpi": {
+    "activeMembers": "Active members",
+    "thisMonth": "+{count} this month",
+    "occupancy": "Class occupancy",
+    "thisWeek": "this week",
+    "places": "{booked}/{capacity} places",
+    "training": "Training bookings",
+    "week": "week",
+    "distinctMembers": "{count} different people",
+    "pending": "Pending signups",
+    "older": "{count} older than {days} days"
+  },
+  "risk": {
+    "title": "At-risk class review — {time}, today and {days} days ahead",
+    "alerts": "{count} alerts",
+    "empty": "No classes at risk",
+    "booked": "{count} booked",
+    "today": "today",
+    "tomorrow": "tomorrow",
+    "notified": "{count, plural, one {notified {names}} other {notified {names}}}",
+    "status": {
+      "CANCELLED": "cancelled",
+      "AT_RISK": "at risk",
+      "WILL_CANCEL": "will be cancelled {day} at {time}",
+      "PENDING_DECISION": "at risk · the club will decide"
+    }
+  },
+  "signups": {
+    "title": "Pending signups",
+    "empty": "No pending signups",
+    "validate": "VALIDATE",
+    "validated": "The signup was validated.",
+    "accountNotProvided": "Account not provided",
+    "payment": { "SEPA_DD": "direct debit", "CARD": "card", "MANUAL": "cash" }
+  },
+  "chart": {
+    "title": "Dogs by level — {count} active",
+    "legend": "with booking (current or previous week) · total active",
+    "recent": "With booking",
+    "total": "Total active",
+    "value": "{total} · {recent} booked"
+  }
+}

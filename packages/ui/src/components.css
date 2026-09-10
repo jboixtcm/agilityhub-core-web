@@ -613,3 +613,53 @@
   color: var(--ah-color-text-muted);
   text-align: center;
 }
+
+.ah-bar-chart {
+  margin: 0;
+}
+
+.ah-bar-chart__plot {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ah-space-4);
+  min-height: 8.5rem;
+  padding-top: var(--ah-space-3);
+}
+
+.ah-bar-chart__column {
+  display: grid;
+  flex: 1;
+  gap: var(--ah-space-1);
+  min-width: 2.5rem;
+  color: var(--ah-color-text-muted);
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.ah-bar-chart__column strong {
+  color: var(--ah-color-text);
+}
+
+.ah-bar-chart__bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--ah-space-1);
+  height: 5rem;
+}
+
+.ah-bar-chart__bar {
+  display: block;
+  width: 0.875rem;
+  min-height: 0.125rem;
+  border-radius: var(--ah-radius-sm) var(--ah-radius-sm) 0 0;
+}
+
+.ah-bar-chart__bar--total {
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+}
+
+.ah-bar-chart__bar--highlighted {
+  background: var(--ah-color-primary);
+}

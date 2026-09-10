@@ -1,0 +1,46 @@
+{
+  "common": { "empty": "—", "error": "No s'ha pogut carregar el tauler.", "loading": "Carregant el tauler", "retry": "Torna-ho a provar" },
+  "greeting": "{period, select, morning {Bon dia!} afternoon {Bona tarda!} other {Bon vespre!}} {date}",
+  "kpi": {
+    "activeMembers": "Abonats d'alta",
+    "thisMonth": "+{count} aquest mes",
+    "occupancy": "Ocupació classes",
+    "thisWeek": "aquesta setmana",
+    "places": "{booked}/{capacity} places",
+    "training": "Entrenaments reservats",
+    "week": "setmana",
+    "distinctMembers": "{count} persones diferents",
+    "pending": "Preinscripcions pendents",
+    "older": "{count} de fa més de {days} dies"
+  },
+  "risk": {
+    "title": "Revisió de classes en risc — {time}, avui i {days} dies vista",
+    "alerts": "{count} avisos",
+    "empty": "Cap classe en risc",
+    "booked": "{count} inscrits",
+    "today": "avui",
+    "tomorrow": "demà",
+    "notified": "{count, plural, one {{gender, select, female {avisada} other {avisat}} {names}} other {avisats {names}}}",
+    "status": {
+      "CANCELLED": "anul·lada",
+      "AT_RISK": "en risc",
+      "WILL_CANCEL": "s'anul·larà {day} a les {time}",
+      "PENDING_DECISION": "en risc · el club decidirà"
+    }
+  },
+  "signups": {
+    "title": "Preinscripcions pendents",
+    "empty": "Cap preinscripció pendent",
+    "validate": "VALIDA",
+    "validated": "L'alta s'ha validat.",
+    "accountNotProvided": "Compte no informat",
+    "payment": { "SEPA_DD": "domiciliació", "CARD": "targeta", "MANUAL": "efectiu" }
+  },
+  "chart": {
+    "title": "Gossos per nivell — {count} actius",
+    "legend": "amb reserva (setm. en curs o anterior) · total actius",
+    "recent": "Amb reserva",
+    "total": "Total actius",
+    "value": "{total} · {recent} res."
+  }
+}

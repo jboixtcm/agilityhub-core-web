@@ -53,7 +53,7 @@ test.describe("T-02-14 clubs-admin shell", () => {
     await prepareScenario(page, "admin", brandingCanic);
     await login(page);
 
-    await expect(page.getByRole("heading", { name: "Configuració" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Bon dia!/u })).toBeVisible();
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "admin-canic-1280.png"),
@@ -64,7 +64,7 @@ test.describe("T-02-14 clubs-admin shell", () => {
     await prepareScenario(page, "minimalAdmin", brandingMinim);
     await login(page);
 
-    await expect(page.getByRole("heading", { name: "Configuració" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Bon dia!/u })).toBeVisible();
     await expect(page.getByRole("link", { name: "Entrenaments" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Facturació" })).toHaveCount(0);
     await page.screenshot({
@@ -104,6 +104,6 @@ test.describe("T-01-20 clubs-admin handoff", () => {
     await page.goto(`${baseUrl}/entrar?handoff=mock-handoff-code`);
 
     await page.waitForURL("**/tauler");
-    await expect(page.getByRole("heading", { name: "Configuració" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Bon dia!/u })).toBeVisible();
   });
 });

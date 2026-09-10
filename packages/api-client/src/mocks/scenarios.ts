@@ -17,6 +17,7 @@ type OnboardingState = components["schemas"]["OnboardingState"];
 
 export interface MockScenarioDefinition {
   branding: Branding;
+  dashboardNulls?: boolean;
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
@@ -24,7 +25,7 @@ export interface MockScenarioDefinition {
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
   signupStripe?: boolean;
-  signupFamilyPending?: boolean;
+  signupReviewManual?: boolean;
 }
 
 const canic = brandingCanic as Branding;
@@ -48,6 +49,18 @@ const scenarios = {
     branding: { ...canic, locales: ["ca", "es", "en"] },
     me: meAdmin as Me,
     sessions: accountSessions,
+  },
+  adminDashboardNulls: {
+    branding: canic,
+    dashboardNulls: true,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  adminSignupReviewManual: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReviewManual: true,
   },
   member: {
     branding: canic,
@@ -202,12 +215,6 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
     signupStripe: true,
-  },
-  signupNoFamilyPending: {
-    branding: { ...canic, locales: ["ca", "es", "en"] },
-    me: member,
-    sessions: accountSessions,
-    signupFamilyPending: false,
   },
   signupClosed: {
     branding: {

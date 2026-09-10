@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/dashboard/DashboardPage.test.tsx src/dashboard/SignupReviewPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  10:46:46
+   Duration  1.10s (tests 34%, environment 30%, transform 18%, import 10%, setup 7%)
+

@@ -1,38 +1,61 @@
 {
   "enabled": true,
-  "requireDogDocumentAtSignup": false,
-  "allowFamilyGroupPending": true,
-  "steps": ["PERSON", "DOG", "FAMILY", "PAYMENT"],
+  "countryProfile": {
+    "code": "ES",
+    "dateFormat": "dd/MM/yyyy",
+    "idDocumentTypes": ["DNI", "NIE", "PASSPORT"],
+    "phonePrefix": "+34",
+    "postalCodeLookup": true,
+    "timeFormat": "HH:mm"
+  },
+  "steps": ["PERSON", "DOG", "FAMILY_GROUP", "PAYMENT"],
   "plans": [
     {
-      "id": "plan-member",
+      "id": "10000000-0000-4000-8000-000000000001",
       "type": "MONTHLY",
       "name": "Abonat",
-      "price": { "amountMinor": 6000, "currency": "EUR" },
+      "description": "Quota mensual",
+      "conditions": "Pagament mensual",
+      "price": {
+        "id": "20000000-0000-4000-8000-000000000001",
+        "amount": { "amountMinor": 6000, "currency": "EUR" },
+        "periodicity": "MONTHLY"
+      },
       "entryFee": { "amountMinor": 10000, "currency": "EUR" },
       "offerLabel": "Ofertes si es porta més d'un gos per família"
     },
     {
-      "id": "plan-pack-6",
+      "id": "10000000-0000-4000-8000-000000000002",
       "type": "PACK",
       "name": "Pack 6",
-      "price": { "amountMinor": 13500, "currency": "EUR" },
+      "description": "Sis sessions",
+      "price": {
+        "id": "20000000-0000-4000-8000-000000000002",
+        "amount": { "amountMinor": 13500, "currency": "EUR" },
+        "periodicity": "ONE_OFF"
+      },
       "conditions": "Només un cop",
-      "pack": { "months": 3 }
+      "pack": { "sessions": 6, "validityMonths": 3 }
     },
     {
-      "id": "plan-pack-10",
+      "id": "10000000-0000-4000-8000-000000000003",
       "type": "PACK",
       "name": "Pack 10",
-      "price": { "amountMinor": 18000, "currency": "EUR" },
+      "description": "Deu sessions",
+      "price": {
+        "id": "20000000-0000-4000-8000-000000000003",
+        "amount": { "amountMinor": 18000, "currency": "EUR" },
+        "periodicity": "ONE_OFF"
+      },
       "conditions": "Només un cop",
-      "pack": { "months": 5, "discountLabel": "després 40% dte. en matrícula" }
+      "pack": { "sessions": 10, "validityMonths": 5 }
     },
     {
-      "id": "plan-therapy",
+      "id": "10000000-0000-4000-8000-000000000004",
       "type": "MONTHLY",
       "name": "Teràpia",
       "description": "condicions i cost segons cada cas",
+      "conditions": "Segons valoració",
       "entryFee": { "amountMinor": 5000, "currency": "EUR" },
       "maintenanceFee": { "amountMinor": 1000, "currency": "EUR" }
     }
@@ -55,7 +78,8 @@
     "familyGroupIntro": "Quan s'inscriu més d'un gos d'una família, pot aplicar-se una quota mensual reduïda a partir del segon gos. L'entrada sí que és per cada gos.",
     "monthlyPaymentIntro": "La quota mensual es cobrarà normalment el dia 1. En el cas de packs no es genera cap càrrec.",
     "paymentDay": "Quan ja no vulguis seguir fent activitats al club o vulguis estar un temps sense venir, indica'ns-ho abans del dia 25 per modificar l'emissió de rebuts del mes següent.",
-    "cashConditions": "Els pagaments es fan per períodes naturals complets. Posa't en contacte amb el club per coordinar-los."
+    "cashConditions": "Els pagaments es fan per períodes naturals complets. Posa't en contacte amb el club per coordinar-los.",
+    "imageConsent": "Autoritzo la publicació de fotos meves i del meu gos dins l'àmbit de les activitats del club."
   },
   "legal": {
     "privacyPolicyUrl": "https://canic.example.test/privacitat",
@@ -68,30 +92,22 @@
     "firstMonthOptions": [
       {
         "option": "TODAY",
-        "label": "Alta avui, 17 d'agost (mig mes)",
         "startDate": "2026-08-17",
         "amountDue": { "amountMinor": 3000, "currency": "EUR" }
       },
       {
         "option": "ALTERNATIVE",
-        "label": "Alta l'1 de setembre (mes complet)",
         "startDate": "2026-09-01",
         "amountDue": { "amountMinor": 6000, "currency": "EUR" }
       }
-    ],
-    "lines": [
-      {
-        "type": "ENTRY_FEE",
-        "label": "Entrada (1 gos)",
-        "amount": { "amountMinor": 10000, "currency": "EUR" }
-      }
-    ],
-    "totalDue": { "amountMinor": 13000, "currency": "EUR" }
+    ]
   },
   "member": {
-    "planId": "plan-member",
-    "paymentMethodMasked": "Domiciliació · ···· 2231",
-    "consentsUpToDate": false,
-    "fullName": "Laura Serra Vidal"
+    "planId": "10000000-0000-4000-8000-000000000001",
+    "paymentMethodMasked": {
+      "type": "SEPA_DD",
+      "maskedAccount": "···· 2231"
+    },
+    "consentsUpToDate": false
   }
 }

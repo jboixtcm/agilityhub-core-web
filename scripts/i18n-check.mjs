@@ -139,6 +139,11 @@ for (const [key, file] of usedKeys) {
 }
 
 const dynamicKeyPrefixes = [
+  "admin-census:signupReview.fields.",
+  "admin-census:signupReview.warnings.",
+  "admin-census:values.",
+  "admin-dashboard:risk.status.",
+  "admin-dashboard:signups.payment.",
   "admin-audit:actions.",
   "admin-settings:blocks.",
   "admin-settings:days.",

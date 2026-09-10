@@ -82,10 +82,12 @@ describe("T-02-14 clubs-admin shell", () => {
     window.history.pushState(null, "", "/tauler");
     await renderApplication(client);
 
-    expect(document.querySelector(".admin-shell__brand img")).toHaveAttribute(
-      "src",
-      brandingCanicFixture.theme.markUrl,
-    );
+    await waitFor(() => {
+      expect(document.querySelector(".admin-shell__brand img")).toHaveAttribute(
+        "src",
+        brandingCanicFixture.theme.markUrl,
+      );
+    });
     expect(document.querySelector(".admin-shell__brand img")).toHaveAttribute("alt", "");
     expect(screen.getByText(brandingCanicFixture.club.name)).toBeVisible();
   });
