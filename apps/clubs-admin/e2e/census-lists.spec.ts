@@ -118,9 +118,18 @@ test.describe("E2-W01 census universal lists", () => {
     await page.goto(`${baseUrl}/abonats`);
     await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
     await page.getByText("Excel · PDF", { exact: true }).click();
-    await expect(page.getByRole("link", { name: "Excel" })).toHaveAttribute(
-      "href",
-      /format=xlsx.*columns=fullName%2Cdogs%2Cplan%2CdisplayStatus/u,
+    const responsePromise = page.waitForResponse((response) =>
+      new URL(response.url()).pathname.endsWith("/api/v1/members/export"),
     );
+    await page.getByRole("button", { name: "Excel" }).click();
+
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
+    const exportUrl = new URL(response.url());
+    expect(exportUrl.searchParams.get("format")).toBe("xlsx");
+    expect(exportUrl.searchParams.get("columns")).toBe(
+      "fullName,dogs,plan,displayStatus",
+    );
+    expect(response.headers()["content-disposition"]).toContain('filename="members.mock"');
   });
 });
