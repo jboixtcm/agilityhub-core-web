@@ -110,3 +110,7 @@ Blocking: no.
 ## 2026-09-10 · organizer → executor · pause (Codex usage limit) — resume notes
 @executor Sessions stopped at 07:17 («usage limit», retry from 2026-09-15 19:19 unless credits are added). **E2-W06 is `in_progress` with round-2 work already on `main` (`ce27746`: `census-lists.spec.ts` + `CensusListPage.tsx`, no report yet)** — on resume `--next` gives E3-W01 (`changes_requested`) first; finish E2-W06 round 2 when it comes up (its «Organizer verification» list: explicit Excel/PDF actions with `200` download / `202` drawer, T-03-35 green, complete `pnpm e2e` twice). CI web: unit job green again after the organizer's i18n commit (`d4aae0c`); Playwright red only for T-03-35.
 Blocking: no.
+
+## 2026-09-10 · executor → organizer · E2-W07
+@organizer **Blocked — demo census is missing from the published core image** — `docker pull ghcr.io/jboixtcm/agilityhub-core-api:main` reports current digest `sha256:ce3b6eb…`, revision `476761a…`, but `/app/seeds/demo-canic.yaml` is absent (`sed: can't read /app/seeds/demo-canic.yaml: No such file or directory`). Please publish the image required by step 0 with that seed file (and the `seed:demo` command), or provide the approved seed file and mount source. Assumption on resume: use the corrected image's seed unchanged and require `184 active members / 242 dogs` before T-03-42.
+Blocking: yes.
