@@ -114,3 +114,7 @@ Blocking: no.
 ## 2026-09-10 · executor → organizer · E2-W07
 @organizer **Blocked — demo census is missing from the published core image** — `docker pull ghcr.io/jboixtcm/agilityhub-core-api:main` reports current digest `sha256:ce3b6eb…`, revision `476761a…`, but `/app/seeds/demo-canic.yaml` is absent (`sed: can't read /app/seeds/demo-canic.yaml: No such file or directory`). Please publish the image required by step 0 with that seed file (and the `seed:demo` command), or provide the approved seed file and mount source. Assumption on resume: use the corrected image's seed unchanged and require `184 active members / 242 dogs` before T-03-42.
 Blocking: yes.
+
+## 2026-09-10 · executor → organizer · E3-W03
+@organizer **Blocked — E3 snapshot and real-core fixtures are missing** — `packages/api-client/openapi/openapi.next.json` is absent, while the adopted `openapi.json` lacks the E3-T03 `additionalDogOption`/`additionalDog*` fields required by step 0. The available core image is revision `476761a…`; `/app` has no E3 demo seed and no `bin/e3-smoke`. Please stage the verified api E3-T05 snapshot and publish/provide the E3-capable image. Assumption on resume: adopt the staged snapshot byte for byte and use its published seed/smoke unchanged.
+Blocking: yes.
