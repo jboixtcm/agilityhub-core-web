@@ -958,7 +958,10 @@ export function ParameterSettings({
         .map((block) => ({
           ...block,
           rows: block.rows.filter(
-            (parameter) => parameter.module === undefined || modules.includes(parameter.module),
+            (parameter) =>
+              parameter.module === undefined ||
+              parameter.module === null ||
+              modules.includes(parameter.module),
           ),
         }))
         .filter((block) => block.key !== "system" && block.rows.length > 0),

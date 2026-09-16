@@ -330,7 +330,7 @@
     "classes": {
       "defaultCapacity": {
         "help": "Aforament per defecte; cada classe usa el mínim dels seus nivells.",
-        "label": "Aforament per nivell"
+        "label": "Aforament per defecte (nivell sense valor)"
       },
       "finishGraceMinutes": {
         "help": "Marge després de l'hora final abans de tancar la classe.",
@@ -652,7 +652,7 @@
   "value": {
     "always": "Sempre",
     "closed": "Tancat",
-    "coverageSummary": "correcta > {ok}% · ajustada {tight}–{ok}% · curta {short}–{tight}%",
+    "coverageSummary": "bé > {ok}% · ajustat {tight}–{ok}% · manca oferta {short}–{tight}% · cal ampliar < {short}%",
     "dayBefore": "El dia abans",
     "dayHours": "{day} {open}–{close}",
     "everyDayHours": "dl–dg {open}–{close}",

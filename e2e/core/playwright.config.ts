@@ -34,7 +34,7 @@ function webServer(
 export default defineConfig({
   expect: { timeout: 15_000 },
   fullyParallel: false,
-  outputDir: "../../test-results/core-e1",
+  outputDir: `../../test-results/${process.env.CORE_EVIDENCE_SUBDIRECTORY ?? "core-e1"}`,
   reporter: "line",
   testDir: ".",
   timeout: 90_000,

@@ -2,6 +2,7 @@ name: agilityhub-e1-w04
 
 x-core-environment: &core-environment
   SPRING_PROFILES_ACTIVE: local
+  ATTACHMENT_LOCAL_DIRECTORY: /tmp/agilityhub-attachments
   EXPORT_LOCAL_DIRECTORY: /app/exports
   MONGODB_HOST: mongo
   MONGODB_PORT: 27017
@@ -50,12 +51,13 @@ services:
       <<: *core-environment
       SEED_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
     entrypoint: [/bin/sh, -ec]
+    working_dir: /app
     command:
       - |
-        java -jar /app/app.jar --core.command=club:apply /consumer-seeds/club-canic.yaml
+        java -jar /app/app.jar --core.command=club:apply /app/seeds/club-canic.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
+        java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42
     volumes:
-      - ./club-canic.yaml:/consumer-seeds/club-canic.yaml:ro
       - export-files:/app/exports
     healthcheck:
       disable: true
@@ -89,7 +91,8 @@ services:
       CI: "1"
       CORE_URL: ${CORE_URL:?CORE_URL is required}
       E1_CORE_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
-      E1_EVIDENCE_DIRECTORY: /evidence/E1-W04
+      CORE_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}
+      E1_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}
       E1_MAILBOX_DIRECTORY: /mailbox
     volumes:
       - ../..:/src:ro

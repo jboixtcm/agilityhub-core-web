@@ -65,7 +65,7 @@ test("T-14-26 shows member/global audit, masked diffs, LastChange and queued exp
 
   await page.getByRole("link", { exact: true, name: "Mètode de pagament modificat" }).click();
   const changeDrawer = page.getByRole("dialog", { name: "Detall del canvi" });
-  await expect(changeDrawer).toContainText("paymentMethod.iban");
+  await expect(changeDrawer).toContainText("IBAN nou");
   await expect(changeDrawer).toContainText("···· ···· ···· ···· 2231");
   await expect(changeDrawer).toContainText("···· ···· ···· ···· 8867");
   await page.screenshot({

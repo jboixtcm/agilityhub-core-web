@@ -1,0 +1,67 @@
+.ah-limited-markdown {
+  color: var(--ah-color-text);
+  line-height: 1.6;
+}
+
+.ah-limited-markdown > :first-child {
+  margin-top: 0;
+}
+
+.ah-limited-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.ah-limited-markdown h2,
+.ah-limited-markdown h3,
+.ah-limited-markdown h4 {
+  margin: var(--ah-space-5) 0 var(--ah-space-2);
+  color: var(--ah-color-text);
+  font-family: var(--ah-font-display);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ah-limited-markdown h2 {
+  font-size: 1.25rem;
+}
+
+.ah-limited-markdown h3 {
+  font-size: 1.1rem;
+}
+
+.ah-limited-markdown h4 {
+  font-size: 1rem;
+}
+
+.ah-limited-markdown p {
+  margin: 0 0 var(--ah-space-3);
+}
+
+.ah-limited-markdown ul,
+.ah-limited-markdown ol {
+  margin: 0 0 var(--ah-space-4);
+  padding-left: var(--ah-space-6);
+}
+
+.ah-limited-markdown ul {
+  list-style: disc;
+}
+
+.ah-limited-markdown ol {
+  list-style: decimal;
+}
+
+.ah-limited-markdown li + li {
+  margin-top: var(--ah-space-1);
+}
+
+.ah-limited-markdown strong {
+  font-weight: 700;
+}
+
+.ah-limited-markdown a {
+  color: var(--ah-color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}

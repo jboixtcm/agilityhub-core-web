@@ -5,6 +5,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -31,6 +32,9 @@ afterAll(() => {
 });
 
 async function renderPage(kind: "dogs" | "members") {
+  server.use(
+    http.get("*/api/v1/dashboard/counters", () => HttpResponse.json({ pendingSignups: 0 })),
+  );
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
@@ -53,7 +57,7 @@ describe("T-03-38 D5 universal member list", () => {
     await renderPage("members");
 
     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
-    expect(screen.getByText("184 d'alta")).toBeVisible();
+    expect(await screen.findByText("184 d'alta")).toBeVisible();
     expect(screen.getByText(/Filtre \(1\): Modalitat = «Abonat»/u)).toBeVisible();
 
     fireEvent.click(screen.getByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }));

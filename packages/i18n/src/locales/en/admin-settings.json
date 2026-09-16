@@ -330,7 +330,7 @@
     "classes": {
       "defaultCapacity": {
         "help": "Default capacity; each class uses the minimum of its levels.",
-        "label": "Capacity by level"
+        "label": "Default capacity (level without a value)"
       },
       "finishGraceMinutes": {
         "help": "Grace period after the end time before closing a class.",
@@ -652,7 +652,7 @@
   "value": {
     "always": "Always",
     "closed": "Closed",
-    "coverageSummary": "good > {ok}% · tight {tight}–{ok}% · short {short}–{tight}%",
+    "coverageSummary": "good > {ok}% · tight {tight}–{ok}% · insufficient offer {short}–{tight}% · expand < {short}%",
     "dayBefore": "The day before",
     "dayHours": "{day} {open}–{close}",
     "everyDayHours": "Mon–Sun {open}–{close}",

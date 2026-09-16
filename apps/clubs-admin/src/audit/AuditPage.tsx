@@ -1,4 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { fmtDateTime, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
   Drawer,
@@ -151,6 +152,29 @@ function auditValue(value: unknown, empty: string): string {
   if (typeof value === "string") return value;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
   return JSON.stringify(value);
+}
+
+const AUDIT_FIELD_LABEL_KEYS = {
+  "address.city": "admin-census:member.fields.city",
+  "address.postalCode": "admin-census:member.fields.postalCode",
+  "address.street": "admin-census:member.fields.street",
+  birthDate: "admin-census:member.fields.birthDate",
+  "bookingBlock.active": "admin-census:member.bookingBlocked",
+  "bookingBlock.reason": "admin-census:member.block.reason",
+  firstName: "admin-census:member.fields.firstName",
+  gender: "admin-census:member.fields.gender",
+  internalNotes: "admin-census:member.fields.internalNotes",
+  lastName1: "admin-census:member.fields.lastName1",
+  lastName2: "admin-census:member.fields.lastName2",
+  "paymentMethod.holder": "admin-census:member.payment.holder",
+  "paymentMethod.iban": "admin-census:member.payment.iban",
+  plan: "admin-census:member.fields.plan",
+  remarks: "admin-census:member.fields.remarks",
+} as const;
+
+function auditFieldLabel(t: Translation, path: string): string {
+  const key = AUDIT_FIELD_LABEL_KEYS[path as keyof typeof AUDIT_FIELD_LABEL_KEYS];
+  return key === undefined ? path : t(key);
 }
 
 function initialFilters(memberId: string | undefined): UniversalFilter[] {
@@ -315,7 +339,7 @@ function DetailDrawer({
   entryId: string | undefined;
   onClose: () => void;
 }) {
-  const { t } = useTranslation("admin-audit");
+  const { t } = useTranslation(["admin-audit", "admin-census"]);
   const [entry, setEntry] = useState<AuditEntry>();
   const [failedEntryId, setFailedEntryId] = useState<string>();
   useEffect(() => {
@@ -372,7 +396,7 @@ function DetailDrawer({
             <ul className="audit-detail__changes">
               {entry.changes.map((change, index) => (
                 <li key={`${change.path}-${String(index)}`}>
-                  <strong>{change.path}</strong>
+                  <strong>{auditFieldLabel(t, change.path)}</strong>
                   <div>
                     <span>{t("admin-audit:drawer.before")}</span>
                     <code>{auditValue(change.before, t("admin-audit:none"))}</code>
@@ -400,7 +424,7 @@ function DetailDrawer({
 
 export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?: string }) {
   const branding = useBranding();
-  const { i18n, t } = useTranslation(["admin-audit", "census", "errors"]);
+  const { i18n, t } = useTranslation(["admin-audit", "admin-census", "census", "errors"]);
   const { openExports } = useExportsDrawer();
   const [state, setState, applySavedView] = useAuditState(memberId);
   const { data, error, loading, retry } = useAuditData(client, memberId, state);
@@ -409,7 +433,10 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
     () => new URLSearchParams(window.location.search).get("entry") ?? undefined,
   );
   const [exportError, setExportError] = useState<string>();
-  const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
+  const locale = normalizeLocale(
+    i18n.resolvedLanguage ?? i18n.language,
+    normalizeLocale(branding.defaultLocale),
+  );
 
   const filterColumns: UniversalListFilterColumn[] = [
     { key: "action", label: t("admin-audit:filters.action"), type: "enum" },
@@ -426,12 +453,7 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
       {
         key: "at",
         label: t("admin-audit:columns.at"),
-        render: (entry) =>
-          new Intl.DateTimeFormat(locale, {
-            dateStyle: "short",
-            timeStyle: "short",
-            timeZone: branding.timeZone,
-          }).format(new Date(entry.at)),
+        render: (entry) => fmtDateTime(entry.at, locale, branding.timeZone),
         sortKey: "at",
       },
       {

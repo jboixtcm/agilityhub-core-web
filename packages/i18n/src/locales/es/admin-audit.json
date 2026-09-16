@@ -1,5 +1,7 @@
 {
   "actions": {
+    "BOOKING_BLOCK_CLEARED": "Bloqueo de reservas retirado",
+    "BOOKING_BLOCK_SET": "Reservas bloqueadas",
     "CATALOG_CHANGED": "Catálogo modificado",
     "DATA_EXPORTED": "Datos exportados",
     "DOG_LEVEL_CHANGED": "Nivel del perro modificado",

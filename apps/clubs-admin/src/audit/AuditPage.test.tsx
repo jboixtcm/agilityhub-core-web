@@ -38,7 +38,7 @@ async function renderAudit() {
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["admin-audit", "census", "errors"],
+    initialNamespaces: ["admin-audit", "admin-census", "census", "errors"],
     storage: undefined,
   });
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
@@ -86,7 +86,7 @@ describe("T-14-26 member audit and exports", () => {
     fireEvent.click(action);
 
     const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
-    expect(drawer).toHaveTextContent("paymentMethod.iban");
+    expect(drawer).toHaveTextContent("IBAN nou");
     expect(drawer).toHaveTextContent("···· ···· ···· ···· 2231");
     expect(drawer).toHaveTextContent("···· ···· ···· ···· 8867");
   });

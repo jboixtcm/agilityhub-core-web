@@ -486,11 +486,11 @@ function MemberSummary({
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
   const [plan, setPlan] = useState<Plan>();
-  const preferences = overview.notificationPreferences as NotificationPreferences;
+  const preferences = overview.notificationPreferences as Partial<NotificationPreferences>;
 
   useEffect(() => {
     let current = true;
-    if (!modules.includes("BILLING") || member.planId === undefined) {
+    if (!modules.includes("BILLING") || member.planId === undefined || member.planId === null) {
       return () => {
         current = false;
       };
@@ -602,7 +602,9 @@ function MemberSummary({
                 </Button>
               </DataRow>
             ) : null}
-            {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
+            {modules.includes("BILLING") &&
+            overview.nextInvoice !== undefined &&
+            overview.nextInvoice !== null ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
                 <strong>{formatDate(overview.nextInvoice.date, locale)}</strong> ·{" "}
                 {formatMoney(
@@ -620,7 +622,7 @@ function MemberSummary({
                 </Badge>
               )}{" "}
               {t("admin-census:member.language", {
-                locale: preferences.locale.toUpperCase(),
+                locale: (preferences.locale ?? branding.defaultLocale).toUpperCase(),
               })}
             </DataRow>
             <DataRow label={t("admin-census:member.fields.roles")}>
@@ -641,7 +643,9 @@ function MemberSummary({
                 {t("admin-census:common.edit")}
               </Button>
             </DataRow>
-            {modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
+            {modules.includes("FAMILY_GROUP") &&
+            overview.familyGroup !== undefined &&
+            overview.familyGroup !== null ? (
               <DataRow label={t("admin-census:member.fields.familyGroup")}>
                 <span className="census-record__links">
                   {overview.familyGroup.members.map((familyMember) => (
@@ -713,11 +717,11 @@ function MemberSummary({
               <span>{preferenceLabel(category)}</span>
               <Icon aria-label={t("admin-census:member.preferences.alwaysOn")} name="check" />
               <span className="census-record__preference-control">
-                {category === "CLUB_CHANGES" && preferences.modules.sms ? (
+                {category === "CLUB_CHANGES" && preferences.modules?.sms ? (
                   <small>{t("admin-census:member.preferences.sms")}</small>
                 ) : null}
                 <Switch
-                  checked={preferences.emailByCategory[category]}
+                  checked={preferences.emailByCategory?.[category] ?? false}
                   label={t("admin-census:member.preferences.emailToggle", {
                     category: preferenceLabel(category),
                   })}
@@ -742,18 +746,18 @@ function MemberSummary({
               value={preferences.reminderMinutesBefore ?? ""}
             >
               <option value="">{t("admin-census:member.preferences.never")}</option>
-              {preferences.reminderOptionsMinutes.map((minutes) => (
+              {(preferences.reminderOptionsMinutes ?? []).map((minutes) => (
                 <option key={minutes} value={minutes}>
                   {t("admin-census:member.preferences.hoursBefore", { count: minutes / 60 })}
                 </option>
               ))}
             </Select>
           </div>
-          {preferences.modules.push ? (
+          {preferences.modules?.push ? (
             <div className="census-record__preference-row">
               <span>{t("admin-census:member.preferences.push")}</span>
               <Switch
-                checked={preferences.pushClubNews}
+                checked={preferences.pushClubNews ?? false}
                 label={t("admin-census:member.preferences.push")}
                 onCheckedChange={(checked) => void updatePreferences({ pushClubNews: checked })}
               />
@@ -1193,7 +1197,9 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               {t("admin-census:member.activeSince", { year: joinedYear })}
             </Badge>
           )}
-          {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
+          {branding.modules.includes("FAMILY_GROUP") &&
+          overview.familyGroup !== undefined &&
+          overview.familyGroup !== null ? (
             <Badge>
               {holder
                 ? t("admin-census:member.familyHolder")

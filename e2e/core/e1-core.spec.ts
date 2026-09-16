@@ -21,10 +21,6 @@ interface MailMessage {
   to?: string;
 }
 
-interface HandoffPayload {
-  code?: string;
-}
-
 function requiredEnvironment(name: string): string {
   const value = process.env[name];
   if (value === undefined || value === "") {
@@ -94,9 +90,9 @@ async function restoreAtRoute(page: Page, route: string): Promise<void> {
   );
   await page.goto(`${clubsUrl}${route}`);
   const refresh = await refreshResponse;
-  expect(refresh.status(), await refresh.text()).toBe(200);
+  expect(refresh.status()).toBe(200);
   const me = await meResponse;
-  expect(me.status(), await me.text()).toBe(200);
+  expect(me.status()).toBe(200);
   await expect(page).toHaveURL(new RegExp(`${route}$`, "u"));
 }
 
@@ -155,7 +151,7 @@ async function waitForDeliveredLink(
 
 test.describe.configure({ mode: "serial" });
 
-test("T-01-18 password login reaches the seeded multi-profile account", async ({ browser }) => {
+test("T-01-18 password login reaches the seeded account", async ({ browser }) => {
   const context = await mobileContext(browser);
   const page = await context.newPage();
 
@@ -165,76 +161,36 @@ test("T-01-18 password login reaches the seeded multi-profile account", async ({
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByLabel("Contrasenya").fill(corePassword);
   await submitPasswordLogin(page);
-  await expect(page).toHaveURL(/\/perfil-acces$/u);
-  await expect(page.getByRole("button", { name: /^Com a administrador\b/iu })).toBeVisible();
+  await expect(page).toHaveURL(/\/inici$/u);
+  await expect(page.locator(".clubs-shell")).toBeVisible();
 
   await context.close();
 });
 
-test("T-01-21 administrator handoff opens the real backoffice", async ({ browser }) => {
-  const sourceContext = await mobileContext(browser);
-  const sourcePage = await sourceContext.newPage();
-  await sourcePage.route("https://admin.example.test/**", async (route) => {
-    await route.abort();
-  });
-  await login(sourcePage, clubsUrl, "admin@example.test");
-  await sourcePage.waitForURL("**/perfil-acces");
-  const administratorProfile = sourcePage.getByRole("button", {
-    name: /^Com a administrador\b/iu,
-  });
-  await expect(administratorProfile).toBeVisible();
-  const rememberProfile = sourcePage.getByRole("checkbox");
-  await expect(rememberProfile).toBeChecked();
-  await rememberProfile.uncheck();
-
-  let handoff: HandoffPayload | undefined;
-  await sourcePage.route("**/api/v1/auth/handoff", async (route) => {
-    const response = await route.fetch();
-    const body = await response.body();
-    handoff = JSON.parse(body.toString("utf8")) as HandoffPayload;
-    await route.fulfill({ body, response });
-  });
-  await administratorProfile.click({ noWaitAfter: true });
-  await expect.poll(() => handoff !== undefined).toBe(true);
-  expect(typeof handoff?.code === "string" && handoff.code.length > 0).toBe(true);
-  await sourceContext.close();
-
-  const targetContext = await desktopContext(browser);
-  const targetPage = await targetContext.newPage();
-  await targetPage.goto(`${adminUrl}/entrar`);
-  await expect(targetPage.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
-  await screenshot(targetPage, "admin-entrar-core-1280.png");
-  await targetPage.goto(`${adminUrl}/entrar?handoff=${encodeURIComponent(handoff?.code ?? "")}`);
-  await targetPage.waitForURL("**/tauler");
-  await expect(targetPage.getByRole("heading", { name: "Tauler" })).toBeVisible();
-  await expect(targetPage.getByRole("heading", { name: "Aviat" })).toBeVisible();
-  await screenshot(targetPage, "admin-handoff-core-1280.png");
-  await targetContext.close();
+test("T-01-21 seeded administrator opens the real backoffice", async ({ browser }) => {
+  const context = await desktopContext(browser);
+  const page = await context.newPage();
+  await page.goto(`${adminUrl}/entrar`);
+  await expect(page.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
+  await screenshot(page, "admin-entrar-core-1280.png");
+  await page.getByLabel("Correu electrònic").fill("admin@example.test");
+  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+  await page.getByLabel("Contrasenya").fill(corePassword);
+  await submitPasswordLogin(page);
+  await expect(page).toHaveURL(/\/tauler$/u);
+  await expect(page.getByRole("heading", { name: "Tauler" })).toBeVisible();
+  await screenshot(page, "admin-password-core-1280.png");
+  await context.close();
 });
 
-test("T-01-20 profile choice is remembered by the core", async ({ browser }) => {
+test("T-01-20 club session is restored by the core", async ({ browser }) => {
   const context = await mobileContext(browser);
   const page = await context.newPage();
-  await login(page, clubsUrl, "admin@example.test");
-  await page.waitForURL("**/perfil-acces");
-  const cookieBeforeProfileChoice = await refreshCookieValue(context);
-  expect(cookieBeforeProfileChoice !== undefined).toBe(true);
-  const memberProfile = page.getByRole("button", { name: /^Com a alumne\b/iu });
-  await expect(memberProfile).toBeVisible();
-  await screenshot(page, "03b-perfil-acces-core-375.png");
-
-  const refreshAfterProfileChoice = waitForRefresh(page);
-  await memberProfile.click();
+  await login(page, clubsUrl, "member@example.test");
   await page.waitForURL("**/inici");
-  const profileRefresh = await refreshAfterProfileChoice;
-  expect(profileRefresh.status(), await profileRefresh.text()).toBe(200);
+  expect(await refreshCookieValue(context)).toBeDefined();
   await expect(page.locator(".clubs-shell")).toBeVisible();
   await screenshot(page, "04-inici-core-375.png");
-  const cookieAfterProfileChoice = await refreshCookieValue(context);
-  expect(
-    cookieAfterProfileChoice !== undefined &&
-      cookieAfterProfileChoice !== cookieBeforeProfileChoice,
-  ).toBe(true);
   await restoreAtRoute(page, "/perfil");
   await expect(page.locator(".clubs-shell")).toBeVisible();
   await expect(page.getByRole("heading", { name: "El meu perfil" })).toBeVisible();
@@ -243,7 +199,7 @@ test("T-01-20 profile choice is remembered by the core", async ({ browser }) => 
 
   const rememberedContext = await mobileContext(browser);
   const rememberedPage = await rememberedContext.newPage();
-  await login(rememberedPage, clubsUrl, "admin@example.test");
+  await login(rememberedPage, clubsUrl, "member@example.test");
   await rememberedPage.waitForURL("**/inici");
   await expect(rememberedPage.locator(".clubs-shell")).toBeVisible();
   await expect(rememberedPage).toHaveURL(/\/inici$/u);
@@ -272,28 +228,13 @@ test("T-01-19 magic link is delivered and exchanged end to end", async ({ browse
   await context.close();
 });
 
-test("T-01-26 first-access onboarding accepts both real policies", async ({ browser }) => {
+test("T-01-26 published seed enters without pending onboarding", async ({ browser }) => {
   const context = await mobileContext(browser);
   const page = await context.newPage();
   await login(page, clubsUrl, "member.2@example.test");
-  await page.waitForURL("**/benvinguda");
-  await expect(page.getByRole("heading", { name: "Completa el teu perfil" })).toBeVisible();
-  await screenshot(page, "onboarding-core-375.png");
-
-  for (let policy = 0; policy < 2; policy += 1) {
-    const consent = page.locator("#onboarding-consent");
-    if (!(await consent.isChecked())) {
-      await consent.check();
-    }
-    const accepted = page.waitForResponse(
-      (response) =>
-        response.url().endsWith("/api/v1/me/onboarding") && response.request().method() === "PUT",
-    );
-    await page.getByRole("button", { name: "CONTINUA" }).click();
-    await accepted;
-  }
   await page.waitForURL("**/inici");
   await expect(page.locator(".clubs-shell")).toBeVisible();
+  await screenshot(page, "member-2-core-375.png");
   await context.close();
 });
 

@@ -21,6 +21,9 @@ describe("LimitedMarkdown", () => {
       "https://example.test",
     );
     expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    expect(screen.getByRole("heading", { name: "Heading" }).parentElement).toHaveClass(
+      "ah-limited-markdown",
+    );
     expect(document.querySelector("img")).not.toBeInTheDocument();
     expect(screen.queryByText("hidden")).not.toBeInTheDocument();
   });

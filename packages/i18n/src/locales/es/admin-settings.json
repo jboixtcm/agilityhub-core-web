@@ -330,7 +330,7 @@
     "classes": {
       "defaultCapacity": {
         "help": "Aforo predeterminado; cada clase usa el mínimo de sus niveles.",
-        "label": "Aforo por nivel"
+        "label": "Aforo por defecto (nivel sin valor)"
       },
       "finishGraceMinutes": {
         "help": "Margen después de la hora final antes de cerrar la clase.",
@@ -652,7 +652,7 @@
   "value": {
     "always": "Siempre",
     "closed": "Cerrado",
-    "coverageSummary": "correcta > {ok}% · ajustada {tight}–{ok}% · corta {short}–{tight}%",
+    "coverageSummary": "bien > {ok}% · ajustado {tight}–{ok}% · falta oferta {short}–{tight}% · hay que ampliar < {short}%",
     "dayBefore": "El día anterior",
     "dayHours": "{day} {open}–{close}",
     "everyDayHours": "lu–do {open}–{close}",

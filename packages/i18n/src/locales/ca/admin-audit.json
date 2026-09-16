@@ -1,5 +1,7 @@
 {
   "actions": {
+    "BOOKING_BLOCK_CLEARED": "Bloqueig de reserves retirat",
+    "BOOKING_BLOCK_SET": "Reserves bloquejades",
     "CATALOG_CHANGED": "Catàleg modificat",
     "DATA_EXPORTED": "Dades exportades",
     "DOG_LEVEL_CHANGED": "Nivell del gos modificat",

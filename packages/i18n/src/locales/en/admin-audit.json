@@ -1,5 +1,7 @@
 {
   "actions": {
+    "BOOKING_BLOCK_CLEARED": "Booking block removed",
+    "BOOKING_BLOCK_SET": "Bookings blocked",
     "CATALOG_CHANGED": "Catalogue changed",
     "DATA_EXPORTED": "Data exported",
     "DOG_LEVEL_CHANGED": "Dog level changed",

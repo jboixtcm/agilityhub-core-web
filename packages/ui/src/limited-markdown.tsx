@@ -144,5 +144,7 @@ export function LimitedMarkdown({ children, className }: LimitedMarkdownProps) {
     );
   }
 
-  return <div className={className}>{blocks}</div>;
+  return (
+    <div className={["ah-limited-markdown", className].filter(Boolean).join(" ")}>{blocks}</div>
+  );
 }
