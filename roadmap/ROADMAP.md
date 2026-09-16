@@ -47,5 +47,13 @@ Planned: E3-W01 public stepper 16–19 (`/apuntat-hi/*`) + «add a dog» (`/goss
 - [ ] Screenshots of 16–19, enviada, D1, D2 against the mockups; `signup`, `admin-dashboard`, `admin-census` keys complete in ca/es/en; vocabulary lint green.
 - [ ] No S04/S14 operation left in `pending.json`; CI green.
 
-## E4 → E12 (summary)
-E4 D3/D3b/D4/D4b/D4c + 10/23 + D7 + activities in 04 · E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
+## E4 · Planning and activities (thread B) — installed 2026-09-16 as `not_open`; E4-W01/W03/W04 open when api E4-T01 (contracts S06 + S07) is verified and its snapshot is staged
+Decisions in force: A21, A22 (instructor reads D3/D4; single automatic description form «B+C» / «D i sup.»; the student never sees counts on 10), B20. Planned tasks: E4-W01 D3 + D3b (templates, class form, coverage) · E4-W02 D4/D4b/D4c (calendar, validation, class edition, D4c cancellation modal, ring blocks) · E4-W03 screens 10 + 23 (`DayGrid` in `packages/ui`) · E4-W04 D7 + activities in the app (04 block, detail, rows of 03/25) · E4-W05 integration against the published core with the E4 seed (T-06-28, T-07-32) — gate E4 (front).
+
+### Gate E4 (front — checked by the organizer)
+- [ ] `e2e:core` E4 scenario green: generate from «Setmana A» + «Dissabtes» → validate → cancel the Wednesday 18:50 class with 4 registrants from D4c → the student sees it on 10/25; publish an activity → block on D4 → block on 04 → register → FIFO promotion.
+- [ ] Screenshots of D3/D3b/D4/D4b/D4c/D7 at 1280 and 10/23/04/detail/03/25 at 375 compared with the mockups (A22 d/e deviations only).
+- [ ] Complete `pnpm e2e` green; CI green.
+
+## E5 → E12 (summary)
+E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
