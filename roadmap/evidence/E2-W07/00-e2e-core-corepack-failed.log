@@ -1,0 +1,19 @@
+node:fs:1370
+  const result = binding.mkdir(
+                         ^
+
+Error: EPERM: operation not permitted, mkdir '/Users/jordib/.cache/node/corepack/v1/corepack-89533-ffc97b48.8a0df'
+    at mkdirSync (node:fs:1370:26)
+    at getTemporaryFolder (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:21959:31)
+    at download (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:22288:21)
+    at installVersion (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:22386:61)
+    at async Engine.ensurePackageManager (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:22899:32)
+    at async Engine.executePackageManagerRequest (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:23010:25)
+    at async Object.runMain (/Users/jordib/.nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/lib/corepack.cjs:23710:7) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'mkdir',
+  path: '/Users/jordib/.cache/node/corepack/v1/corepack-89533-ffc97b48.8a0df'
+}
+
+Node.js v22.23.2

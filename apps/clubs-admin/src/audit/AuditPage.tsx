@@ -173,8 +173,9 @@ const AUDIT_FIELD_LABEL_KEYS = {
 } as const;
 
 function auditFieldLabel(t: Translation, path: string): string {
-  const key = AUDIT_FIELD_LABEL_KEYS[path as keyof typeof AUDIT_FIELD_LABEL_KEYS];
-  return key === undefined ? path : t(key);
+  return Object.hasOwn(AUDIT_FIELD_LABEL_KEYS, path)
+    ? t(AUDIT_FIELD_LABEL_KEYS[path as keyof typeof AUDIT_FIELD_LABEL_KEYS])
+    : path;
 }
 
 function initialFilters(memberId: string | undefined): UniversalFilter[] {

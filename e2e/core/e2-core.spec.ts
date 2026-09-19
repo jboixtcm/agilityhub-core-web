@@ -11,7 +11,8 @@ const evidenceDirectory =
 const bookingBlockReason = "Validació d'integració E2";
 
 let blockedMemberId = "";
-let memberStorageState: Awaited<ReturnType<BrowserContext["storageState"]>> | undefined;
+let e2AdminContext: BrowserContext | undefined;
+let e2AdminPage: Page | undefined;
 
 mkdirSync(evidenceDirectory, { recursive: true });
 
@@ -91,9 +92,9 @@ async function loginAdmin(page: Page): Promise<void> {
     .toBe(true);
 }
 
-async function loginMember(page: Page): Promise<void> {
+async function loginMember(page: Page, email = "member@example.test"): Promise<void> {
   await page.goto(`${clubsUrl}/entrar`);
-  await page.getByLabel("Correu electrònic").fill("member@example.test");
+  await page.getByLabel("Correu electrònic").fill(email);
   await page.getByLabel("Contrasenya").fill(corePassword);
   const routeRefresh = page.waitForResponse((response) => {
     if (!response.url().endsWith("/oauth2/token") || response.request().method() !== "POST") {
@@ -202,8 +203,9 @@ test.describe.configure({ mode: "serial" });
 
 test("T-03-42 real census flow, booking block and member profile", async ({ browser }) => {
   test.setTimeout(180_000);
-  const adminContext = await localizedContext(browser, { height: 900, width: 1280 });
-  const admin = await adminContext.newPage();
+  e2AdminContext = await localizedContext(browser, { height: 900, width: 1280 });
+  const admin = await e2AdminContext.newPage();
+  e2AdminPage = admin;
   const pageErrors: string[] = [];
   admin.on("pageerror", (error) => {
     pageErrors.push(error.stack ?? error.message);
@@ -237,10 +239,10 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   await expect(filterMenu.locator("summary")).toContainText("Nivell del gos");
   await screenshot(admin, "D5-abonats-core-1280.png");
 
-  const performance = percentileSummary(await measureFilteredMembers(admin));
+  const performanceSummary = percentileSummary(await measureFilteredMembers(admin));
   writeFileSync(
     join(evidenceDirectory, "performance-members.json"),
-    `${JSON.stringify(performance, null, 2)}\n`,
+    `${JSON.stringify(performanceSummary, null, 2)}\n`,
   );
 
   const search = admin.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" });
@@ -262,9 +264,9 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   );
   await navigateSpa(admin, memberHref);
   expect((await overviewResponse).status()).toBe(200);
-  await screenshot(admin, "D10-abonat-core-1280.png");
   expect(pageErrors).toEqual([]);
   await expect(admin.getByRole("heading", { name: "Laia Fictici006" })).toBeVisible();
+  await screenshot(admin, "D10-abonat-core-1280.png");
 
   await admin.getByRole("button", { name: "Bloqueja les reserves" }).click();
   const blockDialog = admin.getByRole("dialog", { name: "Bloqueja les reserves" });
@@ -283,7 +285,6 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   await expect(admin.getByText("242 actius")).toBeVisible();
   await expect(admin.getByRole("table", { name: "Llistat de gossos" })).toBeVisible();
   await screenshot(admin, "D15-gossos-core-1280.png");
-  await adminContext.close();
 
   const memberContext = await localizedContext(browser, { height: 844, width: 375 });
   const member = await memberContext.newPage();
@@ -293,10 +294,10 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   });
   await loginMember(member);
   await navigateClubRoute(member, "/gossos");
-  await screenshot(member, "13-els-meus-gossos-core-375.png");
   expect(memberPageErrors).toEqual([]);
   await expect(member.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
   await expect(member.locator(".dog-card")).toHaveCount(2);
+  await screenshot(member, "13-els-meus-gossos-core-375.png");
 
   await navigateClubRoute(member, "/dades");
   await expect(member.getByRole("heading", { name: "Les meves dades" })).toBeVisible();
@@ -328,17 +329,15 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
         .every((entry) => !/^https?:\/\/(?:fonts\.googleapis|fonts\.gstatic)\./u.test(entry.name)),
     ),
   ).toBe(true);
-  memberStorageState = await memberContext.storageState();
   await memberContext.close();
 });
 
-test("T-05-22/T-05-25 real catalog create, edit and deactivate round trips", async ({
-  browser,
-}) => {
+test("T-05-22/T-05-25 real catalog create, edit and deactivate round trips", async () => {
   test.setTimeout(180_000);
-  const context = await localizedContext(browser, { height: 900, width: 1280 });
-  const page = await context.newPage();
-  await loginAdmin(page);
+  if (e2AdminPage === undefined) {
+    throw new Error("The administrator session from T-03-42 was not available");
+  }
+  const page = e2AdminPage;
 
   await navigateSpa(page, "/pistes");
   await expect(page.getByRole("heading", { name: "Pistes" })).toBeVisible();
@@ -415,14 +414,14 @@ test("T-05-22/T-05-25 real catalog create, edit and deactivate round trips", asy
   await navigateSpa(page, "/plantilles");
   await expect(page.getByRole("heading", { name: "Aviat" })).toBeVisible();
   await screenshot(page, "D3-plantilles-placeholder-core-1280.png");
-  await context.close();
 });
 
-test("T-02-13/T-14-26 real parameter history, export and audit", async ({ browser }) => {
+test("T-02-13/T-14-26 real parameter history, export and audit", async () => {
   test.setTimeout(180_000);
-  const context = await localizedContext(browser, { height: 900, width: 1280 });
-  const page = await context.newPage();
-  await loginAdmin(page);
+  if (e2AdminPage === undefined) {
+    throw new Error("The administrator session from T-03-42 was not available");
+  }
+  const page = e2AdminPage;
   await navigateSpa(page, "/parametres");
 
   const parameterLabel = "Llindar d'anul·lació tardana («classe feta»)";
@@ -478,14 +477,14 @@ test("T-02-13/T-14-26 real parameter history, export and audit", async ({ browse
   await navigateSpa(page, `/abonats/${blockedMemberId}/auditoria`);
   await expect(page.getByRole("heading", { name: "Auditoria de l'abonat" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Reserves bloquejades" }).first()).toBeVisible();
-  await context.close();
 });
 
 test("T-05-CP-07 real club page edit renders styled Markdown on screen 30", async ({ browser }) => {
   test.setTimeout(180_000);
-  const adminContext = await localizedContext(browser, { height: 900, width: 1280 });
-  const admin = await adminContext.newPage();
-  await loginAdmin(admin);
+  if (e2AdminContext === undefined || e2AdminPage === undefined) {
+    throw new Error("The administrator session from T-03-42 was not available");
+  }
+  const admin = e2AdminPage;
   await navigateSpa(admin, "/parametres");
   const rules = admin.getByRole("button", { name: /Normes del club/u });
   await expect(rules).toBeVisible();
@@ -511,16 +510,13 @@ test("T-05-CP-07 real club page edit renders styled Markdown on screen 30", asyn
   expect((await publishResponse).status()).toBe(200);
   await expect(rules.getByText("publicada", { exact: true })).toBeVisible();
   await expect(rules.getByText(/versió \d+/u)).toBeVisible();
-  await adminContext.close();
+  await e2AdminContext.close();
+  e2AdminContext = undefined;
+  e2AdminPage = undefined;
 
-  if (memberStorageState === undefined) {
-    throw new Error("The member session from T-03-42 was not available");
-  }
-  const memberContext = await browser.newContext({
-    storageState: memberStorageState,
-    viewport: { height: 844, width: 375 },
-  });
+  const memberContext = await localizedContext(browser, { height: 844, width: 375 });
   const member = await memberContext.newPage();
+  await loginMember(member, "member.2@example.test");
   await navigateClubRoute(member, "/info");
   await expect(member.getByRole("heading", { name: "Info" })).toBeVisible();
   await member.getByRole("tab", { name: "Normes" }).click();

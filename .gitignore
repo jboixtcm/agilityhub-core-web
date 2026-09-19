@@ -18,6 +18,7 @@ test-results/
 !roadmap/evidence/E2-W06/07-e2e-full-round2-pass2.log
 !roadmap/evidence/E2-W06/08-turbo-round2.log
 !roadmap/evidence/E2-W06/09-i18n-round2.log
+!roadmap/evidence/E2-W07/*.log
 !roadmap/evidence/E2-W10/*.log
 !roadmap/evidence/E3-W01/04-turbo-final.log
 !roadmap/evidence/E3-W01/05-i18n.log

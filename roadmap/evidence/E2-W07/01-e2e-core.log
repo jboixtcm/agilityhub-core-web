@@ -1,0 +1,138 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh
+
+ Volume agilityhub-e2-w07_mongo-data Creating 
+ Volume agilityhub-e2-w07_mailbox Creating 
+ Network agilityhub-e2-w07_default Creating 
+ Volume agilityhub-e2-w07_export-files Creating 
+ Volume agilityhub-e2-w07_mongo-data Creating 
+ Volume agilityhub-e2-w07_mailbox Creating 
+ Network agilityhub-e2-w07_default Creating 
+ Volume agilityhub-e2-w07_export-files Creating 
+ Volume agilityhub-e2-w07_mailbox Created 
+ Volume agilityhub-e2-w07_mailbox Created 
+ Volume agilityhub-e2-w07_mongo-data Created 
+ Volume agilityhub-e2-w07_mongo-data Created 
+ Volume agilityhub-e2-w07_export-files Created 
+ Volume agilityhub-e2-w07_export-files Created 
+ Network agilityhub-e2-w07_default Created 
+ Network agilityhub-e2-w07_default Created 
+ Container agilityhub-e2-w07-mongo-1 Creating 
+ Container agilityhub-e2-w07-mongo-1 Created 
+ Container agilityhub-e2-w07-seed-1 Creating 
+ Container agilityhub-e2-w07-seed-1 Created 
+ Container agilityhub-e2-w07-core-1 Creating 
+ Container agilityhub-e2-w07-core-1 Created 
+ Container agilityhub-e2-w07-mongo-1 Starting 
+ Container agilityhub-e2-w07-mongo-1 Started 
+ Container agilityhub-e2-w07-mongo-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Healthy 
+ Container agilityhub-e2-w07-seed-1 Starting 
+ Container agilityhub-e2-w07-seed-1 Started 
+ Container agilityhub-e2-w07-seed-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Healthy 
+ Container agilityhub-e2-w07-seed-1 Exited 
+ Container agilityhub-e2-w07-core-1 Starting 
+ Container agilityhub-e2-w07-core-1 Started 
+ Container agilityhub-e2-w07-seed-1 Waiting 
+ Container agilityhub-e2-w07-core-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Waiting 
+ Container agilityhub-e2-w07-seed-1 Exited 
+ Container agilityhub-e2-w07-mongo-1 Healthy 
+ Container agilityhub-e2-w07-core-1 Healthy 
+ Container agilityhub-e2-w07-core-1 Running 
+ Container agilityhub-e2-w07-mongo-1 Running 
+ Container agilityhub-e2-w07-mongo-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Healthy 
+ Container agilityhub-e2-w07-seed-1 Starting 
+ Container agilityhub-e2-w07-seed-1 Started 
+ Container agilityhub-e2-w07-mongo-1 Waiting 
+ Container agilityhub-e2-w07-seed-1 Waiting 
+ Container agilityhub-e2-w07-mongo-1 Healthy 
+ Container agilityhub-e2-w07-seed-1 Exited 
+ Container agilityhub-e2-w07-core-1 Waiting 
+ Container agilityhub-e2-w07-core-1 Healthy 
+ Container agilityhub-e2-w07-playwright-run-4704aa33712e Creating 
+ Container agilityhub-e2-w07-playwright-run-4704aa33712e Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +850
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 850, reused 0, downloaded 93, added 93
+Progress: resolved 850, reused 0, downloaded 216, added 215
+Progress: resolved 850, reused 0, downloaded 414, added 414
+Progress: resolved 850, reused 0, downloaded 540, added 540
+Progress: resolved 850, reused 0, downloaded 560, added 560
+Progress: resolved 850, reused 0, downloaded 603, added 603
+Progress: resolved 850, reused 0, downloaded 633, added 633
+Progress: resolved 850, reused 0, downloaded 669, added 669
+Progress: resolved 850, reused 0, downloaded 752, added 752
+Progress: resolved 850, reused 0, downloaded 845, added 845
+Progress: resolved 850, reused 0, downloaded 848, added 848
+Progress: resolved 850, reused 0, downloaded 850, added 850, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 11.9s using pnpm v9.15.9
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:214) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 10 tests using 1 worker
+
+[1/10] e2e/core/e1-core.spec.ts:154:5 › T-01-18 password login reaches the seeded account
+[2/10] e2e/core/e1-core.spec.ts:170:5 › T-01-21 seeded administrator opens the real backoffice
+[3/10] e2e/core/e1-core.spec.ts:186:5 › T-01-20 club session is restored by the core
+[4/10] e2e/core/e1-core.spec.ts:209:5 › T-01-19 magic link is delivered and exchanged end to end
+[5/10] e2e/core/e1-core.spec.ts:231:5 › T-01-26 published seed enters without pending onboarding
+[6/10] e2e/core/e1-core.spec.ts:241:5 › T-01-22 apps/id resumes a real authorize flow through oauth2/session
+[7/10] e2e/core/e2-core.spec.ts:204:5 › T-03-42 real census flow, booking block and member profile
+[8/10] e2e/core/e2-core.spec.ts:335:5 › T-05-22/T-05-25 real catalog create, edit and deactivate round trips
+[9/10] e2e/core/e2-core.spec.ts:419:5 › T-02-13/T-14-26 real parameter history, export and audit
+[10/10] e2e/core/e2-core.spec.ts:482:5 › T-05-CP-07 real club page edit renders styled Markdown on screen 30
+  10 passed (25.0s)

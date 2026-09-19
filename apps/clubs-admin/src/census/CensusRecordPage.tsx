@@ -490,7 +490,7 @@ function MemberSummary({
 
   useEffect(() => {
     let current = true;
-    if (!modules.includes("BILLING") || member.planId === undefined || member.planId === null) {
+    if (!modules.includes("BILLING") || member.planId === undefined) {
       return () => {
         current = false;
       };
@@ -603,8 +603,7 @@ function MemberSummary({
               </DataRow>
             ) : null}
             {modules.includes("BILLING") &&
-            overview.nextInvoice !== undefined &&
-            overview.nextInvoice !== null ? (
+            overview.nextInvoice !== undefined ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
                 <strong>{formatDate(overview.nextInvoice.date, locale)}</strong> ·{" "}
                 {formatMoney(
@@ -644,8 +643,7 @@ function MemberSummary({
               </Button>
             </DataRow>
             {modules.includes("FAMILY_GROUP") &&
-            overview.familyGroup !== undefined &&
-            overview.familyGroup !== null ? (
+            overview.familyGroup !== undefined ? (
               <DataRow label={t("admin-census:member.fields.familyGroup")}>
                 <span className="census-record__links">
                   {overview.familyGroup.members.map((familyMember) => (
@@ -1198,8 +1196,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
             </Badge>
           )}
           {branding.modules.includes("FAMILY_GROUP") &&
-          overview.familyGroup !== undefined &&
-          overview.familyGroup !== null ? (
+          overview.familyGroup !== undefined ? (
             <Badge>
               {holder
                 ? t("admin-census:member.familyHolder")

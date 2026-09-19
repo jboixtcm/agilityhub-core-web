@@ -960,7 +960,6 @@ export function ParameterSettings({
           rows: block.rows.filter(
             (parameter) =>
               parameter.module === undefined ||
-              parameter.module === null ||
               modules.includes(parameter.module),
           ),
         }))
