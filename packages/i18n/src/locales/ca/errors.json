@@ -87,6 +87,7 @@
   "INACTIVITY_DEADLINE_PASSED": "El termini d'inactivitat ja ha passat.",
   "INACTIVITY_INVALID_RANGE": "El període d'inactivitat no és vàlid.",
   "INACTIVITY_INVALID_STATE": "La sol·licitud d'inactivitat no està en un estat vàlid.",
+  "INACTIVITY_NOT_APPLICABLE": "Aquest abonament no admet períodes d'inactivitat.",
   "INACTIVITY_OVERLAP": "El període d'inactivitat se superposa amb un altre.",
   "INACTIVITY_PERIOD": "Aquest abonament està en un període d'inactivitat.",
   "INPUT_SCHEMA_MISMATCH": "Les dades no segueixen l'esquema esperat.",

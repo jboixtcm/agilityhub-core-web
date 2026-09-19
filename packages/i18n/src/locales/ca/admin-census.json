@@ -261,16 +261,27 @@
     "fields": {
       "name": "Nom", "idDocument": "DNI/NIE", "contact": "Contacte", "family": "Grup familiar", "payment": "Pagament",
       "chip": "Xip", "documents": "Documents", "notes": "Notes als instructors", "level": "Nivell inicial", "nextInvoice": "Data del proper rebut",
-      "birthDate": "Data de naixement", "birthMonth": "Mes de naixement", "breed": "Raça", "sex": "Sexe", "email": "Correu electrònic", "phone": "Telèfon", "street": "Adreça", "postalCode": "Codi postal", "city": "Població", "firstName": "Nom", "lastName1": "Primer cognom", "lastName2": "Segon cognom"
+      "birthDate": "Data de naixement", "birthMonth": "Mes de naixement", "breed": "Raça", "sex": "Sexe", "email": "Correu electrònic", "phone": "Telèfon", "street": "Adreça", "postalCode": "Codi postal", "city": "Població", "firstName": "Nom", "lastName1": "Primer cognom", "lastName2": "Segon cognom", "iban": "IBAN", "accountHolder": "Titular del compte"
     },
-    "familyRate": "tarifa familiar en validar",
+    "familySummary": "Sí — titular: {holder} + gos {dog} · tarifa familiar en validar",
     "sameHolder": "titular: la mateixa",
+    "paymentSummary": "{method} · {account} · {holder}",
+    "paymentMethod": { "SEPA_DD": "Domiciliació", "CARD": "Targeta", "MANUAL": "Efectiu" },
     "whatsapp": "WhatsApp",
     "datePlaceholder": "dd/mm/aaaa",
     "required": "obligatori",
     "plan": "Modalitat i tarifa",
+    "planWithPrice": "{plan} · {price}/mes",
     "upfront": "Pagament inicial (anticipat)",
     "actuallyPaid": "Import efectivament cobrat:",
+    "attachments": "{count, plural, one {# adjunt} other {# adjunts}}",
+    "upfrontBreakdown": "{lines} · es registra el cobrament; la factura, des de comptabilitat",
+    "upfrontLines": {
+      "ENTRY_FEE": "Entrada {amount}",
+      "FIRST_MONTH": "{month} {amount} (mitja quota)",
+      "PACK": "Pack {amount}",
+      "ADDITIONAL_DOG_FEE": "Quota de gos addicional {amount}"
+    },
     "paid": "cobrat",
     "nothingPaid": "No s'ha cobrat res: queda pendent",
     "confirmNothingPaid": "Confirma que no s'ha cobrat cap import",

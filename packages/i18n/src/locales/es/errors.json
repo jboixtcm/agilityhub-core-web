@@ -87,6 +87,7 @@
   "INACTIVITY_DEADLINE_PASSED": "El plazo de inactividad ya ha pasado.",
   "INACTIVITY_INVALID_RANGE": "El periodo de inactividad no es válido.",
   "INACTIVITY_INVALID_STATE": "La solicitud de inactividad no está en un estado válido.",
+  "INACTIVITY_NOT_APPLICABLE": "Este abono no admite períodos de inactividad.",
   "INACTIVITY_OVERLAP": "El periodo de inactividad se solapa con otro.",
   "INACTIVITY_PERIOD": "Este abono está en un periodo de inactividad.",
   "INPUT_SCHEMA_MISMATCH": "Los datos no siguen el esquema esperado.",

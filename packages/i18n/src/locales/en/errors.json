@@ -87,6 +87,7 @@
   "INACTIVITY_DEADLINE_PASSED": "The inactivity deadline has passed.",
   "INACTIVITY_INVALID_RANGE": "The inactivity period is invalid.",
   "INACTIVITY_INVALID_STATE": "The inactivity request is not in a valid state.",
+  "INACTIVITY_NOT_APPLICABLE": "This membership does not allow inactivity periods.",
   "INACTIVITY_OVERLAP": "The inactivity period overlaps another one.",
   "INACTIVITY_PERIOD": "This membership is in an inactivity period.",
   "INPUT_SCHEMA_MISMATCH": "The input does not match the expected schema.",

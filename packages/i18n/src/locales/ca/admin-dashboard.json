@@ -17,7 +17,7 @@
     "title": "Revisió de classes en risc — {time}, avui i {days} dies vista",
     "alerts": "{count} avisos",
     "empty": "Cap classe en risc",
-    "booked": "{count} inscrits",
+    "booked": "{count, plural, one {# inscrit} other {# inscrits}}",
     "today": "avui",
     "tomorrow": "demà",
     "notified": "{count, plural, one {{gender, select, female {avisada} other {avisat}} {names}} other {avisats {names}}}",

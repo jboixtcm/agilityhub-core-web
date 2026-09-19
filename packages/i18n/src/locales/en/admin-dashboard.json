@@ -17,7 +17,7 @@
     "title": "At-risk class review — {time}, today and {days} days ahead",
     "alerts": "{count} alerts",
     "empty": "No classes at risk",
-    "booked": "{count} booked",
+    "booked": "{count, plural, one {# booked} other {# booked}}",
     "today": "today",
     "tomorrow": "tomorrow",
     "notified": "{count, plural, one {notified {names}} other {notified {names}}}",

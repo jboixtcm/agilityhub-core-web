@@ -17,7 +17,7 @@
     "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",
     "alerts": "{count} avisos",
     "empty": "Ninguna clase en riesgo",
-    "booked": "{count} inscritos",
+    "booked": "{count, plural, one {# inscrito} other {# inscritos}}",
     "today": "hoy",
     "tomorrow": "mañana",
     "notified": "{count, plural, one {{gender, select, female {avisada} other {avisado}} {names}} other {avisados {names}}}",
