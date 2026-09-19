@@ -88,13 +88,13 @@ export interface paths {
         };
         /**
          * activities
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Default sort date desc; default filter deleted:eq:false. q searches title. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR. Default sort date desc; default filter deleted:eq:false. q searches title. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["activities"];
         put?: never;
         /**
          * createActivity
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["createActivity"];
         delete?: never;
@@ -112,7 +112,7 @@ export interface paths {
         };
         /**
          * export
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["export"];
         put?: never;
@@ -132,7 +132,7 @@ export interface paths {
         };
         /**
          * filterValues
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["filterValues"];
         put?: never;
@@ -152,7 +152,7 @@ export interface paths {
         };
         /**
          * activity
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. INSTRUCTOR projection omits internalNotes; placementIds only with COURSES. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR. INSTRUCTOR projection omits internalNotes; placementIds only with COURSES. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["activity"];
         put?: never;
@@ -162,7 +162,7 @@ export interface paths {
         head?: never;
         /**
          * patchActivity
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         patch: operations["patchActivity"];
         trace?: never;
@@ -178,7 +178,7 @@ export interface paths {
         put?: never;
         /**
          * cancelActivity
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["cancelActivity"];
         delete?: never;
@@ -196,7 +196,7 @@ export interface paths {
         };
         /**
          * cancellationPreview
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["cancellationPreview"];
         put?: never;
@@ -218,7 +218,7 @@ export interface paths {
         put?: never;
         /**
          * document
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["document"];
         delete?: never;
@@ -239,7 +239,7 @@ export interface paths {
         post?: never;
         /**
          * deleteDocument
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         delete: operations["deleteDocument"];
         options?: never;
@@ -257,13 +257,13 @@ export interface paths {
         get?: never;
         /**
          * image
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         put: operations["image"];
         post?: never;
         /**
          * deleteImage
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         delete: operations["deleteImage"];
         options?: never;
@@ -282,12 +282,12 @@ export interface paths {
         put?: never;
         /**
          * publish
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["publish"];
         /**
          * unpublish
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         delete: operations["unpublish"];
         options?: never;
@@ -304,7 +304,7 @@ export interface paths {
         };
         /**
          * registrations
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Export through /activity-registrations/export with filter=activityId:eq:id. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR. Export through /activity-registrations/export with filter=activityId:eq:id. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["registrations"];
         put?: never;
@@ -324,7 +324,7 @@ export interface paths {
         };
         /**
          * ringConflicts
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["ringConflicts"];
         put?: never;
@@ -346,7 +346,7 @@ export interface paths {
         put?: never;
         /**
          * register
-         * @description Roles: MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: MEMBER.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["register"];
         delete?: never;
@@ -364,7 +364,7 @@ export interface paths {
         };
         /**
          * Export activity registrations
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Filter by activityId to export an activity. Contract only; implementation is deferred to E4-T04.
+         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Filter by activityId to export an activity. Implemented by S07.
          */
         get: operations["exportActivityRegistrations"];
         put?: never;
@@ -384,7 +384,7 @@ export interface paths {
         };
         /**
          * registration
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. MEMBER sees own registration only, including impersonation. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. MEMBER sees own registration only, including impersonation. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["registration"];
         put?: never;
@@ -406,7 +406,7 @@ export interface paths {
         put?: never;
         /**
          * cancelRegistration
-         * @description Roles: MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: MEMBER.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         post: operations["cancelRegistration"];
         delete?: never;
@@ -672,13 +672,13 @@ export interface paths {
         };
         /**
          * classes
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. MEMBER cannot list classes; use day-grid or class detail. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. MEMBER cannot list classes; use day-grid or class detail. Tenant comes from the JWT.
          */
         get: operations["classes"];
         put?: never;
         /**
          * createClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["createClass"];
         delete?: never;
@@ -696,7 +696,7 @@ export interface paths {
         };
         /**
          * classSession
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. MEMBER including impersonation sees only ACTIVE/FINISHED; no notes or instructor counts. Instructor visibility follows R-06-12. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER including impersonation sees only ACTIVE/FINISHED; no notes or instructor counts. Instructor visibility follows R-06-12. Tenant comes from the JWT.
          */
         get: operations["classSession"];
         put?: never;
@@ -706,7 +706,7 @@ export interface paths {
         head?: never;
         /**
          * patchClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT.
          */
         patch: operations["patchClass"];
         trace?: never;
@@ -722,7 +722,7 @@ export interface paths {
         put?: never;
         /**
          * cancelClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["cancelClass"];
         delete?: never;
@@ -740,7 +740,7 @@ export interface paths {
         };
         /**
          * classCancellationPreview
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["classCancellationPreview"];
         put?: never;
@@ -762,7 +762,7 @@ export interface paths {
         put?: never;
         /**
          * exemptClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["exemptClass"];
         delete?: never;
@@ -960,7 +960,7 @@ export interface paths {
         };
         /**
          * coverage
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Exactly one of templateId (optional saturdayTemplateId) or weekId is required. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. Exactly one of templateId (optional saturdayTemplateId) or weekId is required. Tenant comes from the JWT.
          */
         get: operations["coverage"];
         put?: never;
@@ -1020,7 +1020,7 @@ export interface paths {
         };
         /**
          * dayGrid
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER, AGILITYHUB_ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Every authenticated role may use member view; instructor view requires INSTRUCTOR/ADMIN. Impersonation permits only member view. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER, AGILITYHUB_ADMIN. Tenant and role guards apply. Every authenticated role may use member view; instructor view requires INSTRUCTOR/ADMIN. Impersonation permits only member view. Tenant comes from the JWT.
          */
         get: operations["dayGrid"];
         put?: never;
@@ -1704,7 +1704,7 @@ export interface paths {
         };
         /**
          * mine
-         * @description Roles: MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: MEMBER.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["mine"];
         put?: never;
@@ -1724,7 +1724,7 @@ export interface paths {
         };
         /**
          * memberDetail
-         * @description Roles: MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: MEMBER.  Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["memberDetail"];
         put?: never;
@@ -2708,7 +2708,7 @@ export interface paths {
         };
         /**
          * publicActivities
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Published content only. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Published content only. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
          */
         get: operations["publicActivities"];
         put?: never;
@@ -2728,7 +2728,7 @@ export interface paths {
         };
         /**
          * publicActivity
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
          */
         get: operations["publicActivity"];
         put?: never;
@@ -2748,7 +2748,7 @@ export interface paths {
         };
         /**
          * publicFile
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. No API key. Redirect to a short-lived signed URL.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. No API key. Redirect to a short-lived signed URL.
          */
         get: operations["publicFile"];
         put?: never;
@@ -2808,13 +2808,13 @@ export interface paths {
         };
         /**
          * blocks
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. MEMBER receives RingBlockMemberView without note or createdByName. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER receives RingBlockMemberView without note or createdByName. Tenant comes from the JWT.
          */
         get: operations["blocks"];
         put?: never;
         /**
          * createBlock
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. RESERVATION requires FREE_TRAINING; cancelBookings requires ADMIN. Conditional write rules enforced in E4-T03. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. RESERVATION requires FREE_TRAINING; cancelBookings requires ADMIN. Tenant comes from the JWT.
          */
         post: operations["createBlock"];
         delete?: never;
@@ -2832,7 +2832,7 @@ export interface paths {
         };
         /**
          * block
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["block"];
         put?: never;
@@ -2842,7 +2842,7 @@ export interface paths {
         head?: never;
         /**
          * patchBlock
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         patch: operations["patchBlock"];
         trace?: never;
@@ -2858,7 +2858,7 @@ export interface paths {
         put?: never;
         /**
          * cancelBlock
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["cancelBlock"];
         delete?: never;
@@ -3104,13 +3104,13 @@ export interface paths {
         };
         /**
          * templates
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["templates"];
         put?: never;
         /**
          * createTemplate
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["createTemplate"];
         delete?: never;
@@ -3128,7 +3128,7 @@ export interface paths {
         };
         /**
          * template
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["template"];
         put?: never;
@@ -3138,7 +3138,7 @@ export interface paths {
         head?: never;
         /**
          * patchTemplate
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         patch: operations["patchTemplate"];
         trace?: never;
@@ -3154,7 +3154,7 @@ export interface paths {
         put?: never;
         /**
          * createBand
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["createBand"];
         delete?: never;
@@ -3175,14 +3175,14 @@ export interface paths {
         post?: never;
         /**
          * deleteBand
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         delete: operations["deleteBand"];
         options?: never;
         head?: never;
         /**
          * patchBand
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         patch: operations["patchBand"];
         trace?: never;
@@ -3198,7 +3198,7 @@ export interface paths {
         put?: never;
         /**
          * createTemplateClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["createTemplateClass"];
         delete?: never;
@@ -3219,14 +3219,14 @@ export interface paths {
         post?: never;
         /**
          * deleteTemplateClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         delete: operations["deleteTemplateClass"];
         options?: never;
         head?: never;
         /**
          * patchTemplateClass
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         patch: operations["patchTemplateClass"];
         trace?: never;
@@ -3240,13 +3240,13 @@ export interface paths {
         };
         /**
          * weeks
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["weeks"];
         put?: never;
         /**
          * createWeek
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards. 200 for an existing week; 201 for a new week. startDate must be Monday. Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply. 200 for an existing week; 201 for a new week. startDate must be Monday. Tenant comes from the JWT.
          */
         post: operations["createWeek"];
         delete?: never;
@@ -3264,7 +3264,7 @@ export interface paths {
         };
         /**
          * generationCandidates
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["generationCandidates"];
         put?: never;
@@ -3284,7 +3284,7 @@ export interface paths {
         };
         /**
          * week
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["week"];
         put?: never;
@@ -3304,7 +3304,7 @@ export interface paths {
         };
         /**
          * calendar
-         * @description Roles: ADMIN, INSTRUCTOR. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         get: operations["calendar"];
         put?: never;
@@ -3326,7 +3326,7 @@ export interface paths {
         put?: never;
         /**
          * generate
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["generate"];
         delete?: never;
@@ -3346,7 +3346,7 @@ export interface paths {
         put?: never;
         /**
          * validateWeek
-         * @description Roles: ADMIN. Contract only; returns 501 NOT_IMPLEMENTED after tenant, role and module guards.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["validateWeek"];
         delete?: never;
@@ -3835,7 +3835,7 @@ export interface components {
         };
         ActivityRegistrationRequest: {
             activityId: string;
-            /** @description Requires WAITLIST */
+            /** @description Explicitly joins the waitlist when full and WAITLIST is enabled; otherwise ACTIVITY_FULL */
             joinWaitlist?: boolean;
         };
         ActivityRegistrationSummary: {
@@ -6286,12 +6286,18 @@ export interface components {
             levels: string[];
             location: components["schemas"]["ActivityLocation"];
             longDescriptionHtml?: string | null;
+            longDescriptionI18n?: {
+                [key: string]: string;
+            } | null;
             longDescriptionText?: string | null;
             places: components["schemas"]["PublicActivityPlaces"];
             publicUrl: string;
             registration: components["schemas"]["PublicActivityRegistration"];
             ringNames: string[];
             shortDescription?: string | null;
+            shortDescriptionI18n?: {
+                [key: string]: string;
+            } | null;
             slug: string;
             startTime?: string | null;
             /** @enum {string} */
@@ -6304,6 +6310,9 @@ export interface components {
             /** @enum {string} */
             type: "SEMINAR" | "SOCIAL_LEAGUE" | "COMPETITION" | "DEMONSTRATION" | "COURSE" | "OTHER";
             typeLabel: string;
+            typeLabelI18n?: {
+                [key: string]: string;
+            } | null;
         };
         PublicActivityDocument: {
             name: string;
@@ -6412,7 +6421,7 @@ export interface components {
             title: string;
         };
         RegistrationCancellationRequest: {
-            /** @description Required when impersonating outside the cancellation window */
+            /** @description Required for every impersonated cancellation */
             reason?: string;
         };
         RejectionRequest: {
@@ -29165,7 +29174,10 @@ export interface operations {
     };
     publicFile: {
         parameters: {
-            query?: never;
+            query?: {
+                expires?: number;
+                signature?: string;
+            };
             header?: {
                 "Accept-Language"?: string;
             };
@@ -32487,7 +32499,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description TEMPLATE_KIND_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -34248,7 +34260,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description WEEK_ALREADY_GENERATED, IDEMPOTENCY_KEY_REUSED */
+            /** @description WEEK_ALREADY_GENERATED, INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;

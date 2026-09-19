@@ -1,0 +1,45 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh
+
+ Network agilityhub-e3-w03-final_default Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Creating 
+ Volume agilityhub-e3-w03-final_export-files Creating 
+ Volume agilityhub-e3-w03-final_export-files Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Creating 
+ Network agilityhub-e3-w03-final_default Creating 
+ Volume agilityhub-e3-w03-final_mailbox Creating 
+ Volume agilityhub-e3-w03-final_mailbox Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Created 
+ Volume agilityhub-e3-w03-final_mongo-data Created 
+ Volume agilityhub-e3-w03-final_export-files Created 
+ Volume agilityhub-e3-w03-final_export-files Created 
+ Volume agilityhub-e3-w03-final_mailbox Created 
+ Volume agilityhub-e3-w03-final_mailbox Created 
+ Network agilityhub-e3-w03-final_default Created 
+ Network agilityhub-e3-w03-final_default Created 
+ Container agilityhub-e3-w03-final-mongo-1 Creating 
+ Container agilityhub-e3-w03-final-mongo-1 Created 
+ Container agilityhub-e3-w03-final-seed-1 Creating 
+ Container agilityhub-e3-w03-final-seed-1 Created 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Creating 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Created 
+ Container agilityhub-e3-w03-final-core-1 Creating 
+ Container agilityhub-e3-w03-final-core-1 Created 
+ Container agilityhub-e3-w03-final-mongo-1 Starting 
+ Container agilityhub-e3-w03-final-mongo-1 Started 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-seed-1 Starting 
+ Container agilityhub-e3-w03-final-seed-1 Started 
+ Container agilityhub-e3-w03-final-seed-1 Waiting 
+ Container agilityhub-e3-w03-final-seed-1 Exited 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Starting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Started 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Exited 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-core-1 Starting 
+Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint agilityhub-e3-w03-final-core-1 (0b434c2dd5e6947ba046983c864f9cfc4c550177d95f6fc2ce02912ed72215e8): Bind for 127.0.0.1:18080 failed: port is already allocated
+ ELIFECYCLE  Command failed with exit code 1.

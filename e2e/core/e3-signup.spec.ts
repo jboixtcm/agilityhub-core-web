@@ -108,16 +108,6 @@ async function openAdmin(browser: Browser): Promise<{ context: BrowserContext; p
   return adminSession;
 }
 
-async function loginMember(page: Page, email = "member@example.test"): Promise<void> {
-  await page.goto(`${clubsUrl}/entrar`);
-  await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill(corePassword);
-  await submitPasswordLogin(page);
-  await page.waitForURL("**/inici");
-  await expect(page.locator(".clubs-shell")).toBeVisible();
-  await page.waitForTimeout(1_000);
-}
-
 async function navigateSpa(page: Page, path: string): Promise<void> {
   await page.evaluate((nextPath) => {
     window.history.pushState(null, "", nextPath);
@@ -321,10 +311,10 @@ test.describe.configure({ mode: "serial" });
 test("T-04-34 public signup is validated and enters through the N-02 welcome link", async ({
   browser,
 }) => {
-  test.setTimeout(180_000);
+  test.setTimeout(300_000);
   const publicContext = await localizedContext(browser, { height: 844, width: 375 });
   const publicPage = await publicContext.newPage();
-  await completePublicSignup({
+  const acceptedMemberId = await completePublicSignup({
     document: "12345678Z",
     dog: acceptedDog,
     email: acceptedEmail,
@@ -361,13 +351,48 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await admin.waitForTimeout(1_000);
   await navigateSpa(admin, "/abonats");
   await expect(admin.getByRole("heading", { name: "Abonats" })).toBeVisible();
+  const refreshedDashboard = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/dashboard") && response.request().method() === "GET",
+  );
   await navigateSpa(admin, "/tauler");
+  const dashboardResponse = await refreshedDashboard;
+  expect(dashboardResponse.status()).toBe(200);
+  const dashboard = (await dashboardResponse.json()) as {
+    pendingSignups?: { count: number; items: { memberId: string }[] } | null;
+  };
+  expect(dashboard.pendingSignups?.count).toBe(initialPendingCount - 1);
+  expect(dashboard.pendingSignups?.items.some((signup) => signup.memberId === acceptedMemberId)).toBe(
+    false,
+  );
   await expect(admin.locator(".dashboard-page")).toBeVisible();
   await expect(
     admin.locator(".dashboard-signups header").getByText(String(initialPendingCount - 1), {
       exact: true,
     }),
   ).toBeVisible();
+  await screenshot(admin, "D1-dashboard-after-validation-core-1280.png");
+
+  const welcomeMessage = await waitForMessage(
+    acceptedEmail,
+    mailboxBeforeValidation,
+    (message) => `${message.html ?? ""} ${message.text ?? ""}`.includes("/activacio"),
+  );
+  const welcomeLink = messageLink(welcomeMessage);
+  expect(welcomeLink.hostname).toBe("app.example.test");
+  const memberContext = await localizedContext(browser, { height: 844, width: 375 });
+  const member = await memberContext.newPage();
+  const memberPageErrors: string[] = [];
+  member.on("pageerror", (error) => {
+    memberPageErrors.push(error.message);
+  });
+  await member.goto(`${clubsUrl}${welcomeLink.pathname}${welcomeLink.search}`);
+  await expect(member.getByRole("heading", { name: /Nora/u })).toBeVisible();
+  await member.getByRole("button", { name: "CONTINUAR" }).click();
+  await member.waitForURL("**/inici");
+  await expect(member.locator(".clubs-shell")).toBeVisible();
+  await screenshot(member, "03-home-new-member-core-375.png");
+
   const rejectedContext = await localizedContext(browser, { height: 844, width: 375 });
   const rejectedPage = await rejectedContext.newPage();
   const rejectedMemberId = await completePublicSignup({
@@ -398,32 +423,24 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       ),
   );
 
-  const addDogContext = await localizedContext(browser, { height: 844, width: 375 });
-  const dogMember = await addDogContext.newPage();
-  const dogPageErrors: string[] = [];
-  dogMember.on("pageerror", (error) => {
-    dogPageErrors.push(error.message);
-  });
-  await loginMember(dogMember, "member.2@example.test");
-  await dogMember.getByRole("link", { exact: true, name: "Gossos" }).click();
-  await dogMember.waitForURL("**/gossos");
-  await screenshot(dogMember, "13-my-dogs-core-375.png");
-  expect(dogPageErrors).toEqual([]);
-  await expect(dogMember.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
-  const addDogLink = dogMember.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first();
+  await navigateSpa(member, "/gossos");
+  await expect(member.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
+  await screenshot(member, "13-my-dogs-core-375.png");
+  expect(memberPageErrors).toEqual([]);
+  const addDogLink = member.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first();
   await expect(addDogLink).toBeVisible();
   await addDogLink.click();
-  await dogMember.waitForURL("**/gossos/nou");
-  await fillDog(dogMember, additionalDog, "941000000009903");
-  await dogMember.getByRole("button", { name: "CONTINUA" }).click();
-  await dogMember.waitForURL("**/gossos/nou/pagament");
-  await expect(dogMember.getByLabel("Mètode de pagament actual")).toHaveValue(/Efectiu/u);
-  const privacy = dogMember.getByLabel("Accepto la política de privacitat");
+  await member.waitForURL("**/gossos/nou");
+  await fillDog(member, additionalDog, "941000000009903");
+  await member.getByRole("button", { name: "CONTINUA" }).click();
+  await member.waitForURL("**/gossos/nou/pagament");
+  await expect(member.getByLabel("Mètode de pagament actual")).toHaveValue(/Domiciliació/u);
+  const privacy = member.getByLabel("Accepto la política de privacitat");
   if (await privacy.isVisible()) await privacy.check();
-  await screenshot(dogMember, "19-add-dog-core-375.png");
-  await dogMember.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
-  await dogMember.waitForURL("**/apuntat-hi/enviada");
-  await addDogContext.close();
+  await screenshot(member, "19-add-dog-core-375.png");
+  await member.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
+  await member.waitForURL("**/apuntat-hi/enviada");
+  await memberContext.close();
   await navigateSpa(admin, "/tauler");
   await admin.evaluate(() => {
     window.dispatchEvent(new Event("focus"));
@@ -453,23 +470,6 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   signupDisabled = true;
   await adminSession?.context.close();
   adminSession = undefined;
-
-  const welcomeMessage = await waitForMessage(
-    acceptedEmail,
-    mailboxBeforeValidation,
-    (message) => `${message.html ?? ""} ${message.text ?? ""}`.includes("/activacio"),
-  );
-  const welcomeLink = messageLink(welcomeMessage);
-  expect(welcomeLink.hostname).toBe("app.example.test");
-  const memberContext = await localizedContext(browser, { height: 844, width: 375 });
-  const member = await memberContext.newPage();
-  await member.goto(`${clubsUrl}${welcomeLink.pathname}${welcomeLink.search}`);
-  await expect(member.getByRole("heading", { name: /Nora/u })).toBeVisible();
-  await member.getByRole("button", { name: "CONTINUAR" }).click();
-  await member.waitForURL("**/inici");
-  await expect(member.locator(".clubs-shell")).toBeVisible();
-  await screenshot(member, "03-home-new-member-core-375.png");
-  await memberContext.close();
 });
 
 test("T-04-34 rejected signup delivers N-03", () => {

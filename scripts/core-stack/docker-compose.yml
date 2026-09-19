@@ -128,6 +128,7 @@ services:
       CORE_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}
       E1_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}
       E1_MAILBOX_DIRECTORY: /mailbox
+      CORE_TEST_FILES: ${CORE_TEST_FILES:-}
     volumes:
       - ../..:/src:ro
       - ../../roadmap/evidence:/evidence
@@ -139,7 +140,7 @@ services:
         tar --exclude=.git --exclude=.turbo --exclude=dist --exclude=node_modules --exclude=playwright-report --exclude=test-results -cf - -C /src . | tar -xf - -C /work
         corepack enable
         pnpm install --frozen-lockfile
-        pnpm exec playwright test --config=e2e/core/playwright.config.ts
+        pnpm exec playwright test --config=e2e/core/playwright.config.ts ${CORE_TEST_FILES:-}
     depends_on:
       core:
         condition: service_healthy

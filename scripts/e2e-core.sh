@@ -25,14 +25,26 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+run_core_suite() {
+  docker compose -f "$compose_file" up -d --wait mongo seed core
+  docker compose -f "$compose_file" --profile e2e run --rm playwright
+}
+
 cleanup
-docker compose -f "$compose_file" up -d --wait mongo seed core
-docker compose -f "$compose_file" --profile e2e run --rm playwright
+if [[ "$evidence_subdirectory" == "E3-W03" ]]; then
+  export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
+  run_core_suite
+  cleanup
+  export CORE_TEST_FILES="e3-signup.spec.ts"
+  run_core_suite
+else
+  run_core_suite
+fi
 
 if [[ "$evidence_subdirectory" == "E3-W03" ]]; then
   docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
     mongodb://localhost:27017/agilityhub_e1_web --eval '
-      const account = db.accounts.findOne({email: "member.2@example.test"});
+      const account = db.accounts.findOne({email: "nora.e3@example.test"});
       const notification = account === null ? null : db.notifications.findOne({
         accountId: account._id,
         channel: "APP",

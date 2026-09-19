@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Complete the E3 frontend integration gate against the published core with public signup, dashboard validation and rejection, welcome activation, authenticated add-dog validation, N-37 delivery, signup closure, real-data screenshots, and isolated seeded authentication stages.
 - Complete the E2 frontend integration gate against the published core with the 184-member/242-dog demo census, real catalog, parameter, audit, export and club-page round trips, deterministic Playwright execution, performance evidence and real-data screenshots.
 - Adopt the verified S04 OpenAPI snapshot, prune its mocks-first overlay, regenerate client types, and align the public-signup fixtures and consumers with the published contract.
 - Route the member and dog list Excel/PDF actions through the export API, preserving visible-column query parameters while downloading synchronous responses and opening the global drawer for queued jobs.

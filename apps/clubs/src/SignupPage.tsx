@@ -192,7 +192,8 @@ function readDraft(addDog: boolean, prefix: string): SignupDraft {
   try {
     const serialized = sessionStorage.getItem(DRAFT_KEY);
     if (serialized !== null) {
-      const candidate = JSON.parse(serialized) as SignupDraft;
+      const candidate = JSON.parse(serialized) as Omit<SignupDraft, "additionalDogOption"> &
+        Partial<Pick<SignupDraft, "additionalDogOption">>;
       const mode = addDog ? "add-dog" : "public";
       if (
         candidate.mode === mode &&
