@@ -151,7 +151,7 @@ export function DashboardPage({
             {dashboard.pendingSignups.items.length === 0 ? <p>{t("admin-dashboard:signups.empty")}</p> : dashboard.pendingSignups.items.map((signup) => (
               <article className="dashboard-signups__row" key={signup.memberId}>
                 <div><strong>{signup.shortName} + {signup.dogs.map((dog) => `${dog.name} (${dog.breed})`).join(", ")}</strong><small>{signup.planName}{signup.paymentMethodType === undefined ? "" : ` · ${t(`admin-dashboard:signups.payment.${signup.paymentMethodType}`)}`}</small></div>
-                {signup.warnings.includes("ACCOUNT_NOT_PROVIDED") ? <Badge tone="danger">{t("admin-dashboard:signups.accountNotProvided")}</Badge> : null}
+                {(signup.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED") ? <Badge tone="danger">{t("admin-dashboard:signups.accountNotProvided")}</Badge> : null}
                 <Button onClick={() => { onNavigate(`/preinscripcions/${signup.memberId}`); }}>{t("admin-dashboard:signups.validate")}</Button>
               </article>
             ))}

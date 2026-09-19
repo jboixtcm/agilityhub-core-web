@@ -18,7 +18,7 @@ x-core-environment: &core-environment
   OIDC_CLUBS_ADMIN_REDIRECT_URI: https://admin.example.test/oidc/callback
   OIDC_CLUBS_ADMIN_LOGOUT_URI: https://admin.example.test/
   CORS_PLATFORM_HOSTS: id.example.test
-  SHARED_SCHEDULING_ENABLED: "false"
+  SHARED_SCHEDULING_ENABLED: "true"
   LOGGING_LEVEL_ROOT: WARN
   SPRING_MAIN_BANNER_MODE: "off"
 
@@ -66,6 +66,40 @@ services:
       mongo:
         condition: service_healthy
 
+  activate-demo-club:
+    image: mongo:7
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        mongosh --quiet mongodb://mongo:27017/agilityhub_e1_web --eval '
+          const result = db.clubs.updateOne(
+            {slug: "canic"},
+            {$$set: {status: "ACTIVE", updatedAt: new Date()}}
+          );
+          if (result.matchedCount !== 1) { quit(1); }
+          const accounts = db.accounts.find({
+            email: {$$in: ["member@example.test", "member.2@example.test"]}
+          }).toArray();
+          const plan = db.plans.findOne({code: "ABONAT", active: true});
+          const price = db.prices.find({
+            planId: plan?._id,
+            validFrom: {$$lte: new Date()},
+            $$or: [{validTo: {$$exists: false}}, {validTo: {$$gte: new Date()}}]
+          }).sort({validFrom: -1}).limit(1).next();
+          if (accounts.length !== 2 || !plan || !price) { quit(1); }
+          const members = db.members.updateMany(
+            {accountId: {$$in: accounts.map((account) => account._id)}, status: "ACTIVE"},
+            {$$set: {planId: plan._id, priceId: price._id, updatedAt: new Date()}}
+          );
+          if (members.matchedCount !== 2) { quit(1); }
+        '
+    healthcheck:
+      disable: true
+    restart: "no"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+
   core:
     image: ghcr.io/jboixtcm/agilityhub-core-api:main
     environment:
@@ -80,7 +114,7 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-      seed:
+      activate-demo-club:
         condition: service_completed_successfully
 
   playwright:

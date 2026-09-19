@@ -28,3 +28,26 @@ trap cleanup EXIT INT TERM
 cleanup
 docker compose -f "$compose_file" up -d --wait mongo seed core
 docker compose -f "$compose_file" --profile e2e run --rm playwright
+
+if [[ "$evidence_subdirectory" == "E3-W03" ]]; then
+  docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
+    mongodb://localhost:27017/agilityhub_e1_web --eval '
+      const account = db.accounts.findOne({email: "member.2@example.test"});
+      const notification = account === null ? null : db.notifications.findOne({
+        accountId: account._id,
+        channel: "APP",
+        code: "N-37",
+        status: "SENT",
+        "variables.action": "OPEN_DOG",
+        "variables.dog_name": "Neret E3"
+      });
+      if (notification === null) { quit(1); }
+      print(EJSON.stringify({
+        action: notification.variables.action,
+        channel: notification.channel,
+        code: notification.code,
+        dogName: notification.variables.dog_name,
+        status: notification.status
+      }));
+    ' | tee "$evidence_directory/n37-notification.json"
+fi

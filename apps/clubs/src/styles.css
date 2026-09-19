@@ -945,6 +945,23 @@ select {
   font-size: 0.75rem;
 }
 
+.signup-chips--gender {
+  flex-wrap: nowrap;
+  gap: var(--ah-space-1);
+}
+
+.signup-chips--gender legend {
+  margin-inline-end: var(--ah-space-1);
+  white-space: nowrap;
+}
+
+.signup-chips--gender button {
+  min-width: 0;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
+
 .signup-chips--dog {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

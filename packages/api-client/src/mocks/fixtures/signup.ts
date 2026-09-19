@@ -6,7 +6,14 @@ export type SignupConfig = components["schemas"]["SignupConfig"];
 export type SignupRequest = components["schemas"]["SignupRequest"];
 export type MemberDogSignupRequest = components["schemas"]["AddDogSignupRequest"];
 
-const baseline = signupConfigFixture as SignupConfig;
+type CompleteSignupConfig = SignupConfig & {
+  legal: NonNullable<SignupConfig["legal"]>;
+  plans: NonNullable<SignupConfig["plans"]>;
+  steps: NonNullable<SignupConfig["steps"]>;
+  texts: NonNullable<SignupConfig["texts"]>;
+};
+
+const baseline = signupConfigFixture as CompleteSignupConfig;
 
 const content = {
   ca: {
@@ -72,7 +79,7 @@ function localeFrom(value: string | null): keyof typeof content {
   return locale === "es" || locale === "en" ? locale : "ca";
 }
 
-function translatedConfig(locale: keyof typeof content): SignupConfig {
+function translatedConfig(locale: keyof typeof content): CompleteSignupConfig {
   const config = structuredClone(baseline);
   if (locale === "ca") {
     return config;

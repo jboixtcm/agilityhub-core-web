@@ -23,6 +23,7 @@ type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
 type Dog = SignupView["dogs"][number];
 type ValidationRequest = components["schemas"]["ValidationRequest"];
+type Money = components["schemas"]["Money"];
 
 function currentMemberId(): string {
   return window.location.pathname.split("/").filter(Boolean).at(-1) ?? "";
@@ -89,6 +90,10 @@ function EditSignupDrawer({
   const { t } = useTranslation("admin-census");
   const [member, setMember] = useState(() => structuredClone(signup.member));
   const [dogs, setDogs] = useState(() => structuredClone(signup.dogs));
+  const [iban, setIban] = useState("");
+  const [accountHolder, setAccountHolder] = useState(
+    signup.member.paymentMethod?.holderName ?? signup.member.fullName,
+  );
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -107,6 +112,14 @@ function EditSignupDrawer({
           ...(member.idDocument === undefined ? {} : { idDocument: member.idDocument }),
           lastName1: member.lastName1,
           ...(member.lastName2 === undefined ? {} : { lastName2: member.lastName2 }),
+          ...(member.paymentMethod?.type === "SEPA_DD" && iban.trim() !== ""
+            ? {
+                paymentMethod: {
+                  sepa: { holderName: accountHolder.trim(), iban: iban.trim() },
+                  type: "SEPA_DD" as const,
+                },
+              }
+            : {}),
           phones: member.phones,
           version: signup.version,
         },
@@ -116,8 +129,19 @@ function EditSignupDrawer({
         setError(isApiError(memberResult.error, "STALE_VERSION") ? t("admin-census:signupReview.stale") : t("admin-census:signupReview.genericError"));
         return;
       }
-      let version = memberResult.data.version;
-      for (const dog of dogs.filter((item) => item.status === "PENDING")) {
+      const changedDogs = dogs.filter((dog) => {
+        const initial = signup.dogs.find((item) => item.id === dog.id);
+        return (
+          dog.status === "PENDING" &&
+          initial !== undefined &&
+          (dog.birthMonth !== initial.birthMonth ||
+            dog.breed !== initial.breed ||
+            dog.chip !== initial.chip ||
+            dog.name !== initial.name ||
+            dog.sex !== initial.sex)
+        );
+      });
+      for (const dog of changedDogs) {
         const dogResult = await client.PATCH("/dogs/{id}", {
           body: {
             birthDate: `${dog.birthMonth}-01`,
@@ -125,7 +149,7 @@ function EditSignupDrawer({
             chip: dog.chip,
             name: dog.name,
             sex: dog.sex,
-            version,
+            version: signup.version,
           },
           params: { path: { id: dog.id } },
         });
@@ -133,7 +157,6 @@ function EditSignupDrawer({
           setError(isApiError(dogResult.error, "STALE_VERSION") ? t("admin-census:signupReview.stale") : t("admin-census:signupReview.genericError"));
           return;
         }
-        version = dogResult.data.version;
       }
       onSaved();
     } catch (cause) {
@@ -163,6 +186,16 @@ function EditSignupDrawer({
         {(["street", "postalCode", "city"] as const).map((key) => (
           <FormField id={`signup-edit-${key}`} key={key} label={t(`admin-census:signupReview.fields.${key}`)}><Input id={`signup-edit-${key}`} onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, address: { ...value.address, [key]: input } })); }} value={member.address[key]} /></FormField>
         ))}
+        {member.paymentMethod?.type === "SEPA_DD" ? (
+          <>
+            <FormField id="signup-edit-iban" label={t("admin-census:signupReview.fields.iban")}>
+              <Input autoComplete="off" id="signup-edit-iban" onChange={(event) => { setIban(event.currentTarget.value); }} value={iban} />
+            </FormField>
+            <FormField id="signup-edit-account-holder" label={t("admin-census:signupReview.fields.accountHolder")}>
+              <Input id="signup-edit-account-holder" onChange={(event) => { setAccountHolder(event.currentTarget.value); }} value={accountHolder} />
+            </FormField>
+          </>
+        ) : null}
         {dogs.map((dog, index) => (
           <fieldset disabled={dog.status !== "PENDING"} key={dog.id}>
             <legend>{t("admin-census:signupReview.dog", { current: index + 1, total: dogs.length })}</legend>
@@ -187,7 +220,7 @@ export function SignupReviewPage({
   onNavigate?: (path: string) => void;
 }) {
   const branding = useBranding();
-  const { formatDate, formatMoney, locale } = useClubFormats();
+  const { formatDate, formatMoney, formatMonth, locale } = useClubFormats();
   const { t } = useTranslation("admin-census");
   const memberId = currentMemberId();
   const [signup, setSignup] = useState<SignupView>();
@@ -207,6 +240,9 @@ export function SignupReviewPage({
   const [manualPaid, setManualPaid] = useState("0");
   const [confirmZero, setConfirmZero] = useState(false);
   const [warnDays, setWarnDays] = useState<number>();
+  const [planName, setPlanName] = useState<string>();
+  const [planPrice, setPlanPrice] = useState<Money>();
+  const [familyGroupId, setFamilyGroupId] = useState<string>();
 
   const load = useCallback(() => {
     void client.GET("/members/{id}/signup", { params: { path: { id: memberId } } }).then(
@@ -215,11 +251,42 @@ export function SignupReviewPage({
         setLoadError(false);
         setSignup(result.data);
         setLevels(Object.fromEntries(result.data.dogs.map((dog) => [dog.id, dog.levelId ?? ""])));
-        setPlanId(result.data.proposals.planId);
+        setPlanId(result.data.proposals.planId ?? "");
         setPriceId(result.data.proposals.priceId ?? "");
         const proposedDate = result.data.proposals.nextInvoiceDate ?? "";
         setNextInvoiceDate(proposedDate);
         setNextInvoiceInput(proposedDate === "" ? "" : formatDate(`${proposedDate}T12:00:00Z`, "short"));
+        const holderMemberId = result.data.familyGroupClaim?.holder?.id;
+        setFamilyGroupId(undefined);
+        if (holderMemberId !== undefined) {
+          void client.GET("/members/{id}", { params: { path: { id: holderMemberId } } }).then(
+            (holderResult) => {
+              if (holderResult.data !== undefined && "familyGroupId" in holderResult.data) {
+                setFamilyGroupId(holderResult.data.familyGroupId);
+              }
+            },
+            () => undefined,
+          );
+        }
+        void (async () => {
+          const catalogResult = await client.GET("/plans", {
+            params: { query: { includeInactive: true } },
+          });
+          const catalogPlan = catalogResult.data?.items.find(
+            (candidate) => candidate.id === result.data.proposals.planId,
+          );
+          if (catalogPlan !== undefined) {
+            setPlanName(catalogPlan.name);
+            setPlanPrice(catalogPlan.currentPrices?.[0]?.amount);
+            return;
+          }
+          const configResult = await client.GET("/signup");
+          const selectedPlan = configResult.data?.plans?.find(
+            (candidate) => candidate.id === result.data.proposals.planId,
+          );
+          setPlanName(selectedPlan?.name);
+          setPlanPrice(selectedPlan?.price?.amount);
+        })().catch(() => undefined);
       },
       () => { setLoadError(true); },
     );
@@ -240,12 +307,12 @@ export function SignupReviewPage({
   const billing = branding.modules.includes("BILLING");
   const monthly = signup.member.plan?.type === "MONTHLY";
   const stripePaid = (signup.upfront?.totalPaid.amountMinor ?? 0) > 0 && signup.upfront?.lines.every((line) => line.provider === "STRIPE" && line.status === "PAID") === true;
-  const validationBody = (): ValidationRequest => ({
+  const validationBody = (resolvedFamilyGroupId = familyGroupId): ValidationRequest => ({
     dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levels[dog.id] === undefined || levels[dog.id] === "" ? {} : { levelId: levels[dog.id] }) })),
     ...(nextInvoiceDate === "" ? {} : { nextInvoiceDate }),
     ...(planId === "" ? {} : { planId }),
     ...(priceId === "" ? {} : { priceId }),
-    ...(signup.familyGroupClaim?.holder?.id === undefined ? {} : { familyGroupId: signup.familyGroupClaim.holder.id }),
+    ...(resolvedFamilyGroupId === undefined ? {} : { familyGroupId: resolvedFamilyGroupId }),
     ...(billing && !stripePaid ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
     version: signup.version,
   });
@@ -272,7 +339,23 @@ export function SignupReviewPage({
     if (billing && !stripePaid && Number(manualPaid) === 0 && !confirmZero) { setMessage(t("admin-census:signupReview.confirmNothingPaid")); return; }
     setWorking(true); setMessage(undefined); setFieldErrors({});
     try {
-      const result = await client.POST("/members/{id}/validation", { body: validationBody(), params: { path: { id: memberId }, query: { dryRun: false } } });
+      let resolvedFamilyGroupId = familyGroupId;
+      const holderMemberId = signup.familyGroupClaim?.holder?.id;
+      if (resolvedFamilyGroupId === undefined && holderMemberId !== undefined) {
+        const holderResult = await client.GET("/members/{id}", {
+          params: { path: { id: holderMemberId } },
+        });
+        if (holderResult.data !== undefined && "familyGroupId" in holderResult.data) {
+          resolvedFamilyGroupId = holderResult.data.familyGroupId;
+          setFamilyGroupId(resolvedFamilyGroupId);
+        }
+      }
+      if (signup.familyGroupClaim?.status === "FOUND" && resolvedFamilyGroupId === undefined) {
+        setMessage(t("admin-census:signupReview.genericError"));
+        setWorking(false);
+        return;
+      }
+      const result = await client.POST("/members/{id}/validation", { body: validationBody(resolvedFamilyGroupId), params: { path: { id: memberId }, query: { dryRun: false } } });
       if (result.error !== undefined) { validationError(result.error); setWorking(false); return; }
       onNavigate("/tauler?signup=validated");
     } catch (cause) { validationError(cause); setWorking(false); }
@@ -289,6 +372,20 @@ export function SignupReviewPage({
   };
 
   const dogNames = signup.dogs.map((dog) => dog.name).join(", ");
+  const family = signup.familyGroupClaim;
+  const payment = signup.member.paymentMethod;
+  const signupMonth = formatMonth(signup.signup.submittedAt).replace(
+    /\s+(?:d(?:e|el)\s+)?\d{4}$/u,
+    "",
+  );
+  const upfrontBreakdown = signup.upfront?.lines
+    .map((line) =>
+      t(`admin-census:signupReview.upfrontLines.${line.concept}`, {
+        amount: formatMoney(line.amount.amountMinor / 100),
+        month: signupMonth,
+      }),
+    )
+    .join(" + ");
   return (
     <section className="signup-review-page">
       {message === undefined ? null : <Toast tone="danger">{message}</Toast>}
@@ -304,8 +401,28 @@ export function SignupReviewPage({
             <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{signup.member.fullName}</strong></dd>
             <dt>{t("admin-census:signupReview.fields.idDocument")}</dt><dd>{signup.member.idDocument?.number ?? t("admin-census:values.empty")}</dd>
             <dt>{t("admin-census:signupReview.fields.contact")}</dt><dd>{contactValue(signup.member)} {signup.member.phones[0] === undefined ? null : <a aria-label={t("admin-census:signupReview.whatsapp")} href={`https://wa.me/${signup.member.phones[0].prefix.replaceAll(/\D/gu, "")}${signup.member.phones[0].number.replaceAll(/\D/gu, "")}`}><Icon aria-hidden="true" name="send" /> {t("admin-census:signupReview.whatsapp")}</a>}</dd>
-            <dt>{t("admin-census:signupReview.fields.family")}</dt><dd>{signup.familyGroupClaim?.holderName ?? t("admin-census:values.empty")} {signup.familyGroupClaim?.status === "FOUND" ? <Badge>{t("admin-census:signupReview.familyRate")}</Badge> : null}</dd>
-            <dt>{t("admin-census:signupReview.fields.payment")}</dt><dd>{signup.member.paymentMethod?.maskedAccount ?? signup.member.maskedAccount ?? t("admin-census:values.empty")} {signup.member.paymentMethod?.holderName === signup.member.fullName ? ` · ${t("admin-census:signupReview.sameHolder")}` : null}</dd>
+            <dt>{t("admin-census:signupReview.fields.family")}</dt>
+            <dd>
+              {family?.status === "FOUND"
+                ? t("admin-census:signupReview.familySummary", {
+                    dog: family.dogName ?? t("admin-census:values.empty"),
+                    holder: family.holderName ?? family.holder?.fullName ?? t("admin-census:values.empty"),
+                  })
+                : t("admin-census:values.no")}
+            </dd>
+            <dt>{t("admin-census:signupReview.fields.payment")}</dt>
+            <dd>
+              {payment === undefined
+                ? t("admin-census:values.empty")
+                : t("admin-census:signupReview.paymentSummary", {
+                    account: payment.maskedAccount ?? signup.member.maskedAccount ?? t("admin-census:values.empty"),
+                    holder:
+                      payment.holderName === signup.member.fullName
+                        ? t("admin-census:signupReview.sameHolder")
+                        : (payment.holderName ?? t("admin-census:values.empty")),
+                    method: t(`admin-census:signupReview.paymentMethod.${payment.type}`),
+                  })}
+            </dd>
           </dl>
           {signup.warnings.includes("NO_IMAGE_CONSENT") ? <p className="signup-review-warning signup-review-warning--image"><Icon aria-hidden="true" name="warn" /> {t("admin-census:signupReview.warnings.image", { gender: signup.member.gender === "FEMALE" ? "female" : "other" })}</p> : null}
           {signup.member.accountMissing === true ? <p className="signup-review-warning signup-review-warning--danger">{t("admin-census:signupReview.warnings.account")}</p> : null}
@@ -317,7 +434,17 @@ export function SignupReviewPage({
               <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{dog.name}</strong> · {t(`admin-census:values.${dog.sex === "FEMALE" ? "female" : "male"}`)} · {dog.breed} · {formatDate(`${dog.birthMonth}-01T12:00:00Z`, "monthYear")}</dd>
               <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
               <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{dog.documents.flatMap((document) => document.files).map((file) => <a href={file.downloadUrl} key={file.downloadUrl}><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
-              <dt>{t("admin-census:signupReview.fields.notes")}</dt><dd>{dog.notesToInstructors ?? t("admin-census:values.empty")}</dd>
+              <dt>
+                {t("admin-census:signupReview.fields.notes")}
+                {dog.documents.flatMap((document) => document.files).length === 0 ? null : (
+                  <Badge>
+                    {t("admin-census:signupReview.attachments", {
+                      count: dog.documents.flatMap((document) => document.files).length,
+                    })}
+                  </Badge>
+                )}
+              </dt>
+              <dd>{dog.notesToInstructors ?? t("admin-census:values.empty")}</dd>
             </dl>
             {signup.proposals.levels.length === 0 ? null : <FormField {...(fieldErrors[`dogs.${String(index)}.levelId`] === undefined ? {} : { error: t("admin-census:signupReview.levelRequired") })} id={`signup-level-${dog.id}`} label={t("admin-census:signupReview.fields.level")}><Select id={`signup-level-${dog.id}`} onChange={(event) => { const input = event.currentTarget.value; setLevels((value) => ({ ...value, [dog.id]: input })); }} value={levels[dog.id] ?? ""}><option value="">{t("admin-census:values.empty")}</option>{signup.proposals.levels.map((level) => <option key={level.id} value={level.id}>{level.name}</option>)}</Select></FormField>}
             {billing && monthly ? <FormField {...(fieldErrors.nextInvoiceDate === undefined ? {} : { error: t("admin-census:signupReview.invoiceRequired") })} id={`signup-invoice-${dog.id}`} label={t("admin-census:signupReview.fields.nextInvoice")}><Input id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { const input = event.currentTarget.value; setNextInvoiceInput(input); setNextInvoiceDate(isoDateFromInput(input, locale) ?? ""); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceInput} /><Badge tone="danger">{t("admin-census:signupReview.required")}</Badge></FormField> : null}
@@ -325,8 +452,8 @@ export function SignupReviewPage({
         ))}
       </div>
       <Card className="signup-review-decision">
-        <div><h2>{t("admin-census:signupReview.plan")}</h2><Select aria-label={t("admin-census:signupReview.plan")} onChange={(event) => void dryRun(event.currentTarget.value)} value={planId}><option value={signup.proposals.planId}>{signup.member.plan?.name ?? signup.proposals.planId}</option></Select></div>
-        {billing && signup.upfront !== undefined ? <div><h2>{t("admin-census:signupReview.upfront")}</h2><label>{t("admin-census:signupReview.actuallyPaid")} {stripePaid ? <><Input readOnly value={formatMoney(signup.upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></> : <Input min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); }} step="0.01" type="number" value={manualPaid} />}</label>{stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}</div> : null}
+        <div><h2>{t("admin-census:signupReview.plan")}</h2><Select aria-label={t("admin-census:signupReview.plan")} onChange={(event) => void dryRun(event.currentTarget.value)} value={planId}><option value={signup.proposals.planId}>{planPrice === undefined ? (signup.member.plan?.name ?? planName ?? signup.proposals.planId) : t("admin-census:signupReview.planWithPrice", { plan: signup.member.plan?.name ?? planName ?? signup.proposals.planId, price: formatMoney(planPrice.amountMinor / 100) })}</option></Select></div>
+        {billing && signup.upfront !== undefined ? <div><h2>{t("admin-census:signupReview.upfront")}</h2><label>{t("admin-census:signupReview.actuallyPaid")} {stripePaid ? <><Input readOnly value={formatMoney(signup.upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></> : <Input min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); }} step="0.01" type="number" value={manualPaid} />}</label>{upfrontBreakdown === undefined || upfrontBreakdown === "" ? null : <small className="signup-review-upfront-breakdown">{t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}</small>}{stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}</div> : null}
         <footer><Button onClick={() => { setEditOpen(true); }} variant="secondary"><Icon aria-hidden="true" name="edit" />{t("admin-census:signupReview.actions.edit")}</Button><Button onClick={() => { setRejectOpen(true); }} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button><Button loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button></footer>
       </Card>
       {signup.warnings.map((warning) => warningKey(warning)).filter((key): key is string => key !== undefined).map((key) => <Badge key={key} tone="danger">{t(key)}</Badge>)}

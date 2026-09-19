@@ -902,7 +902,9 @@ export const handlers = [
             items: response.pendingSignups.items.map((item) => {
               const sanitized = {
                 ...item,
-                warnings: item.warnings.filter((warning) => warning !== "ACCOUNT_NOT_PROVIDED"),
+                warnings: (item.warnings ?? []).filter(
+                  (warning) => warning !== "ACCOUNT_NOT_PROVIDED",
+                ),
               };
               delete sanitized.paymentMethodType;
               return sanitized;
@@ -944,13 +946,13 @@ export const handlers = [
     response.member.id = id;
     response.member.firstName = pending.shortName.split(" ")[0] ?? pending.shortName;
     response.member.fullName = pending.shortName;
-    response.member.accountMissing = pending.warnings.includes("ACCOUNT_NOT_PROVIDED");
+    response.member.accountMissing = (pending.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED");
     if (response.member.accountMissing) {
       response.member.paymentMethod = { type: "SEPA_DD" };
     }
     response.signup.pendingDays = pending.pendingDays;
     response.signup.source = pending.dogs.some((dog) => dog.isAddDog) ? "APP_ADD_DOG" : "PUBLIC";
-    response.warnings = [...pending.warnings];
+    response.warnings = [...(pending.warnings ?? [])];
     const dogTemplate = response.dogs[0];
     if (dogTemplate === undefined) return apiError("NOT_FOUND", "Signup dog not found", 404);
     response.dogs = pending.dogs.map((dog, index) => ({
@@ -1237,7 +1239,7 @@ export const handlers = [
     }
     return HttpResponse.json(
       {
-        checkout: { required: false },
+        checkout: { memberId: "member-signup-357", required: false },
         dogId: "dog-pending-new",
         upfront: signupUpfront(true),
       },
@@ -1747,11 +1749,18 @@ export const handlers = [
       ? HttpResponse.json(censusRecordState.memberOverview)
       : apiError("NOT_FOUND", "Member not found", 404),
   ),
-  http.get("*/api/v1/members/:id", ({ params }) =>
-    String(params.id) === censusRecordState.memberOverview.member.id
+  http.get("*/api/v1/members/:id", ({ params }) => {
+    const id = String(params.id);
+    if (id === memberSignupReviewState.member.id) {
+      return HttpResponse.json({
+        ...memberSignupReviewState.member,
+        familyGroupId: "47000000-0000-4000-8000-000000000001",
+      });
+    }
+    return id === censusRecordState.memberOverview.member.id
       ? HttpResponse.json(censusRecordState.memberOverview.member)
-      : apiError("NOT_FOUND", "Member not found", 404),
-  ),
+      : apiError("NOT_FOUND", "Member not found", 404);
+  }),
   http.patch("*/api/v1/members/:id", async ({ params, request }) => {
     if (String(params.id) === memberSignupReviewState.member.id) {
       const body = (await request.json()) as MemberPatchRequest;

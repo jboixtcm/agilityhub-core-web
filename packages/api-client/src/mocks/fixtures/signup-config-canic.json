@@ -93,12 +93,24 @@
       {
         "option": "TODAY",
         "startDate": "2026-08-17",
-        "amountDue": { "amountMinor": 3000, "currency": "EUR" }
+        "amount": { "amountMinor": 3000, "currency": "EUR" }
       },
       {
         "option": "ALTERNATIVE",
         "startDate": "2026-09-01",
-        "amountDue": { "amountMinor": 6000, "currency": "EUR" }
+        "amount": { "amountMinor": 6000, "currency": "EUR" }
+      }
+    ],
+    "additionalDogOptions": [
+      {
+        "option": "TODAY",
+        "startDate": "2026-08-17",
+        "amount": { "amountMinor": 3000, "currency": "EUR" }
+      },
+      {
+        "option": "ALTERNATIVE",
+        "startDate": "2026-09-01",
+        "amount": { "amountMinor": 6000, "currency": "EUR" }
       }
     ]
   },

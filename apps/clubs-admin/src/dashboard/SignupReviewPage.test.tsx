@@ -31,11 +31,16 @@ describe("T-04-33 D2 signup validation", () => {
 
     expect(screen.getByText("47·····2K")).toBeVisible();
     expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", "https://wa.me/34655123123");
+    expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi · tarifa familiar en validar")).toBeVisible();
+    expect(screen.getByText("Domiciliació · ES02 ···· 7719 · titular: la mateixa")).toBeVisible();
     expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute("href", "https://files.example.test/cartilla_Kiwi_1.jpg");
+    expect(screen.getByText("3 adjunts")).toBeVisible();
     expect(screen.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
     expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
     expect(screen.getByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
+    expect(await screen.findByDisplayValue(/Abonat · 60,00 €\/mes/u)).toBeVisible();
     expect(screen.getByDisplayValue(/130,00/u)).toBeVisible();
+    expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € \(mitja quota\)/u)).toBeVisible();
     expect(screen.getByText("cobrat")).toBeVisible();
   });
 

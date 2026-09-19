@@ -39,6 +39,7 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.getByText(/anul·lada · avisada Laura \+ Duna/u)).toBeVisible();
     expect(screen.getByText(/en risc · avisat Pau \+ Blat/u)).toBeVisible();
     expect(screen.getByText(/s'anul·larà dc a les 07:30/u)).toBeVisible();
+    expect(screen.getAllByText("1 inscrit").length).toBeGreaterThan(0);
     expect(screen.getAllByRole("button", { name: "VALIDA" })).toHaveLength(3);
     expect(screen.getByText("Compte no informat")).toBeVisible();
 

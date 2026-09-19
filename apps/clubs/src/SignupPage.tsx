@@ -15,6 +15,12 @@ import { type ChangeEvent, type ReactNode, type SyntheticEvent, useEffect, useSt
 import { useTranslation } from "react-i18next";
 
 type SignupConfig = components["schemas"]["SignupConfig"];
+type EnabledSignupConfig = SignupConfig & {
+  legal: NonNullable<SignupConfig["legal"]>;
+  plans: NonNullable<SignupConfig["plans"]>;
+  steps: NonNullable<SignupConfig["steps"]>;
+  texts: NonNullable<SignupConfig["texts"]>;
+};
 type SignupPerson = components["schemas"]["SignupPerson"];
 type SignupDog = components["schemas"]["SignupDog"];
 type SignupPhone = components["schemas"]["SignupPhone"];
@@ -29,6 +35,7 @@ type DraftPerson = Omit<SignupPerson, "gender"> & {
 };
 
 interface SignupDraft {
+  additionalDogOption: "ALTERNATIVE" | "TODAY";
   dog: SignupDog;
   familyClaim: components["schemas"]["SignupFamilyGroupClaim"];
   imageConsent: boolean;
@@ -46,6 +53,16 @@ type FieldErrors = Readonly<Record<string, string>>;
 const DRAFT_KEY = "signup.draft.v1";
 const CHECKOUT_KEY = "signup.checkout.v1";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+function isEnabledSignupConfig(config: SignupConfig): config is EnabledSignupConfig {
+  return (
+    config.enabled &&
+    config.legal !== undefined &&
+    config.plans !== undefined &&
+    config.steps !== undefined &&
+    config.texts !== undefined
+  );
+}
 
 function maskNumericDate(value: string, segmentLengths: readonly number[]): string {
   const digits = value.replaceAll(/\D/gu, "").slice(
@@ -140,6 +157,7 @@ function emptyPhone(prefix: string): SignupPhone {
 
 function emptyDraft(addDog: boolean, prefix: string): SignupDraft {
   return {
+    additionalDogOption: "TODAY",
     dog: {
       birthMonth: "",
       breed: "",
@@ -183,6 +201,7 @@ function readDraft(addDog: boolean, prefix: string): SignupDraft {
       ) {
         return {
           ...candidate,
+          additionalDogOption: candidate.additionalDogOption ?? "TODAY",
           dog: {
             ...candidate.dog,
             birthMonth: legacyMonthToDisplay(candidate.dog.birthMonth),
@@ -609,7 +628,7 @@ function PersonStep({
         />
       </FormField>
       <fieldset
-        className="signup-chips"
+        className="signup-chips signup-chips--gender"
         aria-invalid={errors.gender === undefined ? undefined : true}
       >
         <legend>{t("signup:person.gender")}</legend>
@@ -814,7 +833,7 @@ function DogStep({
 }: {
   addDog: boolean;
   client: ApiClient;
-  config: SignupConfig;
+  config: EnabledSignupConfig;
   draft: SignupDraft;
   onChange: (next: SignupDraft) => void;
   onContinue: (path: string) => void;
@@ -1108,7 +1127,7 @@ function FamilyStep({
   totalSteps,
 }: {
   client: ApiClient;
-  config: SignupConfig;
+  config: EnabledSignupConfig;
   draft: SignupDraft;
   onChange: (next: SignupDraft) => void;
   onContinue: (path: string) => void;
@@ -1258,7 +1277,7 @@ function PaymentStep({
 }: {
   addDog: boolean;
   client: ApiClient;
-  config: SignupConfig;
+  config: EnabledSignupConfig;
   draft: SignupDraft;
   onChange: (next: SignupDraft) => void;
   onContinue: (path: string) => void;
@@ -1302,6 +1321,7 @@ function PaymentStep({
       if (addDog) {
         const memberResult = await client.POST("/me/dogs/signup", {
           body: {
+            additionalDogOption: draft.additionalDogOption,
             dog,
             documents: dog.documents ?? [],
             planIdRequested: draft.planId,
@@ -1311,7 +1331,21 @@ function PaymentStep({
         });
         if (memberResult.data === undefined) throw new TypeError("Missing dog-signup response");
         safeSessionRemove(DRAFT_KEY);
-        onContinue("/apuntat-hi/enviada");
+        if (memberResult.data.checkout.required) {
+          sessionStorage.setItem(CHECKOUT_KEY, "1");
+          const checkout = await client.POST("/checkout-sessions", {
+            body: {
+              cancelUrl: `${window.location.origin}/gossos/nou/pagament?cs=cancel`,
+              memberId: memberResult.data.checkout.memberId,
+              successUrl: `${window.location.origin}/apuntat-hi/enviada?cs=success`,
+            },
+            params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+          });
+          if (checkout.data === undefined) throw new TypeError("Missing checkout response");
+          onContinue(checkout.data.checkoutUrl);
+        } else {
+          onContinue("/apuntat-hi/enviada");
+        }
         return;
       }
       const result = await client.POST("/signup", {
@@ -1324,7 +1358,9 @@ function PaymentStep({
           person: {
             ...draft.person,
             birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
+            emails: draft.person.emails.filter((email) => email.trim() !== ""),
             gender: draft.person.gender || "OTHER",
+            phones: draft.person.phones.filter((phone) => phone.number.trim() !== ""),
           },
           planId: draft.planId,
           website,
@@ -1491,19 +1527,33 @@ function PaymentStep({
               </strong>
             </p>
           )}
-          {config.upfront.firstMonthOptions.length === 0 ? null : (
+          {(addDog
+            ? (config.upfront.additionalDogOptions ?? [])
+            : config.upfront.firstMonthOptions
+          ).length === 0 ? null : (
             <fieldset className="signup-upfront__options">
               <legend>{t("signup:payment.chooseStart")}</legend>
-              {config.upfront.firstMonthOptions.map((option) => (
+              {(addDog
+                ? (config.upfront.additionalDogOptions ?? [])
+                : config.upfront.firstMonthOptions
+              ).map((option) => (
                 <label key={option.option}>
                   <input
-                    checked={draft.payment.firstMonthOption === option.option}
+                    checked={
+                      addDog
+                        ? draft.additionalDogOption === option.option
+                        : draft.payment.firstMonthOption === option.option
+                    }
                     name="signup-start"
                     onChange={() => {
-                      onChange({
-                        ...draft,
-                        payment: { ...draft.payment, firstMonthOption: option.option },
-                      });
+                      onChange(
+                        addDog
+                          ? { ...draft, additionalDogOption: option.option }
+                          : {
+                              ...draft,
+                              payment: { ...draft.payment, firstMonthOption: option.option },
+                            },
+                      );
                     }}
                     type="radio"
                   />
@@ -1512,7 +1562,7 @@ function PaymentStep({
                       ? t("signup:payment.startToday", { date: formatDate(option.startDate, "dayMonth") })
                       : t("signup:payment.startAlternative", { date: formatDate(option.startDate, "dayMonth") })}
                   </span>
-                  <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
+                  <strong>{formatMoney(option.amount.amountMinor / 100)}</strong>
                 </label>
               ))}
             </fieldset>
@@ -1662,8 +1712,8 @@ export function SignupPage({
           const planId =
             current.planId === ""
               ? addDog
-                ? (data.member?.planId ?? data.plans[0]?.id ?? "")
-                : (data.plans[0]?.id ?? "")
+                ? (data.member?.planId ?? data.plans?.[0]?.id ?? "")
+                : (data.plans?.[0]?.id ?? "")
               : current.planId;
           const paymentMethods = data.paymentMethods ?? [];
           const method = paymentMethods.some(
@@ -1742,6 +1792,24 @@ export function SignupPage({
     return (
       <Layout>
         <p className="signup-state">{config.closedText}</p>
+      </Layout>
+    );
+  }
+
+  if (!isEnabledSignupConfig(config)) {
+    return (
+      <Layout>
+        <section className="signup-state" role="alert">
+          <p>{t("signup:common.loadError")}</p>
+          <Button
+            onClick={() => {
+              setLoadError(false);
+              setReload((current) => current + 1);
+            }}
+          >
+            {t("signup:common.retry")}
+          </Button>
+        </section>
       </Layout>
     );
   }

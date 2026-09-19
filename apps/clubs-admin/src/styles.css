@@ -1567,6 +1567,10 @@ select {
   color: var(--ah-color-text-muted);
 }
 
+.signup-review-data dt .ah-badge {
+  margin-inline-start: var(--ah-space-2);
+}
+
 .signup-review-data dd {
   display: flex;
   flex-wrap: wrap;
@@ -1579,6 +1583,13 @@ select {
   align-items: center;
   gap: var(--ah-space-1);
   color: var(--ah-color-primary);
+}
+
+.signup-review-upfront-breakdown {
+  display: block;
+  margin-top: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  line-height: 1.5;
 }
 
 .signup-review-warning {

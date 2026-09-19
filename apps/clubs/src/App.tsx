@@ -1109,7 +1109,19 @@ export function App({
   navigate?: (path: string, replace: boolean) => void;
   publicApiClient?: ApiClient;
 }) {
-  const pathname = window.location.pathname;
+  const [location, setLocation] = useState(
+    () => `${window.location.pathname}${window.location.search}`,
+  );
+  useEffect(() => {
+    const handlePopState = () => {
+      setLocation(`${window.location.pathname}${window.location.search}`);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+  const pathname = new URL(location, window.location.origin).pathname;
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;
   }
