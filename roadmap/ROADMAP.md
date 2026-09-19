@@ -55,5 +55,8 @@ Decisions in force: A21, A22 (instructor reads D3/D4; single automatic descripti
 - [ ] Screenshots of D3/D3b/D4/D4b/D4c/D7 at 1280 and 10/23/04/detail/03/25 at 375 compared with the mockups (A22 d/e deviations only).
 - [ ] Complete `pnpm e2e` green; CI green.
 
-## E5 → E12 (summary)
+## E5 · E6 · E7 · E8 — INSTALLED 2026-09-19 (organizer-less mode: all tasks `ready`, chained by `depends_on`)
+E5 W01 screens 03/04/06/29/07 (bookings + waitlist), W02 screen 08 + 24 + D12 card (free training, `SlotGrid`), W03 back-office (D4/23 registrants panel, `/entrenaments` register, D10 bookings card, D11 «Processos automàtics» + D1 risk card), W04 integration · E6 W01 20/21/22, W02 25/26/D13, W03 D12 agenda + PDF and D14, W04 integration · E7 W01 D9 templates + announcements + log + D10 block, W02 screens 11/12/30 + push, W03 integration · E8 W01 D6 + remittances + accounting export, W02 12/rebuts + 13 pack + 14/15, W03 D10 drawers + «Inactivitats i baixes», W04 integration. The session wrapper stages the api snapshot automatically (`openapi.next.json`); each screen task's step 0 adopts it or goes mocks-first.
+
+## E9 → E12 (summary)
 E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D12/D13/D14 · E7 D9, 11, 12, 30, push · E8 D6, 12/receipts, 14/15, D10 drawers, «Inactivitats i baixes», remittances · E9 course-ui, D18, D16 geometry, mobile viewer/registration/build session · E10 D19 console · E11 hardening, Lighthouse, e2e, QA with Josep · E12 go-live support.
