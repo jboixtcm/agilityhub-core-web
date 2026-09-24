@@ -26,6 +26,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { clubToday } from "./today/useDayGrid";
+
 type SignupConfig = components["schemas"]["SignupConfig"];
 type EnabledSignupConfig = SignupConfig & {
   legal: NonNullable<SignupConfig["legal"]>;
@@ -53,10 +55,25 @@ type DraftPerson = Omit<SignupPerson, "gender"> & {
 /** The step-19 operation in flight: one idempotency key per payload, kept until the flow ends. */
 interface SignupSubmission {
   checkoutKey?: string;
+  /** SHA-256 of the canonical payload (never the payload: it holds the IBAN). */
   fingerprint: string;
   idempotencyKey: string;
   memberId?: string;
   signupToken?: string;
+}
+
+/**
+ * An api error routed to the step and field that own it (S04 §2, CATALEG_ERRORS). It lives in the
+ * draft, so it survives the full page load of the production navigator; the step consumes it.
+ */
+interface PendingError {
+  /** The api code; "" for a failure without one (network). */
+  code: string;
+  field?: string;
+  /** `details.fieldErrors` of the owning step: form field → code. */
+  fields?: Record<string, string>;
+  retryAfter?: number;
+  step: SignupStep;
 }
 
 interface SignupDraft {
@@ -66,10 +83,13 @@ interface SignupDraft {
   dog: SignupDog;
   familyClaim: components["schemas"]["SignupFamilyGroupClaim"];
   familyFound: boolean;
+  /** R-04-10: the account holder was prefilled with the group holder of a FOUND claim. */
+  holderFromGroup: boolean;
   imageConsent: boolean;
   mode: "add-dog" | "public";
   passport: string;
   payment: SignupPayment;
+  pendingError?: PendingError;
   person: DraftPerson;
   planId: string;
   privacyAccepted: boolean;
@@ -80,14 +100,6 @@ interface SignupDraft {
 type DraftUpdate = Dispatch<SetStateAction<SignupDraft>>;
 type FieldErrors = Readonly<Record<string, string>>;
 type SignupStep = "dog" | "family" | "payment" | "person";
-
-/** Api errors routed to the step and field that own them (S04 §2, CATALEG_ERRORS). */
-interface RoutedErrors {
-  fields: FieldErrors;
-  message?: string | undefined;
-  nonce: number;
-  step: SignupStep;
-}
 
 interface CountryProfile {
   code: string;
@@ -182,15 +194,6 @@ function birthMonthToIso(value: string): string | undefined {
   return Number(year) > 0 && monthNumber >= 1 && monthNumber <= 12 ? `${year}-${month}` : undefined;
 }
 
-function localToday(): string {
-  const now = new Date();
-  return [
-    String(now.getFullYear()).padStart(4, "0"),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
-}
-
 function legacyDateToDisplay(value: string): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/u.exec(value);
   if (match === null) return value;
@@ -220,6 +223,34 @@ function validChip(value: string, profileCode: string): boolean {
 
 function normaliseIban(value: string): string {
   return value.replaceAll(/\s/gu, "").toUpperCase();
+}
+
+/** The payment of another method: the SEPA-only fields never stay in the session draft. */
+function withPaymentType(payment: SignupPayment, type: SignupPayment["type"]): SignupPayment {
+  const next: SignupPayment = { ...payment, type };
+  if (type !== "SEPA_DD") {
+    delete next.iban;
+    delete next.holderTaxId;
+  }
+  return next;
+}
+
+/** JSON with sorted keys, so the same payload always gives the same digest. */
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((entry) => canonicalJson(entry)).join(",")}]`;
+  if (typeof value === "object" && value !== null) {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, entry]) => entry !== undefined)
+      .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
+    return `{${entries.map(([key, entry]) => `${JSON.stringify(key)}:${canonicalJson(entry)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+/** The payload fingerprint: a SHA-256 digest (Web Crypto), so no personal data is kept. */
+async function payloadDigest(body: unknown): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canonicalJson(body)));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 /** R-04-10: mod-97 and the country length (ES = 24). */
@@ -281,18 +312,27 @@ function useFocusFirstError(root: RefObject<HTMLElement | null>): () => void {
   }, []);
 }
 
-/** Applies the errors the page routed to this step, once per routing. */
-function useRoutedErrors(
+/**
+ * Consumes the error routed to this step (from the draft, also after a full page load): shows it
+ * on its field or as the step message, focuses it, and removes it from the draft.
+ */
+function usePendingError(
   step: SignupStep,
-  routed: RoutedErrors | undefined,
-  apply: (errors: RoutedErrors) => void,
+  pending: PendingError | undefined,
+  onChange: DraftUpdate,
+  apply: (errors: { fields: FieldErrors; message?: string | undefined }) => void,
 ): void {
-  const applied = useRef<number>(undefined);
+  const { t } = useTranslation(["signup", "errors"]);
   useEffect(() => {
-    if (routed?.step !== step || applied.current === routed.nonce) return;
-    applied.current = routed.nonce;
-    apply(routed);
-  }, [apply, routed, step]);
+    if (pending?.step !== step) return;
+    apply(pendingErrorMessages(pending, t));
+    onChange((current) => {
+      if (current.pendingError !== pending) return current;
+      const next = { ...current };
+      delete next.pendingError;
+      return next;
+    });
+  }, [apply, onChange, pending, step, t]);
 }
 
 function countryProfile(value: unknown): CountryProfile {
@@ -358,6 +398,7 @@ function emptyDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     },
     familyClaim: { dogName: "", holderName: "", leavePending: false },
     familyFound: false,
+    holderFromGroup: false,
     imageConsent: false,
     mode: addDog ? "add-dog" : "public",
     passport: "",
@@ -388,9 +429,14 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     if (serialized !== null) {
       const candidate = JSON.parse(serialized) as Omit<
         SignupDraft,
-        "additionalDogOption" | "consentVersion" | "familyFound"
+        "additionalDogOption" | "consentVersion" | "familyFound" | "holderFromGroup"
       > &
-        Partial<Pick<SignupDraft, "additionalDogOption" | "consentVersion" | "familyFound">>;
+        Partial<
+          Pick<
+            SignupDraft,
+            "additionalDogOption" | "consentVersion" | "familyFound" | "holderFromGroup"
+          >
+        >;
       const mode = addDog ? "add-dog" : "public";
       if (
         candidate.mode === mode &&
@@ -399,6 +445,12 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
       ) {
         // A draft without the accepted version cannot prove which texts were accepted.
         const consentVersion = candidate.consentVersion ?? "";
+        // A fingerprint of an older build held the plain payload (IBAN included): never kept.
+        const submission =
+          candidate.submission === undefined ||
+          /^[0-9a-f]{64}$/u.test(candidate.submission.fingerprint)
+            ? candidate.submission
+            : { ...candidate.submission, fingerprint: "" };
         const consentKnown = consentVersion !== "";
         return {
           ...candidate,
@@ -409,12 +461,14 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
             birthMonth: legacyMonthToDisplay(candidate.dog.birthMonth),
           },
           familyFound: candidate.familyFound ?? false,
+          holderFromGroup: candidate.holderFromGroup ?? false,
           imageConsent: consentKnown && candidate.imageConsent,
           person: {
             ...candidate.person,
             birthDate: legacyDateToDisplay(candidate.person.birthDate),
           },
           privacyAccepted: consentKnown && candidate.privacyAccepted,
+          ...(submission === undefined ? {} : { submission }),
         };
       }
       sessionStorage.removeItem(DRAFT_KEY);
@@ -487,7 +541,7 @@ function formField(path: string): { field: string; step: SignupStep } | undefine
   return field === undefined ? undefined : { field, step: "person" };
 }
 
-function codeMessage(code: string, t: Translate): string {
+function codeMessage(code: string, t: Translate, fallback: string): string {
   switch (code) {
     case "CONSENT_VERSION_OUTDATED":
       return t("signup:payment.consentOutdated");
@@ -502,54 +556,67 @@ function codeMessage(code: string, t: Translate): string {
     case "REQUIRED":
       return t("signup:common.required");
     default:
-      return t(`errors:${code}`, { defaultValue: t("errors:VALIDATION_ERROR") });
+      return t(`errors:${code}`, { defaultValue: fallback });
   }
 }
 
-/** Where an api error belongs; `undefined` for codes the page handles itself (closed). */
-function routeApiError(
-  error: unknown,
-  currentStep: SignupStep,
+/** The texts of a routed error: field messages, or the step message. */
+function pendingErrorMessages(
+  pending: PendingError,
   t: Translate,
-): Omit<RoutedErrors, "nonce"> {
-  const generic = { fields: {}, message: t("signup:common.genericError"), step: currentStep };
-  if (!isApiError(error)) return generic;
+): { fields: FieldErrors; message?: string } {
+  const generic = t("signup:common.genericError");
+  if (pending.code === "RATE_LIMITED") {
+    return { fields: {}, message: t("signup:common.rateLimited", { seconds: pending.retryAfter ?? 60 }) };
+  }
+  if (pending.fields !== undefined) {
+    const fieldFallback = t("errors:VALIDATION_ERROR");
+    return {
+      fields: Object.fromEntries(
+        Object.entries(pending.fields).map(([field, code]) => [
+          field,
+          codeMessage(code, t, fieldFallback),
+        ]),
+      ),
+    };
+  }
+  const message = pending.code === "" ? generic : codeMessage(pending.code, t, generic);
+  return pending.field === undefined
+    ? { fields: {}, message }
+    : { fields: { [pending.field]: message } };
+}
+
+/** Where an api error belongs (the page handles `SIGNUP_CLOSED` itself). */
+function routeApiError(error: unknown, currentStep: SignupStep): PendingError {
+  if (!isApiError(error)) return { code: "", step: currentStep };
   if (error.status === 429 || error.code === "RATE_LIMITED") {
     return {
-      fields: {},
-      message: t("signup:common.rateLimited", { seconds: error.retryAfter ?? 60 }),
+      code: "RATE_LIMITED",
+      ...(error.retryAfter === undefined ? {} : { retryAfter: error.retryAfter }),
       step: currentStep,
     };
   }
   const fieldErrors = apiFieldErrors(error).flatMap((entry) => {
     const target = formField(entry.field);
-    return target === undefined ? [] : [{ ...target, message: codeMessage(entry.code, t) }];
+    return target === undefined ? [] : [{ ...target, code: entry.code }];
   });
   if (fieldErrors.length > 0) {
     const step = STEP_ORDER.find((candidate) =>
       fieldErrors.some((entry) => entry.step === candidate),
     ) ?? currentStep;
     return {
+      code: error.code,
       fields: Object.fromEntries(
-        fieldErrors
-          .filter((entry) => entry.step === step)
-          .map((entry) => [entry.field, entry.message]),
+        fieldErrors.filter((entry) => entry.step === step).map((entry) => [entry.field, entry.code]),
       ),
       step,
     };
   }
   const route = CODE_ROUTES[error.code];
-  if (route === undefined) {
-    return {
-      fields: {},
-      message: t(`errors:${error.code}`, { defaultValue: t("signup:common.genericError") }),
-      step: currentStep,
-    };
-  }
-  const message = codeMessage(error.code, t);
+  if (route === undefined) return { code: error.code, step: currentStep };
   return route.field === undefined
-    ? { fields: {}, message, step: route.step }
-    : { fields: { [route.field]: message }, step: route.step };
+    ? { code: error.code, step: route.step }
+    : { code: error.code, field: route.field, step: route.step };
 }
 
 function safeSessionRemove(key: string): void {
@@ -653,7 +720,7 @@ function PersonStep({
   onApiError,
   onChange,
   onContinue,
-  routed,
+  today,
   totalSteps,
 }: {
   client: ApiClient;
@@ -661,7 +728,7 @@ function PersonStep({
   onApiError: (error: unknown, step: SignupStep) => void;
   onChange: DraftUpdate;
   onContinue: (path: string) => void;
-  routed: RoutedErrors | undefined;
+  today: string;
   totalSteps: number;
 }) {
   const branding = useBranding();
@@ -678,11 +745,12 @@ function PersonStep({
   const isSpanishProfile = profile.code === "ES";
   const documentTypes = genericDocumentTypes(profile);
 
-  useRoutedErrors(
+  usePendingError(
     "person",
-    routed,
+    draft.pendingError,
+    onChange,
     useCallback(
-      (next: RoutedErrors) => {
+      (next: { fields: FieldErrors; message?: string | undefined }) => {
         setErrors(next.fields);
         setMessage(next.message);
         focusFirstError();
@@ -736,7 +804,7 @@ function PersonStep({
     const birthDate = birthDateToIso(draft.person.birthDate);
     if (draft.person.birthDate.trim() === "") {
       next.birthDate = required;
-    } else if (birthDate === undefined || birthDate < "1900-01-01" || birthDate >= localToday()) {
+    } else if (birthDate === undefined || birthDate < "1900-01-01" || birthDate >= today) {
       next.birthDate = t("signup:common.invalidDate");
     }
     if (draft.person.gender === "") next.gender = required;
@@ -1191,8 +1259,8 @@ function DogStep({
   draft,
   onChange,
   onContinue,
-  routed,
   step,
+  today,
   totalSteps,
 }: {
   addDog: boolean;
@@ -1201,8 +1269,9 @@ function DogStep({
   draft: SignupDraft;
   onChange: DraftUpdate;
   onContinue: (path: string) => void;
-  routed: RoutedErrors | undefined;
   step: number;
+  /** The club's date (R-04 §4: «today» in `CLUB.timeZone`), never the browser's. */
+  today: string;
   totalSteps: number;
 }) {
   const branding = useBranding();
@@ -1217,11 +1286,12 @@ function DogStep({
   const files = draft.dog.documents?.[0]?.files ?? [];
   const familyOffers = branding.modules.includes("FAMILY_GROUP");
 
-  useRoutedErrors(
+  usePendingError(
     "dog",
-    routed,
+    draft.pendingError,
+    onChange,
     useCallback(
-      (next: RoutedErrors) => {
+      (next: { fields: FieldErrors; message?: string | undefined }) => {
         setErrors(next.fields);
         setMessage(next.message);
         focusFirstError();
@@ -1301,7 +1371,7 @@ function DogStep({
     const birthMonth = birthMonthToIso(draft.dog.birthMonth);
     if (draft.dog.birthMonth.trim() === "") {
       next.birthMonth = t("signup:common.required");
-    } else if (birthMonth === undefined || birthMonth > localToday().slice(0, 7)) {
+    } else if (birthMonth === undefined || birthMonth > today.slice(0, 7)) {
       next.birthMonth = t("signup:common.invalidMonth");
     }
     const chip = normaliseChip(draft.dog.chip);
@@ -1560,7 +1630,6 @@ function FamilyStep({
   onApiError,
   onChange,
   onContinue,
-  routed,
   totalSteps,
 }: {
   client: ApiClient;
@@ -1569,7 +1638,6 @@ function FamilyStep({
   onApiError: (error: unknown, step: SignupStep) => void;
   onChange: DraftUpdate;
   onContinue: (path: string) => void;
-  routed: RoutedErrors | undefined;
   totalSteps: number;
 }) {
   const { formatMoney } = useClubFormats();
@@ -1584,11 +1652,12 @@ function FamilyStep({
   // The api's display name already ends with the initial's period («Marta R.»).
   const holderDisplayName = (lookup?.holderDisplayName ?? "").replace(/\.+$/u, "");
 
-  useRoutedErrors(
+  usePendingError(
     "family",
-    routed,
+    draft.pendingError,
+    onChange,
     useCallback(
-      (next: RoutedErrors) => {
+      (next: { fields: FieldErrors; message?: string | undefined }) => {
         setErrors(next.fields);
         setMessage(next.message);
         focusFirstError();
@@ -1601,9 +1670,8 @@ function FamilyStep({
     setLookup(undefined);
     setErrors({});
     onChange((current) => ({
-      ...current,
+      ...withoutGroupHolder(current),
       familyClaim: { ...current.familyClaim, [key]: value },
-      familyFound: false,
     }));
   };
 
@@ -1613,14 +1681,8 @@ function FamilyStep({
     setMessage(undefined);
     if (holderName === "" && dogName === "") {
       onChange((current) => ({
-        ...current,
+        ...withoutGroupHolder(current),
         familyClaim: { dogName: "", holderName: "", leavePending: false },
-        familyFound: false,
-        // The group holder prefilled at 19 goes back to the applicant (R-04-10).
-        payment:
-          current.familyFound && current.payment.holderName === current.familyClaim.holderName.trim()
-            ? { ...current.payment, holderName: "" }
-            : current.payment,
       }));
       onContinue("/apuntat-hi/pagament");
       return;
@@ -1645,6 +1707,7 @@ function FamilyStep({
         onChange((current) => ({
           ...current,
           familyFound: true,
+          holderFromGroup: true,
           payment: { ...current.payment, holderName },
         }));
       }
@@ -1748,6 +1811,21 @@ function FamilyStep({
   );
 }
 
+/**
+ * A claim no longer FOUND (edited or cleared): a holder prefilled from the group goes back to the
+ * applicant (R-04-10); a holder the applicant typed stays.
+ */
+function withoutGroupHolder(draft: SignupDraft): SignupDraft {
+  if (!draft.holderFromGroup) return { ...draft, familyFound: false };
+  const holderName = applicantName(draft.person);
+  return {
+    ...draft,
+    familyFound: false,
+    holderFromGroup: false,
+    payment: { ...draft.payment, holderName },
+  };
+}
+
 function paymentBody(payment: SignupPayment): SignupPayment {
   const base: SignupPayment = {
     type: payment.type,
@@ -1775,7 +1853,6 @@ function PaymentStep({
   onApiError,
   onChange,
   onContinue,
-  routed,
   showCancellation,
   step,
   totalSteps,
@@ -1787,7 +1864,6 @@ function PaymentStep({
   onApiError: (error: unknown, step: SignupStep) => void;
   onChange: DraftUpdate;
   onContinue: (path: string) => void;
-  routed: RoutedErrors | undefined;
   showCancellation: boolean;
   step: number;
   totalSteps: number;
@@ -1811,17 +1887,21 @@ function PaymentStep({
   const manualInstructions = paymentMethods.find(
     (method) => method.type === "MANUAL",
   )?.instructions;
+  // R-04-26: once the signup exists, 19 shows what was committed and only the checkout is retried.
+  const committed = draft.submission?.memberId !== undefined;
+  const locked = committed || working;
   const imageConsentText =
     config.texts.imageConsent.trim() === ""
       ? config.legal.imageConsentText
       : config.texts.imageConsent;
   const paths = signupPaths(addDog);
 
-  useRoutedErrors(
+  usePendingError(
     "payment",
-    routed,
+    draft.pendingError,
+    onChange,
     useCallback(
-      (next: RoutedErrors) => {
+      (next: { fields: FieldErrors; message?: string | undefined }) => {
         setErrors(next.fields);
         setMessage(next.message);
         focusFirstError();
@@ -1837,11 +1917,18 @@ function PaymentStep({
       const holderName = current.familyFound
         ? current.familyClaim.holderName.trim()
         : applicantName(current.person);
-      return holderName === "" ? current : { ...current, payment: { ...current.payment, holderName } };
+      return holderName === ""
+        ? current
+        : {
+            ...current,
+            holderFromGroup: current.familyFound,
+            payment: { ...current.payment, holderName },
+          };
     });
   }, [onChange]);
 
   const acceptConsent = (patch: Partial<Pick<SignupDraft, "imageConsent" | "privacyAccepted">>) => {
+    if (locked) return;
     const version = config.legal.legalTextsVersion;
     onChange((current) => ({ ...current, ...patch, consentVersion: version }));
   };
@@ -1863,7 +1950,7 @@ function PaymentStep({
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nextErrors = localErrors();
+    const nextErrors = committed ? {} : localErrors();
     setErrors(nextErrors);
     setMessage(undefined);
     if (Object.keys(nextErrors).length > 0) {
@@ -1915,7 +2002,7 @@ function PaymentStep({
             };
         // One Idempotency-Key per payload (CONVENCIONS_API §7): a retry of the same payload
         // replays the first 201; any change to the payload gets a new key.
-        const fingerprint = JSON.stringify(body);
+        const fingerprint = await payloadDigest(body);
         const idempotencyKey =
           submission?.fingerprint === fingerprint
             ? submission.idempotencyKey
@@ -2029,17 +2116,14 @@ function PaymentStep({
                 {paymentMethods.map((method) => (
                   <button
                     aria-pressed={draft.payment.type === method.type}
+                    disabled={locked}
                     key={method.type}
                     onClick={() => {
-                      onChange((current) => {
-                        const payment: SignupPayment = { ...current.payment, type: method.type };
-                        if (method.type !== "SEPA_DD") {
-                          // The IBAN never stays in the session draft of another method.
-                          delete payment.iban;
-                          delete payment.holderTaxId;
-                        }
-                        return { ...current, payment };
-                      });
+                      if (locked) return;
+                      onChange((current) => ({
+                        ...current,
+                        payment: withPaymentType(current.payment, method.type),
+                      }));
                     }}
                     type="button"
                   >
@@ -2054,6 +2138,7 @@ function PaymentStep({
                       {...invalidProps("signup-iban", errors.iban)}
                       autoComplete="off"
                       id="signup-iban"
+                      readOnly={locked}
                       onChange={(event) => {
                         const iban = event.currentTarget.value;
                         onChange((current) => ({
@@ -2076,9 +2161,11 @@ function PaymentStep({
                         const holderName = event.currentTarget.value;
                         onChange((current) => ({
                           ...current,
+                          holderFromGroup: false,
                           payment: { ...current.payment, holderName },
                         }));
                       }}
+                      readOnly={locked}
                       value={draft.payment.holderName ?? ""}
                     />
                   </FormField>
@@ -2090,6 +2177,7 @@ function PaymentStep({
                     <Input
                       {...invalidProps("signup-holder-tax-id", errors.holderTaxId)}
                       id="signup-holder-tax-id"
+                      readOnly={locked}
                       onChange={(event) => {
                         const holderTaxId = event.currentTarget.value;
                         onChange((current) => ({
@@ -2153,8 +2241,10 @@ function PaymentStep({
                         ? draft.additionalDogOption === option.option
                         : draft.payment.firstMonthOption === option.option
                     }
+                    disabled={locked}
                     name="signup-start"
                     onChange={() => {
+                      if (locked) return;
                       onChange((current) =>
                         addDog
                           ? { ...current, additionalDogOption: option.option }
@@ -2185,6 +2275,7 @@ function PaymentStep({
             <Checkbox
               {...invalidProps("signup-privacy", errors.privacy)}
               checked={draft.privacyAccepted}
+              disabled={locked}
               id="signup-privacy"
               onChange={(event) => {
                 acceptConsent({ privacyAccepted: event.currentTarget.checked });
@@ -2203,6 +2294,7 @@ function PaymentStep({
           <div className="signup-consent">
             <Checkbox
               checked={draft.imageConsent}
+              disabled={locked}
               id="signup-image-consent"
               onChange={(event) => {
                 acceptConsent({ imageConsent: event.currentTarget.checked });
@@ -2240,12 +2332,12 @@ function PaymentStep({
       <StepMessage message={message} />
       <Button
         className="signup-primary"
-        disabled={working || (needsConsents && !draft.privacyAccepted)}
+        disabled={working || (!committed && needsConsents && !draft.privacyAccepted)}
         loading={working}
         loadingLabel={t("signup:payment.submitting")}
         type="submit"
       >
-        {t("signup:payment.submit")}
+        {committed ? t("signup:payment.payNow") : t("signup:payment.submit")}
       </Button>
       <p className="signup-copy signup-copy--center">
         {addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}
@@ -2295,7 +2387,7 @@ export function SignupPage({
       ? (paths.payment ?? window.location.pathname)
       : window.location.pathname;
   const [path, setPath] = useState(initialPath);
-  const [draft, setDraft] = useState(() => {
+  const [draft, setDraftState] = useState(() => {
     const saved = readDraft(addDog, profile);
     // A cancelled checkout resolved that attempt: the retry asks for a new checkout session
     // for the signup already created (no new POST /signup).
@@ -2304,12 +2396,20 @@ export function SignupPage({
     delete submission.checkoutKey;
     return { ...saved, submission };
   });
+  // The latest draft, updated synchronously: the production navigator is a full page load, so
+  // the draft is written to the session before leaving, with every update of the same tick.
+  const draftRef = useRef(draft);
+  const updateDraft: DraftUpdate = useCallback((update) => {
+    const next = typeof update === "function" ? update(draftRef.current) : update;
+    draftRef.current = next;
+    setDraftState(next);
+  }, []);
   const [config, setConfig] = useState<SignupConfig>();
   const [closed, setClosed] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [reload, setReload] = useState(0);
-  const [routed, setRouted] = useState<RoutedErrors>();
   const sent = path === paths.sent && !cancelled;
+  const committed = draft.submission?.memberId !== undefined;
 
   useEffect(() => {
     if (sent) {
@@ -2331,7 +2431,9 @@ export function SignupPage({
         }
         const data = result.data;
         setConfig(data);
-        setDraft((current) => {
+        updateDraft((current) => {
+          // The signup exists: its committed choices never change (R-04-26).
+          if (current.submission?.memberId !== undefined) return current;
           const plans = data.plans ?? [];
           const memberPlan = addDog ? data.member?.planId : undefined;
           const planAvailable =
@@ -2355,10 +2457,8 @@ export function SignupPage({
             ...(consentOutdated
               ? { consentVersion: "", imageConsent: false, privacyAccepted: false }
               : {}),
-            payment: {
-              ...current.payment,
-              ...(method === undefined ? {} : { type: method }),
-            },
+            payment:
+              method === undefined ? current.payment : withPaymentType(current.payment, method),
             planId,
           };
         });
@@ -2370,15 +2470,25 @@ export function SignupPage({
     return () => {
       active = false;
     };
-  }, [addDog, client, i18n.resolvedLanguage, reload]);
+  }, [addDog, client, i18n.resolvedLanguage, reload, updateDraft]);
 
   const navigateTo = (nextPath: string) => {
+    if (nextPath === paths.sent) {
+      safeSessionRemove(DRAFT_KEY);
+    } else {
+      safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draftRef.current, savedAt: Date.now() }));
+    }
     setPath(nextPath);
     onNavigate(nextPath);
   };
 
   const go = (nextPath: string) => {
-    setRouted(undefined);
+    updateDraft((current) => {
+      if (current.pendingError === undefined) return current;
+      const next = { ...current };
+      delete next.pendingError;
+      return next;
+    });
     navigateTo(nextPath);
   };
 
@@ -2391,20 +2501,20 @@ export function SignupPage({
     if (isApiError(error, "CONSENT_VERSION_OUTDATED") || isApiError(error, "PLAN_NOT_AVAILABLE")) {
       setReload((current) => current + 1);
     }
-    const target = routeApiError(error, currentStep, t);
-    const targetPath = paths[target.step];
-    const resolved: RoutedErrors =
-      targetPath === undefined
+    const target = routeApiError(error, currentStep);
+    // A step this flow does not have (add-dog), or any step once the signup exists: the
+    // message shows on the current step.
+    const pending: PendingError =
+      paths[target.step] === undefined || (committed && target.step !== currentStep)
         ? {
-            fields: {},
-            message: target.message ?? Object.values(target.fields)[0],
-            nonce: Date.now(),
+            code: Object.values(target.fields ?? {})[0] ?? target.code,
+            ...(target.retryAfter === undefined ? {} : { retryAfter: target.retryAfter }),
             step: currentStep,
           }
-        : { ...target, nonce: Date.now() };
-    setRouted(resolved);
-    const resolvedPath = paths[resolved.step];
-    if (resolvedPath !== undefined && resolvedPath !== path) navigateTo(resolvedPath);
+        : target;
+    updateDraft((current) => ({ ...current, pendingError: pending }));
+    const targetPath = paths[pending.step];
+    if (targetPath !== undefined && targetPath !== path) navigateTo(targetPath);
   };
 
   if (sent) {
@@ -2473,40 +2583,52 @@ export function SignupPage({
   const totalSteps = steps.length;
   const dogStep = addDog ? 1 : 2;
   const paymentStep = totalSteps;
+  // S04 §4: «today» is the club's date (the configuration's, else `CLUB.timeZone`).
+  const today = config.upfront?.today ?? clubToday(branding.timeZone);
+
+  // Once the signup exists every step path shows 19: only the checkout can be retried.
+  const view: SignupStep = committed
+    ? "payment"
+    : path === "/apuntat-hi"
+      ? "person"
+      : path === "/apuntat-hi/gos" || path === "/gossos/nou"
+        ? "dog"
+        : path === "/apuntat-hi/familia" && !addDog
+          ? "family"
+          : "payment";
 
   return (
     <Layout>
-      {path === "/apuntat-hi" ? (
+      {view === "person" ? (
         <PersonStep
           client={client}
           draft={draft}
           onApiError={handleApiError}
-          onChange={setDraft}
+          onChange={updateDraft}
           onContinue={go}
-          routed={routed}
+          today={today}
           totalSteps={totalSteps}
         />
-      ) : path === "/apuntat-hi/gos" || path === "/gossos/nou" ? (
+      ) : view === "dog" ? (
         <DogStep
           addDog={addDog}
           client={client}
           config={config}
           draft={draft}
-          onChange={setDraft}
+          onChange={updateDraft}
           onContinue={go}
-          routed={routed}
           step={dogStep}
+          today={today}
           totalSteps={totalSteps}
         />
-      ) : path === "/apuntat-hi/familia" && !addDog ? (
+      ) : view === "family" ? (
         <FamilyStep
           client={client}
           config={config}
           draft={draft}
           onApiError={handleApiError}
-          onChange={setDraft}
+          onChange={updateDraft}
           onContinue={go}
-          routed={routed}
           totalSteps={totalSteps}
         />
       ) : (
@@ -2516,9 +2638,8 @@ export function SignupPage({
           config={config}
           draft={draft}
           onApiError={handleApiError}
-          onChange={setDraft}
+          onChange={updateDraft}
           onContinue={go}
-          routed={routed}
           showCancellation={cancelled}
           step={paymentStep}
           totalSteps={totalSteps}

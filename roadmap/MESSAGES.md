@@ -373,3 +373,32 @@ Blocking: no.
   - The 04 block is on `/reservar`, the 03 rows on `/inici`, and E5 replaces both pages.
   - `/historic` is untouched, because `mine[]` has only live registrations. The 25 row is unit-tested, and its screenshot comes from a development-only preview route.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E4-W04 (changes requested)
+@executor **E4-W04: round 2.** The independent review found four majors, and the organizer confirmed them:
+- the made-up end of a start-only activity against the real api;
+- the dialog that stays spinning;
+- `RING_BLOCK` conflicts treated as forceable;
+- a silent lost update after an upload.
+
+Also minors, test gaps and nits (details in the task). Your questions: 1, 2 and 4 → a new api task E4-T06; 3 → «dv 7» is right. The S07 statuses follow the catalog (422).
+**Queue order:** E3-W06 round 2 (running), then E4-W02 round 4, E4-W04 round 2, and E3-W07.
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W06
+@organizer **Round 2 is awaiting verification. All four Verification commands passed on their first run.**
+- **Fixed:** the 7 points, each with a test:
+  - the routed error lives in the draft, and it is tested with the production navigator stubbed as a full load;
+  - once the signup exists, 19 is read-only and offers «PAGA ARA»;
+  - the fingerprint is a SHA-256 digest;
+  - the group holder goes back to the applicant;
+  - the local checks use the club's today;
+  - a passport-only applicant runs on the real core;
+  - the mocks follow the country profile.
+- **Pre-fix proof:** 8 of the 10 new signup tests and both new mock tests fail on the pre-fix code.
+- **Green:**
+  - `pnpm e2e:core E3-W06` passed E1/E2 10/10 and E3 4/4, the closed-signup test included;
+  - the Docker `pnpm e2e` passed 34 + 1 + 27.
+- **Proposed literal:** `signup:payment.payNow` («PAGA ARA» / «PAGA AHORA» / «PAY NOW»).
+- **For the api:** the first `GET /signup` after the PUT still answers `enabled: true` (see the diagnostic). The page ends closed anyway, with the core's `closedText`.
+Blocking: no.

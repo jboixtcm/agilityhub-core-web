@@ -74,6 +74,7 @@ async function renderSignup({
   locale = "ca",
   navigate = vi.fn(),
   path,
+  productionNavigator = false,
   scenario = "signup",
 }: {
   addDog?: boolean;
@@ -81,6 +82,8 @@ async function renderSignup({
   locale?: "ca" | "en" | "es";
   navigate?: (path: string) => void;
   path: string;
+  /** No `onNavigate`: the page uses its production navigator (`window.location.assign`). */
+  productionNavigator?: boolean;
   scenario?: MockScenario;
 }) {
   window.history.pushState(null, "", path);
@@ -102,7 +105,7 @@ async function renderSignup({
             getAccessToken: () => (addDog ? "mock-access-token" : undefined),
             getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
           })}
-          onNavigate={navigate}
+          {...(productionNavigator ? {} : { onNavigate: navigate })}
         />
       </BrandingProvider>
     </I18nextProvider>,
@@ -252,6 +255,8 @@ beforeAll(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
   sessionStorage.clear();
   localStorage.clear();
   server.resetHandlers();
@@ -1010,7 +1015,7 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
     expect(screen.getByText(/El pagament no s'ha completat/u)).toBeVisible();
     expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
     expect(screen.getByLabelText("Accepto la política de privacitat")).toBeChecked();
-    submitSignup();
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
     });
@@ -1167,5 +1172,278 @@ describe("M19 the consent version sent is the accepted one (R-04-17)", () => {
       expect(screen.getByLabelText("Accepto la política de privacitat")).not.toBeChecked();
     });
     expect(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeDisabled();
+  });
+});
+
+/**
+ * The production navigator is `window.location.assign`: a full page load. The stub keeps only what
+ * a browser keeps (the session storage): the old page is unmounted and a fresh page mounts.
+ */
+function stubFullPageLoads(initialPath: string): string[] {
+  const url = new URL(initialPath, window.location.origin);
+  const loads: string[] = [];
+  const assign = (next: string) => {
+    const target = new URL(next, url);
+    url.href = target.href;
+    const path = `${target.pathname}${target.search}`;
+    loads.push(path);
+    queueMicrotask(() => {
+      cleanup();
+      void renderSignup({ path, productionNavigator: true }).catch(() => undefined);
+    });
+  };
+  vi.stubGlobal("location", {
+    assign,
+    get hash() {
+      return url.hash;
+    },
+    get host() {
+      return url.host;
+    },
+    get hostname() {
+      return url.hostname;
+    },
+    get href() {
+      return url.href;
+    },
+    get origin() {
+      return url.origin;
+    },
+    get pathname() {
+      return url.pathname;
+    },
+    get search() {
+      return url.search;
+    },
+    replace: assign,
+  });
+  return loads;
+}
+
+describe("E3-W06 round 2", () => {
+  it("#1 an INVALID_IBAN from 19 stays on 19, on the IBAN field (production navigator)", async () => {
+    server.use(http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_IBAN", 400)));
+    seedDraft({ payment: { firstMonthOption: "TODAY", iban: VALID_IBAN, type: "SEPA_DD" } });
+    const loads = stubFullPageLoads("/apuntat-hi/pagament");
+    await renderSignup({ path: "/apuntat-hi/pagament", productionNavigator: true });
+    acceptPrivacy();
+    submitSignup();
+
+    const iban = screen.getByLabelText("IBAN");
+    await waitFor(() => {
+      expect(iban).toHaveFocus();
+    });
+    expect(iban).toHaveAttribute("aria-describedby", "signup-iban-error");
+    expect(document.getElementById("signup-iban-error")).toHaveTextContent(
+      "El número de compte bancari no és vàlid.",
+    );
+    expect(loads).toEqual([]);
+    await waitFor(() => {
+      expect(savedDraft()).not.toHaveProperty("pendingError");
+    });
+  });
+
+  it("#1 an INVALID_ID_DOCUMENT routed to 16 survives the full page load and focuses the document", async () => {
+    server.use(http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_ID_DOCUMENT", 400)));
+    seedDraft();
+    const loads = stubFullPageLoads("/apuntat-hi/pagament");
+    await renderSignup({ path: "/apuntat-hi/pagament", productionNavigator: true });
+    acceptPrivacy();
+    submitSignup();
+
+    await waitFor(() => {
+      expect(loads).toEqual(["/apuntat-hi"]);
+    });
+    // A fresh page: only the session storage came through the load.
+    const document = await screen.findByLabelText("DNI / NIE");
+    await waitFor(() => {
+      expect(document).toHaveFocus();
+    });
+    expect(document).toHaveAttribute("aria-describedby", "signup-id-error");
+    expect(window.document.getElementById("signup-id-error")).toHaveTextContent(
+      "El document d'identitat no és vàlid.",
+    );
+    expect(screen.getByText(/Pas 1 de 4/u)).toBeVisible();
+    // Consumed once: a reload of 16 does not show it again.
+    await waitFor(() => {
+      expect(savedDraft()).not.toHaveProperty("pendingError");
+    });
+  });
+
+  it("#2 after a cancelled checkout 19 is read-only and the retry charges the committed signup", async () => {
+    const recorded = recordRequests();
+    seedDraft({
+      payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" },
+    });
+    const navigate = vi.fn();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    const firstBody = await lastBody(recorded, "/signup");
+
+    cleanup();
+    navigate.mockClear();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    expect(screen.getByLabelText("IBAN")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Titular del compte")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("NIF del titular (opcional)")).toHaveAttribute("readonly");
+    for (const method of ["Domiciliació", "Targeta", "Efectiu"]) {
+      expect(screen.getByRole("button", { name: method })).toBeDisabled();
+    }
+    for (const option of screen.getAllByRole("radio")) expect(option).toBeDisabled();
+    expect(screen.getByLabelText("Accepto la política de privacitat")).toBeDisabled();
+    expect(screen.getByLabelText("Autoritzo l'ús de la meva imatge")).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "ENVIA LA SOL·LICITUD" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(screen.getAllByRole("radio")[1] ?? document.body);
+    expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
+    expect((savedDraft().payment as Record<string, unknown>).type).toBe("SEPA_DD");
+    expect((savedDraft().payment as Record<string, unknown>).firstMonthOption).toBe("TODAY");
+
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+    expect(firstBody.payment).toMatchObject({ firstMonthOption: "TODAY", type: "SEPA_DD" });
+    expect(await lastBody(recorded, "/checkout-sessions")).toMatchObject({
+      memberId: "member-signup-357",
+      signupToken: "mock-signup-token",
+    });
+
+    // Any step path shows 19 while the signup exists: 16–18 cannot change it any more.
+    cleanup();
+    await renderSignup({ navigate, path: "/apuntat-hi", scenario: "signupStripe" });
+    expect(screen.getByRole("button", { name: "PAGA ARA" })).toBeVisible();
+    expect(screen.queryByLabelText("DNI / NIE")).not.toBeInTheDocument();
+  });
+
+  it("#3 the fingerprint is a SHA-256 digest and the IBAN leaves the draft after a failed submission", async () => {
+    server.use(http.post("*/api/v1/signup", () => HttpResponse.error()));
+    seedDraft({ payment: { firstMonthOption: "TODAY", iban: VALID_IBAN, type: "SEPA_DD" } });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    acceptPrivacy();
+    submitSignup();
+    expect(await screen.findByText("No s'ha pogut completar l'acció.")).toBeVisible();
+    await waitFor(() => {
+      expect((savedDraft().submission as Record<string, unknown> | undefined)?.fingerprint).toMatch(
+        /^[0-9a-f]{64}$/u,
+      );
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    await waitFor(() => {
+      expect((savedDraft().payment as Record<string, unknown>).type).toBe("MANUAL");
+    });
+    const stored = sessionStorage.getItem(DRAFT_KEY) ?? "";
+    expect(stored).not.toContain(VALID_IBAN);
+    expect(stored).not.toContain(VALID_IBAN.slice(4));
+  });
+
+  it("#3 a config reload that drops SEPA removes the IBAN from the draft", async () => {
+    const config = await signupConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({
+          ...config,
+          paymentMethods: (config.paymentMethods as { type: string }[]).filter(
+            (method) => method.type !== "SEPA_DD",
+          ),
+        }),
+      ),
+    );
+    seedDraft({
+      payment: { firstMonthOption: "TODAY", holderTaxId: "12345678Z", iban: VALID_IBAN, type: "SEPA_DD" },
+    });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    await waitFor(() => {
+      expect((savedDraft().payment as Record<string, unknown>).type).toBe("MANUAL");
+    });
+    const stored = sessionStorage.getItem(DRAFT_KEY) ?? "";
+    expect(stored).not.toContain(VALID_IBAN);
+    expect(savedDraft().payment).not.toHaveProperty("holderTaxId");
+  });
+
+  it("#4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10)", async () => {
+    const navigate = vi.fn();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/familia" });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Marta Roca" } });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Kiwi" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await screen.findByText(/Grup trobat/u);
+    await waitFor(() => {
+      expect((savedDraft().payment as Record<string, unknown>).holderName).toBe("Marta Roca");
+    });
+
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "" } });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
+    expect(await screen.findByLabelText("Titular del compte")).toHaveValue("Nora Soler Pons");
+  });
+
+  it("#4 a holder typed by the applicant is kept when the claim changes", async () => {
+    seedDraft({
+      familyClaim: { dogName: "Kiwi", holderName: "Marta Roca", leavePending: false },
+      familyFound: true,
+      holderFromGroup: false,
+      payment: { firstMonthOption: "TODAY", holderName: "Jan Soler", type: "SEPA_DD" },
+    });
+    await renderSignup({ path: "/apuntat-hi/familia" });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "" } });
+    await waitFor(() => {
+      expect(savedDraft().familyFound).toBe(false);
+    });
+    expect((savedDraft().payment as Record<string, unknown>).holderName).toBe("Jan Soler");
+  });
+
+  it("#5 the birth date is checked against the club's today, not the browser's", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    // The browser is one day ahead of the club (configuration `upfront.today` = 2026-08-17).
+    vi.setSystemTime(new Date(2026, 7, 18, 10, 0, 0));
+    const recorded = recordRequests();
+    await renderSignup({ path: "/apuntat-hi" });
+    fillPerson("12345678Z", "new@example.test", "17/08/2026");
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(await screen.findByText("La data no és vàlida.")).toBeVisible();
+    expect(requestsTo(recorded, "POST", "/signup/identity-checks")).toHaveLength(0);
+
+    fireEvent.change(screen.getByLabelText("Data de naixement"), { target: { value: "16/08/2026" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(requestsTo(recorded, "POST", "/signup/identity-checks")).toHaveLength(1);
+    });
+    expect(screen.queryByText("La data no és vàlida.")).not.toBeInTheDocument();
+  });
+
+  it("#5 the dog's birth month is checked against the club's month, not the browser's", async () => {
+    const config = await signupConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({
+          ...config,
+          upfront: { ...(config.upfront as Record<string, unknown>), today: "2026-08-31" },
+        }),
+      ),
+    );
+    vi.useFakeTimers({ toFake: ["Date"] });
+    // The browser is already in September; the club is still on 31 August.
+    vi.setSystemTime(new Date(2026, 8, 1, 10, 0, 0));
+    const navigate = vi.fn();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/gos" });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "092026" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(await screen.findByText("El mes de naixement no és vàlid.")).toBeVisible();
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "082026" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
   });
 });

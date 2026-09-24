@@ -1,0 +1,64 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (2 tests | 2 failed) 14ms
+   ❯ T-04-01 / T-04-02 the signup mocks follow R-04-01 by country profile (2)
+     × ES: pads a seven-digit DNI (1234567L → 01234567L) and accepts it 10ms
+     × GENERIC: accepts OTHER with four characters or more and rejects DNI and short values 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-01 / T-04-02 the signup mocks follow R-04-01 by country profile > ES: pads a seven-digit DNI (1234567L → 01234567L) and accepts it
+AssertionError: expected { code: 'INVALID_ID_DOCUMENT', …(3) } to deeply equal { result: 'NEW' }
+
+- Expected
++ Received
+
+  {
+-   "result": "NEW",
++   "code": "INVALID_ID_DOCUMENT",
++   "details": {},
++   "message": "Invalid identity document",
++   "traceId": "mock-trace-id",
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:75:84
+     73|   it("ES: pads a seven-digit DNI (1234567L → 01234567L) and accepts it…
+     74|     mockScenario("signup");
+     75|     expect(await (await identityCheck({ type: "DNI", value: "1234567L"…
+       |                                                                                    ^
+     76|       result: "NEW",
+     77|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-01 / T-04-02 the signup mocks follow R-04-01 by country profile > GENERIC: accepts OTHER with four characters or more and rejects DNI and short values
+AssertionError: expected { code: 'INVALID_ID_DOCUMENT', …(3) } to deeply equal { result: 'NEW' }
+
+- Expected
++ Received
+
+  {
+-   "result": "NEW",
++   "code": "INVALID_ID_DOCUMENT",
++   "details": {},
++   "message": "Invalid identity document",
++   "traceId": "mock-trace-id",
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:89:83
+     87|   it("GENERIC: accepts OTHER with four characters or more and rejects …
+     88|     mockScenario("signupGeneric");
+     89|     expect(await (await identityCheck({ type: "OTHER", value: "AB-12" …
+       |                                                                                   ^
+     90|       result: "NEW",
+     91|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  19:25:19
+   Duration  379ms (import 51%, transform 43%, tests 5%, worker 1%)
+

@@ -807,17 +807,28 @@ function resetSignupMockState(): void {
 
 const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-function validSpanishDocument(type: string, value: string): boolean {
-  if (type === "PASSPORT") return /^[A-Z0-9]{5,20}$/u.test(value);
+/**
+ * R-04-01 per `CLUB.countryProfile`: the normalised value, or `undefined` when invalid. `ES`: DNI
+ * (7 digits get a leading zero), NIE, and a 5–20 passport; `GENERIC`: `PASSPORT` / `OTHER` ≥ 4.
+ */
+function normalisedIdentityDocument(document: { type: string; value: string }): string | undefined {
+  const value = document.value.trim().toUpperCase().replaceAll(/[-\s]/gu, "");
+  if (currentMockScenario().branding.countryProfile.code !== "ES") {
+    return (document.type === "PASSPORT" || document.type === "OTHER") && value.length >= 4
+      ? value
+      : undefined;
+  }
+  if (document.type === "PASSPORT") return /^[A-Z0-9]{5,20}$/u.test(value) ? value : undefined;
+  const padded = document.type === "DNI" && /^\d{7}[A-Z]$/u.test(value) ? `0${value}` : value;
   const match =
-    type === "DNI"
-      ? /^(\d{8})([A-Z])$/u.exec(value)
-      : type === "NIE"
-        ? /^([XYZ]\d{7})([A-Z])$/u.exec(value)
+    document.type === "DNI"
+      ? /^(\d{8})([A-Z])$/u.exec(padded)
+      : document.type === "NIE"
+        ? /^([XYZ]\d{7})([A-Z])$/u.exec(padded)
         : null;
-  if (match === null) return false;
+  if (match === null) return undefined;
   const digits = (match[1] ?? "").replace(/^X/u, "0").replace(/^Y/u, "1").replace(/^Z/u, "2");
-  return DNI_LETTERS[Number(digits) % 23] === match[2];
+  return DNI_LETTERS[Number(digits) % 23] === match[2] ? padded : undefined;
 }
 
 function validIban(value: string): boolean {
@@ -1194,7 +1205,7 @@ export const handlers = [
     if (body.idDocument.value.trim() === "") {
       return validationError([{ code: "REQUIRED", field: "idDocument.value" }]);
     }
-    if (!validSpanishDocument(body.idDocument.type, body.idDocument.value)) {
+    if (normalisedIdentityDocument(body.idDocument) === undefined) {
       // The api answers a top-level code with empty details (CATALEG_ERRORS §1: 400).
       return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
     }
@@ -1260,7 +1271,8 @@ export const handlers = [
     if (body.person.emails[0]?.startsWith("limit") === true) {
       return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "120" });
     }
-    if (!validSpanishDocument(body.person.idDocument.type, body.person.idDocument.value)) {
+    const identity = normalisedIdentityDocument(body.person.idDocument);
+    if (identity === undefined) {
       return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
     }
     if (body.payment?.iban !== undefined && body.payment.iban !== "" && !validIban(body.payment.iban)) {
@@ -1283,7 +1295,6 @@ export const handlers = [
     if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
-    const identity = body.person.idDocument.value;
     if (body.person.emails[0] === "pending@example.test" || submittedSignupIdentities.has(identity)) {
       return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 422);
     }

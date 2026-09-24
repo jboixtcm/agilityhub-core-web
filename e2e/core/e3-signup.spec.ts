@@ -19,6 +19,8 @@ const rejectedEmail = "pau.e3@example.test";
 const rejectedName = "Pau Rebuig E3";
 const rejectedDog = "Brisa E3";
 const additionalDog = "Neret E3";
+const passportEmail = "joana.e3@example.test";
+const passportDog = "Nit E3";
 let adminSession: { context: BrowserContext; page: Page } | undefined;
 let rejectionMessage: MailMessage | undefined;
 let additionalDogValidated = false;
@@ -171,10 +173,15 @@ async function fillPerson(
     email: string;
     firstName: string;
     lastName: string;
+    passport?: string;
     phone: string;
   },
 ): Promise<void> {
   await page.getByLabel("DNI / NIE").fill(values.document);
+  // The passport is enabled only while DNI / NIE is empty (R-04-01).
+  if (values.passport !== undefined) {
+    await page.getByLabel("Passaport — si no tens DNI/NIE").fill(values.passport);
+  }
   await page.getByLabel("Nom", { exact: true }).fill(values.firstName);
   await page.getByLabel("Cognom 1").fill(values.lastName);
   await page.getByLabel("Data de naixement").fill("05/04/1992");
@@ -198,6 +205,7 @@ async function fillDog(page: Page, name: string, chip: string): Promise<void> {
 }
 
 async function completePublicSignup({
+  chip,
   document,
   dog,
   email,
@@ -206,8 +214,11 @@ async function completePublicSignup({
   firstName,
   lastName,
   page,
+  passport,
+  phone,
   screenshots,
 }: {
+  chip: string;
   document: string;
   dog: string;
   email: string;
@@ -216,6 +227,8 @@ async function completePublicSignup({
   firstName: string;
   lastName: string;
   page: Page;
+  passport?: string;
+  phone: string;
   screenshots: boolean;
 }): Promise<string> {
   await page.goto(`${clubsUrl}/apuntat-hi`);
@@ -225,13 +238,14 @@ async function completePublicSignup({
     email,
     firstName,
     lastName,
-    phone: document === "12345678Z" ? "699000901" : "699000902",
+    ...(passport === undefined ? {} : { passport }),
+    phone,
   });
   if (screenshots) await screenshot(page, "16-person-core-375.png");
 
   await page.getByRole("button", { name: "CONTINUA" }).click();
   await page.waitForURL("**/apuntat-hi/gos");
-  await fillDog(page, dog, document === "12345678Z" ? "941000000009901" : "941000000009902");
+  await fillDog(page, dog, chip);
   if (screenshots) await screenshot(page, "17-dog-core-375.png");
 
   await page.getByRole("button", { name: "CONTINUA" }).click();
@@ -337,6 +351,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const publicContext = await localizedContext(browser, { height: 844, width: 375 });
   const publicPage = await publicContext.newPage();
   const acceptedMemberId = await completePublicSignup({
+    chip: "941000000009901",
     document: "12345678Z",
     dog: acceptedDog,
     email: acceptedEmail,
@@ -345,6 +360,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     firstName: "Nora",
     lastName: "Integració E3",
     page: publicPage,
+    phone: "699000901",
     screenshots: true,
   });
   await publicContext.close();
@@ -483,6 +499,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const rejectedPage = await rejectedContext.newPage();
   const rejectedMemberId = await completePublicSignup({
     // A NIE applicant (typed lower case with a hyphen) reaches «Sol·licitud enviada» (B1).
+    chip: "941000000009902",
     document: "y7654321-g",
     dog: rejectedDog,
     email: rejectedEmail,
@@ -491,9 +508,27 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     firstName: "Pau",
     lastName: "Rebuig E3",
     page: rejectedPage,
+    phone: "699000902",
     screenshots: false,
   });
   await rejectedContext.close();
+  // A passport-only applicant (DNI / NIE empty) reaches «Sol·licitud enviada» too (B1, R-04-01).
+  const passportContext = await localizedContext(browser, { height: 844, width: 375 });
+  await completePublicSignup({
+    chip: "941000000009904",
+    document: "",
+    dog: passportDog,
+    email: passportEmail,
+    expectedDocument: { type: "PASSPORT", value: "PA1234567" },
+    family: false,
+    firstName: "Joana",
+    lastName: "Passaport E3",
+    page: await passportContext.newPage(),
+    passport: "pa1234567",
+    phone: "699000904",
+    screenshots: false,
+  });
+  await passportContext.close();
   const mailboxBeforeRejection = mailboxFiles();
   await navigateSpa(admin, `/preinscripcions/${rejectedMemberId}`);
   await expect(admin.getByRole("heading", { name: new RegExp(rejectedName, "u") })).toBeVisible();

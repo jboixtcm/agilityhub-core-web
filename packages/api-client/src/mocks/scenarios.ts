@@ -232,6 +232,16 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
   },
+  /** R-04-01 `GENERIC` country profile: `PASSPORT` / `OTHER` documents only. */
+  signupGeneric: {
+    branding: {
+      ...canic,
+      countryProfile: { code: "GENERIC", idDocumentTypes: ["PASSPORT", "OTHER"], phonePrefix: "" },
+      locales: ["ca", "es", "en"],
+    },
+    me: member,
+    sessions: accountSessions,
+  },
   signupStripe: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
     me: member,
