@@ -4325,6 +4325,21 @@ export interface components {
             title: string;
             /** @enum {string} */
             type: "SEMINAR" | "SOCIAL_LEAGUE" | "COMPETITION" | "DEMONSTRATION" | "COURSE" | "OTHER";
+            /** @description S07 R-07-01 / §13-1: the D7 list shows «{title} · {typeDisplay}» (the typeLabel of the reader's locale, else the enum label), as Activity.typeDisplay. */
+            typeDisplay?: string;
+            /** @description S07 R-07-13: club-local HH:mm of the D7 «Data» column («ds 7 · 18:30–20:30»); null without hours. */
+            startTime?: string | null;
+            /** @description S07 R-07-13: club-local HH:mm; null without an end time. */
+            endTime?: string | null;
+            /** @description S07 §2 D7 «Pistes»: true when ringIds are all the active rings («totes — bloquejades»), as Activity.allRings. */
+            allRings?: boolean;
+            /** @description S07 §2 D7 «Pistes»: «— (fora del club)» when atClub is false. */
+            location?: components["schemas"]["ActivityLocation"];
+            /**
+             * Format: int32
+             * @description S07 §2 D7 «Inscripcions»: «{active}/{max} · fins el {registrationTo}»; null = no maximum («obertes · socis»).
+             */
+            maxPlaces?: number | null;
         };
         ActivityLocation: {
             address?: string | null;

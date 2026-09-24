@@ -1,0 +1,156 @@
+import { mkdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+import { expect, test, type Page } from "@playwright/test";
+
+const baseUrl = "http://127.0.0.1:4174";
+const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W04");
+const brandingCanic: unknown = JSON.parse(
+  readFileSync(
+    resolve(
+      import.meta.dirname,
+      "../../../packages/api-client/src/mocks/fixtures/branding-canic.json",
+    ),
+    "utf8",
+  ),
+);
+// The D7 mockup is read at the beginning of August 2026 (the Torneig of 7/08 is «this month»).
+const mockupNow = new Date("2026-08-04T10:00:00+02:00");
+
+async function signIn(page: Page, scenario: "admin" | "instructor") {
+  await page.clock.setFixedTime(mockupNow);
+  await page.addInitScript(
+    ({ cachedBranding, mockScenario }) => {
+      localStorage.setItem("agilityhub.locale", "ca");
+      localStorage.setItem("agilityhub.mockScenario", mockScenario);
+      localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
+    },
+    { cachedBranding: brandingCanic, mockScenario: scenario },
+  );
+  await page.goto(`${baseUrl}/entrar`);
+  await page.getByLabel("Correu electrònic").fill(`${scenario}@example.test`);
+  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByRole("button", { name: "ENTRA" }).click();
+  await page.waitForURL("**/tauler");
+}
+
+function maintenance(page: Page, title: string) {
+  return page.getByRole("region", { name: `Manteniment de l'activitat — ${title}` });
+}
+
+test.beforeAll(() => {
+  mkdirSync(evidenceDirectory, { recursive: true });
+});
+
+test.describe("E4-W04 D7 activities", () => {
+  test("T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup", async ({ page }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+    await page.waitForURL("**/activitats**");
+    const table = page.getByRole("table");
+    const tournament = table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" });
+    await expect(tournament).toContainText("dv 7 · 18:30–20:30");
+    await expect(tournament).toContainText("totes — bloquejades");
+    await expect(tournament).toContainText("22/40 · fins el 6/08");
+    await expect(tournament).toContainText("publicada");
+    await expect(
+      table.getByRole("row").filter({ hasText: "Demostració Festa Major" }),
+    ).toContainText("— (fora del club)");
+    await tournament.getByRole("link").first().click();
+    await page.waitForURL("**/activitats/activity-torneig-estiu-2026");
+    const card = maintenance(page, "Torneig d'Estiu 2026");
+    await expect(card.getByLabel("Títol", { exact: true })).toHaveValue("Torneig d'Estiu 2026");
+    await expect(card.getByText("Nivells: tots")).toBeVisible();
+    await expect(card.getByRole("button", { name: "Llista d'espera: sí" })).toBeVisible();
+    await expect(
+      card.getByText(
+        "URL: agilitycanic.cat/activitat/torneig-estiu-2026 · surt a l'API de la web (mai noms)",
+      ),
+    ).toBeVisible();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(evidenceDirectory, "D7-activitats-1280.png"),
+    });
+  });
+
+  test("T-07-29 publishing a dated draft opens the ring-conflict dialog and applies the options", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.goto(`${baseUrl}/activitats/activity-demostracio-festa-major`);
+    const card = maintenance(page, "Demostració Festa Major");
+    await expect(card.getByLabel("Lloc")).toHaveValue("Plaça Major");
+    await card.getByRole("switch", { name: "Al club" }).click();
+    await card.getByRole("button", { name: "Muntanya" }).click();
+    await card.getByRole("button", { name: "Central" }).click();
+    await card.getByLabel("Hora d'inici").selectOption("18:30");
+    await card.getByLabel("Hora de final").selectOption("20:30");
+    await card.getByLabel("Inscripció: de").fill("01/09/2026");
+    await card.getByLabel("Inscripció: al").fill("01/10/2026");
+    await card.getByRole("button", { name: "DESA" }).click();
+    await expect(page.getByText("Canvis desats")).toBeVisible();
+    await card.getByRole("button", { name: "PUBLICA" }).click();
+    const dialog = page.getByRole("dialog", { name: "Conflictes de pista" });
+    await expect(dialog.getByText("Central · B+C · 18:30–19:30")).toBeVisible();
+    await expect(dialog.getByText("3 inscrits")).toBeVisible();
+    await expect(dialog.getByText("Muntanya · Pau Soler + Blat · 19:00–19:30")).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "PUBLICA I APLICA" })).toBeDisabled();
+    await dialog.getByLabel("Anul·la les classes en conflicte i avisa els inscrits").check();
+    await dialog.getByLabel("Cancel·la les reserves d'entrenament").check();
+    await dialog
+      .getByLabel("Text de l'avís")
+      .fill("Diumenge 4 fem la Demostració: la classe queda anul·lada.");
+    await page.screenshot({ path: resolve(evidenceDirectory, "D7-conflictes-1280.png") });
+    await dialog.getByRole("button", { name: "PUBLICA I APLICA" }).click();
+    await expect(page.getByText("Activitat publicada")).toBeVisible();
+    await expect(card.getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" })).toBeVisible();
+  });
+
+  test("T-07-29 cancelling the Torneig lists the 22 registrants and requires the notice text", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.goto(`${baseUrl}/activitats/activity-torneig-estiu-2026`);
+    const card = maintenance(page, "Torneig d'Estiu 2026");
+    await card.getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }).click();
+    const modal = page.getByRole("dialog", {
+      name: "Cancel·lar l'activitat — Torneig d'Estiu 2026",
+    });
+    await expect(modal.getByRole("row")).toHaveCount(22);
+    const confirm = modal.getByRole("button", { name: "CANCEL·LA I AVISA ELS 22 INSCRITS" });
+    await expect(confirm).toBeDisabled();
+    await modal.getByLabel("Text de l'avís").fill("Pluja forta: pistes tancades");
+    await expect(confirm).toBeEnabled();
+    await page.screenshot({ path: resolve(evidenceDirectory, "D7-cancellacio-1280.png") });
+    await confirm.click();
+    await expect(page.getByText("Activitat cancel·lada")).toBeVisible();
+  });
+
+  test("registrants of a full activity with the FIFO waitlist positions", async ({ page }) => {
+    await signIn(page, "admin");
+    await page.goto(`${baseUrl}/activitats/activity-taller-contactes`);
+    await maintenance(page, "Taller de contactes")
+      .getByRole("link", { name: "Inscrits (10) ›" })
+      .click();
+    await page.waitForURL("**/activitats/activity-taller-contactes/inscrits");
+    await expect(
+      page.getByRole("heading", { name: "Inscrits — Taller de contactes" }),
+    ).toBeVisible();
+    await expect(page.getByText("en llista d'espera (1)")).toBeVisible();
+    await expect(page.getByText("en llista d'espera (2)")).toBeVisible();
+    await page
+      .getByRole("heading", { name: "Inscrits — Taller de contactes" })
+      .scrollIntoViewIfNeeded();
+    await page.screenshot({ path: resolve(evidenceDirectory, "D7-inscrits-1280.png") });
+  });
+
+  test("INSTRUCTOR reads D7 without actions", async ({ page }) => {
+    await signIn(page, "instructor");
+    await page.goto(`${baseUrl}/activitats/activity-torneig-estiu-2026`);
+    const card = maintenance(page, "Torneig d'Estiu 2026");
+    await expect(card.getByLabel("Títol", { exact: true })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Nova activitat" })).toHaveCount(0);
+    await expect(card.getByRole("button", { name: "DESA" })).toHaveCount(0);
+  });
+});

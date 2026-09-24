@@ -37,6 +37,8 @@ import {
 } from "react";
 import { I18nContext, useTranslation } from "react-i18next";
 
+import { ActivitiesPage } from "./activities/ActivitiesPage";
+import { ActivityRegistrantsPage } from "./activities/ActivityRegistrantsPage";
 import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
 import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
 import { PlansPage } from "./catalogs/PlansPage";
@@ -82,8 +84,10 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screen D6.
   { path: "/facturacio", roles: ["ADMIN"] },
   { path: "/facturacio/remeses", roles: ["ADMIN"] },
-  // Screen D7.
-  { path: "/activitats", roles: ["ADMIN"] },
+  // Screen D7 + registrants (INSTRUCTOR reads them without actions nor internal notes, S07 §2).
+  { path: "/activitats", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/activitats/:id", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/activitats/:id/inscrits", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D8.
   { path: "/modalitats", roles: ["ADMIN"] },
   // Screen D9.
@@ -270,7 +274,7 @@ export function AdminNavigation({
           icon: "flag",
           id: "activities",
           label: t("shell:nav.activities"),
-          roles: ["ADMIN"],
+          roles: ["INSTRUCTOR", "ADMIN"],
         },
         {
           href: "/recorreguts",
@@ -403,12 +407,52 @@ function CalendarRoute({
   );
 }
 
+function ActivitiesRoute({
+  client,
+  onNavigate,
+  pathname,
+  route,
+}: {
+  client: ReturnType<typeof createAuthenticatedApiClient>;
+  onNavigate: (path: string) => void;
+  pathname: string;
+  route: AdminRouteDefinition;
+}) {
+  const session = useSession();
+  const readOnly = !session.roles.includes("ADMIN");
+  const id = decodeURIComponent(pathname.split("/")[2] ?? "");
+  if (route.path === "/activitats/:id/inscrits") {
+    return (
+      <ActivityRegistrantsPage
+        activityId={id}
+        client={client}
+        key={pathname}
+        onNavigate={onNavigate}
+        readOnly={readOnly}
+      />
+    );
+  }
+  return (
+    <ActivitiesPage
+      client={client}
+      onNavigate={onNavigate}
+      readOnly={readOnly}
+      {...(route.path === "/activitats/:id" ? { selectedId: id } : {})}
+    />
+  );
+}
+
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
   onNavigate: (path: string) => void,
   pathname: string,
 ) {
+  if (route.path.startsWith("/activitats")) {
+    return (
+      <ActivitiesRoute client={client} onNavigate={onNavigate} pathname={pathname} route={route} />
+    );
+  }
   if (route.path === "/plantilles") {
     return <PlanningTemplatesRoute client={client} onNavigate={onNavigate} />;
   }

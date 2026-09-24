@@ -41,6 +41,7 @@ async function bootstrap(root: HTMLElement) {
     initialNamespaces: [
       "common",
       "auth",
+      "admin-activities",
       "admin-audit",
       "admin-catalogs",
       "admin-census",

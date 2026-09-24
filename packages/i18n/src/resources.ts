@@ -7,6 +7,8 @@ type ResourceLoader = () => Promise<{ default: Messages }>;
 
 const loaders = {
   ca: {
+    activities: () => import("./locales/ca/activities.json"),
+    "admin-activities": () => import("./locales/ca/admin-activities.json"),
     "admin-audit": () => import("./locales/ca/admin-audit.json"),
     "admin-catalogs": () => import("./locales/ca/admin-catalogs.json"),
     "admin-census": () => import("./locales/ca/admin-census.json"),
@@ -25,6 +27,8 @@ const loaders = {
     signup: () => import("./locales/ca/signup.json"),
   },
   en: {
+    activities: () => import("./locales/en/activities.json"),
+    "admin-activities": () => import("./locales/en/admin-activities.json"),
     "admin-audit": () => import("./locales/en/admin-audit.json"),
     "admin-catalogs": () => import("./locales/en/admin-catalogs.json"),
     "admin-census": () => import("./locales/en/admin-census.json"),
@@ -43,6 +47,8 @@ const loaders = {
     signup: () => import("./locales/en/signup.json"),
   },
   es: {
+    activities: () => import("./locales/es/activities.json"),
+    "admin-activities": () => import("./locales/es/admin-activities.json"),
     "admin-audit": () => import("./locales/es/admin-audit.json"),
     "admin-catalogs": () => import("./locales/es/admin-catalogs.json"),
     "admin-census": () => import("./locales/es/admin-census.json"),

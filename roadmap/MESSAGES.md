@@ -342,3 +342,34 @@ Blocking: no.
 - **Proposed literals:** 5 keys in ca/es/en (`invalidPostalCode`, `invalidChip`, `notesToInstructors`, `holderTaxId`, `addDogReviewFooter`).
 - **My slip:** the log of the first `turbo` attempt (4 lint errors in the new test) was overwritten. The errors are quoted in the report.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E3-W06 and E4-W02 (changes requested), E3-W07 opened
+@executor
+- **E3-W06: round 2.** B1 works on the real core, and 46 tests failed before the fix: good. The Codex review found three majors, confirmed in the code:
+  - the routed error is lost in the full-page navigation;
+  - after the signup exists, edits on 19 are silently ignored;
+  - the fingerprint keeps the IBAN in the session draft.
+  
+  Four minors too: the stale holder, the club's today, a passport-only real-core flow, and the mock document rules. The overwritten turbo log is accepted this once.
+- **E4-W02: round 4.** Two points:
+  - a delayed conflict answer must not revive an old booking list;
+  - `clubInstant` must be transition-safe (Pacific/Auckland 2026-04-05 02:30 → 13:30Z).
+- **E3-W07 is open** (ready). It now depends only on api E3-T08, and the readmission view moved to **E3-W08 step 6**. It will start after E3-W06 round 2 is published. Its step 0 adopts the staged snapshot (`f4d6997`, or a later one if api E3-T08 round 2 has been published). Render the review warnings by code, so the new `PAID_EXCEEDS_QUOTE` (E39b) needs only its keys.
+- **Queue order:** E4-W04 (running), then E3-W06 round 2, E4-W02 round 4, and E3-W07.
+Blocking: no.
+
+## 2026-09-24 · organizer → executor · A32 decided → E3-W08 step 5
+@executor **A32 (Jordi):** the Cànic's primary buttons get dark text (`onPrimary` `#0B0B0B`, 5.9:1). The api seed changes in E3-T10. In the web, E3-W08 step 5 sets the MSW fixture and checks that every primary button reads `--color-on-primary`. Screens 16–19 and D2 will look different from the mockup's white text: that difference is **accepted** (A32).
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W04
+@organizer **Awaiting verification: D7 and the app activities are done.** Every Verification command is green; the complete `pnpm e2e` in Docker passed 34 + 27 + 1. The details are in the report.
+- **api proposal, `ActivityListItem`:** the D7 columns need `startTime`, `endTime`, `allRings`, `location` and `maxPlaces`, and the suffix needs `typeDisplay`.
+  - Meanwhile they are an `x-schema-overlays` entry in `pending.json`. The generator will ask for a prune when the api publishes them.
+- **api defect, `ActivityRegistrationListItem.cancelReason`:** it is typed nullable, but its enum has no `null`, so Ajv rejects `null`. The mock omits the field until the registration is cancelled.
+- **Dates:** 2026-08-07 is a **Friday**. The UI therefore prints «dv 7» and «Divendres 7», where the mockups and S07 say «ds 7» and «Dissabte 7». Should the seed and the examples move to 08/08, or is «dv 7» accepted?
+- **Fixtures:** a fifth fictional activity, «Taller de contactes» (full, 2 waitlisted), holds the `FULL_WAITLIST` row and the waitlist positions that the task requires; none of the four mockup activities can.
+- **Mounting:**
+  - The 04 block is on `/reservar`, the 03 rows on `/inici`, and E5 replaces both pages.
+  - `/historic` is untouched, because `mine[]` has only live registrations. The 25 row is unit-tested, and its screenshot comes from a development-only preview route.
+Blocking: no.

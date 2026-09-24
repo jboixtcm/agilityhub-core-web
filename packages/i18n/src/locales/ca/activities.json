@@ -1,0 +1,47 @@
+{
+  "block": {
+    "title": "Activitats",
+    "intro": "Seleccioneu l'activitat o classe que vulgueu reservar.",
+    "loading": "Carregant les activitats",
+    "separator": " · "
+  },
+  "list": {
+    "freeSeats": "{count, plural, one {# plaça} other {# places}}",
+    "open": "Obertes",
+    "full": "Completa",
+    "fullWaitlist": "Completa · ⏳{waiting}"
+  },
+  "detail": {
+    "title": "Activitat",
+    "back": "Torna enrere",
+    "close": "Tanca",
+    "loading": "Carregant l'activitat",
+    "loadError": "No s'ha pogut carregar l'activitat.",
+    "retry": "Torna-ho a provar",
+    "notAvailable": "Aquesta activitat ja no està disponible.",
+    "allRings": "totes les pistes",
+    "registrationUntil": "Inscripció fins el {date}",
+    "freeSeats": "{count, plural, one {# plaça lliure} other {# places lliures}} de {max}",
+    "documents": "Documents",
+    "waitlistPosition": "en llista d'espera ({position})",
+    "registerButton": "INSCRIU-M'HI",
+    "joinWaitlistButton": "APUNTA'M A LA LLISTA D'ESPERA",
+    "cancelButton": "ANUL·LA LA INSCRIPCIÓ",
+    "leaveWaitlistButton": "SURT DE LA LLISTA D'ESPERA",
+    "contactClubToCancel": "Per anul·lar la inscripció, posa't en contacte amb el club",
+    "waitlistQuestion": "Vols apuntar-te a la llista d'espera de {title}?",
+    "cancelQuestion": "Vols anul·lar la inscripció a {title}?",
+    "leaveQuestion": "Vols sortir de la llista d'espera de {title}?",
+    "sending": "Enviant",
+    "registered": "T'hi has inscrit",
+    "waitlisted": "Ets a la llista d'espera",
+    "cancelled": "Inscripció anul·lada",
+    "left": "Has sortit de la llista d'espera",
+    "error": "No s'ha pogut completar l'acció. Torna-ho a provar."
+  },
+  "rows": {
+    "sectionTitle": "Les meves reserves",
+    "when": "{date} · {place}",
+    "adminText": "«{text}»"
+  }
+}

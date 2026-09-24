@@ -144,12 +144,11 @@
 - **Conseqüències**: **E0-T13** (staging al droplet) queda per al release i **deixa de ser un bloqueig** · les portes que diuen «a staging» es comproven a la pila local de Docker (`bin/e*-smoke`) · la prova de càrrega k6 (E28) es repeteix al servidor definitiu abans del release · SSH/DNS, SendGrid real, Twilio, Stripe i el banc també passen al release.
 - **Què NO canvia**: les specs i els scripts de desplegament (`docs/DEPLOY.md`) es mantenen; només canvia quan s'executen.
 
-### A32 · Contrast del botó principal del Cànic (taronja amb text blanc) — **oberta 24-09**
+### A32 · Contrast del botó principal del Cànic (taronja amb text blanc) — **tancada 24-09**
 - **El problema**: el taronja del tema del Cànic (`#E26A2A`) amb text blanc fa **3,32:1**. El nivell AA de les pautes d'accessibilitat (WCAG), que la guia del projecte demana, exigeix **4,5:1** per al text normal. Només arriba al mínim per al text gran (3:1). Ho va detectar l'auditoria del web (E3-W05); el mateix `BrandingProvider` ja n'avisa.
 - **Opcions**: (a) text **fosc** sobre el mateix taronja: 6,3:1, i el color de marca no canvia; (b) un taronja **més fosc** amb text blanc (cal arribar a 4,5:1); (c) deixar-ho com al mockup i acceptar-ne la desviació.
 - **Recomanació**: **(a)**. Manté el color del club, i només canvia el color del text dels botons principals (el `onPrimary` del tema). Si el Josep prefereix el blanc, (b).
-- **Mentrestant**: res no s'atura; les tasques segueixen amb el tema actual.
-- **Decisió Jordi:**
+- **Decisió Jordi (24-09):** **(a) text fosc** sobre el mateix taronja. Aplicació: `onPrimary` = `#0B0B0B`, el color de fons del tema del Cànic, que dona un contrast de 5,9:1 (AA). El taronja no canvia. Seed del club: api E3-T10 pas 14. Fixture del web i captures: E3-W08.
 
 ### A27 · Accions que només pots fer tu (no són decisions, són bloquejos)
 - ~~Muntar l'arrel de `agilityhub-course-builder` (A6)~~ **fet 24-09** · confirmar dades reals a Supabase · llista d'admins de plataforma (A3) · compte SendGrid i domini verificat (E1) · compte Twilio (E7) · compte Stripe de test (E8) · XSD pain.008 i banc (E8; SEPA **genèric**, sense dependre de CaixaBank — Jordi 05-09) · exports de Playoff + llista d'equip (E2/E12) · DNS del Cànic (E10; «el generarem al deploy» — Jordi 05-09) · reunió amb qui porta la comptabilitat (format d'export, E8).
@@ -211,7 +210,7 @@ De l'anàlisi dels tres exports del 07-09 (`MAPATGE_CAMPS_PLAYOFF.md`). Cap bloq
 
 | # | Pregunta | Assumpció aplicada | Si respon diferent |
 |---|---|---|---|
-| B34 | **Modalitats «Instructors» (4 abonats) i «Competició 1 gos» (3)**: les creem al catàleg? Quant val «Competició 1 gos», i segueix viva? | cap de les dues és al seed: els 7 es migren **sense modalitat** amb l'avís `PLAN_UNMAPPED` (els instructors conserven el rol) i el club els assigna la modalitat després de la càrrega | es creen al seed (`INSTRUCTOR_FREE` a 0 €, no visible a l'alta; `COMPETICIO_1` amb el preu que digui) i el mapatge de S18 §3 ja hi apunta |
+| B34 | **Modalitats «Instructors» (4 abonats) i «Competició 1 gos» (3)** — **tancada 24-09 (Jordi)** | **«Instructors» no es migra com a modalitat**: els 4 es migren sense modalitat i sense l'avís `PLAN_UNMAPPED`, amb el rol d'instructor. **«Competició 1 gos» val 40 €/mes**: modalitat nova `COMPETICIO_1` al seed (mensual, 1 gos). Assumpcions de l'organitzador, canviables des del catàleg: entrada estàndard i no surt ni a l'alta pública ni a la web (l'assigna el club) | aplicat a S05 §12, S18 §3 i `MAPATGE_CAMPS_PLAYOFF.md` · codi: E5-T12 ronda 4, punt 4 |
 
 També per al Josep, abans del tall (no és una decisió, és feina de dades): **26 abonats amb domiciliació i sense IBAN** i **16 gossos sense número de xip**; l'informe de migració els llistarà per número d'abonat.
 
@@ -300,6 +299,8 @@ Cadascuna ja és aplicada a la spec/catàleg (Dropbox i `docs/` dels dos repos) 
 | E37 | A la targeta de risc de D1, passada l'hora de revisió del dia o amb el procés P2 apagat, una classe en risc surt com a «en risc», mai com a «s'anul·larà…»: només es diu «s'anul·larà» quan P2 de debò s'executarà | S15 §6 (aplicat) · codi: E5-T15 | el tauler prometia una anul·lació que ja no passaria |
 | E38 | Una **readmissió** (algú que torna amb el DNI d'un abonat de baixa) ja no sobreescriu la fitxa en enviar el formulari: les dades noves esperen a la sol·licitud, D2 mostra el valor antic i el nou, i s'apliquen en validar. Si es rebutja, la fitxa queda exactament com era (baixa amb el seu motiu i la seva data originals) | S04 R-04-06 i R-04-23 (aplicat) · codi: E3-T09 (api), E3-W07 (web) | qualsevol que sabés el DNI d'un exabonat li podia reescriure la fitxa, i un rebuig en perdia les dades originals (RGPD art. 5) |
 | E39 | A D2, un canvi de pla mentre hi ha un pagament amb targeta en curs (`CHECKOUT_PENDING`) es refusa (`409 INVALID_STATE`), i la simulació ho avisa. Els pagaments parcials es conserven com els cobrats i es descompten del nou import | S04 §5 (aplicat) · codi: E3-T08 | un pagament completat després del canvi no trobaria la seva línia i es perdria |
+| E39b | Si un canvi de pla o un rebuig tanca un pagament **parcial** (p. ex. 50 € cobrats d'una entrada de 100 €), aquell registre queda anul·lat tal com era i se'n crea un de nou «cobrat» pels 50 € realment rebuts. Així es descompta bé del nou import (un pla de 60 € deixa 10 € pendents, no 50 €), i en un rebuig surt l'avís de retornar-los. Si el que s'ha cobrat supera el nou import, D2 avisa que cal retornar la diferència | S04 §5 (aplicat) · codi: E3-T08 ronda 2 | amb la regla anterior es cobrava de més a qui baixava de pla, i un rebuig no avisava dels diners rebuts |
+| E40 | Migració: si en tornar a carregar les dades de Playoff apareix un canvi que no es pot reconciliar (per exemple, un soci importat amb compte que ara arriba de baixa, o una unió de `persones.csv` que desapareix), **no s'aplica res** de la càrrega. A staging es fa `--reset` i una càrrega nova; a producció només hi ha una càrrega | S18 R-18-14 (aplicat) · codi: E5-T12 ronda 4 | aplicar «la resta» obria camins perquè una altra fila tornés a escriure la persona protegida (tres rondes de revisió); bloquejar és més simple i segur |
 
 ---
 

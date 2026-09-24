@@ -159,6 +159,90 @@ export function formatWeekRange(
     : translateStatic("common:format.weekRange.differentMonth", locale, values);
 }
 
+/**
+ * R-07-13 presentations of an activity date: `list` (D7 list, 04 block) «ds 7» in the current
+ * month, otherwise «ds 12/09»; `long` (D7 maintenance) «ds 7 d’agost»; `day` (03) «Dissabte 7»;
+ * `history` (25) always «ds 12/07». `list`, `long` and `day` append « · 18:30[–20:30]» (hours
+ * without a leading zero) when there are hours.
+ */
+export type ActivityDatePresentation = "day" | "history" | "list" | "long";
+
+const LOCAL_DATE_TIME = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::\d{2})?$/u;
+const LOCAL_TIME = /^\d{2}:\d{2}$/u;
+
+function clubLocalDate(value: DateInput, timeZone: string): string {
+  if (typeof value === "string") {
+    if (isPlainDate(value)) return value;
+    const local = LOCAL_DATE_TIME.exec(value);
+    if (local?.[1] !== undefined) return local[1];
+  }
+  return new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+    year: "numeric",
+  }).format(toDate(value));
+}
+
+/** «18:30» from a club-local `HH:mm`, a club-local `YYYY-MM-DDTHH:mm` or an instant (club zone). */
+function clubLocalTime(value: string, locale: Locale, timeZone: string): string {
+  const local = LOCAL_TIME.test(value) ? value : LOCAL_DATE_TIME.exec(value)?.[2];
+  return (local ?? formatTime(value, locale, timeZone)).replace(/^0(?=\d:)/u, "");
+}
+
+/**
+ * Activity dates of R-07-13. `date`, `startTime` and `endTime` are club-local values
+ * (`YYYY-MM-DD`, `HH:mm`, `YYYY-MM-DDTHH:mm`) or instants, which are read in the club
+ * `timeZone` — never in the device's; `today` decides «the current month» in the same zone.
+ */
+export function formatActivityDate(
+  date: string,
+  startTime: string | null | undefined,
+  endTime: string | null | undefined,
+  locale: Locale,
+  timeZone: string,
+  today: DateInput = new Date(),
+  presentation: ActivityDatePresentation = "list",
+): string {
+  const localDate = clubLocalDate(date, timeZone);
+  const day = String(Number(localDate.slice(8, 10)));
+  const month = localDate.slice(5, 7);
+  const weekday = formatPlainDate(
+    localDate,
+    locale,
+    presentation === "day" ? "weekdayLong" : "weekdayShort",
+  ).replaceAll(/[.,]/gu, "");
+  let label: string;
+  if (presentation === "long") {
+    label = translateStatic("common:format.activityDate.long", locale, {
+      dayMonth: formatPlainDate(localDate, locale, "dayMonth"),
+      weekday,
+    });
+  } else if (presentation === "day") {
+    label = translateStatic("common:format.activityDate.currentMonth", locale, {
+      day,
+      weekday: `${weekday.charAt(0).toLocaleUpperCase(locale)}${weekday.slice(1)}`,
+    });
+  } else {
+    const sameMonth =
+      presentation === "list" &&
+      clubLocalDate(today, timeZone).slice(0, 7) === localDate.slice(0, 7);
+    label = sameMonth
+      ? translateStatic("common:format.activityDate.currentMonth", locale, { day, weekday })
+      : translateStatic("common:format.activityDate.otherMonth", locale, { day, month, weekday });
+  }
+  if (presentation === "history" || startTime === null || startTime === undefined) return label;
+  const start = clubLocalTime(startTime, locale, timeZone);
+  const time =
+    endTime === null || endTime === undefined
+      ? start
+      : translateStatic("common:format.activityDate.timeRange", locale, {
+          end: clubLocalTime(endTime, locale, timeZone),
+          start,
+        });
+  return translateStatic("common:format.activityDate.withTime", locale, { date: label, time });
+}
+
 export function formatDateTime(value: DateInput, locale: Locale, timeZone: string): string {
   return new Intl.DateTimeFormat(intlLocales[locale], {
     ...dateOptions.short,
@@ -209,6 +293,14 @@ export function formatMonth(value: DateInput, locale: Locale, timeZone: string):
 }
 
 export interface ClubFormats {
+  /** R-07-13 activity dates in the club zone (see `formatActivityDate`). */
+  formatActivityDate: (
+    date: string,
+    startTime?: string | null,
+    endTime?: string | null,
+    presentation?: ActivityDatePresentation,
+    today?: DateInput,
+  ) => string;
   formatDate: (value: DateInput, presentation?: DatePresentation) => string;
   formatDateRange: (start: DateInput, end: DateInput, presentation?: DatePresentation) => string;
   formatDateTime: (value: DateInput) => string;
@@ -224,6 +316,8 @@ export interface ClubFormats {
 
 export function createClubFormats(locale: Locale, timeZone: string, currency: string): ClubFormats {
   return {
+    formatActivityDate: (date, startTime, endTime, presentation, today) =>
+      formatActivityDate(date, startTime, endTime, locale, timeZone, today, presentation),
     formatDate: (value, presentation) => formatDate(value, locale, timeZone, presentation),
     formatDateRange: (start, end, presentation) =>
       formatDateRange(start, end, locale, timeZone, presentation),

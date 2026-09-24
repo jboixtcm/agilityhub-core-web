@@ -1,5 +1,12 @@
 {
   "format": {
+    "activityDate": {
+      "currentMonth": "{weekday} {day}",
+      "otherMonth": "{weekday} {day}/{month}",
+      "long": "{weekday} {dayMonth}",
+      "withTime": "{date} · {time}",
+      "timeRange": "{start}–{end}"
+    },
     "duration": {
       "before": "{duration} abans"
     },

@@ -1,0 +1,45 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ✓ src/activities.test.ts > T-07-31 activities i18n (activities, admin-activities, enums) > has the same activities keys in ca, es and en, none empty 2ms
+ ✓ src/activities.test.ts > T-07-31 activities i18n (activities, admin-activities, enums) > has the same admin-activities keys in ca, es and en, none empty 3ms
+ ✓ src/activities.test.ts > T-07-31 activities i18n (activities, admin-activities, enums) > has the same enums keys in ca, es and en, none empty 0ms
+ ✓ src/activities.test.ts > T-07-31 activities i18n (activities, admin-activities, enums) > never uses the forbidden vocabulary (the registration is «per persona») 12ms
+ ✓ src/activities.test.ts > T-07-31 activities i18n (activities, admin-activities, enums) > keeps the mockup and S07 §10 literals in ca 0ms
+ ✓ src/format.test.ts > club-aware formats > formats money in ca 8ms
+ ✓ src/format.test.ts > club-aware formats > formats money in es 0ms
+ ✓ src/format.test.ts > club-aware formats > formats money in en 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in ca 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in es 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in en 0ms
+ ✓ src/format.test.ts > club-aware formats > uses the club time zone for the same UTC instant 3ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in ca (E4-W01 D3 generation card) 1ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in es (E4-W01 D3 generation card) 1ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in en (E4-W01 D3 generation card) 0ms
+ ✓ src/format.test.ts > club-aware formats > formats numeric day and month and long weekday names 0ms
+ ✓ src/format.test.ts > club-aware formats > formats date ranges and binds branding values 0ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Auckland 0ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Kiritimati 0ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Europe/Madrid 0ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in America/Bogota 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-13-01" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-08-32" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-02-30" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "hola" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > accepts real business dates, leap days included 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-08-07 18:30–20:30 as «dv 7 · 18:30–20:30» 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-09-12 09:00–13:00 as «ds 12/09 · 9:00–13:00» 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-09-19 09:00–null as «ds 19/09 · 9:00» 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-10-04 null–null as «dg 4/10» 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the maintenance, 03 and 25 presentations 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the list date in es 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the list date in en 0ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > T-07-31 a viewer in America/Bogota reads 18:30 for 2026-08-07T16:30:00Z (club Europe/Madrid) 1ms
+ ✓ src/format.test.ts > club-aware formats > R-07-13 activity dates > decides «the current month» in the club zone 0ms
+
+ Test Files  2 passed (2)
+      Tests  36 passed (36)
+   Start at  19:02:24
+   Duration  198ms (transform 61%, tests 20%, import 18%, worker 2%)
+

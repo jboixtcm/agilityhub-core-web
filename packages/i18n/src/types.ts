@@ -5,6 +5,8 @@ export type Locale = (typeof productLocales)[number];
 export const namespaces = [
   "common",
   "auth",
+  "activities",
+  "admin-activities",
   "admin-audit",
   "admin-catalogs",
   "admin-census",

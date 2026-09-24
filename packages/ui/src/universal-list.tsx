@@ -175,7 +175,11 @@ export interface UniversalListProps<Row> {
   };
   totalPages: number;
   bulkActions?: (selected: string[], clear: () => void) => ReactNode;
+  /** Replaces the empty state's «clear filters» action (e.g. «Nova activitat»). */
+  emptyAction?: ReactNode;
   error?: string;
+  /** `false` hides the «Excel · PDF» menu (a role without export rights). */
+  exportable?: boolean;
   loading?: boolean;
   selectable?: boolean;
 }
@@ -271,7 +275,9 @@ export function UniversalList<Row>({
   bulkActions,
   caption,
   columns,
+  emptyAction,
   error,
+  exportable = true,
   filterColumns,
   getExportHref,
   labels,
@@ -780,43 +786,45 @@ export function UniversalList<Row>({
           </div>
         </details>
 
-        <details className="ah-universal-list__menu ah-universal-list__export">
-          <summary>
-            <Icon aria-hidden="true" name="export" />
-            {labels.export}
-          </summary>
-          <div className="ah-universal-list__menu-panel">
-            {onExport === undefined ? (
-              <>
-                <a download href={getExportHref("xlsx", state)}>
-                  {labels.formatXlsx}
-                </a>
-                <a download href={getExportHref("pdf", state)}>
-                  {labels.formatPdf}
-                </a>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    onExport("xlsx", state);
-                  }}
-                  type="button"
-                >
-                  {labels.formatXlsx}
-                </button>
-                <button
-                  onClick={() => {
-                    onExport("pdf", state);
-                  }}
-                  type="button"
-                >
-                  {labels.formatPdf}
-                </button>
-              </>
-            )}
-          </div>
-        </details>
+        {exportable ? (
+          <details className="ah-universal-list__menu ah-universal-list__export">
+            <summary>
+              <Icon aria-hidden="true" name="export" />
+              {labels.export}
+            </summary>
+            <div className="ah-universal-list__menu-panel">
+              {onExport === undefined ? (
+                <>
+                  <a download href={getExportHref("xlsx", state)}>
+                    {labels.formatXlsx}
+                  </a>
+                  <a download href={getExportHref("pdf", state)}>
+                    {labels.formatPdf}
+                  </a>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      onExport("xlsx", state);
+                    }}
+                    type="button"
+                  >
+                    {labels.formatXlsx}
+                  </button>
+                  <button
+                    onClick={() => {
+                      onExport("pdf", state);
+                    }}
+                    type="button"
+                  >
+                    {labels.formatPdf}
+                  </button>
+                </>
+              )}
+            </div>
+          </details>
+        ) : null}
       </div>
 
       <div className="ah-universal-list__table-wrap">
@@ -934,20 +942,24 @@ export function UniversalList<Row>({
         {!loading && rows.length === 0 ? (
           <EmptyState
             action={
-              <Button
-                onClick={() => {
-                  setSearchValue("");
-                  onStateChange({
-                    ...state,
-                    filters: state.filters.filter((filter) => filter.field === statusFilter.field),
-                    page: 0,
-                    q: "",
-                  });
-                }}
-                variant="secondary"
-              >
-                {labels.clearFilters}
-              </Button>
+              emptyAction ?? (
+                <Button
+                  onClick={() => {
+                    setSearchValue("");
+                    onStateChange({
+                      ...state,
+                      filters: state.filters.filter(
+                        (filter) => filter.field === statusFilter.field,
+                      ),
+                      page: 0,
+                      q: "",
+                    });
+                  }}
+                  variant="secondary"
+                >
+                  {labels.clearFilters}
+                </Button>
+              )
             }
             description={labels.emptyDescription}
             icon="search"

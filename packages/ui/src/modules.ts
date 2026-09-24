@@ -48,7 +48,7 @@ export const moduleUi = {
   SINGLE_CLASS: { menuEntries: [], routes: [], tabs: [] },
   ACTIVITIES: {
     menuEntries: ["activities"],
-    routes: ["/activitats"],
+    routes: ["/activitats", "/activitats/:id", "/activitats/:id/inscrits"],
     tabs: [],
   },
   FAMILY_GROUP: { menuEntries: [], routes: [], tabs: [] },

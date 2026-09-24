@@ -31,6 +31,10 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ReserveActivitiesPage } from "./activities/ActivitiesBlock";
+import { ActivityDetailPage } from "./activities/ActivityDetailPage";
+import { HomeActivityReservations } from "./activities/ActivityReservationRow";
+import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
 import { InfoPage } from "./InfoPage";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -80,6 +84,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 25.
   { path: "/historic" },
+  // Activity detail (S07 §2, no mockup; ACTIVITIES through `moduleUi`).
+  { path: "/activitats/:id" },
   // Screen 30.
   { path: "/info" },
   // New course screens from S16.
@@ -1233,6 +1239,31 @@ export function App({
       <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
         <OverviewPage client={apiClient} />
       </RequireRole>
+    ) : route.path === "/activitats/:id" ? (
+      <RequireAuth>
+        <RequireModule module="ACTIVITIES">
+          <ActivityDetailPage
+            activityId={decodeURIComponent(pathname.split("/")[2] ?? "")}
+            client={apiClient}
+            key={pathname}
+          />
+        </RequireModule>
+      </RequireAuth>
+    ) : pathname === "/reservar" ? (
+      // Screen 04 placeholder with the S07 block; E5 (S08) owns the page.
+      <RequireAuth>
+        <ReserveActivitiesPage client={apiClient} />
+      </RequireAuth>
+    ) : import.meta.env.DEV && pathname === "/_gallery/historic-activitats" ? (
+      // Development-only evidence of the screen 25 activity rows (S10/E6 owns `/historic`).
+      <RequireAuth>
+        <HistoryRowsPreview />
+      </RequireAuth>
+    ) : pathname === "/inici" ? (
+      // Screen 03 placeholder with the S07 rows of «Les meves reserves»; E5 replaces the page.
+      <RequireAuth>
+        <HomeActivityReservations client={apiClient} fallback={<Placeholder />} />
+      </RequireAuth>
     ) : (
       routePlaceholder(route)
     );
@@ -1249,7 +1280,11 @@ export function App({
     >
       <MobileShell
         authClient={authClient}
-        detail={["/gossos", "/dades", "/info", "/avui", "/instructor/avui"].includes(pathname)}
+        detail={
+          ["/gossos", "/dades", "/info", "/avui", "/instructor/avui", "/reservar"].includes(
+            pathname,
+          ) || route.path === "/activitats/:id"
+        }
       >
         {content}
       </MobileShell>

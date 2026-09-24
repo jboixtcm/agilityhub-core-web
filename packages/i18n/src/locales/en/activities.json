@@ -1,0 +1,47 @@
+{
+  "block": {
+    "title": "Activities",
+    "intro": "Choose the activity or class you want to book.",
+    "loading": "Loading the activities",
+    "separator": " · "
+  },
+  "list": {
+    "freeSeats": "{count, plural, one {# place} other {# places}}",
+    "open": "Open",
+    "full": "Full",
+    "fullWaitlist": "Full · ⏳{waiting}"
+  },
+  "detail": {
+    "title": "Activity",
+    "back": "Go back",
+    "close": "Close",
+    "loading": "Loading the activity",
+    "loadError": "The activity could not be loaded.",
+    "retry": "Try again",
+    "notAvailable": "This activity is no longer available.",
+    "allRings": "all rings",
+    "registrationUntil": "Registration until {date}",
+    "freeSeats": "{count, plural, one {# free place} other {# free places}} of {max}",
+    "documents": "Documents",
+    "waitlistPosition": "on the waiting list ({position})",
+    "registerButton": "SIGN ME UP",
+    "joinWaitlistButton": "PUT ME ON THE WAITING LIST",
+    "cancelButton": "CANCEL MY REGISTRATION",
+    "leaveWaitlistButton": "LEAVE THE WAITING LIST",
+    "contactClubToCancel": "To cancel the registration, contact the club",
+    "waitlistQuestion": "Do you want to join the waiting list of {title}?",
+    "cancelQuestion": "Do you want to cancel your registration to {title}?",
+    "leaveQuestion": "Do you want to leave the waiting list of {title}?",
+    "sending": "Sending",
+    "registered": "You are registered",
+    "waitlisted": "You are on the waiting list",
+    "cancelled": "Registration cancelled",
+    "left": "You left the waiting list",
+    "error": "The action could not be completed. Try again."
+  },
+  "rows": {
+    "sectionTitle": "My bookings",
+    "when": "{date} · {place}",
+    "adminText": "“{text}”"
+  }
+}

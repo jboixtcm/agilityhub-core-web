@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createClubFormats,
+  formatActivityDate,
   formatDate,
   formatDateRange,
   formatDuration,
@@ -106,5 +107,83 @@ describe("club-aware formats", () => {
   it("accepts real business dates, leap days included", () => {
     expect(parsePlainDate("2028-02-29")?.toISOString()).toBe("2028-02-29T00:00:00.000Z");
     expect(isPlainDate("2026-08-04")).toBe(true);
+  });
+
+  describe("R-07-13 activity dates", () => {
+    // The D7 list is read in August 2026 (club-local).
+    const today = "2026-08-04";
+
+    it.each([
+      ["2026-08-07", "18:30", "20:30", "dv 7 · 18:30–20:30"],
+      ["2026-09-12", "09:00", "13:00", "ds 12/09 · 9:00–13:00"],
+      ["2026-09-19", "09:00", null, "ds 19/09 · 9:00"],
+      ["2026-10-04", null, null, "dg 4/10"],
+    ] as const)("lists %s %s–%s as «%s»", (date, start, end, expected) => {
+      expect(formatActivityDate(date, start, end, "ca", "Europe/Madrid", today)).toBe(expected);
+    });
+
+    it("formats the maintenance, 03 and 25 presentations", () => {
+      const formats = createClubFormats("ca", "Europe/Madrid", "EUR");
+      expect(formats.formatActivityDate("2026-08-07", "18:30", "20:30", "long")).toBe(
+        "dv 7 d’agost · 18:30–20:30",
+      );
+      expect(
+        formats.formatActivityDate(
+          "2026-08-07T18:30",
+          "2026-08-07T18:30",
+          "2026-08-07T20:30",
+          "day",
+        ),
+      ).toBe("Divendres 7 · 18:30–20:30");
+      expect(formats.formatActivityDate("2026-07-12T10:00", "10:00", null, "history")).toBe(
+        "dg 12/07",
+      );
+    });
+
+    it.each([
+      ["es", "sáb 12/09 · 9:00–13:00"],
+      ["en", "Sat 09/12 · 9:00–13:00"],
+    ] as const)("formats the list date in %s", (locale, expected) => {
+      expect(
+        formatActivityDate("2026-09-12", "09:00", "13:00", locale, "Europe/Madrid", today),
+      ).toBe(expected);
+    });
+
+    it("T-07-31 a viewer in America/Bogota reads 18:30 for 2026-08-07T16:30:00Z (club Europe/Madrid)", () => {
+      const previous = process.env.TZ;
+      process.env.TZ = "America/Bogota";
+      try {
+        expect(new Date("2026-08-07T16:30:00Z").getHours()).toBe(11);
+        expect(
+          formatActivityDate(
+            "2026-08-07T16:30:00Z",
+            "2026-08-07T16:30:00Z",
+            "2026-08-07T18:30:00Z",
+            "ca",
+            "Europe/Madrid",
+            "2026-08-04T12:00:00Z",
+          ),
+        ).toBe("dv 7 · 18:30–20:30");
+      } finally {
+        process.env.TZ = previous;
+      }
+    });
+
+    it("decides «the current month» in the club zone", () => {
+      // 31/07 23:30 in Madrid is already 1/08 there: the August activity is «this month».
+      expect(
+        formatActivityDate("2026-08-07", null, null, "ca", "Europe/Madrid", "2026-07-31T22:30:00Z"),
+      ).toBe("dv 7");
+      expect(
+        formatActivityDate(
+          "2026-08-07",
+          null,
+          null,
+          "ca",
+          "America/Bogota",
+          "2026-07-31T22:30:00Z",
+        ),
+      ).toBe("dv 7/08");
+    });
   });
 });

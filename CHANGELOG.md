@@ -32,6 +32,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the Clubs Admin class calendar (D4/D4b/D4c `/calendari?estat=…&setmana=…`) and its day view (`/calendari/dia/:date`): Actives/Esborrany/Anul·lades filter choosing the initial week, club-local week selector, grid with counts, waitlist, draft, cancelled and ring-block cells, «Classe seleccionada» card with chip editors saved with `version`, D4c cancellation/deletion modal from the cancellation preview with mandatory notice text and `Idempotency-Key`, whole-week validation card, week warnings card, [Crear classe] and [Bloqueja pista] drawers with masked dates and conflict lists, read-only INSTRUCTOR access (menu and routes), `calendar.*`/`cancelModal.*` and `classState`/`cancellationReason`/`ringBlockKind`/`ringBlockReason` enums in ca/es/en, `ScheduleCell` draft/counts/icon/link variants, stateful calendar MSW handlers (week calendar, validation, class sessions, cancellation, risk exemption, ring blocks, day grid) and desktop browser evidence (E4-W02).
 - Add `@agilityhub/course-core` and `@agilityhub/shared-types`, recovered unchanged from the web-planner monorepo (course-builder `65126cf`). They bring the Smarter importer and writer, the `CourseData` schema, geometry, the placement warning engine, AprilTag markers and calibration, and the Unity `BuildSessionExportV1` contract. The Supabase row types are kept for reference under `shared-types/src/legacy/`. Also added: the 8 Smarter test exports, the colour scheme and the 4 route-validation fixtures, the AprilTag BSD-2 notice, READMEs with provenance, and the T-16-01 `smarter-fixtures.test.ts` (E0-W08).
 - Add the Clubs screens 10 «Classes del dia» (`/avui`, member and impersonated sessions) and 23 «Visió global» (`/instructor/avui`, INSTRUCTOR/ADMIN) on the new shared `DayGrid` presenter of `@agilityhub/ui` (form D of `GET /day-grid`, identical ring columns, stacked cells, «Sense» column, «Ocupada» in grey without background, «Entren.»/«Bloq.»/«Activitat» cells, cancelled classes dimmed, `n/n +e` only in the instructor view with `WAITLIST`). Also added: the club-local «today» and `?date=` navigation with arrows and dl–ds chips, the risk balloon with the api `riskText`, the empty and error states, the class drawer (`GET /class-sessions/{id}`) and the ring-block drawer with [Anul·la el bloqueig] (`POST /ring-blocks/{id}/cancellation`, `INVALID_STATE` / `RING_BLOCK_MANAGED_BY_ACTIVITY`), the `home` and `instructor` namespaces, `enums:occupiedReason` and `shell:nav.globalView` in ca/es/en, the mockup day-grid MSW world (`fixtures/day-grid.ts`, `day-grid-handlers.ts`, scenario `dayGridEmpty`) and mobile browser evidence (E4-W03).
+- Add S07 activities (E4-W04). **D7** (`/activitats`, `/activitats/:id`, `/activitats/:id/inscrits`; ADMIN, INSTRUCTOR read-only, `ACTIVITIES`-gated):
+  - the universal list of `GET /activities` with the R-07-13 dates, rings, registrations and state chips, and the «Nova activitat» modal;
+  - the maintenance cards: per-locale texts, the type chip and its own label, the restricted `RichTextEditor`, and image and documents by signed upload; date and hours, registration period, places, levels, waitlist, linked rings, location, slug, the public URL and internal notes; [DESA] with `version`;
+  - [PUBLICA] with the `PublishConflictsDialog`, [DESPUBLICA], [CANCEL·LA L'ACTIVITAT] with the `CancelActivityModal`, and [ELIMINA];
+  - the registrants list with the FIFO waitlist positions and exports through the drawer.
+
+  **App:** the «Activitats» block of 04 on the provisional `/reservar`, the `/activitats/:id` detail (register, join the waitlist, cancel, contact text after the deadline), the 03 rows on the provisional `/inici`, and the `ActivityHistoryRow` of 25.
+
+  **Shared:** `formatActivityDate` in `@agilityhub/i18n`; `rich-text.ts` (the R-07-03 allow-list), `RichTextEditor` and `SafeHtml` in `@agilityhub/ui`; the new `UniversalList` props `exportable` and `emptyAction`.
+
+  **i18n:** the `activities` and `admin-activities` namespaces, `enums:activityType/activityState/activityRegistrationState/activityOrigin` and `common:format.activityDate` in ca/es/en.
+
+  **Mocks:** stateful S07 MSW handlers (`activity-handlers.ts`, `fixtures/activities.ts`), scenarios `activitiesNoWaitlist` and `activitiesNoLevels`, and the `ActivityListItem` overlay in `pending.json`. Desktop and mobile browser evidence.
 
 ### Changed
 
@@ -80,5 +93,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Adopt the verified S01 OpenAPI snapshot as the generated client source, retain unpublished E2 operations in `pending.json`, validate JSON mocks against component schemas, and route core authentication APIs separately from identity-host OAuth2 endpoints.
 - Align mobile screen 28 with its approved mockup by keeping language on screen 12 and consent management out of the member data form.
 - Replace browser-readable refresh-token storage with the same-site HttpOnly cookie flow, relative API/identity routes, credentialed requests, cookie-session bootstrap and logout, guarded memory-only MSW support, and local Vite proxies.
+- E4-W04:
+  - The api client sends `Idempotency-Key` by default on `POST /activities/{id}/publication|cancellation` and `POST /activity-registrations`.
+  - The D7 sidebar entry and routes are open to INSTRUCTOR (read-only).
+  - `moduleUi.ACTIVITIES` registers the `/activitats/:id` and `/activitats/:id/inscrits` routes.
+  - The mocks answer `files.maxSizeMb` and queue the activity exports; the export-drawer file name follows the list key.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

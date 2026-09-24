@@ -2,8 +2,10 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { activityHandlers } from "./activity-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
+import { activityState, resetActivityState } from "./fixtures/activities";
 import auditEntriesFixture from "./fixtures/audit-entries.json";
 import {
   catalogState,
@@ -1459,6 +1461,18 @@ export const handlers = [
           version: 1,
         });
       }
+      if (key === "files.maxSizeMb") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          default: 25,
+          editableBy: "PLATFORM",
+          key,
+          label: "Mida màxima per fitxer",
+          type: "INT",
+          value: 25,
+          version: 1,
+        });
+      }
       if (key === "billing.entryFeePerDog") {
         return HttpResponse.json<Parameter>({
           ...base,
@@ -1724,6 +1738,43 @@ export const handlers = [
       { status: 202 },
     );
   }),
+  // S07 D7 and registrants exports (ADMIN): queued jobs followed in the exports drawer.
+  ...(
+    [
+      ["activities", "*/api/v1/activities/export", "00000000-0000-4000-8000-000000000407"],
+      [
+        "activity-registrations",
+        "*/api/v1/activity-registrations/export",
+        "00000000-0000-4000-8000-000000000408",
+      ],
+    ] as const
+  ).map(([listKey, path, id]) =>
+    http.get(path, ({ request }) => {
+      const scenario = currentMockScenario();
+      if (!scenario.branding.modules.includes("ACTIVITIES")) {
+        return apiError("MODULE_DISABLED", "Module disabled", 404);
+      }
+      if (!(scenario.me.membership?.roles ?? []).includes("ADMIN")) {
+        return apiError("FORBIDDEN", "Forbidden", 403);
+      }
+      const requestedFormat = new URL(request.url).searchParams.get("format");
+      const job: ExportJob = {
+        createdAt: "2026-08-03T10:25:00Z",
+        format: requestedFormat === "pdf" ? "PDF" : "XLSX",
+        id,
+        kind: "LIST",
+        listKey,
+        progressPct: 0,
+        status: "QUEUED",
+      };
+      exportPolls = 0;
+      exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
+      return HttpResponse.json(
+        { jobId: job.id, statusUrl: `/api/v1/exports/${job.id}` },
+        { status: 202 },
+      );
+    }),
+  ),
   http.get("*/api/v1/audit-entries/:id", ({ params }) => {
     const item = auditEntries.find((entry) => entry.id === String(params.id));
     if (item === undefined) return apiError("NOT_FOUND", "Audit entry not found", 404);
@@ -1755,7 +1806,7 @@ export const handlers = [
               ...job,
               downloadUrl: `/api/v1/exports/${job.id}/download`,
               expiresAt: "2026-08-10T10:25:00Z",
-              fileName: `auditoria_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
+              fileName: `${job.listKey === "audit-entries" || job.listKey === undefined ? "auditoria" : job.listKey}_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
               progressPct: 100,
               rows: auditEntries.length,
               status: "READY",
@@ -2961,6 +3012,7 @@ export const handlers = [
   ...planningHandlers,
   ...dayGridHandlers,
   ...calendarHandlers,
+  ...activityHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
       status: "UP",
@@ -2971,9 +3023,11 @@ export const handlers = [
 ];
 
 export {
+  activityState,
   catalogState,
   mockScenario,
   planningState,
+  resetActivityState,
   resetAuditMockState,
   resetCatalogState,
   resetCensusRecordState,

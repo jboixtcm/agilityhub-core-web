@@ -55,5 +55,30 @@
   "occupiedReason": {
     "TRAINING": "entren.",
     "MAINTENANCE": "mantenimiento"
+  },
+  "activityType": {
+    "SEMINAR": "seminario",
+    "SOCIAL_LEAGUE": "liga social",
+    "COMPETITION": "competición",
+    "DEMONSTRATION": "exhibición",
+    "COURSE": "cursillo",
+    "OTHER": "otros"
+  },
+  "activityState": {
+    "DRAFT": "borrador",
+    "PUBLISHED": "publicada",
+    "FINISHED": "finalizada",
+    "CANCELLED": "cancelada"
+  },
+  "activityRegistrationState": {
+    "ACTIVE": "inscrita",
+    "WAITLISTED": "en lista de espera",
+    "CANCELLED": "anulada",
+    "CANCELLED_BY_CLUB": "cancelada por el club",
+    "DONE": "hecha"
+  },
+  "activityOrigin": {
+    "APP": "app",
+    "BACKOFFICE": "club"
   }
 }

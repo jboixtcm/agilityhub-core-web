@@ -1,0 +1,47 @@
+{
+  "block": {
+    "title": "Actividades",
+    "intro": "Seleccionad la actividad o clase que queráis reservar.",
+    "loading": "Cargando las actividades",
+    "separator": " · "
+  },
+  "list": {
+    "freeSeats": "{count, plural, one {# plaza} other {# plazas}}",
+    "open": "Abiertas",
+    "full": "Completa",
+    "fullWaitlist": "Completa · ⏳{waiting}"
+  },
+  "detail": {
+    "title": "Actividad",
+    "back": "Volver",
+    "close": "Cerrar",
+    "loading": "Cargando la actividad",
+    "loadError": "No se ha podido cargar la actividad.",
+    "retry": "Volver a intentarlo",
+    "notAvailable": "Esta actividad ya no está disponible.",
+    "allRings": "todas las pistas",
+    "registrationUntil": "Inscripción hasta el {date}",
+    "freeSeats": "{count, plural, one {# plaza libre} other {# plazas libres}} de {max}",
+    "documents": "Documentos",
+    "waitlistPosition": "en lista de espera ({position})",
+    "registerButton": "INSCRÍBEME",
+    "joinWaitlistButton": "APÚNTAME A LA LISTA DE ESPERA",
+    "cancelButton": "ANULAR LA INSCRIPCIÓN",
+    "leaveWaitlistButton": "SALIR DE LA LISTA DE ESPERA",
+    "contactClubToCancel": "Para anular la inscripción, ponte en contacto con el club",
+    "waitlistQuestion": "¿Quieres apuntarte a la lista de espera de {title}?",
+    "cancelQuestion": "¿Quieres anular la inscripción a {title}?",
+    "leaveQuestion": "¿Quieres salir de la lista de espera de {title}?",
+    "sending": "Enviando",
+    "registered": "Te has inscrito",
+    "waitlisted": "Estás en la lista de espera",
+    "cancelled": "Inscripción anulada",
+    "left": "Has salido de la lista de espera",
+    "error": "No se ha podido completar la acción. Inténtalo de nuevo."
+  },
+  "rows": {
+    "sectionTitle": "Mis reservas",
+    "when": "{date} · {place}",
+    "adminText": "«{text}»"
+  }
+}

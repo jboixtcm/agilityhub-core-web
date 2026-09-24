@@ -139,6 +139,8 @@ for (const [key, file] of usedKeys) {
 }
 
 const dynamicKeyPrefixes = [
+  "admin-activities:cancelModal.channel.",
+  "admin-activities:registrants.filters.",
   "admin-census:signupReview.fields.",
   "admin-census:signupReview.paymentMethod.",
   "admin-census:signupReview.upfrontLines.",
@@ -155,6 +157,10 @@ const dynamicKeyPrefixes = [
   "admin-settings:modules.",
   "admin-settings:param.",
   "admin-scheduling:cancelModal.channel.",
+  "enums:activityOrigin.",
+  "enums:activityRegistrationState.",
+  "enums:activityState.",
+  "enums:activityType.",
   "enums:cancellationReason.",
   "enums:classState.",
   "enums:coverageStatus.",

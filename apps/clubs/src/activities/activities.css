@@ -1,0 +1,246 @@
+.activities-screen {
+  display: grid;
+  align-content: start;
+  align-self: start;
+  gap: var(--ah-space-2);
+  width: 100%;
+  padding: 0 var(--ah-space-3) var(--ah-space-4);
+}
+
+.activities-screen__bar {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) 0;
+  margin: 0 calc(-1 * var(--ah-space-3));
+  border-bottom: 0;
+}
+
+.activities-screen__bar .ah-app-bar__title {
+  text-align: left;
+}
+
+.activities-screen__bar h1 {
+  margin: 0;
+  overflow: hidden;
+  font: 700 1.2rem/1.2 var(--ah-font-display);
+  text-overflow: ellipsis;
+}
+
+.activities-screen__back {
+  display: grid;
+  min-width: 2rem;
+  min-height: 2rem;
+  color: var(--ah-color-primary);
+  font-size: 1.4rem;
+  text-decoration: none;
+  place-items: center;
+}
+
+.activities-screen__intro {
+  margin: 0;
+  color: var(--ah-color-text);
+  font-size: 0.85rem;
+}
+
+.activities-block {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.activities-block__title {
+  margin: var(--ah-space-2) 0 0;
+  color: var(--ah-color-text-muted);
+  font: 700 0.72rem/1.3 var(--ah-font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.activity-row {
+  padding: 0;
+}
+
+.activity-row__body {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text);
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.activity-row__body--two-lines {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.activity-row__line {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.activity-row__line--muted {
+  justify-content: space-between;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}
+
+.activity-row__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-row__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-row__icon,
+.activity-row__chevron {
+  flex: none;
+  color: var(--ah-color-text-muted);
+}
+
+.activity-row--inert {
+  opacity: 0.5;
+}
+
+.activity-badge--nowrap {
+  white-space: nowrap;
+}
+
+.activity-history-row {
+  display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-2) var(--ah-space-3);
+}
+
+.activity-history-row__line {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  font-size: 0.85rem;
+}
+
+.activity-history-row__date {
+  width: 3rem;
+  flex: none;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}
+
+.activity-history-row__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-history-row__note {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}
+
+.activity-detail {
+  gap: var(--ah-space-3);
+}
+
+.activity-detail__image {
+  width: 100%;
+  max-height: 12rem;
+  object-fit: cover;
+  border-radius: var(--ah-radius-lg);
+}
+
+.activity-detail__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.activity-detail__header h2 {
+  flex: 1 1 100%;
+  margin: 0;
+  font: 800 1.25rem/1.2 var(--ah-font-display);
+}
+
+.activity-detail__facts {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.activity-detail__facts li {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.activity-detail__facts svg {
+  flex: none;
+  color: var(--ah-color-primary);
+}
+
+.activity-detail__short {
+  margin: 0;
+  font-weight: 600;
+}
+
+.activity-detail__long {
+  font-size: 0.85rem;
+}
+
+.activity-detail__documents {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.activity-detail__documents h3 {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.activity-detail__documents a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  color: var(--ah-color-primary);
+}
+
+.activity-detail__action {
+  display: grid;
+}
+
+.activity-detail__action .ah-button {
+  width: 100%;
+}
+
+.activity-detail__note {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.activity-detail__dialog {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+}
+
+.activity-row .ah-badge {
+  flex: none;
+  font-size: 0.66rem;
+}
+
+.activity-row__body:not(.activity-row__body--two-lines) {
+  font-size: 0.7rem;
+}

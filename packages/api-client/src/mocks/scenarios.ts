@@ -238,6 +238,27 @@ const scenarios = {
     sessions: accountSessions,
     signupStripe: true,
   },
+  /**
+   * S07 R-07-14 variants: `WAITLIST` off, and `levels.enabled = false`. The account is the member
+   * with the ADMIN role as well, so D7 (admin) and the app (member) read the same variant.
+   */
+  activitiesNoWaitlist: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "WAITLIST") },
+    me: {
+      ...member,
+      membership: { ...memberMembership, roles: ["MEMBER", "ADMIN"] },
+    },
+    sessions: accountSessions,
+  },
+  activitiesNoLevels: {
+    branding: canic,
+    levelsEnabled: false,
+    me: {
+      ...member,
+      membership: { ...memberMembership, roles: ["MEMBER", "ADMIN"] },
+    },
+    sessions: accountSessions,
+  },
   signupClosed: {
     branding: {
       ...canic,

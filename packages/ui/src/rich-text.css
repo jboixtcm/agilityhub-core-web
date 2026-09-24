@@ -1,0 +1,129 @@
+.ah-rich-text {
+  color: var(--ah-color-text);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.ah-rich-text > :first-child {
+  margin-top: 0;
+}
+
+.ah-rich-text > :last-child {
+  margin-bottom: 0;
+}
+
+.ah-rich-text p {
+  margin: 0 0 var(--ah-space-2);
+}
+
+.ah-rich-text h3,
+.ah-rich-text h4 {
+  margin: var(--ah-space-4) 0 var(--ah-space-2);
+  font-family: var(--ah-font-display);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ah-rich-text h3 {
+  font-size: 1.05rem;
+}
+
+.ah-rich-text h4 {
+  font-size: 0.95rem;
+}
+
+.ah-rich-text ul,
+.ah-rich-text ol {
+  margin: 0 0 var(--ah-space-2);
+  padding-left: var(--ah-space-5);
+}
+
+.ah-rich-text blockquote {
+  margin: 0 0 var(--ah-space-2);
+  padding-left: var(--ah-space-3);
+  border-left: 3px solid var(--ah-color-border);
+  color: var(--ah-color-text-muted);
+}
+
+.ah-rich-text a {
+  color: var(--ah-color-primary);
+  text-decoration: underline;
+}
+
+.ah-rich-text-editor {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.ah-rich-text-editor__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1);
+}
+
+.ah-rich-text-editor__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0 var(--ah-space-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  background: var(--ah-color-surface-2);
+  color: var(--ah-color-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ah-rich-text-editor__tool:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 1px;
+}
+
+.ah-rich-text-editor__tool--italic span {
+  font-style: italic;
+}
+
+.ah-rich-text-editor__tool--underline span {
+  text-decoration: underline;
+}
+
+.ah-rich-text-editor__tool--strike span {
+  text-decoration: line-through;
+}
+
+.ah-rich-text-editor__link {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  align-items: center;
+}
+
+.ah-rich-text-editor__link .ah-input {
+  flex: 1 1 14rem;
+}
+
+.ah-rich-text-editor__link .ah-form-field__error {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.ah-rich-text-editor__content {
+  min-height: 5.5rem;
+  height: auto;
+  padding: var(--ah-space-3);
+  white-space: pre-wrap;
+}
+
+.ah-rich-text-editor__content[data-empty]::before {
+  content: attr(data-placeholder);
+  color: var(--ah-color-text-muted);
+  pointer-events: none;
+}
+
+.ah-rich-text-editor--read-only .ah-rich-text-editor__content {
+  background: transparent;
+}
