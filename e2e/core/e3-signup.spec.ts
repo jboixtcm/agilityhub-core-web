@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, readdirSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
@@ -281,15 +281,22 @@ async function openSignupFromDashboard(
   await expect(page.getByRole("heading", { name: new RegExp(headingText, "u") })).toBeVisible();
 }
 
-async function completeValidation(page: Page): Promise<void> {
+async function completeValidation(
+  page: Page,
+  { nextInvoiceDate }: { nextInvoiceDate?: { input: string; iso: string } } = {},
+): Promise<void> {
   const level = page.getByLabel("Nivell inicial").first();
   await expect.poll(() => level.locator("option").count()).toBeGreaterThan(1);
   if ((await level.inputValue()) === "") {
     const firstLevel = level.locator("option").nth(1);
     await level.selectOption((await firstLevel.getAttribute("value")) ?? "");
   }
-  const invoice = page.getByLabel("Data del proper rebut").first();
-  if (await invoice.isVisible()) await invoice.fill("01/10/2026");
+  if (nextInvoiceDate !== undefined) {
+    const invoice = page.getByLabel("Data del proper rebut");
+    await expect(invoice).toBeVisible();
+    await expect(invoice.locator("xpath=..").getByText("obligatori", { exact: true })).toBeVisible();
+    await invoice.fill(nextInvoiceDate.input);
+  }
   const paid = page.getByLabel("Import efectivament cobrat:");
   if (await paid.isEditable()) {
     await paid.fill("130");
@@ -300,6 +307,10 @@ async function completeValidation(page: Page): Promise<void> {
   );
   await page.getByRole("button", { name: "VALIDA L'ALTA" }).click();
   const response = await validationResponse;
+  if (nextInvoiceDate !== undefined) {
+    const body = response.request().postDataJSON() as { nextInvoiceDate?: string };
+    expect(body.nextInvoiceDate).toBe(nextInvoiceDate.iso);
+  }
   const errorBody = response.status() === 200 ? "" : await response.text();
   expect(response.status(), errorBody).toBe(200);
   await page.waitForURL("**/tauler?signup=validated");
@@ -335,7 +346,43 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const acceptedRow = admin.locator(".dashboard-signups__row").filter({ hasText: acceptedDog });
   await expect(acceptedRow.getByText("Compte no informat")).toBeVisible();
   await screenshot(admin, "D1-dashboard-core-1280.png");
+  const signupView = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/members/${acceptedMemberId}/signup`) &&
+      response.request().method() === "GET",
+  );
   await openSignupFromDashboard(admin, acceptedDog, acceptedName);
+  const view = (await (await signupView).json()) as {
+    member: {
+      maskedAccount?: string;
+      paymentMethod?: { maskedAccount?: string; type: string };
+      plan?: unknown;
+      planId?: string;
+      status: string;
+    };
+    proposals: { nextInvoiceDate?: string; planId?: string };
+  };
+  // Real-core shape behind the D2 plan/date/account rendering (fictional member).
+  writeFileSync(
+    join(evidenceDirectory, "d2-signup-view-core.json"),
+    `${JSON.stringify(
+      {
+        member: {
+          maskedAccount: view.member.maskedAccount ?? null,
+          paymentMethod: view.member.paymentMethod ?? null,
+          plan: view.member.plan ?? null,
+          planId: view.member.planId ?? null,
+          status: view.member.status,
+        },
+        proposals: {
+          nextInvoiceDate: view.proposals.nextInvoiceDate ?? null,
+          planId: view.proposals.planId ?? null,
+        },
+      },
+      null,
+      2,
+    )}\n`,
+  );
   await expect(admin.getByText(/Sí — titular: Laia Fictici001 \+ gos Ona 1/u)).toBeVisible();
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const edit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
@@ -346,8 +393,10 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(
     admin.getByLabel("Modalitat i tarifa").locator("option:checked"),
   ).toHaveText(/€\/mes/u);
+  await expect(admin.getByText("Pagament inicial pendent")).toHaveClass(/ah-badge/u);
+  await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
   await screenshot(admin, "D2-signup-core-1280.png");
-  await completeValidation(admin);
+  await completeValidation(admin, { nextInvoiceDate: { input: "01/10/2026", iso: "2026-10-01" } });
   await admin.waitForTimeout(1_000);
   await navigateSpa(admin, "/abonats");
   await expect(admin.getByRole("heading", { name: "Abonats" })).toBeVisible();
@@ -450,7 +499,27 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await completeValidation(admin);
   additionalDogValidated = true;
 
+  const parametersResponse = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/parameters") && response.request().method() === "GET",
+  );
   await navigateSpa(admin, "/parametres");
+  const parameters = (await (await parametersResponse).json()) as {
+    blocks?: { key: string; rows: { key: string; module?: string | null }[] }[];
+  };
+  // Real-core placement of the signup switch (D11 hides rows whose module is off).
+  writeFileSync(
+    join(evidenceDirectory, "d11-signup-parameter-core.json"),
+    `${JSON.stringify(
+      (parameters.blocks ?? []).flatMap((block) =>
+        block.rows
+          .filter((row) => row.key.startsWith("signup.") || row.key.startsWith("bookings."))
+          .map((row) => ({ block: block.key, key: row.key, module: row.module ?? null })),
+      ),
+      null,
+      2,
+    )}\n`,
+  );
   await admin.waitForTimeout(1_000);
   await screenshot(admin, "D11-signup-toggle-core-1280.png");
   const parameter = admin.locator(".settings-parameter").filter({ hasText: "Altes públiques" });

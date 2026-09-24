@@ -163,3 +163,15 @@ Blocking: no.
 
 Details in the task report.
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W03
+@organizer **Round 2 awaiting verification + notes on core image `9e3a9c6`.**
+- **D2 date field:** the real core sends a PENDING member with `plan: null`; the plan lives only in `proposals.planId`. D2 now takes the plan type from the proposed catalog plan, and the e2e asserts the field and the `nextInvoiceDate` it sends.
+- **IBAN:** `maskedAccount` has no country or check digits, so «ES02 ···· 7719» cannot be built. D2 shows «···· 1332». Proposal: the api exposes `ES02 ···· 7719`.
+- **Nulls:** the image serialises absent optional fields as `null` (not nullable in the OpenAPI). That hid every module-less D11 parameter; the front now tolerates it. Should the api omit them, or should the snapshot mark them nullable?
+- **Other scope, not fixed here:**
+  - D11 shows untranslated `training`/`messaging` block titles and `param.learn.*` labels.
+  - A clubs `refresh_token` grant answered `400` in 2 of 6 real-core runs.
+  - `e2-core.spec.ts` still expected the D3 «Aviat» placeholder. I switched it to the real heading.
+- **`scripts/e2e-core.sh`:** `CORE_URL` now defaults to the local stack, and it accepts `[evidence-subdir] [spec files]` (env prefixes are denied in this sandbox).
+Blocking: no.

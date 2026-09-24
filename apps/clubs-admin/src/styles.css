@@ -1592,6 +1592,21 @@ select {
   line-height: 1.5;
 }
 
+.signup-review-dog-decision {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--ah-space-4);
+}
+
+.signup-review-dog-decision > * {
+  flex: 1 1 12rem;
+}
+
+.signup-review-dog-decision .ah-badge {
+  justify-self: start;
+}
+
 .signup-review-warning {
   margin: 0;
   padding: var(--ah-space-2) var(--ah-space-3);

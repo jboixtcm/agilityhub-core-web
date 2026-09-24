@@ -24,6 +24,7 @@ type Member = SignupView["member"];
 type Dog = SignupView["dogs"][number];
 type ValidationRequest = components["schemas"]["ValidationRequest"];
 type Money = components["schemas"]["Money"];
+type PlanType = NonNullable<Member["plan"]>["type"];
 
 function currentMemberId(): string {
   return window.location.pathname.split("/").filter(Boolean).at(-1) ?? "";
@@ -61,6 +62,10 @@ function contactValue(member: Member): string {
   const email = member.contactEmails[0]?.email ?? "";
   const phone = member.phones[0];
   return [email, phone === undefined ? "" : `${phone.prefix} ${phone.number.slice(0, 3)} ··· ···`].filter(Boolean).join(" · ");
+}
+
+function compactMaskedAccount(value: string): string {
+  return value.replaceAll(/·+(?:\s+·+)+/gu, "····");
 }
 
 function warningKey(warning: components["schemas"]["SignupWarning"]): string | undefined {
@@ -242,6 +247,7 @@ export function SignupReviewPage({
   const [warnDays, setWarnDays] = useState<number>();
   const [planName, setPlanName] = useState<string>();
   const [planPrice, setPlanPrice] = useState<Money>();
+  const [proposedPlanType, setProposedPlanType] = useState<PlanType>();
   const [familyGroupId, setFamilyGroupId] = useState<string>();
 
   const load = useCallback(() => {
@@ -278,6 +284,7 @@ export function SignupReviewPage({
           if (catalogPlan !== undefined) {
             setPlanName(catalogPlan.name);
             setPlanPrice(catalogPlan.currentPrices?.[0]?.amount);
+            setProposedPlanType(catalogPlan.type);
             return;
           }
           const configResult = await client.GET("/signup");
@@ -286,6 +293,7 @@ export function SignupReviewPage({
           );
           setPlanName(selectedPlan?.name);
           setPlanPrice(selectedPlan?.price?.amount);
+          setProposedPlanType(selectedPlan?.type);
         })().catch(() => undefined);
       },
       () => { setLoadError(true); },
@@ -305,7 +313,8 @@ export function SignupReviewPage({
   if (signup === undefined) return <section className="signup-review-page"><Toast tone="danger">{t("admin-census:signupReview.loadError")}</Toast><Button onClick={() => { setLoadError(false); setReload((value) => value + 1); }}>{t("admin-census:signupReview.retry")}</Button></section>;
 
   const billing = branding.modules.includes("BILLING");
-  const monthly = signup.member.plan?.type === "MONTHLY";
+  // A PENDING member has no plan reference yet: the proposed catalog plan decides.
+  const monthly = (signup.member.plan?.type ?? proposedPlanType) === "MONTHLY";
   const stripePaid = (signup.upfront?.totalPaid.amountMinor ?? 0) > 0 && signup.upfront?.lines.every((line) => line.provider === "STRIPE" && line.status === "PAID") === true;
   const validationBody = (resolvedFamilyGroupId = familyGroupId): ValidationRequest => ({
     dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levels[dog.id] === undefined || levels[dog.id] === "" ? {} : { levelId: levels[dog.id] }) })),
@@ -393,6 +402,11 @@ export function SignupReviewPage({
         <h1>{t("admin-census:signupReview.header", { number: signup.member.memberNumber ?? shortId(signup.member.id), name: signup.member.fullName, dogs: dogNames })}</h1>
         <Badge tone={warnDays !== undefined && signup.signup.pendingDays >= warnDays ? "warning" : "neutral"}>{t("admin-census:signupReview.pending", { count: signup.signup.pendingDays })}</Badge>
         {signup.signup.readmission ? <Badge>{t("admin-census:signupReview.readmission")}</Badge> : null}
+        {signup.warnings
+          .filter((warning) => !(warning === "ACCOUNT_NOT_PROVIDED" && signup.member.accountMissing === true))
+          .map((warning) => warningKey(warning))
+          .filter((key): key is string => key !== undefined)
+          .map((key) => <Badge key={key} tone="warning">{t(key)}</Badge>)}
       </header>
       <div className="signup-review-grid">
         <Card>
@@ -415,7 +429,7 @@ export function SignupReviewPage({
               {payment === undefined
                 ? t("admin-census:values.empty")
                 : t("admin-census:signupReview.paymentSummary", {
-                    account: payment.maskedAccount ?? signup.member.maskedAccount ?? t("admin-census:values.empty"),
+                    account: compactMaskedAccount(payment.maskedAccount ?? signup.member.maskedAccount ?? t("admin-census:values.empty")),
                     holder:
                       payment.holderName === signup.member.fullName
                         ? t("admin-census:signupReview.sameHolder")
@@ -446,8 +460,10 @@ export function SignupReviewPage({
               </dt>
               <dd>{dog.notesToInstructors ?? t("admin-census:values.empty")}</dd>
             </dl>
+            <div className="signup-review-dog-decision">
             {signup.proposals.levels.length === 0 ? null : <FormField {...(fieldErrors[`dogs.${String(index)}.levelId`] === undefined ? {} : { error: t("admin-census:signupReview.levelRequired") })} id={`signup-level-${dog.id}`} label={t("admin-census:signupReview.fields.level")}><Select id={`signup-level-${dog.id}`} onChange={(event) => { const input = event.currentTarget.value; setLevels((value) => ({ ...value, [dog.id]: input })); }} value={levels[dog.id] ?? ""}><option value="">{t("admin-census:values.empty")}</option>{signup.proposals.levels.map((level) => <option key={level.id} value={level.id}>{level.name}</option>)}</Select></FormField>}
-            {billing && monthly ? <FormField {...(fieldErrors.nextInvoiceDate === undefined ? {} : { error: t("admin-census:signupReview.invoiceRequired") })} id={`signup-invoice-${dog.id}`} label={t("admin-census:signupReview.fields.nextInvoice")}><Input id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { const input = event.currentTarget.value; setNextInvoiceInput(input); setNextInvoiceDate(isoDateFromInput(input, locale) ?? ""); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceInput} /><Badge tone="danger">{t("admin-census:signupReview.required")}</Badge></FormField> : null}
+            {billing && monthly && index === 0 ? <FormField {...(fieldErrors.nextInvoiceDate === undefined ? {} : { error: t("admin-census:signupReview.invoiceRequired") })} id={`signup-invoice-${dog.id}`} label={t("admin-census:signupReview.fields.nextInvoice")}><Input id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { const input = event.currentTarget.value; setNextInvoiceInput(input); setNextInvoiceDate(isoDateFromInput(input, locale) ?? ""); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceInput} /><Badge tone="danger">{t("admin-census:signupReview.required")}</Badge></FormField> : null}
+            </div>
           </Card>
         ))}
       </div>
@@ -456,7 +472,6 @@ export function SignupReviewPage({
         {billing && signup.upfront !== undefined ? <div><h2>{t("admin-census:signupReview.upfront")}</h2><label>{t("admin-census:signupReview.actuallyPaid")} {stripePaid ? <><Input readOnly value={formatMoney(signup.upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></> : <Input min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); }} step="0.01" type="number" value={manualPaid} />}</label>{upfrontBreakdown === undefined || upfrontBreakdown === "" ? null : <small className="signup-review-upfront-breakdown">{t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}</small>}{stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}</div> : null}
         <footer><Button onClick={() => { setEditOpen(true); }} variant="secondary"><Icon aria-hidden="true" name="edit" />{t("admin-census:signupReview.actions.edit")}</Button><Button onClick={() => { setRejectOpen(true); }} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button><Button loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button></footer>
       </Card>
-      {signup.warnings.map((warning) => warningKey(warning)).filter((key): key is string => key !== undefined).map((key) => <Badge key={key} tone="danger">{t(key)}</Badge>)}
       <EditSignupDrawer client={client} key={signup.version} onClose={() => { setEditOpen(false); }} onSaved={() => { setEditOpen(false); setMessage(t("admin-census:signupReview.saved")); setReload((value) => value + 1); }} open={editOpen} signup={signup} />
       <Modal closeLabel={t("admin-census:signupReview.cancel")} onClose={() => { setRejectOpen(false); }} open={rejectOpen} title={t("admin-census:signupReview.rejectTitle")}><FormField id="signup-reject-reason" label={t("admin-census:signupReview.rejectReason")}><Textarea id="signup-reject-reason" maxLength={500} minLength={3} onChange={(event) => { setRejectReason(event.currentTarget.value); }} value={rejectReason} /></FormField><p>{t("admin-census:signupReview.rejectHelp")}</p><Button disabled={rejectReason.trim().length < 3} loading={working} onClick={() => void reject()} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button></Modal>
     </section>

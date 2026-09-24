@@ -17,10 +17,23 @@ beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
 afterEach(() => { cleanup(); server.resetHandlers(); resetDashboardMockState(); mockScenario("admin"); });
 afterAll(() => { server.close(); });
 
-async function renderReview(onNavigate = vi.fn()) {
+// The real core returns a PENDING member without `plan` and with the account masked group by group.
+const pendingMemberFetch: typeof fetch = async (input, init) => {
+  const response = await fetch(input, init);
+  const request = input instanceof Request ? input : new Request(input, init);
+  if (request.method !== "GET" || !new URL(request.url).pathname.endsWith(`/members/${memberId}/signup`)) return response;
+  const body = (await response.json()) as { member: Record<string, unknown> & { paymentMethod?: Record<string, unknown> } };
+  delete body.member.plan;
+  delete body.member.planId;
+  body.member.maskedAccount = "···· ···· ···· ···· 7719";
+  if (body.member.paymentMethod !== undefined) body.member.paymentMethod.maskedAccount = "···· ···· ···· ···· 7719";
+  return Response.json(body, { status: response.status });
+};
+
+async function renderReview(onNavigate = vi.fn(), fetchOverride?: typeof fetch) {
   window.history.pushState(null, "", `/preinscripcions/${memberId}`);
   const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-census"], storage: undefined });
-  render(<I18nextProvider i18n={i18n}><BrandingProvider branding={branding}><SignupReviewPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} onNavigate={onNavigate} /></BrandingProvider></I18nextProvider>);
+  render(<I18nextProvider i18n={i18n}><BrandingProvider branding={branding}><SignupReviewPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1`, ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }) })} onNavigate={onNavigate} /></BrandingProvider></I18nextProvider>);
   await screen.findByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u });
   return onNavigate;
 }
@@ -42,6 +55,23 @@ describe("T-04-33 D2 signup validation", () => {
     expect(screen.getByDisplayValue(/130,00/u)).toBeVisible();
     expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € \(mitja quota\)/u)).toBeVisible();
     expect(screen.getByText("cobrat")).toBeVisible();
+  });
+
+  it("shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet", async () => {
+    await renderReview(vi.fn(), pendingMemberFetch);
+
+    expect(await screen.findByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
+    expect(screen.getByText("obligatori")).toBeVisible();
+    expect(screen.getByText("Domiciliació · ···· 7719 · titular: la mateixa")).toBeVisible();
+  });
+
+  it("shows signup warnings as compact header badges", async () => {
+    mockScenario("adminSignupReviewManual");
+    await renderReview();
+    const header = screen.getByRole("heading", { name: /Preinscripció #1042/u }).closest("header");
+    expect(header).not.toBeNull();
+    if (header === null) return;
+    expect(within(header).getByText("Pagament inicial pendent")).toHaveClass("ah-badge");
   });
 
   it("edits pending data, requires a rejection reason, and validates through the server", async () => {

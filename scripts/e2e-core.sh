@@ -4,11 +4,13 @@ set -euo pipefail
 
 repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 compose_file="$repository_root/scripts/core-stack/docker-compose.yml"
-evidence_subdirectory="${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}"
+# Optional first argument: evidence subdirectory (`pnpm e2e:core E3-W03`), same as CORE_EVIDENCE_SUBDIRECTORY.
+evidence_subdirectory="${1:-${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}}"
 evidence_directory="${CORE_EVIDENCE_DIRECTORY:-$repository_root/roadmap/evidence/$evidence_subdirectory}"
 core_project_name="${CORE_PROJECT_NAME:-${E1_CORE_PROJECT_NAME:-agilityhub-e1-w04}}"
 
-: "${CORE_URL:?Set CORE_URL to the core URL visible from the Playwright container (for the local stack: http://core:8080)}"
+# Core URL visible from the Playwright container; defaults to the local stack.
+export CORE_URL="${CORE_URL:-http://core:8080}"
 
 if ! docker image inspect ghcr.io/jboixtcm/agilityhub-core-api:main >/dev/null 2>&1; then
   echo "The published core image is not available locally: ghcr.io/jboixtcm/agilityhub-core-api:main" >&2
@@ -31,7 +33,11 @@ run_core_suite() {
 }
 
 cleanup
-if [[ "$evidence_subdirectory" == "E3-W03" ]]; then
+# Optional second argument: run only these spec files in one seeded stage (`pnpm e2e:core E3-W03 e3-signup.spec.ts`).
+if [[ -n "${2:-}" ]]; then
+  export CORE_TEST_FILES="$2"
+  run_core_suite
+elif [[ "$evidence_subdirectory" == "E3-W03" ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
   run_core_suite
   cleanup

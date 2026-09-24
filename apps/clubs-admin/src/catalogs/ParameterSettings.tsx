@@ -957,11 +957,11 @@ export function ParameterSettings({
       (data?.blocks ?? [])
         .map((block) => ({
           ...block,
-          rows: block.rows.filter(
-            (parameter) =>
-              parameter.module === undefined ||
-              modules.includes(parameter.module),
-          ),
+          rows: block.rows.filter((parameter) => {
+            // The core may send `module: null` for a module-less parameter.
+            const module: unknown = parameter.module;
+            return typeof module !== "string" || modules.includes(module);
+          }),
         }))
         .filter((block) => block.key !== "system" && block.rows.length > 0),
     [data?.blocks, modules],

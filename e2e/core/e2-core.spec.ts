@@ -412,8 +412,9 @@ test("T-05-22/T-05-25 real catalog create, edit and deactivate round trips", asy
   await expect(page.getByRole("heading", { name: "Modalitats i tarifes" })).toBeVisible();
   await screenshot(page, "D8-modalitats-core-1280.png");
   await navigateSpa(page, "/plantilles");
-  await expect(page.getByRole("heading", { name: "Aviat" })).toBeVisible();
-  await screenshot(page, "D3-plantilles-placeholder-core-1280.png");
+  // D3 is no longer a placeholder since E4-W01: the real templates page opens.
+  await expect(page.getByRole("heading", { name: "Plantilles", exact: true })).toBeVisible();
+  await screenshot(page, "D3-plantilles-core-1280.png");
 });
 
 test("T-02-13/T-14-26 real parameter history, export and audit", async () => {

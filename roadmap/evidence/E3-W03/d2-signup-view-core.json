@@ -1,0 +1,18 @@
+{
+  "member": {
+    "maskedAccount": null,
+    "paymentMethod": {
+      "type": "SEPA_DD",
+      "maskedAccount": null,
+      "holderName": "Nora Integració E3",
+      "channel": null
+    },
+    "plan": null,
+    "planId": null,
+    "status": "PENDING"
+  },
+  "proposals": {
+    "nextInvoiceDate": "2026-10-01",
+    "planId": "117b3292-5edc-491b-80f4-0ef4ce5fbb36"
+  }
+}

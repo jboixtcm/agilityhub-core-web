@@ -45,6 +45,7 @@ test-results/
 !roadmap/evidence/E3-W03/09-turbo.log
 !roadmap/evidence/E3-W03/10-i18n.log
 !roadmap/evidence/E3-W03/11-playwright-all.log
+!roadmap/evidence/E3-W03/1[2-6]*.log
 .DS_Store
 .env
 .env.*
