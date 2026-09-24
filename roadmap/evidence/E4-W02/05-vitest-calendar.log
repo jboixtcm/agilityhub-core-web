@@ -1,0 +1,31 @@
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the exact mockup texts of the footers, the validation card and the D4c modal 25ms
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the D4 / D4b grid and card literals 4ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > builds «B+C», «D i sup.», «A+C» and «Cadells» from the catalog order 20ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > ignores inactive levels when deciding the last active level 2ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the es form of «i sup.» 5ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the en form of «i sup.» 4ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > keeps the exact mockup literals 3ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > uses no forbidden vocabulary or requirement codes in the three locales 9ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > uses the compact mark with the runtime club name 93ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > hides the Configuració group from instructors 14ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10) 10ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > T-06-28 shows «Calendari de classes» to instructors (read-only D4, A22 c) 8ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > shows the fixed sidebar groups to administrators 12ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > registers every desktop route from the frontend plan 0ms
+ ✓ src/App.test.tsx > T-01-18 clubs-admin access > offers magic-link and password entry with the shared auth components 30ms
+ ✓ src/App.test.tsx > T-01-20 clubs-admin handoff > exchanges the one-time handoff code on the landing route 7ms
+ ✓ src/App.test.tsx > T-01-26 clubs-admin onboarding > shows profile completion as a non-dismissible backoffice modal 31ms
+ ✓ src/App.test.tsx > T-01-26 clubs-admin onboarding > removes the postpone action when the policy limit is exhausted 17ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count 263ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once 141ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES» 169ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal 161ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version and handles STALE_VERSION and CAPACITY_BELOW_BOOKINGS 158ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer 156ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c) 109ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view 70ms
+ Test Files  4 passed (4)
+      Tests  26 passed (26)
+   Start at  10:49:06
+   Duration  2.21s (environment 38%, tests 30%, transform 16%, setup 9%, import 6%)

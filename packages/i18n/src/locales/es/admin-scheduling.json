@@ -109,5 +109,132 @@
   "description": {
     "andAbove": "{level} y sup.",
     "join": "+"
+  },
+  "calendar": {
+    "title": "Calendario de clases",
+    "filter": {
+      "label": "Estado de las clases",
+      "actives": "Activas",
+      "drafts": "Borrador",
+      "cancelled": "Anuladas"
+    },
+    "week": {
+      "current": "Semana en curso",
+      "next": "Semana que viene",
+      "range": "del {range}",
+      "previous": "Semana anterior",
+      "following": "Semana siguiente",
+      "select": "Semana"
+    },
+    "create": "Crear clase",
+    "block": "Bloquear pista",
+    "gridLabel": "Calendario de clases · del {range}",
+    "empty": "Ninguna clase esta semana",
+    "cell": {
+      "counts": "{booked}/{capacity}",
+      "waiting": "+{count}",
+      "noRing": "sin pista",
+      "cancelled": "anulada · {reason}",
+      "blocked": "{ring} bloqueada",
+      "blockDetail": "{reason} {from}–{to}",
+      "activity": "Actividad · {title}",
+      "label": "{when} · {description} · {details}"
+    },
+    "footer": {
+      "active": "n/n +e = inscritos/plazas + lista de espera · {icon} = pista bloqueada · Haz clic en el nombre de un día para verlo por pista o por instructor",
+      "draft": "contorno discontinuo = borrador (los alumnos aún no la ven) · Haz clic en el nombre de un día para verlo por pista o por instructor"
+    },
+    "saved": "Cambios guardados",
+    "cancelled": "Clase anulada",
+    "deleted": "Clase eliminada",
+    "selected": {
+      "title": "Clase seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
+      "time": "Hora",
+      "noLevels": "ninguno",
+      "exempt": "Exenta de la revisión de las 7:30",
+      "notes": "Notas",
+      "accept": "ACEPTA",
+      "cancel": "ANULA LA CLASE",
+      "delete": "ELIMINA",
+      "deleteDraft": "Elimina",
+      "close": "Cierra"
+    },
+    "ringBookings": {
+      "title": "Esta pista tiene reservas de entrenamiento",
+      "text": "Si continúas, estas reservas quedarán anuladas por el club y se avisará:",
+      "confirm": "Anula las reservas y guarda",
+      "back": "Vuelve atrás"
+    },
+    "warnings": {
+      "title": "Avisos de incoherencia de la semana",
+      "empty": "Ninguna incoherencia"
+    },
+    "validation": {
+      "title": "Validación de la semana",
+      "summary": "{weekLabel} · del {range} · {draftCount, plural, one {# clase} other {# clases}} en borrador · ",
+      "count": "{count, plural, one {# clase} other {# clases}}",
+      "clean": "ninguna incoherencia",
+      "issues": "{count, plural, one {# incoherencia} other {# incoherencias}}",
+      "help": "{count, plural, one {Al validar, la clase pasa a activa y los alumnos ya la pueden reservar. No se puede validar una clase sola.} other {Al validar, las # clases pasan a activas a la vez y los alumnos ya las pueden reservar. No se puede validar una clase sola.}}",
+      "submit": "VALIDAR LA SEMANA",
+      "done": "{count, plural, one {# clase validada} other {# clases validadas}}"
+    },
+    "createForm": {
+      "title": "Crear clase",
+      "date": "Fecha",
+      "datePlaceholder": "dd/mm/aaaa",
+      "invalidDate": "Escribe una fecha válida (dd/mm/aaaa).",
+      "start": "Inicio",
+      "end": "Final",
+      "holiday": "Este día es festivo",
+      "visibleNow": "Los alumnos la verán enseguida",
+      "submit": "CREA LA CLASE",
+      "done": "Clase creada"
+    },
+    "blockForm": {
+      "title": "Bloquear pista",
+      "editTitle": "Bloqueo de pista",
+      "ring": "Pista",
+      "date": "Fecha",
+      "from": "De",
+      "to": "A",
+      "kind": "Tipo",
+      "reason": "Motivo",
+      "note": "Nota",
+      "submit": "GUARDA EL BLOQUEO",
+      "cancel": "Anula el bloqueo",
+      "conflicts": "Coincide con:",
+      "conflictRow": "{label} · {from}–{to}",
+      "managedByActivity": "Este bloqueo se gestiona desde la actividad.",
+      "openActivity": "Abre la actividad",
+      "saved": "Bloqueo guardado",
+      "cancelledDone": "Bloqueo anulado"
+    },
+    "day": {
+      "gridLabel": "Calendario de clases · {day}",
+      "training": "Entren. {who}",
+      "block": "Bloq. {reason}",
+      "empty": "Ninguna clase este día"
+    }
+  },
+  "cancelModal": {
+    "title": "Anular la clase — {day} · {time} · {description} · {ring} · {instructors}",
+    "intro": "Esta clase tiene {count, plural, one {# alumno inscrito} other {# alumnos inscritos}}. Si la anulas, recibirán un aviso en la app, por correo y por SMS con el texto que escribas abajo.",
+    "introCount": "{count, plural, one {# alumno inscrito} other {# alumnos inscritos}}",
+    "listLabel": "Alumnos inscritos",
+    "dog": "+ {dog}",
+    "channel": {
+      "APP": "app",
+      "EMAIL": "correo",
+      "SMS": "SMS"
+    },
+    "smsPhones": "SMS ({count} teléfonos)",
+    "text": "Texto del aviso",
+    "footer": "Se envía con la plantilla «Clase anulada por el club»",
+    "footerWaitlist": " · también a la lista de espera ({count})",
+    "back": "Vuelve atrás",
+    "confirm": "{count, plural, one {ANULA Y AVISA AL ALUMNO} other {ANULA Y AVISA A LOS # ALUMNOS}}",
+    "simpleCancel": "¿Quieres anular la clase?",
+    "simpleDelete": "¿Quieres eliminar la clase?"
   }
 }

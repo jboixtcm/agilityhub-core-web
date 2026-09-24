@@ -39,6 +39,9 @@ import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
+import { isIsoDate } from "./planning/calendar-shared";
+import { CalendarDayPage } from "./planning/CalendarDayPage";
+import { CalendarPage } from "./planning/CalendarPage";
 import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
@@ -57,8 +60,9 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screens D3 and D3b (INSTRUCTOR reads them without actions, S06 §13-10).
   { path: "/plantilles", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/plantilles/:templateId/dia/:dayOfWeek", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screens D4, D4b and D4c.
-  { path: "/calendari", roles: ["ADMIN"] },
+  // Screens D4, D4b and D4c + the D4 day view (INSTRUCTOR reads them without actions, A22 c).
+  { path: "/calendari", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/calendari/dia/:date", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screens D5 and D10.
   { path: "/abonats", roles: ["ADMIN"] },
   { path: "/abonats/:id", roles: ["ADMIN"] },
@@ -231,7 +235,7 @@ export function AdminNavigation({
           icon: "day",
           id: "class-calendar",
           label: t("shell:nav.classCalendar"),
-          roles: ["ADMIN"],
+          roles: ["INSTRUCTOR", "ADMIN"],
         },
         {
           href: "/agenda",
@@ -355,6 +359,17 @@ function PlanningTemplatesRoute({
   return <TemplatesPage client={client} onNavigate={onNavigate} readOnly={!session.roles.includes("ADMIN")} />;
 }
 
+function CalendarRoute({
+  client,
+  onNavigate,
+}: {
+  client: ReturnType<typeof createAuthenticatedApiClient>;
+  onNavigate: (path: string) => void;
+}) {
+  const session = useSession();
+  return <CalendarPage client={client} onNavigate={onNavigate} readOnly={!session.roles.includes("ADMIN")} />;
+}
+
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
@@ -374,6 +389,17 @@ function routeContent(
         onNavigate={onNavigate}
         templateId={decodeURIComponent(templateId)}
       />
+    );
+  }
+  if (route.path === "/calendari") {
+    return <CalendarRoute client={client} key={pathname} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/calendari/dia/:date") {
+    const date = pathname.split("/")[3] ?? "";
+    return isIsoDate(date) ? (
+      <CalendarDayPage client={client} date={date} key={pathname} onNavigate={onNavigate} />
+    ) : (
+      <Placeholder />
     );
   }
   if (route.path === "/tauler") {

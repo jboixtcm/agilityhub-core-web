@@ -3072,7 +3072,7 @@ export interface paths {
         };
         /**
          * publicActivities
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Published content only. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Published content only. No names, member data or registrations. X-Api-Key required and checked before the club and the module (403 INVALID_API_KEY first). Public cache 300 seconds with ETag.
          */
         get: operations["publicActivities"];
         put?: never;
@@ -3092,7 +3092,7 @@ export interface paths {
         };
         /**
          * publicActivity
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. X-Api-Key required. Public cache 300 seconds with ETag.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. X-Api-Key required and checked before the club and the module (403 INVALID_API_KEY first). Public cache 300 seconds with ETag.
          */
         get: operations["publicActivity"];
         put?: never;
@@ -3652,7 +3652,7 @@ export interface paths {
         };
         /**
          * waitlistEntry
-         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR, ADMIN. Screen 07 «/espera/:id»: class card, position (FIFO order), confirmBy (FIFO only), state. Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR, ADMIN. Screen 07 «/espera/:id»: class card, position (FIFO only; null with waitlist.mode = ALL_AT_ONCE), confirmBy (FIFO only), state. Requires WAITLIST. Tenant comes from the JWT.
          */
         get: operations["waitlistEntry"];
         put?: never;
@@ -8769,9 +8769,9 @@ export interface components {
             notifiedAt?: string | null;
             /**
              * Format: int32
-             * @description FIFO order; kept but unused in ALL_AT_ONCE
+             * @description FIFO order (R-08-14); null when waitlist.mode = ALL_AT_ONCE
              */
-            position: number;
+            position?: number | null;
             /** @enum {string} */
             state: "ACTIVE" | "NOTIFIED" | "CONSOLIDATED" | "EXPIRED" | "CANCELLED";
         };

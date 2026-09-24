@@ -2,6 +2,13 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import {
+  classSession,
+  type ClassSession,
+  initialClassSessions,
+  initialRingBlocks,
+  type RingBlock,
+} from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
   addDays,
@@ -38,24 +45,36 @@ const SLOT_MINUTES = 10;
 const DEFAULT_CAPACITY = 5;
 const CANDIDATE_WEEKS = 13;
 
-export const planningState: { templates: WeekTemplate[]; weeks: MockWeek[]; sequence: number } = {
+export const planningState: {
+  blocks: RingBlock[];
+  sequence: number;
+  sessions: ClassSession[];
+  templates: WeekTemplate[];
+  weeks: MockWeek[];
+} = {
+  blocks: initialRingBlocks(mondayOf(clubLocalDate())),
   sequence: 1,
+  sessions: initialClassSessions(mondayOf(clubLocalDate())),
   templates: structuredClone([...initialWeekTemplates]),
   weeks: initialWeeks(),
 };
 
+/** Rebuilds the planning state relative to the club-local date of now (tests may fake `Date`). */
 export function resetPlanningState(): void {
+  const monday = mondayOf(clubLocalDate());
+  planningState.blocks = initialRingBlocks(monday);
   planningState.sequence = 1;
+  planningState.sessions = initialClassSessions(monday);
   planningState.templates = structuredClone([...initialWeekTemplates]);
   planningState.weeks = initialWeeks();
 }
 
-function nextId(prefix: string): string {
+export function nextId(prefix: string): string {
   planningState.sequence += 1;
   return `${prefix}-${String(planningState.sequence)}`;
 }
 
-function apiError(
+export function apiError(
   code: string,
   message: string,
   status: number,
@@ -67,19 +86,19 @@ function apiError(
   );
 }
 
-function validationError(field: string, code = "INVALID") {
+export function validationError(field: string, code = "INVALID") {
   return apiError("VALIDATION_ERROR", "Validation failed", 400, { fieldErrors: [{ code, field }] });
 }
 
-function levelsEnabled(): boolean {
+export function levelsEnabled(): boolean {
   return currentMockScenario().levelsEnabled ?? true;
 }
 
-function maxInstructors(): number {
+export function maxInstructors(): number {
   return currentMockScenario().maxInstructorsPerClass ?? 1;
 }
 
-function planningLevels() {
+export function planningLevels() {
   return catalogState.levels.map((level) => ({
     active: level.active,
     capacity: level.capacity,
@@ -123,7 +142,7 @@ function findTemplate(id: string): WeekTemplate | undefined {
   return planningState.templates.find((template) => template.id === id);
 }
 
-function minutes(time: string): number {
+export function minutes(time: string): number {
   const [hours, mins] = time.split(":").map(Number);
   return (hours ?? 0) * 60 + (mins ?? 0);
 }
@@ -170,7 +189,7 @@ function sortedBands(bands: readonly TimeBand[]): TimeBand[] {
   return [...bands].sort((left, right) => minutes(left.startTime) - minutes(right.startTime));
 }
 
-function autoCapacity(levelIds: readonly string[]): number {
+export function autoCapacity(levelIds: readonly string[]): number {
   const capacities = catalogState.levels
     .filter((level) => levelIds.includes(level.id))
     .map((level) => level.capacity);
@@ -202,13 +221,26 @@ function classProblem(
   return undefined;
 }
 
-function manualDescription(value: string | null | undefined): string | null {
+export function manualDescription(value: string | null | undefined): string | null {
   return value === undefined || value === null || value.trim() === "" ? null : value.trim();
 }
 
-function weekListItem(week: MockWeek): WeekListItem {
+/** `classCounts` from the class sessions of the week once it has any (the D4 calendar state). */
+function classCounts(week: MockWeek): WeekListItem["classCounts"] {
+  const sessions = planningState.sessions.filter((session) => session.weekId === week.id);
+  if (sessions.length === 0) return week.classCounts;
+  const count = (states: readonly ClassSession["state"][]) =>
+    sessions.filter((session) => states.includes(session.state)).length;
   return {
-    classCounts: week.classCounts,
+    active: count(["ACTIVE", "FINISHED"]),
+    cancelled: count(["CANCELLED"]),
+    draft: count(["DRAFT"]),
+  };
+}
+
+export function weekListItem(week: MockWeek): WeekListItem {
+  return {
+    classCounts: classCounts(week),
     endDate: week.endDate,
     generatedAt: week.generatedAt ?? null,
     id: week.id,
@@ -222,7 +254,7 @@ function weekListItem(week: MockWeek): WeekListItem {
   };
 }
 
-function weekResource(week: MockWeek): components["schemas"]["Week"] {
+export function weekResource(week: MockWeek): components["schemas"]["Week"] {
   return {
     endDate: week.endDate,
     generatedAt: week.generatedAt ?? null,
@@ -275,7 +307,7 @@ function candidates(): GenerationCandidate[] {
   });
 }
 
-function holidayDates(): string[] {
+export function holidayDates(): string[] {
   const value = findParameter("club.holidays")?.value;
   return Array.isArray(value)
     ? value.flatMap((entry: unknown) =>
@@ -653,15 +685,37 @@ export const planningHandlers = [
     const holidays = new Set(holidayDates());
     const skippedByDate = new Map<string, SkippedClasses>();
     let classCount = 0;
-    for (const item of templates.flatMap((template) => template.classes)) {
-      const date = addDays(week.startDate, dayOffset[item.dayOfWeek]);
-      const reason = holidays.has(date) ? "HOLIDAY" : date < today ? "PAST" : undefined;
-      if (reason === undefined) {
-        classCount += 1;
-      } else {
-        const skipped = skippedByDate.get(date) ?? { count: 0, date, reason };
-        skipped.count += 1;
-        skippedByDate.set(date, skipped);
+    const levels = planningLevels();
+    for (const template of templates) {
+      for (const item of template.classes) {
+        const date = addDays(week.startDate, dayOffset[item.dayOfWeek]);
+        const reason = holidays.has(date) ? "HOLIDAY" : date < today ? "PAST" : undefined;
+        const timeBand = template.bands.find((candidate) => candidate.id === item.bandId);
+        if (reason === undefined && timeBand !== undefined) {
+          classCount += 1;
+          planningState.sessions.push(
+            classSession({
+              capacity: item.capacity,
+              capacityMode: item.capacityMode,
+              date,
+              description: item.description ?? null,
+              displayDescription: mockDisplayDescription(levels, item.levelIds, item.description),
+              endTime: timeBand.endTime,
+              id: nextId(`cls-${date}`),
+              instructorIds: [...item.instructorIds],
+              levelIds: [...item.levelIds],
+              origin: { templateClassId: item.id, templateId: template.id },
+              ringId: item.ringId ?? null,
+              startTime: timeBand.startTime,
+              state: "DRAFT",
+              weekId: week.id,
+            }),
+          );
+        } else if (reason !== undefined) {
+          const skipped = skippedByDate.get(date) ?? { count: 0, date, reason };
+          skipped.count += 1;
+          skippedByDate.set(date, skipped);
+        }
       }
     }
     Object.assign(week, {

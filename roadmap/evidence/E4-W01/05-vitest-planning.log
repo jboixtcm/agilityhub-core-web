@@ -1,0 +1,100 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > builds «B+C», «D i sup.», «A+C» and «Cadells» from the catalog order 12ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > ignores inactive levels when deciding the last active level 2ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the es form of «i sup.» 5ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the en form of «i sup.» 4ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > keeps the exact mockup literals 3ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > uses no forbidden vocabulary or requirement codes in the three locales 12ms
+stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows only the rings used that day in catalog order, plus «Sense» when a class has no ring
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > drops unused rings and the «Sense» column on a day without them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > switches to one column per instructor with a class that day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows only the rings used that day in catalog order, plus «Sense» when a class has no ring 149ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > drops unused rings and the «Sense» column on a day without them 32ms
+stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > moves between days and goes back to the weekly view of the same template
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs-admin shell > uses the compact mark with the runtime club name
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows the Saturday template with its single day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > switches to one column per instructor with a class that day 37ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > moves between days and goes back to the weekly view of the same template 24ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows the Saturday template with its single day 21ms
+stderr | src/App.test.tsx > T-02-14 clubs-admin shell > hides the Configuració group from instructors
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs-admin shell > T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs-admin shell > shows the fixed sidebar groups to administrators
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 clubs-admin access > offers magic-link and password entry with the shared auth components
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-20 clubs-admin handoff > exchanges the one-time handoff code on the landing route
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > shows profile completion as a non-dismissible backoffice modal
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > uses the compact mark with the runtime club name 100ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > hides the Configuració group from instructors 13ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10) 10ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > shows the fixed sidebar groups to administrators 13ms
+ ✓ src/App.test.tsx > T-02-14 clubs-admin shell > registers every desktop route from the frontend plan 1ms
+ ✓ src/App.test.tsx > T-01-18 clubs-admin access > offers magic-link and password entry with the shared auth components 31ms
+ ✓ src/App.test.tsx > T-01-20 clubs-admin handoff > exchanges the one-time handoff code on the landing route 8ms
+stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > removes the postpone action when the policy limit is exhausted
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 clubs-admin onboarding > shows profile completion as a non-dismissible backoffice modal 34ms
+ ✓ src/App.test.tsx > T-01-26 clubs-admin onboarding > removes the postpone action when the policy limit is exhausted 14ms
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band 402ms
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version 281ms
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation 160ms
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week 120ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c) 55ms
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places 58ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2 50ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description 45ms
+
+ Test Files  4 passed (4)
+      Tests  28 passed (28)
+   Start at  10:01:47
+   Duration  1.93s (tests 38%, environment 29%, transform 17%, import 9%, setup 7%)
+

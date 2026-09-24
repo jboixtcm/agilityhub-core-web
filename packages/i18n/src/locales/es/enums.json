@@ -27,5 +27,29 @@
   "skipReason": {
     "HOLIDAY": "festivo",
     "PAST": "días pasados"
+  },
+  "classState": {
+    "ACTIVE": "activa",
+    "DRAFT": "borrador",
+    "FINISHED": "finalizada",
+    "CANCELLED": "anulada"
+  },
+  "cancellationReason": {
+    "RISK_REVIEW": "revisión de las 7:30",
+    "CLUB_MANUAL": "por el club",
+    "DELETED": "eliminada",
+    "ACTIVITY": "actividad"
+  },
+  "ringBlockKind": {
+    "BLOCK": "Bloqueo",
+    "RESERVATION": "Reserva de pista"
+  },
+  "ringBlockReason": {
+    "MAINTENANCE": "mantenimiento",
+    "PRIVATE_CLASS": "clase particular",
+    "THERAPY": "terapia",
+    "PREPARATION": "preparación",
+    "ACTIVITY": "actividad",
+    "OTHER": "otros"
   }
 }

@@ -27,5 +27,29 @@
   "skipReason": {
     "HOLIDAY": "holiday",
     "PAST": "past days"
+  },
+  "classState": {
+    "ACTIVE": "active",
+    "DRAFT": "draft",
+    "FINISHED": "finished",
+    "CANCELLED": "cancelled"
+  },
+  "cancellationReason": {
+    "RISK_REVIEW": "7:30 review",
+    "CLUB_MANUAL": "by the club",
+    "DELETED": "deleted",
+    "ACTIVITY": "activity"
+  },
+  "ringBlockKind": {
+    "BLOCK": "Block",
+    "RESERVATION": "Ring booking"
+  },
+  "ringBlockReason": {
+    "MAINTENANCE": "maintenance",
+    "PRIVATE_CLASS": "private class",
+    "THERAPY": "therapy",
+    "PREPARATION": "preparation",
+    "ACTIVITY": "activity",
+    "OTHER": "other"
   }
 }

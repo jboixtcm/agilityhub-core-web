@@ -172,6 +172,57 @@ describe("typed API client", () => {
 
     expect(idempotencyKey).toBe("123e4567-e89b-42d3-a456-426614174001");
   });
+
+  it("R-06-10 / R-06-11 sends an Idempotency-Key on class cancellations and ring blocks by default", async () => {
+    const keys: string[] = [];
+    server.use(
+      http.post(
+        "https://core.example.test/api/v1/class-sessions/:id/cancellation",
+        ({ request }) => {
+          keys.push(`cancellation:${request.headers.get("Idempotency-Key") ?? ""}`);
+          return HttpResponse.json({});
+        },
+      ),
+      http.post("https://core.example.test/api/v1/ring-blocks", ({ request }) => {
+        keys.push(`ring-block:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({}, { status: 201 });
+      }),
+      http.post("https://core.example.test/api/v1/ring-blocks/:id/cancellation", ({ request }) => {
+        keys.push(`ring-block-cancellation:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({});
+      }),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174002",
+    });
+
+    await client.POST("/class-sessions/{id}/cancellation", {
+      body: { reason: "CLUB_MANUAL" },
+      // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+      params: { path: { id: "class-1" } },
+    });
+    // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+    await client.POST("/ring-blocks", {
+      body: {
+        from: "2026-08-12T14:00:00Z",
+        kind: "BLOCK",
+        reason: "MAINTENANCE",
+        ringId: "ring-carretera",
+        to: "2026-08-12T16:00:00Z",
+      },
+    });
+    await client.POST("/ring-blocks/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "block-1" } },
+    });
+
+    expect(keys).toEqual([
+      "cancellation:123e4567-e89b-42d3-a456-426614174002",
+      "ring-block:123e4567-e89b-42d3-a456-426614174002",
+      "ring-block-cancellation:",
+    ]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -207,7 +258,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(142);
+    expect(handlers).toHaveLength(155);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

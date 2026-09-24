@@ -109,5 +109,132 @@
   "description": {
     "andAbove": "{level} and up",
     "join": "+"
+  },
+  "calendar": {
+    "title": "Class calendar",
+    "filter": {
+      "label": "Class state",
+      "actives": "Active",
+      "drafts": "Draft",
+      "cancelled": "Cancelled"
+    },
+    "week": {
+      "current": "Current week",
+      "next": "Next week",
+      "range": "{range}",
+      "previous": "Previous week",
+      "following": "Following week",
+      "select": "Week"
+    },
+    "create": "Create class",
+    "block": "Block ring",
+    "gridLabel": "Class calendar · {range}",
+    "empty": "No classes this week",
+    "cell": {
+      "counts": "{booked}/{capacity}",
+      "waiting": "+{count}",
+      "noRing": "no ring",
+      "cancelled": "cancelled · {reason}",
+      "blocked": "{ring} blocked",
+      "blockDetail": "{reason} {from}–{to}",
+      "activity": "Activity · {title}",
+      "label": "{when} · {description} · {details}"
+    },
+    "footer": {
+      "active": "n/n +w = booked/places + waiting list · {icon} = ring blocked · Click a day name to see it by ring or by instructor",
+      "draft": "dashed outline = draft (students cannot see it yet) · Click a day name to see it by ring or by instructor"
+    },
+    "saved": "Changes saved",
+    "cancelled": "Class cancelled",
+    "deleted": "Class deleted",
+    "selected": {
+      "title": "Selected class — {day} · {time} · {description} · {ring} · {instructors}",
+      "time": "Time",
+      "noLevels": "none",
+      "exempt": "Exempt from the 7:30 review",
+      "notes": "Notes",
+      "accept": "ACCEPT",
+      "cancel": "CANCEL THE CLASS",
+      "delete": "DELETE",
+      "deleteDraft": "Delete",
+      "close": "Close"
+    },
+    "ringBookings": {
+      "title": "This ring has training bookings",
+      "text": "If you continue, these bookings will be cancelled by the club and notified:",
+      "confirm": "Cancel the bookings and save",
+      "back": "Go back"
+    },
+    "warnings": {
+      "title": "Week inconsistency warnings",
+      "empty": "No inconsistencies"
+    },
+    "validation": {
+      "title": "Week validation",
+      "summary": "{weekLabel} · {range} · {draftCount, plural, one {# class} other {# classes}} in draft · ",
+      "count": "{count, plural, one {# class} other {# classes}}",
+      "clean": "no inconsistencies",
+      "issues": "{count, plural, one {# inconsistency} other {# inconsistencies}}",
+      "help": "{count, plural, one {When validated, the class becomes active and students can book it. A single class cannot be validated on its own.} other {When validated, the # classes become active at once and students can book them. A single class cannot be validated on its own.}}",
+      "submit": "VALIDATE THE WEEK",
+      "done": "{count, plural, one {# class validated} other {# classes validated}}"
+    },
+    "createForm": {
+      "title": "Create class",
+      "date": "Date",
+      "datePlaceholder": "dd/mm/yyyy",
+      "invalidDate": "Enter a valid date (dd/mm/yyyy).",
+      "start": "Start",
+      "end": "End",
+      "holiday": "This day is a holiday",
+      "visibleNow": "Students will see it straight away",
+      "submit": "CREATE THE CLASS",
+      "done": "Class created"
+    },
+    "blockForm": {
+      "title": "Block ring",
+      "editTitle": "Ring block",
+      "ring": "Ring",
+      "date": "Date",
+      "from": "From",
+      "to": "To",
+      "kind": "Type",
+      "reason": "Reason",
+      "note": "Note",
+      "submit": "SAVE THE BLOCK",
+      "cancel": "Cancel the block",
+      "conflicts": "Overlaps with:",
+      "conflictRow": "{label} · {from}–{to}",
+      "managedByActivity": "This block is managed from the activity.",
+      "openActivity": "Open the activity",
+      "saved": "Block saved",
+      "cancelledDone": "Block cancelled"
+    },
+    "day": {
+      "gridLabel": "Class calendar · {day}",
+      "training": "Train. {who}",
+      "block": "Block. {reason}",
+      "empty": "No classes this day"
+    }
+  },
+  "cancelModal": {
+    "title": "Cancel the class — {day} · {time} · {description} · {ring} · {instructors}",
+    "intro": "This class has {count, plural, one {# booked student} other {# booked students}}. If you cancel it, they will get a notice in the app, by email and by SMS with the text you write below.",
+    "introCount": "{count, plural, one {# booked student} other {# booked students}}",
+    "listLabel": "Booked students",
+    "dog": "+ {dog}",
+    "channel": {
+      "APP": "app",
+      "EMAIL": "email",
+      "SMS": "SMS"
+    },
+    "smsPhones": "SMS ({count} phones)",
+    "text": "Notice text",
+    "footer": "Sent with the «Class cancelled by the club» template",
+    "footerWaitlist": " · also to the waiting list ({count})",
+    "back": "Go back",
+    "confirm": "{count, plural, one {CANCEL AND NOTIFY THE STUDENT} other {CANCEL AND NOTIFY THE # STUDENTS}}",
+    "simpleCancel": "Cancel the class?",
+    "simpleDelete": "Delete the class?"
   }
 }

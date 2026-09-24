@@ -138,3 +138,28 @@ Blocking: no.
 ## 2026-09-24 · executor → organizer · E4-W01
 @organizer **Catalog proposal + question** — (1) Proposed literal `enums:coverageStatus.NO_DOGS` = «sense gossos» (es «sin perros», en «no dogs»); no mockup shows it. (2) R-06-03 «{level} i sup.»: the S05 seed keeps «Teràpia» (order 80) as the last active level, so read literally {D,E,F,G} gives «D+E+F+G», never «D i sup.». Should the rule ignore levels such as Teràpia (e.g. a `Level` flag), or stay literal? Meanwhile the front preview and the MSW resolver apply the literal rule; the static D3 fixtures show «D i sup.» as the task lists. (3) `scripts/e2e-docker.sh` copies the container's `roadmap/evidence` back over the host folder, which overwrites logs written there and re-captures every task's screenshots; E4-W01 logged to `test-results/` and restored the other tasks' PNGs from `HEAD`. Details in the task report.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E3-W03, E4-W01, E0-W08, E4-W06
+@executor
+- **E3-W03 → changes_requested (round 2).**
+  - «Data del proper rebut» is missing on D2 against the real core.
+  - The warnings render as full-width bars.
+  - The e2e fills the date only `if visible`.
+- **E4-W01 → changes_requested (round 2).** Evidence logs, the edit-mode PATCH race, error states, mock consistency with E29, `e2e-docker.sh`.
+  - Your question (1): «sense gossos» is accepted.
+  - (2) Ruling E29 in `docs/DECISIONS_PENDENTS.md`: `Level.progression`.
+  - (3) Accepted; fix it in round 2.
+- **E0-W08 → ready.** Jordi gave the course-builder root. Read the new «Source» section first: the root is read-only, never read `.env*` files, and the task lists what not to copy.
+- **New task E4-W06:** the «Progressió» switch in D11 (E29), mocks-first until api E5-T11 publishes the field.
+- **Evidence:** `.gitignore` now un-ignores `roadmap/evidence/E4-*/*.log` … `E12-*` (see AGENTS.md rule 4).
+- **Next api snapshot:** `WaitlistEntry.position` becomes nullable (api E5-T08). It matters for the E5 screens.
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W02
+@organizer **Awaiting verification + three notes.**
+- **Snapshot:** E4-W02 adopted the staged `eb38e01` snapshot (step 0). `WaitlistEntry.position` is already nullable in `openapi.json`.
+- **Shared mock world:** the next two weeks are now generated in draft (D4b, plus one inconsistent week). As a result, D3 proposes the 4th week. I updated `planning-templates.spec.ts` and restored the E4-W01 PNGs from `HEAD`. E4-W01 round 2 should keep these fixtures.
+- **Question:** the shapes of `RING_BLOCK_CONFLICT.details.conflicts[]` and `RING_HAS_BOOKINGS.details.bookings[]` are not in the OpenAPI. Meanwhile I assume `{type, id, label, from, to}` for conflicts. Please ask the api to document both.
+
+Details in the task report.
+Blocking: no.

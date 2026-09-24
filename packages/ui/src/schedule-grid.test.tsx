@@ -65,4 +65,27 @@ describe("ScheduleGrid", () => {
     expect(onCell).toHaveBeenCalledWith("c2");
     expect(screen.getByRole("rowheader", { name: "8:30" })).toBeInTheDocument();
   });
+
+  it("renders the D4 variants: counts, draft outline, cancelled and link cells", () => {
+    render(
+      <>
+        <ScheduleCell dashed meta="4/5 +2" subtitle="Central · Marc" title="B+C" />
+        <ScheduleCell muted struck subtitle="anul·lada · revisió de les 7:30" title="Cadells" />
+        <ScheduleCell href="/activitats/a1" icon="cone" label="Activitat · Taller" title="Taller" />
+      </>,
+    );
+
+    expect(screen.getByText("4/5 +2").tagName).toBe("STRONG");
+    expect(screen.getByText("B+C").closest(".ah-schedule-cell")).toHaveClass(
+      "ah-schedule-cell--dashed",
+    );
+    expect(screen.getByText("Cadells").closest(".ah-schedule-cell")).toHaveClass(
+      "ah-schedule-cell--muted",
+      "ah-schedule-cell--struck",
+    );
+    expect(screen.getByRole("link", { name: "Activitat · Taller" })).toHaveAttribute(
+      "href",
+      "/activitats/a1",
+    );
+  });
 });

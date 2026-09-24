@@ -5,7 +5,7 @@
   "ACTIVITY_IN_PAST": "Aquesta activitat ja ha passat.",
   "ACTIVITY_INCOMPLETE": "Completeu l'activitat abans de continuar.",
   "ACTIVITY_NOT_PUBLISHED": "Aquesta activitat no està publicada.",
-  "ADMIN_TEXT_REQUIRED": "Introduïu la informació per als administradors.",
+  "ADMIN_TEXT_REQUIRED": "Cal escriure el text de l'avís per als alumnes.",
   "ALREADY_BOOKED": "Aquesta reserva ja existeix.",
   "ALREADY_ON_WAITLIST": "Ja sou a la llista d'espera.",
   "ALREADY_PENDING": "Ja hi ha una sol·licitud pendent.",

@@ -14,7 +14,8 @@ const brandingCanic: unknown = JSON.parse(
     "utf8",
   ),
 );
-// The D3 mockup is drawn on Wednesday 19 August 2026: week 34 generated and validated, week 35 pending.
+// The D3 mockup is drawn on Wednesday 19 August 2026: week 34 generated and validated (since
+// E4-W02 the mocks also generate weeks 35 and 36 in draft for the D4b calendar).
 const mockupNow = new Date("2026-08-19T10:00:00+02:00");
 
 async function signIn(page: Page, scenario: "admin" | "instructor") {
@@ -63,10 +64,12 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
     await expect(
       weeks.getByRole("row", { name: "2026 34 17/08 17/08 · 09:12 18/08 · 10:02" }),
     ).toBeVisible();
-    await expect(weeks.getByRole("row", { name: "2026 35 24/08 pendent —" })).toBeVisible();
-    await expect(page.getByRole("combobox", { name: "Setmana" })).toHaveValue("2026-08-24");
+    // E4-W02: the next two weeks are generated in draft (D4b) → the proposal is week 37.
+    await expect(weeks.getByRole("row", { name: "2026 35 24/08 18/08 · 09:30 —" })).toBeVisible();
+    await expect(weeks.getByRole("row", { name: "2026 36 31/08 19/08 · 08:40 —" })).toBeVisible();
+    await expect(page.getByRole("combobox", { name: "Setmana" })).toHaveValue("2026-09-07");
     await expect(page.getByRole("combobox", { name: "Setmana" })).toContainText(
-      "Setmana del 24 al 30 d’agost",
+      "Setmana del 7 al 13 de setembre",
     );
     await expect(
       page.getByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
@@ -107,20 +110,20 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
     const confirmation = page.getByRole("dialog", { name: "Generar classes — per setmanes" });
     await expect(
       confirmation.getByText(
-        "Es generaran com a esborrany les classes de la setmana del 24/08/2026",
+        "Es generaran com a esborrany les classes de la setmana del 07/09/2026",
         { exact: true },
       ),
     ).toBeVisible();
     const generation = page.waitForRequest(
       (request) =>
-        request.method() === "POST" && request.url().endsWith("/weeks/week-2026-08-24/generation"),
+        request.method() === "POST" && request.url().endsWith("/weeks/week-2026-09-07/generation"),
     );
     await confirmation.getByRole("button", { name: "GENERAR CLASSES" }).click();
     expect((await generation).headers()["idempotency-key"]).toMatch(/^[0-9a-f-]{36}$/u);
     await expect(page.getByText("46 classes generades")).toBeVisible();
-    await expect(weeks.getByRole("row", { name: "2026 35 24/08 19/08 · 10:00 —" })).toBeVisible();
+    await expect(weeks.getByRole("row", { name: "2026 37 07/09 19/08 · 10:00 —" })).toBeVisible();
     await expect(page.getByRole("combobox", { name: "Setmana" })).toContainText(
-      "Setmana del 31 d’agost al 6 de setembre",
+      "Setmana del 14 al 20 de setembre",
     );
 
     await page.getByRole("button", { name: /^dilluns/iu }).click();

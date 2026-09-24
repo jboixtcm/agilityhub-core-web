@@ -2,6 +2,7 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { calendarHandlers } from "./calendar-handlers";
 import auditEntriesFixture from "./fixtures/audit-entries.json";
 import {
   catalogState,
@@ -2886,6 +2887,7 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
   ...planningHandlers,
+  ...calendarHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
       status: "UP",

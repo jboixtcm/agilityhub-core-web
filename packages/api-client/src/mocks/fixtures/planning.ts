@@ -454,25 +454,33 @@ export function mockWeek(monday: string, overrides: Partial<MockWeek> = {}): Moc
 }
 
 /**
- * Weeks relative to the club-local current week (the D3 mockup: W34 generated + validated,
- * W35 pending) so the SETMANES table and the candidates stay meaningful on any date.
+ * Weeks relative to the club-local current week so the SETMANES table, the candidates and the D4
+ * calendar stay meaningful on any date: the current week generated + validated (D4), the next
+ * one generated in draft (D4b) and the one after generated with an inconsistency between drafts.
+ * `classCounts` are recomputed from the class sessions by the handlers.
  */
 export function initialWeeks(today: string = clubLocalDate()): MockWeek[] {
   const current = mondayOf(today);
-  return [
-    mockWeek(current, {
-      classCounts: { active: 51, cancelled: 1, draft: 0 },
-      generatedAt: `${current}T07:12:00Z`,
+  const generated = (monday: string, generatedAt: string, template: WeekTemplate) =>
+    mockWeek(monday, {
+      generatedAt,
       generatedByAccountId: "account-admin",
       saturdayTemplateId: dissabtes.id,
       saturdayTemplateName: dissabtes.name,
+      state: "GENERATED",
+      version: 2,
+      weekdayTemplateId: template.id,
+      weekdayTemplateName: template.name,
+    });
+  return [
+    {
+      ...generated(current, `${current}T07:12:00Z`, setmanaA),
       state: "VALIDATED",
       validatedAt: `${addDays(current, 1)}T08:02:00Z`,
       validatedByAccountId: "account-admin",
       version: 3,
-      weekdayTemplateId: setmanaA.id,
-      weekdayTemplateName: setmanaA.name,
-    }),
-    mockWeek(addDays(current, 7)),
+    },
+    generated(addDays(current, 7), `${addDays(current, 1)}T07:30:00Z`, setmanaA),
+    generated(addDays(current, 14), `${addDays(current, 2)}T06:40:00Z`, setmanaB),
   ];
 }

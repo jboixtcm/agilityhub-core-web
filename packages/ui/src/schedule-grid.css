@@ -127,6 +127,10 @@ button.ah-schedule-cell {
   cursor: pointer;
 }
 
+a.ah-schedule-cell {
+  text-decoration: none;
+}
+
 .ah-schedule-cell--neutral {
   color: var(--ah-color-text-muted);
   background: var(--ah-color-surface-2);
@@ -148,6 +152,17 @@ button.ah-schedule-cell--empty:hover {
   opacity: 0.55;
 }
 
+.ah-schedule-cell--dashed {
+  background: transparent;
+  border: 1px dashed
+    color-mix(in srgb, var(--schedule-color, var(--ah-color-text-muted)) 70%, transparent);
+}
+
+.ah-schedule-cell--struck .ah-schedule-cell__title,
+.ah-schedule-cell--struck .ah-schedule-cell__subtitle {
+  text-decoration: line-through;
+}
+
 .ah-schedule-cell--warning {
   border-color: var(--ah-color-warning);
 }
@@ -158,9 +173,23 @@ button.ah-schedule-cell--empty:hover {
 }
 
 .ah-schedule-cell__title {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ah-schedule-cell__title .ah-icon {
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.ah-schedule-cell__meta {
+  font-weight: 800;
 }
 
 .ah-schedule-cell__subtitle {

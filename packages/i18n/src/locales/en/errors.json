@@ -5,7 +5,7 @@
   "ACTIVITY_IN_PAST": "This activity is in the past.",
   "ACTIVITY_INCOMPLETE": "Complete the activity before continuing.",
   "ACTIVITY_NOT_PUBLISHED": "This activity is not published.",
-  "ADMIN_TEXT_REQUIRED": "Enter the information for administrators.",
+  "ADMIN_TEXT_REQUIRED": "Write the notice text for the students.",
   "ALREADY_BOOKED": "This booking already exists.",
   "ALREADY_ON_WAITLIST": "You are already on the waiting list.",
   "ALREADY_PENDING": "A request is already pending.",

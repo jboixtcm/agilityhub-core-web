@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
 import { Icon } from "./icons/Icon";
+import type { IconName } from "./icons/names";
 
 function classes(...values: (false | string | undefined)[]): string {
   return values.filter(Boolean).join(" ");
@@ -148,24 +149,39 @@ export function ScheduleGrid<Cell extends ScheduleGridCell>({
 export interface ScheduleCellProps {
   title: string;
   color?: string | null | undefined;
+  /** D4b draft: dashed outline. */
+  dashed?: boolean;
+  /** Link cell (activity block → its page). */
+  href?: string | undefined;
+  icon?: IconName | undefined;
   label?: string | undefined;
+  /** Bold counts after the title («4/5 +1»). */
+  meta?: string | undefined;
   muted?: boolean;
   onClick?: (() => void) | undefined;
   selected?: boolean;
+  /** Cancelled class: struck-through text (with `muted`). */
+  struck?: boolean;
   subtitle?: string | undefined;
   warning?: boolean;
 }
 
 /**
- * One class in a schedule slot: line 1 = description, line 2 = instructors. Tinted with the ring
- * colour (`--schedule-color`); no colour = grey «sense pista» tone; `warning` = inconsistency outline.
+ * One class in a schedule slot: line 1 = description (+ counts), line 2 = ring/instructors. Tinted
+ * with the ring colour (`--schedule-color`); no colour = grey «sense pista» tone; `warning` =
+ * inconsistency outline; `dashed` = draft; `muted` + `struck` = cancelled.
  */
 export function ScheduleCell({
   color,
+  dashed = false,
+  href,
+  icon,
   label,
+  meta,
   muted = false,
   onClick,
   selected = false,
+  struck = false,
   subtitle,
   title,
   warning = false,
@@ -173,18 +189,33 @@ export function ScheduleCell({
   const className = classes(
     "ah-schedule-cell",
     (color === undefined || color === null || color === "") && "ah-schedule-cell--neutral",
+    dashed && "ah-schedule-cell--dashed",
     muted && "ah-schedule-cell--muted",
+    struck && "ah-schedule-cell--struck",
     selected && "ah-schedule-cell--selected",
     warning && "ah-schedule-cell--warning",
   );
   const content = (
     <>
-      <span className="ah-schedule-cell__title">{title}</span>
+      <span className="ah-schedule-cell__title">
+        {icon === undefined ? null : <Icon aria-hidden="true" name={icon} />}
+        {title}
+        {meta === undefined || meta === "" ? null : (
+          <strong className="ah-schedule-cell__meta">{meta}</strong>
+        )}
+      </span>
       {subtitle === undefined || subtitle === "" ? null : (
         <span className="ah-schedule-cell__subtitle">{subtitle}</span>
       )}
     </>
   );
+  if (href !== undefined) {
+    return (
+      <a aria-label={label} className={className} href={href} style={scheduleColorStyle(color)}>
+        {content}
+      </a>
+    );
+  }
   return onClick === undefined ? (
     <div
       aria-label={label}

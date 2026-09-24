@@ -1,0 +1,783 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/i18n, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 8 packages
+   • Remote caching disabled
+
+@agilityhub/i18n:lint: cache bypass, force executing 8edf49988ce8f2c9
+@agilityhub/config:lint: cache bypass, force executing 9bfae1aac519771f
+id:lint: cache bypass, force executing e72f0ee3bae6b9fe
+@agilityhub/api-client:typecheck: cache bypass, force executing 6f4b86990d447821
+@agilityhub/api-client:test: cache bypass, force executing 1ed8995a50ad681e
+@agilityhub/ui:typecheck: cache bypass, force executing c5fb1ed194647216
+@agilityhub/ui:test: cache bypass, force executing 79fc84610b7d1f5d
+clubs-admin:lint: cache bypass, force executing 0247df25248b015d
+@agilityhub/auth:lint: cache bypass, force executing 124b2e03cc508bda
+@agilityhub/config:typecheck: cache bypass, force executing d963af231b5e6a98
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:lint: cache bypass, force executing 82e80f53dd29ccd1
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 27ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (22 tests) 409ms
+@agilityhub/api-client:test:  ✓ src/mocks/calendar-handlers.test.ts (5 tests) 185ms
+@agilityhub/api-client:test:  ✓ src/index.test.ts (12 tests) 436ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  4 passed (4)
+@agilityhub/api-client:test:       Tests  40 passed (40)
+@agilityhub/api-client:test:    Start at  10:49:20
+@agilityhub/api-client:test:    Duration  1.36s (import 44%, transform 28%, tests 28%)
+@agilityhub/api-client:test: 
+clubs:lint: cache bypass, force executing 3ec98ef18a20b240
+@agilityhub/ui:lint: cache bypass, force executing 48398fc726af7bc0
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (5 tests) 4ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (4 tests) 25ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 62ms
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 21ms
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 101ms
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (2 tests) 152ms
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/ui:test:  ✓ src/components.test.tsx (27 tests) 212ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  7 passed (7)
+@agilityhub/ui:test:       Tests  42 passed (42)
+@agilityhub/ui:test:    Start at  10:49:21
+@agilityhub/ui:test:    Duration  1.73s (environment 73%, setup 14%, transform 6%, tests 6%, import 1%)
+@agilityhub/ui:test: 
+@agilityhub/i18n:typecheck: cache bypass, force executing c7c5e3c76f8351fb
+@agilityhub/i18n:test: cache bypass, force executing d2355903ab25bd0e
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+clubs-admin:build: cache bypass, force executing 729a4f044878a76c
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 2ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (12 tests) 19ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (3 tests) 26ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  3 passed (3)
+@agilityhub/i18n:test:       Tests  18 passed (18)
+@agilityhub/i18n:test:    Start at  10:49:23
+@agilityhub/i18n:test:    Duration  369ms (transform 69%, import 21%, tests 9%, worker 1%)
+@agilityhub/i18n:test: 
+clubs:build: cache bypass, force executing e54ebd170ca82fdd
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+id:build: cache bypass, force executing 4a0a8a96fc0b3210
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/auth:typecheck: cache bypass, force executing ab880bf9d7e60d2d
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: cache bypass, force executing 1378ced38c95bc29
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: 
+clubs-admin:typecheck: cache bypass, force executing ae194aa9102972f6
+id:typecheck: cache bypass, force executing 02bce8749f3e41a9
+clubs-admin:test: cache bypass, force executing f4484ce3dcdb3a24
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+@agilityhub/auth:test:  ✓ src/auth-client.test.ts (14 tests) 71ms
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+@agilityhub/auth:test:  ✓ src/session.test.tsx (3 tests) 128ms
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  Test Files  2 passed (2)
+@agilityhub/auth:test:       Tests  17 passed (17)
+@agilityhub/auth:test:    Start at  10:49:26
+@agilityhub/auth:test:    Duration  825ms (environment 50%, import 18%, transform 16%, tests 15%)
+@agilityhub/auth:test: 
+id:test: cache bypass, force executing ecce36809d1a87fd
+clubs-admin:test: 
+clubs-admin:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: 
+clubs:typecheck: cache bypass, force executing 76d52f8f688ea008
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+id:build: ✓ 428 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-Bg5p6J4I.css                           37.15 kB │ gzip:   7.30 kB
+id:build: dist/assets/enums-C6eMDWZt.js                             1.25 kB │ gzip:   0.71 kB
+id:build: dist/assets/enums-ON52RGAe.js                             1.30 kB │ gzip:   0.76 kB
+id:build: dist/assets/enums-B0UQdpoZ.js                             1.30 kB │ gzip:   0.76 kB
+id:build: dist/assets/shell-aHeTXtRj.js                             1.31 kB │ gzip:   0.70 kB
+id:build: dist/assets/shell-j-5bNr7h.js                             1.36 kB │ gzip:   0.78 kB
+id:build: dist/assets/shell-CFpLUFsp.js                             1.39 kB │ gzip:   0.78 kB
+id:build: dist/assets/common-CaTKPWMi.js                            1.39 kB │ gzip:   0.75 kB
+id:build: dist/assets/common-CnQ6CNO1.js                            1.47 kB │ gzip:   0.82 kB
+id:build: dist/assets/admin-dashboard-DEroKKpe.js                   1.50 kB │ gzip:   0.80 kB
+id:build: dist/assets/common-CgR5fNLl.js                            1.51 kB │ gzip:   0.83 kB
+id:build: dist/assets/admin-dashboard-C2DxNGts.js                   1.58 kB │ gzip:   0.88 kB
+id:build: dist/assets/admin-dashboard-C7J1Sedq.js                   1.63 kB │ gzip:   0.89 kB
+id:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+id:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+id:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+id:build: dist/assets/signup-DVenis1D.js                            4.72 kB │ gzip:   2.22 kB
+id:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+id:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+id:build: dist/assets/signup-DNLtsJ8E.js                            4.98 kB │ gzip:   2.48 kB
+id:build: dist/assets/signup-Cmt4S_ay.js                            5.05 kB │ gzip:   2.49 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+id:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+id:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+id:build: dist/assets/admin-scheduling-CtFPm1hD.js                  6.98 kB │ gzip:   2.75 kB
+id:build: dist/assets/admin-scheduling-pDYiurxO.js                  7.33 kB │ gzip:   2.98 kB
+id:build: dist/assets/admin-scheduling-CWf-Dfsk.js                  7.34 kB │ gzip:   2.99 kB
+id:build: dist/assets/admin-census-1EJBTIn-.js                      8.55 kB │ gzip:   3.38 kB
+id:build: dist/assets/admin-census-Du0-IMyk.js                      9.01 kB │ gzip:   3.64 kB
+id:build: dist/assets/admin-census-DNahXOci.js                      9.32 kB │ gzip:   3.72 kB
+id:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+id:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+id:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+id:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+id:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+id:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+id:build: dist/assets/index-lxKdEaJP.js                           320.42 kB │ gzip:  99.38 kB
+id:build: dist/assets/browser-CVkbVnR3.js                         759.97 kB │ gzip: 342.75 kB
+id:build: 
+id:build: [plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+id:build: ✓ built in 493ms
+clubs:test: cache bypass, force executing f50d6bf61e7e7f74
+id:test: 
+id:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 431 modules transformed.
+clubs:test: 
+clubs:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: 
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                                        0.13 kB
+clubs:build: dist/index.html                                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-Bi6WAoPH.css                           62.52 kB │ gzip:  10.75 kB
+clubs:build: dist/assets/enums-C6eMDWZt.js                             1.25 kB │ gzip:   0.71 kB
+clubs:build: dist/assets/enums-ON52RGAe.js                             1.30 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/enums-B0UQdpoZ.js                             1.30 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/admin-dashboard-DEroKKpe.js                   1.50 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/admin-dashboard-C2DxNGts.js                   1.58 kB │ gzip:   0.88 kB
+clubs:build: dist/assets/admin-dashboard-C7J1Sedq.js                   1.63 kB │ gzip:   0.89 kB
+clubs:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+clubs:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+clubs:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/signup-DVenis1D.js                            4.72 kB │ gzip:   2.22 kB
+clubs:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/signup-DNLtsJ8E.js                            4.98 kB │ gzip:   2.48 kB
+clubs:build: dist/assets/signup-Cmt4S_ay.js                            5.05 kB │ gzip:   2.49 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/admin-scheduling-CtFPm1hD.js                  6.98 kB │ gzip:   2.75 kB
+clubs:build: dist/assets/admin-scheduling-pDYiurxO.js                  7.33 kB │ gzip:   2.98 kB
+clubs:build: dist/assets/admin-scheduling-CWf-Dfsk.js                  7.34 kB │ gzip:   2.99 kB
+clubs:build: dist/assets/admin-census-1EJBTIn-.js                      8.55 kB │ gzip:   3.38 kB
+clubs:build: dist/assets/admin-census-Du0-IMyk.js                      9.01 kB │ gzip:   3.64 kB
+clubs:build: dist/assets/admin-census-DNahXOci.js                      9.32 kB │ gzip:   3.72 kB
+clubs:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs:build: dist/assets/index-DfCCMz7f.js                           416.60 kB │ gzip: 124.88 kB
+clubs:build: dist/assets/browser-CVkbVnR3.js                         759.97 kB │ gzip: 342.75 kB
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: ✓ built in 518ms
+clubs-admin:test:  ✓ src/catalogs/derived-settings.test.ts (2 tests) 7ms
+clubs-admin:test:  ✓ src/planning/calendar-literals.test.ts (2 tests) 40ms
+clubs-admin:test:  ✓ src/planning/description.test.ts (6 tests) 83ms
+clubs-admin:test: stderr | src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > renders the server aggregate, all risk rows, pending signups, and accessible chart
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows masked data, signed documents, consent warning, level, invoice, and Stripe payment
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > renders applied filters and preserves selection when page size changes
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/catalogs/ClubPagesCard.test.tsx > T-05-CP-07 club page editor > warns about provisional text and confirms the next consent version before publishing
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows only the rings used that day in catalog order, plus «Sense» when a class has no ring
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > filters by action and opens the masked before/after change drawer
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > edits pending data, requires a rejection reason, and validates through the server
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > hides nullable module blocks and refetches when the window regains focus
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > drops unused rings and the «Sense» column on a day without them
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/dashboard/DashboardPage.test.tsx (2 tests) 557ms
+clubs-admin:test:    ✓ T-14-25 D1 dashboard (2)
+clubs-admin:test:      ✓ renders the server aggregate, all risk rows, pending signups, and accessible chart 522ms
+clubs-admin:test: stderr | src/catalogs/ClubPagesCard.test.tsx > T-05-CP-07 club page editor > maps STALE_VERSION to the page-specific reload message
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > switches to one column per instructor with a class that day
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/catalogs/ClubPagesCard.test.tsx (2 tests) 601ms
+clubs-admin:test:    ✓ T-05-CP-07 club page editor (2)
+clubs-admin:test:      ✓ warns about provisional text and confirms the next consent version before publishing 500ms
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > uses the compact mark with the runtime club name
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > hides the Configuració group from instructors
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > opens the exports drawer for a queued job and exposes its READY download
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10)
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > moves between days and goes back to the weekly view of the same template
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > T-06-28 shows «Calendari de classes» to instructors (read-only D4, A22 c)
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > maps validation errors to the level and next-invoice fields
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-02-14 clubs-admin shell > shows the fixed sidebar groups to administrators
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows the Saturday template with its single day
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+id:test:  ✓ src/App.test.tsx (9 tests) 750ms
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+id:test: 
+id:test:  Test Files  1 passed (1)
+id:test:       Tests  9 passed (9)
+id:test:    Start at  10:49:28
+id:test:    Duration  2.46s (environment 39%, tests 32%, transform 16%, setup 10%, import 3%)
+id:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-18 clubs-admin access > offers magic-link and password entry with the shared auth components
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/planning/TemplateDayPage.test.tsx (5 tests) 717ms
+clubs-admin:test:    ✓ T-06-27 D3b day view per ring / per instructor (5)
+clubs-admin:test:      ✓ shows only the rings used that day in catalog order, plus «Sense» when a class has no ring 363ms
+clubs-admin:test: stderr | src/App.test.tsx > T-01-20 clubs-admin handoff > exchanges the one-time handoff code on the landing route
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > shows profile completion as a non-dismissible backoffice modal
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > requires explicit confirmation when a manual upfront payment is zero
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > toggles visible columns and synchronizes the ordered fields to the URL
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/App.test.tsx > T-01-26 clubs-admin onboarding > removes the postpone action when the policy limit is exhausted
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/App.test.tsx (10 tests) 483ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  42 entries (1477.25 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs-admin:test: stderr | src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > rejects a pending signup only after receiving a valid reason
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > shows FAQ, rules and other active pages only
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:build: ✓ 460 modules transformed.
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test:  ✓ src/dashboard/SignupReviewPage.test.tsx (5 tests) 1130ms
+clubs-admin:test:    ✓ T-04-33 D2 signup validation (5)
+clubs-admin:test:      ✓ shows masked data, signed documents, consent warning, level, invoice, and Stripe payment 442ms
+clubs-admin:test:      ✓ edits pending data, requires a rejection reason, and validates through the server 303ms
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:build: rendering chunks...
+clubs:test: stderr | src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > keeps Info available without the FAQ module and omits the FAQ tab
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test:  ✓ src/InfoPage.test.tsx (2 tests) 166ms
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs-admin:build: dist/assets/index-DyyJLwRo.css                           78.91 kB │ gzip:  12.80 kB
+clubs-admin:build: dist/assets/enums-C6eMDWZt.js                             1.25 kB │ gzip:   0.71 kB
+clubs-admin:build: dist/assets/enums-ON52RGAe.js                             1.30 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/enums-B0UQdpoZ.js                             1.30 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/admin-dashboard-DEroKKpe.js                   1.50 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/admin-dashboard-C2DxNGts.js                   1.58 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/admin-dashboard-C7J1Sedq.js                   1.63 kB │ gzip:   0.89 kB
+clubs-admin:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+clubs-admin:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+clubs-admin:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs-admin:build: dist/assets/signup-DVenis1D.js                            4.72 kB │ gzip:   2.22 kB
+clubs-admin:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/signup-DNLtsJ8E.js                            4.98 kB │ gzip:   2.48 kB
+clubs-admin:build: dist/assets/signup-Cmt4S_ay.js                            5.05 kB │ gzip:   2.49 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-scheduling-CtFPm1hD.js                  6.98 kB │ gzip:   2.75 kB
+clubs-admin:build: dist/assets/admin-scheduling-pDYiurxO.js                  7.33 kB │ gzip:   2.98 kB
+clubs-admin:build: dist/assets/admin-scheduling-CWf-Dfsk.js                  7.34 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-census-1EJBTIn-.js                      8.55 kB │ gzip:   3.38 kB
+clubs-admin:build: dist/assets/admin-census-Du0-IMyk.js                      9.01 kB │ gzip:   3.64 kB
+clubs-admin:build: dist/assets/admin-census-DNahXOci.js                      9.32 kB │ gzip:   3.72 kB
+clubs-admin:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs-admin:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs-admin:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs-admin:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs-admin:build: dist/assets/browser-BIiBixyB.js                         571.74 kB │ gzip: 199.65 kB
+clubs-admin:build: dist/assets/index-GdbInjtn.js                           826.43 kB │ gzip: 316.15 kB
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 301ms
+clubs:test: stderr | src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/census/CensusListPage.test.tsx > T-03-42 D15 translated dog list > renders the approved columns and dog record links
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps the draft and refetches localized configuration after a language change
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test:  ✓ src/census/CensusRecordPage.test.tsx (5 tests) 1319ms
+clubs-admin:test:    ✓ T-03-39 D10 member record (3)
+clubs-admin:test:      ✓ renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL 437ms
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-29 signup person and draft > masks and validates the browser-independent birth date control
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > uploads sequentially named vaccination pages and renders API plans
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > removes amounts without BILLING and the family offer and step without FAMILY_GROUP
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > removes amounts without BILLING and the family offer and step without FAMILY_GROUP
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-31 signup family lookup > keeps the dog draft when returning from the family step
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > renders API totals and payment conditions and submits only after privacy consent
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > redirects through checkout when Stripe is enabled
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version and handles STALE_VERSION and CAPACITY_BELOW_BOOKINGS
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > uses the member plan and payment method and posts the add-dog flow
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  ✓ src/SignupPage.test.tsx (10 tests) 935ms
+clubs:test:    ✓ T-04-29 signup person and draft (3)
+clubs:test:      ✓ persists a current draft, expires it after 24 hours and maps identity states 361ms
+clubs:test: stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > shows the catalogued EXPORT_LIMIT explanation in the exports drawer
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs:test: stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  ✓ src/App.test.tsx (17 tests) 933ms
+clubs:test: 
+clubs:test:  Test Files  3 passed (3)
+clubs:test:       Tests  29 passed (29)
+clubs:test:    Start at  10:49:28
+clubs:test:    Duration  2.90s (transform 28%, environment 28%, tests 28%, import 9%, setup 6%)
+clubs:test: 
+clubs:test:   Transform  transforming modules took 2.07s · 28% of tracked time, re-done on every run
+clubs:test:              persist transforms across runs with fsModuleCache: true
+clubs:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+clubs:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c)
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued members list export into the global drawer
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/census/CensusListPage.test.tsx (3 tests) 2175ms
+clubs-admin:test:    ✓ T-03-38 D5 universal member list (2)
+clubs-admin:test:      ✓ renders applied filters and preserves selection when page size changes 847ms
+clubs-admin:test:      ✓ toggles visible columns and synchronizes the ordered fields to the URL 398ms
+clubs-admin:test:    ✓ T-03-42 D15 translated dog list (1)
+clubs-admin:test:      ✓ renders the approved columns and dog record links 927ms
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued dogs list export into the global drawer
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > links LastChange to the entity-scoped audit trail
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/audit/AuditPage.test.tsx (6 tests) 2241ms
+clubs-admin:test:    ✓ T-14-26 member audit and exports (6)
+clubs-admin:test:      ✓ filters by action and opens the masked before/after change drawer 572ms
+clubs-admin:test:      ✓ opens the exports drawer for a queued job and exposes its READY download 1317ms
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: stderr | src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/planning/TemplatesPage.test.tsx (8 tests) 2391ms
+clubs-admin:test:    ✓ T-06-26 D3 weekly templates (8)
+clubs-admin:test:      ✓ prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band 1026ms
+clubs-admin:test:      ✓ saves every change of a full cell at once with the template version 587ms
+clubs-admin:test: stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+clubs-admin:test: [BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  ✓ src/planning/CalendarPage.test.tsx (8 tests) 2429ms
+clubs-admin:test:    ✓ T-06-28 D4 / D4b / D4c class calendar (front half, MSW) (8)
+clubs-admin:test:      ✓ opens «Esborrany» on the first week with drafts, with the validation card and its count 796ms
+clubs-admin:test:      ✓ cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES» 377ms
+clubs-admin:test: 
+clubs-admin:test:  Test Files  13 passed (13)
+clubs-admin:test:       Tests  64 passed (64)
+clubs-admin:test:    Start at  10:49:27
+clubs-admin:test:    Duration  4.96s (tests 33%, environment 30%, transform 19%, setup 11%, import 7%)
+clubs-admin:test: 
+
+ Tasks:    26 successful, 26 total
+Cached:    0 cached, 26 total
+  Time:    15.391s 
+

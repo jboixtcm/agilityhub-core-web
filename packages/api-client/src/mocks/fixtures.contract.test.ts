@@ -8,6 +8,12 @@ import { describe, expect, it } from "vitest";
 import openapiDocument from "../../openapi/openapi.json";
 import pendingDocument from "../../openapi/pending.json";
 
+import {
+  cancellationPreviewFor,
+  clubInstant,
+  initialClassSessions,
+  initialRingBlocks,
+} from "./fixtures/calendar";
 import { coverageFixture, initialWeeks, initialWeekTemplates, mockWeek } from "./fixtures/planning";
 
 const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
@@ -92,7 +98,8 @@ describe("E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Covera
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
   ajv.addSchema(mergedDocument, openapiSchemaId);
-  const schema = (name: string) => ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
 
   it.each(initialWeekTemplates.map((template) => [template.name, template] as const))(
     "validates the %s template",
@@ -109,9 +116,68 @@ describe("E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Covera
     for (const item of [...initialWeeks("2026-08-19"), mockWeek("2026-08-31")]) {
       expect(week(item), JSON.stringify(week.errors, null, 2)).toBe(true);
     }
-    expect(initialWeeks("2026-08-19").map((item) => [item.isoYear, item.isoWeek, item.startDate])).toEqual([
+    expect(
+      initialWeeks("2026-08-19").map((item) => [item.isoYear, item.isoWeek, item.startDate]),
+    ).toEqual([
       [2026, 34, "2026-08-17"],
       [2026, 35, "2026-08-24"],
+      [2026, 36, "2026-08-31"],
     ]);
+  });
+});
+
+describe("E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const sessions = initialClassSessions("2026-08-10");
+
+  it("validates every class session of the D4, D4b and inconsistent weeks", () => {
+    const validate = schema("ClassSession");
+    for (const session of sessions) {
+      expect(validate(session), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    }
+    const count = (weekId: string, state: string) =>
+      sessions.filter((session) => session.weekId === weekId && session.state === state).length;
+    expect(count("week-2026-08-17", "DRAFT")).toBe(28);
+    expect(count("week-2026-08-24", "DRAFT")).toBe(6);
+    expect(sessions.find((session) => session.id === "cls-2026-08-12-1850-0")).toMatchObject({
+      counters: { booked: 4, waiting: 2 },
+      displayDescription: "B+C",
+      ringId: "ring-central",
+      startTime: "18:50",
+      state: "ACTIVE",
+    });
+  });
+
+  it("validates the ring block and the cancellation preview of the Wednesday 18:50 class", () => {
+    const block = schema("RingBlock");
+    for (const item of initialRingBlocks("2026-08-10")) {
+      expect(block(item), JSON.stringify(block.errors, null, 2)).toBe(true);
+      expect(item).toMatchObject({ from: "2026-08-12T14:00:00Z", to: "2026-08-12T16:00:00Z" });
+    }
+    const preview = schema("CancellationPreview");
+    const wednesday = sessions.find((session) => session.id === "cls-2026-08-12-1850-0");
+    if (wednesday === undefined) throw new TypeError("Missing the Wednesday 18:50 class");
+    const value = cancellationPreviewFor(wednesday);
+    expect(preview(value), JSON.stringify(preview.errors, null, 2)).toBe(true);
+    expect(
+      value.bookings.map((item) => [item.memberName, item.levelName, item.phoneCount]),
+    ).toEqual([
+      ["Laura Serra", "C", 2],
+      ["Marc Prats", "B", 1],
+      ["Aina Roca", "B", 1],
+      ["Biel Puig", "C", 1],
+    ]);
+    expect(value.waitlistCount).toBe(2);
+  });
+
+  it("R-06-14 derives UTC instants from the club-local time across the DST change", () => {
+    expect(clubInstant("2026-10-24", "08:30")).toBe("2026-10-24T06:30:00Z");
+    expect(clubInstant("2026-10-26", "08:30")).toBe("2026-10-26T07:30:00Z");
+    expect(clubInstant("2026-03-28", "08:30")).toBe("2026-03-28T07:30:00Z");
+    expect(clubInstant("2026-03-30", "08:30")).toBe("2026-03-30T06:30:00Z");
   });
 });

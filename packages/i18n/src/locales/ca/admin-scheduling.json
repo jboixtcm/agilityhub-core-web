@@ -109,5 +109,132 @@
   "description": {
     "andAbove": "{level} i sup.",
     "join": "+"
+  },
+  "calendar": {
+    "title": "Calendari de classes",
+    "filter": {
+      "label": "Estat de les classes",
+      "actives": "Actives",
+      "drafts": "Esborrany",
+      "cancelled": "Anul·lades"
+    },
+    "week": {
+      "current": "Setmana en curs",
+      "next": "Setmana vinent",
+      "range": "del {range}",
+      "previous": "Setmana anterior",
+      "following": "Setmana següent",
+      "select": "Setmana"
+    },
+    "create": "Crear classe",
+    "block": "Bloqueja pista",
+    "gridLabel": "Calendari de classes · del {range}",
+    "empty": "Cap classe aquesta setmana",
+    "cell": {
+      "counts": "{booked}/{capacity}",
+      "waiting": "+{count}",
+      "noRing": "sense pista",
+      "cancelled": "anul·lada · {reason}",
+      "blocked": "{ring} bloquejada",
+      "blockDetail": "{reason} {from}–{to}",
+      "activity": "Activitat · {title}",
+      "label": "{when} · {description} · {details}"
+    },
+    "footer": {
+      "active": "n/n +e = inscrits/places + llista d'espera · {icon} = pista bloquejada · Clica el nom d'un dia per veure'l per pista o per instructor",
+      "draft": "contorn discontinu = esborrany (els alumnes encara no la veuen) · Clica el nom d'un dia per veure'l per pista o per instructor"
+    },
+    "saved": "Canvis desats",
+    "cancelled": "Classe anul·lada",
+    "deleted": "Classe eliminada",
+    "selected": {
+      "title": "Classe seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
+      "time": "Hora",
+      "noLevels": "cap",
+      "exempt": "Exempta de la revisió de les 7:30",
+      "notes": "Notes",
+      "accept": "ACCEPTA",
+      "cancel": "ANUL·LA LA CLASSE",
+      "delete": "ELIMINA",
+      "deleteDraft": "Elimina",
+      "close": "Tanca"
+    },
+    "ringBookings": {
+      "title": "Aquesta pista té reserves d'entrenament",
+      "text": "Si continues, aquestes reserves quedaran anul·lades pel club i se'n farà l'avís:",
+      "confirm": "Anul·la les reserves i desa",
+      "back": "Torna enrere"
+    },
+    "warnings": {
+      "title": "Avisos d'incoherència de la setmana",
+      "empty": "Cap incoherència"
+    },
+    "validation": {
+      "title": "Validació de la setmana",
+      "summary": "{weekLabel} · del {range} · {draftCount, plural, one {# classe} other {# classes}} en esborrany · ",
+      "count": "{count, plural, one {# classe} other {# classes}}",
+      "clean": "cap incoherència",
+      "issues": "{count, plural, one {# incoherència} other {# incoherències}}",
+      "help": "{count, plural, one {En validar, la classe passa a activa i els alumnes ja la poden reservar. No es pot validar una classe sola.} other {En validar, les # classes passen a actives alhora i els alumnes ja les poden reservar. No es pot validar una classe sola.}}",
+      "submit": "VALIDAR LA SETMANA",
+      "done": "{count, plural, one {# classe validada} other {# classes validades}}"
+    },
+    "createForm": {
+      "title": "Crear classe",
+      "date": "Data",
+      "datePlaceholder": "dd/mm/aaaa",
+      "invalidDate": "Escriu una data vàlida (dd/mm/aaaa).",
+      "start": "Inici",
+      "end": "Final",
+      "holiday": "Aquest dia és festiu",
+      "visibleNow": "Els alumnes la veuran de seguida",
+      "submit": "CREA LA CLASSE",
+      "done": "Classe creada"
+    },
+    "blockForm": {
+      "title": "Bloqueja pista",
+      "editTitle": "Bloqueig de pista",
+      "ring": "Pista",
+      "date": "Data",
+      "from": "De",
+      "to": "A",
+      "kind": "Tipus",
+      "reason": "Motiu",
+      "note": "Nota",
+      "submit": "DESA EL BLOQUEIG",
+      "cancel": "Anul·la el bloqueig",
+      "conflicts": "Coincideix amb:",
+      "conflictRow": "{label} · {from}–{to}",
+      "managedByActivity": "Aquest bloqueig es gestiona des de l'activitat.",
+      "openActivity": "Obre l'activitat",
+      "saved": "Bloqueig desat",
+      "cancelledDone": "Bloqueig anul·lat"
+    },
+    "day": {
+      "gridLabel": "Calendari de classes · {day}",
+      "training": "Entren. {who}",
+      "block": "Bloq. {reason}",
+      "empty": "Cap classe aquest dia"
+    }
+  },
+  "cancelModal": {
+    "title": "Anul·lar la classe — {day} · {time} · {description} · {ring} · {instructors}",
+    "intro": "Aquesta classe té {count, plural, one {# alumne inscrit} other {# alumnes inscrits}}. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota.",
+    "introCount": "{count, plural, one {# alumne inscrit} other {# alumnes inscrits}}",
+    "listLabel": "Alumnes inscrits",
+    "dog": "+ {dog}",
+    "channel": {
+      "APP": "app",
+      "EMAIL": "correu",
+      "SMS": "SMS"
+    },
+    "smsPhones": "SMS ({count} telèfons)",
+    "text": "Text de l'avís",
+    "footer": "S'envia amb la plantilla «Classe anul·lada pel club»",
+    "footerWaitlist": " · també a la llista d'espera ({count})",
+    "back": "Torna enrere",
+    "confirm": "{count, plural, one {ANUL·LA I AVISA L'ALUMNE} other {ANUL·LA I AVISA ELS # ALUMNES}}",
+    "simpleCancel": "Vols anul·lar la classe?",
+    "simpleDelete": "Vols eliminar la classe?"
   }
 }

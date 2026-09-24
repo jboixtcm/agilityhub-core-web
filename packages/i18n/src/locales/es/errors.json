@@ -5,7 +5,7 @@
   "ACTIVITY_IN_PAST": "Esta actividad ya ha pasado.",
   "ACTIVITY_INCOMPLETE": "Complete la actividad antes de continuar.",
   "ACTIVITY_NOT_PUBLISHED": "Esta actividad no está publicada.",
-  "ADMIN_TEXT_REQUIRED": "Introduzca la información para los administradores.",
+  "ADMIN_TEXT_REQUIRED": "Hay que escribir el texto del aviso para los alumnos.",
   "ALREADY_BOOKED": "Esta reserva ya existe.",
   "ALREADY_ON_WAITLIST": "Ya está en la lista de espera.",
   "ALREADY_PENDING": "Ya hay una solicitud pendiente.",

@@ -27,5 +27,29 @@
   "skipReason": {
     "HOLIDAY": "festiu",
     "PAST": "dies passats"
+  },
+  "classState": {
+    "ACTIVE": "activa",
+    "DRAFT": "esborrany",
+    "FINISHED": "finalitzada",
+    "CANCELLED": "anul·lada"
+  },
+  "cancellationReason": {
+    "RISK_REVIEW": "revisió de les 7:30",
+    "CLUB_MANUAL": "pel club",
+    "DELETED": "eliminada",
+    "ACTIVITY": "activitat"
+  },
+  "ringBlockKind": {
+    "BLOCK": "Bloqueig",
+    "RESERVATION": "Reserva de pista"
+  },
+  "ringBlockReason": {
+    "MAINTENANCE": "manteniment",
+    "PRIVATE_CLASS": "classe particular",
+    "THERAPY": "teràpia",
+    "PREPARATION": "preparació",
+    "ACTIVITY": "activitat",
+    "OTHER": "altres"
   }
 }

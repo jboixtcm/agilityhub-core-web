@@ -1,0 +1,448 @@
+import { isApiError, type ApiClient } from "@agilityhub/api-client";
+import { Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
+import { type CSSProperties, type SyntheticEvent, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import {
+  type CalendarSettings,
+  type ClassSession,
+  errorCode,
+  holidayDates,
+  maskDate,
+  minutesOf,
+  type OpeningHours,
+  openingOf,
+  parseMaskedDate,
+  timeLabel,
+  timeOf,
+  timeOptions,
+  useCalendarErrorMessage,
+} from "./calendar-shared";
+import { automaticDescription } from "./description";
+import { RingBookingList } from "./SelectedClassCard";
+import {
+  errorProp,
+  fieldOfValidationError,
+  mondayOf,
+  type PlanningCatalogs,
+  useResource,
+} from "./shared";
+
+type FieldKey =
+  "date" | "description" | "general" | "instructorIds" | "levelIds" | "ringId" | "time";
+
+const fieldByCode: Readonly<Record<string, FieldKey>> = {
+  DESCRIPTION_REQUIRED: "description",
+  INVALID_SLOT_GRANULARITY: "time",
+  INVALID_TIME_RANGE: "time",
+  LEVEL_REQUIRED: "levelIds",
+  OUTSIDE_OPENING_HOURS: "time",
+  RING_BLOCKED: "ringId",
+  TOO_MANY_INSTRUCTORS: "instructorIds",
+};
+
+/** «Els alumnes la veuran de seguida» when the week of the date is validated (R-06-09). */
+function VisibleNowNote({ client, monday }: { client: ApiClient; monday: string }) {
+  const { t } = useTranslation("admin-scheduling");
+  const week = useResource(
+    useCallback(
+      async () =>
+        (
+          await client.GET("/weeks", {
+            params: { query: { filter: [`startDate:eq:${monday}`] } },
+          })
+        ).data?.items[0],
+      [client, monday],
+    ),
+  );
+  return week.data?.state === "VALIDATED" ? (
+    <p className="planning-note planning-note--warning" role="note">
+      {t("admin-scheduling:calendar.createForm.visibleNow")}
+    </p>
+  ) : null;
+}
+
+function colorStyle(color: string): CSSProperties {
+  return { "--planning-chip-color": color } as CSSProperties;
+}
+
+/**
+ * [Crear classe] of D4 (R-06-09): the class fields of the D3 card (ring, levels, instructor,
+ * description preview, limit) plus a masked date and start/end times. Warns when the date is a
+ * holiday and when the week is validated (the class is born ACTIVE). Mounted only while open.
+ */
+export function CreateClassDrawer({
+  catalogs,
+  client,
+  onClose,
+  onCreated,
+  openingHours,
+  settings,
+}: {
+  catalogs: PlanningCatalogs;
+  client: ApiClient;
+  onClose: () => void;
+  onCreated: (session: ClassSession) => void;
+  openingHours: OpeningHours;
+  settings: CalendarSettings;
+}) {
+  const { t } = useTranslation(["admin-scheduling", "errors"]);
+  const errorMessage = useCalendarErrorMessage();
+  const activeRings = catalogs.rings.filter((ring) => ring.active);
+  const activeLevels = catalogs.levels.filter((level) => level.active);
+  const activeInstructors = catalogs.instructors.filter((instructor) => instructor.active);
+  const [date, setDate] = useState("");
+  const isoDate = parseMaskedDate(date);
+  const opening = openingOf(openingHours, isoDate ?? "2026-08-10");
+  const starts = timeOptions(
+    opening.open,
+    timeOf(minutesOf(opening.close) - settings.slotMinutes),
+    settings.slotMinutes,
+  );
+  const ends = timeOptions(
+    timeOf(minutesOf(opening.open) + settings.slotMinutes),
+    opening.close,
+    settings.slotMinutes,
+  );
+  const [startTime, setStartTime] = useState(starts[0] ?? "");
+  const [endTime, setEndTime] = useState(timeOf(minutesOf(starts[0] ?? "07:00") + 60));
+  const [ringId, setRingId] = useState<string | null>(null);
+  const [levelIds, setLevelIds] = useState<string[]>([]);
+  const [instructorIds, setInstructorIds] = useState<string[]>(() => {
+    const first = activeInstructors[0];
+    return settings.maxInstructors === 1 && first !== undefined ? [first.id] : [];
+  });
+  const [description, setDescription] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [pending, setPending] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const [bookings, setBookings] = useState<unknown[]>();
+
+  const holidays = useResource(
+    useCallback(async () => {
+      try {
+        return holidayDates((await client.GET("/club/holidays")).data?.value);
+      } catch {
+        return [];
+      }
+    }, [client]),
+  );
+  const automatic = useMemo(
+    () => automaticDescription(catalogs.levels, levelIds, t),
+    [catalogs.levels, levelIds, t],
+  );
+  const autoCapacity = useMemo(() => {
+    const capacities = catalogs.levels
+      .filter((level) => levelIds.includes(level.id))
+      .map((level) => level.capacity);
+    return capacities.length === 0 ? "" : String(Math.min(...capacities));
+  }, [catalogs.levels, levelIds]);
+  const isHoliday = isoDate !== undefined && (holidays.data ?? []).includes(isoDate);
+  const endOptions = ends.includes(endTime) ? ends : [...ends, endTime];
+
+  const create = async (cancelBookings = false) => {
+    if (isoDate === undefined) {
+      setErrors({ date: t("admin-scheduling:calendar.createForm.invalidDate") });
+      return;
+    }
+    setPending(true);
+    setErrors({});
+    try {
+      const result = await client.POST("/class-sessions", {
+        body: {
+          capacity: capacity.trim() === "" ? null : Number(capacity),
+          date: isoDate,
+          description: description.trim() === "" ? null : description.trim(),
+          endTime,
+          instructorIds,
+          levelIds,
+          ringId,
+          startTime,
+          ...(cancelBookings ? { cancelBookings: true } : {}),
+        },
+      });
+      setBookings(undefined);
+      if (result.data !== undefined) onCreated(result.data);
+    } catch (cause) {
+      const code = errorCode(cause);
+      if (code === "RING_HAS_BOOKINGS" && isApiError(cause)) {
+        const list = (cause.details as { bookings?: unknown } | undefined)?.bookings;
+        setBookings(Array.isArray(list) ? list : []);
+        return;
+      }
+      const validationField = fieldOfValidationError(cause);
+      const field: FieldKey =
+        (code === undefined ? undefined : fieldByCode[code]) ??
+        (validationField === "date"
+          ? "date"
+          : validationField === "startTime" || validationField === "endTime"
+            ? "time"
+            : "general");
+      setErrors({ [field]: errorMessage(cause) });
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const submit = (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    void create();
+  };
+
+  const listError = (message: string | undefined) =>
+    message === undefined ? null : (
+      <p className="ah-form-field__error" role="alert">
+        {message}
+      </p>
+    );
+
+  return (
+    <Drawer
+      closeLabel={t("admin-scheduling:common.close")}
+      onClose={onClose}
+      open
+      title={t("admin-scheduling:calendar.createForm.title")}
+    >
+      <form className="planning-form calendar-drawer-form" noValidate onSubmit={submit}>
+        <FormField
+          {...errorProp(errors.date)}
+          id="calendar-create-date"
+          label={t("admin-scheduling:calendar.createForm.date")}
+        >
+          <Input
+            autoComplete="off"
+            id="calendar-create-date"
+            inputMode="numeric"
+            onChange={(event) => {
+              setDate(maskDate(event.currentTarget.value));
+            }}
+            placeholder={t("admin-scheduling:calendar.createForm.datePlaceholder")}
+            required
+            value={date}
+          />
+        </FormField>
+        {isHoliday ? (
+          <p className="planning-note planning-note--warning" role="note">
+            {t("admin-scheduling:calendar.createForm.holiday")}
+          </p>
+        ) : null}
+        {isoDate === undefined ? null : (
+          <VisibleNowNote client={client} monday={mondayOf(isoDate)} />
+        )}
+        <div className="calendar-form__pair">
+          <FormField
+            id="calendar-create-start"
+            label={t("admin-scheduling:calendar.createForm.start")}
+          >
+            <Select
+              id="calendar-create-start"
+              onChange={(event) => {
+                const next = event.currentTarget.value;
+                const length = minutesOf(endTime) - minutesOf(startTime);
+                setStartTime(next);
+                setEndTime(timeOf(minutesOf(next) + Math.max(length, settings.slotMinutes)));
+              }}
+              value={startTime}
+            >
+              {starts.map((time) => (
+                <option key={time} value={time}>
+                  {timeLabel(time)}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+          <FormField
+            {...errorProp(errors.time)}
+            id="calendar-create-end"
+            label={t("admin-scheduling:calendar.createForm.end")}
+          >
+            <Select
+              id="calendar-create-end"
+              onChange={(event) => {
+                setEndTime(event.currentTarget.value);
+              }}
+              value={endTime}
+            >
+              {endOptions.map((time) => (
+                <option key={time} value={time}>
+                  {timeLabel(time)}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+        </div>
+        {settings.maxInstructors <= 1 ? (
+          <FormField
+            {...errorProp(errors.instructorIds)}
+            id="calendar-create-instructor"
+            label={t("admin-scheduling:classCard.instructor")}
+          >
+            <Select
+              id="calendar-create-instructor"
+              onChange={(event) => {
+                setInstructorIds([event.currentTarget.value]);
+              }}
+              value={instructorIds[0] ?? ""}
+            >
+              {activeInstructors.map((instructor) => (
+                <option key={instructor.id} value={instructor.id}>
+                  {instructor.shortName}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+        ) : (
+          <fieldset className="planning-form__fieldset">
+            <legend>
+              {t("admin-scheduling:classCard.instructors", { max: settings.maxInstructors })}
+            </legend>
+            <div className="planning-chips">
+              {activeInstructors.map((instructor) => {
+                const selected = instructorIds.includes(instructor.id);
+                return (
+                  <button
+                    aria-pressed={selected}
+                    className="planning-chip"
+                    disabled={!selected && instructorIds.length >= settings.maxInstructors}
+                    key={instructor.id}
+                    onClick={() => {
+                      setInstructorIds(
+                        selected
+                          ? instructorIds.filter((id) => id !== instructor.id)
+                          : [...instructorIds, instructor.id],
+                      );
+                    }}
+                    type="button"
+                  >
+                    {instructor.shortName}
+                  </button>
+                );
+              })}
+            </div>
+            {listError(errors.instructorIds)}
+          </fieldset>
+        )}
+        <fieldset className="planning-form__fieldset">
+          <legend>{t("admin-scheduling:classCard.ring")}</legend>
+          <div className="planning-chips" role="radiogroup">
+            {activeRings.map((ring) => (
+              <button
+                aria-checked={ringId === ring.id}
+                className="planning-chip planning-chip--dot"
+                key={ring.id}
+                onClick={() => {
+                  setRingId(ring.id);
+                }}
+                role="radio"
+                style={colorStyle(ring.color)}
+                type="button"
+              >
+                {ring.name}
+              </button>
+            ))}
+            <button
+              aria-checked={ringId === null}
+              className="planning-chip"
+              onClick={() => {
+                setRingId(null);
+              }}
+              role="radio"
+              type="button"
+            >
+              {t("admin-scheduling:classCard.noRing")}
+            </button>
+          </div>
+          {listError(errors.ringId)}
+        </fieldset>
+        {settings.levelsEnabled ? (
+          <fieldset className="planning-form__fieldset">
+            <legend>{t("admin-scheduling:classCard.levels")}</legend>
+            <div className="planning-chips">
+              {activeLevels.map((level) => (
+                <button
+                  aria-pressed={levelIds.includes(level.id)}
+                  className="planning-chip"
+                  key={level.id}
+                  onClick={() => {
+                    setLevelIds(
+                      levelIds.includes(level.id)
+                        ? levelIds.filter((id) => id !== level.id)
+                        : catalogs.levels
+                            .filter((item) => item.id === level.id || levelIds.includes(item.id))
+                            .map((item) => item.id),
+                    );
+                  }}
+                  type="button"
+                >
+                  {level.name}
+                </button>
+              ))}
+            </div>
+            {listError(errors.levelIds)}
+          </fieldset>
+        ) : null}
+        <div className="calendar-form__pair">
+          <FormField
+            {...errorProp(errors.description)}
+            id="calendar-create-description"
+            label={t("admin-scheduling:classCard.description")}
+          >
+            <Input
+              id="calendar-create-description"
+              maxLength={40}
+              onChange={(event) => {
+                setDescription(event.currentTarget.value);
+              }}
+              placeholder={automatic}
+              value={description}
+            />
+          </FormField>
+          <FormField id="calendar-create-capacity" label={t("admin-scheduling:classCard.capacity")}>
+            <Input
+              id="calendar-create-capacity"
+              min={1}
+              onChange={(event) => {
+                setCapacity(event.currentTarget.value);
+              }}
+              placeholder={autoCapacity}
+              type="number"
+              value={capacity}
+            />
+          </FormField>
+        </div>
+        {listError(errors.general)}
+        {bookings === undefined ? null : (
+          <div className="calendar-conflicts" role="alert">
+            <p>
+              <strong>{t("admin-scheduling:calendar.ringBookings.title")}</strong>
+            </p>
+            <p>{t("admin-scheduling:calendar.ringBookings.text")}</p>
+            <RingBookingList bookings={bookings} />
+            <div className="calendar-modal__actions">
+              <Button
+                onClick={() => {
+                  setBookings(undefined);
+                }}
+                variant="ghost"
+              >
+                {t("admin-scheduling:calendar.ringBookings.back")}
+              </Button>
+              <Button loading={pending} onClick={() => void create(true)} variant="danger">
+                {t("admin-scheduling:calendar.ringBookings.confirm")}
+              </Button>
+            </div>
+          </div>
+        )}
+        <div className="planning-form__actions">
+          <Button
+            loading={pending}
+            loadingLabel={t("admin-scheduling:common.saving")}
+            type="submit"
+          >
+            {t("admin-scheduling:calendar.createForm.submit")}
+          </Button>
+        </div>
+      </form>
+    </Drawer>
+  );
+}

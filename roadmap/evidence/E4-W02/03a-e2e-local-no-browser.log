@@ -1,0 +1,107 @@
+
+Running 4 tests using 2 workers
+
+[1/4] e2e/planning-templates.spec.ts:52:3 › E4-W01 D3 + D3b weekly templates › T-06-26 / T-06-27 designs, checks and generates the week, then opens the day per ring and per instructor
+[2/4] e2e/planning-calendar.spec.ts:48:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view
+  1) e2e/planning-calendar.spec.ts:48:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/jordib/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     pnpm exec playwright install                           ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2) e2e/planning-templates.spec.ts:52:3 › E4-W01 D3 + D3b weekly templates › T-06-26 / T-06-27 designs, checks and generates the week, then opens the day per ring and per instructor 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/jordib/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     pnpm exec playwright install                           ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: ../../test-results/clubs-admin/planning-templates-E4-W01--ca2e5-per-ring-and-per-instructor/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/planning-templates-E4-W01--ca2e5-per-ring-and-per-instructor/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-templates-E4-W01--ca2e5-per-ring-and-per-instructor/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/4] e2e/planning-templates.spec.ts:165:3 › E4-W01 D3 + D3b weekly templates › T-06-26 INSTRUCTOR reads D3 without any action (A22 c)
+[4/4] e2e/planning-calendar.spec.ts:201:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c)
+  3) e2e/planning-templates.spec.ts:165:3 › E4-W01 D3 + D3b weekly templates › T-06-26 INSTRUCTOR reads D3 without any action (A22 c) 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/jordib/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     pnpm exec playwright install                           ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: ../../test-results/clubs-admin/planning-templates-E4-W01--4f92e-3-without-any-action-A22-c-/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/planning-templates-E4-W01--4f92e-3-without-any-action-A22-c-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-templates-E4-W01--4f92e-3-without-any-action-A22-c-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  4) e2e/planning-calendar.spec.ts:201:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c) 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/jordib/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     pnpm exec playwright install                           ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: ../../test-results/clubs-admin/planning-calendar-E4-W02-D-2aa2c-4-without-any-action-A22-c-/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/planning-calendar-E4-W02-D-2aa2c-4-without-any-action-A22-c-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-calendar-E4-W02-D-2aa2c-4-without-any-action-A22-c-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  4 failed
+    e2e/planning-calendar.spec.ts:48:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+    e2e/planning-calendar.spec.ts:201:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c) 
+    e2e/planning-templates.spec.ts:52:3 › E4-W01 D3 + D3b weekly templates › T-06-26 / T-06-27 designs, checks and generates the week, then opens the day per ring and per instructor 
+    e2e/planning-templates.spec.ts:165:3 › E4-W01 D3 + D3b weekly templates › T-06-26 INSTRUCTOR reads D3 without any action (A22 c) 
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test e2e/planning-calendar.spec.ts e2e/planning-templates.spec.ts --reporter=line

@@ -103,7 +103,12 @@ describe("T-02-14 clubs-admin shell", () => {
     await renderNavigation(["INSTRUCTOR"]);
 
     expect(screen.getByRole("link", { name: "Plantilla setmanal" })).toHaveAttribute("href", "/plantilles");
-    expect(screen.queryByRole("link", { name: "Calendari de classes" })).not.toBeInTheDocument();
+  });
+
+  it("T-06-28 shows «Calendari de classes» to instructors (read-only D4, A22 c)", async () => {
+    await renderNavigation(["INSTRUCTOR"]);
+
+    expect(screen.getByRole("link", { name: "Calendari de classes" })).toHaveAttribute("href", "/calendari");
   });
 
   it("shows the fixed sidebar groups to administrators", async () => {
@@ -123,6 +128,7 @@ describe("T-02-14 clubs-admin shell", () => {
         "/plantilles",
         "/plantilles/:templateId/dia/:dayOfWeek",
         "/calendari",
+        "/calendari/dia/:date",
         "/abonats",
         "/abonats/:id",
         "/gossos",
