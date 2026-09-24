@@ -9,3 +9,9 @@ docs
 roadmap
 pnpm-lock.yaml
 packages/api-client/src/generated
+# course engine recovered verbatim from the web-planner (E0-W08): keep byte-identical to the origin
+packages/course-core/src
+packages/course-core/tests
+packages/course-core/fixtures
+packages/shared-types/src
+packages/shared-types/tests

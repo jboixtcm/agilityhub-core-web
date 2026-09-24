@@ -166,6 +166,51 @@ export default tseslint.config(
     },
   },
   {
+    // Course engine recovered verbatim from the web-planner (E0-W08, ADR-013): the files stay
+    // byte-identical to course-builder 65126cf so the origin can be diffed. These style/strictness
+    // rules were not enforced there; the color, import-resolution and correctness rules still apply.
+    // Drop entries from this list as the code is touched.
+    basePath: path.resolve(import.meta.dirname, "../.."),
+    files: ["packages/course-core/**/*.ts", "packages/shared-types/**/*.ts"],
+    linterOptions: {
+      reportUnusedDisableDirectives: "off",
+    },
+    rules: {
+      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/dot-notation": "off",
+      "@typescript-eslint/no-base-to-string": "off",
+      "@typescript-eslint/no-confusing-void-expression": "off",
+      "@typescript-eslint/no-deprecated": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/no-unnecessary-type-conversion": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/prefer-optional-chain": "off",
+      "@typescript-eslint/prefer-regexp-exec": "off",
+      "@typescript-eslint/restrict-plus-operands": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "import/order": "off",
+    },
+  },
+  {
+    // Printable AprilTag markers (E0-W08): the fiducial must be pure black on white to be detected,
+    // and the page is a standalone SVG file (no CSS variables); not themed UI.
+    basePath: path.resolve(import.meta.dirname, "../.."),
+    files: [
+      "packages/course-core/src/markers/apriltag-36h11.ts",
+      "packages/course-core/src/markers/marker-svg.ts",
+      "packages/course-core/tests/apriltag-36h11.test.ts",
+      "packages/course-core/tests/marker-svg.test.ts",
+    ],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+  {
     files: ["**/*.css"],
     language: "css/css",
     plugins: {

@@ -1,0 +1,27 @@
+{
+  "name": "@agilityhub/shared-types",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript types shared across apps. Mirrors what later becomes C# DTOs in Unity.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@agilityhub/course-core": "workspace:*",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint src tests --max-warnings 0 --config ../../eslint.config.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}
