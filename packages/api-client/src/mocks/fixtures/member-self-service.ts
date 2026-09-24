@@ -3,7 +3,9 @@ import type { components } from "../../generated/schema";
 import { censusLevels } from "./census";
 
 type License = components["schemas"]["LicenseWithPendingFields"];
-export type MeDog = Omit<components["schemas"]["MeDog"], "licenses"> & {
+// The fixture dogs are ACTIVE, so they carry the documents and licences the api sends only for ACTIVE dogs.
+export type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
+  documents: NonNullable<components["schemas"]["MeDog"]["documents"]>;
   licenses: License[];
 };
 export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
@@ -70,6 +72,7 @@ export const meDogsFixture: MeDogs = {
       licenses: [],
       name: "Duna",
       sex: "FEMALE",
+      status: "ACTIVE",
       tasks: {
         completed: 1,
         items: [
@@ -122,6 +125,7 @@ export const meDogsFixture: MeDogs = {
         total: 10,
       },
       sex: "MALE",
+      status: "ACTIVE",
     },
   ],
 };

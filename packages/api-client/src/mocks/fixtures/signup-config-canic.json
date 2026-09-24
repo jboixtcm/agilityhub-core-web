@@ -112,6 +112,47 @@
         "startDate": "2026-09-01",
         "amount": { "amountMinor": 6000, "currency": "EUR" }
       }
+    ],
+    "planQuotes": [
+      {
+        "planId": "10000000-0000-4000-8000-000000000001",
+        "lines": [{ "concept": "ENTRY_FEE", "amount": { "amountMinor": 10000, "currency": "EUR" } }],
+        "totalDue": { "amountMinor": 10000, "currency": "EUR" },
+        "options": [
+          {
+            "option": "TODAY",
+            "portion": "HALF",
+            "startDate": "2026-08-17",
+            "amountDue": { "amountMinor": 3000, "currency": "EUR" },
+            "totalDue": { "amountMinor": 13000, "currency": "EUR" }
+          },
+          {
+            "option": "ALTERNATIVE",
+            "portion": "FULL",
+            "startDate": "2026-09-01",
+            "amountDue": { "amountMinor": 6000, "currency": "EUR" },
+            "totalDue": { "amountMinor": 16000, "currency": "EUR" }
+          }
+        ]
+      },
+      {
+        "planId": "10000000-0000-4000-8000-000000000002",
+        "lines": [{ "concept": "PACK", "amount": { "amountMinor": 13500, "currency": "EUR" } }],
+        "totalDue": { "amountMinor": 13500, "currency": "EUR" },
+        "options": []
+      },
+      {
+        "planId": "10000000-0000-4000-8000-000000000003",
+        "lines": [{ "concept": "PACK", "amount": { "amountMinor": 18000, "currency": "EUR" } }],
+        "totalDue": { "amountMinor": 18000, "currency": "EUR" },
+        "options": []
+      },
+      {
+        "planId": "10000000-0000-4000-8000-000000000004",
+        "lines": [{ "concept": "ENTRY_FEE", "amount": { "amountMinor": 5000, "currency": "EUR" } }],
+        "totalDue": { "amountMinor": 5000, "currency": "EUR" },
+        "options": []
+      }
     ]
   },
   "member": {

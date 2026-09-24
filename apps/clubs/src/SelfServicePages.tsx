@@ -23,7 +23,11 @@ import {
 import { useTranslation } from "react-i18next";
 
 type License = components["schemas"]["LicenseWithPendingFields"];
-type MeDog = Omit<components["schemas"]["MeDog"], "licenses"> & { licenses: License[] };
+// The api sends documents and licences for ACTIVE dogs only; the page reads them as empty lists otherwise.
+type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
+  documents: NonNullable<components["schemas"]["MeDog"]["documents"]>;
+  licenses: License[];
+};
 type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
 type MeProfile = components["schemas"]["MeProfile"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
@@ -641,7 +645,14 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
           setError(true);
           return;
         }
-        setData(dogs.data);
+        setData({
+          ...dogs.data,
+          dogs: dogs.data.dogs.map((dog) => ({
+            ...dog,
+            documents: dog.documents ?? [],
+            licenses: dog.licenses ?? [],
+          })),
+        });
         const options = documentTypeOptions(types?.value);
         setDocumentTypes(
           options.length > 0

@@ -8,7 +8,7 @@
   "greeting": "{period, select, morning {Good morning!} afternoon {Good afternoon!} other {Good evening!}} {date}",
   "kpi": {
     "activeMembers": "Active members",
-    "thisMonth": "+{count} this month",
+    "thisMonth": "{sign, select, plus {+{count}} minus {−{count}} other {0}} this month",
     "occupancy": "Class occupancy",
     "thisWeek": "this week",
     "places": "{booked}/{capacity} places",
@@ -20,7 +20,7 @@
   },
   "risk": {
     "title": "At-risk class review — {time}, today and {days} days ahead",
-    "alerts": "{count} alerts",
+    "alerts": "{count, plural, one {# alert} other {# alerts}}",
     "empty": "No classes at risk",
     "booked": "{count, plural, one {# booked} other {# booked}}",
     "today": "today",
@@ -31,7 +31,8 @@
       "AT_RISK": "at risk",
       "WILL_CANCEL": "will be cancelled {day} at {time}",
       "PENDING_DECISION": "at risk · the club will decide"
-    }
+    },
+    "more": "+{count} more"
   },
   "signups": {
     "title": "Pending signups",
@@ -39,11 +40,15 @@
     "validate": "VALIDATE",
     "validated": "The signup was validated.",
     "accountNotProvided": "Account not provided",
-    "payment": { "SEPA_DD": "direct debit", "CARD": "card", "MANUAL": "cash" }
+    "payment": { "SEPA_DD": "direct debit", "CARD": "card", "MANUAL": "cash" },
+    "dog": "{name} {isAddDog, select, true {(new dog)} other {({breed})}}",
+    "validateLabel": "VALIDATE: {name}",
+    "submitted": "submitted on {date}",
+    "refundRequired": "A payment has been collected: it must be refunded from Billing"
   },
   "chart": {
     "title": "Dogs by level — {count} active",
-    "legend": "with booking (current or previous week) · total active",
+    "legend": "{previous, plural, =0 {with booking (current week)} one {with booking (current or previous week)} other {with booking (current or # previous weeks)}} · total active",
     "recent": "With booking",
     "total": "Total active",
     "value": "{total} · {recent} booked"

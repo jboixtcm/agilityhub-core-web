@@ -8,7 +8,7 @@
   "greeting": "{period, select, morning {Bon dia!} afternoon {Bona tarda!} other {Bon vespre!}} {date}",
   "kpi": {
     "activeMembers": "Abonats d'alta",
-    "thisMonth": "+{count} aquest mes",
+    "thisMonth": "{sign, select, plus {+{count}} minus {−{count}} other {0}} aquest mes",
     "occupancy": "Ocupació classes",
     "thisWeek": "aquesta setmana",
     "places": "{booked}/{capacity} places",
@@ -20,7 +20,7 @@
   },
   "risk": {
     "title": "Revisió de classes en risc — {time}, avui i {days} dies vista",
-    "alerts": "{count} avisos",
+    "alerts": "{count, plural, one {# avís} other {# avisos}}",
     "empty": "Cap classe en risc",
     "booked": "{count, plural, one {# inscrit} other {# inscrits}}",
     "today": "avui",
@@ -31,7 +31,8 @@
       "AT_RISK": "en risc",
       "WILL_CANCEL": "s'anul·larà {day} a les {time}",
       "PENDING_DECISION": "en risc · el club decidirà"
-    }
+    },
+    "more": "+{count} més"
   },
   "signups": {
     "title": "Preinscripcions pendents",
@@ -39,11 +40,15 @@
     "validate": "VALIDA",
     "validated": "L'alta s'ha validat.",
     "accountNotProvided": "Compte no informat",
-    "payment": { "SEPA_DD": "domiciliació", "CARD": "targeta", "MANUAL": "efectiu" }
+    "payment": { "SEPA_DD": "domiciliació", "CARD": "targeta", "MANUAL": "efectiu" },
+    "dog": "{name} {isAddDog, select, true {(nou gos)} other {({breed})}}",
+    "validateLabel": "VALIDA: {name}",
+    "submitted": "enviada el {date}",
+    "refundRequired": "Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"
   },
   "chart": {
     "title": "Gossos per nivell — {count} actius",
-    "legend": "amb reserva (setm. en curs o anterior) · total actius",
+    "legend": "{previous, plural, =0 {amb reserva (setm. en curs)} one {amb reserva (setm. en curs o anterior)} other {amb reserva (setm. en curs o les # anteriors)}} · total actius",
     "recent": "Amb reserva",
     "total": "Total actius",
     "value": "{total} · {recent} res."

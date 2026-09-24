@@ -9,7 +9,8 @@
     "MEMBER_PAYMENT_METHOD_CHANGED": "Payment method changed",
     "MEMBER_PLAN_CHANGED": "Plan changed",
     "MEMBER_UPDATED": "Member details changed",
-    "PARAMETER_CHANGED": "Settings changed"
+    "PARAMETER_CHANGED": "Settings changed",
+    "SIGNUP_SUBMITTED": "Signup request submitted"
   },
   "asMember": "as member: {name}",
   "caption": "Audit entries",
@@ -88,6 +89,7 @@
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Back office",
+    "PUBLIC": "Public form",
     "SYSTEM": "System",
     "WEBHOOK": "Webhook"
   },

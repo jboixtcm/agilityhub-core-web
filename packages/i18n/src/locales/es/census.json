@@ -98,7 +98,6 @@
       "priceId": "Tarifa",
       "status": "Estado"
     },
-    "new": "Nuevo abonado",
     "search": "Buscar por nombre, DNI, perro…",
     "selectRow": "Seleccionar a {name}",
     "statusLabel": "Estado de los abonados",

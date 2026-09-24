@@ -254,7 +254,6 @@
   "signupReview": {
     "header": "Preinscripció #{number} — {name} + {dogs}",
     "pending": "{count, plural, =0 {pendent des d'avui} one {pendent des de fa # dia} other {pendent des de fa # dies}}",
-    "readmission": "Readmissió",
     "newDog": "nou gos",
     "person": "Persona",
     "dog": "Gos ({current} de {total})",
@@ -282,9 +281,16 @@
       "lastName1": "Primer cognom",
       "lastName2": "Segon cognom",
       "iban": "IBAN",
-      "accountHolder": "Titular del compte"
+      "accountHolder": "Titular del compte",
+      "gender": "Gènere",
+      "secondEmail": "Segon correu electrònic",
+      "phonePrefix": "Prefix",
+      "secondPhone": "Segon telèfon",
+      "phoneLabel": "Descripció",
+      "holderTaxId": "NIF del titular",
+      "requestedPlan": "Modalitat sol·licitada",
+      "planName": "Modalitat"
     },
-    "familySummary": "Sí — titular: {holder} + gos {dog} · tarifa familiar en validar",
     "sameHolder": "titular: la mateixa",
     "paymentSummary": "{method} · {account} · {holder}",
     "paymentMethod": { "SEPA_DD": "Domiciliació", "CARD": "Targeta", "MANUAL": "Efectiu" },
@@ -292,32 +298,27 @@
     "datePlaceholder": "dd/mm/aaaa",
     "required": "obligatori",
     "plan": "Modalitat i tarifa",
-    "planWithPrice": "{plan} · {price}/mes",
+    "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/mes} other {}}",
     "upfront": "Pagament inicial (anticipat)",
     "actuallyPaid": "Import efectivament cobrat:",
     "attachments": "{count, plural, one {# adjunt} other {# adjunts}}",
     "upfrontBreakdown": "{lines} · es registra el cobrament; la factura, des de comptabilitat",
     "upfrontLines": {
       "ENTRY_FEE": "Entrada {amount}",
-      "FIRST_MONTH": "{month} {amount} (mitja quota)",
+      "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (mitja quota)} other {}}",
       "PACK": "Pack {amount}",
-      "ADDITIONAL_DOG_FEE": "Quota de gos addicional {amount}"
+      "ADDITIONAL_DOG_FEE": "Quota de gos addicional {amount}",
+      "FIRST_MONTH_UNKNOWN": "Primera quota {amount}"
     },
     "paid": "cobrat",
     "nothingPaid": "No s'ha cobrat res: queda pendent",
     "confirmNothingPaid": "Confirma que no s'ha cobrat cap import",
-    "warnings": {
-      "image": "No autoritza l'ús de la seva imatge: no publiqueu fotos on surti {gender, select, female {ella} other {ell}}.",
-      "account": "Compte no informat",
-      "document": "Document pendent",
-      "family": "No s'ha trobat el titular del grup familiar",
-      "upfront": "Pagament inicial pendent"
-    },
     "actions": {
       "edit": "EDITA LES DADES",
       "reject": "REBUTJA (amb motiu)",
       "validate": "VALIDA L'ALTA",
-      "save": "DESA ELS CANVIS"
+      "save": "DESA ELS CANVIS",
+      "reload": "Torna a carregar"
     },
     "editTitle": "Edita les dades de la preinscripció",
     "rejectTitle": "Rebutja la preinscripció",
@@ -332,7 +333,42 @@
     "invalidState": "La preinscripció ja no es pot validar.",
     "genericError": "No s'ha pogut completar l'acció.",
     "levelRequired": "Selecciona el nivell inicial.",
-    "invoiceRequired": "Indica la data del proper rebut."
+    "invoiceRequired": "Indica la data del proper rebut.",
+    "warning": {
+      "ACCOUNT_NOT_PROVIDED": "Compte no informat",
+      "CHECKOUT_PENDING": "Hi ha un pagament amb targeta en curs: la modalitat no es pot canviar fins que acabi.",
+      "DOCUMENT_PENDING": "Document pendent",
+      "FAMILY_HOLDER_NOT_FOUND": "No s'ha trobat el titular del grup familiar",
+      "NO_IMAGE_CONSENT": "No autoritza l'ús de la seva imatge: no publiqueu fotos on surti {gender, select, FEMALE {ella} other {ell}}.",
+      "PAID_EXCEEDS_QUOTE": "El que s'ha cobrat supera el nou import: caldrà retornar la diferència des de Facturació.",
+      "READMISSION": "Readmissió",
+      "UPFRONT_UNPAID": "Pagament inicial pendent"
+    },
+    "familyFound": "Sí — titular: {holder} + gos {dog}",
+    "familyFare": "tarifa familiar en validar",
+    "familyPending": "Pendent — ha indicat: {holder} + gos {dog}",
+    "familySearch": "Cerca el titular",
+    "familyAttach": "Afegeix al grup de {name}",
+    "familyNoGroup": "{name}: sense grup familiar",
+    "familyNoResults": "Cap abonat amb aquest nom",
+    "familyNone": "Sense grup",
+    "familyChosen": "Grup de {name}",
+    "familyChange": "Canvia",
+    "familyDecisionRequired": "Tria el grup del titular o «Sense grup».",
+    "resolved": "Aquesta preinscripció ja s'ha resolt",
+    "resolvedLink": "Obre la fitxa de l'abonat",
+    "refundWarning": "Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació",
+    "invoiceInvalid": "La data del proper rebut no és vàlida.",
+    "gender": {
+      "FEMALE": "Femení",
+      "MALE": "Masculí",
+      "OTHER": "Altres / No binari"
+    },
+    "sex": {
+      "FEMALE": "Femella",
+      "MALE": "Mascle"
+    },
+    "familyCandidate": "{name} + {dogs}"
   },
   "values": {
     "empty": "—",

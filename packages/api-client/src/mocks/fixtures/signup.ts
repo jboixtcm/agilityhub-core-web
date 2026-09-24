@@ -144,6 +144,10 @@ export function signupConfig({
   if (!packs) {
     config.plans = config.plans.filter((plan) => plan.type !== "PACK");
   }
+  if (config.upfront !== undefined) {
+    const offered = new Set([...config.plans.map((plan) => plan.id), member?.planId]);
+    config.upfront.planQuotes = config.upfront.planQuotes.filter((quote) => offered.has(quote.planId));
+  }
   if (!billing) {
     delete config.paymentMethods;
     delete config.upfront;

@@ -665,6 +665,8 @@ export interface BarChartDatum {
   highlighted: number;
   label: string;
   total: number;
+  /** Tooltip of the column and its data row (e.g. the resolved level name behind a code). */
+  title?: string;
 }
 
 export function BarChart({
@@ -685,7 +687,7 @@ export function BarChart({
     <figure aria-label={label} className="ah-bar-chart">
       <div aria-hidden="true" className="ah-bar-chart__plot">
         {data.map((item) => (
-          <div className="ah-bar-chart__column" key={item.label}>
+          <div className="ah-bar-chart__column" key={item.label} title={item.title}>
             <div className="ah-bar-chart__bars">
               <span
                 className="ah-bar-chart__bar ah-bar-chart__bar--total"
@@ -708,7 +710,7 @@ export function BarChart({
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item.label}>
+            <tr key={item.label} title={item.title}>
               <th scope="row">{item.label}</th><td>{item.total}</td><td>{item.highlighted}</td>
             </tr>
           ))}

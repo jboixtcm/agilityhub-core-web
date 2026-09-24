@@ -8,7 +8,7 @@
   "greeting": "{period, select, morning {¡Buenos días!} afternoon {¡Buenas tardes!} other {¡Buenas noches!}} {date}",
   "kpi": {
     "activeMembers": "Socios de alta",
-    "thisMonth": "+{count} este mes",
+    "thisMonth": "{sign, select, plus {+{count}} minus {−{count}} other {0}} este mes",
     "occupancy": "Ocupación de clases",
     "thisWeek": "esta semana",
     "places": "{booked}/{capacity} plazas",
@@ -20,7 +20,7 @@
   },
   "risk": {
     "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",
-    "alerts": "{count} avisos",
+    "alerts": "{count, plural, one {# aviso} other {# avisos}}",
     "empty": "Ninguna clase en riesgo",
     "booked": "{count, plural, one {# inscrito} other {# inscritos}}",
     "today": "hoy",
@@ -31,7 +31,8 @@
       "AT_RISK": "en riesgo",
       "WILL_CANCEL": "se anulará {day} a las {time}",
       "PENDING_DECISION": "en riesgo · el club decidirá"
-    }
+    },
+    "more": "+{count} más"
   },
   "signups": {
     "title": "Preinscripciones pendientes",
@@ -39,11 +40,15 @@
     "validate": "VALIDA",
     "validated": "El alta se ha validado.",
     "accountNotProvided": "Cuenta no informada",
-    "payment": { "SEPA_DD": "domiciliación", "CARD": "tarjeta", "MANUAL": "efectivo" }
+    "payment": { "SEPA_DD": "domiciliación", "CARD": "tarjeta", "MANUAL": "efectivo" },
+    "dog": "{name} {isAddDog, select, true {(perro nuevo)} other {({breed})}}",
+    "validateLabel": "VALIDA: {name}",
+    "submitted": "enviada el {date}",
+    "refundRequired": "Hay un pago cobrado: habrá que devolverlo desde Facturación"
   },
   "chart": {
     "title": "Perros por nivel — {count} activos",
-    "legend": "con reserva (sem. actual o anterior) · total activos",
+    "legend": "{previous, plural, =0 {con reserva (sem. actual)} one {con reserva (sem. actual o anterior)} other {con reserva (sem. actual o las # anteriores)}} · total activos",
     "recent": "Con reserva",
     "total": "Total activos",
     "value": "{total} · {recent} res."

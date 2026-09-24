@@ -35,36 +35,18 @@
         }
       }
     },
-    "Level": {
+    "SignupUpfrontReview": {
       "properties": {
-        "progression": {
-          "type": "boolean",
-          "default": true,
-          "description": "S05 §3, ruling E29: part of the level progression; only these levels count for the automatic description «{first} i sup.» (S06 R-06-03). Default true; a special level such as «Teràpia» is false."
-        }
-      }
-    },
-    "LevelReaderView": {
-      "properties": {
-        "progression": {
-          "type": "boolean",
-          "default": true,
-          "description": "S05 §3, ruling E29 (see Level.progression)."
-        }
-      }
-    },
-    "LevelCreate": {
-      "properties": {
-        "progression": {
-          "type": "boolean",
-          "description": "Omitted = true (S05 §3)."
-        }
-      }
-    },
-    "LevelPatch": {
-      "properties": {
-        "progression": {
-          "type": "boolean"
+        "firstMonth": {
+          "type": "object",
+          "description": "S04 §3 Member.signup.upfront.firstMonth (R-04-15), frozen at submission and recalculated by dryRun: the option, portion and start of the FIRST_MONTH line, so D2 names its month and «(mitja quota)» without reimplementing the rule. Absent without a FIRST_MONTH line. Mocks-first (web E3-W07), proposed to the api.",
+          "required": ["option", "portion", "startDate", "amountDue"],
+          "properties": {
+            "option": { "type": "string", "enum": ["TODAY", "ALTERNATIVE"] },
+            "portion": { "type": "string", "enum": ["FULL", "HALF"] },
+            "startDate": { "type": "string", "format": "date" },
+            "amountDue": { "$ref": "#/components/schemas/Money" }
+          }
         }
       }
     }

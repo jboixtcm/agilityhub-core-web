@@ -98,7 +98,6 @@
       "priceId": "Tarifa",
       "status": "Estat"
     },
-    "new": "Nou abonat",
     "search": "Cerca per nom, DNI, gos…",
     "selectRow": "Selecciona {name}",
     "statusLabel": "Estat dels abonats",

@@ -243,7 +243,6 @@
   "signupReview": {
     "header": "Signup #{number} — {name} + {dogs}",
     "pending": "{count, plural, =0 {pending since today} one {pending for # day} other {pending for # days}}",
-    "readmission": "Readmission",
     "newDog": "new dog",
     "person": "Person",
     "dog": "Dog ({current} of {total})",
@@ -271,9 +270,16 @@
       "lastName1": "First surname",
       "lastName2": "Second surname",
       "iban": "IBAN",
-      "accountHolder": "Account holder"
+      "accountHolder": "Account holder",
+      "gender": "Gender",
+      "secondEmail": "Second email",
+      "phonePrefix": "Prefix",
+      "secondPhone": "Second phone",
+      "phoneLabel": "Description",
+      "holderTaxId": "Account holder tax ID",
+      "requestedPlan": "Requested plan",
+      "planName": "Plan"
     },
-    "familySummary": "Yes — holder: {holder} + dog {dog} · family rate on validation",
     "sameHolder": "holder: same person",
     "paymentSummary": "{method} · {account} · {holder}",
     "paymentMethod": { "SEPA_DD": "Direct debit", "CARD": "Card", "MANUAL": "Cash" },
@@ -281,32 +287,27 @@
     "datePlaceholder": "mm/dd/yyyy",
     "required": "required",
     "plan": "Plan and price",
-    "planWithPrice": "{plan} · {price}/month",
+    "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/month} other {}}",
     "upfront": "Initial payment (advance)",
     "actuallyPaid": "Amount actually collected:",
     "attachments": "{count, plural, one {# attachment} other {# attachments}}",
     "upfrontBreakdown": "{lines} · the payment is recorded; invoicing is handled in accounting",
     "upfrontLines": {
       "ENTRY_FEE": "Joining fee {amount}",
-      "FIRST_MONTH": "{month} {amount} (half fee)",
+      "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (half fee)} other {}}",
       "PACK": "Pack {amount}",
-      "ADDITIONAL_DOG_FEE": "Additional dog fee {amount}"
+      "ADDITIONAL_DOG_FEE": "Additional dog fee {amount}",
+      "FIRST_MONTH_UNKNOWN": "First fee {amount}"
     },
     "paid": "paid",
     "nothingPaid": "Nothing has been collected: payment remains due",
     "confirmNothingPaid": "Confirm that no amount has been collected",
-    "warnings": {
-      "image": "Image use was not authorized: do not publish photos showing {gender, select, female {her} other {him}}.",
-      "account": "Account not provided",
-      "document": "Document pending",
-      "family": "The family-group holder was not found",
-      "upfront": "Initial payment pending"
-    },
     "actions": {
       "edit": "EDIT DETAILS",
       "reject": "REJECT (with reason)",
       "validate": "VALIDATE SIGNUP",
-      "save": "SAVE CHANGES"
+      "save": "SAVE CHANGES",
+      "reload": "Reload"
     },
     "editTitle": "Edit signup details",
     "rejectTitle": "Reject signup",
@@ -321,7 +322,42 @@
     "invalidState": "The signup can no longer be validated.",
     "genericError": "The action could not be completed.",
     "levelRequired": "Select the initial level.",
-    "invoiceRequired": "Enter the next invoice date."
+    "invoiceRequired": "Enter the next invoice date.",
+    "warning": {
+      "ACCOUNT_NOT_PROVIDED": "Account not provided",
+      "CHECKOUT_PENDING": "A card payment is in progress: the plan cannot be changed until it finishes.",
+      "DOCUMENT_PENDING": "Document pending",
+      "FAMILY_HOLDER_NOT_FOUND": "The family-group holder was not found",
+      "NO_IMAGE_CONSENT": "Image use was not authorized: do not publish photos showing {gender, select, FEMALE {her} MALE {him} other {them}}.",
+      "PAID_EXCEEDS_QUOTE": "The amount collected exceeds the new total: the difference must be refunded from Billing.",
+      "READMISSION": "Readmission",
+      "UPFRONT_UNPAID": "Initial payment pending"
+    },
+    "familyFound": "Yes — holder: {holder} + dog {dog}",
+    "familyFare": "family rate on validation",
+    "familyPending": "Pending — entered: {holder} + dog {dog}",
+    "familySearch": "Search for the holder",
+    "familyAttach": "Add to {name}'s group",
+    "familyNoGroup": "{name}: no family group",
+    "familyNoResults": "No member with this name",
+    "familyNone": "No group",
+    "familyChosen": "{name}'s group",
+    "familyChange": "Change",
+    "familyDecisionRequired": "Choose the holder's group or «No group».",
+    "resolved": "This signup has already been resolved",
+    "resolvedLink": "Open the member record",
+    "refundWarning": "A payment has been collected: it must be refunded from Billing",
+    "invoiceInvalid": "The next invoice date is not valid.",
+    "gender": {
+      "FEMALE": "Female",
+      "MALE": "Male",
+      "OTHER": "Other / Non-binary"
+    },
+    "sex": {
+      "FEMALE": "Female",
+      "MALE": "Male"
+    },
+    "familyCandidate": "{name} + {dogs}"
   },
   "values": {
     "empty": "—",

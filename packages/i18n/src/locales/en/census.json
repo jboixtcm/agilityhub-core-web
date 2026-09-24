@@ -98,7 +98,6 @@
       "priceId": "Price",
       "status": "Status"
     },
-    "new": "New member",
     "search": "Search by name, ID, dog…",
     "selectRow": "Select {name}",
     "statusLabel": "Member status",

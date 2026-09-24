@@ -243,7 +243,6 @@
   "signupReview": {
     "header": "Preinscripción #{number} — {name} + {dogs}",
     "pending": "{count, plural, =0 {pendiente desde hoy} one {pendiente desde hace # día} other {pendiente desde hace # días}}",
-    "readmission": "Readmisión",
     "newDog": "perro nuevo",
     "person": "Persona",
     "dog": "Perro ({current} de {total})",
@@ -271,9 +270,16 @@
       "lastName1": "Primer apellido",
       "lastName2": "Segundo apellido",
       "iban": "IBAN",
-      "accountHolder": "Titular de la cuenta"
+      "accountHolder": "Titular de la cuenta",
+      "gender": "Género",
+      "secondEmail": "Segundo correo electrónico",
+      "phonePrefix": "Prefijo",
+      "secondPhone": "Segundo teléfono",
+      "phoneLabel": "Descripción",
+      "holderTaxId": "NIF del titular",
+      "requestedPlan": "Modalidad solicitada",
+      "planName": "Modalidad"
     },
-    "familySummary": "Sí — titular: {holder} + perro {dog} · tarifa familiar al validar",
     "sameHolder": "titular: la misma",
     "paymentSummary": "{method} · {account} · {holder}",
     "paymentMethod": { "SEPA_DD": "Domiciliación", "CARD": "Tarjeta", "MANUAL": "Efectivo" },
@@ -281,32 +287,27 @@
     "datePlaceholder": "dd/mm/aaaa",
     "required": "obligatorio",
     "plan": "Modalidad y tarifa",
-    "planWithPrice": "{plan} · {price}/mes",
+    "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/mes} other {}}",
     "upfront": "Pago inicial (anticipado)",
     "actuallyPaid": "Importe efectivamente cobrado:",
     "attachments": "{count, plural, one {# adjunto} other {# adjuntos}}",
     "upfrontBreakdown": "{lines} · se registra el cobro; la factura, desde contabilidad",
     "upfrontLines": {
       "ENTRY_FEE": "Entrada {amount}",
-      "FIRST_MONTH": "{month} {amount} (media cuota)",
+      "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (media cuota)} other {}}",
       "PACK": "Bono {amount}",
-      "ADDITIONAL_DOG_FEE": "Cuota de perro adicional {amount}"
+      "ADDITIONAL_DOG_FEE": "Cuota de perro adicional {amount}",
+      "FIRST_MONTH_UNKNOWN": "Primera cuota {amount}"
     },
     "paid": "cobrado",
     "nothingPaid": "No se ha cobrado nada: queda pendiente",
     "confirmNothingPaid": "Confirma que no se ha cobrado ningún importe",
-    "warnings": {
-      "image": "No autoriza el uso de su imagen: no publiquéis fotos donde salga {gender, select, female {ella} other {él}}.",
-      "account": "Cuenta no informada",
-      "document": "Documento pendiente",
-      "family": "No se ha encontrado el titular del grupo familiar",
-      "upfront": "Pago inicial pendiente"
-    },
     "actions": {
       "edit": "EDITA LOS DATOS",
       "reject": "RECHAZA (con motivo)",
       "validate": "VALIDA EL ALTA",
-      "save": "GUARDA LOS CAMBIOS"
+      "save": "GUARDA LOS CAMBIOS",
+      "reload": "Vuelve a cargar"
     },
     "editTitle": "Edita los datos de la preinscripción",
     "rejectTitle": "Rechaza la preinscripción",
@@ -321,7 +322,42 @@
     "invalidState": "La preinscripción ya no se puede validar.",
     "genericError": "No se ha podido completar la acción.",
     "levelRequired": "Selecciona el nivel inicial.",
-    "invoiceRequired": "Indica la fecha del próximo recibo."
+    "invoiceRequired": "Indica la fecha del próximo recibo.",
+    "warning": {
+      "ACCOUNT_NOT_PROVIDED": "Cuenta no informada",
+      "CHECKOUT_PENDING": "Hay un pago con tarjeta en curso: la modalidad no se puede cambiar hasta que termine.",
+      "DOCUMENT_PENDING": "Documento pendiente",
+      "FAMILY_HOLDER_NOT_FOUND": "No se ha encontrado el titular del grupo familiar",
+      "NO_IMAGE_CONSENT": "No autoriza el uso de su imagen: no publiquéis fotos donde salga {gender, select, FEMALE {ella} other {él}}.",
+      "PAID_EXCEEDS_QUOTE": "Lo cobrado supera el nuevo importe: habrá que devolver la diferencia desde Facturación.",
+      "READMISSION": "Readmisión",
+      "UPFRONT_UNPAID": "Pago inicial pendiente"
+    },
+    "familyFound": "Sí — titular: {holder} + perro {dog}",
+    "familyFare": "tarifa familiar al validar",
+    "familyPending": "Pendiente — ha indicado: {holder} + perro {dog}",
+    "familySearch": "Busca el titular",
+    "familyAttach": "Añade al grupo de {name}",
+    "familyNoGroup": "{name}: sin grupo familiar",
+    "familyNoResults": "Ningún abonado con este nombre",
+    "familyNone": "Sin grupo",
+    "familyChosen": "Grupo de {name}",
+    "familyChange": "Cambia",
+    "familyDecisionRequired": "Elige el grupo del titular o «Sin grupo».",
+    "resolved": "Esta preinscripción ya se ha resuelto",
+    "resolvedLink": "Abre la ficha del abonado",
+    "refundWarning": "Hay un pago cobrado: habrá que devolverlo desde Facturación",
+    "invoiceInvalid": "La fecha del próximo recibo no es válida.",
+    "gender": {
+      "FEMALE": "Femenino",
+      "MALE": "Masculino",
+      "OTHER": "Otros / No binario"
+    },
+    "sex": {
+      "FEMALE": "Hembra",
+      "MALE": "Macho"
+    },
+    "familyCandidate": "{name} + {dogs}"
   },
   "values": {
     "empty": "—",

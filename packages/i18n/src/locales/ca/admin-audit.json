@@ -9,7 +9,8 @@
     "MEMBER_PAYMENT_METHOD_CHANGED": "Mètode de pagament modificat",
     "MEMBER_PLAN_CHANGED": "Modalitat modificada",
     "MEMBER_UPDATED": "Dades de l'abonat modificades",
-    "PARAMETER_CHANGED": "Configuració modificada"
+    "PARAMETER_CHANGED": "Configuració modificada",
+    "SIGNUP_SUBMITTED": "Sol·licitud d'alta enviada"
   },
   "asMember": "com l'abonat: {name}",
   "caption": "Entrades d'auditoria",
@@ -88,6 +89,7 @@
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
+    "PUBLIC": "Formulari públic",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"
   },

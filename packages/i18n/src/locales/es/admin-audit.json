@@ -9,7 +9,8 @@
     "MEMBER_PAYMENT_METHOD_CHANGED": "Método de pago modificado",
     "MEMBER_PLAN_CHANGED": "Modalidad modificada",
     "MEMBER_UPDATED": "Datos del abonado modificados",
-    "PARAMETER_CHANGED": "Configuración modificada"
+    "PARAMETER_CHANGED": "Configuración modificada",
+    "SIGNUP_SUBMITTED": "Solicitud de alta enviada"
   },
   "asMember": "como el abonado: {name}",
   "caption": "Entradas de auditoría",
@@ -88,6 +89,7 @@
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
+    "PUBLIC": "Formulario público",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"
   },

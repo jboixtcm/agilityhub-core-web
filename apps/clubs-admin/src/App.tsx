@@ -47,6 +47,7 @@ import { SettingsPage } from "./catalogs/SettingsPage";
 import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
+import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
@@ -543,16 +544,32 @@ function AdminShell({
   const { openExports } = useExportsDrawer();
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   const [counters, setCounters] = useState<components["schemas"]["DashboardCounters"]>();
+  const [countersRequest, setCountersRequest] = useState(0);
+  const refreshCounters = useCallback(() => {
+    setCountersRequest((value) => value + 1);
+  }, []);
+  const countersAllowed = session.roles.includes("ADMIN");
 
+  // R-14-08: ADMIN only (an INSTRUCTOR would get 403); on load, on focus and after the commands
+  // that change them (`refreshCounters`), never on every navigation.
   useEffect(() => {
+    if (!countersAllowed) return undefined;
     let active = true;
-    void client.GET("/dashboard/counters").then((result) => {
-      if (active && result.data !== undefined) setCounters(result.data);
-    });
+    const load = () => {
+      client.GET("/dashboard/counters").then(
+        (result) => {
+          if (active && result.data !== undefined) setCounters(result.data);
+        },
+        () => undefined,
+      );
+    };
+    load();
+    window.addEventListener("focus", load);
     return () => {
       active = false;
+      window.removeEventListener("focus", load);
     };
-  }, [client, pathname]);
+  }, [client, countersAllowed, countersRequest]);
 
   return (
     <div className="admin-shell">
@@ -589,7 +606,9 @@ function AdminShell({
         pathname={pathname}
         roles={session.roles}
       />
-      <main className="admin-shell__content">{children}</main>
+      <main className="admin-shell__content">
+        <CountersRefreshContext.Provider value={refreshCounters}>{children}</CountersRefreshContext.Provider>
+      </main>
     </div>
   );
 }

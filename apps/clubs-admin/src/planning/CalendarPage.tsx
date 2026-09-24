@@ -75,10 +75,19 @@ type CalendarCell =
   | { block: RingBlock; columnId: string; id: string; kind: "block" }
   | { columnId: string; id: string; kind: "class"; session: ClassSession };
 
-function readQuery(): { filter: CalendarFilter; week: string | undefined } {
+function readQuery(): {
+  classId: string | undefined;
+  filter: CalendarFilter;
+  week: string | undefined;
+} {
   const params = new URLSearchParams(window.location.search);
   const week = params.get("setmana");
-  return { filter: parseFilter(params.get("estat")), week: isIsoDate(week) ? week : undefined };
+  // `classe` opens the selected-class card (the D1 risk rows link here, S14 §2).
+  return {
+    classId: params.get("classe") ?? undefined,
+    filter: parseFilter(params.get("estat")),
+    week: isIsoDate(week) ? week : undefined,
+  };
 }
 
 function WeekSelector({
@@ -201,7 +210,7 @@ export function CalendarPage({
   const [chosenMonday, setMonday] = useState<string | undefined>(() =>
     initial.week === undefined ? undefined : mondayOf(initial.week),
   );
-  const [selectedId, setSelectedId] = useState<string>();
+  const [selectedId, setSelectedId] = useState<string | undefined>(initial.classId);
   const [feedback, setFeedback] = useState<Feedback>();
   const [confirmValidation, setConfirmValidation] = useState(false);
   const [validating, setValidating] = useState(false);
