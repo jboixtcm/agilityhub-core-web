@@ -34,14 +34,19 @@ docker run --rm \
   "$playwright_image" \
   sh -c '
     set -eu
+    # Not copied: the roadmap kit files (`.roadmap-*`, the executor log reached 400 MB on 24-09)
+    # and the stray `.pnpm-store` of 06-09 (390 MB) that no config uses.
     tar \
       --exclude=.git \
+      --exclude=".roadmap-*" \
+      --exclude=.pnpm-store \
       --exclude=.turbo \
       --exclude=dist \
       --exclude=node_modules \
       --exclude=playwright-report \
       --exclude=test-results \
       -cf - -C /src . | tar -xf - -C /work
+    echo "Checkout copied into the container: $(du -sh /work | cut -f1)"
     corepack enable
     pnpm install --frozen-lockfile
     touch /tmp/e2e-started

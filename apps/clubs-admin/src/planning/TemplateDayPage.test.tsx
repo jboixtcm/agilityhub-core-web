@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -127,7 +127,10 @@ describe("T-06-27 D3b day view per ring / per instructor", () => {
     await renderDay(dayOfWeek, "template-setmana-a");
 
     await screen.findByRole("table", { name: "Plantilla «Setmana A» · dilluns" });
-    expect(window.location.pathname).toBe("/plantilles/template-setmana-a/dia/monday");
+    // The rewrite is a passive effect: on a loaded host it runs after the table is committed.
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/plantilles/template-setmana-a/dia/monday");
+    });
     expect(window.location.search).toBe("?vista=instructor");
   });
 

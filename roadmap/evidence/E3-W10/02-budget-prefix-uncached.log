@@ -1,0 +1,52 @@
+diff --git a/packages/api-client/src/mocks/fixtures/calendar.ts b/packages/api-client/src/mocks/fixtures/calendar.ts
+index 85d9128..f49c216 100644
+--- a/packages/api-client/src/mocks/fixtures/calendar.ts
++++ b/packages/api-client/src/mocks/fixtures/calendar.ts
+@@ -32,7 +32,16 @@ function offsetFormatter(timeZone: string): Intl.DateTimeFormat {
+ }
+ 
+ function zoneOffsetMinutes(instant: number, timeZone: string): number {
+-  const parts = offsetFormatter(timeZone).formatToParts(new Date(instant));
++  const parts = new Intl.DateTimeFormat("en-US", {
++    day: "2-digit",
++    hour: "2-digit",
++    hourCycle: "h23",
++    minute: "2-digit",
++    month: "2-digit",
++    second: "2-digit",
++    timeZone,
++    year: "numeric",
++  }).formatToParts(new Date(instant));
+   const value = (type: Intl.DateTimeFormatPartTypes) =>
+     Number(parts.find((part) => part.type === type)?.value ?? 0);
+   const local = Date.UTC(
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (13 tests | 1 failed) 952ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (13)
+     × builds resetPlanningState within its budget 763ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 141.72 ms (budget 50 ms): expected 141.72020900000007 to be less than 50
+ ❯ src/mocks/mock-worlds.budget.test.ts:72:88
+     70|     const elapsed = fastestBuildMs(reset);
+     71|
+     72|     expect(elapsed, `${name}: ${elapsed.toFixed(2)} ms (budget ${Strin…
+       |                                                                                        ^
+     73|       budget,
+     74|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  21:10:58
+   Duration  1.44s (tests 70%, import 19%, transform 11%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

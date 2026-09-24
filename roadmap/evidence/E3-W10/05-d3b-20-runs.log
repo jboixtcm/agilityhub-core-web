@@ -1,0 +1,200 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:06
+   Duration  1.37s (environment 31%, tests 30%, transform 19%, import 14%, setup 6%)
+
+run 1 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:08
+   Duration  1.17s (tests 37%, environment 23%, transform 23%, import 12%, setup 5%)
+
+run 2 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:09
+   Duration  1.12s (tests 36%, environment 25%, transform 22%, import 12%, setup 5%)
+
+run 3 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:11
+   Duration  1.10s (tests 37%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 4 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:12
+   Duration  1.12s (tests 36%, environment 24%, transform 23%, import 12%, setup 5%)
+
+run 5 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:22
+   Duration  1.20s (tests 36%, environment 24%, transform 22%, import 13%, setup 5%)
+
+run 6 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:23
+   Duration  1.14s (tests 36%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 7 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:25
+   Duration  1.13s (tests 36%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 8 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:26
+   Duration  1.12s (tests 37%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 9 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:28
+   Duration  1.23s (tests 37%, environment 24%, transform 21%, import 12%, setup 5%)
+
+run 10 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:29
+   Duration  1.16s (tests 37%, environment 23%, transform 23%, import 13%, setup 5%)
+
+run 11 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:31
+   Duration  1.24s (tests 38%, transform 23%, environment 21%, import 13%, setup 4%)
+
+run 12 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:33
+   Duration  1.21s (tests 37%, environment 23%, transform 22%, import 12%, setup 5%)
+
+run 13 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:34
+   Duration  1.15s (tests 38%, environment 23%, transform 22%, import 12%, setup 5%)
+
+run 14 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:36
+   Duration  1.15s (tests 35%, environment 24%, transform 22%, import 12%, setup 6%)
+
+run 15 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:37
+   Duration  1.12s (tests 37%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 16 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:39
+   Duration  1.11s (tests 36%, environment 24%, transform 22%, import 12%, setup 5%)
+
+run 17 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:40
+   Duration  1.14s (tests 36%, environment 24%, transform 22%, import 13%, setup 5%)
+
+run 18 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:42
+   Duration  1.13s (tests 38%, environment 23%, transform 22%, import 12%, setup 5%)
+
+run 19 exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  21:14:43
+   Duration  1.14s (tests 38%, environment 24%, transform 21%, import 12%, setup 5%)
+
+run 20 exit 0

@@ -109,5 +109,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Other fixes: D7 «—» for a finished activity without a maximum; «clear filters» on a filtered empty list; list markers in rich text; an error state with a retry in the 04 block; the development preview out of the production bundle; the club's default locale in the mock's publication check; «en llista d'espera» without «()»; separators and `‹` from i18n; a guarded path decode; the `ADMIN_TEXT_REQUIRED` field.
   - The export-drawer file name is `auditoria_…` again for every list, as before E4-W04.
   - The calendar mock's `clubInstant` reuses one `Intl.DateTimeFormat` per time zone (about 11× faster, same results).
+- Test stability (E3-W10, no product change):
+  - `mock-worlds.budget.test.ts` times the build of every stateful MSW world (each `reset…State` of the handlers, plus the day grid) against a budget: 50 ms for the planning world, 5 ms for the others. It also checks that a reset rebuilds the start-up worlds. It fails without the per-zone formatter cache of `clubInstant` (planning 142 ms).
+  - The D3b test «rewrites an unknown day in the URL…» waits for the URL rewrite, which is a passive effect that can run after the table is committed.
+  - `scripts/e2e-docker.sh` no longer copies `.roadmap-*` or the stray `.pnpm-store` into the container, and prints the size of the copy (67 MB).
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

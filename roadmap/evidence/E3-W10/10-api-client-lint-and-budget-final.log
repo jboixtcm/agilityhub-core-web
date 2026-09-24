@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  21:20:18
+   Duration  540ms (import 39%, transform 35%, tests 25%)
+

@@ -1,0 +1,112 @@
+// TEMPORARY (E3-W10 step 2 proof, deleted after the run): the template answer arrives after the
+// catalogs, as on CI at d95b199, so the table and the URL rewrite land in the same commit.
+import { createApiClient } from "@agilityhub/api-client";
+import { resetPlanningState } from "@agilityhub/api-client/mocks";
+import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
+import { server } from "@agilityhub/api-client/mocks/server";
+import { createI18n } from "@agilityhub/i18n";
+import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { delay, http } from "msw";
+import { I18nextProvider } from "react-i18next";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+
+import { TemplateDayPage } from "./TemplateDayPage";
+
+const branding: Branding = {
+  ...brandingCanicFixture,
+  theme: { ...brandingCanicFixture.theme, mode: "dark" },
+};
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+});
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  resetPlanningState();
+});
+afterAll(() => {
+  server.close();
+});
+
+async function renderLateTemplate() {
+  server.use(
+    http.get("*/api/v1/week-templates/:id", async () => {
+      await delay(150);
+    }),
+  );
+  window.history.replaceState(null, "", "/plantilles/template-setmana-a/dia/someday?vista=instructor");
+  const i18n = await createI18n({
+    branding,
+    browserLanguages: ["ca"],
+    initialNamespaces: ["admin-scheduling", "enums", "errors"],
+    storage: undefined,
+  });
+  render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <TemplateDayPage
+          client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+          dayOfWeek={undefined}
+          onNavigate={() => undefined}
+          templateId="template-setmana-a"
+        />
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+}
+
+// A loaded host: React's scheduler yields after every task (so the passive effects run in a later
+// macrotask than the commit), and the host is busy for a few ms after the table is committed (so
+// the 0 ms timer of Testing Library's async wrapper is due before that macrotask).
+function simulateLoadedHost() {
+  const realNow = performance.now.bind(performance);
+  let skew = 0;
+  vi.spyOn(performance, "now").mockImplementation(() => {
+    skew += 10;
+    return realNow() + skew;
+  });
+  const observer = new MutationObserver(() => {
+    if (document.querySelector("table") === null) return;
+    observer.disconnect();
+    let hops = 0;
+    const hop = () => {
+      hops += 1;
+      if (hops < 50) {
+        queueMicrotask(hop);
+        return;
+      }
+      const until = Date.now() + 5;
+      while (Date.now() < until) {
+        // busy host
+      }
+    };
+    queueMicrotask(hop);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+describe("scratch: the template arrives after the catalogs", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("old assertion: reads the URL right after findByRole", async () => {
+    simulateLoadedHost();
+    await renderLateTemplate();
+    await screen.findByRole("table", { name: "Plantilla «Setmana A» · dilluns" });
+    expect(window.location.pathname).toBe("/plantilles/template-setmana-a/dia/monday");
+    expect(window.location.search).toBe("?vista=instructor");
+  });
+
+  it("new assertion: waits for the URL rewrite", async () => {
+    simulateLoadedHost();
+    await renderLateTemplate();
+    await screen.findByRole("table", { name: "Plantilla «Setmana A» · dilluns" });
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/plantilles/template-setmana-a/dia/monday");
+    });
+    expect(window.location.search).toBe("?vista=instructor");
+  });
+});

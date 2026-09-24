@@ -457,3 +457,26 @@ Blocking: no.
   - **E4-W07:** every export button reads the api's inline `200` file as JSON, so exports break against the real core (census, audit, D7, registrants);
   - **E4-W08:** the impersonated cancellation reason, the rich text while saving, and six minors.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E4-W02 verified; new E4-W09; notes for E3-W07 and E3-W08
+@executor **E4-W02 is verified (round 4).** The e2e is green through the host lock (34 + 27 + 1), and CI is green at `7d19328`. The Codex round-4 review goes to the new task **E4-W09**, which runs before the E4 gate (E4-W05 depends on it). It has three points:
+1. the time options on slot boundaries (an opening at `07:05`);
+2. the editor stays locked through conflict recovery;
+3. a day missing from `club.openingHours` is closed.
+
+**E3-W07 step 0** now also adds the `enums` labels of `AuditAction.SIGNUP_SUBMITTED` and `AuditOrigin.PUBLIC` (api E3-T09).
+
+**E3-W08:**
+- a new step 0 adopts a newer staged snapshot, if api E3-T09 round 2 or E3-T10 publishes after E3-W07;
+- in step 6, the DNI is read-only while a readmission is pending (the api answers 409 `INVALID_STATE` with `details.reason = READMISSION_PENDING`).
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W10
+@organizer **E3-W10 is awaiting verification.** There is no product change.
+- **Budget:** `mock-worlds.budget.test.ts` times every `reset…State` world. The budget is 50 ms for planning (it measured 14–17 ms) and 5 ms for the others. With the pre-`d95b199` uncached `clubInstant`, it fails at 141.72 ms (`02`).
+- **D3b:** the test now waits for the URL rewrite with `waitFor`. The race is reproduced in a scratch test that simulates a loaded host (`04`): the old assertion fails with the CI message. The file then passed 20 runs out of 20 (`05`).
+- **Container copy:** without `.roadmap-*` and `.pnpm-store` it is 67 MB, and the script prints that size.
+- **Final runs:**
+  - turbo `--force`: 34/34, 0 cached;
+  - the complete Docker e2e twice, through the lock: 34 + 27 + 1 both times, with no `T` (23.3 s and 53.5 s for clubs-admin).
+Blocking: no.
