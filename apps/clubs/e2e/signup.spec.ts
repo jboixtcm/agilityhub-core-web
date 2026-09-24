@@ -55,12 +55,13 @@ async function fillPerson(page: Page) {
   await expect(page.getByLabel("Població (proposada pel CP)")).not.toHaveValue("");
 }
 
-async function fillDog(page: Page, name: string) {
+async function fillDog(page: Page, name: string, chip: string) {
   await page.getByLabel("Nom del gos").fill(name);
   await page.getByRole("button", { name: "Mascle" }).click();
   await page.getByLabel("Raça").fill("Mestís");
   await page.getByLabel("Naix.").fill("03/2022");
-  await page.getByLabel("Núm. de xip").fill(`chip-${name.toLocaleLowerCase()}`);
+  // ES profile: 15 digits (S04 §3).
+  await page.getByLabel("Núm. de xip").fill(chip);
   await page.getByLabel("Cartilla de vacunes").setInputFiles({
     buffer: Buffer.from("mock-vaccination-page"),
     mimeType: "image/jpeg",
@@ -83,7 +84,7 @@ test.describe("T-04-29–32 public signup", () => {
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/gos");
     await expect(page.getByText(/Pas 2 de 4/u)).toBeVisible();
-    await fillDog(page, "Kiwi");
+    await fillDog(page, "Kiwi", "941000012345678");
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "17-dog-375.png"),
@@ -129,7 +130,7 @@ test.describe("T-04-32 add-dog signup", () => {
     await page.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first().click();
     await page.waitForURL("**/gossos/nou");
     await expect(page.getByText(/Pas 1 de 2/u)).toBeVisible();
-    await fillDog(page, "Neret");
+    await fillDog(page, "Neret", "941000012345679");
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/gossos/nou/pagament");
     await expect(page.getByLabel("Mètode de pagament actual")).toHaveValue(

@@ -1,0 +1,295 @@
+# E3-W06 · new SignupPage.test.tsx run against the PRE-FIX apps/clubs/src/SignupPage.tsx (git HEAD 18d92a9)
+# command: pnpm exec vitest run src/SignupPage.test.tsx --reporter=verbose   (in apps/clubs)   exit=1
+# condensed: the per-test list + the first assertion lines of each failure (DOM dumps removed; raw 870 KB)
+
+ × src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states 10141ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps the draft and refetches localized configuration after a language change 46ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > masks and validates the browser-independent birth date control 60ms
+ × src/SignupPage.test.tsx > T-04-29 signup person and draft > M2 checks the ES postal code and a past birth date from 1900 before any request 10058ms
+ × src/SignupPage.test.tsx > T-04-29 signup person and draft > focuses the first error after it renders and links each field to its message 10034ms
+ × src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps fields typed while the town lookup is in flight 117ms
+ × src/SignupPage.test.tsx > T-04-29 signup person and draft > GENERIC profile: the first document type of the profile and an editable prefix 25ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > uploads sequentially named vaccination pages and renders API plans 59ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > removes amounts without BILLING and the family offer and step without FAMILY_GROUP 31ms
+ × src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > gates offerLabel by FAMILY_GROUP even when the configuration sends it 13ms
+ × src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > validates and normalises the chip per country profile and the birth month 10025ms
+ × src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > keeps fields typed while an upload is in flight 117ms
+ × src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup 10038ms
+ ✓ src/SignupPage.test.tsx > T-04-31 signup family lookup > keeps the dog draft when returning from the family step 36ms
+ × src/SignupPage.test.tsx > T-04-31 signup family lookup > prefills the account holder with the group holder when the group is found (R-04-10) 23ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > renders API totals and payment conditions and submits only after privacy consent 38ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > shows each payment text only under its method (T-04-32, M7 web half) 21ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > redirects through checkout when Stripe is enabled 26ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > uses the member plan and payment method and posts the add-dog flow 10023ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > the add-dog success page does not promise a welcome email 17ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > sends notesToInstructors from 17 and holderTaxId from 19 (§2, §3) 15ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > drops the IBAN from the session draft when the method changes away from SEPA 10029ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > checks the IBAN mod-97 before sending 10039ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > omits planId and planIdRequested when the club has no signup plans (R-04-09) 27ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > hides the honeypot from assistive technology and the tab order 12ms
+ × src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > reads the image-consent text from texts.imageConsent, then legal.imageConsentText 17ms
+ × src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a DNI applicant with the identity-check document 10021ms
+ × src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a NIE applicant with the identity-check document 10031ms
+ × src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a passport only applicant with the identity-check document 10052ms
+ × src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > retries a lost 201 with the same Idempotency-Key and gets the same 201 10059ms
+ × src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > changing a payload field after a failure uses a new key 10051ms
+ × src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > add-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog 10064ms
+ × src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > a cancelled checkout returns to 19 with the data and retries only the checkout 10066ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_ID_DOCUMENT (400) → /apuntat-hi 10049ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > ID_DOCUMENT_AMBIGUOUS (422) → /apuntat-hi 10051ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_PHONE (400) → /apuntat-hi 10027ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_IBAN (400) → undefined 10030ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PLAN_NOT_AVAILABLE (422) → /apuntat-hi/gos 10050ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_DOCUMENT_REQUIRED (422) → /apuntat-hi/gos 10050ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FILE_NOT_FOUND (400) → /apuntat-hi/gos 10050ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_CHIP_ALREADY_REGISTERED (422) → /apuntat-hi/gos 48ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FAMILY_HOLDER_NOT_FOUND (422) → /apuntat-hi/familia 10028ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > CONSENT_VERSION_OUTDATED (422) → undefined 10058ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > MEMBER_ALREADY_EXISTS (409) → /apuntat-hi 10042ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_ALREADY_PENDING (422) → /apuntat-hi 10024ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_CLOSED (422) → undefined 10045ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > RATE_LIMITED (429) → undefined 10048ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PAYMENT_METHOD_NOT_AVAILABLE (422) → undefined 10021ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SOMETHING_NEW (422) → undefined 10026ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi 10043ms
+ × src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi/gos 10044ms
+ × src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > clears an acceptance of other legal texts and sends the version accepted again 10040ms
+ × src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > a saved acceptance of an older version is not carried into the new texts 10019ms
+
+ FAIL  src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states
+    TestingLibraryElementError: Unable to find an element with the text: El document d'identitat no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for yo
+
+ FAIL  src/SignupPage.test.tsx > T-04-29 signup person and draft > M2 checks the ES postal code and a past birth date from 1900 before any request
+    TestingLibraryElementError: Unable to find an element with the text: La data no és vàlida.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher
+
+ FAIL  src/SignupPage.test.tsx > T-04-29 signup person and draft > focuses the first error after it renders and links each field to its message
+    Error: expect(element).toHaveFocus()
+    Expected element with focus:
+
+ FAIL  src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps fields typed while the town lookup is in flight
+    Error: expect(element).toHaveValue(Carrer Nou, 1)
+    Expected the element to have value:
+      Carrer Nou, 1
+    Received:
+     ❯ src/SignupPage.test.tsx:387:54
+        385|       expect(screen.getByLabelText("Població (proposada pel CP)")).toH…
+        386|     });
+        387|     expect(screen.getByLabelText("Carrer i número")).toHaveValue("Carr…
+           |                                                      ^
+        388|   });
+        389|
+
+ FAIL  src/SignupPage.test.tsx > T-04-29 signup person and draft > GENERIC profile: the first document type of the profile and an editable prefix
+    AssertionError: expected 'SELECT' to be 'INPUT' // Object.is equality
+    Expected: "INPUT"
+    Received: "SELECT"
+     ❯ src/SignupPage.test.tsx:400:29
+        398|     ).toEqual(["PASSPORT", "OTHER"]);
+        399|     const [prefix] = screen.getAllByLabelText("Prefix");
+        400|     expect(prefix?.tagName).toBe("INPUT");
+           |                             ^
+        401|     fireEvent.change(prefix as HTMLElement, { target: { value: "+376" …
+        402|     expect(prefix).toHaveValue("+376");
+
+ FAIL  src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > gates offerLabel by FAMILY_GROUP even when the configuration sends it
+    Error: expect(element).not.toBeInTheDocument()
+    expected document not to contain element, found <small>
+      Ofertes si es porta més d'un gos per família
+
+ FAIL  src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > validates and normalises the chip per country profile and the birth month
+    TestingLibraryElementError: Unable to find an element with the text: El número de xip no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text
+
+ FAIL  src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > keeps fields typed while an upload is in flight
+    Error: expect(element).toHaveValue(941000012345678)
+    Expected the element to have value:
+      941000012345678
+    Received:
+     ❯ src/SignupPage.test.tsx:561:50
+        559|
+        560|     expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBe…
+        561|     expect(screen.getByLabelText("Núm. de xip")).toHaveValue("94100001…
+           |                                                  ^
+        562|   });
+        563| });
+
+ FAIL  src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+    TestingLibraryElementError: Unable to find an element with the text: Grup trobat: Marta R. El gos nou quedarà vinculat al seu grup familiar.. This could be because the text is broken up by multiple elements. In this case
+
+ FAIL  src/SignupPage.test.tsx > T-04-31 signup family lookup > prefills the account holder with the group holder when the group is found (R-04-10)
+    Error: expect(element).toHaveValue(Marta Roca)
+    Expected the element to have value:
+      Marta Roca
+    Received:
+      Nora Soler Pons
+     ❯ src/SignupPage.test.tsx:635:64
+        633|     await screen.findByText(/Grup trobat/u);
+        634|     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+        635|     expect(await screen.findByLabelText("Titular del compte")).toHaveV…
+           |                                                                ^
+        636|   });
+        637| });
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > shows each payment text only under its method (T-04-32, M7 web half)
+    Error: expect(element).not.toBeInTheDocument()
+    expected document not to contain element, found <aside
+      class="signup-note signup-note--neutral"
+    >
+      Quan ja no vulguis seguir fent activitats al club o vulguis estar un temps sense venir, indica'ns-ho abans del dia 25 per modificar l'emissió de rebuts del mes següent.
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > uses the member plan and payment method and posts the add-dog flow
+    AssertionError: expected "vi.fn()" to be called with arguments: [ '/gossos/nou/enviada' ]
+    Received:
+      1st vi.fn() call:
+      [
+    -   "/gossos/nou/enviada",
+    +   "/apuntat-hi/enviada",
+      ]
+    Number of calls: 1
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > the add-dog success page does not promise a welcome email
+    TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "Sol·licitud enviada"
+    Here are the accessible roles:
+      main:
+      Name "":
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > sends notesToInstructors from 17 and holderTaxId from 19 (§2, §3)
+    TestingLibraryElementError: Unable to find a label with the text of: Notes als instructors (opcional)
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > drops the IBAN from the session draft when the method changes away from SEPA
+    AssertionError: expected '{"additionalDogOption":"TODAY","conse…' not to contain 'ES9121000418450200051332'
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > checks the IBAN mod-97 before sending
+    Error: expect(element).toHaveFocus()
+    Expected element with focus:
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > omits planId and planIdRequested when the club has no signup plans (R-04-09)
+    AssertionError: expected { consents: { …(2) }, …(6) } to not have property "planId"
+    - Expected:
+    undefined
+    + Received:
+    ""
+     ❯ src/SignupPage.test.tsx:836:53
+        834|       expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
+        835|     });
+        836|     expect(await lastBody(recorded, "/signup")).not.toHaveProperty("pl…
+           |                                                     ^
+        837|
+        838|     cleanup();
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > hides the honeypot from assistive technology and the tab order
+    Error: expect(element).toHaveAttribute("aria-hidden", "true") // element.getAttribute("aria-hidden") === "true"
+    Expected the element to have attribute:
+      aria-hidden="true"
+    Received:
+      null
+     ❯ src/SignupPage.test.tsx:853:40
+        851|     const honeypot = document.getElementById("signup-website");
+        852|     expect(honeypot).toHaveAttribute("tabindex", "-1");
+        853|     expect(honeypot?.closest("label")).toHaveAttribute("aria-hidden", …
+           |                                        ^
+        854|     expect(screen.queryByRole("textbox", { name: "Lloc web" })).not.to…
+        855|   });
+
+ FAIL  src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > reads the image-consent text from texts.imageConsent, then legal.imageConsentText
+    TestingLibraryElementError: Unable to find an element with the text: Text de la configuració del formulari.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for 
+
+ FAIL  src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a DNI applicant with the identity-check document
+
+ FAIL  src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a NIE applicant with the identity-check document
+
+ FAIL  src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a passport only applicant with the identity-check document
+    AssertionError: expected "vi.fn()" to be called with arguments: [ '/apuntat-hi/enviada' ]
+    Number of calls: 0
+
+ FAIL  src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > retries a lost 201 with the same Idempotency-Key and gets the same 201
+    AssertionError: expected "vi.fn()" to be called with arguments: [ '/apuntat-hi/enviada' ]
+    Number of calls: 0
+
+ FAIL  src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > changing a payload field after a failure uses a new key
+    TestingLibraryElementError: Unable to find an element with the text: El número de compte bancari no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function fo
+
+ FAIL  src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > add-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog
+    AssertionError: expected "vi.fn()" to be called with arguments: [ '/gossos/nou/enviada' ]
+    Number of calls: 0
+
+ FAIL  src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > a cancelled checkout returns to 19 with the data and retries only the checkout
+    AssertionError: expected undefined to match object { memberId: 'member-signup-357', …(1) }
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_ID_DOCUMENT (400) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: El document d'identitat no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for yo
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > ID_DOCUMENT_AMBIGUOUS (422) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: El document d'identitat coincideix amb més d'un registre.. This could be because the text is broken up by multiple elements. In this case, you can prov
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_PHONE (400) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: El telèfon no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text match
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_IBAN (400) → undefined
+    TestingLibraryElementError: Unable to find an element with the text: El número de compte bancari no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function fo
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PLAN_NOT_AVAILABLE (422) → /apuntat-hi/gos
+    TestingLibraryElementError: Unable to find an element with the text: Aquest pla no està disponible.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your tex
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_DOCUMENT_REQUIRED (422) → /apuntat-hi/gos
+    TestingLibraryElementError: Unable to find an element with the text: Cal un document per a aquest gos.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your 
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FILE_NOT_FOUND (400) → /apuntat-hi/gos
+    TestingLibraryElementError: Unable to find an element with the text: No s'ha trobat el fitxer.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text mat
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_CHIP_ALREADY_REGISTERED (422) → /apuntat-hi/gos
+    AssertionError: expected last "vi.fn()" call to have been called with [ '/apuntat-hi/gos' ]
+    - Expected:
+    [
+      "/apuntat-hi/gos",
+    ]
+    + Received:
+    undefined
+     ❯ src/SignupPage.test.tsx:1088:24
+        1086|       expect(navigate).not.toHaveBeenCalled();
+        1087|     } else {
+        1088|       expect(navigate).toHaveBeenLastCalledWith(path);
+           |                        ^
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FAMILY_HOLDER_NOT_FOUND (422) → /apuntat-hi/familia
+    TestingLibraryElementError: Unable to find an element with the text: No s'ha trobat el titular del grup familiar.. This could be because the text is broken up by multiple elements. In this case, you can provide a functio
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > CONSENT_VERSION_OUTDATED (422) → undefined
+    Error: expect(element).toHaveFocus()
+    Expected element with focus:
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > MEMBER_ALREADY_EXISTS (409) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: Aquest abonat ja existeix.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text ma
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_ALREADY_PENDING (422) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: Ja tenim una sol·licitud pendent amb aquestes dades; el club la revisarà aviat.. This could be because the text is broken up by multiple elements. In t
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_CLOSED (422) → undefined
+    TestingLibraryElementError: Unable to find an element with the text: En aquest moment no es poden enviar sol·licituds d'alta.. This could be because the text is broken up by multiple elements. In this case, you can provi
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > RATE_LIMITED (429) → undefined
+    Error: expect(element).toHaveFocus()
+    Expected element with focus:
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PAYMENT_METHOD_NOT_AVAILABLE (422) → undefined
+    TestingLibraryElementError: Unable to find an element with the text: Aquest mètode de pagament no està disponible.. This could be because the text is broken up by multiple elements. In this case, you can provide a functi
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SOMETHING_NEW (422) → undefined
+    Error: expect(element).toHaveFocus()
+    Expected element with focus:
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi
+    TestingLibraryElementError: Unable to find an element with the text: El correu electrònic no és vàlid.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your 
+
+ FAIL  src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi/gos
+    TestingLibraryElementError: Unable to find an element with the text: Aquest camp és obligatori.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text ma
+
+ FAIL  src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > clears an acceptance of other legal texts and sends the version accepted again
+    Error: expect(element).not.toBeChecked()
+    Received element is checked:
+
+ FAIL  src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > a saved acceptance of an older version is not carried into the new texts
+    Error: expect(element).not.toBeChecked()
+    Received element is checked:
+
+ Test Files  1 failed (1)
+      Tests  46 failed | 7 passed (53)

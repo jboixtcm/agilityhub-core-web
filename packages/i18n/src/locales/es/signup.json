@@ -15,6 +15,7 @@
     "invalidPhone": "El teléfono no es válido.",
     "invalidDate": "La fecha no es válida.",
     "invalidMonth": "El mes de nacimiento no es válido.",
+    "invalidPostalCode": "El código postal no es válido.",
     "genericError": "No se ha podido completar la acción.",
     "rateLimited": "Demasiados intentos. Vuelve a intentarlo dentro de {seconds} s.",
     "locale": {
@@ -70,6 +71,8 @@
     "birthMonth": "Nac.",
     "birthMonthPlaceholder": "mm/aaaa",
     "chip": "Núm. de chip",
+    "invalidChip": "El número de chip no es válido.",
+    "notesToInstructors": "Notas para los instructores (opcional)",
     "vaccinationCard": "Cartilla de vacunas",
     "uploaded": "{name} subida",
     "addPage": "＋ Añadir otra página",
@@ -103,6 +106,7 @@
     "monthlyTitle": "Pago de los recibos mensuales",
     "iban": "IBAN",
     "accountHolder": "Titular de la cuenta",
+    "holderTaxId": "NIF del titular (opcional)",
     "cardSecure": "Pagarás con tarjeta de forma segura al enviar la solicitud.",
     "currentMethod": "Método de pago actual",
     "initialTitle": "Pago inicial",
@@ -118,6 +122,7 @@
     "submit": "ENVÍA LA SOLICITUD",
     "submitting": "Enviando la solicitud",
     "reviewFooter": "El club revisará la solicitud y el pago, y te enviará la bienvenida con el acceso y la Guía del usuario.",
+    "addDogReviewFooter": "El club revisará la solicitud y el pago del perro nuevo, y te avisaremos en la app cuando la haya validado.",
     "consentOutdated": "La política ha cambiado. Revísala y vuelve a aceptarla.",
     "cancelled": "El pago no se ha completado: puedes volver a intentarlo desde el correo que te hemos enviado."
   },

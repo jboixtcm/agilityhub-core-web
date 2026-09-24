@@ -15,6 +15,7 @@
     "invalidPhone": "El telèfon no és vàlid.",
     "invalidDate": "La data no és vàlida.",
     "invalidMonth": "El mes de naixement no és vàlid.",
+    "invalidPostalCode": "El codi postal no és vàlid.",
     "genericError": "No s'ha pogut completar l'acció.",
     "rateLimited": "Massa intents. Torna-ho a provar d'aquí a {seconds} s.",
     "locale": {
@@ -70,6 +71,8 @@
     "birthMonth": "Naix.",
     "birthMonthPlaceholder": "mm/aaaa",
     "chip": "Núm. de xip",
+    "invalidChip": "El número de xip no és vàlid.",
+    "notesToInstructors": "Notes als instructors (opcional)",
     "vaccinationCard": "Cartilla de vacunes",
     "uploaded": "{name} pujada",
     "addPage": "＋ Afegir un altre full",
@@ -103,6 +106,7 @@
     "monthlyTitle": "Pagament dels rebuts mensuals",
     "iban": "IBAN",
     "accountHolder": "Titular del compte",
+    "holderTaxId": "NIF del titular (opcional)",
     "cardSecure": "Pagaràs amb targeta de forma segura en enviar la sol·licitud.",
     "currentMethod": "Mètode de pagament actual",
     "initialTitle": "Pagament inicial",
@@ -118,6 +122,7 @@
     "submit": "ENVIA LA SOL·LICITUD",
     "submitting": "Enviant la sol·licitud",
     "reviewFooter": "El club revisarà la sol·licitud i el pagament, i t'enviarà la benvinguda amb l'accés i la Guia de l'usuari.",
+    "addDogReviewFooter": "El club revisarà la sol·licitud i el pagament del gos nou, i t'avisarem a l'app quan l'hagi validat.",
     "consentOutdated": "La política ha canviat. Revisa-la i torna a acceptar-la.",
     "cancelled": "El pagament no s'ha completat: pots reintentar-lo des del correu que t'hem enviat."
   },

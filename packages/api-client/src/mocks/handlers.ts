@@ -791,6 +791,46 @@ function signupUpfront(addDog = false) {
   });
 }
 
+// Idempotent signup replays (CONVENCIONS_API §7): a key returns its first 201; the committed
+// people and chips make a retry with a fresh key fail like the api does.
+const signupReplays = new Map<string, unknown>();
+const submittedSignupIdentities = new Set<string>();
+const submittedDogChips = new Set<string>();
+
+function resetSignupMockState(): void {
+  signupReplays.clear();
+  submittedSignupIdentities.clear();
+  submittedDogChips.clear();
+}
+
+const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+function validSpanishDocument(type: string, value: string): boolean {
+  if (type === "PASSPORT") return /^[A-Z0-9]{5,20}$/u.test(value);
+  const match =
+    type === "DNI"
+      ? /^(\d{8})([A-Z])$/u.exec(value)
+      : type === "NIE"
+        ? /^([XYZ]\d{7})([A-Z])$/u.exec(value)
+        : null;
+  if (match === null) return false;
+  const digits = (match[1] ?? "").replace(/^X/u, "0").replace(/^Y/u, "1").replace(/^Z/u, "2");
+  return DNI_LETTERS[Number(digits) % 23] === match[2];
+}
+
+function validIban(value: string): boolean {
+  const iban = value.replaceAll(/\s/gu, "").toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban) || (iban.startsWith("ES") && iban.length !== 24)) {
+    return false;
+  }
+  const digits = `${iban.slice(4)}${iban.slice(0, 4)}`.replaceAll(/[A-Z]/gu, (letter) =>
+    String(letter.charCodeAt(0) - 55),
+  );
+  let remainder = 0;
+  for (const digit of digits) remainder = (remainder * 10 + Number(digit)) % 97;
+  return remainder === 1;
+}
+
 function currentMemberDog(id: string): MeDog | undefined {
   return memberDogsState.dogs.find((dog) => dog.id === id);
 }
@@ -1149,8 +1189,12 @@ export const handlers = [
     if (email.startsWith("limit")) {
       return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "120" });
     }
-    if (body.idDocument.value.trim() === "" || body.idDocument.value === "12345678A") {
-      return validationError([{ code: "INVALID_ID_DOCUMENT", field: "idDocument.value" }]);
+    if (body.idDocument.value.trim() === "") {
+      return validationError([{ code: "REQUIRED", field: "idDocument.value" }]);
+    }
+    if (!validSpanishDocument(body.idDocument.type, body.idDocument.value)) {
+      // The api answers a top-level code with empty details (CATALEG_ERRORS §1: 400).
+      return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
     }
     if (email === "existing@example.test") {
       return HttpResponse.json({ maskedEmail: "e••••••g@e••••••.test", result: "VERIFICATION_SENT" });
@@ -1202,12 +1246,23 @@ export const handlers = [
     if ((body.website ?? "").trim() !== "") {
       return new HttpResponse(null, { status: 202 });
     }
+    const idempotencyKey = request.headers.get("Idempotency-Key") ?? "";
+    const replay = signupReplays.get(`signup:${idempotencyKey}`);
+    if (replay !== undefined) {
+      return HttpResponse.json(replay, { status: 201 });
+    }
     const scenario = currentMockScenario();
     if (!scenario.branding.signup.enabled || scenario.branding.status !== "ACTIVE") {
-      return apiError("SIGNUP_CLOSED", "Signup closed", 409);
+      return apiError("SIGNUP_CLOSED", "Signup closed", 422);
     }
     if (body.person.emails[0]?.startsWith("limit") === true) {
       return apiError("RATE_LIMITED", "Rate limited", 429, { "Retry-After": "120" });
+    }
+    if (!validSpanishDocument(body.person.idDocument.type, body.person.idDocument.value)) {
+      return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
+    }
+    if (body.payment?.iban !== undefined && body.payment.iban !== "" && !validIban(body.payment.iban)) {
+      return apiError("INVALID_IBAN", "Invalid IBAN", 400);
     }
     if (!body.consents.privacyPolicy.accepted) {
       return validationError([{ code: "REQUIRED", field: "consents.privacyPolicy.accepted" }]);
@@ -1215,39 +1270,54 @@ export const handlers = [
     if (body.consents.privacyPolicy.version !== "2026-09") {
       return apiError("CONSENT_VERSION_OUTDATED", "Consent version outdated", 422);
     }
-    if (body.dog.chip === "registered") {
+    const plans = signupConfiguration(request).plans ?? [];
+    if (
+      body.planId === undefined
+        ? plans.length > 0
+        : !plans.some((plan) => plan.id === body.planId)
+    ) {
+      return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
+    }
+    if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
-    if (body.person.emails[0] === "pending@example.test") {
-      return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 409);
+    const identity = body.person.idDocument.value;
+    if (body.person.emails[0] === "pending@example.test" || submittedSignupIdentities.has(identity)) {
+      return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 422);
     }
+    submittedSignupIdentities.add(identity);
+    submittedDogChips.add(body.dog.chip);
     const checkoutRequired = scenario.signupStripe === true;
-    return HttpResponse.json(
-      {
-        checkout: { required: checkoutRequired },
-        memberId: "member-signup-357",
-        signupToken: "mock-signup-token",
-        upfront: signupUpfront(),
-      },
-      { status: 201 },
-    );
+    const result = {
+      checkout: { required: checkoutRequired },
+      memberId: "member-signup-357",
+      signupToken: "mock-signup-token",
+      upfront: signupUpfront(),
+    };
+    if (idempotencyKey !== "") signupReplays.set(`signup:${idempotencyKey}`, result);
+    return HttpResponse.json(result, { status: 201 });
   }),
   http.post("*/api/v1/me/dogs/signup", async ({ request }) => {
     if (!request.headers.has("Authorization")) {
       return apiError("UNAUTHENTICATED", "Authentication required", 401);
     }
     const body = (await request.json()) as MemberDogSignupRequest;
-    if (body.dog.chip === "registered") {
+    const idempotencyKey = request.headers.get("Idempotency-Key") ?? "";
+    const replay = signupReplays.get(`add-dog:${idempotencyKey}`);
+    if (replay !== undefined) {
+      return HttpResponse.json(replay, { status: 201 });
+    }
+    if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
-    return HttpResponse.json(
-      {
-        checkout: { memberId: "member-signup-357", required: false },
-        dogId: "dog-pending-new",
-        upfront: signupUpfront(true),
-      },
-      { status: 201 },
-    );
+    submittedDogChips.add(body.dog.chip);
+    const result = {
+      checkout: { memberId: "member-signup-357", required: currentMockScenario().signupStripe === true },
+      dogId: "dog-pending-new",
+      upfront: signupUpfront(true),
+    };
+    if (idempotencyKey !== "") signupReplays.set(`add-dog:${idempotencyKey}`, result);
+    return HttpResponse.json(result, { status: 201 });
   }),
   http.post("*/api/v1/checkout-sessions", async ({ request }) => {
     await request.json() as CheckoutSessionRequest;
@@ -2912,5 +2982,6 @@ export {
   resetOnboardingMockState,
   resetPlanningState,
   resetSettingsState,
+  resetSignupMockState,
   type MockScenario,
 };

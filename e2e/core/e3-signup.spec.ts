@@ -201,6 +201,7 @@ async function completePublicSignup({
   document,
   dog,
   email,
+  expectedDocument,
   family,
   firstName,
   lastName,
@@ -210,6 +211,7 @@ async function completePublicSignup({
   document: string;
   dog: string;
   email: string;
+  expectedDocument: { type: string; value: string };
   family: boolean;
   firstName: string;
   lastName: string;
@@ -246,11 +248,13 @@ async function completePublicSignup({
   await page.getByLabel("Accepto la política de privacitat").check();
   if (screenshots) await screenshot(page, "19-payment-core-375.png");
   let signupResult: { memberId: string } | undefined;
+  let signupBody = "";
   await page.route(
     "**/api/v1/signup",
     async (route) => {
       const upstream = await route.fetch();
       const body = await upstream.text();
+      signupBody = body;
       if (upstream.status() === 201) {
         signupResult = JSON.parse(body) as { memberId: string };
       }
@@ -264,7 +268,12 @@ async function completePublicSignup({
   );
   await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
   const response = await signupResponse;
-  expect(response.status()).toBe(201);
+  expect(response.status(), signupBody).toBe(201);
+  // B1 (R-04-01): the submission carries the same normalised document as the identity check.
+  const submitted = response.request().postDataJSON() as {
+    person: { idDocument: { type: string; value: string } };
+  };
+  expect(submitted.person.idDocument).toEqual(expectedDocument);
   if (signupResult === undefined) throw new TypeError("Missing signup result");
   await page.waitForURL("**/apuntat-hi/enviada");
   await expect(page.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
@@ -331,6 +340,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     document: "12345678Z",
     dog: acceptedDog,
     email: acceptedEmail,
+    expectedDocument: { type: "DNI", value: "12345678Z" },
     family: true,
     firstName: "Nora",
     lastName: "Integració E3",
@@ -472,9 +482,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const rejectedContext = await localizedContext(browser, { height: 844, width: 375 });
   const rejectedPage = await rejectedContext.newPage();
   const rejectedMemberId = await completePublicSignup({
-    document: "00000000T",
+    // A NIE applicant (typed lower case with a hyphen) reaches «Sol·licitud enviada» (B1).
+    document: "y7654321-g",
     dog: rejectedDog,
     email: rejectedEmail,
+    expectedDocument: { type: "NIE", value: "Y7654321G" },
     family: false,
     firstName: "Pau",
     lastName: "Rebuig E3",
@@ -517,7 +529,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   if (await privacy.isVisible()) await privacy.check();
   await screenshot(member, "19-add-dog-core-375.png");
   await member.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
-  await member.waitForURL("**/apuntat-hi/enviada");
+  await member.waitForURL("**/gossos/nou/enviada");
+  await expect(member.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
+  // The add-dog success page never promises a welcome message (the member already has access).
+  await expect(member.getByText(/benvinguda/u)).toHaveCount(0);
+  await screenshot(member, "enviada-add-dog-core-375.png");
   await memberContext.close();
   await navigateSpa(admin, "/tauler");
   await admin.evaluate(() => {
@@ -592,7 +608,27 @@ test("T-04-34 signup.enabled=false shows only the configured closed text", async
 
   const publicContext = await localizedContext(browser, { height: 844, width: 375 });
   const page = await publicContext.newPage();
+  const configResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/signup") && response.request().method() === "GET",
+  );
   await page.goto(`${clubsUrl}/apuntat-hi`);
+  const config = await configResponse;
+  const configBody = (await config.json()) as { closedText?: string; enabled?: boolean };
+  // Diagnostic for the api (E3-W05 finding): what the core answered right after the PUT.
+  writeFileSync(
+    join(evidenceDirectory, "signup-closed-config-core.json"),
+    `${JSON.stringify(
+      {
+        cacheControl: config.headers()["cache-control"] ?? null,
+        closedText: configBody.closedText ?? null,
+        enabled: configBody.enabled ?? null,
+        status: config.status(),
+      },
+      null,
+      2,
+    )}\n`,
+  );
   await expect(
     page.getByText(
       "Les inscripcions estan tancades temporalment. Torna-ho a provar més endavant o posa't en contacte amb el club.",

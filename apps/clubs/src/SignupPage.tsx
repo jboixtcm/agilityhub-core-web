@@ -9,9 +9,21 @@ import {
   Input,
   resolveBrandingLogo,
   Select,
+  Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import { type ChangeEvent, type ReactNode, type SyntheticEvent, useEffect, useState } from "react";
+import {
+  type ChangeEvent,
+  type Dispatch,
+  type ReactNode,
+  type RefObject,
+  type SetStateAction,
+  type SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 type SignupConfig = components["schemas"]["SignupConfig"];
@@ -27,17 +39,33 @@ type SignupPhone = components["schemas"]["SignupPhone"];
 type SignupTown = components["schemas"]["Town"];
 type SignupFamilyLookup = components["schemas"]["FamilyGroupLookupResult"];
 type SignupIdentityResult = components["schemas"]["IdentityCheckResult"];
+type SignupIdDocument = components["schemas"]["SignupIdDocument"];
 type SignupPayment = components["schemas"]["SignupPayment"];
 type SignupDocumentFile = components["schemas"]["SignupFile"];
+type SignupRequest = components["schemas"]["SignupRequest"];
+type AddDogSignupRequest = components["schemas"]["AddDogSignupRequest"];
+type Translate = ReturnType<typeof useTranslation>["t"];
 
 type DraftPerson = Omit<SignupPerson, "gender"> & {
   gender: SignupPerson["gender"] | "";
 };
 
+/** The step-19 operation in flight: one idempotency key per payload, kept until the flow ends. */
+interface SignupSubmission {
+  checkoutKey?: string;
+  fingerprint: string;
+  idempotencyKey: string;
+  memberId?: string;
+  signupToken?: string;
+}
+
 interface SignupDraft {
   additionalDogOption: "ALTERNATIVE" | "TODAY";
+  /** The legal texts version the applicant accepted (R-04-17); "" until accepted. */
+  consentVersion: string;
   dog: SignupDog;
   familyClaim: components["schemas"]["SignupFamilyGroupClaim"];
+  familyFound: boolean;
   imageConsent: boolean;
   mode: "add-dog" | "public";
   passport: string;
@@ -46,13 +74,66 @@ interface SignupDraft {
   planId: string;
   privacyAccepted: boolean;
   savedAt: number;
+  submission?: SignupSubmission;
 }
 
+type DraftUpdate = Dispatch<SetStateAction<SignupDraft>>;
 type FieldErrors = Readonly<Record<string, string>>;
+type SignupStep = "dog" | "family" | "payment" | "person";
+
+/** Api errors routed to the step and field that own them (S04 §2, CATALEG_ERRORS). */
+interface RoutedErrors {
+  fields: FieldErrors;
+  message?: string | undefined;
+  nonce: number;
+  step: SignupStep;
+}
+
+interface CountryProfile {
+  code: string;
+  idDocumentTypes: string[];
+  phonePrefix: string;
+}
 
 const DRAFT_KEY = "signup.draft.v1";
 const CHECKOUT_KEY = "signup.checkout.v1";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+const STEP_ORDER: readonly SignupStep[] = ["person", "dog", "family", "payment"];
+const PERSON_FIELDS = new Set(["birthDate", "firstName", "gender", "lastName1", "lastName2"]);
+const DOG_FIELDS = new Set(["birthMonth", "breed", "chip", "documents", "name", "notesToInstructors", "sex"]);
+
+const CODE_ROUTES: Readonly<Record<string, { field?: string; step: SignupStep }>> = {
+  CONSENT_VERSION_OUTDATED: { field: "privacy", step: "payment" },
+  DOG_CHIP_ALREADY_REGISTERED: { field: "chip", step: "dog" },
+  DOG_DOCUMENT_REQUIRED: { field: "documents", step: "dog" },
+  FAMILY_HOLDER_NOT_FOUND: { field: "familyHolder", step: "family" },
+  FILE_NOT_FOUND: { field: "documents", step: "dog" },
+  ID_DOCUMENT_AMBIGUOUS: { field: "idDocument", step: "person" },
+  INVALID_IBAN: { field: "iban", step: "payment" },
+  INVALID_ID_DOCUMENT: { field: "idDocument", step: "person" },
+  INVALID_PHONE: { field: "phones0", step: "person" },
+  MEMBER_ALREADY_EXISTS: { step: "person" },
+  PLAN_NOT_AVAILABLE: { field: "plan", step: "dog" },
+  SIGNUP_ALREADY_PENDING: { step: "person" },
+};
+
+function signupPaths(addDog: boolean): Readonly<Record<SignupStep | "sent", string | undefined>> {
+  return addDog
+    ? {
+        dog: "/gossos/nou",
+        family: undefined,
+        payment: "/gossos/nou/pagament",
+        person: undefined,
+        sent: "/gossos/nou/enviada",
+      }
+    : {
+        dog: "/apuntat-hi/gos",
+        family: "/apuntat-hi/familia",
+        payment: "/apuntat-hi/pagament",
+        person: "/apuntat-hi",
+        sent: "/apuntat-hi/enviada",
+      };
+}
 
 function isEnabledSignupConfig(config: SignupConfig): config is EnabledSignupConfig {
   return (
@@ -101,6 +182,15 @@ function birthMonthToIso(value: string): string | undefined {
   return Number(year) > 0 && monthNumber >= 1 && monthNumber <= 12 ? `${year}-${month}` : undefined;
 }
 
+function localToday(): string {
+  const now = new Date();
+  return [
+    String(now.getFullYear()).padStart(4, "0"),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
 function legacyDateToDisplay(value: string): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/u.exec(value);
   if (match === null) return value;
@@ -113,6 +203,35 @@ function legacyMonthToDisplay(value: string): string {
   if (match === null) return value;
   const [, year = "", month = ""] = match;
   return `${month}/${year}`;
+}
+
+function normaliseDocument(value: string): string {
+  return value.trim().toUpperCase().replaceAll(/[-\s]/gu, "");
+}
+
+/** R-04-07 / S04 §3: the chip is stored without separators, in upper case. */
+function normaliseChip(value: string): string {
+  return value.trim().toUpperCase().replaceAll(/[-\s.]/gu, "");
+}
+
+function validChip(value: string, profileCode: string): boolean {
+  return profileCode === "ES" ? /^\d{15}$/u.test(value) : /^[A-Z0-9]{8,15}$/u.test(value);
+}
+
+function normaliseIban(value: string): string {
+  return value.replaceAll(/\s/gu, "").toUpperCase();
+}
+
+/** R-04-10: mod-97 and the country length (ES = 24). */
+function validIban(value: string): boolean {
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(value)) return false;
+  if (value.startsWith("ES") && value.length !== 24) return false;
+  const digits = `${value.slice(4)}${value.slice(0, 4)}`.replaceAll(/[A-Z]/gu, (letter) =>
+    String(letter.charCodeAt(0) - 55),
+  );
+  let remainder = 0;
+  for (const digit of digits) remainder = (remainder * 10 + Number(digit)) % 97;
+  return remainder === 1;
 }
 
 function FormField({
@@ -133,11 +252,50 @@ function FormField({
   );
 }
 
-function countryProfile(value: unknown): {
-  code: string;
-  idDocumentTypes: string[];
-  phonePrefix: string;
-} {
+/** `aria-invalid` + `aria-describedby` pointing at the FormField error (`{id}-error`). */
+function invalidProps(
+  id: string,
+  error: string | undefined,
+): { "aria-describedby"?: string; "aria-invalid"?: true } {
+  return error === undefined ? {} : { "aria-describedby": `${id}-error`, "aria-invalid": true };
+}
+
+/** Focuses the first invalid control after the errors have rendered. */
+function useFocusFirstError(root: RefObject<HTMLElement | null>): () => void {
+  const [request, setRequest] = useState(0);
+  useEffect(() => {
+    if (request === 0) return;
+    const container = root.current;
+    if (container === null) return;
+    const invalid = container.querySelector<HTMLElement>("[aria-invalid='true']");
+    const control =
+      invalid === null
+        ? container.querySelector<HTMLElement>("[data-signup-message]")
+        : invalid.matches("input, select, textarea, button")
+          ? invalid
+          : invalid.querySelector<HTMLElement>("input, select, textarea, button");
+    control?.focus();
+  }, [request, root]);
+  return useCallback(() => {
+    setRequest((current) => current + 1);
+  }, []);
+}
+
+/** Applies the errors the page routed to this step, once per routing. */
+function useRoutedErrors(
+  step: SignupStep,
+  routed: RoutedErrors | undefined,
+  apply: (errors: RoutedErrors) => void,
+): void {
+  const applied = useRef<number>(undefined);
+  useEffect(() => {
+    if (routed?.step !== step || applied.current === routed.nonce) return;
+    applied.current = routed.nonce;
+    apply(routed);
+  }, [apply, routed, step]);
+}
+
+function countryProfile(value: unknown): CountryProfile {
   if (typeof value !== "object" || value === null) {
     return { code: "GENERIC", idDocumentTypes: [], phonePrefix: "" };
   }
@@ -151,22 +309,55 @@ function countryProfile(value: unknown): {
   };
 }
 
+/** GENERIC profiles offer only `PASSPORT` / `OTHER` (R-04-01), in the profile's order. */
+function genericDocumentTypes(profile: CountryProfile): ("OTHER" | "PASSPORT")[] {
+  const types = profile.idDocumentTypes.filter(
+    (type): type is "OTHER" | "PASSPORT" => type === "PASSPORT" || type === "OTHER",
+  );
+  return types.length === 0 ? ["PASSPORT", "OTHER"] : types;
+}
+
+function identityDocument(draft: SignupDraft, spanishProfile: boolean): SignupIdDocument {
+  if (spanishProfile && draft.person.idDocument.value.trim() === "") {
+    return { type: "PASSPORT", value: normaliseDocument(draft.passport) };
+  }
+  const value = normaliseDocument(draft.person.idDocument.value);
+  return {
+    type: spanishProfile
+      ? /^[XYZ]/u.test(value)
+        ? "NIE"
+        : "DNI"
+      : draft.person.idDocument.type,
+    value,
+  };
+}
+
+function applicantName(person: DraftPerson): string {
+  return [person.firstName, person.lastName1, person.lastName2]
+    .map((part) => (part ?? "").trim())
+    .filter((part) => part !== "")
+    .join(" ");
+}
+
 function emptyPhone(prefix: string): SignupPhone {
   return { label: "", number: "", prefix };
 }
 
-function emptyDraft(addDog: boolean, prefix: string): SignupDraft {
+function emptyDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
   return {
     additionalDogOption: "TODAY",
+    consentVersion: "",
     dog: {
       birthMonth: "",
       breed: "",
       chip: "",
       documents: [{ files: [], type: "VACCINATION_CARD" }],
       name: "",
+      notesToInstructors: "",
       sex: "FEMALE",
     },
     familyClaim: { dogName: "", holderName: "", leavePending: false },
+    familyFound: false,
     imageConsent: false,
     mode: addDog ? "add-dog" : "public",
     passport: "",
@@ -177,10 +368,13 @@ function emptyDraft(addDog: boolean, prefix: string): SignupDraft {
       emails: ["", ""],
       firstName: "",
       gender: "",
-      idDocument: { type: "DNI", value: "" },
+      idDocument: {
+        type: profile.code === "ES" ? "DNI" : (genericDocumentTypes(profile)[0] ?? "PASSPORT"),
+        value: "",
+      },
       lastName1: "",
       lastName2: "",
-      phones: [emptyPhone(prefix), emptyPhone(prefix)],
+      phones: [emptyPhone(profile.phonePrefix), emptyPhone(profile.phonePrefix)],
     },
     planId: "",
     privacyAccepted: false,
@@ -188,29 +382,39 @@ function emptyDraft(addDog: boolean, prefix: string): SignupDraft {
   };
 }
 
-function readDraft(addDog: boolean, prefix: string): SignupDraft {
+function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
   try {
     const serialized = sessionStorage.getItem(DRAFT_KEY);
     if (serialized !== null) {
-      const candidate = JSON.parse(serialized) as Omit<SignupDraft, "additionalDogOption"> &
-        Partial<Pick<SignupDraft, "additionalDogOption">>;
+      const candidate = JSON.parse(serialized) as Omit<
+        SignupDraft,
+        "additionalDogOption" | "consentVersion" | "familyFound"
+      > &
+        Partial<Pick<SignupDraft, "additionalDogOption" | "consentVersion" | "familyFound">>;
       const mode = addDog ? "add-dog" : "public";
       if (
         candidate.mode === mode &&
         Number.isFinite(candidate.savedAt) &&
         Date.now() - candidate.savedAt <= DRAFT_MAX_AGE_MS
       ) {
+        // A draft without the accepted version cannot prove which texts were accepted.
+        const consentVersion = candidate.consentVersion ?? "";
+        const consentKnown = consentVersion !== "";
         return {
           ...candidate,
           additionalDogOption: candidate.additionalDogOption ?? "TODAY",
+          consentVersion,
           dog: {
             ...candidate.dog,
             birthMonth: legacyMonthToDisplay(candidate.dog.birthMonth),
           },
+          familyFound: candidate.familyFound ?? false,
+          imageConsent: consentKnown && candidate.imageConsent,
           person: {
             ...candidate.person,
             birthDate: legacyDateToDisplay(candidate.person.birthDate),
           },
+          privacyAccepted: consentKnown && candidate.privacyAccepted,
         };
       }
       sessionStorage.removeItem(DRAFT_KEY);
@@ -218,7 +422,7 @@ function readDraft(addDog: boolean, prefix: string): SignupDraft {
   } catch {
     sessionStorage.removeItem(DRAFT_KEY);
   }
-  return emptyDraft(addDog, prefix);
+  return emptyDraft(addDog, profile);
 }
 
 function apiFieldErrors(error: unknown): { code: string; field: string }[] {
@@ -238,10 +442,114 @@ function apiFieldErrors(error: unknown): { code: string; field: string }[] {
   });
 }
 
-function documentField(field: string): string {
-  return field === "idDocument.value" || field === "person.idDocument.value"
-    ? "idDocument"
-    : field.replace(/^person\./u, "");
+function personFormField(segments: readonly string[]): string | undefined {
+  const [first = "", second, third] = segments;
+  if (first === "idDocument") return "idDocument";
+  if (first === "emails") return second === "1" ? "emails1" : "emails0";
+  if (first === "phones") {
+    if (second !== "1") return "phones0";
+    return third === "label" ? "phones1label" : "phones1";
+  }
+  if (first === "address") {
+    return second === "street" || second === "postalCode" || second === "town" ? second : "street";
+  }
+  return PERSON_FIELDS.has(first) ? first : undefined;
+}
+
+/** Maps an api field path (`emails[0]`, `person.idDocument.value`, `dog.chip`…) to the form. */
+function formField(path: string): { field: string; step: SignupStep } | undefined {
+  const segments = path
+    .replaceAll(/\[(\d+)\]/gu, ".$1")
+    .split(".")
+    .filter((segment) => segment !== "");
+  const [head = "", ...rest] = segments;
+  if (head === "dog" || head === "documents") {
+    const field = head === "documents" ? "documents" : (rest[0] ?? "");
+    return DOG_FIELDS.has(field) ? { field, step: "dog" } : undefined;
+  }
+  if (head === "planId" || head === "planIdRequested") return { field: "plan", step: "dog" };
+  if (head === "familyGroupClaim") {
+    return { field: rest[0] === "dogName" ? "familyDog" : "familyHolder", step: "family" };
+  }
+  if (head === "payment") {
+    const field =
+      rest[0] === "iban"
+        ? "iban"
+        : rest[0] === "holderName"
+          ? "accountHolder"
+          : rest[0] === "holderTaxId"
+            ? "holderTaxId"
+            : undefined;
+    return field === undefined ? undefined : { field, step: "payment" };
+  }
+  if (head === "consents") return { field: "privacy", step: "payment" };
+  const field = personFormField(head === "person" ? rest : segments);
+  return field === undefined ? undefined : { field, step: "person" };
+}
+
+function codeMessage(code: string, t: Translate): string {
+  switch (code) {
+    case "CONSENT_VERSION_OUTDATED":
+      return t("signup:payment.consentOutdated");
+    case "INVALID_EMAIL":
+      return t("signup:common.invalidEmail");
+    case "INVALID_PHONE":
+      return t("signup:common.invalidPhone");
+    case "SIGNUP_ALREADY_PENDING":
+      return t("signup:person.alreadyPending");
+    case "NOT_BLANK":
+    case "NOT_NULL":
+    case "REQUIRED":
+      return t("signup:common.required");
+    default:
+      return t(`errors:${code}`, { defaultValue: t("errors:VALIDATION_ERROR") });
+  }
+}
+
+/** Where an api error belongs; `undefined` for codes the page handles itself (closed). */
+function routeApiError(
+  error: unknown,
+  currentStep: SignupStep,
+  t: Translate,
+): Omit<RoutedErrors, "nonce"> {
+  const generic = { fields: {}, message: t("signup:common.genericError"), step: currentStep };
+  if (!isApiError(error)) return generic;
+  if (error.status === 429 || error.code === "RATE_LIMITED") {
+    return {
+      fields: {},
+      message: t("signup:common.rateLimited", { seconds: error.retryAfter ?? 60 }),
+      step: currentStep,
+    };
+  }
+  const fieldErrors = apiFieldErrors(error).flatMap((entry) => {
+    const target = formField(entry.field);
+    return target === undefined ? [] : [{ ...target, message: codeMessage(entry.code, t) }];
+  });
+  if (fieldErrors.length > 0) {
+    const step = STEP_ORDER.find((candidate) =>
+      fieldErrors.some((entry) => entry.step === candidate),
+    ) ?? currentStep;
+    return {
+      fields: Object.fromEntries(
+        fieldErrors
+          .filter((entry) => entry.step === step)
+          .map((entry) => [entry.field, entry.message]),
+      ),
+      step,
+    };
+  }
+  const route = CODE_ROUTES[error.code];
+  if (route === undefined) {
+    return {
+      fields: {},
+      message: t(`errors:${error.code}`, { defaultValue: t("signup:common.genericError") }),
+      step: currentStep,
+    };
+  }
+  const message = codeMessage(error.code, t);
+  return route.field === undefined
+    ? { fields: {}, message, step: route.step }
+    : { fields: { [route.field]: message }, step: route.step };
 }
 
 function safeSessionRemove(key: string): void {
@@ -250,6 +558,27 @@ function safeSessionRemove(key: string): void {
   } catch {
     // Signup still works when storage is unavailable.
   }
+}
+
+function safeSessionSet(key: string, value: string): void {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    // Signup still works when storage is unavailable.
+  }
+}
+
+function StepMessage({ message }: { message: string | undefined }) {
+  return message === undefined ? null : (
+    <p
+      className="signup-message signup-message--error"
+      data-signup-message=""
+      role="alert"
+      tabIndex={-1}
+    >
+      {message}
+    </p>
+  );
 }
 
 function Layout({ children }: { children: ReactNode }) {
@@ -318,87 +647,96 @@ function Progress({ current, label, total }: { current: number; label: ReactNode
   );
 }
 
-function inputError(code: string, t: ReturnType<typeof useTranslation>["t"]): string {
-  if (code === "INVALID_EMAIL") return t("signup:common.invalidEmail");
-  if (code === "INVALID_PHONE") return t("signup:common.invalidPhone");
-  if (code === "INVALID_ID_DOCUMENT") return t("errors:INVALID_ID_DOCUMENT");
-  return t("signup:common.required");
-}
-
 function PersonStep({
   client,
   draft,
+  onApiError,
   onChange,
   onContinue,
+  routed,
   totalSteps,
 }: {
   client: ApiClient;
   draft: SignupDraft;
-  onChange: (next: SignupDraft) => void;
+  onApiError: (error: unknown, step: SignupStep) => void;
+  onChange: DraftUpdate;
   onContinue: (path: string) => void;
+  routed: RoutedErrors | undefined;
   totalSteps: number;
 }) {
   const branding = useBranding();
   const profile = countryProfile(branding.countryProfile);
   const { t } = useTranslation(["signup", "errors"]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const focusFirstError = useFocusFirstError(formRef);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [towns, setTowns] = useState<SignupTown[]>([]);
   const [recognition, setRecognition] = useState<SignupIdentityResult>();
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
+  const townLookup = useRef(0);
   const isSpanishProfile = profile.code === "ES";
+  const documentTypes = genericDocumentTypes(profile);
+
+  useRoutedErrors(
+    "person",
+    routed,
+    useCallback(
+      (next: RoutedErrors) => {
+        setErrors(next.fields);
+        setMessage(next.message);
+        focusFirstError();
+      },
+      [focusFirstError],
+    ),
+  );
 
   const patchPerson = <Key extends keyof DraftPerson>(key: Key, value: DraftPerson[Key]) => {
-    onChange({ ...draft, person: { ...draft.person, [key]: value } });
+    onChange((current) => ({ ...current, person: { ...current.person, [key]: value } }));
   };
 
   const patchAddress = (key: keyof SignupPerson["address"], value: string) => {
-    patchPerson("address", {
-      ...draft.person.address,
-      [key]: value,
-    });
+    onChange((current) => ({
+      ...current,
+      person: { ...current.person, address: { ...current.person.address, [key]: value } },
+    }));
   };
 
   const patchPhone = (index: number, key: keyof SignupPhone, value: string) => {
-    const phones = draft.person.phones.map((phone, phoneIndex) =>
-      phoneIndex === index ? { ...phone, [key]: value } : phone,
-    );
-    patchPerson("phones", phones);
+    onChange((current) => ({
+      ...current,
+      person: {
+        ...current.person,
+        phones: current.person.phones.map((phone, phoneIndex) =>
+          phoneIndex === index ? { ...phone, [key]: value } : phone,
+        ),
+      },
+    }));
   };
 
   const patchEmail = (index: number, value: string) => {
-    const emails = draft.person.emails.map((email, emailIndex) =>
-      emailIndex === index ? value : email,
-    );
-    patchPerson("emails", emails);
-  };
-
-  const identityDocument = (): components["schemas"]["SignupIdDocument"] => {
-    if (isSpanishProfile && draft.person.idDocument.value.trim() === "") {
-      return { type: "PASSPORT", value: draft.passport.trim() };
-    }
-    const value = draft.person.idDocument.value.trim().toUpperCase().replaceAll(/[-\s]/gu, "");
-    return {
-      type:
-        isSpanishProfile && /^[XYZ]/u.test(value)
-          ? "NIE"
-          : isSpanishProfile
-            ? "DNI"
-            : draft.person.idDocument.type,
-      value,
-    };
+    onChange((current) => ({
+      ...current,
+      person: {
+        ...current.person,
+        emails: current.person.emails.map((email, emailIndex) =>
+          emailIndex === index ? value : email,
+        ),
+      },
+    }));
   };
 
   const localErrors = (): Record<string, string> => {
     const next: Record<string, string> = {};
     const required = t("signup:common.required");
-    if (identityDocument().value === "") next.idDocument = required;
+    if (identityDocument(draft, isSpanishProfile).value === "") next.idDocument = required;
     for (const key of ["firstName", "lastName1"] as const) {
       if (draft.person[key].trim() === "") next[key] = required;
     }
+    const birthDate = birthDateToIso(draft.person.birthDate);
     if (draft.person.birthDate.trim() === "") {
       next.birthDate = required;
-    } else if (birthDateToIso(draft.person.birthDate) === undefined) {
+    } else if (birthDate === undefined || birthDate < "1900-01-01" || birthDate >= localToday()) {
       next.birthDate = t("signup:common.invalidDate");
     }
     if (draft.person.gender === "") next.gender = required;
@@ -410,26 +748,25 @@ function PersonStep({
     } else if (secondEmail !== "" && secondEmail.toLowerCase() === primaryEmail.toLowerCase()) {
       next.emails1 = t("signup:common.duplicateEmail");
     }
-    const primaryPhone = draft.person.phones[0];
-    const secondPhone = draft.person.phones[1];
-    if (
-      primaryPhone === undefined ||
-      primaryPhone.prefix.trim() === "" ||
-      (isSpanishProfile
-        ? !/^\d{9}$/u.test(primaryPhone.number.replaceAll(/\D/gu, ""))
-        : !/^\d{7,15}$/u.test(primaryPhone.number.replaceAll(/\D/gu, "")))
-    ) {
-      next.phones0 = t("signup:common.invalidPhone");
+    for (const [index, phone] of draft.person.phones.entries()) {
+      const digits = phone.number.replaceAll(/\D/gu, "");
+      if (index > 0 && phone.number.trim() === "") continue;
+      if (
+        phone.prefix.trim() === "" ||
+        (isSpanishProfile ? !/^\d{9}$/u.test(digits) : !/^\d{7,15}$/u.test(digits))
+      ) {
+        next[`phones${String(index)}`] = t("signup:common.invalidPhone");
+      }
+      if (index > 0 && (phone.label ?? "").trim() === "") next.phones1label = required;
     }
-    if (
-      secondPhone !== undefined &&
-      secondPhone.number.trim() !== "" &&
-      (secondPhone.label ?? "").trim() === ""
-    ) {
-      next.phones1label = required;
-    }
+    if (draft.person.phones.length === 0) next.phones0 = t("signup:common.invalidPhone");
     if (draft.person.address.street.trim() === "") next.street = required;
-    if (draft.person.address.postalCode.trim() === "") next.postalCode = required;
+    const postalCode = draft.person.address.postalCode.trim();
+    if (postalCode === "") {
+      next.postalCode = required;
+    } else if (isSpanishProfile ? !/^\d{5}$/u.test(postalCode) : !/^.{3,10}$/u.test(postalCode)) {
+      next.postalCode = t("signup:common.invalidPostalCode");
+    }
     if (draft.person.address.town.trim() === "") next.town = required;
     return next;
   };
@@ -442,25 +779,14 @@ function PersonStep({
       const response = await client.POST("/signup/identity-checks", {
         body: {
           emails: draft.person.emails.filter((email) => email.trim() !== ""),
-          idDocument: identityDocument(),
+          idDocument: identityDocument(draft, isSpanishProfile),
         },
       });
       if (response.data === undefined) throw new TypeError("Missing identity-check response");
       setRecognition(response.data);
       if (response.data.result === "NEW") onContinue("/apuntat-hi/gos");
     } catch (error) {
-      const backend = apiFieldErrors(error);
-      if (backend.length > 0) {
-        setErrors(
-          Object.fromEntries(
-            backend.map((entry) => [documentField(entry.field), inputError(entry.code, t)]),
-          ),
-        );
-      } else if (isApiError(error) && error.status === 429) {
-        setMessage(t("signup:common.rateLimited", { seconds: error.retryAfter ?? 60 }));
-      } else {
-        setMessage(t("signup:common.genericError"));
-      }
+      onApiError(error, "person");
     } finally {
       setWorking(false);
     }
@@ -470,22 +796,40 @@ function PersonStep({
     event.preventDefault();
     const nextErrors = localErrors();
     setErrors(nextErrors);
+    setMessage(undefined);
     if (Object.keys(nextErrors).length > 0) {
-      document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+      focusFirstError();
       return;
     }
     void checkIdentity();
   };
 
   const lookupTowns = async () => {
-    if (!isSpanishProfile || draft.person.address.postalCode.length !== 5) return;
+    const postalCode = draft.person.address.postalCode.trim();
+    if (!isSpanishProfile || !/^\d{5}$/u.test(postalCode)) return;
+    townLookup.current += 1;
+    const lookup = townLookup.current;
     try {
       const result = await client.GET("/signup/towns", {
-        params: { query: { postalCode: draft.person.address.postalCode } },
+        params: { query: { postalCode } },
       });
-      if (result.data === undefined) return;
-      setTowns(result.data);
-      if (result.data[0] !== undefined) patchAddress("town", result.data[0].name);
+      if (result.data === undefined || lookup !== townLookup.current) return;
+      const found = result.data;
+      setTowns(found);
+      const first = found[0];
+      if (first === undefined) return;
+      // Functional update: fields typed while the lookup was in flight are kept.
+      onChange((current) =>
+        current.person.address.postalCode.trim() === postalCode
+          ? {
+              ...current,
+              person: {
+                ...current.person,
+                address: { ...current.person.address, town: first.name },
+              },
+            }
+          : current,
+      );
     } catch (error) {
       if (isApiError(error) && error.status === 429) {
         setMessage(t("signup:common.rateLimited", { seconds: error.retryAfter ?? 60 }));
@@ -494,29 +838,24 @@ function PersonStep({
   };
 
   return (
-    <form className="signup-form" noValidate onSubmit={submit}>
+    <form className="signup-form" noValidate onSubmit={submit} ref={formRef}>
       <Progress current={1} label={t("signup:progress.person")} total={totalSteps} />
       {isSpanishProfile ? (
         <div className="signup-grid signup-grid--identity">
           <FormField error={errors.idDocument} id="signup-id" label={t("signup:person.idDniNie")}>
             <Input
-              aria-invalid={errors.idDocument === undefined ? undefined : true}
+              {...invalidProps("signup-id", errors.idDocument)}
               id="signup-id"
               onChange={(event) => {
-                patchPerson("idDocument", {
-                  ...draft.person.idDocument,
-                  value: event.currentTarget.value,
-                });
-                if (event.currentTarget.value.trim() !== "") {
-                  onChange({
-                    ...draft,
-                    passport: "",
-                    person: {
-                      ...draft.person,
-                      idDocument: { ...draft.person.idDocument, value: event.currentTarget.value },
-                    },
-                  });
-                }
+                const value = event.currentTarget.value;
+                onChange((current) => ({
+                  ...current,
+                  passport: value.trim() === "" ? current.passport : "",
+                  person: {
+                    ...current.person,
+                    idDocument: { ...current.person.idDocument, value },
+                  },
+                }));
               }}
               value={draft.person.idDocument.value}
             />
@@ -526,7 +865,8 @@ function PersonStep({
               disabled={draft.person.idDocument.value.trim() !== ""}
               id="signup-passport"
               onChange={(event) => {
-                onChange({ ...draft, passport: event.currentTarget.value });
+                const value = event.currentTarget.value;
+                onChange((current) => ({ ...current, passport: value }));
               }}
               value={draft.passport}
             />
@@ -545,8 +885,13 @@ function PersonStep({
               }}
               value={draft.person.idDocument.type}
             >
-              <option value="PASSPORT">{t("signup:person.passportType")}</option>
-              <option value="OTHER">{t("signup:person.otherType")}</option>
+              {documentTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type === "PASSPORT"
+                    ? t("signup:person.passportType")
+                    : t("signup:person.otherType")}
+                </option>
+              ))}
             </Select>
           </FormField>
           <FormField
@@ -555,7 +900,7 @@ function PersonStep({
             label={t("signup:person.documentValue")}
           >
             <Input
-              aria-invalid={errors.idDocument === undefined ? undefined : true}
+              {...invalidProps("signup-id", errors.idDocument)}
               id="signup-id"
               onChange={(event) => {
                 patchPerson("idDocument", {
@@ -574,7 +919,7 @@ function PersonStep({
         label={t("signup:person.firstName")}
       >
         <Input
-          aria-invalid={errors.firstName === undefined ? undefined : true}
+          {...invalidProps("signup-first-name", errors.firstName)}
           autoComplete="given-name"
           id="signup-first-name"
           onChange={(event) => {
@@ -590,7 +935,7 @@ function PersonStep({
           label={t("signup:person.lastName1")}
         >
           <Input
-            aria-invalid={errors.lastName1 === undefined ? undefined : true}
+            {...invalidProps("signup-last-name-1", errors.lastName1)}
             autoComplete="family-name"
             id="signup-last-name-1"
             onChange={(event) => {
@@ -599,8 +944,13 @@ function PersonStep({
             value={draft.person.lastName1}
           />
         </FormField>
-        <FormField id="signup-last-name-2" label={t("signup:person.lastName2")}>
+        <FormField
+          error={errors.lastName2}
+          id="signup-last-name-2"
+          label={t("signup:person.lastName2")}
+        >
           <Input
+            {...invalidProps("signup-last-name-2", errors.lastName2)}
             id="signup-last-name-2"
             onChange={(event) => {
               patchPerson("lastName2", event.currentTarget.value);
@@ -615,7 +965,7 @@ function PersonStep({
         label={t("signup:person.birthDate")}
       >
         <Input
-          aria-invalid={errors.birthDate === undefined ? undefined : true}
+          {...invalidProps("signup-birth-date", errors.birthDate)}
           autoComplete="bday"
           id="signup-birth-date"
           inputMode="numeric"
@@ -630,7 +980,7 @@ function PersonStep({
       </FormField>
       <fieldset
         className="signup-chips signup-chips--gender"
-        aria-invalid={errors.gender === undefined ? undefined : true}
+        {...invalidProps("signup-gender", errors.gender)}
       >
         <legend>{t("signup:person.gender")}</legend>
         {(["MALE", "FEMALE", "OTHER"] as const).map((gender) => (
@@ -649,11 +999,15 @@ function PersonStep({
                 : t("signup:person.other")}
           </button>
         ))}
-        {errors.gender === undefined ? null : <span role="alert">{errors.gender}</span>}
+        {errors.gender === undefined ? null : (
+          <span id="signup-gender-error" role="alert">
+            {errors.gender}
+          </span>
+        )}
       </fieldset>
       <FormField error={errors.emails0} id="signup-email" label={t("signup:person.email")}>
         <Input
-          aria-invalid={errors.emails0 === undefined ? undefined : true}
+          {...invalidProps("signup-email", errors.emails0)}
           autoComplete="email"
           id="signup-email"
           onChange={(event) => {
@@ -669,7 +1023,7 @@ function PersonStep({
         label={t("signup:person.secondEmail")}
       >
         <Input
-          aria-invalid={errors.emails1 === undefined ? undefined : true}
+          {...invalidProps("signup-second-email", errors.emails1)}
           id="signup-second-email"
           onChange={(event) => {
             patchEmail(1, event.currentTarget.value);
@@ -678,58 +1032,69 @@ function PersonStep({
           value={draft.person.emails[1] ?? ""}
         />
       </FormField>
-      {[0, 1].map((index) => (
-        <div className="signup-grid signup-grid--phone" key={index}>
-          <FormField
-            id={`signup-phone-prefix-${String(index)}`}
-            label={t("signup:person.phonePrefix")}
-          >
-            <Select
-              id={`signup-phone-prefix-${String(index)}`}
-              onChange={(event) => {
-                patchPhone(index, "prefix", event.currentTarget.value);
-              }}
-              value={draft.person.phones[index]?.prefix ?? profile.phonePrefix}
+      {[0, 1].map((index) => {
+        const prefixId = `signup-phone-prefix-${String(index)}`;
+        const numberId = `signup-phone-${String(index)}`;
+        const labelId = `signup-phone-label-${String(index)}`;
+        const numberError = errors[`phones${String(index)}`];
+        const labelError = index === 1 ? errors.phones1label : undefined;
+        const prefix = draft.person.phones[index]?.prefix ?? profile.phonePrefix;
+        return (
+          <div className="signup-grid signup-grid--phone" key={index}>
+            <FormField id={prefixId} label={t("signup:person.phonePrefix")}>
+              {isSpanishProfile ? (
+                <Select
+                  id={prefixId}
+                  onChange={(event) => {
+                    patchPhone(index, "prefix", event.currentTarget.value);
+                  }}
+                  value={prefix}
+                >
+                  <option value={prefix}>{prefix}</option>
+                </Select>
+              ) : (
+                <Input
+                  autoComplete="tel-country-code"
+                  id={prefixId}
+                  inputMode="tel"
+                  onChange={(event) => {
+                    patchPhone(index, "prefix", event.currentTarget.value);
+                  }}
+                  value={prefix}
+                />
+              )}
+            </FormField>
+            <FormField
+              error={numberError}
+              id={numberId}
+              label={index === 0 ? t("signup:person.phone") : t("signup:person.secondPhone")}
             >
-              <option value={draft.person.phones[index]?.prefix ?? profile.phonePrefix}>
-                {draft.person.phones[index]?.prefix ?? profile.phonePrefix}
-              </option>
-            </Select>
-          </FormField>
-          <FormField
-            error={index === 0 ? errors.phones0 : undefined}
-            id={`signup-phone-${String(index)}`}
-            label={index === 0 ? t("signup:person.phone") : t("signup:person.secondPhone")}
-          >
-            <Input
-              aria-invalid={index === 0 && errors.phones0 !== undefined ? true : undefined}
-              id={`signup-phone-${String(index)}`}
-              inputMode="tel"
-              onChange={(event) => {
-                patchPhone(index, "number", event.currentTarget.value);
-              }}
-              value={draft.person.phones[index]?.number ?? ""}
-            />
-          </FormField>
-          <FormField
-            error={index === 1 ? errors.phones1label : undefined}
-            id={`signup-phone-label-${String(index)}`}
-            label={t("signup:person.phoneDescription")}
-          >
-            <Input
-              aria-invalid={index === 1 && errors.phones1label !== undefined ? true : undefined}
-              id={`signup-phone-label-${String(index)}`}
-              onChange={(event) => {
-                patchPhone(index, "label", event.currentTarget.value);
-              }}
-              value={draft.person.phones[index]?.label ?? ""}
-            />
-          </FormField>
-        </div>
-      ))}
+              <Input
+                {...invalidProps(numberId, numberError)}
+                id={numberId}
+                inputMode="tel"
+                onChange={(event) => {
+                  patchPhone(index, "number", event.currentTarget.value);
+                }}
+                value={draft.person.phones[index]?.number ?? ""}
+              />
+            </FormField>
+            <FormField error={labelError} id={labelId} label={t("signup:person.phoneDescription")}>
+              <Input
+                {...invalidProps(labelId, labelError)}
+                id={labelId}
+                onChange={(event) => {
+                  patchPhone(index, "label", event.currentTarget.value);
+                }}
+                value={draft.person.phones[index]?.label ?? ""}
+              />
+            </FormField>
+          </div>
+        );
+      })}
       <FormField error={errors.street} id="signup-street" label={t("signup:person.street")}>
         <Input
-          aria-invalid={errors.street === undefined ? undefined : true}
+          {...invalidProps("signup-street", errors.street)}
           autoComplete="street-address"
           id="signup-street"
           onChange={(event) => {
@@ -745,11 +1110,12 @@ function PersonStep({
           label={t("signup:person.postalCode")}
         >
           <Input
-            aria-invalid={errors.postalCode === undefined ? undefined : true}
+            {...invalidProps("signup-postal-code", errors.postalCode)}
             autoComplete="postal-code"
             id="signup-postal-code"
             onBlur={() => void lookupTowns()}
             onChange={(event) => {
+              townLookup.current += 1;
               setTowns([]);
               patchAddress("postalCode", event.currentTarget.value);
             }}
@@ -759,7 +1125,7 @@ function PersonStep({
         <FormField error={errors.town} id="signup-town" label={t("signup:person.town")}>
           {towns.length > 1 ? (
             <Select
-              aria-invalid={errors.town === undefined ? undefined : true}
+              {...invalidProps("signup-town", errors.town)}
               id="signup-town"
               onChange={(event) => {
                 patchAddress("town", event.currentTarget.value);
@@ -774,7 +1140,7 @@ function PersonStep({
             </Select>
           ) : (
             <Input
-              aria-invalid={errors.town === undefined ? undefined : true}
+              {...invalidProps("signup-town", errors.town)}
               id="signup-town"
               onChange={(event) => {
                 patchAddress("town", event.currentTarget.value);
@@ -810,11 +1176,7 @@ function PersonStep({
           {t("signup:person.contactClub")}
         </p>
       ) : null}
-      {message === undefined ? null : (
-        <p className="signup-message signup-message--error" role="alert">
-          {message}
-        </p>
-      )}
+      <StepMessage message={message} />
       <Button className="signup-primary" disabled={working} loading={working} type="submit">
         {t("signup:common.continue")}
       </Button>
@@ -829,6 +1191,7 @@ function DogStep({
   draft,
   onChange,
   onContinue,
+  routed,
   step,
   totalSteps,
 }: {
@@ -836,20 +1199,39 @@ function DogStep({
   client: ApiClient;
   config: EnabledSignupConfig;
   draft: SignupDraft;
-  onChange: (next: SignupDraft) => void;
+  onChange: DraftUpdate;
   onContinue: (path: string) => void;
+  routed: RoutedErrors | undefined;
   step: number;
   totalSteps: number;
 }) {
+  const branding = useBranding();
+  const profile = countryProfile(branding.countryProfile);
   const { formatMoney } = useClubFormats();
   const { t } = useTranslation(["signup", "errors"]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const focusFirstError = useFocusFirstError(formRef);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState<string>();
   const [uploading, setUploading] = useState(false);
   const files = draft.dog.documents?.[0]?.files ?? [];
+  const familyOffers = branding.modules.includes("FAMILY_GROUP");
+
+  useRoutedErrors(
+    "dog",
+    routed,
+    useCallback(
+      (next: RoutedErrors) => {
+        setErrors(next.fields);
+        setMessage(next.message);
+        focusFirstError();
+      },
+      [focusFirstError],
+    ),
+  );
 
   const patchDog = <Key extends keyof SignupDog>(key: Key, value: SignupDog[Key]) => {
-    onChange({ ...draft, dog: { ...draft.dog, [key]: value } });
+    onChange((current) => ({ ...current, dog: { ...current.dog, [key]: value } }));
   };
 
   const upload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -884,7 +1266,19 @@ function DogStep({
         if (!put.ok) throw new TypeError("Signed upload failed");
         uploaded.push({ fileKey: response.data.fileKey, name: proposed });
       }
-      patchDog("documents", [{ files: [...files, ...uploaded], type: "VACCINATION_CARD" }]);
+      // Functional update: fields typed while the upload was in flight are kept.
+      onChange((current) => ({
+        ...current,
+        dog: {
+          ...current.dog,
+          documents: [
+            {
+              files: [...(current.dog.documents?.[0]?.files ?? []), ...uploaded],
+              type: "VACCINATION_CARD",
+            },
+          ],
+        },
+      }));
     } catch (error) {
       setMessage(
         isApiError(error, "FILE_TOO_LARGE")
@@ -901,16 +1295,28 @@ function DogStep({
   const submit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const next: Record<string, string> = {};
-    for (const key of ["name", "breed", "chip"] as const) {
+    for (const key of ["name", "breed"] as const) {
       if (draft.dog[key].trim() === "") next[key] = t("signup:common.required");
     }
+    const birthMonth = birthMonthToIso(draft.dog.birthMonth);
     if (draft.dog.birthMonth.trim() === "") {
       next.birthMonth = t("signup:common.required");
-    } else if (birthMonthToIso(draft.dog.birthMonth) === undefined) {
+    } else if (birthMonth === undefined || birthMonth > localToday().slice(0, 7)) {
       next.birthMonth = t("signup:common.invalidMonth");
     }
+    const chip = normaliseChip(draft.dog.chip);
+    if (chip === "") {
+      next.chip = t("signup:common.required");
+    } else if (!validChip(chip, profile.code)) {
+      next.chip = t("signup:dog.invalidChip");
+    }
     setErrors(next);
-    if (Object.keys(next).length > 0) return;
+    setMessage(undefined);
+    if (Object.keys(next).length > 0) {
+      focusFirstError();
+      return;
+    }
+    if (chip !== draft.dog.chip) patchDog("chip", chip);
     onContinue(
       addDog
         ? "/gossos/nou/pagament"
@@ -921,7 +1327,7 @@ function DogStep({
   };
 
   return (
-    <form className="signup-form" noValidate onSubmit={submit}>
+    <form className="signup-form" noValidate onSubmit={submit} ref={formRef}>
       <Progress
         current={step}
         label={
@@ -933,6 +1339,7 @@ function DogStep({
       />
       <FormField error={errors.name} id="signup-dog-name" label={t("signup:dog.name")}>
         <Input
+          {...invalidProps("signup-dog-name", errors.name)}
           id="signup-dog-name"
           onChange={(event) => {
             patchDog("name", event.currentTarget.value);
@@ -957,6 +1364,7 @@ function DogStep({
       <div className="signup-grid">
         <FormField error={errors.breed} id="signup-dog-breed" label={t("signup:dog.breed")}>
           <Input
+            {...invalidProps("signup-dog-breed", errors.breed)}
             id="signup-dog-breed"
             onChange={(event) => {
               patchDog("breed", event.currentTarget.value);
@@ -970,7 +1378,7 @@ function DogStep({
           label={t("signup:dog.birthMonth")}
         >
           <Input
-            aria-invalid={errors.birthMonth === undefined ? undefined : true}
+            {...invalidProps("signup-dog-birth", errors.birthMonth)}
             id="signup-dog-birth"
             inputMode="numeric"
             maxLength={7}
@@ -985,11 +1393,29 @@ function DogStep({
       </div>
       <FormField error={errors.chip} id="signup-dog-chip" label={t("signup:dog.chip")}>
         <Input
+          {...invalidProps("signup-dog-chip", errors.chip)}
           id="signup-dog-chip"
+          inputMode={profile.code === "ES" ? "numeric" : "text"}
           onChange={(event) => {
             patchDog("chip", event.currentTarget.value);
           }}
           value={draft.dog.chip}
+        />
+      </FormField>
+      <FormField
+        error={errors.notesToInstructors}
+        id="signup-dog-notes"
+        label={t("signup:dog.notesToInstructors")}
+      >
+        <Textarea
+          {...invalidProps("signup-dog-notes", errors.notesToInstructors)}
+          id="signup-dog-notes"
+          maxLength={1000}
+          onChange={(event) => {
+            patchDog("notesToInstructors", event.currentTarget.value);
+          }}
+          rows={2}
+          value={draft.dog.notesToInstructors ?? ""}
         />
       </FormField>
       <div
@@ -1000,8 +1426,8 @@ function DogStep({
           <span>{t("signup:dog.vaccinationCard")}</span>
         </label>
         <Input
+          {...invalidProps("signup-dog-document", errors.documents)}
           accept="application/pdf,image/*"
-          aria-invalid={errors.documents === undefined ? undefined : true}
           className="signup-file-input"
           disabled={uploading}
           id="signup-dog-document"
@@ -1010,7 +1436,7 @@ function DogStep({
           type="file"
         />
         {errors.documents === undefined ? null : (
-          <div className="ah-form-field__error" role="alert">
+          <div className="ah-form-field__error" id="signup-dog-document-error" role="alert">
             {errors.documents}
           </div>
         )}
@@ -1037,7 +1463,12 @@ function DogStep({
       {config.plans.length === 0 ? null : (
         <section className="signup-plans" aria-labelledby="signup-plans-title">
           <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
-          <div className="signup-plans__grid">
+          <div
+            className="signup-plans__grid"
+            role="group"
+            aria-labelledby="signup-plans-title"
+            {...invalidProps("signup-plans", errors.plan)}
+          >
             {config.plans.map((plan) => {
               const planClassName = [
                 "signup-plan",
@@ -1053,7 +1484,7 @@ function DogStep({
                     aria-label={t("signup:dog.selectPlan", { plan: plan.name })}
                     aria-pressed={draft.planId === plan.id}
                     onClick={() => {
-                      onChange({ ...draft, planId: plan.id });
+                      onChange((current) => ({ ...current, planId: plan.id }));
                     }}
                     type="button"
                   >
@@ -1096,7 +1527,9 @@ function DogStep({
                         })}
                       </small>
                     )}
-                    {plan.offerLabel === undefined ? null : <small>{plan.offerLabel}</small>}
+                    {plan.offerLabel === undefined || !familyOffers ? null : (
+                      <small>{plan.offerLabel}</small>
+                    )}
                     {draft.planId === plan.id ? (
                       <span className="signup-plan__activate">{t("signup:dog.activate")}</span>
                     ) : null}
@@ -1105,13 +1538,14 @@ function DogStep({
               );
             })}
           </div>
+          {errors.plan === undefined ? null : (
+            <p className="ah-form-field__error" id="signup-plans-error" role="alert">
+              {errors.plan}
+            </p>
+          )}
         </section>
       )}
-      {message === undefined ? null : (
-        <p className="signup-message signup-message--error" role="alert">
-          {message}
-        </p>
-      )}
+      <StepMessage message={message ?? (config.plans.length === 0 ? errors.plan : undefined)} />
       <Button className="signup-primary" disabled={uploading} type="submit">
         {t("signup:common.continue")}
       </Button>
@@ -1123,30 +1557,71 @@ function FamilyStep({
   client,
   config,
   draft,
+  onApiError,
   onChange,
   onContinue,
+  routed,
   totalSteps,
 }: {
   client: ApiClient;
   config: EnabledSignupConfig;
   draft: SignupDraft;
-  onChange: (next: SignupDraft) => void;
+  onApiError: (error: unknown, step: SignupStep) => void;
+  onChange: DraftUpdate;
   onContinue: (path: string) => void;
+  routed: RoutedErrors | undefined;
   totalSteps: number;
 }) {
   const { formatMoney } = useClubFormats();
   const { t } = useTranslation("signup");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const focusFirstError = useFocusFirstError(rootRef);
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [lookup, setLookup] = useState<SignupFamilyLookup>();
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
   const plan = config.plans.find((candidate) => candidate.id === draft.planId);
+  // The api's display name already ends with the initial's period («Marta R.»).
+  const holderDisplayName = (lookup?.holderDisplayName ?? "").replace(/\.+$/u, "");
+
+  useRoutedErrors(
+    "family",
+    routed,
+    useCallback(
+      (next: RoutedErrors) => {
+        setErrors(next.fields);
+        setMessage(next.message);
+        focusFirstError();
+      },
+      [focusFirstError],
+    ),
+  );
+
+  const patchClaim = (key: "dogName" | "holderName", value: string) => {
+    setLookup(undefined);
+    setErrors({});
+    onChange((current) => ({
+      ...current,
+      familyClaim: { ...current.familyClaim, [key]: value },
+      familyFound: false,
+    }));
+  };
 
   const continueStep = async () => {
     const holderName = draft.familyClaim.holderName.trim();
     const dogName = draft.familyClaim.dogName.trim();
     setMessage(undefined);
     if (holderName === "" && dogName === "") {
-      onChange({ ...draft, familyClaim: { dogName: "", holderName: "", leavePending: false } });
+      onChange((current) => ({
+        ...current,
+        familyClaim: { dogName: "", holderName: "", leavePending: false },
+        familyFound: false,
+        // The group holder prefilled at 19 goes back to the applicant (R-04-10).
+        payment:
+          current.familyFound && current.payment.holderName === current.familyClaim.holderName.trim()
+            ? { ...current.payment, holderName: "" }
+            : current.payment,
+      }));
       onContinue("/apuntat-hi/pagament");
       return;
     }
@@ -1165,15 +1640,23 @@ function FamilyStep({
       });
       if (result.data === undefined) throw new TypeError("Missing family lookup response");
       setLookup(result.data);
-    } catch {
-      setMessage(t("signup:common.genericError"));
+      if (result.data.result === "FOUND") {
+        // R-04-10: the account holder is the group holder when the group is found.
+        onChange((current) => ({
+          ...current,
+          familyFound: true,
+          payment: { ...current.payment, holderName },
+        }));
+      }
+    } catch (error) {
+      onApiError(error, "family");
     } finally {
       setWorking(false);
     }
   };
 
   return (
-    <div className="signup-form signup-family">
+    <div className="signup-form signup-family" ref={rootRef}>
       <Progress current={3} label={t("signup:family.title")} total={totalSteps} />
       <button
         aria-label={t("signup:common.back")}
@@ -1199,28 +1682,30 @@ function FamilyStep({
       <section className="signup-family__fields">
         <h2>{t("signup:family.sectionTitle")}</h2>
         <p>{t("signup:family.explanation")}</p>
-        <FormField id="signup-family-holder" label={t("signup:family.holderName")}>
+        <FormField
+          error={errors.familyHolder}
+          id="signup-family-holder"
+          label={t("signup:family.holderName")}
+        >
           <Input
+            {...invalidProps("signup-family-holder", errors.familyHolder)}
             id="signup-family-holder"
             onChange={(event) => {
-              setLookup(undefined);
-              onChange({
-                ...draft,
-                familyClaim: { ...draft.familyClaim, holderName: event.currentTarget.value },
-              });
+              patchClaim("holderName", event.currentTarget.value);
             }}
             value={draft.familyClaim.holderName}
           />
         </FormField>
-        <FormField id="signup-family-dog" label={t("signup:family.holderDog")}>
+        <FormField
+          error={errors.familyDog}
+          id="signup-family-dog"
+          label={t("signup:family.holderDog")}
+        >
           <Input
+            {...invalidProps("signup-family-dog", errors.familyDog)}
             id="signup-family-dog"
             onChange={(event) => {
-              setLookup(undefined);
-              onChange({
-                ...draft,
-                familyClaim: { ...draft.familyClaim, dogName: event.currentTarget.value },
-              });
+              patchClaim("dogName", event.currentTarget.value);
             }}
             value={draft.familyClaim.dogName}
           />
@@ -1228,14 +1713,17 @@ function FamilyStep({
       </section>
       {lookup?.result === "FOUND" ? (
         <aside className="signup-note signup-note--success" role="status">
-          {t("signup:family.found", { holder: lookup.holderDisplayName ?? "" })}
+          {t("signup:family.found", { holder: holderDisplayName })}
         </aside>
       ) : lookup?.result === "NOT_FOUND" ? (
         <aside className="signup-note signup-note--danger" role="alert">
           {t("signup:family.notFound")}{" "}
           <button
             onClick={() => {
-              onChange({ ...draft, familyClaim: { ...draft.familyClaim, leavePending: true } });
+              onChange((current) => ({
+                ...current,
+                familyClaim: { ...current.familyClaim, leavePending: true },
+              }));
               onContinue("/apuntat-hi/pagament");
             }}
             type="button"
@@ -1244,11 +1732,7 @@ function FamilyStep({
           </button>
         </aside>
       ) : null}
-      {message === undefined ? null : (
-        <p className="signup-message signup-message--error" role="alert">
-          {message}
-        </p>
-      )}
+      <StepMessage message={message} />
       <p className="signup-copy">{t("signup:family.validationFooter")}</p>
       <p className="signup-copy signup-copy--center">{t("signup:family.managementFooter")}</p>
       <Button
@@ -1264,14 +1748,34 @@ function FamilyStep({
   );
 }
 
+function paymentBody(payment: SignupPayment): SignupPayment {
+  const base: SignupPayment = {
+    type: payment.type,
+    ...(payment.firstMonthOption === undefined
+      ? {}
+      : { firstMonthOption: payment.firstMonthOption }),
+  };
+  if (payment.type !== "SEPA_DD") return base;
+  const iban = normaliseIban(payment.iban ?? "");
+  const holderName = (payment.holderName ?? "").trim();
+  const holderTaxId = normaliseDocument(payment.holderTaxId ?? "");
+  return {
+    ...base,
+    ...(iban === "" ? {} : { iban }),
+    ...(holderName === "" ? {} : { holderName }),
+    ...(holderTaxId === "" ? {} : { holderTaxId }),
+  };
+}
+
 function PaymentStep({
   addDog,
   client,
   config,
   draft,
+  onApiError,
   onChange,
   onContinue,
-  onReloadConfiguration,
+  routed,
   showCancellation,
   step,
   totalSteps,
@@ -1280,16 +1784,21 @@ function PaymentStep({
   client: ApiClient;
   config: EnabledSignupConfig;
   draft: SignupDraft;
-  onChange: (next: SignupDraft) => void;
+  onApiError: (error: unknown, step: SignupStep) => void;
+  onChange: DraftUpdate;
   onContinue: (path: string) => void;
-  onReloadConfiguration: () => void;
+  routed: RoutedErrors | undefined;
   showCancellation: boolean;
   step: number;
   totalSteps: number;
 }) {
   const branding = useBranding();
+  const profile = countryProfile(branding.countryProfile);
   const { formatDate, formatMoney } = useClubFormats();
   const { i18n, t } = useTranslation(["signup", "errors"]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const focusFirstError = useFocusFirstError(formRef);
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [imageOpen, setImageOpen] = useState(false);
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
@@ -1302,107 +1811,175 @@ function PaymentStep({
   const manualInstructions = paymentMethods.find(
     (method) => method.type === "MANUAL",
   )?.instructions;
+  const imageConsentText =
+    config.texts.imageConsent.trim() === ""
+      ? config.legal.imageConsentText
+      : config.texts.imageConsent;
+  const paths = signupPaths(addDog);
+
+  useRoutedErrors(
+    "payment",
+    routed,
+    useCallback(
+      (next: RoutedErrors) => {
+        setErrors(next.fields);
+        setMessage(next.message);
+        focusFirstError();
+      },
+      [focusFirstError],
+    ),
+  );
+
+  // R-04-10: the holder is prefilled with the applicant (or the group holder, set at 18).
+  useEffect(() => {
+    onChange((current) => {
+      if ((current.payment.holderName ?? "").trim() !== "") return current;
+      const holderName = current.familyFound
+        ? current.familyClaim.holderName.trim()
+        : applicantName(current.person);
+      return holderName === "" ? current : { ...current, payment: { ...current.payment, holderName } };
+    });
+  }, [onChange]);
+
+  const acceptConsent = (patch: Partial<Pick<SignupDraft, "imageConsent" | "privacyAccepted">>) => {
+    const version = config.legal.legalTextsVersion;
+    onChange((current) => ({ ...current, ...patch, consentVersion: version }));
+  };
+
+  const localErrors = (): Record<string, string> => {
+    const next: Record<string, string> = {};
+    const iban = normaliseIban(draft.payment.iban ?? "");
+    if (billing && !addDog && draft.payment.type === "SEPA_DD" && iban !== "" && !validIban(iban)) {
+      next.iban = t("errors:INVALID_IBAN");
+    }
+    if (
+      needsConsents &&
+      (!draft.privacyAccepted || draft.consentVersion !== config.legal.legalTextsVersion)
+    ) {
+      next.privacy = t("signup:common.required");
+    }
+    return next;
+  };
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (needsConsents && !draft.privacyAccepted) return;
-    setWorking(true);
+    const nextErrors = localErrors();
+    setErrors(nextErrors);
     setMessage(undefined);
-    const version = config.legal.legalTextsVersion;
+    if (Object.keys(nextErrors).length > 0) {
+      focusFirstError();
+      return;
+    }
+    setWorking(true);
+    // The version sent is the one the applicant accepted (R-04-17), never the current config's.
+    const version = draft.consentVersion;
     const consents = {
       imageUse: { granted: draft.imageConsent, version },
       privacyPolicy: { accepted: draft.privacyAccepted, version },
     };
+    const { notesToInstructors, ...dogFields } = draft.dog;
+    const notes = notesToInstructors?.trim() ?? "";
+    const dog: SignupDog = {
+      ...dogFields,
+      birthMonth: birthMonthToIso(draft.dog.birthMonth) ?? draft.dog.birthMonth,
+      chip: normaliseChip(draft.dog.chip),
+      ...(notes === "" ? {} : { notesToInstructors: notes }),
+    };
     try {
-      const dog: SignupDog = {
-        ...draft.dog,
-        birthMonth: birthMonthToIso(draft.dog.birthMonth) ?? draft.dog.birthMonth,
-        ...(draft.dog.documents === undefined ? {} : { documents: draft.dog.documents }),
-      };
-      if (addDog) {
-        const memberResult = await client.POST("/me/dogs/signup", {
-          body: {
-            additionalDogOption: draft.additionalDogOption,
-            dog,
-            documents: dog.documents ?? [],
-            planIdRequested: draft.planId,
-            ...(needsConsents ? { consents } : {}),
-          },
-          params: { header: { "Idempotency-Key": crypto.randomUUID() } },
-        });
-        if (memberResult.data === undefined) throw new TypeError("Missing dog-signup response");
-        safeSessionRemove(DRAFT_KEY);
-        if (memberResult.data.checkout.required) {
-          sessionStorage.setItem(CHECKOUT_KEY, "1");
-          const checkout = await client.POST("/checkout-sessions", {
-            body: {
-              cancelUrl: `${window.location.origin}/gossos/nou/pagament?cs=cancel`,
-              memberId: memberResult.data.checkout.memberId,
-              successUrl: `${window.location.origin}/apuntat-hi/enviada?cs=success`,
-            },
-            params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+      let submission = draft.submission;
+      if (submission?.memberId === undefined) {
+        const body: AddDogSignupRequest | SignupRequest = addDog
+          ? {
+              additionalDogOption: draft.additionalDogOption,
+              dog,
+              documents: dog.documents ?? [],
+              ...(draft.planId === "" ? {} : { planIdRequested: draft.planId }),
+              ...(needsConsents ? { consents } : {}),
+            }
+          : {
+              consents,
+              dog,
+              ...(draft.familyClaim.holderName === "" ? {} : { familyGroupClaim: draft.familyClaim }),
+              locale: i18n.resolvedLanguage ?? branding.defaultLocale,
+              ...(billing ? { payment: paymentBody(draft.payment) } : {}),
+              person: {
+                ...draft.person,
+                birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
+                emails: draft.person.emails.filter((email) => email.trim() !== ""),
+                gender: draft.person.gender || "OTHER",
+                idDocument: identityDocument(draft, profile.code === "ES"),
+                phones: draft.person.phones.filter((phone) => phone.number.trim() !== ""),
+              },
+              ...(draft.planId === "" ? {} : { planId: draft.planId }),
+              website,
+            };
+        // One Idempotency-Key per payload (CONVENCIONS_API §7): a retry of the same payload
+        // replays the first 201; any change to the payload gets a new key.
+        const fingerprint = JSON.stringify(body);
+        const idempotencyKey =
+          submission?.fingerprint === fingerprint
+            ? submission.idempotencyKey
+            : crypto.randomUUID();
+        const pending: SignupSubmission = { fingerprint, idempotencyKey };
+        onChange((current) => ({ ...current, submission: pending }));
+        const header = { "Idempotency-Key": idempotencyKey };
+        if (addDog) {
+          const result = await client.POST("/me/dogs/signup", {
+            body: body as AddDogSignupRequest,
+            params: { header },
           });
-          if (checkout.data === undefined) throw new TypeError("Missing checkout response");
-          onContinue(checkout.data.checkoutUrl);
+          if (result.data === undefined) throw new TypeError("Missing dog-signup response");
+          if (!result.data.checkout.required) {
+            onContinue(paths.sent ?? "/gossos/nou/enviada");
+            return;
+          }
+          submission = { ...pending, memberId: result.data.checkout.memberId };
         } else {
-          onContinue("/apuntat-hi/enviada");
-        }
-        return;
-      }
-      const result = await client.POST("/signup", {
-        body: {
-          consents,
-          dog,
-          ...(draft.familyClaim.holderName === "" ? {} : { familyGroupClaim: draft.familyClaim }),
-          locale: i18n.resolvedLanguage ?? branding.defaultLocale,
-          ...(billing ? { payment: draft.payment } : {}),
-          person: {
-            ...draft.person,
-            birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
-            emails: draft.person.emails.filter((email) => email.trim() !== ""),
-            gender: draft.person.gender || "OTHER",
-            phones: draft.person.phones.filter((phone) => phone.number.trim() !== ""),
-          },
-          planId: draft.planId,
-          website,
-        },
-        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
-      });
-      if (result.data === undefined) throw new TypeError("Missing signup response");
-      safeSessionRemove(DRAFT_KEY);
-      if (result.data.checkout.required) {
-        sessionStorage.setItem(CHECKOUT_KEY, "1");
-        const checkout = await client.POST("/checkout-sessions", {
-          body: {
-            cancelUrl: `${window.location.origin}/apuntat-hi/enviada?cs=cancel`,
+          const result = await client.POST("/signup", {
+            body: body as SignupRequest,
+            params: { header },
+          });
+          if (result.data === undefined) throw new TypeError("Missing signup response");
+          if (!result.data.checkout.required) {
+            onContinue(paths.sent ?? "/apuntat-hi/enviada");
+            return;
+          }
+          submission = {
+            ...pending,
             memberId: result.data.memberId,
             signupToken: result.data.signupToken,
-            successUrl: `${window.location.origin}/apuntat-hi/enviada?cs=success`,
-          },
-          params: { header: { "Idempotency-Key": crypto.randomUUID() } },
-        });
-        if (checkout.data === undefined) throw new TypeError("Missing checkout response");
-        onContinue(checkout.data.checkoutUrl);
-      } else {
-        onContinue("/apuntat-hi/enviada");
+          };
+        }
       }
+      // The created signup stays in the draft until the checkout resolves (R-04-26): a retry
+      // (or `?cs=cancel`) only asks for the checkout again, never for a new signup.
+      const checkoutKey = submission.checkoutKey ?? crypto.randomUUID();
+      const created: SignupSubmission = { ...submission, checkoutKey };
+      onChange((current) => ({ ...current, submission: created }));
+      safeSessionSet(CHECKOUT_KEY, "1");
+      const origin = window.location.origin;
+      const checkout = await client.POST("/checkout-sessions", {
+        body: {
+          cancelUrl: `${origin}${paths.payment ?? ""}?cs=cancel`,
+          memberId: created.memberId ?? "",
+          ...(created.signupToken === undefined ? {} : { signupToken: created.signupToken }),
+          successUrl: `${origin}${paths.sent ?? ""}?cs=success`,
+        },
+        params: { header: { "Idempotency-Key": checkoutKey } },
+      });
+      if (checkout.data === undefined) throw new TypeError("Missing checkout response");
+      onContinue(checkout.data.checkoutUrl);
     } catch (error) {
-      if (isApiError(error, "CONSENT_VERSION_OUTDATED")) {
-        onChange({ ...draft, privacyAccepted: false });
-        onReloadConfiguration();
-        setMessage(t("signup:payment.consentOutdated"));
-      } else if (isApiError(error) && error.status === 429) {
-        setMessage(t("signup:common.rateLimited", { seconds: error.retryAfter ?? 60 }));
-      } else if (isApiError(error, "SIGNUP_CLOSED")) {
-        setMessage(t("errors:SIGNUP_CLOSED"));
-      } else if (isApiError(error, "SIGNUP_ALREADY_PENDING")) {
-        setMessage(t("errors:SIGNUP_ALREADY_PENDING"));
-      } else if (isApiError(error, "DOG_CHIP_ALREADY_REGISTERED")) {
-        setMessage(t("errors:DOG_CHIP_ALREADY_REGISTERED"));
-      } else {
-        setMessage(t("signup:common.genericError"));
-      }
       setWorking(false);
+      if (isApiError(error, "CONSENT_VERSION_OUTDATED")) {
+        onChange((current) => ({
+          ...current,
+          consentVersion: "",
+          imageConsent: false,
+          privacyAccepted: false,
+        }));
+      }
+      onApiError(error, "payment");
     }
   };
 
@@ -1411,6 +1988,7 @@ function PaymentStep({
       className="signup-form signup-payment"
       noValidate
       onSubmit={(event) => void submit(event)}
+      ref={formRef}
     >
       <Progress current={step} label={t("signup:progress.payment")} total={totalSteps} />
       {showCancellation ? (
@@ -1453,7 +2031,15 @@ function PaymentStep({
                     aria-pressed={draft.payment.type === method.type}
                     key={method.type}
                     onClick={() => {
-                      onChange({ ...draft, payment: { ...draft.payment, type: method.type } });
+                      onChange((current) => {
+                        const payment: SignupPayment = { ...current.payment, type: method.type };
+                        if (method.type !== "SEPA_DD") {
+                          // The IBAN never stays in the session draft of another method.
+                          delete payment.iban;
+                          delete payment.holderTaxId;
+                        }
+                        return { ...current, payment };
+                      });
                     }}
                     type="button"
                   >
@@ -1463,28 +2049,55 @@ function PaymentStep({
               </div>
               {draft.payment.type === "SEPA_DD" ? (
                 <>
-                  <FormField id="signup-iban" label={t("signup:payment.iban")}>
+                  <FormField error={errors.iban} id="signup-iban" label={t("signup:payment.iban")}>
                     <Input
+                      {...invalidProps("signup-iban", errors.iban)}
+                      autoComplete="off"
                       id="signup-iban"
                       onChange={(event) => {
-                        onChange({
-                          ...draft,
-                          payment: { ...draft.payment, iban: event.currentTarget.value },
-                        });
+                        const iban = event.currentTarget.value;
+                        onChange((current) => ({
+                          ...current,
+                          payment: { ...current.payment, iban },
+                        }));
                       }}
                       value={draft.payment.iban ?? ""}
                     />
                   </FormField>
-                  <FormField id="signup-account-holder" label={t("signup:payment.accountHolder")}>
+                  <FormField
+                    error={errors.accountHolder}
+                    id="signup-account-holder"
+                    label={t("signup:payment.accountHolder")}
+                  >
                     <Input
+                      {...invalidProps("signup-account-holder", errors.accountHolder)}
                       id="signup-account-holder"
                       onChange={(event) => {
-                        onChange({
-                          ...draft,
-                          payment: { ...draft.payment, holderName: event.currentTarget.value },
-                        });
+                        const holderName = event.currentTarget.value;
+                        onChange((current) => ({
+                          ...current,
+                          payment: { ...current.payment, holderName },
+                        }));
                       }}
                       value={draft.payment.holderName ?? ""}
+                    />
+                  </FormField>
+                  <FormField
+                    error={errors.holderTaxId}
+                    id="signup-holder-tax-id"
+                    label={t("signup:payment.holderTaxId")}
+                  >
+                    <Input
+                      {...invalidProps("signup-holder-tax-id", errors.holderTaxId)}
+                      id="signup-holder-tax-id"
+                      onChange={(event) => {
+                        const holderTaxId = event.currentTarget.value;
+                        onChange((current) => ({
+                          ...current,
+                          payment: { ...current.payment, holderTaxId },
+                        }));
+                      }}
+                      value={draft.payment.holderTaxId ?? ""}
                     />
                   </FormField>
                   {paymentMethod?.mandateText === undefined ? null : (
@@ -1497,14 +2110,9 @@ function PaymentStep({
                   </aside>
                 </>
               ) : draft.payment.type === "CARD" ? (
-                <>
-                  <aside className="signup-note signup-note--neutral">
-                    {t("signup:payment.cardSecure")}
-                  </aside>
-                  <aside className="signup-note signup-note--neutral">
-                    {config.texts.paymentDay}
-                  </aside>
-                </>
+                <aside className="signup-note signup-note--neutral">
+                  {t("signup:payment.cardSecure")}
+                </aside>
               ) : (
                 <aside className="signup-note signup-note--neutral">
                   {config.texts.cashConditions}
@@ -1547,12 +2155,12 @@ function PaymentStep({
                     }
                     name="signup-start"
                     onChange={() => {
-                      onChange(
+                      onChange((current) =>
                         addDog
-                          ? { ...draft, additionalDogOption: option.option }
+                          ? { ...current, additionalDogOption: option.option }
                           : {
-                              ...draft,
-                              payment: { ...draft.payment, firstMonthOption: option.option },
+                              ...current,
+                              payment: { ...current.payment, firstMonthOption: option.option },
                             },
                       );
                     }}
@@ -1575,10 +2183,11 @@ function PaymentStep({
         <section className="signup-consents">
           <div className="signup-consent">
             <Checkbox
+              {...invalidProps("signup-privacy", errors.privacy)}
               checked={draft.privacyAccepted}
               id="signup-privacy"
               onChange={(event) => {
-                onChange({ ...draft, privacyAccepted: event.currentTarget.checked });
+                acceptConsent({ privacyAccepted: event.currentTarget.checked });
               }}
             />
             <label htmlFor="signup-privacy">{t("signup:payment.privacy")}</label>
@@ -1586,12 +2195,17 @@ function PaymentStep({
               {t("signup:payment.privacyLink")}
             </a>
           </div>
+          {errors.privacy === undefined ? null : (
+            <p className="ah-form-field__error" id="signup-privacy-error" role="alert">
+              {errors.privacy}
+            </p>
+          )}
           <div className="signup-consent">
             <Checkbox
               checked={draft.imageConsent}
               id="signup-image-consent"
               onChange={(event) => {
-                onChange({ ...draft, imageConsent: event.currentTarget.checked });
+                acceptConsent({ imageConsent: event.currentTarget.checked });
               }}
             />
             <label htmlFor="signup-image-consent">{t("signup:payment.imageUse")}</label>
@@ -1606,13 +2220,11 @@ function PaymentStep({
             </button>
           </div>
           {imageOpen ? (
-            <aside className="signup-note signup-note--neutral">
-              {config.legal.imageConsentText}
-            </aside>
+            <aside className="signup-note signup-note--neutral">{imageConsentText}</aside>
           ) : null}
         </section>
       ) : null}
-      <label className="signup-honeypot" htmlFor="signup-website">
+      <label aria-hidden="true" className="signup-honeypot" htmlFor="signup-website">
         {t("signup:honeypot")}
         <Input
           autoComplete="off"
@@ -1625,11 +2237,7 @@ function PaymentStep({
           value={website}
         />
       </label>
-      {message === undefined ? null : (
-        <p className="signup-message signup-message--error" role="alert">
-          {message}
-        </p>
-      )}
+      <StepMessage message={message} />
       <Button
         className="signup-primary"
         disabled={working || (needsConsents && !draft.privacyAccepted)}
@@ -1639,25 +2247,28 @@ function PaymentStep({
       >
         {t("signup:payment.submit")}
       </Button>
-      <p className="signup-copy signup-copy--center">{t("signup:payment.reviewFooter")}</p>
+      <p className="signup-copy signup-copy--center">
+        {addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}
+      </p>
     </form>
   );
 }
 
-function SuccessStep() {
+function SuccessStep({ addDog }: { addDog: boolean }) {
   const { t } = useTranslation("signup");
-  const checkout =
-    sessionStorage.getItem(CHECKOUT_KEY) === "1" ||
-    new URLSearchParams(window.location.search).get("cs") === "success";
+  const [checkout] = useState(
+    () =>
+      sessionStorage.getItem(CHECKOUT_KEY) === "1" ||
+      new URLSearchParams(window.location.search).get("cs") === "success",
+  );
   useEffect(() => {
-    safeSessionRemove(DRAFT_KEY);
     safeSessionRemove(CHECKOUT_KEY);
   }, []);
   return (
     <section className="signup-success">
       <span aria-hidden="true">✓</span>
       <h2>{t("signup:success.title")}</h2>
-      <p>{t("signup:payment.reviewFooter")}</p>
+      <p>{addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}</p>
       {checkout ? <p>{t("signup:success.checkout")}</p> : null}
     </section>
   );
@@ -1676,27 +2287,38 @@ export function SignupPage({
 }) {
   const branding = useBranding();
   const profile = countryProfile(branding.countryProfile);
-  const { i18n, t } = useTranslation("signup");
+  const { i18n, t } = useTranslation(["signup", "errors"]);
+  const paths = signupPaths(addDog);
   const cancelled = new URLSearchParams(window.location.search).get("cs") === "cancel";
   const initialPath =
-    cancelled && window.location.pathname === "/apuntat-hi/enviada"
-      ? addDog
-        ? "/gossos/nou/pagament"
-        : "/apuntat-hi/pagament"
+    cancelled && (window.location.pathname === paths.sent || window.location.pathname === "/apuntat-hi/enviada")
+      ? (paths.payment ?? window.location.pathname)
       : window.location.pathname;
   const [path, setPath] = useState(initialPath);
-  const [draft, setDraft] = useState(() => readDraft(addDog, profile.phonePrefix));
+  const [draft, setDraft] = useState(() => {
+    const saved = readDraft(addDog, profile);
+    // A cancelled checkout resolved that attempt: the retry asks for a new checkout session
+    // for the signup already created (no new POST /signup).
+    if (!cancelled || saved.submission?.checkoutKey === undefined) return saved;
+    const submission: SignupSubmission = { ...saved.submission };
+    delete submission.checkoutKey;
+    return { ...saved, submission };
+  });
   const [config, setConfig] = useState<SignupConfig>();
+  const [closed, setClosed] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [reload, setReload] = useState(0);
+  const [routed, setRouted] = useState<RoutedErrors>();
+  const sent = path === paths.sent && !cancelled;
 
   useEffect(() => {
-    try {
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
-    } catch {
-      // Signup still works when storage is unavailable.
+    if (sent) {
+      // The flow ends here: the draft (and the signup capability it holds) is discarded.
+      safeSessionRemove(DRAFT_KEY);
+      return;
     }
-  }, [draft]);
+    safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
+  }, [draft, sent]);
 
   useEffect(() => {
     let active = true;
@@ -1710,30 +2332,32 @@ export function SignupPage({
         const data = result.data;
         setConfig(data);
         setDraft((current) => {
-          const planId =
-            current.planId === ""
-              ? addDog
-                ? (data.member?.planId ?? data.plans?.[0]?.id ?? "")
-                : (data.plans?.[0]?.id ?? "")
-              : current.planId;
+          const plans = data.plans ?? [];
+          const memberPlan = addDog ? data.member?.planId : undefined;
+          const planAvailable =
+            current.planId !== "" &&
+            (plans.some((plan) => plan.id === current.planId) || current.planId === memberPlan);
+          const planId = planAvailable ? current.planId : (memberPlan ?? plans[0]?.id ?? "");
           const paymentMethods = data.paymentMethods ?? [];
           const method = paymentMethods.some(
             (candidate) => candidate.type === current.payment.type,
           )
             ? current.payment.type
             : paymentMethods[0]?.type;
-          const holderName =
-            (current.payment.holderName?.trim() ?? "") === ""
-              ? [current.person.firstName, current.person.lastName1, current.person.lastName2]
-                  .filter((part) => part !== "")
-                  .join(" ")
-              : current.payment.holderName;
+          // R-04-17: an acceptance of other legal texts is cleared and asked again.
+          const version = data.legal?.legalTextsVersion;
+          const consentOutdated =
+            version !== undefined &&
+            (current.privacyAccepted || current.imageConsent) &&
+            current.consentVersion !== version;
           return {
             ...current,
+            ...(consentOutdated
+              ? { consentVersion: "", imageConsent: false, privacyAccepted: false }
+              : {}),
             payment: {
               ...current.payment,
               ...(method === undefined ? {} : { type: method }),
-              ...(holderName === undefined ? {} : { holderName }),
             },
             planId,
           };
@@ -1748,15 +2372,45 @@ export function SignupPage({
     };
   }, [addDog, client, i18n.resolvedLanguage, reload]);
 
-  const go = (nextPath: string) => {
+  const navigateTo = (nextPath: string) => {
     setPath(nextPath);
     onNavigate(nextPath);
   };
 
-  if (path === "/apuntat-hi/enviada" && !cancelled) {
+  const go = (nextPath: string) => {
+    setRouted(undefined);
+    navigateTo(nextPath);
+  };
+
+  const handleApiError = (error: unknown, currentStep: SignupStep) => {
+    if (isApiError(error, "SIGNUP_CLOSED")) {
+      setClosed(true);
+      setReload((current) => current + 1);
+      return;
+    }
+    if (isApiError(error, "CONSENT_VERSION_OUTDATED") || isApiError(error, "PLAN_NOT_AVAILABLE")) {
+      setReload((current) => current + 1);
+    }
+    const target = routeApiError(error, currentStep, t);
+    const targetPath = paths[target.step];
+    const resolved: RoutedErrors =
+      targetPath === undefined
+        ? {
+            fields: {},
+            message: target.message ?? Object.values(target.fields)[0],
+            nonce: Date.now(),
+            step: currentStep,
+          }
+        : { ...target, nonce: Date.now() };
+    setRouted(resolved);
+    const resolvedPath = paths[resolved.step];
+    if (resolvedPath !== undefined && resolvedPath !== path) navigateTo(resolvedPath);
+  };
+
+  if (sent) {
     return (
       <Layout>
-        <SuccessStep />
+        <SuccessStep addDog={addDog} />
       </Layout>
     );
   }
@@ -1789,10 +2443,10 @@ export function SignupPage({
     );
   }
 
-  if (!config.enabled || branding.status !== "ACTIVE") {
+  if (closed || !config.enabled || branding.status !== "ACTIVE") {
     return (
       <Layout>
-        <p className="signup-state">{config.closedText}</p>
+        <p className="signup-state">{config.closedText ?? t("errors:SIGNUP_CLOSED")}</p>
       </Layout>
     );
   }
@@ -1826,8 +2480,10 @@ export function SignupPage({
         <PersonStep
           client={client}
           draft={draft}
+          onApiError={handleApiError}
           onChange={setDraft}
           onContinue={go}
+          routed={routed}
           totalSteps={totalSteps}
         />
       ) : path === "/apuntat-hi/gos" || path === "/gossos/nou" ? (
@@ -1838,6 +2494,7 @@ export function SignupPage({
           draft={draft}
           onChange={setDraft}
           onContinue={go}
+          routed={routed}
           step={dogStep}
           totalSteps={totalSteps}
         />
@@ -1846,8 +2503,10 @@ export function SignupPage({
           client={client}
           config={config}
           draft={draft}
+          onApiError={handleApiError}
           onChange={setDraft}
           onContinue={go}
+          routed={routed}
           totalSteps={totalSteps}
         />
       ) : (
@@ -1856,11 +2515,10 @@ export function SignupPage({
           client={client}
           config={config}
           draft={draft}
+          onApiError={handleApiError}
           onChange={setDraft}
           onContinue={go}
-          onReloadConfiguration={() => {
-            setReload((current) => current + 1);
-          }}
+          routed={routed}
           showCancellation={cancelled}
           step={paymentStep}
           totalSteps={totalSteps}

@@ -15,6 +15,7 @@
     "invalidPhone": "The phone number is invalid.",
     "invalidDate": "The date is invalid.",
     "invalidMonth": "The birth month is invalid.",
+    "invalidPostalCode": "The postal code is invalid.",
     "genericError": "The action could not be completed.",
     "rateLimited": "Too many attempts. Try again in {seconds} seconds.",
     "locale": {
@@ -70,6 +71,8 @@
     "birthMonth": "Born",
     "birthMonthPlaceholder": "mm/yyyy",
     "chip": "Microchip number",
+    "invalidChip": "The microchip number is invalid.",
+    "notesToInstructors": "Notes for the instructors (optional)",
     "vaccinationCard": "Vaccination record",
     "uploaded": "{name} uploaded",
     "addPage": "＋ Add another page",
@@ -103,6 +106,7 @@
     "monthlyTitle": "Monthly payment",
     "iban": "IBAN",
     "accountHolder": "Account holder",
+    "holderTaxId": "Account holder tax ID (optional)",
     "cardSecure": "You will pay securely by card when you submit the request.",
     "currentMethod": "Current payment method",
     "initialTitle": "Initial payment",
@@ -118,6 +122,7 @@
     "submit": "SUBMIT REQUEST",
     "submitting": "Submitting the request",
     "reviewFooter": "The club will review the request and payment, then send your welcome message with access and the user guide.",
+    "addDogReviewFooter": "The club will review the request and the payment for the new dog, and we will let you know in the app once it is approved.",
     "consentOutdated": "The policy has changed. Review it and accept it again.",
     "cancelled": "The payment was not completed. You can retry from the email we sent you."
   },

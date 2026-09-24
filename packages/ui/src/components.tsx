@@ -199,7 +199,7 @@ export function FormField({ children, error, help, id, label }: FormFieldProps) 
       {children}
       {help !== undefined ? <div className="ah-form-field__help">{help}</div> : null}
       {error !== undefined ? (
-        <div className="ah-form-field__error" role="alert">
+        <div className="ah-form-field__error" id={`${id}-error`} role="alert">
           {error}
         </div>
       ) : null}

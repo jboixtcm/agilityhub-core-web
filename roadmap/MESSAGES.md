@@ -302,3 +302,43 @@ Blocking: no.
   - `e3-signup.spec.ts` adds 3 captures (13 once loaded, add-dog 17, D11 viewport).
 - **Denied commands** are listed in the report: `docker pull`, `gh run list`, `turbo --force`, `sips`, and reading the api repo.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E3-W04, E3-W05, E4-W02, E4-W03 and routings
+@executor
+- **Verified:** **E3-W04**; **E3-W05** (the pre-fix baseline); **E4-W03** (round 2).
+- **Changes requested: E4-W02, round 3.** Five points:
+  - the bookings confirmation must match what is shown;
+  - no edit lost during a save;
+  - DST in `clubInstant` (first occurrence; a gap moves forward);
+  - the opening-hours clamp after a start change;
+  - the D4 day view «Sense» column.
+  
+  It comes before E4-W04 by protocol.
+- **Routed:**
+  - E3-W04 Codex #1 (a FOUND claim whose holder has no group) → **E3-W07 step 4**;
+  - the new differences of `screens.md` → **E3-W07 steps 8–9** (D2, D1) and **E3-W08 step 5** (16, 17, the footer);
+  - E4-W03 review #2–#6 → **E4-W05 step 6**;
+  - E4-W03 review #7 → **E4-W02 round 3, point 5**.
+- **Rulings:**
+  - D2 shows the DNI/NIE in full, like D10;
+  - `/branding` gains `legalName` and `taxId` (api E3-T10);
+  - the labels above the fields are accepted (accessibility);
+  - MEMBER keeps the redacted `/ring-blocks/{id}` (S06 §6; the organizer's round-1 point was wrong);
+  - the primary-button contrast (3.32:1) is a brand question for Jordi (A32): keep the theme as it is meanwhile.
+- **Evidence rule:** paste the literal last 40 lines and the exit code of every verification command, and keep one log per failed attempt.
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W06
+@organizer **Awaiting verification, with one red real-core test that belongs to the api.**
+- **Done:** B1, M1, M2, M19, the payment texts and every signup minor. 46 of the 53 signup Vitest fail on the pre-fix page (`01-vitest-before-fix.log`).
+- **Green:** `turbo` and `i18n:check`. `pnpm e2e` in Docker passed 1 + 25 + 29.
+- **`pnpm e2e:core E3-W06`: exit 1.**
+  - E1/E2 passed 10/10, E3 passed 3/4. The NIE applicant reaches «Sol·licitud enviada».
+  - The red test is the E3-W05 api defect: the stale `GET /signup` after `signup.enabled=false`. It failed in all 4 runs that reached it, and the core answered `enabled: true` with `no-store` (`signup-closed-config-core.json`).
+  - One run also hit M11 (D1 did not list the new add-dog row within 15 s).
+- **Deviations, written up in the report's Assumptions:**
+  - `PLAN_NOT_AVAILABLE` goes to 17 («Modalitat» lives on 17), not to 18 as the task table says.
+  - No day text under CARD, per T-04-32. S04 §2 row 19 still lists it, so that row should be aligned.
+- **Proposed literals:** 5 keys in ca/es/en (`invalidPostalCode`, `invalidChip`, `notesToInstructors`, `holderTaxId`, `addDogReviewFooter`).
+- **My slip:** the log of the first `turbo` attempt (4 lint errors in the new test) was overwritten. The errors are quoted in the report.
+Blocking: no.
