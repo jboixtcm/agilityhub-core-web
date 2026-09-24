@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   type CalendarSettings,
+  clampTime,
   clubInstant,
   errorCode,
   formatMaskedDate,
@@ -21,7 +22,7 @@ import {
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import { RingBookingList } from "./SelectedClassCard";
-import { errorProp, type Ring } from "./shared";
+import { clubToday, errorProp, type Ring } from "./shared";
 
 type RingBlockPatch = components["schemas"]["RingBlockPatchRequest"];
 type Kind = RingBlock["kind"];
@@ -78,21 +79,34 @@ export function RingBlockDrawer({
   const block = mode.kind === "edit" ? mode.block : undefined;
   const managed = block?.activityId !== null && block?.activityId !== undefined;
   const activeRings = rings.filter((ring) => ring.active || ring.id === block?.ringId);
-  const kinds: Kind[] = modules.includes("FREE_TRAINING") ? ["BLOCK", "RESERVATION"] : ["BLOCK"];
+  const moduleKinds: Kind[] = modules.includes("FREE_TRAINING")
+    ? ["BLOCK", "RESERVATION"]
+    : ["BLOCK"];
+  // Edit mode always offers the stored kind, also a RESERVATION after FREE_TRAINING was turned off.
+  const kinds =
+    block === undefined || moduleKinds.includes(block.kind)
+      ? moduleKinds
+      : [...moduleKinds, block.kind];
+  const today = clubToday(timeZone);
+  const optionsOf = (day: string) => {
+    const opening = openingOf(openingHours, day);
+    return {
+      ends: timeOptions(
+        timeOf(minutesOf(opening.open) + settings.trainingSlotMinutes),
+        opening.close,
+        settings.slotMinutes,
+      ),
+      starts: timeOptions(
+        opening.open,
+        timeOf(minutesOf(opening.close) - settings.trainingSlotMinutes),
+        settings.slotMinutes,
+      ),
+    };
+  };
   const [ringId, setRingId] = useState(block?.ringId ?? activeRings[0]?.id ?? "");
   const [date, setDate] = useState(block === undefined ? "" : formatMaskedDate(block.date));
   const isoDate = parseMaskedDate(date);
-  const opening = openingOf(openingHours, isoDate ?? "2026-08-10");
-  const starts = timeOptions(
-    opening.open,
-    timeOf(minutesOf(opening.close) - settings.trainingSlotMinutes),
-    settings.slotMinutes,
-  );
-  const ends = timeOptions(
-    timeOf(minutesOf(opening.open) + settings.trainingSlotMinutes),
-    opening.close,
-    settings.slotMinutes,
-  );
+  const { ends, starts } = optionsOf(isoDate ?? today);
   const [from, setFrom] = useState(block?.fromLocal ?? starts[0] ?? "");
   const [to, setTo] = useState(block?.toLocal ?? ends[0] ?? "");
   const [kind, setKind] = useState<Kind>(block?.kind ?? "BLOCK");
@@ -102,7 +116,23 @@ export function RingBlockDrawer({
   const [error, setError] = useState<{ field: FieldKey; message: string }>();
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [bookings, setBookings] = useState<unknown[]>();
-  const reasons = reasonsByKind[kind];
+  const reasons =
+    kind === block?.kind && !reasonsByKind[kind].includes(block.reason)
+      ? [...reasonsByKind[kind], block.reason]
+      : reasonsByKind[kind];
+
+  /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
+  const changeDate = (value: string) => {
+    const next = maskDate(value);
+    setDate(next);
+    const day = parseMaskedDate(next);
+    if (day === undefined) return;
+    const options = optionsOf(day);
+    const nextFrom = clampTime(from, options.starts);
+    const minimumTo = timeOf(minutesOf(nextFrom) + settings.trainingSlotMinutes);
+    setFrom(nextFrom);
+    setTo(clampTime(to < minimumTo ? minimumTo : to, options.ends));
+  };
   const readOnly = managed;
   const startOptions = starts.includes(from) ? starts : [from, ...starts];
   const endOptions = ends.includes(to) ? ends : [...ends, to];
@@ -256,7 +286,7 @@ export function RingBlockDrawer({
               id="calendar-block-date"
               inputMode="numeric"
               onChange={(event) => {
-                setDate(maskDate(event.currentTarget.value));
+                changeDate(event.currentTarget.value);
               }}
               placeholder={t("admin-scheduling:calendar.createForm.datePlaceholder")}
               required

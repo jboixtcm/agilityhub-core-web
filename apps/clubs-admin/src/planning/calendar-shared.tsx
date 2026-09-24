@@ -62,6 +62,12 @@ export function timeOptions(open: string, close: string, step: number): string[]
   return options;
 }
 
+/** `value` when it is an option; otherwise the first option after it, or the last one. */
+export function clampTime(value: string, options: readonly string[]): string {
+  if (options.length === 0 || options.includes(value)) return value;
+  return options.find((option) => option > value) ?? options.at(-1) ?? value;
+}
+
 function zoneOffsetMinutes(instant: number, timeZone: string): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     day: "2-digit",

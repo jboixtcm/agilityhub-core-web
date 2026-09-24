@@ -1,5 +1,11 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetCatalogState, resetPlanningState } from "@agilityhub/api-client/mocks";
+import {
+  catalogState,
+  mockScenario,
+  planningState,
+  resetCatalogState,
+  resetPlanningState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -39,10 +45,15 @@ afterAll(() => {
   server.close();
 });
 
-async function renderCalendar({ readOnly = false, search = "" } = {}) {
+async function renderCalendar({
+  modules = branding.modules,
+  readOnly = false,
+  search = "",
+}: { modules?: readonly string[]; readOnly?: boolean; search?: string } = {}) {
   window.history.replaceState(null, "", `/calendari${search}`);
+  const clubBranding: Branding = { ...branding, modules: [...modules] };
   const i18n = await createI18n({
-    branding,
+    branding: clubBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["admin-scheduling", "enums", "errors"],
     storage: undefined,
@@ -51,12 +62,49 @@ async function renderCalendar({ readOnly = false, search = "" } = {}) {
   const onNavigate = vi.fn();
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={branding}>
+      <BrandingProvider branding={clubBranding}>
         <CalendarPage client={client} onNavigate={onNavigate} readOnly={readOnly} />
       </BrandingProvider>
     </I18nextProvider>,
   );
-  return { onNavigate };
+  return { client, onNavigate };
+}
+
+const WEDNESDAY_1850 = "cls-2026-08-12-1850-0";
+
+/** Another admin's change, straight to the mock api: it bumps the class version. */
+async function concurrentPatch(
+  client: ReturnType<typeof createApiClient>,
+  body: { capacity?: number; version: number },
+) {
+  await client.PATCH("/class-sessions/{id}", { body, params: { path: { id: WEDNESDAY_1850 } } });
+}
+
+function optionValues(select: HTMLElement): string[] {
+  return [...(select as HTMLSelectElement).options].map((option) => option.value);
+}
+
+function selectedLabel(select: HTMLElement): string | undefined {
+  const element = select as HTMLSelectElement;
+  return element.options[element.selectedIndex]?.textContent ?? undefined;
+}
+
+function openingHoursWithShortSaturday() {
+  const day = { close: "22:00", open: "07:00" };
+  return http.get("*/api/v1/club/opening-hours", () =>
+    HttpResponse.json({
+      key: "club.openingHours",
+      value: {
+        FRIDAY: day,
+        MONDAY: day,
+        SATURDAY: { close: "14:00", open: "09:00" },
+        SUNDAY: day,
+        THURSDAY: day,
+        TUESDAY: day,
+        WEDNESDAY: day,
+      },
+    }),
+  );
 }
 
 function grid(range: RegExp) {
@@ -103,7 +151,10 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Setmana següent" }));
     await grid(/del 24 al 30 d.agost$/u);
     const blocked = screen.getByRole("region", { name: "Validació de la setmana" });
-    expect(blocked).toHaveTextContent("6 classes en esborrany · 1 incoherència");
+    // Neither current nor next: the summary starts with the range only (step 1).
+    expect(blocked.querySelector(".calendar-validation-card__summary")).toHaveTextContent(
+      /^del 24 al 30 d’agost · 6 classes en esborrany · 1 incoherència$/u,
+    );
     expect(within(blocked).getByRole("button", { name: "VALIDAR LA SETMANA" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Setmana següent" })).toBeDisabled();
     expect(
@@ -218,14 +269,20 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     });
   });
 
-  it("R-06-09 saves the diff with the version and handles STALE_VERSION and CAPACITY_BELOW_BOOKINGS", async () => {
-    await renderCalendar();
+  it("R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card", async () => {
+    const { client } = await renderCalendar();
     const week = await grid(/del 10 al 16 d.agost$/u);
     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
 
     const accept = within(selectedCard()).getByRole("button", { name: "ACCEPTA" });
+    const exempt = within(selectedCard()).getByRole("button", {
+      name: "Exempta de la revisió de les 7:30",
+    });
     expect(accept).toBeDisabled();
+    expect(exempt).toBeEnabled();
     fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "3" } });
+    // Unsaved chip edits: the exemption (which reloads the class) waits for them.
+    expect(exempt).toBeDisabled();
     fireEvent.click(accept);
     expect(
       await within(selectedCard()).findByText(
@@ -233,33 +290,37 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
       ),
     ).toBeVisible();
 
-    let calendarReads = 0;
-    let patchBody: unknown;
+    // Another admin raises the limit to 7 meanwhile: the class is now at version 2.
+    await concurrentPatch(client, { capacity: 7, version: 1 });
+    const bodies: unknown[] = [];
     server.events.on("request:start", ({ request }) => {
-      if (request.method === "GET" && request.url.includes("/calendar")) calendarReads += 1;
+      if (request.method === "PATCH") {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => bodies.push(body));
+      }
     });
-    server.use(
-      http.patch("*/api/v1/class-sessions/:id", async ({ request }) => {
-        patchBody = await request.json();
-        return HttpResponse.json(
-          { code: "STALE_VERSION", details: {}, message: "Stale", traceId: "t" },
-          { status: 409 },
-        );
-      }),
-    );
     fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
     fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+
+    // The refetch brings version 2, so the card remounts with the other admin's limit…
+    await waitFor(() => {
+      expect(
+        within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/7 \+2/u }),
+      ).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(7);
+    });
+    // …and the conflict message is still on the page.
     expect(
-      await within(selectedCard()).findByText(
+      screen.getByText(
         "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
       ),
     ).toBeVisible();
-    expect(patchBody).toEqual({ capacity: 6, version: 1 });
-    await waitFor(() => {
-      expect(calendarReads).toBeGreaterThan(0);
-    });
+    expect(bodies).toEqual([{ capacity: 6, version: 1 }]);
 
-    server.resetHandlers();
     fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
     fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
     expect(await screen.findByText("Canvis desats")).toBeVisible();
@@ -268,6 +329,241 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
         within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/6 \+2/u }),
       ).toBeVisible();
     });
+    expect(bodies).toEqual([
+      { capacity: 6, version: 1 },
+      { capacity: 6, version: 2 },
+    ]);
+    server.events.removeAllListeners();
+  });
+
+  it("R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch", async () => {
+    const { client } = await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    // Another admin cancels the class meanwhile (new state, new version).
+    await client.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+      params: { header: { "Idempotency-Key": "concurrent-cancel" }, path: { id: WEDNESDAY_1850 } },
+    });
+    fireEvent.click(
+      within(selectedCard()).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    );
+
+    await waitFor(() => {
+      expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dc 12 .*anul·lada0\/5/u);
+    });
+    expect(
+      screen.getByText("Aquest element no està en un estat vàlid per a aquesta operació."),
+    ).toBeVisible();
+  });
+
+  it("R-06-05 moving a class onto training bookings asks first and resends with cancelBookings", async () => {
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const bodies: unknown[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "PATCH") {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => bodies.push(body));
+      }
+    });
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    fireEvent.change(within(selectedCard()).getByLabelText("Pista"), {
+      target: { value: "ring-muntanya" },
+    });
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+
+    const dialog = await screen.findByRole("dialog", {
+      name: "Aquesta pista té reserves d'entrenament",
+    });
+    expect(
+      within(dialog)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual(["Clara Font + Trevi"]);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Anul·la les reserves i desa" }));
+
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    await waitFor(() => {
+      expect(
+        within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+2 · Muntanya/u }),
+      ).toBeVisible();
+    });
+    expect(bodies).toEqual([
+      { ringId: "ring-muntanya", version: 1 },
+      { cancelBookings: true, ringId: "ring-muntanya", version: 1 },
+    ]);
+    server.events.removeAllListeners();
+  });
+
+  it("R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button", async () => {
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/cancellation-preview", () =>
+        HttpResponse.json({ bookings: [], waitlistCount: 2 }),
+      ),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ANUL·LA LA CLASSE" }));
+
+    const dialog = await screen.findByRole("dialog", {
+      name: "Anul·lar la classe — dc 12 · 18:50 · B+C · Central · Marc",
+    });
+    expect(dialog).toHaveTextContent(
+      "Aquesta classe no té alumnes inscrits, però té 2 alumnes a la llista d'espera. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota.",
+    );
+    expect(within(dialog).getByText("2 alumnes a la llista d'espera").tagName).toBe("STRONG");
+    expect(dialog).not.toHaveTextContent(/\b0 alumnes/u);
+    expect(within(dialog).queryByRole("table")).not.toBeInTheDocument();
+    expect(dialog).toHaveTextContent(
+      "S'envia amb la plantilla «Classe anul·lada pel club» · també a la llista d'espera (2)",
+    );
+    const confirm = within(dialog).getByRole("button", {
+      name: "ANUL·LA I AVISA LA LLISTA D'ESPERA",
+    });
+    expect(confirm).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Text de l'avís"), {
+      target: { value: "Plou massa." },
+    });
+    expect(confirm).toBeEnabled();
+  });
+
+  it("R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only", async () => {
+    server.use(openingHoursWithShortSaturday());
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    // No date yet: the options of today (Wednesday 12, 7:00–22:00).
+    expect(within(drawer).getByLabelText("De")).toHaveValue("07:00");
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "15082026" } });
+
+    const from = within(drawer).getByLabelText("De");
+    const to = within(drawer).getByLabelText("A");
+    expect(optionValues(from)[0]).toBe("09:00");
+    expect(optionValues(from).at(-1)).toBe("13:30");
+    expect(optionValues(from).every((time) => time >= "09:00" && time <= "13:30")).toBe(true);
+    expect(optionValues(to)[0]).toBe("09:30");
+    expect(optionValues(to).at(-1)).toBe("14:00");
+    expect(from).toHaveValue("09:00");
+    expect(to).toHaveValue("09:30");
+  });
+
+  it("R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours", async () => {
+    server.use(openingHoursWithShortSaturday());
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    expect(within(drawer).getByLabelText("Inici")).toHaveValue("07:00");
+    expect(within(drawer).getByLabelText("Final")).toHaveValue("08:00");
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "15082026" } });
+
+    const start = within(drawer).getByLabelText("Inici");
+    const end = within(drawer).getByLabelText("Final");
+    expect(optionValues(start)[0]).toBe("09:00");
+    expect(optionValues(start).at(-1)).toBe("13:50");
+    expect(optionValues(end).at(-1)).toBe("14:00");
+    expect(optionValues(end).every((time) => time >= "09:10" && time <= "14:00")).toBe(true);
+    expect(start).toHaveValue("09:00");
+    expect(end).toHaveValue("10:00");
+  });
+
+  it("shows the value the class holds: inactive ring and instructor stay selected", async () => {
+    for (const item of [
+      ...catalogState.rings.filter((ring) => ring.id === "ring-central"),
+      ...catalogState.instructors.filter((instructor) => instructor.id === "instructor-marc"),
+    ]) {
+      item.active = false;
+    }
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+
+    const ring = within(selectedCard()).getByLabelText("Pista");
+    expect(ring).toHaveValue("ring-central");
+    expect(selectedLabel(ring)).toBe("Central");
+    const instructor = within(selectedCard()).getByLabelText("Instructor");
+    expect(instructor).toHaveValue("instructor-marc");
+    expect(selectedLabel(instructor)).toBe("Marc");
+    expect(within(selectedCard()).getByRole("button", { name: "ACCEPTA" })).toBeDisabled();
+  });
+
+  it("shows a RESERVATION block as it is when FREE_TRAINING was turned off later", async () => {
+    const [template] = planningState.blocks;
+    if (template === undefined) throw new TypeError("Missing the fixture block");
+    planningState.blocks.push({
+      ...template,
+      date: "2026-08-14",
+      from: "2026-08-14T14:00:00Z",
+      fromLocal: "16:00",
+      id: "block-2026-08-14-petita",
+      kind: "RESERVATION",
+      reason: "THERAPY",
+      ringId: "ring-petita",
+      to: "2026-08-14T15:00:00Z",
+      toLocal: "17:00",
+    });
+    await renderCalendar({ modules: branding.modules.filter((item) => item !== "FREE_TRAINING") });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    fireEvent.click(
+      within(week).getByRole("button", { name: "Petita bloquejada · teràpia 16:00–17:00" }),
+    );
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueig de pista" });
+    const kind = within(drawer).getByLabelText("Tipus");
+    expect(kind).toHaveValue("RESERVATION");
+    expect(selectedLabel(kind)).toBe("Reserva de pista");
+    expect(within(drawer).getByLabelText("Motiu")).toHaveValue("THERAPY");
+  });
+
+  it("R-06-15 without WAITLIST there is no «+e» in the cell nor in the card", async () => {
+    await renderCalendar({ modules: branding.modules.filter((item) => item !== "WAITLIST") });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const cell = within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 · Central/u });
+    expect(cell).not.toHaveTextContent("+2");
+    fireEvent.click(cell);
+    expect(selectedCard().querySelector(".calendar-selected-card__counts")).toHaveTextContent(
+      /^4\/5$/u,
+    );
+  });
+
+  it("R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»", async () => {
+    await renderCalendar({ modules: branding.modules.filter((item) => item !== "FREE_TRAINING") });
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    expect(optionValues(within(drawer).getByLabelText("Tipus"))).toEqual(["BLOCK"]);
+  });
+
+  it("R-06-15 with levels.enabled=false the card has no «Nivells» chip", async () => {
+    mockScenario("planningNoLevels");
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(within(selectedCard()).getByRole("button", { name: "ACCEPTA" })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(within(selectedCard()).queryByText("Nivells")).not.toBeInTheDocument();
+    });
+  });
+
+  it("R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels", async () => {
+    mockScenario("instructor");
+    planningState.sessions = planningState.sessions.map((session) =>
+      session.id === WEDNESDAY_1850 ? { ...session, levelIds: [] } : session,
+    );
+    await renderCalendar({ readOnly: true });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(within(selectedCard()).queryByText("Nivells")).not.toBeInTheDocument();
+    fireEvent.click(within(week).getByRole("button", { name: /^dt 11 18:50 · A\+B/u }));
+    expect(selectedCard()).toHaveTextContent(/Nivells\s+A, B/u);
   });
 
   it("R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer", async () => {

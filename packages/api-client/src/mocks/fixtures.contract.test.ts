@@ -219,6 +219,21 @@ describe("E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBl
     });
   });
 
+  it("keeps every calendar fixture description equal to the mock resolver (E29: {F,G} = «F i sup.»)", () => {
+    const levels = planningLevels();
+    for (const session of sessions) {
+      expect(
+        mockDisplayDescription(levels, session.levelIds, session.description),
+        session.id,
+      ).toBe(session.displayDescription);
+    }
+    expect(
+      sessions
+        .filter((session) => session.levelIds.join() === "level-f,level-g")
+        .map((session) => session.displayDescription),
+    ).toEqual(["F i sup.", "F i sup.", "F i sup."]);
+  });
+
   it("validates the ring block and the cancellation preview of the Wednesday 18:50 class", () => {
     const block = schema("RingBlock");
     for (const item of initialRingBlocks("2026-08-10")) {

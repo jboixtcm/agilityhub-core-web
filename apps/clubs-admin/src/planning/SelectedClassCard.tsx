@@ -170,7 +170,9 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
  * D4 «Classe seleccionada» (R-06-09): chip editors for ADMIN on DRAFT/ACTIVE classes, [ACCEPTA]
  * sends the diff with `version`; [ANUL·LA LA CLASSE] / [ELIMINA] go through D4c (parent).
  * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c).
- * The parent remounts it (`key`) on every new class or version.
+ * The parent remounts it (`key`) on every new class or version, so the values always start from
+ * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
+ * the message on the page while the refetch brings the new version.
  */
 export function SelectedClassCard({
   catalogs,
@@ -178,7 +180,7 @@ export function SelectedClassCard({
   heading,
   onCancel,
   onClose,
-  onReload,
+  onConflict,
   onSaved,
   openingHours,
   readOnly,
@@ -191,7 +193,7 @@ export function SelectedClassCard({
   heading: ClassHeading;
   onCancel: (reason: "CLUB_MANUAL" | "DELETED") => void;
   onClose: () => void;
-  onReload: () => void;
+  onConflict: (message: string) => void;
   onSaved: (session: ClassSession) => void;
   openingHours: OpeningHours;
   readOnly: boolean;
@@ -210,9 +212,16 @@ export function SelectedClassCard({
   const patch = diffOf(session, values, editable);
   const changed = Object.keys(patch).length > 1;
 
-  const activeRings = catalogs.rings.filter((ring) => ring.active);
-  const activeLevels = catalogs.levels.filter((level) => level.active);
-  const activeInstructors = catalogs.instructors.filter((instructor) => instructor.active);
+  // The editors always offer what the class holds, also an inactive ring, level or instructor.
+  const ringOptions = catalogs.rings.filter(
+    (ring) => ring.active || ring.id === session.ringId || ring.id === values.ringId,
+  );
+  const levelOptions = catalogs.levels.filter(
+    (level) => level.active || session.levelIds.includes(level.id),
+  );
+  const instructorOptions = catalogs.instructors.filter(
+    (instructor) => instructor.active || session.instructorIds.includes(instructor.id),
+  );
   const ringName = (ringId: string | null) =>
     ringId === null
       ? t("admin-scheduling:classCard.noRing")
@@ -264,13 +273,15 @@ export function SelectedClassCard({
       if (code === "RING_HAS_BOOKINGS" && isApiError(cause)) {
         const bookings = (cause.details as { bookings?: unknown } | undefined)?.bookings;
         setRingBookings(Array.isArray(bookings) ? bookings : []);
+      } else if (code === "STALE_VERSION" || code === "INVALID_STATE") {
+        setRingBookings(undefined);
+        onConflict(errorMessage(cause));
       } else {
         setRingBookings(undefined);
         setError({
           field: code === "CAPACITY_BELOW_BOOKINGS" ? "capacity" : "general",
           message: errorMessage(cause),
         });
-        if (code === "STALE_VERSION" || code === "INVALID_STATE") onReload();
       }
     } finally {
       setPending(false);
@@ -288,9 +299,12 @@ export function SelectedClassCard({
       });
       if (result.data !== undefined) onSaved(result.data);
     } catch (cause) {
-      setError({ field: "general", message: errorMessage(cause) });
       const code = errorCode(cause);
-      if (code === "STALE_VERSION" || code === "INVALID_STATE") onReload();
+      if (code === "STALE_VERSION" || code === "INVALID_STATE") {
+        onConflict(errorMessage(cause));
+      } else {
+        setError({ field: "general", message: errorMessage(cause) });
+      }
     } finally {
       setPending(false);
     }
@@ -337,7 +351,7 @@ export function SelectedClassCard({
               }}
               value={values.ringId ?? ""}
             >
-              {activeRings.map((ring) => (
+              {ringOptions.map((ring) => (
                 <option key={ring.id} value={ring.id}>
                   {ring.name}
                 </option>
@@ -356,7 +370,7 @@ export function SelectedClassCard({
                       .map((level) => level.id);
                 set({ levelIds });
               }}
-              options={activeLevels.map((level) => ({ id: level.id, label: level.name }))}
+              options={levelOptions.map((level) => ({ id: level.id, label: level.name }))}
               selected={values.levelIds}
               summary={levelNames(values.levelIds)}
             />
@@ -372,7 +386,12 @@ export function SelectedClassCard({
                 }}
                 value={values.instructorIds[0] ?? ""}
               >
-                {activeInstructors.map((instructor) => (
+                {values.instructorIds.length === 0 ? (
+                  <option disabled value="">
+                    {t("admin-scheduling:calendar.selected.noInstructor")}
+                  </option>
+                ) : null}
+                {instructorOptions.map((instructor) => (
                   <option key={instructor.id} value={instructor.id}>
                     {instructor.shortName}
                   </option>
@@ -390,7 +409,7 @@ export function SelectedClassCard({
                     : [...values.instructorIds, instructorId],
                 });
               }}
-              options={activeInstructors.map((instructor) => ({
+              options={instructorOptions.map((instructor) => ({
                 id: instructor.id,
                 label: instructor.shortName,
               }))}
@@ -451,7 +470,8 @@ export function SelectedClassCard({
             <button
               aria-pressed={session.riskExempt}
               className="planning-chip"
-              disabled={pending}
+              // Saving the exemption reloads the class: unsaved chip edits must go first.
+              disabled={pending || changed}
               onClick={() => void toggleExempt()}
               type="button"
             >
@@ -465,7 +485,8 @@ export function SelectedClassCard({
             label={t("admin-scheduling:classCard.ring")}
             value={ringName(session.ringId ?? null)}
           />
-          {settings.levelsEnabled ? (
+          {/* INSTRUCTOR cannot read `levels.enabled` (R-06-15): the class's own levels decide. */}
+          {settings.levelsEnabled && session.levelIds.length > 0 ? (
             <StaticChip
               label={t("admin-scheduling:classCard.levels")}
               value={levelNames(session.levelIds)}
@@ -593,18 +614,26 @@ export function SelectedClassCard({
   );
 }
 
-/** `details.bookings[]` of `RING_HAS_BOOKINGS` (training bookings, S09): shown as the api sends them. */
+/**
+ * `details.bookings[]` of `RING_HAS_BOOKINGS` (training bookings): «{memberName} + {dogName}», the
+ * two fields both published shapes carry (INC-09: `{id, ringId, from, to, …}` on S05/S06 routes,
+ * `SlotOccupant {bookingId, …}` in the S09 schema).
+ */
 export function RingBookingList({ bookings }: { bookings: readonly unknown[] }) {
+  const { t } = useTranslation("admin-scheduling");
   const lines = bookings.map((booking, index) => {
     if (typeof booking !== "object" || booking === null) return { key: String(index), text: "" };
     const record = booking as Record<string, unknown>;
-    const text = [record.label, record.memberName, record.dogName, record.who]
+    const text = [
+      record.memberName,
+      typeof record.dogName === "string" && record.dogName !== ""
+        ? t("admin-scheduling:cancelModal.dog", { dog: record.dogName })
+        : undefined,
+    ]
       .filter((value): value is string => typeof value === "string" && value !== "")
-      .join(" · ");
-    return {
-      key: typeof record.bookingId === "string" ? record.bookingId : String(index),
-      text,
-    };
+      .join(" ");
+    const id = typeof record.bookingId === "string" ? record.bookingId : record.id;
+    return { key: typeof id === "string" ? id : String(index), text };
   });
   return lines.length === 0 ? null : (
     <ul className="calendar-list">

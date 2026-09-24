@@ -45,6 +45,8 @@ export function CancelClassModal({
   const [error, setError] = useState<{ field: boolean; message: string }>();
   const count = preview.bookings.length;
   const withRegistrants = count + preview.waitlistCount > 0;
+  // Only a waitlist (R-06-10 still requires the text): no «0 alumnes inscrits».
+  const waitlistOnly = count === 0 && preview.waitlistCount > 0;
 
   const confirm = async () => {
     setPending(true);
@@ -107,10 +109,21 @@ export function CancelClassModal({
     >
       <div className="calendar-cancel">
         <p className="calendar-cancel__intro">
-          <Emphasized
-            phrase={t("admin-scheduling:cancelModal.introCount", { count })}
-            text={t("admin-scheduling:cancelModal.intro", { count })}
-          />
+          {waitlistOnly ? (
+            <Emphasized
+              phrase={t("admin-scheduling:cancelModal.introWaitlistCount", {
+                count: preview.waitlistCount,
+              })}
+              text={t("admin-scheduling:cancelModal.introWaitlist", {
+                count: preview.waitlistCount,
+              })}
+            />
+          ) : (
+            <Emphasized
+              phrase={t("admin-scheduling:cancelModal.introCount", { count })}
+              text={t("admin-scheduling:cancelModal.intro", { count })}
+            />
+          )}
         </p>
         {count === 0 ? null : (
           <table
@@ -186,7 +199,9 @@ export function CancelClassModal({
             variant="danger"
           >
             <Icon aria-hidden="true" name="x" />
-            {t("admin-scheduling:cancelModal.confirm", { count })}
+            {waitlistOnly
+              ? t("admin-scheduling:cancelModal.confirmWaitlist")
+              : t("admin-scheduling:cancelModal.confirm", { count })}
           </Button>
         </div>
       </div>

@@ -24,7 +24,7 @@ Order: W01 → W02 ∥ W03 → W04 → W05 → W06 → W07 → W09 · W08 when J
 - [ ] The three shells render with the theme of the host's club **before first paint**, the navigation matches the mockups (6 tabs / sidebar groups) and hides disabled modules and unauthorised entries.
 - [ ] CI green: lint (incl. color rule), typecheck, tests, `i18n:check`, generated types diff, e2e, size budget.
 - [ ] Gallery screenshots in both themes; shell screenshots at 375 px and 1280 px committed under `roadmap/evidence/E0-W06/`.
-- [ ] `course-core` + `shared-types` in the monorepo with tests green (or explicitly deferred).
+- [x] `course-core` + `shared-types` in the monorepo with tests green (or explicitly deferred). — organizer 24-09: E0-W08 verified (2 rounds, 363 tests; JSON Schema split off to WP-16-C′).
 - [ ] Playbook written.
 
 ## E1 · AgilityHub ID (front part) — OPENED 2026-09-06 (E1-W01 ready; W02–W04 open when the api contract E1-T01 lands)

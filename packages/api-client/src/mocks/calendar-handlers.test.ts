@@ -174,6 +174,55 @@ describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)",
     });
   });
 
+  it("R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking", async () => {
+    const id = "cls-2026-08-12-1850-0";
+    const bookings = [
+      {
+        dogName: "Trevi",
+        from: "2026-08-12T17:00:00Z",
+        id: "training-2026-08-12-muntanya",
+        memberName: "Clara Font",
+        ringId: "ring-muntanya",
+        to: "2026-08-12T18:00:00Z",
+      },
+    ];
+    await expect(
+      client.PATCH("/class-sessions/{id}", {
+        body: { ringId: "ring-muntanya", version: 1 },
+        params: { path: { id } },
+      }),
+    ).rejects.toMatchObject({ code: "RING_HAS_BOOKINGS", details: { bookings }, status: 422 });
+    await expect(
+      client.POST("/ring-blocks", {
+        body: {
+          from: "2026-08-12T17:30:00Z",
+          kind: "BLOCK",
+          reason: "MAINTENANCE",
+          ringId: "ring-muntanya",
+          to: "2026-08-12T18:30:00Z",
+        },
+        params: { header: { "Idempotency-Key": "key-5" } },
+      }),
+    ).rejects.toMatchObject({ code: "RING_HAS_BOOKINGS", details: { bookings }, status: 422 });
+
+    const moved = await client.PATCH("/class-sessions/{id}", {
+      body: { cancelBookings: true, ringId: "ring-muntanya", version: 1 },
+      params: { path: { id } },
+    });
+    expect(moved.data).toMatchObject({ ringId: "ring-muntanya", version: 2 });
+    // The booking is cancelled by the club: the same move no longer conflicts.
+    const back = await client.PATCH("/class-sessions/{id}", {
+      body: { ringId: "ring-central", version: 2 },
+      params: { path: { id } },
+    });
+    expect(back.data).toMatchObject({ ringId: "ring-central", version: 3 });
+    const again = await client.PATCH("/class-sessions/{id}", {
+      body: { ringId: "ring-muntanya", version: 3 },
+      params: { path: { id } },
+    });
+    expect(again.data).toMatchObject({ ringId: "ring-muntanya", version: 4 });
+  });
+
   it("serves the instructor day grid (form D) of the Wednesday", async () => {
     const result = await client.GET("/day-grid", {
       params: { query: { date: "2026-08-12", view: "instructor" } },

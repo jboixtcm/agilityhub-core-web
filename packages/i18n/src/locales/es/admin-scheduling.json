@@ -150,6 +150,7 @@
     "selected": {
       "title": "Clase seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Hora",
+      "noInstructor": "Sin instructor",
       "noLevels": "ninguno",
       "exempt": "Exenta de la revisión de las 7:30",
       "notes": "Notas",
@@ -172,6 +173,7 @@
     "validation": {
       "title": "Validación de la semana",
       "summary": "{weekLabel} · del {range} · {draftCount, plural, one {# clase} other {# clases}} en borrador · ",
+      "summaryRange": "del {range} · {draftCount, plural, one {# clase} other {# clases}} en borrador · ",
       "count": "{count, plural, one {# clase} other {# clases}}",
       "clean": "ninguna incoherencia",
       "issues": "{count, plural, one {# incoherencia} other {# incoherencias}}",
@@ -221,6 +223,8 @@
     "title": "Anular la clase — {day} · {time} · {description} · {ring} · {instructors}",
     "intro": "Esta clase tiene {count, plural, one {# alumno inscrito} other {# alumnos inscritos}}. Si la anulas, recibirán un aviso en la app, por correo y por SMS con el texto que escribas abajo.",
     "introCount": "{count, plural, one {# alumno inscrito} other {# alumnos inscritos}}",
+    "introWaitlist": "Esta clase no tiene alumnos inscritos, pero tiene {count, plural, one {# alumno en la lista de espera} other {# alumnos en la lista de espera}}. Si la anulas, recibirán un aviso en la app, por correo y por SMS con el texto que escribas abajo.",
+    "introWaitlistCount": "{count, plural, one {# alumno en la lista de espera} other {# alumnos en la lista de espera}}",
     "listLabel": "Alumnos inscritos",
     "dog": "+ {dog}",
     "channel": {
@@ -234,6 +238,7 @@
     "footerWaitlist": " · también a la lista de espera ({count})",
     "back": "Vuelve atrás",
     "confirm": "{count, plural, one {ANULA Y AVISA AL ALUMNO} other {ANULA Y AVISA A LOS # ALUMNOS}}",
+    "confirmWaitlist": "ANULA Y AVISA A LA LISTA DE ESPERA",
     "simpleCancel": "¿Quieres anular la clase?",
     "simpleDelete": "¿Quieres eliminar la clase?"
   }

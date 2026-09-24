@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   type CalendarSettings,
+  clampTime,
   type ClassSession,
   errorCode,
   holidayDates,
@@ -21,6 +22,7 @@ import {
 import { automaticDescription } from "./description";
 import { RingBookingList } from "./SelectedClassCard";
 import {
+  clubToday,
   errorProp,
   fieldOfValidationError,
   mondayOf,
@@ -78,6 +80,7 @@ export function CreateClassDrawer({
   onCreated,
   openingHours,
   settings,
+  timeZone,
 }: {
   catalogs: PlanningCatalogs;
   client: ApiClient;
@@ -85,27 +88,49 @@ export function CreateClassDrawer({
   onCreated: (session: ClassSession) => void;
   openingHours: OpeningHours;
   settings: CalendarSettings;
+  timeZone: string;
 }) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
   const errorMessage = useCalendarErrorMessage();
   const activeRings = catalogs.rings.filter((ring) => ring.active);
   const activeLevels = catalogs.levels.filter((level) => level.active);
   const activeInstructors = catalogs.instructors.filter((instructor) => instructor.active);
+  const today = clubToday(timeZone);
+  const optionsOf = (day: string) => {
+    const opening = openingOf(openingHours, day);
+    return {
+      ends: timeOptions(
+        timeOf(minutesOf(opening.open) + settings.slotMinutes),
+        opening.close,
+        settings.slotMinutes,
+      ),
+      starts: timeOptions(
+        opening.open,
+        timeOf(minutesOf(opening.close) - settings.slotMinutes),
+        settings.slotMinutes,
+      ),
+    };
+  };
   const [date, setDate] = useState("");
   const isoDate = parseMaskedDate(date);
-  const opening = openingOf(openingHours, isoDate ?? "2026-08-10");
-  const starts = timeOptions(
-    opening.open,
-    timeOf(minutesOf(opening.close) - settings.slotMinutes),
-    settings.slotMinutes,
-  );
-  const ends = timeOptions(
-    timeOf(minutesOf(opening.open) + settings.slotMinutes),
-    opening.close,
-    settings.slotMinutes,
-  );
+  const { ends, starts } = optionsOf(isoDate ?? today);
   const [startTime, setStartTime] = useState(starts[0] ?? "");
-  const [endTime, setEndTime] = useState(timeOf(minutesOf(starts[0] ?? "07:00") + 60));
+  const [endTime, setEndTime] = useState(() =>
+    clampTime(timeOf(minutesOf(starts[0] ?? "") + 60), ends),
+  );
+
+  /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
+  const changeDate = (value: string) => {
+    const next = maskDate(value);
+    setDate(next);
+    const day = parseMaskedDate(next);
+    if (day === undefined) return;
+    const options = optionsOf(day);
+    const nextStart = clampTime(startTime, options.starts);
+    const length = Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
+    setStartTime(nextStart);
+    setEndTime(clampTime(timeOf(minutesOf(nextStart) + length), options.ends));
+  };
   const [ringId, setRingId] = useState<string | null>(null);
   const [levelIds, setLevelIds] = useState<string[]>([]);
   const [instructorIds, setInstructorIds] = useState<string[]>(() => {
@@ -138,6 +163,7 @@ export function CreateClassDrawer({
     return capacities.length === 0 ? "" : String(Math.min(...capacities));
   }, [catalogs.levels, levelIds]);
   const isHoliday = isoDate !== undefined && (holidays.data ?? []).includes(isoDate);
+  const startOptions = starts.includes(startTime) ? starts : [startTime, ...starts];
   const endOptions = ends.includes(endTime) ? ends : [...ends, endTime];
 
   const create = async (cancelBookings = false) => {
@@ -214,7 +240,7 @@ export function CreateClassDrawer({
             id="calendar-create-date"
             inputMode="numeric"
             onChange={(event) => {
-              setDate(maskDate(event.currentTarget.value));
+              changeDate(event.currentTarget.value);
             }}
             placeholder={t("admin-scheduling:calendar.createForm.datePlaceholder")}
             required
@@ -244,7 +270,7 @@ export function CreateClassDrawer({
               }}
               value={startTime}
             >
-              {starts.map((time) => (
+              {startOptions.map((time) => (
                 <option key={time} value={time}>
                   {timeLabel(time)}
                 </option>

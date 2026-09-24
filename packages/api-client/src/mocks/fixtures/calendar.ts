@@ -262,8 +262,8 @@ function draftSpecs(): SessionSpec[] {
     spec(0, "18:50", CEN, [B, C], MARC, "B+C", 5),
     spec(0, "18:50", CAD, [P], ANNA, "Cadells", 5),
     spec(0, "20:00", MUN, [B, C], MARC, "B+C", 5),
-    spec(0, "20:00", CEN, [F, G], ANNA, "F+G", 4),
-    spec(1, "08:30", CEN, [F, G], LAURA, "F+G", 4),
+    spec(0, "20:00", CEN, [F, G], ANNA, "F i sup.", 4),
+    spec(1, "08:30", CEN, [F, G], LAURA, "F i sup.", 4),
     spec(1, "17:40", CAR, [D, E], MARC, "D+E", 5),
     spec(1, "18:50", CEN, [A, B], LAURA, "A+B", 5),
     spec(1, "20:00", PET, [A, B], LAURA, "A+B", 5),
@@ -274,7 +274,7 @@ function draftSpecs(): SessionSpec[] {
     spec(2, "18:50", CEN, [B, C], MARC, "B+C", 5),
     spec(2, "18:50", PET, [T], ANNA, "Teràpia", 1, { description: "Teràpia" }),
     spec(2, "20:00", CEN, [B, C], MARC, "B+C", 5),
-    spec(2, "20:00", CAR, [F, G], ANNA, "F+G", 4),
+    spec(2, "20:00", CAR, [F, G], ANNA, "F i sup.", 4),
     spec(3, "17:40", CAR, [D, E], MARC, "D+E", 5),
     spec(3, "18:50", CAD, [P], MARC, "Cadells", 5),
     spec(3, "20:00", MUN, [D, E], LAURA, "D+E", 5),
@@ -328,6 +328,40 @@ export function initialRingBlocks(currentMonday: string): RingBlock[] {
       to: clubInstant(date, "18:00"),
       toLocal: "18:00",
       version: 1,
+    },
+  ];
+}
+
+/**
+ * A live training booking (S09) the calendar does not draw: moving a class or a block onto it
+ * answers `RING_HAS_BOOKINGS` until the admin sends `cancelBookings: true` (R-06-05, R-06-11).
+ */
+export interface MockTrainingBooking {
+  date: string;
+  dogName: string;
+  from: string;
+  fromLocal: string;
+  id: string;
+  memberName: string;
+  ringId: string;
+  to: string;
+  toLocal: string;
+}
+
+/** «Clara Font + Trevi» trains on Muntanya on the current Wednesday, 19:00–20:00. */
+export function initialTrainingBookings(currentMonday: string): MockTrainingBooking[] {
+  const date = addDays(currentMonday, 2);
+  return [
+    {
+      date,
+      dogName: "Trevi",
+      from: clubInstant(date, "19:00"),
+      fromLocal: "19:00",
+      id: `training-${date}-muntanya`,
+      memberName: "Clara Font",
+      ringId: MUN,
+      to: clubInstant(date, "20:00"),
+      toLocal: "20:00",
     },
   ];
 }

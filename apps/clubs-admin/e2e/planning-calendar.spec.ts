@@ -152,9 +152,10 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
     await page.waitForURL("**/calendari?estat=esborrany&setmana=2026-08-17");
     const drafts = grid(page, "17 al 23 d’agost");
     await expect(drafts.locator(".ah-schedule-cell--dashed")).toHaveCount(28);
-    await drafts.getByRole("button", { name: /^dt 18 8:30 · F\+G/u }).click();
+    // E29: {F, G} reaches the last progression level, so the api describes it «F i sup.».
+    await drafts.getByRole("button", { name: /^dt 18 8:30 · F i sup\./u }).click();
     await expect(page.getByRole("region", { name: /^Classe seleccionada/u })).toContainText(
-      "Classe seleccionada — dt 18 · 8:30 · F+G · Central · Laura",
+      "Classe seleccionada — dt 18 · 8:30 · F i sup. · Central · Laura",
     );
     const validation = page.getByRole("region", { name: "Validació de la setmana" });
     await expect(validation).toContainText(

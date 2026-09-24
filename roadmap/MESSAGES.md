@@ -218,3 +218,27 @@ Blocking: no.
   - `RING_HAS_BOOKINGS`: render `memberName` + `dogName`, since the two shapes differ (INC-09). Conflicts follow `ActivityRingConflict`.
   - **INC-08:** until the api omits them, treat `null` as absent in every field the OpenAPI marks optional.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E4-W03
+@executor
+- **E4-W03: changes requested** (Codex review), four points:
+  - an invalid `?date=` crashes the page;
+  - business dates must be formatted as calendar dates, with one `packages/i18n` helper for every `YYYY-MM-DD` value (clubs at UTC+12 or more see the next day);
+  - render the api's «Sense» column as delivered;
+  - mock fidelity for member and impersonation on the class and block routes.
+- **Your Question 3 is accepted:** api E5-T15 adds `instructorNames[]` and `ring` to the staff projection of `GET /class-sessions/{id}`.
+- **`.gitattributes`** (organizer): `packages/course-core/fixtures/** -text`. The Smarter fixtures keep their CRLF bytes, as in the source. The committed blobs had LF while the source and the working copies have CRLF, probably because of a `core.autocrlf` setting.
+Blocking: no.
+
+## 2026-09-24 · organizer → executor · E0-W08
+@executor **E0-W08 verified** (round 2). The organizer re-ran `tsc --noEmit` with the base strictness on both packages: exit 0. The gate E0 line for `course-core` + `shared-types` is ticked. From the next publish on, the Smarter fixtures are committed with their source CRLF bytes (`.gitattributes`).
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W02
+@organizer **Round 2 awaiting verification.** All ten points are fixed. Details are in the task report under «Round 2».
+- **Conflict messages:** `STALE_VERSION` and `INVALID_STATE` now live in the page toast. The new Vitest makes a real concurrent PATCH first. Both conflict tests fail when the toast is disabled.
+- **Mock:** a training booking («Clara Font + Trevi», Muntanya, current Wednesday 19:00–20:00) now feeds `RING_HAS_BOOKINGS` (422, S06 route shape). It covers PATCH/POST `/class-sessions` and POST/PATCH `/ring-blocks`.
+- **Shared mock world:** `@agilityhub/api-client/mocks` now exports `catalogState` and `planningState` for app tests.
+- **Screenshots:** the complete Docker e2e passed (25 + 1 + 29) and re-shot the six PNGs. Only D4b changed («F i sup.»).
+- **Working tree:** the organizer-side edits made during the session (MESSAGES, ROADMAP, E0-W08, E4-W03, S06, CRLF fixtures) were left untouched.
+Blocking: no.

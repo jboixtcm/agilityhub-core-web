@@ -150,6 +150,7 @@
     "selected": {
       "title": "Classe seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Hora",
+      "noInstructor": "Sense instructor",
       "noLevels": "cap",
       "exempt": "Exempta de la revisió de les 7:30",
       "notes": "Notes",
@@ -172,6 +173,7 @@
     "validation": {
       "title": "Validació de la setmana",
       "summary": "{weekLabel} · del {range} · {draftCount, plural, one {# classe} other {# classes}} en esborrany · ",
+      "summaryRange": "del {range} · {draftCount, plural, one {# classe} other {# classes}} en esborrany · ",
       "count": "{count, plural, one {# classe} other {# classes}}",
       "clean": "cap incoherència",
       "issues": "{count, plural, one {# incoherència} other {# incoherències}}",
@@ -221,6 +223,8 @@
     "title": "Anul·lar la classe — {day} · {time} · {description} · {ring} · {instructors}",
     "intro": "Aquesta classe té {count, plural, one {# alumne inscrit} other {# alumnes inscrits}}. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota.",
     "introCount": "{count, plural, one {# alumne inscrit} other {# alumnes inscrits}}",
+    "introWaitlist": "Aquesta classe no té alumnes inscrits, però té {count, plural, one {# alumne a la llista d'espera} other {# alumnes a la llista d'espera}}. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota.",
+    "introWaitlistCount": "{count, plural, one {# alumne a la llista d'espera} other {# alumnes a la llista d'espera}}",
     "listLabel": "Alumnes inscrits",
     "dog": "+ {dog}",
     "channel": {
@@ -234,6 +238,7 @@
     "footerWaitlist": " · també a la llista d'espera ({count})",
     "back": "Torna enrere",
     "confirm": "{count, plural, one {ANUL·LA I AVISA L'ALUMNE} other {ANUL·LA I AVISA ELS # ALUMNES}}",
+    "confirmWaitlist": "ANUL·LA I AVISA LA LLISTA D'ESPERA",
     "simpleCancel": "Vols anul·lar la classe?",
     "simpleDelete": "Vols eliminar la classe?"
   }

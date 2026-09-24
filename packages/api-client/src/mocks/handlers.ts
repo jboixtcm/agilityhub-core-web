@@ -54,7 +54,7 @@ import {
   type MemberDogSignupRequest,
   type SignupRequest,
 } from "./fixtures/signup";
-import { planningHandlers, resetPlanningState } from "./planning-handlers";
+import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
   currentMockScenarioName,
@@ -2901,7 +2901,9 @@ export const handlers = [
 ];
 
 export {
+  catalogState,
   mockScenario,
+  planningState,
   resetAuditMockState,
   resetCatalogState,
   resetCensusRecordState,

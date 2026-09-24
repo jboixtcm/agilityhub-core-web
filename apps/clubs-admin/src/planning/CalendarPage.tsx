@@ -770,7 +770,11 @@ export function CalendarPage({
             onClose={() => {
               setSelectedId(undefined);
             }}
-            onReload={calendar.reload}
+            onConflict={(message) => {
+              // Page-level: the refetch brings a new version and remounts the card.
+              setFeedback({ message, tone: "danger" });
+              calendar.reload();
+            }}
             onSaved={() => {
               setFeedback({ message: t("admin-scheduling:calendar.saved"), tone: "success" });
               calendar.reload();
@@ -797,13 +801,17 @@ export function CalendarPage({
                 phrase={t("admin-scheduling:calendar.validation.count", {
                   count: current.draftCount,
                 })}
-                text={t("admin-scheduling:calendar.validation.summary", {
-                  draftCount: current.draftCount,
-                  range: formatWeekRange(current.week.startDate, current.week.endDate),
-                  weekLabel:
-                    relativeLabel(current.week.relative) ??
-                    t("admin-scheduling:calendar.week.select"),
-                })}
+                text={(() => {
+                  const summary = {
+                    draftCount: current.draftCount,
+                    range: formatWeekRange(current.week.startDate, current.week.endDate),
+                  };
+                  const weekLabel = relativeLabel(current.week.relative);
+                  // Neither current nor next: only the range (step 1).
+                  return weekLabel === undefined
+                    ? t("admin-scheduling:calendar.validation.summaryRange", summary)
+                    : t("admin-scheduling:calendar.validation.summary", { ...summary, weekLabel });
+                })()}
               />
               {inconsistencies.length === 0 ? (
                 <Badge tone="success">{t("admin-scheduling:calendar.validation.clean")}</Badge>
@@ -930,6 +938,7 @@ export function CalendarPage({
           }}
           openingHours={openingHours.data ?? {}}
           settings={config}
+          timeZone={branding.timeZone}
         />
       )}
       {readOnly || blockDrawer === undefined || cat === undefined ? null : (

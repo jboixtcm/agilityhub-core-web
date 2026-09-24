@@ -150,6 +150,7 @@
     "selected": {
       "title": "Selected class — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Time",
+      "noInstructor": "No instructor",
       "noLevels": "none",
       "exempt": "Exempt from the 7:30 review",
       "notes": "Notes",
@@ -172,6 +173,7 @@
     "validation": {
       "title": "Week validation",
       "summary": "{weekLabel} · {range} · {draftCount, plural, one {# class} other {# classes}} in draft · ",
+      "summaryRange": "{range} · {draftCount, plural, one {# class} other {# classes}} in draft · ",
       "count": "{count, plural, one {# class} other {# classes}}",
       "clean": "no inconsistencies",
       "issues": "{count, plural, one {# inconsistency} other {# inconsistencies}}",
@@ -221,6 +223,8 @@
     "title": "Cancel the class — {day} · {time} · {description} · {ring} · {instructors}",
     "intro": "This class has {count, plural, one {# booked student} other {# booked students}}. If you cancel it, they will get a notice in the app, by email and by SMS with the text you write below.",
     "introCount": "{count, plural, one {# booked student} other {# booked students}}",
+    "introWaitlist": "This class has no booked students, but it has {count, plural, one {# student on the waiting list} other {# students on the waiting list}}. If you cancel it, they will get a notice in the app, by email and by SMS with the text you write below.",
+    "introWaitlistCount": "{count, plural, one {# student on the waiting list} other {# students on the waiting list}}",
     "listLabel": "Booked students",
     "dog": "+ {dog}",
     "channel": {
@@ -234,6 +238,7 @@
     "footerWaitlist": " · also to the waiting list ({count})",
     "back": "Go back",
     "confirm": "{count, plural, one {CANCEL AND NOTIFY THE STUDENT} other {CANCEL AND NOTIFY THE # STUDENTS}}",
+    "confirmWaitlist": "CANCEL AND NOTIFY THE WAITING LIST",
     "simpleCancel": "Cancel the class?",
     "simpleDelete": "Delete the class?"
   }

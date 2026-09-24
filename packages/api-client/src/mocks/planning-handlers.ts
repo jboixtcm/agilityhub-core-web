@@ -7,6 +7,8 @@ import {
   type ClassSession,
   initialClassSessions,
   initialRingBlocks,
+  initialTrainingBookings,
+  type MockTrainingBooking,
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
@@ -51,12 +53,14 @@ export const planningState: {
   sequence: number;
   sessions: ClassSession[];
   templates: WeekTemplate[];
+  trainingBookings: MockTrainingBooking[];
   weeks: MockWeek[];
 } = {
   blocks: initialRingBlocks(mondayOf(clubLocalDate())),
   sequence: 1,
   sessions: initialClassSessions(mondayOf(clubLocalDate())),
   templates: structuredClone([...initialWeekTemplates]),
+  trainingBookings: initialTrainingBookings(mondayOf(clubLocalDate())),
   weeks: initialWeeks(),
 };
 
@@ -67,6 +71,7 @@ export function resetPlanningState(): void {
   planningState.sequence = 1;
   planningState.sessions = initialClassSessions(monday);
   planningState.templates = structuredClone([...initialWeekTemplates]);
+  planningState.trainingBookings = initialTrainingBookings(monday);
   planningState.weeks = initialWeeks();
   resetDayGridState();
 }

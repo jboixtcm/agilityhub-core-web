@@ -325,6 +325,60 @@ function sessionProblem(item: {
   return undefined;
 }
 
+/** Live training bookings of a ring overlapping a club-local range (S09 R-09-13). */
+function trainingBookingsOn(
+  ringId: string | null | undefined,
+  date: string,
+  startTime: string,
+  endTime: string,
+) {
+  return ringId === null || ringId === undefined
+    ? []
+    : planningState.trainingBookings.filter(
+        (booking) =>
+          booking.ringId === ringId &&
+          booking.date === date &&
+          overlaps(
+            { end: endTime, start: startTime },
+            { end: booking.toLocal, start: booking.fromLocal },
+          ),
+      );
+}
+
+/**
+ * `RING_HAS_BOOKINGS` (R-06-05, R-06-11) unless the ADMIN sends `cancelBookings: true`; then the
+ * bookings are cancelled by the club (removed from the mock). Called after every other check.
+ */
+function ringBookingsProblem(
+  ringId: string | null | undefined,
+  date: string,
+  startTime: string,
+  endTime: string,
+  cancelBookings: boolean | null | undefined,
+) {
+  const bookings = trainingBookingsOn(ringId, date, startTime, endTime);
+  if (bookings.length === 0) return undefined;
+  if (cancelBookings !== true) {
+    return apiError("RING_HAS_BOOKINGS", "The ring has training bookings", 422, {
+      bookings: bookings.map((booking) => ({
+        dogName: booking.dogName,
+        from: booking.from,
+        id: booking.id,
+        memberName: booking.memberName,
+        ringId: booking.ringId,
+        to: booking.to,
+      })),
+    });
+  }
+  if (currentMockScenario().me.membership?.roles.includes("ADMIN") !== true) {
+    return apiError("FORBIDDEN", "Only an admin can cancel training bookings", 403);
+  }
+  planningState.trainingBookings = planningState.trainingBookings.filter(
+    (booking) => !bookings.includes(booking),
+  );
+  return undefined;
+}
+
 function findSession(id: string): ClassSession | undefined {
   return planningState.sessions.find((session) => session.id === id);
 }
@@ -547,7 +601,9 @@ export const calendarHandlers = [
     if (!/^\d{4}-\d{2}-\d{2}$/u.test(body.date)) return validationError("date");
     const description = manualDescription(body.description);
     const ringId = body.ringId ?? null;
-    const problem = sessionProblem({ ...body, description, ringId });
+    const problem =
+      sessionProblem({ ...body, description, ringId }) ??
+      ringBookingsProblem(ringId, body.date, body.startTime, body.endTime, body.cancelBookings);
     if (problem !== undefined) return problem;
     const monday = mondayOf(body.date);
     let week = planningState.weeks.find((candidate) => candidate.startDate === monday);
@@ -627,6 +683,16 @@ export const calendarHandlers = [
       });
       if (problem !== undefined) return problem;
     }
+    if (body.ringId !== undefined || body.startTime !== undefined || body.endTime !== undefined) {
+      const bookings = ringBookingsProblem(
+        next.ringId,
+        next.date,
+        next.startTime,
+        next.endTime,
+        body.cancelBookings,
+      );
+      if (bookings !== undefined) return bookings;
+    }
     if (body.levelIds !== undefined || "description" in body) {
       next.displayDescription = mockDisplayDescription(planningLevels(), levelIds, description);
     }
@@ -690,7 +756,15 @@ export const calendarHandlers = [
   }),
   http.post("*/api/v1/ring-blocks", async ({ request }) => {
     const body = (await request.json()) as RingBlockCreateRequest;
-    const problem = blockProblem(body);
+    const problem =
+      blockProblem(body) ??
+      ringBookingsProblem(
+        body.ringId,
+        clubLocalDateOf(body.from),
+        clubLocalTime(body.from),
+        clubLocalTime(body.to),
+        body.cancelBookings,
+      );
     if (problem !== undefined) return problem;
     const date = clubLocalDateOf(body.from);
     const block: RingBlock = {
@@ -739,7 +813,15 @@ export const calendarHandlers = [
       ringId: body.ringId ?? current.ringId,
       to: body.to ?? current.to,
     };
-    const problem = blockProblem(fields, current.id);
+    const problem =
+      blockProblem(fields, current.id) ??
+      ringBookingsProblem(
+        fields.ringId,
+        clubLocalDateOf(fields.from),
+        clubLocalTime(fields.from),
+        clubLocalTime(fields.to),
+        body.cancelBookings,
+      );
     if (problem !== undefined) return problem;
     const next: RingBlock = {
       ...current,
