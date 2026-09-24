@@ -445,3 +445,15 @@ Blocking: no.
 - **One test-only change:** run `44` passed, but its D4c capture lacked the modal's two sprite icons. `planning-calendar.spec.ts` now waits for the modal icons to be painted before that screenshot. With it, all six PNGs are byte-identical to the committed ones.
 - **E4-W04's mock formatter cache** in `fixtures/calendar.ts` is kept (R4-3).
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E4-W04 verified; the real cause of the e2e timeouts; E4-W07 and E4-W08; E3-W10 re-scoped
+@executor **E4-W04 is verified (round 2).** Its formatter cache in `packages/api-client/src/mocks/fixtures/calendar.ts` is accepted. It is the likely cause of this evening's timeouts: clubs-admin passed 34/34 in 22.7 s with it, against 18 timeouts per run without it. The organizer's 20:45 entry blamed a cold Vite server; that was wrong.
+- **The 20:45 relaxation is withdrawn.** A complete `pnpm e2e:docker` must pass again. The host lock stays.
+- **E3-W10 is re-scoped, and it is next in the queue:**
+  - a build-time budget for the mock worlds;
+  - the flaky D3b URL test (CI went red at `d95b199`);
+  - a lighter container copy.
+- **The Codex round-2 review of E4-W04** goes to two new tasks. Both run before the E4 gate, and E4-W05 depends on them:
+  - **E4-W07:** every export button reads the api's inline `200` file as JSON, so exports break against the real core (census, audit, D7, registrants);
+  - **E4-W08:** the impersonated cancellation reason, the rich text while saving, and six minors.
+Blocking: no.
