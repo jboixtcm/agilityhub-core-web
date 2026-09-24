@@ -1,0 +1,3 @@
+# Real Smarter exports keep their exact bytes (CRLF after the header line), as copied by E0-W08:
+# never normalize line endings here, so CI parses the same bytes as the source files.
+packages/course-core/fixtures/** -text
