@@ -1,10 +1,12 @@
 import "./components.css";
+import "./day-grid.css";
 import "./limited-markdown.css";
 import "./schedule-grid.css";
 import "./universal-list.css";
 
 export * from "./branding";
 export * from "./components";
+export * from "./day-grid";
 export * from "./icons/Icon";
 export * from "./icons/names";
 export * from "./limited-markdown";

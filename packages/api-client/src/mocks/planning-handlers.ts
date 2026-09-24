@@ -10,6 +10,7 @@ import {
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
+import { resetDayGridState } from "./fixtures/day-grid";
 import {
   addDays,
   clubLocalDate,
@@ -67,6 +68,7 @@ export function resetPlanningState(): void {
   planningState.sessions = initialClassSessions(monday);
   planningState.templates = structuredClone([...initialWeekTemplates]);
   planningState.weeks = initialWeeks();
+  resetDayGridState();
 }
 
 export function nextId(prefix: string): string {

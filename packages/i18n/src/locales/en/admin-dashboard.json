@@ -1,5 +1,10 @@
 {
-  "common": { "empty": "—", "error": "The dashboard could not be loaded.", "loading": "Loading the dashboard", "retry": "Try again" },
+  "common": {
+    "empty": "—",
+    "error": "The dashboard could not be loaded.",
+    "loading": "Loading the dashboard",
+    "retry": "Try again"
+  },
   "greeting": "{period, select, morning {Good morning!} afternoon {Good afternoon!} other {Good evening!}} {date}",
   "kpi": {
     "activeMembers": "Active members",

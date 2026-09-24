@@ -67,7 +67,8 @@ test.describe("T-02-14 clubs shell", () => {
     );
     expect(initialPrimary).toBe(brandingCanic.theme.colors.primary);
     await expect(page.getByRole("link", { name: "Entrenaments" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Avui" })).toHaveCount(0);
+    // E4-W03: the member tab bar of mockup 10 has «Avui» → /avui.
+    await expect(page.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
 
     const manifest = await page.evaluate(async () => {
       const href = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.href;

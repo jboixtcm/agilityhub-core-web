@@ -420,7 +420,8 @@
 .ah-tab-bar {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  /* Content-sized tracks + equal share of the rest: six labels («Entrenaments») fit at 375 px. */
+  grid-auto-columns: auto;
   color: var(--ah-color-text-muted);
   background: var(--ah-color-surface);
   border-top: 1px solid var(--ah-color-border);
@@ -436,6 +437,7 @@
   font-size: 0.6875rem;
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .ah-tab-bar__item[aria-current="page"] {

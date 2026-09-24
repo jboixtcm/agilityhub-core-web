@@ -1,0 +1,21 @@
+{
+  "today": {
+    "title": "Classes of the day",
+    "dateHeader": "{weekday} {date}",
+    "dayChip": "{weekday} {day}",
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "weekDays": "Days of the week",
+    "grid": "Day grid",
+    "time": "Time",
+    "occupied": "Occupied",
+    "atRisk": "at risk ⚠",
+    "activity": "Activity · {title}",
+    "noRing": "No ring",
+    "footer": "Occupied = ring booked for training or blocked",
+    "empty": "No classes on this day",
+    "loading": "Loading the day grid",
+    "loadError": "The day grid could not be loaded.",
+    "retry": "Try again"
+  }
+}

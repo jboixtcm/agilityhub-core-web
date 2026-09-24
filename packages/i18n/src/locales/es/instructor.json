@@ -1,0 +1,29 @@
+{
+  "overview": {
+    "title": "Visión global",
+    "footer": "n/n +e = inscritos/plazas + lista de espera · el instructor previsto se muestra siempre",
+    "training": "Entren.",
+    "block": "Bloq.",
+    "close": "Cerrar",
+    "class": {
+      "loading": "Cargando la clase",
+      "loadError": "No se ha podido cargar la clase.",
+      "when": "Fecha y hora",
+      "ring": "Pista",
+      "instructors": "Instructor",
+      "occupancy": "Inscritos/plazas",
+      "state": "Estado",
+      "risk": "En riesgo"
+    },
+    "blockDrawer": {
+      "title": "Bloqueo de pista",
+      "reason": "Motivo",
+      "note": "Nota",
+      "createdBy": "Creado por",
+      "cancel": "Anula el bloqueo",
+      "cancelling": "Anulando el bloqueo",
+      "loading": "Cargando el bloqueo",
+      "loadError": "No se ha podido cargar el bloqueo."
+    }
+  }
+}

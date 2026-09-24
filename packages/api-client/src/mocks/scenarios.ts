@@ -71,6 +71,12 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
   },
+  /** Screen 10 empty state: `GET /day-grid` answers `rows: []` for every date. */
+  dayGridEmpty: {
+    branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
   planningNoLevels: {
     branding: canic,
     levelsEnabled: false,

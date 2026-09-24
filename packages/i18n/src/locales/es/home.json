@@ -1,0 +1,21 @@
+{
+  "today": {
+    "title": "Clases del día",
+    "dateHeader": "{weekday} {date}",
+    "dayChip": "{weekday} {day}",
+    "previousDay": "Día anterior",
+    "nextDay": "Día siguiente",
+    "weekDays": "Días de la semana",
+    "grid": "Cuadro del día",
+    "time": "Hora",
+    "occupied": "Ocupada",
+    "atRisk": "en riesgo ⚠",
+    "activity": "Actividad · {title}",
+    "noRing": "Sin pista",
+    "footer": "Ocupada = pista reservada para entrenamiento o bloqueada",
+    "empty": "Ninguna clase este día",
+    "loading": "Cargando el cuadro del día",
+    "loadError": "No se ha podido cargar el cuadro del día.",
+    "retry": "Reintentar"
+  }
+}

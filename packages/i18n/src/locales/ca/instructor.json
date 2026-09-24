@@ -1,0 +1,29 @@
+{
+  "overview": {
+    "title": "Visió global",
+    "footer": "n/n +e = inscrits/places + llista d'espera · l'instructor previst es mostra sempre",
+    "training": "Entren.",
+    "block": "Bloq.",
+    "close": "Tanca",
+    "class": {
+      "loading": "Carregant la classe",
+      "loadError": "No s'ha pogut carregar la classe.",
+      "when": "Data i hora",
+      "ring": "Pista",
+      "instructors": "Instructor",
+      "occupancy": "Inscrits/places",
+      "state": "Estat",
+      "risk": "En risc"
+    },
+    "blockDrawer": {
+      "title": "Bloqueig de pista",
+      "reason": "Motiu",
+      "note": "Nota",
+      "createdBy": "Creat per",
+      "cancel": "Anul·la el bloqueig",
+      "cancelling": "Anul·lant el bloqueig",
+      "loading": "Carregant el bloqueig",
+      "loadError": "No s'ha pogut carregar el bloqueig."
+    }
+  }
+}

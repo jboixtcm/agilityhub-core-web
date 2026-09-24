@@ -152,6 +152,12 @@ button.ah-schedule-cell--empty:hover {
   opacity: 0.55;
 }
 
+.ah-schedule-cell--plain {
+  color: var(--ah-color-text-muted);
+  background: transparent;
+  border-color: transparent;
+}
+
 .ah-schedule-cell--dashed {
   background: transparent;
   border: 1px dashed

@@ -42,10 +42,12 @@ Added 09-09: **E2-W10** CI e2e independence (each Playwright project starts the 
 ## E3 · Public signup + dashboard (thread B) — task files installed 09-09 (`not_open`; the organizer opens E3-W01 at gate E2 or as soon as api E3-T01 publishes the contract)
 Planned: E3-W01 public stepper 16–19 (`/apuntat-hi/*`) + «add a dog» (`/gossos/nou*`), mocks-first on the S04 contract (T-04-29…32) · E3-W02 D2 `/preinscripcions/:id` + D1 `/tauler` (KPIs, risk card, pending card, dogs-by-level chart, menu counters; T-04-33, T-14-25) · E3-W03 integration against the real core (adopt the E3 snapshot; T-04-34 scenarios; gate E3 front).
 
+Added 24-09: **E3-W04** follow-ups after the gate (D2 polish from the E3-W03 review, one masked-IBAN format R-03-27, null-tolerant D2, INC-07 evidence in the real-core e2e).
+
 ### Gate E3 (front — checked by the organizer)
-- [ ] `pnpm e2e:core` green with the E3 scenarios (public signup → D1 → D2 → welcome mail → screen 03; rejection; add-dog → N-37; closed form).
-- [ ] Screenshots of 16–19, enviada, D1, D2 against the mockups; `signup`, `admin-dashboard`, `admin-census` keys complete in ca/es/en; vocabulary lint green.
-- [ ] No S04/S14 operation left in `pending.json`; CI green.
+- [x] `pnpm e2e:core` green with the E3 scenarios (public signup → D1 → D2 → welcome mail → screen 03; rejection; add-dog → N-37; closed form). — organizer 24-09: E3-W03 round 2, `12-e2e-core.log` (10/10 + 4/4).
+- [x] Screenshots of 16–19, enviada, D1, D2 against the mockups; `signup`, `admin-dashboard`, `admin-census` keys complete in ca/es/en; vocabulary lint green. — organizer 24-09: D2 re-shot in round 2; the two cosmetic leftovers (success toast tone, «fa 0 dies») go to E3-W04.
+- [x] No S04/S14 operation left in `pending.json`; CI green. — organizer 24-09: `pending.json` has no S04/S14 path; CI green at `68e6fb8`.
 
 ## E4 · Planning and activities (thread B) — installed 2026-09-16 as `not_open`; E4-W01/W03/W04 open when api E4-T01 (contracts S06 + S07) is verified and its snapshot is staged
 Decisions in force: A21, A22 (instructor reads D3/D4; single automatic description form «B+C» / «D i sup.»; the student never sees counts on 10), B20. Planned tasks: E4-W01 D3 + D3b (templates, class form, coverage) · E4-W02 D4/D4b/D4c (calendar, validation, class edition, D4c cancellation modal, ring blocks) · E4-W03 screens 10 + 23 (`DayGrid` in `packages/ui`) · E4-W04 D7 + activities in the app (04 block, detail, rows of 03/25) · E4-W05 integration against the published core with the E4 seed (T-06-28, T-07-32) — gate E4 (front).

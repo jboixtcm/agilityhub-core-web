@@ -1,0 +1,67 @@
+/* Screens 10 / 23: identical ring columns (V8), fixed time column, cells from ScheduleCell.
+   Type sizes follow the mockups (7.5 px on a 300 px phone ≈ 0.6rem at 375 px). */
+.ah-day-grid {
+  display: grid;
+  gap: 0.2rem;
+  width: 100%;
+  font-size: 0.625rem;
+}
+
+.ah-day-grid__row {
+  display: contents;
+}
+
+.ah-day-grid__corner,
+.ah-day-grid__column {
+  padding: 0.15rem 0;
+}
+
+.ah-day-grid__column {
+  overflow: hidden;
+  color: var(--ah-color-text-muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ah-day-grid__column[data-colored] {
+  color: color-mix(in srgb, var(--schedule-color) 70%, var(--ah-color-text));
+}
+
+.ah-day-grid__time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.3rem;
+  color: var(--ah-color-text-muted);
+  font-size: 0.625rem;
+}
+
+.ah-day-grid__slot {
+  display: grid;
+  align-content: stretch;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.ah-day-grid .ah-schedule-cell {
+  gap: 0;
+  min-height: 2.4rem;
+  padding: 0.2rem;
+  line-height: 1.25;
+}
+
+.ah-day-grid .ah-schedule-cell__title {
+  display: block;
+  letter-spacing: -0.015em;
+}
+
+.ah-day-grid .ah-schedule-cell__subtitle {
+  font-size: 0.55rem;
+  overflow-wrap: break-word;
+  white-space: pre-line;
+}

@@ -1,5 +1,10 @@
 {
-  "common": { "empty": "—", "error": "No s'ha pogut carregar el tauler.", "loading": "Carregant el tauler", "retry": "Torna-ho a provar" },
+  "common": {
+    "empty": "—",
+    "error": "No s'ha pogut carregar el tauler.",
+    "loading": "Carregant el tauler",
+    "retry": "Torna-ho a provar"
+  },
   "greeting": "{period, select, morning {Bon dia!} afternoon {Bona tarda!} other {Bon vespre!}} {date}",
   "kpi": {
     "activeMembers": "Abonats d'alta",

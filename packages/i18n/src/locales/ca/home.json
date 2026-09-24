@@ -1,0 +1,21 @@
+{
+  "today": {
+    "title": "Classes del dia",
+    "dateHeader": "{weekday} {date}",
+    "dayChip": "{weekday} {day}",
+    "previousDay": "Dia anterior",
+    "nextDay": "Dia següent",
+    "weekDays": "Dies de la setmana",
+    "grid": "Quadre del dia",
+    "time": "Hora",
+    "occupied": "Ocupada",
+    "atRisk": "en risc ⚠",
+    "activity": "Activitat · {title}",
+    "noRing": "Sense",
+    "footer": "Ocupada = pista reservada per a entrenament o bloquejada",
+    "empty": "Cap classe aquest dia",
+    "loading": "Carregant el quadre del dia",
+    "loadError": "No s'ha pogut carregar el quadre del dia.",
+    "retry": "Torna-ho a provar"
+  }
+}

@@ -1,5 +1,10 @@
 {
-  "common": { "empty": "—", "error": "No se ha podido cargar el panel.", "loading": "Cargando el panel", "retry": "Volver a intentarlo" },
+  "common": {
+    "empty": "—",
+    "error": "No se ha podido cargar el panel.",
+    "loading": "Cargando el panel",
+    "retry": "Volver a intentarlo"
+  },
   "greeting": "{period, select, morning {¡Buenos días!} afternoon {¡Buenas tardes!} other {¡Buenas noches!}} {date}",
   "kpi": {
     "activeMembers": "Socios de alta",

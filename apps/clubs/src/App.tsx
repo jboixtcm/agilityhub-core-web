@@ -34,6 +34,8 @@ import { useTranslation } from "react-i18next";
 import { InfoPage } from "./InfoPage";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
+import { OverviewPage } from "./today/OverviewPage";
+import { TodayPage } from "./today/TodayPage";
 
 interface RouteDefinition {
   path: string;
@@ -74,8 +76,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR"] },
   { path: "/instructor/tasques", roles: ["INSTRUCTOR"] },
   { path: "/instructor/*", roles: ["INSTRUCTOR"] },
-  // Screen 23. Kept before the wildcard for exact route resolution.
-  { path: "/instructor/avui", roles: ["INSTRUCTOR"] },
+  // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
+  { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 25.
   { path: "/historic" },
   // Screen 30.
@@ -209,15 +211,18 @@ function LanguageSelector() {
 }
 
 export function MobileNavigation({
+  activeProfile = null,
   modules,
   pathname,
   roles,
 }: {
+  activeProfile?: Role | null;
   modules: readonly string[];
   pathname: string;
   roles: readonly Role[];
 }) {
   const { t } = useTranslation("shell");
+  const staffProfile = activeProfile === "INSTRUCTOR" || activeProfile === "ADMIN";
   const definitions: (TabBarItem & { id: string; roles?: readonly Role[] })[] = [
     { href: "/inici", icon: "home", id: "home", label: t("shell:nav.home") },
     { href: "/reservar", icon: "cal", id: "reserve", label: t("shell:nav.reserve") },
@@ -227,13 +232,16 @@ export function MobileNavigation({
       id: "training",
       label: t("shell:nav.training"),
     },
-    {
-      href: "/instructor/avui",
-      icon: "day",
-      id: "today",
-      label: t("shell:nav.today"),
-      roles: ["INSTRUCTOR"],
-    },
+    // Mockup 10: «Avui» for the member profile; mockup 23: the same slot is «Visió global».
+    staffProfile
+      ? {
+          href: "/instructor/avui",
+          icon: "globe",
+          id: "globalView",
+          label: t("shell:nav.globalView"),
+          roles: ["INSTRUCTOR", "ADMIN"],
+        }
+      : { href: "/avui", icon: "day", id: "today", label: t("shell:nav.today") },
     { href: "/perfil", icon: "user", id: "profile", label: t("shell:nav.profile") },
     { href: "/info", icon: "info", id: "info", label: t("shell:nav.info") },
   ];
@@ -325,6 +333,7 @@ function MobileShell({
       </div>
       <main className="clubs-shell__content">{children}</main>
       <MobileNavigation
+        activeProfile={session.activeProfile}
         modules={branding.modules}
         pathname={window.location.pathname}
         roles={session.roles}
@@ -1216,6 +1225,14 @@ export function App({
       <RequireAuth>
         <InfoPage client={apiClient} />
       </RequireAuth>
+    ) : pathname === "/avui" ? (
+      <RequireAuth>
+        <TodayPage client={apiClient} />
+      </RequireAuth>
+    ) : pathname === "/instructor/avui" ? (
+      <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
+        <OverviewPage client={apiClient} />
+      </RequireRole>
     ) : (
       routePlaceholder(route)
     );
@@ -1232,7 +1249,7 @@ export function App({
     >
       <MobileShell
         authClient={authClient}
-        detail={pathname === "/gossos" || pathname === "/dades" || pathname === "/info"}
+        detail={["/gossos", "/dades", "/info", "/avui", "/instructor/avui"].includes(pathname)}
       >
         {content}
       </MobileShell>

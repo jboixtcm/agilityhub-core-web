@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 
 import { Icon } from "./icons/Icon";
 import type { IconName } from "./icons/names";
@@ -158,7 +158,9 @@ export interface ScheduleCellProps {
   /** Bold counts after the title («4/5 +1»). */
   meta?: string | undefined;
   muted?: boolean;
-  onClick?: (() => void) | undefined;
+  onClick?: ((event: MouseEvent<HTMLButtonElement>) => void) | undefined;
+  /** Occupied ring (training, block): grey text without background (screens 10/23). */
+  plain?: boolean;
   selected?: boolean;
   /** Cancelled class: struck-through text (with `muted`). */
   struck?: boolean;
@@ -180,6 +182,7 @@ export function ScheduleCell({
   meta,
   muted = false,
   onClick,
+  plain = false,
   selected = false,
   struck = false,
   subtitle,
@@ -191,6 +194,7 @@ export function ScheduleCell({
     (color === undefined || color === null || color === "") && "ah-schedule-cell--neutral",
     dashed && "ah-schedule-cell--dashed",
     muted && "ah-schedule-cell--muted",
+    plain && "ah-schedule-cell--plain",
     struck && "ah-schedule-cell--struck",
     selected && "ah-schedule-cell--selected",
     warning && "ah-schedule-cell--warning",

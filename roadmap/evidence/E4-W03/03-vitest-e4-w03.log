@@ -1,0 +1,254 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > has no forbidden term nor internal code in home, instructor and enums (ca/es/en) 21ms
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > keeps the exact ca literals of mockups 10 and 23 14ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name 93ms
+stderr | src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips 140ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count 38ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class 143ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module 35ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles 31ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile 15ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled 10ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan 1ms
+ ✓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup 59ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere 50ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone 28ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy 22ms
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the «Sense» column and the activity cell
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class 63ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation) 75ms
+stderr | src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation 63ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view 20ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address 60ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the «Sense» column and the activity cell 26ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry 47ms
+ ✓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests 23ms
+ ✓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants 72ms
+ ✓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice 21ms
+stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff 56ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me 12ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice 33ms
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement 85ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it 50ms
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English 84ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS 65ms
+stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing 59ms
+ ✓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile 0ms
+
+ Test Files  4 passed (4)
+      Tests  34 passed (34)
+   Start at  14:56:04
+   Duration  1.69s (tests 35%, environment 28%, transform 19%, import 10%, setup 7%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > stacks cells per slot, exposes day buttons and tints cells through --schedule-color 76ms
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > renders the D4 variants: counts, draft outline, cancelled and link cells 7ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > keeps identical ring columns and strips the leading zero of each start time 51ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > stacks two cells of the same ring and row and draws empty placeholders 9ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > adds the «Sense» column only when a cell has no ring 7ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > never renders occupancy in the member view even when the model carries it 5ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > shows «n/n +e · instructor» in the instructor view, «+e» only with WAITLIST 6ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > marks risk, dims cancelled classes and renders occupied, block and activity cells 14ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > hides cancelled classes from the member view 1ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  14:56:06
+   Duration  581ms (environment 60%, tests 18%, setup 14%, transform 7%, import 1%, worker 1%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/index.test.ts > typed API client > uses the configured base URL and injects locale and authorization headers 9ms
+ ✓ src/index.test.ts > typed API client > maps every non-2xx response to ApiError 3ms
+ ✓ src/index.test.ts > typed API client > maps a fetch failure to the NETWORK ApiError 1ms
+ ✓ src/index.test.ts > typed API client > adds a UUID idempotency key to configured POST operations 3ms
+ ✓ src/index.test.ts > typed API client > R-06-07 sends an Idempotency-Key on POST /weeks/{id}/generation by default 1ms
+ ✓ src/index.test.ts > typed API client > R-06-10 / R-06-11 sends an Idempotency-Key on class cancellations and ring blocks by default 3ms
+ ✓ src/index.test.ts > TanStack Query defaults > uses a 30 second stale time and retries only network and 5xx failures 0ms
+ ✓ src/index.test.ts > TanStack Query defaults > namespaces query keys by host 0ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers 7ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > serves branding, current account, club settings, token, and health fixtures 9ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the D4 week (form B) with the Thursday warning and the Carretera block 36ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-08 validates the draft week and refuses the inconsistent one 35ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > maps every JSON fixture to an authoritative component schema 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates audit-entries.json 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-canic.json 17ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-minim.json 17ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates club-pages.json 14ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates dashboard.json 18ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates export-jobs.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-admin.json 14ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-10 cancels with the notice text and R-06-09 checks the version 29ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-11 refuses a block over a class with the conflict list 20ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the instructor day grid (form D) of the Wednesday 17ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-impersonated.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-instructor.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-member.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-multi-profile.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates member-signup-review.json 21ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates sessions.json 12ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates signup-config-canic.json 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana A template 3ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > paginates members, reports applied filters, and resolves facet labels 125ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana B template 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Dissabtes template 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the E29 level catalog (Level.progression overlay of pending.json) 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > keeps every fixture description equal to the mock resolver, so an edit never flips «D i sup.» 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the coverage table and the week list items 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates every class session of the D4, D4b and inconsistent weeks 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates the ring block and the cancellation preview of the Wednesday 18:50 class 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > R-06-14 derives UTC instants from the club-local time across the DST change 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 member grid 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > projects the member view as the api does (R-06-12): no counts, names, notes nor staff kinds 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > carries the screen 23 counts, trainings, block and cancelled class in the instructor view 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the class sessions and ring blocks behind the screen 23 drawers 6ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > serves 242 dogs and rejects unknown filter fields 248ms
+
+ Test Files  3 passed (3)
+      Tests  52 passed (52)
+   Start at  14:56:07
+   Duration  834ms (tests 43%, import 31%, transform 26%)
+

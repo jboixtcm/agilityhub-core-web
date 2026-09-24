@@ -1,0 +1,29 @@
+{
+  "overview": {
+    "title": "Overview",
+    "footer": "n/n +e = booked/places + waiting list · the planned instructor is always shown",
+    "training": "Training",
+    "block": "Blocked",
+    "close": "Close",
+    "class": {
+      "loading": "Loading the class",
+      "loadError": "The class could not be loaded.",
+      "when": "Date and time",
+      "ring": "Ring",
+      "instructors": "Instructor",
+      "occupancy": "Booked/places",
+      "state": "Status",
+      "risk": "At risk"
+    },
+    "blockDrawer": {
+      "title": "Ring block",
+      "reason": "Reason",
+      "note": "Note",
+      "createdBy": "Created by",
+      "cancel": "Cancel the block",
+      "cancelling": "Cancelling the block",
+      "loading": "Loading the block",
+      "loadError": "The block could not be loaded."
+    }
+  }
+}

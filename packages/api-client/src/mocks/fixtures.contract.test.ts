@@ -16,6 +16,15 @@ import {
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
+  DAY_GRID_ACTIVITY_DATE,
+  DAY_GRID_EMPTY_DATE,
+  DAY_GRID_INSTRUCTOR_DATE,
+  DAY_GRID_MEMBER_DATE,
+  dayGridClassSessions,
+  dayGridFixture,
+  dayGridState,
+} from "./fixtures/day-grid";
+import {
   coverageFixture,
   initialWeeks,
   initialWeekTemplates,
@@ -237,5 +246,127 @@ describe("E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBl
     expect(clubInstant("2026-10-26", "08:30")).toBe("2026-10-26T07:30:00Z");
     expect(clubInstant("2026-03-28", "08:30")).toBe("2026-03-28T07:30:00Z");
     expect(clubInstant("2026-03-30", "08:30")).toBe("2026-03-30T06:30:00Z");
+  });
+});
+
+describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const allModules = {
+    locale: "ca" as const,
+    modules: ["FREE_TRAINING", "WAITLIST", "ACTIVITIES", "COURSES"],
+    timeZone: "Europe/Madrid",
+  };
+  const dates = [
+    DAY_GRID_INSTRUCTOR_DATE,
+    DAY_GRID_MEMBER_DATE,
+    DAY_GRID_EMPTY_DATE,
+    DAY_GRID_ACTIVITY_DATE,
+  ];
+
+  it.each(dates.flatMap((date) => [[date, "member"] as const, [date, "instructor"] as const]))(
+    "validates the %s %s grid",
+    (date, view) => {
+      const validate = schema("DayGrid");
+      const grid = dayGridFixture(date, view, allModules);
+      expect(validate(grid), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    },
+  );
+
+  it("projects the member view as the api does (R-06-12): no counts, names, notes nor staff kinds", () => {
+    for (const date of dates) {
+      for (const cell of dayGridFixture(date, "member", allModules).rows.flatMap(
+        (row) => row.cells,
+      )) {
+        expect(["CLASS", "OCCUPIED", "ACTIVITY"]).toContain(cell.kind);
+        for (const hidden of [
+          "occupancy",
+          "who",
+          "trainingBookingIds",
+          "note",
+          "createdByName",
+          "blockId",
+        ]) {
+          expect(cell).not.toHaveProperty(hidden);
+        }
+        expect(cell.state).not.toBe("CANCELLED");
+      }
+    }
+    const member = dayGridFixture(DAY_GRID_MEMBER_DATE, "member", allModules);
+    expect(member.rows.map((row) => row.time)).toEqual([
+      "08:30",
+      "09:30",
+      "17:40",
+      "18:50",
+      "20:00",
+    ]);
+    const risky = member.rows.at(-1)?.cells.find((cell) => cell.atRisk === true);
+    expect(risky).toMatchObject({
+      description: "D i sup.",
+      instructorName: null,
+      riskText:
+        "Aquesta classe només té un alumne: si ningú més s'hi apunta abans de les 7:30 de dimarts, s'anul·larà.",
+    });
+    expect(dayGridFixture(DAY_GRID_EMPTY_DATE, "member", allModules).rows).toEqual([]);
+  });
+
+  it("carries the screen 23 counts, trainings, block and cancelled class in the instructor view", () => {
+    const grid = dayGridFixture(DAY_GRID_INSTRUCTOR_DATE, "instructor", allModules);
+    expect(grid.rows.map((row) => row.time)).toEqual([
+      "08:00",
+      "08:30",
+      "09:30",
+      "16:00",
+      "17:40",
+      "18:50",
+      "19:00",
+    ]);
+    const cells = grid.rows.flatMap((row) => row.cells);
+    expect(cells.find((cell) => cell.description === "B+C")).toMatchObject({
+      instructorName: "Marc",
+      occupancy: { booked: 5, capacity: 5, waiting: 2 },
+    });
+    expect(cells.filter((cell) => cell.kind === "TRAINING").map((cell) => cell.who)).toEqual([
+      ["Pau + Blat"],
+      ["Júlia + Kira"],
+      ["Sergio + Thai"],
+    ]);
+    expect(cells.filter((cell) => cell.state === "CANCELLED")).toHaveLength(1);
+    const noWaitlist = dayGridFixture(DAY_GRID_INSTRUCTOR_DATE, "instructor", {
+      ...allModules,
+      modules: ["FREE_TRAINING"],
+    });
+    expect(
+      noWaitlist.rows
+        .flatMap((row) => row.cells)
+        .some((cell) => cell.occupancy?.waiting !== undefined),
+    ).toBe(false);
+    const activity = dayGridFixture(DAY_GRID_ACTIVITY_DATE, "member", allModules);
+    expect(
+      activity.rows.flatMap((row) => row.cells).map((cell) => [cell.kind, cell.ringId]),
+    ).toEqual([
+      ["ACTIVITY", "ring-muntanya"],
+      ["CLASS", "ring-carretera"],
+      ["CLASS", null],
+    ]);
+  });
+
+  it("validates the class sessions and ring blocks behind the screen 23 drawers", () => {
+    const session = schema("ClassSession");
+    for (const item of dayGridClassSessions()) {
+      expect(session(item), JSON.stringify(session.errors, null, 2)).toBe(true);
+      expect(item).not.toHaveProperty("notes");
+    }
+    const block = schema("RingBlock");
+    for (const item of dayGridState.blocks) {
+      expect(block(item), JSON.stringify(block.errors, null, 2)).toBe(true);
+    }
+    expect(dayGridState.blocks.map((item) => [item.date, item.fromLocal, item.toLocal])).toEqual([
+      [DAY_GRID_INSTRUCTOR_DATE, "16:00", "18:00"],
+      [DAY_GRID_MEMBER_DATE, "08:30", "09:30"],
+    ]);
   });
 });

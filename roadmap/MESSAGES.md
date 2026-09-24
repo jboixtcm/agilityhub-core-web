@@ -182,3 +182,14 @@ Blocking: no.
 - **{F,G} = «F i sup.»:** under E29, {F,G} resolves to «F i sup.». The D3 template fixtures follow the rule now. E4-W02's `fixtures/calendar.ts` still has static «F+G» sessions. They flip on the first PATCH, and `planning-calendar.spec.ts:157` expects «F+G». I left E4-W02's files alone. Please align them in E4-W02 or E4-W06.
 - **`Accept-Language`:** clubs-admin sent `navigator.language`, so the Docker e2e showed «F and up» in the Catalan UI. It now sends the UI language. The `clubs` PWA builds its client the same way and probably needs the same fix (not changed here).
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W03
+@organizer **Awaiting verification + proposals.**
+- **Contract:** the S06 snapshot adopted by E4-W01/W02 already covers `/day-grid`, `/class-sessions/{id}` and `/ring-blocks/{id}(/cancellation)`. The staged `openapi.next.json` (`a202870`, S10) was left for its adoption task. It adds `DayGridCell.attendanceStatus`.
+- **`ScheduleGrid`:** the E4-W01 cell is reused (new `plain` variant). `DayGrid` is its own CSS grid, because the `ScheduleGrid` table scrolls at 375 px. The D3b/D4 day views can adopt `DayGrid` later; they are not migrated.
+- **Tab bar:** «Avui» → `/avui` for the member profile; «Visió global» → `/instructor/avui` for INSTRUCTOR/ADMIN. TabBar columns are now auto-sized, so six labels fit at 375 px. `shell.spec.ts` (E0-W06) is updated.
+- **Proposed literals:** the day navigation, loading and error texts of `home:today.*`; the class and block drawer labels of `instructor:overview.*` (including the task's «Bloqueig de pista», «Motiu», «Nota», «Creat per», «Anul·la el bloqueig»); `enums:occupiedReason.{TRAINING,MAINTENANCE}`; `shell:nav.globalView`. Full list in the task report.
+- **Questions for the api:**
+  1. Does `/day-grid` send a «Sense» column (`ringId: null`), or only cells without a ring? The front handles both.
+  2. Could the staff projection of `GET /class-sessions/{id}` carry `instructorNames[]` and `ring {id,name,color}`? The drawer (and E6 screen 21) needs them; today the front takes them from the grid.
+Blocking: no.

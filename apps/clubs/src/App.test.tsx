@@ -90,7 +90,11 @@ async function renderApplication(
   );
 }
 
-async function renderNavigation(modules: string[], roles: ("ADMIN" | "INSTRUCTOR" | "MEMBER")[]) {
+async function renderNavigation(
+  modules: string[],
+  roles: ("ADMIN" | "INSTRUCTOR" | "MEMBER")[],
+  activeProfile: "ADMIN" | "INSTRUCTOR" | "MEMBER" = "MEMBER",
+) {
   const i18n = await createI18n({
     branding: canicBranding,
     browserLanguages: ["ca"],
@@ -100,7 +104,12 @@ async function renderNavigation(modules: string[], roles: ("ADMIN" | "INSTRUCTOR
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={{ ...canicBranding, modules }}>
-        <MobileNavigation modules={modules} pathname="/inici" roles={roles} />
+        <MobileNavigation
+          activeProfile={activeProfile}
+          modules={modules}
+          pathname="/inici"
+          roles={roles}
+        />
       </BrandingProvider>
     </I18nextProvider>,
   );
@@ -127,9 +136,21 @@ describe("T-02-14 clubs shell", () => {
     expect(screen.getByRole("link", { name: "Inici" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Reservar" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Entrenaments" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Avui" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
+    expect(screen.queryByRole("link", { name: "Visió global" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Perfil" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Info" })).toBeInTheDocument();
+  });
+
+  it("E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile", async () => {
+    await renderNavigation(["FREE_TRAINING", "FAQ"], ["INSTRUCTOR"], "INSTRUCTOR");
+
+    expect(screen.getByRole("link", { name: "Visió global" })).toHaveAttribute(
+      "href",
+      "/instructor/avui",
+    );
+    expect(screen.queryByRole("link", { name: "Avui" })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("link")).toHaveLength(6);
   });
 
   it("omits Entrenaments when FREE_TRAINING is disabled", async () => {

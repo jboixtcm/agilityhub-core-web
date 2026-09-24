@@ -159,6 +159,7 @@ const dynamicKeyPrefixes = [
   "enums:classState.",
   "enums:coverageStatus.",
   "enums:inconsistencyType.",
+  "enums:occupiedReason.",
   "enums:ringBlockKind.",
   "enums:ringBlockReason.",
   "enums:skipReason.",
