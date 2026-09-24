@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
 const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W02");
@@ -38,6 +38,21 @@ async function signIn(page: Page, scenario: "admin" | "instructor") {
 
 function grid(page: Page, range: string) {
   return page.getByRole("table", { name: `Calendari de classes · del ${range}` });
+}
+
+// Icons are `<use>` references to the external sprite. A modal that has just opened can be
+// captured before the browser resolves them (the D4c capture once came out without its «×»
+// icons), so a screenshot waits until every icon of the overlay has a box.
+async function expectIconsPainted(scope: Locator) {
+  await expect
+    .poll(() =>
+      scope
+        .locator("svg.ah-icon")
+        .evaluateAll((icons) =>
+          icons.every((icon) => icon instanceof SVGSVGElement && icon.getBBox().width > 0),
+        ),
+    )
+    .toBe(true);
 }
 
 test.beforeAll(() => {
@@ -101,6 +116,7 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
         "La classe de dimecres 12 a les 18:50 (B+C, pista Central) queda anul·lada per la pluja. Podeu reservar-ne una altra des de l'app. Disculpeu les molèsties!",
       );
     await expect(confirm).toBeEnabled();
+    await expectIconsPainted(modal);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "D4c-anullar-classe-1280.png"),

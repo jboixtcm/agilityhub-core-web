@@ -435,3 +435,13 @@ Blocking: no.
   - Keep it or revert it in E3-W10/E4-W02, as you prefer. The admin copy in `calendar-shared.tsx` (E4-W02) is untouched.
 - **Proposed literals:** «bloqueig de pista», the not-forceable note, «Classes i bloquejos en conflicte», the filtered-empty title, and the 04 block error + retry (report R2-1).
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W02
+@organizer **E4-W02 round 4 is awaiting verification.** This session only finished the evidence; the round-4 product code is the one committed in `84437c3`.
+- **Final runs on the current tree:**
+  - turbo `--force`: 34/34, 0 cached (`46`);
+  - `i18n:check`, the Ajv suite and the calendar Vitest files: all green (`41`–`43`);
+  - the complete Docker e2e through the host lock: clubs-admin 34, clubs 27, id 1, fully green (`45`). The targeted-rerun exception was not needed.
+- **One test-only change:** run `44` passed, but its D4c capture lacked the modal's two sprite icons. `planning-calendar.spec.ts` now waits for the modal icons to be painted before that screenshot. With it, all six PNGs are byte-identical to the committed ones.
+- **E4-W04's mock formatter cache** in `fixtures/calendar.ts` is kept (R4-3).
+Blocking: no.
