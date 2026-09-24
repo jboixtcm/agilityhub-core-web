@@ -104,8 +104,30 @@ export function planningLevels() {
     capacity: level.capacity,
     id: level.id,
     name: level.name,
+    nameI18n: level.nameI18n,
     order: level.order,
+    progression: level.progression,
   }));
+}
+
+/** Reader language of a request (`Accept-Language`, sent by the client), as the api resolves it. */
+export function readerLocale(request: Request): string {
+  const language = request.headers.get("Accept-Language")?.split(/[-,;]/u)[0]?.trim() ?? "";
+  return ["ca", "es", "en"].includes(language) ? language : "ca";
+}
+
+/** The stored template with `displayDescription` resolved in the reader's language (R-06-03). */
+function forReader(template: WeekTemplate, request: Request): WeekTemplate {
+  const locale = readerLocale(request);
+  if (locale === "ca") return template;
+  const levels = planningLevels();
+  return {
+    ...template,
+    classes: template.classes.map((item) => ({
+      ...item,
+      displayDescription: mockDisplayDescription(levels, item.levelIds, item.description, locale),
+    })),
+  };
 }
 
 function refreshed(template: WeekTemplate): WeekTemplate {
@@ -398,13 +420,13 @@ export const planningHandlers = [
       notes: null,
       version: 0,
     };
-    return HttpResponse.json(store(template), { status: 201 });
+    return HttpResponse.json(forReader(store(template), request), { status: 201 });
   }),
-  http.get("*/api/v1/week-templates/:id", ({ params }) => {
+  http.get("*/api/v1/week-templates/:id", ({ params, request }) => {
     const template = findTemplate(String(params.id));
     return template === undefined
       ? apiError("NOT_FOUND", "Template not found", 404)
-      : HttpResponse.json(template);
+      : HttpResponse.json(forReader(template, request));
   }),
   http.patch("*/api/v1/week-templates/:id", async ({ params, request }) => {
     const template = findTemplate(String(params.id));
@@ -416,12 +438,15 @@ export const planningHandlers = [
       return apiError("STALE_VERSION", "Stale template version", 409);
     }
     return HttpResponse.json(
-      store({
-        ...template,
-        ...(body.name === undefined ? {} : { name: body.name }),
-        ...(body.notes === undefined ? {} : { notes: body.notes }),
-        ...(body.active === undefined ? {} : { active: body.active }),
-      }),
+      forReader(
+        store({
+          ...template,
+          ...(body.name === undefined ? {} : { name: body.name }),
+          ...(body.notes === undefined ? {} : { notes: body.notes }),
+          ...(body.active === undefined ? {} : { active: body.active }),
+        }),
+        request,
+      ),
     );
   }),
   http.post("*/api/v1/week-templates/:id/bands", async ({ params, request }) => {
@@ -440,10 +465,8 @@ export const planningHandlers = [
       startTime: body.startTime,
     };
     return HttpResponse.json(
-      store({ ...template, bands: sortedBands([...template.bands, band]) }),
-      {
-        status: 201,
-      },
+      forReader(store({ ...template, bands: sortedBands([...template.bands, band]) }), request),
+      { status: 201 },
     );
   }),
   http.patch("*/api/v1/week-templates/:id/bands/:bandId", async ({ params, request }) => {
@@ -463,14 +486,17 @@ export const planningHandlers = [
       return problem;
     }
     return HttpResponse.json(
-      store({
-        ...template,
-        bands: sortedBands(
-          template.bands.map((candidate) =>
-            candidate.id === band.id ? { ...band, endTime, startTime } : candidate,
+      forReader(
+        store({
+          ...template,
+          bands: sortedBands(
+            template.bands.map((candidate) =>
+              candidate.id === band.id ? { ...band, endTime, startTime } : candidate,
+            ),
           ),
-        ),
-      }),
+        }),
+        request,
+      ),
     );
   }),
   http.delete("*/api/v1/week-templates/:id/bands/:bandId", ({ params }) => {
@@ -510,9 +536,10 @@ export const planningHandlers = [
       levelIds: [...body.levelIds],
       ringId: body.ringId ?? null,
     };
-    return HttpResponse.json(store({ ...template, classes: [...template.classes, item] }), {
-      status: 201,
-    });
+    return HttpResponse.json(
+      forReader(store({ ...template, classes: [...template.classes, item] }), request),
+      { status: 201 },
+    );
   }),
   http.patch("*/api/v1/week-templates/:id/classes/:classId", async ({ params, request }) => {
     const template = findTemplate(String(params.id));
@@ -546,12 +573,15 @@ export const planningHandlers = [
       return problem;
     }
     return HttpResponse.json(
-      store({
-        ...template,
-        classes: template.classes.map((candidate) =>
-          candidate.id === current.id ? next : candidate,
-        ),
-      }),
+      forReader(
+        store({
+          ...template,
+          classes: template.classes.map((candidate) =>
+            candidate.id === current.id ? next : candidate,
+          ),
+        }),
+        request,
+      ),
     );
   }),
   http.delete("*/api/v1/week-templates/:id/classes/:classId", ({ params }) => {

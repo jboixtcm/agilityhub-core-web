@@ -2373,6 +2373,7 @@ export const handlers = [
       name: localizedDefault(body.name, body.code),
       nameI18n: body.name,
       order: body.order ?? catalogState.levels.length * 10,
+      progression: body.progression ?? true,
       version: 1,
     };
     catalogState.levels.push(item);

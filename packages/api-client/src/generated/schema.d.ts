@@ -6260,6 +6260,11 @@ export interface components {
             /** Format: int64 */
             version: number;
             warnings?: components["schemas"]["LevelUsage"];
+            /**
+             * @description S05 §3, ruling E29: part of the level progression; only these levels count for the automatic description «{first} i sup.» (S06 R-06-03). Default true; a special level such as «Teràpia» is false.
+             * @default true
+             */
+            progression: boolean;
         };
         LevelChangeResult: {
             level: components["schemas"]["LevelSummary"];
@@ -6278,6 +6283,8 @@ export interface components {
             };
             /** Format: int32 */
             order?: number;
+            /** @description Omitted = true (S05 §3). */
+            progression?: boolean;
         };
         LevelHistoryEntry: {
             /** Format: uuid */
@@ -6306,6 +6313,7 @@ export interface components {
             order?: number;
             /** Format: int64 */
             version: number;
+            progression?: boolean;
         };
         LevelReaderView: {
             active: boolean;
@@ -6321,6 +6329,11 @@ export interface components {
             order: number;
             /** Format: int64 */
             version: number;
+            /**
+             * @description S05 §3, ruling E29 (see Level.progression).
+             * @default true
+             */
+            progression: boolean;
         };
         LevelSummary: {
             code: string;

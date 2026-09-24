@@ -18,7 +18,9 @@ export interface PlanningLevel {
   capacity: number;
   id: string;
   name: string;
+  nameI18n?: Readonly<Record<string, string>> | undefined;
   order: number;
+  progression?: boolean | undefined;
 }
 
 export interface PlanningRing {
@@ -49,15 +51,28 @@ const catalanDayNames: Readonly<Record<DayOfWeek, string>> = {
   WEDNESDAY: "dimecres",
 };
 
-/** Mock of the api `DescriptionResolver` (R-06-03), Catalan reader. */
+function andAbove(locale: string, level: string): string {
+  if (locale === "es") return `${level} y sup.`;
+  if (locale === "en") return `${level} and up`;
+  return `${level} i sup.`;
+}
+
+/**
+ * Mock of the api `DescriptionResolver` (R-06-03 as amended by E29) in the reader's language:
+ * «{first} i sup.» only for a contiguous run of progression levels (`Level.progression`, S05)
+ * that reaches the last active progression level; any other set — also one with a level outside
+ * the progression — joins the names with «+».
+ */
 export function mockDisplayDescription(
   levels: readonly PlanningLevel[],
   levelIds: readonly string[],
   description: string | null | undefined,
+  locale = "ca",
 ): string {
   if (description !== null && description !== undefined && description.trim() !== "") {
     return description.trim();
   }
+  const nameOf = (level: PlanningLevel) => level.nameI18n?.[locale] ?? level.name;
   const active = [...levels]
     .filter((level) => level.active)
     .sort((left, right) => left.order - right.order);
@@ -67,14 +82,16 @@ export function mockDisplayDescription(
     return "";
   }
   if (selected.length === 1) {
-    return head.name;
+    return nameOf(head);
   }
-  const first = active.indexOf(head);
-  const contiguous = selected.every((level, index) => active[first + index] === level);
-  const reachesLast = selected.at(-1) === active.at(-1);
+  const progression = active.filter((level) => level.progression !== false);
+  const first = progression.indexOf(head);
+  const contiguous =
+    first >= 0 && selected.every((level, index) => progression[first + index] === level);
+  const reachesLast = selected.at(-1) === progression.at(-1);
   return contiguous && reachesLast
-    ? `${head.name} i sup.`
-    : selected.map((level) => level.name).join("+");
+    ? andAbove(locale, nameOf(head))
+    : selected.map(nameOf).join("+");
 }
 
 function minutes(time: string): number {
@@ -215,8 +232,8 @@ function weekdayGrid(wednesdayEightPmRing: string): Readonly<Record<string, read
     "08:30": [
       ["MONDAY", PET, [A], LAURA, "A", 5],
       ["MONDAY", MUN, [B, C], MARC, "B+C", 5],
-      ["MONDAY", CEN, [F, G], ANNA, "F+G", 4],
-      ["TUESDAY", CEN, [F, G], LAURA, "F+G", 4],
+      ["MONDAY", CEN, [F, G], ANNA, "F i sup.", 4],
+      ["TUESDAY", CEN, [F, G], LAURA, "F i sup.", 4],
       ["WEDNESDAY", MUN, [B, C], MARC, "B+C", 5],
       ["THURSDAY", CAR, [C, D, E], LAURA, "C+D+E", 4],
       ["FRIDAY", CAR, [E, F, G], LAURA, "E i sup.", 4],
@@ -236,31 +253,31 @@ function weekdayGrid(wednesdayEightPmRing: string): Readonly<Record<string, read
     ],
     "17:40": [
       ["MONDAY", CAR, [C, D, E], LAURA, "C+D+E", 4],
-      ["TUESDAY", CEN, [F, G], ANNA, "F+G", 4],
+      ["TUESDAY", CEN, [F, G], ANNA, "F i sup.", 4],
       ["WEDNESDAY", PET, [A], LAURA, "A", 5],
       ["THURSDAY", MUN, [B, C], LAURA, "B+C", 5],
-      ["THURSDAY", CEN, [F, G], ANNA, "F+G", 4],
+      ["THURSDAY", CEN, [F, G], ANNA, "F i sup.", 4],
     ],
     "18:50": [
       ["MONDAY", MUN, [B, C], MARC, "B+C", 5],
-      ["MONDAY", CEN, [F, G], ANNA, "F+G", 4],
+      ["MONDAY", CEN, [F, G], ANNA, "F i sup.", 4],
       ["MONDAY", CAD, [P], LAURA, "Cadells", 5],
       ["TUESDAY", PET, [A], LAURA, "A", 5],
       ["WEDNESDAY", MUN, [B, C], MARC, "B+C", 5],
-      ["WEDNESDAY", CAR, [F, G], SERGIO, "F+G", 4],
+      ["WEDNESDAY", CAR, [F, G], SERGIO, "F i sup.", 4],
       ["WEDNESDAY", CAD, [P], LAURA, "Cadells", 5],
       ["THURSDAY", CAR, [C, D, E], LAURA, "C+D+E", 4],
       ["THURSDAY", PET, [A], ANNA, "A", 5],
     ],
     "20:00": [
       ["MONDAY", MUN, [B, C], MARC, "B+C", 5],
-      ["MONDAY", CEN, [F, G], SERGIO, "F+G", 4],
+      ["MONDAY", CEN, [F, G], SERGIO, "F i sup.", 4],
       ["MONDAY", null, [B, C], LAURA, "Obed. urbana", 5, "Obed. urbana"],
       ["TUESDAY", PET, [A, B], LAURA, "A+B", 5],
       ["TUESDAY", MUN, [B, C], MARC, "B+C", 5],
-      ["TUESDAY", CEN, [F, G], ANNA, "F+G", 4],
+      ["TUESDAY", CEN, [F, G], ANNA, "F i sup.", 4],
       ["WEDNESDAY", CEN, [B, C], MARC, "B+C", 5],
-      ["WEDNESDAY", CAR, [F, G], SERGIO, "F+G", 4],
+      ["WEDNESDAY", CAR, [F, G], SERGIO, "F i sup.", 4],
       ["WEDNESDAY", wednesdayEightPmRing, [C, D, E], ANNA, "C+D+E", 4],
       ["THURSDAY", MUN, [D, E, F, G], LAURA, "D i sup.", 4],
     ],
@@ -328,7 +345,7 @@ const dissabtes: WeekTemplate = {
       ["SATURDAY", CEN, [C, D, E], MARC, "C+D+E", 4],
     ],
     "10:40": [
-      ["SATURDAY", CEN, [F, G], ANNA, "F+G", 4],
+      ["SATURDAY", CEN, [F, G], ANNA, "F i sup.", 4],
       ["SATURDAY", CAD, [P], LAURA, "Cadells", 5],
     ],
     "11:50": [

@@ -175,3 +175,10 @@ Blocking: no.
   - `e2-core.spec.ts` still expected the D3 «Aviat» placeholder. I switched it to the real heading.
 - **`scripts/e2e-core.sh`:** `CORE_URL` now defaults to the local stack, and it accepts `[evidence-subdir] [spec files]` (env prefixes are denied in this sandbox).
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W01
+@organizer **Round 2 awaiting verification + three notes.**
+- **Overlay for E4-W06:** `Level.progression` lives in the new `x-schema-overlays` section of `pending.json`. The generator fails once the snapshot publishes the property, so E4-W06 (or the adoption task) must prune it.
+- **{F,G} = «F i sup.»:** under E29, {F,G} resolves to «F i sup.». The D3 template fixtures follow the rule now. E4-W02's `fixtures/calendar.ts` still has static «F+G» sessions. They flip on the first PATCH, and `planning-calendar.spec.ts:157` expects «F+G». I left E4-W02's files alone. Please align them in E4-W02 or E4-W06.
+- **`Accept-Language`:** clubs-admin sent `navigator.language`, so the Docker e2e showed «F and up» in the Catalan UI. It now sends the UI language. The `clubs` PWA builds its client the same way and probably needs the same fix (not changed here).
+Blocking: no.

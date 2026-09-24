@@ -14,7 +14,15 @@ import {
   initialClassSessions,
   initialRingBlocks,
 } from "./fixtures/calendar";
-import { coverageFixture, initialWeeks, initialWeekTemplates, mockWeek } from "./fixtures/planning";
+import { catalogState } from "./fixtures/catalogs";
+import {
+  coverageFixture,
+  initialWeeks,
+  initialWeekTemplates,
+  mockDisplayDescription,
+  mockWeek,
+} from "./fixtures/planning";
+import { planningLevels } from "./planning-handlers";
 
 const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
 const openapiSchemaId = "https://agilityhub.local/openapi.json";
@@ -56,15 +64,31 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
   },
 };
 
+type SchemaMap = Record<string, { properties?: Record<string, unknown> }>;
+
+/** Same merge as `scripts/generate.mjs`: pending schemas, then the `x-schema-overlays` properties. */
+function withOverlays(schemas: SchemaMap): SchemaMap {
+  const overlays = (pendingDocument as { "x-schema-overlays"?: SchemaMap })["x-schema-overlays"];
+  const merged: SchemaMap = { ...schemas };
+  for (const [name, overlay] of Object.entries(overlays ?? {})) {
+    const published = merged[name] ?? {};
+    merged[name] = {
+      ...published,
+      properties: { ...published.properties, ...overlay.properties },
+    };
+  }
+  return merged;
+}
+
 const mergedDocument = {
   ...openapiDocument,
   paths: { ...openapiDocument.paths, ...pendingDocument.paths },
   components: {
     ...openapiDocument.components,
-    schemas: {
-      ...openapiDocument.components.schemas,
-      ...pendingDocument.components.schemas,
-    },
+    schemas: withOverlays({
+      ...(openapiDocument.components.schemas as SchemaMap),
+      ...(pendingDocument.components.schemas as SchemaMap),
+    }),
   },
 };
 
@@ -108,6 +132,40 @@ describe("E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Covera
       expect(validate(template), JSON.stringify(validate.errors, null, 2)).toBe(true);
     },
   );
+
+  it("validates the E29 level catalog (Level.progression overlay of pending.json)", () => {
+    // Only the overlay property: the catalog mock ids are readable slugs, not the contract's uuids.
+    const validate = ajv.compile({
+      $ref: `${openapiSchemaId}#/components/schemas/Level/properties/progression`,
+    });
+    for (const level of catalogState.levels) {
+      expect(validate(level.progression), `${level.name}: ${JSON.stringify(validate.errors)}`).toBe(
+        true,
+      );
+    }
+    expect(validate("yes")).toBe(false);
+    expect(
+      catalogState.levels.filter((level) => !level.progression).map((level) => level.name),
+    ).toEqual(["Teràpia"]);
+  });
+
+  it("keeps every fixture description equal to the mock resolver, so an edit never flips «D i sup.»", () => {
+    const levels = planningLevels();
+    for (const template of initialWeekTemplates) {
+      for (const item of template.classes) {
+        expect(
+          mockDisplayDescription(levels, item.levelIds, item.description),
+          `${template.name} ${item.id}`,
+        ).toBe(item.displayDescription);
+      }
+    }
+    const aboveD = ["level-d", "level-e", "level-f", "level-g"];
+    expect(mockDisplayDescription(levels, aboveD, null)).toBe("D i sup.");
+    expect(mockDisplayDescription(levels, aboveD, null, "es")).toBe("D y sup.");
+    expect(mockDisplayDescription(levels, aboveD, null, "en")).toBe("D and up");
+    expect(mockDisplayDescription(levels, ["level-g", "level-t"], null)).toBe("G+Teràpia");
+    expect(mockDisplayDescription(levels, ["level-p"], null, "es")).toBe("Cachorros");
+  });
 
   it("validates the coverage table and the week list items", () => {
     const coverage = schema("Coverage");

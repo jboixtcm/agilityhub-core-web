@@ -31,7 +31,7 @@ afterAll(() => {
   server.close();
 });
 
-async function renderDay(dayOfWeek: DayOfWeek, templateId = "template-setmana-a") {
+async function renderDay(dayOfWeek: DayOfWeek | undefined, templateId = "template-setmana-a") {
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
@@ -113,6 +113,22 @@ describe("T-06-27 D3b day view per ring / per instructor", () => {
     expect(onNavigate).toHaveBeenLastCalledWith("/plantilles/template-setmana-a/dia/monday");
     fireEvent.click(screen.getByRole("button", { name: "Tornar a la visió setmanal" }));
     expect(onNavigate).toHaveBeenLastCalledWith("/plantilles?template=template-setmana-a");
+  });
+
+  it.each([
+    ["an unsupported day", "sunday", "SUNDAY" as const],
+    ["an unknown day", "someday", undefined],
+  ])("rewrites %s in the URL to the template's first day", async (_case, segment, dayOfWeek) => {
+    window.history.replaceState(
+      null,
+      "",
+      `/plantilles/template-setmana-a/dia/${segment}?vista=instructor`,
+    );
+    await renderDay(dayOfWeek, "template-setmana-a");
+
+    await screen.findByRole("table", { name: "Plantilla «Setmana A» · dilluns" });
+    expect(window.location.pathname).toBe("/plantilles/template-setmana-a/dia/monday");
+    expect(window.location.search).toBe("?vista=instructor");
   });
 
   it("shows the Saturday template with its single day", async () => {

@@ -89,6 +89,7 @@ const level = (
   order: number,
   grantsFreeTraining: boolean,
   nameEs = name,
+  progression = true,
 ): Level => ({
   active: true,
   capacity,
@@ -104,9 +105,11 @@ const level = (
   name,
   nameI18n: { ca: name, en: name, es: nameEs },
   order,
+  progression,
   version: 1,
 });
 
+/** S05 seed: «Teràpia» is outside the level progression (ruling E29, `pending.json` overlay). */
 const initialLevels: Level[] = [
   level("P", "Cadells", ringColor(3), 5, 0, false, "Cachorros"),
   level("A", "A", ringColor(0), 5, 10, false),
@@ -116,7 +119,7 @@ const initialLevels: Level[] = [
   level("E", "E", ringColor(4), 4, 50, true),
   level("F", "F", ringColor(4), 4, 60, true),
   level("G", "G", ringColor(2), 4, 70, true),
-  level("T", "Teràpia", ringColor(2), 1, 80, false, "Terapia"),
+  level("T", "Teràpia", ringColor(2), 1, 80, false, "Terapia", false),
 ];
 
 const initialInstructors: Instructor[] = [

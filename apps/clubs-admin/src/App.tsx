@@ -25,8 +25,17 @@ import {
   type SidebarGroup,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {
+  type ReactNode,
+  type SyntheticEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { I18nContext, useTranslation } from "react-i18next";
 
 import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
 import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
@@ -188,7 +197,13 @@ export function AdminNavigation({
     {
       label: t("shell:nav.dashboard"),
       entries: [
-        { href: "/tauler", icon: "grid", id: "dashboard", label: t("shell:nav.dashboard"), roles: ["ADMIN"] },
+        {
+          href: "/tauler",
+          icon: "grid",
+          id: "dashboard",
+          label: t("shell:nav.dashboard"),
+          roles: ["ADMIN"],
+        },
       ],
     },
     {
@@ -196,7 +211,9 @@ export function AdminNavigation({
       roles: ["ADMIN"],
       entries: [
         {
-          ...(counters?.pendingSignups === undefined || counters.pendingSignups === 0 ? {} : { count: counters.pendingSignups }),
+          ...(counters?.pendingSignups === undefined || counters.pendingSignups === 0
+            ? {}
+            : { count: counters.pendingSignups }),
           href: "/tauler",
           icon: "user",
           id: "pre-registrations",
@@ -205,14 +222,18 @@ export function AdminNavigation({
         { href: "/abonats", icon: "user", id: "members", label: t("shell:nav.members") },
         { href: "/gossos", icon: "paw", id: "dogs", label: t("shell:nav.dogs") },
         {
-          ...(counters?.pendingRequests === undefined || counters.pendingRequests === 0 ? {} : { count: counters.pendingRequests }),
+          ...(counters?.pendingRequests === undefined || counters.pendingRequests === 0
+            ? {}
+            : { count: counters.pendingRequests }),
           href: "/inactivitats",
           icon: "palm",
           id: "inactivity",
           label: t("shell:nav.inactivity"),
         },
         {
-          ...(counters?.followUpUnread === undefined || counters.followUpUnread === 0 ? {} : { count: counters.followUpUnread }),
+          ...(counters?.followUpUnread === undefined || counters.followUpUnread === 0
+            ? {}
+            : { count: counters.followUpUnread }),
           href: "/seguiment",
           icon: "list",
           id: "student-follow-up",
@@ -356,7 +377,13 @@ function PlanningTemplatesRoute({
   onNavigate: (path: string) => void;
 }) {
   const session = useSession();
-  return <TemplatesPage client={client} onNavigate={onNavigate} readOnly={!session.roles.includes("ADMIN")} />;
+  return (
+    <TemplatesPage
+      client={client}
+      onNavigate={onNavigate}
+      readOnly={!session.roles.includes("ADMIN")}
+    />
+  );
 }
 
 function CalendarRoute({
@@ -367,7 +394,13 @@ function CalendarRoute({
   onNavigate: (path: string) => void;
 }) {
   const session = useSession();
-  return <CalendarPage client={client} onNavigate={onNavigate} readOnly={!session.roles.includes("ADMIN")} />;
+  return (
+    <CalendarPage
+      client={client}
+      onNavigate={onNavigate}
+      readOnly={!session.roles.includes("ADMIN")}
+    />
+  );
 }
 
 function routeContent(
@@ -472,7 +505,9 @@ function AdminShell({
     void client.GET("/dashboard/counters").then((result) => {
       if (active && result.data !== undefined) setCounters(result.data);
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [client, pathname]);
 
   return (
@@ -636,22 +671,32 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
 }
 
 export function App({ authClient }: { authClient: AuthClient }) {
+  const { i18n } = useContext(I18nContext);
+  // `Accept-Language` = the language the admin reads, not the browser's: the api resolves
+  // texts such as `displayDescription` («D i sup.» / «D y sup.» / «D and up») from it.
   const client = useMemo(
     () =>
       createAuthenticatedApiClient(authClient, {
         baseUrl: `${window.location.origin}/api/v1`,
+        getLocale: () => i18n.resolvedLanguage ?? i18n.language,
       }),
-    [authClient],
+    [authClient, i18n],
   );
-  const [location, setLocation] = useState(() => `${window.location.pathname}${window.location.search}`);
+  const [location, setLocation] = useState(
+    () => `${window.location.pathname}${window.location.search}`,
+  );
   const navigate = useCallback((path: string) => {
     window.history.pushState(null, "", path);
     setLocation(path);
   }, []);
   useEffect(() => {
-    const handlePopState = () => { setLocation(`${window.location.pathname}${window.location.search}`); };
+    const handlePopState = () => {
+      setLocation(`${window.location.pathname}${window.location.search}`);
+    };
     window.addEventListener("popstate", handlePopState);
-    return () => { window.removeEventListener("popstate", handlePopState); };
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, []);
   const pathname = new URL(location, window.location.origin).pathname;
 
@@ -670,7 +715,9 @@ export function App({ authClient }: { authClient: AuthClient }) {
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell client={client} pathname={pathname}>{gatedRoute(route, routeContent(route, client, navigate, pathname))}</AdminShell>
+        <AdminShell client={client} pathname={pathname}>
+          {gatedRoute(route, routeContent(route, client, navigate, pathname))}
+        </AdminShell>
       </ExportJobsProvider>
     </OnboardingExperience>
   );

@@ -60,6 +60,42 @@ function assertNoPendingRedefinitions(authoritative, pending) {
   }
 }
 
+/**
+ * `x-schema-overlays` adds mocks-first properties to schemas the snapshot already publishes
+ * (e.g. `Level.progression`, ruling E29). Once the snapshot carries one of them, the generator
+ * fails so the overlay entry is pruned instead of silently shadowing the published contract.
+ */
+function applySchemaOverlays(authoritative, schemas, overlays) {
+  const problems = [];
+  const merged = { ...schemas };
+  for (const [name, overlay] of Object.entries(overlays ?? {})) {
+    const published = authoritative.components?.schemas?.[name];
+    if (published === undefined) {
+      problems.push(`${name} is not in the snapshot (declare it in components.schemas instead)`);
+      continue;
+    }
+    const publishedProperties = published.properties ?? {};
+    for (const property of Object.keys(overlay.properties ?? {})) {
+      if (property in publishedProperties) {
+        problems.push(`${name}.${property} is already published`);
+      }
+    }
+    merged[name] = {
+      ...published,
+      properties: { ...publishedProperties, ...(overlay.properties ?? {}) },
+      ...(overlay.required === undefined
+        ? {}
+        : { required: [...new Set([...(published.required ?? []), ...overlay.required])] }),
+    };
+  }
+  if (problems.length > 0) {
+    throw new Error(
+      `openapi/pending.json x-schema-overlays is out of date (${problems.join("; ")}). Prune the overlay.`,
+    );
+  }
+  return merged;
+}
+
 function mergedClientDocument(authoritative, pending) {
   assertNoPendingRedefinitions(authoritative, pending);
 
@@ -78,6 +114,11 @@ function mergedClientDocument(authoritative, pending) {
       ...pendingEntries,
     };
   }
+  components.schemas = applySchemaOverlays(
+    authoritative,
+    components.schemas ?? {},
+    pending["x-schema-overlays"],
+  );
 
   return {
     ...authoritative,

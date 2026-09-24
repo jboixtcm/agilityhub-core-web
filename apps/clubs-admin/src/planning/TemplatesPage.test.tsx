@@ -5,6 +5,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -134,6 +135,184 @@ describe("T-06-26 D3 weekly templates", () => {
     expect(
       await screen.findByRole("button", { name: "C+D+F · Laura · Carretera" }),
     ).toBeInTheDocument();
+  });
+
+  it("queues two quick changes of a full cell and sends each PATCH with the latest version", async () => {
+    const bodies: { levelIds?: string[]; version: number }[] = [];
+    server.use(
+      http.patch("*/api/v1/week-templates/:id/classes/:classId", async ({ request }) => {
+        bodies.push((await request.clone().json()) as { levelIds?: string[]; version: number });
+      }),
+    );
+    await renderTemplates();
+
+    const [mondayClass] = screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" });
+    if (mondayClass === undefined) throw new TypeError("missing Monday class");
+    fireEvent.click(mondayClass);
+    const card = screen.getByRole("region", { name: "Classe seleccionada" });
+    // Two clicks in a row, without waiting for the first response.
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(within(card).getByRole("button", { name: "F" }));
+
+    expect(
+      await screen.findByRole("button", { name: "C+D+F · Laura · Carretera" }),
+    ).toBeInTheDocument();
+    expect(bodies).toHaveLength(2);
+    const [first, second] = bodies;
+    expect(second?.version).toBe((first?.version ?? Number.NaN) + 1);
+    expect(second?.levelIds).toEqual(["level-c", "level-d", "level-f"]);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(within(classCard()).getByRole("button", { name: "F" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("reloads the template and remounts the card on STALE_VERSION", async () => {
+    let templateReads = 0;
+    server.use(
+      http.get("*/api/v1/week-templates/:id", () => {
+        templateReads += 1;
+      }),
+      http.patch(
+        "*/api/v1/week-templates/:id/classes/:classId",
+        () =>
+          HttpResponse.json(
+            { code: "STALE_VERSION", message: "Stale template version", traceId: "trace-stale" },
+            { status: 409 },
+          ),
+        { once: true },
+      ),
+    );
+    await renderTemplates();
+    const readsBefore = templateReads;
+
+    const [mondayClass] = screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" });
+    if (mondayClass === undefined) throw new TypeError("missing Monday class");
+    fireEvent.click(mondayClass);
+    fireEvent.click(
+      within(screen.getByRole("region", { name: "Classe seleccionada" })).getByRole("button", {
+        name: "E",
+      }),
+    );
+
+    expect(
+      await screen.findByText(
+        "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+      ),
+    ).toBeVisible();
+    await waitFor(() => {
+      expect(templateReads).toBeGreaterThan(readsBefore);
+    });
+    const card = screen.getByRole("region", { name: "Classe seleccionada" });
+    await waitFor(() => {
+      expect(within(card).getByRole("button", { name: "E" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    });
+    // The remounted card works on the fresh version.
+    fireEvent.click(within(classCard()).getByRole("button", { name: "E" }));
+    expect(
+      await screen.findByRole("button", { name: "C+D · Laura · Carretera" }),
+    ).toBeInTheDocument();
+  });
+
+  it("puts the form back to the saved class when a PATCH fails", async () => {
+    server.use(
+      http.patch(
+        "*/api/v1/week-templates/:id/classes/:classId",
+        () =>
+          HttpResponse.json(
+            { code: "LEVEL_REQUIRED", message: "At least one level", traceId: "trace-level" },
+            { status: 422 },
+          ),
+        { once: true },
+      ),
+    );
+    await renderTemplates();
+
+    const [mondayClass] = screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" });
+    if (mondayClass === undefined) throw new TypeError("missing Monday class");
+    fireEvent.click(mondayClass);
+    const card = screen.getByRole("region", { name: "Classe seleccionada" });
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+
+    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(within(card).getByRole("button", { name: "E" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(card).getByLabelText("Descripció")).toHaveAttribute("placeholder", "C+D+E");
+    expect(
+      screen.getByRole("button", { name: "C+D+E · Laura · Carretera", pressed: true }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "C+D · Laura · Carretera" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table", async () => {
+    const failure = () =>
+      HttpResponse.json(
+        { code: "INTERNAL_ERROR", message: "Unexpected error", traceId: "trace-load" },
+        { status: 500 },
+      );
+    server.use(
+      http.get("*/api/v1/weeks", failure, { once: true }),
+      http.get("*/api/v1/coverage", failure, { once: true }),
+    );
+    await renderTemplates();
+
+    const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
+    const weeks = screen.getByRole("table", { name: "Setmanes" });
+    expect(within(weeks).queryByText("Carregant…")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(retry);
+    expect(
+      (await within(weeks).findAllByText(/^\d{2}\/\d{2} · \d{2}:\d{2}$/u)).length,
+    ).toBeGreaterThan(0);
+    expect(
+      await screen.findByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
+  });
+
+  it("shows each band error on the field that caused it", async () => {
+    await renderTemplates();
+
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const drawer = await screen.findByRole("dialog", { name: "Nova franja" });
+    const start = within(drawer).getByLabelText("Inici");
+    const end = within(drawer).getByLabelText("Final");
+    const fieldOf = (input: HTMLElement) => input.closest(".ah-form-field");
+
+    fireEvent.change(start, { target: { value: "21:10" } });
+    fireEvent.change(end, { target: { value: "21:35" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(
+      await within(drawer).findByText("L'interval de les franges horàries no és vàlid."),
+    ).toBeVisible();
+    expect(fieldOf(end)).toHaveClass("ah-form-field--error");
+    expect(fieldOf(start)).not.toHaveClass("ah-form-field--error");
+
+    fireEvent.change(start, { target: { value: "19:30" } });
+    fireEvent.change(end, { target: { value: "21:40" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(
+      await within(drawer).findByText("Aquesta franja se superposa amb una altra."),
+    ).toBeVisible();
+    expect(fieldOf(start)).toHaveClass("ah-form-field--error");
+    expect(fieldOf(end)).not.toHaveClass("ah-form-field--error");
+
+    fireEvent.change(start, { target: { value: "21:10" } });
+    fireEvent.change(end, { target: { value: "23:00" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(
+      await within(drawer).findByText("L'hora seleccionada és fora de l'horari d'obertura."),
+    ).toBeVisible();
+    expect(fieldOf(end)).toHaveClass("ah-form-field--error");
+    expect(fieldOf(start)).not.toHaveClass("ah-form-field--error");
   });
 
   it("marks the inconsistency on the cells and in the footer note and blocks the generation", async () => {

@@ -1,0 +1,25 @@
+
+> agilityhub-core-web@0.0.0 api:generate ~/dev/agilityhub/agilityhub-core-web
+> pnpm --filter @agilityhub/api-client api:generate
+
+
+> @agilityhub/api-client@0.0.0 api:generate ~/dev/agilityhub/agilityhub-core-web/packages/api-client
+> node scripts/generate.mjs
+
+file://~/dev/agilityhub/agilityhub-core-web/packages/api-client/scripts/generate.mjs:92
+    throw new Error(
+          ^
+
+Error: openapi/pending.json x-schema-overlays is out of date (LevelPatch.code is already published). Prune the overlay.
+    at applySchemaOverlays (file://~/dev/agilityhub/agilityhub-core-web/packages/api-client/scripts/generate.mjs:92:11)
+    at mergedClientDocument (file://~/dev/agilityhub/agilityhub-core-web/packages/api-client/scripts/generate.mjs:117:24)
+    at file://~/dev/agilityhub/agilityhub-core-web/packages/api-client/scripts/generate.mjs:138:29
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.2
+~/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 api:generate: `node scripts/generate.mjs`
+Exit status 1
+ ELIFECYCLE  Command failed with exit code 1.

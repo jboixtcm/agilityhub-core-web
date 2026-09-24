@@ -5,6 +5,13 @@
   gap: var(--ah-space-4);
 }
 
+.planning-load-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
 .planning-header {
   display: flex;
   flex-wrap: wrap;

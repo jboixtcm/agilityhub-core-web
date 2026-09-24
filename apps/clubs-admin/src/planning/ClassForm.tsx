@@ -1,6 +1,13 @@
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Card, FormField, Input, Select } from "@agilityhub/ui";
-import { type CSSProperties, type SyntheticEvent, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  type SyntheticEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { automaticDescription } from "./description";
@@ -145,6 +152,11 @@ export function ClassForm({
   );
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const [pending, setPending] = useState(false);
+  /** The class as last saved by the API (the parent passes each PATCH result without remount). */
+  const savedItem = useRef(mode.kind === "edit" ? mode.item : undefined);
+  useEffect(() => {
+    savedItem.current = mode.kind === "edit" ? mode.item : undefined;
+  }, [mode]);
 
   const activeRings = rings.filter((ring) => ring.active);
   const activeLevels = levels.filter((level) => level.active);
@@ -189,6 +201,8 @@ export function ClassForm({
     setErrors({ [field]: message });
   };
 
+  /** Edit mode: the change shows at once and is sent through the parent's PATCH queue; if it
+   * fails, the form goes back to the last saved class (the chips never show an unsaved value). */
   const change = async (patch: ClassFormPatch, next: Partial<ClassFormValues>) => {
     setValues((current) => ({ ...current, ...next }));
     setErrors({});
@@ -196,6 +210,12 @@ export function ClassForm({
     try {
       await onChange(patch);
     } catch (error) {
+      const saved = savedItem.current;
+      if (saved !== undefined) {
+        setValues(
+          initialValues({ item: saved, kind: "edit" }, bands, days, instructors, maxInstructors),
+        );
+      }
       showError(error);
     }
   };

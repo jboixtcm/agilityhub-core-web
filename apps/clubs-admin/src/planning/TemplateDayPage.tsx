@@ -13,7 +13,7 @@ import {
   Skeleton,
   Toast,
 } from "@agilityhub/ui";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./planning.css";
@@ -85,6 +85,15 @@ export function TemplateDayPage({
         ? dayOfWeek
         : data.days[0];
   const dayIndex = data === undefined || day === undefined ? -1 : data.days.indexOf(day);
+
+  // An unknown or unsupported `:dayOfWeek` (e.g. `/dia/sunday`) shows the template's first day;
+  // the URL is rewritten to it so the route round-trips.
+  useEffect(() => {
+    if (day === undefined || day === dayOfWeek) return;
+    const url = new URL(window.location.href);
+    url.pathname = `/plantilles/${templateId}/dia/${day.toLowerCase()}`;
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}`);
+  }, [day, dayOfWeek, templateId]);
 
   const grid = useMemo(() => {
     if (data === undefined || cat === undefined || day === undefined) return undefined;

@@ -60,6 +60,11 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
     await expect(
       page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana A»" }),
     ).toBeVisible();
+    // The api resolves `displayDescription` in the UI language (`Accept-Language`), whatever the
+    // browser language is (R-06-03, E29: «D i sup.» over the progression levels only).
+    await expect(page.getByRole("button", { name: /^D i sup\. · Anna · /u }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /^F i sup\. · /u }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /and up|y sup\./u })).toHaveCount(0);
     const weeks = page.getByRole("table", { name: "Setmanes" });
     await expect(
       weeks.getByRole("row", { name: "2026 34 17/08 17/08 · 09:12 18/08 · 10:02" }),

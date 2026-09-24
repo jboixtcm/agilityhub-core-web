@@ -21,13 +21,15 @@ async function translator(locale: Locale) {
   return i18n.t.bind(i18n);
 }
 
-// Catalog of the R-06-03 examples: Cadells · A · B · C · D · E · F · G.
-const levels: DescriptionLevel[] = ["Cadells", "A", "B", "C", "D", "E", "F", "G"].map(
+// Catalog of the R-06-03 examples: Cadells · A · B · C · D · E · F · G · Teràpia, with Teràpia
+// outside the progression (E29, `Level.progression = false`).
+const levels: DescriptionLevel[] = ["Cadells", "A", "B", "C", "D", "E", "F", "G", "Teràpia"].map(
   (name, index) => ({
     active: true,
     id: `level-${name}`,
     name,
     order: index * 10,
+    progression: name !== "Teràpia",
   }),
 );
 const ids = (...names: string[]) => names.map((name) => `level-${name}`);
@@ -42,6 +44,20 @@ describe("T-06-02 R-06-03 automatic description preview (D3 class card)", () => 
     expect(automaticDescription(levels, ids("A", "C"), t)).toBe("A+C");
     expect(automaticDescription(levels, ids("Cadells"), t)).toBe("Cadells");
     expect(automaticDescription(levels, [], t)).toBe("");
+  });
+
+  it("E29: a level outside the progression joins with «+» and never ends a «… i sup.» run", async () => {
+    const t = await translator("ca");
+
+    expect(automaticDescription(levels, ids("G", "Teràpia"), t)).toBe("G+Teràpia");
+    expect(automaticDescription(levels, ids("D", "E", "F", "G", "Teràpia"), t)).toBe(
+      "D+E+F+G+Teràpia",
+    );
+    expect(automaticDescription(levels, ids("Teràpia"), t)).toBe("Teràpia");
+    // With every level in the progression (the default), «Teràpia» is the last active level and
+    // {D,E,F,G} stays «D+E+F+G» (the question behind E29).
+    const allInProgression = levels.map((level) => ({ ...level, progression: undefined }));
+    expect(automaticDescription(allInProgression, ids("D", "E", "F", "G"), t)).toBe("D+E+F+G");
   });
 
   it("ignores inactive levels when deciding the last active level", async () => {

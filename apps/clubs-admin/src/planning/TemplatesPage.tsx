@@ -34,6 +34,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import "./planning.css";
+import { loadOpeningHours, type OpeningHours } from "./calendar-shared";
 import {
   CLASS_CARD_ID,
   ClassForm,
@@ -47,6 +48,7 @@ import {
   clubToday,
   errorCode,
   errorProp,
+  fieldOfValidationError,
   instructorNames,
   loadPlanningCatalogs,
   mondayOf,
@@ -291,36 +293,92 @@ function TemplateModal({
   );
 }
 
+type BandField = "end" | "general" | "start";
+
+function minutesOf(time: string): number {
+  const [hours, mins] = time.split(":").map(Number);
+  return (hours ?? 0) * 60 + (mins ?? 0);
+}
+
+/** Opening window shared by every day of the template (`club.openingHours`, R-06-01). */
+function templateOpening(
+  hours: OpeningHours,
+  days: readonly string[],
+): { close: string; open: string } {
+  const windows = days.map((day) => hours[day] ?? { close: "22:00", open: "07:00" });
+  const latestOpen =
+    windows
+      .map((window) => window.open)
+      .sort()
+      .at(-1) ?? "07:00";
+  const earliestClose = windows.map((window) => window.close).sort()[0] ?? "22:00";
+  return { close: earliestClose, open: latestOpen };
+}
+
+/**
+ * The band field an API error belongs to: the codes carry no field, so it is derived from the
+ * values that were sent (e.g. `INVALID_SLOT_GRANULARITY` on «Fi» when only the end is off-slot).
+ */
+function bandErrorField(
+  cause: unknown,
+  values: { endTime: string; startTime: string },
+  context: {
+    bands: readonly TimeBand[];
+    opening: { close: string; open: string };
+    slotMinutes: number;
+  },
+): BandField {
+  const code = errorCode(cause);
+  const start = minutesOf(values.startTime);
+  switch (code) {
+    case "INVALID_TIME_RANGE":
+      return "end";
+    case "INVALID_SLOT_GRANULARITY":
+      return start % context.slotMinutes === 0 ? "end" : "start";
+    case "OUTSIDE_OPENING_HOURS":
+      return start < minutesOf(context.opening.open) ? "start" : "end";
+    case "BAND_OVERLAP":
+      return context.bands.some(
+        (band) => minutesOf(band.startTime) <= start && start < minutesOf(band.endTime),
+      )
+        ? "start"
+        : "end";
+    case "VALIDATION_ERROR":
+      return fieldOfValidationError(cause) === "endTime" ? "end" : "start";
+    default:
+      return "general";
+  }
+}
+
 /** [＋ Franja] / click on a row label; mounted only while open. */
 function BandDrawer({
   band,
+  bands,
   onClose,
   onRemove,
   onSave,
+  opening,
   slotMinutes,
 }: {
   band?: TimeBand | undefined;
+  /** The other bands of the template (the edited one excluded). */
+  bands: readonly TimeBand[];
   onClose: () => void;
   onRemove: (band: TimeBand) => Promise<void>;
   onSave: (startTime: string, endTime: string) => Promise<void>;
+  opening: { close: string; open: string };
   slotMinutes: number;
 }) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
   const errorMessage = useErrorMessage();
   const [startTime, setStartTime] = useState(band?.startTime ?? "");
   const [endTime, setEndTime] = useState(band?.endTime ?? "");
-  const [error, setError] = useState<{ field: "end" | "general" | "start"; message: string }>();
+  const [error, setError] = useState<{ field: BandField; message: string }>();
   const [pending, setPending] = useState(false);
 
   const fail = (cause: unknown) => {
-    const code = errorCode(cause);
     setError({
-      field:
-        code === "BAND_NOT_EMPTY" || code === "STALE_VERSION"
-          ? "general"
-          : code === "INVALID_TIME_RANGE"
-            ? "end"
-            : "start",
+      field: bandErrorField(cause, { endTime, startTime }, { bands, opening, slotMinutes }),
       message: errorMessage(cause),
     });
   };
@@ -958,13 +1016,40 @@ export function TemplatesPage({
     ),
   );
 
+  const openingHours = useResource(
+    useCallback(async () => (readOnly ? {} : loadOpeningHours(client)), [client, readOnly]),
+  );
+
   const loadFailure = lists.error ?? template.error ?? catalogs.error;
+  // Secondary cards: a failed load shows the toast with [Torna-ho a provar] instead of a
+  // table that stays loading (S06 §2 «toast + reintent»).
+  const secondaryFailure = coverage.error ?? weeks.error ?? candidates.error;
+
+  /** Latest known template version: every PATCH of the queue reads it when it is sent. */
+  const versionRef = useRef<{ id: string; version: number } | undefined>(undefined);
+  useEffect(() => {
+    if (template.data !== undefined) {
+      versionRef.current = { id: template.data.id, version: template.data.version };
+    }
+  }, [template.data]);
+  const cardRef = useRef(card);
+  useEffect(() => {
+    cardRef.current = card;
+  }, [card]);
+  /** Edit-mode PATCHes run one after the other (R-06-02 «each change is saved at once»). */
+  const patchQueue = useRef<Promise<unknown>>(Promise.resolve());
+  /** Bumped when a PATCH fails: the changes queued after it were built on the rejected one. */
+  const patchGeneration = useRef(0);
 
   const applyTemplate = (next: WeekTemplate) => {
+    versionRef.current = { id: next.id, version: next.version };
     template.setData(next);
     lists.reload();
     coverage.reload();
   };
+
+  const cardShowsClass = (classId: string) =>
+    cardRef.current.mode.kind === "edit" && cardRef.current.mode.item.id === classId;
 
   const selectTemplate = (id: string) => {
     setChoice({
@@ -1012,17 +1097,54 @@ export function TemplatesPage({
     }
   };
 
-  const patchClass = async (patch: ClassFormPatch) => {
-    if (current === undefined || cardMode.kind !== "edit") return;
-    const result = await client.PATCH("/week-templates/{id}/classes/{classId}", {
-      body: { ...patch, version: current.version },
-      params: { path: { classId: cardMode.item.id, id: current.id } },
-    });
-    if (result.data !== undefined) {
-      applyTemplate(result.data);
-      const updated = result.data.classes.find((item) => item.id === cardMode.item.id);
-      if (updated !== undefined) setCardMode({ item: updated, kind: "edit" }, false);
+  /** Another client changed the template: reload it and remount the card on the fresh class. */
+  const recoverFromStaleVersion = async (templateId: string, classId: string, cause: unknown) => {
+    setFeedback({ message: errorMessage(cause), tone: "warning" });
+    const fresh = (
+      await client.GET("/week-templates/{id}", { params: { path: { id: templateId } } })
+    ).data;
+    if (fresh === undefined || versionRef.current?.id !== templateId) return;
+    applyTemplate(fresh);
+    if (cardShowsClass(classId)) {
+      const item = fresh.classes.find((candidate) => candidate.id === classId);
+      setCardMode(
+        item === undefined ? { fromEmptyCell: false, kind: "create" } : { item, kind: "edit" },
+      );
     }
+  };
+
+  const patchClass = (patch: ClassFormPatch): Promise<void> => {
+    if (current === undefined || cardMode.kind !== "edit") return Promise.resolve();
+    const templateId = current.id;
+    const classId = cardMode.item.id;
+    const ticket = patchGeneration.current;
+    const send = async () => {
+      if (ticket !== patchGeneration.current) return;
+      const version =
+        versionRef.current?.id === templateId ? versionRef.current.version : current.version;
+      try {
+        const result = await client.PATCH("/week-templates/{id}/classes/{classId}", {
+          body: { ...patch, version },
+          params: { path: { classId, id: templateId } },
+        });
+        if (result.data === undefined || versionRef.current?.id !== templateId) return;
+        applyTemplate(result.data);
+        const updated = result.data.classes.find((item) => item.id === classId);
+        if (updated !== undefined && cardShowsClass(classId)) {
+          setCardMode({ item: updated, kind: "edit" }, false);
+        }
+      } catch (error) {
+        patchGeneration.current += 1;
+        if (isApiError(error, "STALE_VERSION")) {
+          await recoverFromStaleVersion(templateId, classId, error);
+          return;
+        }
+        throw error;
+      }
+    };
+    const task = patchQueue.current.then(send);
+    patchQueue.current = task.catch(() => undefined);
+    return task;
   };
 
   const removeClass = async () => {
@@ -1057,7 +1179,14 @@ export function TemplatesPage({
             params: { path: { id: current.id } },
           })
         : await client.PATCH("/week-templates/{id}/bands/{bandId}", {
-            body: { endTime, startTime, version: current.version },
+            body: {
+              endTime,
+              startTime,
+              version:
+                versionRef.current?.id === current.id
+                  ? versionRef.current.version
+                  : current.version,
+            },
             params: { path: { bandId: band.id, id: current.id } },
           });
     if (result.data !== undefined) applyTemplate(result.data);
@@ -1195,11 +1324,13 @@ export function TemplatesPage({
       {bandDrawer === undefined ? null : (
         <BandDrawer
           band={bandDrawer.band}
+          bands={(current?.bands ?? []).filter((band) => band.id !== bandDrawer.band?.id)}
           onClose={() => {
             setBandDrawer(undefined);
           }}
           onRemove={removeBand}
           onSave={saveBand}
+          opening={templateOpening(openingHours.data ?? {}, current?.days ?? [])}
           slotMinutes={config.slotMinutes}
         />
       )}
@@ -1238,9 +1369,21 @@ export function TemplatesPage({
     </>
   );
 
-  const coverageToast =
-    coverage.error === undefined ? null : (
-      <Toast tone="danger">{errorMessage(coverage.error)}</Toast>
+  const secondaryToast =
+    secondaryFailure === undefined ? null : (
+      <div className="planning-load-error">
+        <Toast tone="danger">{errorMessage(secondaryFailure)}</Toast>
+        <Button
+          onClick={() => {
+            if (coverage.error !== undefined) coverage.reload();
+            if (weeks.error !== undefined) weeks.reload();
+            if (candidates.error !== undefined) candidates.reload();
+          }}
+          variant="secondary"
+        >
+          {t("admin-scheduling:common.retry")}
+        </Button>
+      </div>
     );
   const feedbackToast =
     feedback === undefined ? null : (
@@ -1306,7 +1449,7 @@ export function TemplatesPage({
     <section className="planning-page">
       {header}
       {feedbackToast}
-      {coverageToast}
+      {secondaryToast}
       {current === undefined || cat === undefined ? (
         <GridSkeleton />
       ) : (
@@ -1360,7 +1503,7 @@ export function TemplatesPage({
           onGenerate={generate}
           readOnly={readOnly}
           weekdayTemplateId={weekdayId}
-          weeks={weeks.data}
+          weeks={weeks.data ?? (weeks.error === undefined ? undefined : [])}
         />
       </div>
       {coverage.data === undefined || coverage.data === null ? null : (
