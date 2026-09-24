@@ -505,9 +505,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   expect(memberPageErrors).toEqual([]);
   const addDogLink = member.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first();
   await expect(addDogLink).toBeVisible();
+  await screenshot(member, "13-my-dogs-loaded-core-375.png");
   await addDogLink.click();
   await member.waitForURL("**/gossos/nou");
   await fillDog(member, additionalDog, "941000000009903");
+  await screenshot(member, "17-add-dog-core-375.png");
   await member.getByRole("button", { name: "CONTINUA" }).click();
   await member.waitForURL("**/gossos/nou/pagament");
   await expect(member.getByLabel("Mètode de pagament actual")).toHaveValue(/Domiciliació/u);
@@ -551,6 +553,9 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await screenshot(admin, "D11-signup-toggle-core-1280.png");
   const parameter = admin.locator(".settings-parameter").filter({ hasText: "Altes públiques" });
   await expect(parameter).toBeVisible();
+  // Viewport capture of the switch in its block (the full-page D11 capture is ~6700 px high).
+  await parameter.scrollIntoViewIfNeeded();
+  await admin.screenshot({ path: join(evidenceDirectory, "D11-signup-toggle-viewport-core-1280.png") });
   await parameter.getByRole("button", { name: /Altes públiques/u }).first().click();
   const editor = admin.getByRole("dialog", { name: "Altes públiques" });
   const toggle = editor.getByRole("switch", { name: "Altes públiques" });

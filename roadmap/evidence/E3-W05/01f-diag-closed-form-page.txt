@@ -1,0 +1,131 @@
+url=http://127.0.0.1:4173/apuntat-hi
+--- text ---
+C
+Apunta-t'hi
+Idioma
+CAT
+ES
+
+Pas 1 de 4 · Tu
+
+DNI / NIE
+Passaport — si no tens DNI/NIE
+Nom
+Cognom 1
+Cognom 2
+Data de naixement
+Gènere
+Masculí
+Femení
+Altres / No binari
+Email
+Segon email (opcional)
+Prefix
++34
+Telèfon
+Descripció
+Prefix
++34
+Segon telèfon (opcional)
+Descripció
+Carrer i número
+CP
+Població (proposada pel CP)
+Ja ets soci i vols afegir un altre gos? Fes servir el mateix formulari: et reconeixerem pel DNI o l'email (verificació per correu) i només registrarem el gos nou.
+CONTINUA
+Club Agility Cànic · Cabrera de Mar
+--- html (first 4000) ---
+<!DOCTYPE html><html lang="ca" data-theme="dark" style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat; --ah-font-display: Montserrat; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"><head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Agility Cànic</title>
+    <link rel="manifest" href="/api/v1/manifest.webmanifest">
+    <script>
+      (() => {
+        try {
+          const cached = localStorage.getItem(`agilityhub.branding:${location.host}`);
+          if (cached === null) return;
+          const theme = JSON.parse(cached).theme;
+          const tokens = {
+            background: "--ah-color-background",
+            border: "--ah-color-border",
+            danger: "--ah-color-danger",
+            info: "--ah-color-info",
+            onPrimary: "--ah-color-primary-fg",
+            primary: "--ah-color-primary",
+            success: "--ah-color-success",
+            surface: "--ah-color-surface",
+            surfaceAlt: "--ah-color-surface-2",
+            text: "--ah-color-text",
+            textMuted: "--ah-color-text-muted",
+            warning: "--ah-color-warning",
+          };
+          Object.entries(theme.colors).forEach(([name, value]) => {
+            const token = tokens[name];
+            if (token !== undefined && typeof value === "string") {
+              document.documentElement.style.setProperty(token, value);
+            }
+          });
+          if (typeof theme.fontFamily === "string") {
+            document.documentElement.style.setProperty("--ah-font-sans", theme.fontFamily);
+            document.documentElement.style.setProperty("--ah-font-display", theme.fontFamily);
+          }
+          if (typeof theme.radius === "string") {
+            document.documentElement.style.setProperty("--ah-radius-sm", theme.radius);
+            document.documentElement.style.setProperty("--ah-radius-md", theme.radius);
+          }
+          if (Array.isArray(theme.ringPalette)) {
+            theme.ringPalette.forEach((color, index) => {
+              if (typeof color === "string") {
+                document.documentElement.style.setProperty(`--ah-color-ring-${index + 1}`, color);
+              }
+            });
+          }
+          if (["auto", "dark", "light"].includes(theme.mode)) {
+            document.documentElement.dataset.theme = theme.mode;
+            document.documentElement.style.colorScheme =
+              theme.mode === "auto" ? "light dark" : theme.mode;
+          }
+        } catch {
+          // The AgilityHub defaults remain active when cached branding is unavailable.
+        }
+      })();
+    </script>
+  <style type="text/css" data-vite-dev-id="/work/packages/ui/src/components.css">.ah-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ah-button,
+.ah-input,
+.ah-checkbox,
+.ah-switch,
+.ah-tabs__tab,
+.ah-overlay__close,
+.ah-toast button {
+  font: inherit;
+}
+
+.ah-button {
+  position: relative;
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-4);
+  border: 1px solid transpare

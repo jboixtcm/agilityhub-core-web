@@ -34,7 +34,7 @@ run_core_suite() {
 
 # E1/E2 stage, then the E3 signup stage on a fresh seed.
 staged_e3=false
-if [[ "$evidence_subdirectory" == "E3-W03" || "$evidence_subdirectory" == "E3-W04" ]]; then
+if [[ "$evidence_subdirectory" =~ ^E3-W0[345]$ ]]; then
   staged_e3=true
 fi
 

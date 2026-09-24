@@ -1,0 +1,200 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh
+
+ Network agilityhub-e3-w03-final_default Creating 
+ Network agilityhub-e3-w03-final_default Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Creating 
+ Volume agilityhub-e3-w03-final_export-files Creating 
+ Volume agilityhub-e3-w03-final_export-files Creating 
+ Volume agilityhub-e3-w03-final_mailbox Creating 
+ Volume agilityhub-e3-w03-final_mailbox Creating 
+ Volume agilityhub-e3-w03-final_mongo-data Created 
+ Volume agilityhub-e3-w03-final_mongo-data Created 
+ Volume agilityhub-e3-w03-final_mailbox Created 
+ Volume agilityhub-e3-w03-final_mailbox Created 
+ Volume agilityhub-e3-w03-final_export-files Created 
+ Volume agilityhub-e3-w03-final_export-files Created 
+ Network agilityhub-e3-w03-final_default Created 
+ Network agilityhub-e3-w03-final_default Created 
+ Container agilityhub-e3-w03-final-mongo-1 Creating 
+ Container agilityhub-e3-w03-final-mongo-1 Created 
+ Container agilityhub-e3-w03-final-seed-1 Creating 
+ Container agilityhub-e3-w03-final-seed-1 Created 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Creating 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Created 
+ Container agilityhub-e3-w03-final-core-1 Creating 
+ Container agilityhub-e3-w03-final-core-1 Created 
+ Container agilityhub-e3-w03-final-mongo-1 Starting 
+ Container agilityhub-e3-w03-final-mongo-1 Started 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-seed-1 Starting 
+ Container agilityhub-e3-w03-final-seed-1 Started 
+ Container agilityhub-e3-w03-final-seed-1 Waiting 
+ Container agilityhub-e3-w03-final-seed-1 Exited 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Starting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Started 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Exited 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-core-1 Starting 
+ Container agilityhub-e3-w03-final-core-1 Started 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Waiting 
+ Container agilityhub-e3-w03-final-core-1 Waiting 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-seed-1 Waiting 
+ Container agilityhub-e3-w03-final-seed-1 Exited 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Exited 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-core-1 Healthy 
+ Container agilityhub-e3-w03-final-mongo-1 Running 
+ Container agilityhub-e3-w03-final-core-1 Running 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-seed-1 Starting 
+ Container agilityhub-e3-w03-final-seed-1 Started 
+ Container agilityhub-e3-w03-final-seed-1 Waiting 
+ Container agilityhub-e3-w03-final-seed-1 Exited 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Starting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Started 
+ Container agilityhub-e3-w03-final-mongo-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Waiting 
+ Container agilityhub-e3-w03-final-activate-demo-club-1 Exited 
+ Container agilityhub-e3-w03-final-mongo-1 Healthy 
+ Container agilityhub-e3-w03-final-core-1 Waiting 
+ Container agilityhub-e3-w03-final-core-1 Healthy 
+ Container agilityhub-e3-w03-final-playwright-run-c3a06eb70eef Creating 
+ Container agilityhub-e3-w03-final-playwright-run-c3a06eb70eef Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +850
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 850, reused 0, downloaded 84, added 0
+Progress: resolved 850, reused 0, downloaded 196, added 196
+Progress: resolved 850, reused 0, downloaded 335, added 335
+Progress: resolved 850, reused 0, downloaded 474, added 474
+Progress: resolved 850, reused 0, downloaded 528, added 528
+Progress: resolved 850, reused 0, downloaded 540, added 540
+Progress: resolved 850, reused 0, downloaded 557, added 557
+Progress: resolved 850, reused 0, downloaded 584, added 584
+Progress: resolved 850, reused 0, downloaded 595, added 595
+Progress: resolved 850, reused 0, downloaded 664, added 664
+Progress: resolved 850, reused 0, downloaded 746, added 746
+Progress: resolved 850, reused 0, downloaded 803, added 803
+Progress: resolved 850, reused 0, downloaded 843, added 843
+Progress: resolved 850, reused 0, downloaded 844, added 844
+Progress: resolved 850, reused 0, downloaded 848, added 848
+Progress: resolved 850, reused 0, downloaded 849, added 848
+Progress: resolved 850, reused 0, downloaded 849, added 849
+Progress: resolved 850, reused 0, downloaded 850, added 850, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 18.8s using pnpm v9.15.9
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:214) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 14 tests using 1 worker
+
+[1/14] e2e/core/e1-core.spec.ts:154:5 › T-01-18 password login reaches the seeded account
+[2/14] e2e/core/e1-core.spec.ts:170:5 › T-01-21 seeded administrator opens the real backoffice
+[3/14] e2e/core/e1-core.spec.ts:186:5 › T-01-20 club session is restored by the core
+[4/14] e2e/core/e1-core.spec.ts:209:5 › T-01-19 magic link is delivered and exchanged end to end
+[5/14] e2e/core/e1-core.spec.ts:231:5 › T-01-26 published seed enters without pending onboarding
+[6/14] e2e/core/e1-core.spec.ts:241:5 › T-01-22 apps/id resumes a real authorize flow through oauth2/session
+[7/14] e2e/core/e2-core.spec.ts:204:5 › T-03-42 real census flow, booking block and member profile
+[8/14] e2e/core/e2-core.spec.ts:335:5 › T-05-22/T-05-25 real catalog create, edit and deactivate round trips
+[9/14] e2e/core/e2-core.spec.ts:419:5 › T-02-13/T-14-26 real parameter history, export and audit
+[10/14] e2e/core/e2-core.spec.ts:482:5 › T-05-CP-07 real club page edit renders styled Markdown on screen 30
+[11/14] e2e/core/e3-signup.spec.ts:287:5 › T-04-34 public signup is validated and enters through the N-02 welcome link
+[12/14] e2e/core/e3-signup.spec.ts:346:5 › T-04-34 rejected signup delivers N-03
+  1) e2e/core/e3-signup.spec.ts:346:5 › T-04-34 rejected signup delivers N-03 ──────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.dashboard-signups__row').filter({ hasText: 'Brisa E3' })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.dashboard-signups__row').filter({ hasText: 'Brisa E3' }) with timeout 15000ms
+      - waiting for locator('.dashboard-signups__row').filter({ hasText: 'Brisa E3' })
+
+
+      253 | ): Promise<void> {
+      254 |   const row = page.locator(".dashboard-signups__row").filter({ hasText: rowText });
+    > 255 |   await expect(row).toBeVisible();
+          |                     ^
+      256 |   await row.getByRole("button", { name: "VALIDA" }).click();
+      257 |   await expect(page.getByRole("heading", { name: new RegExp(headingText, "u") })).toBeVisible();
+      258 | }
+        at openSignupFromDashboard (/work/e2e/core/e3-signup.spec.ts:255:21)
+        at /work/e2e/core/e3-signup.spec.ts:364:9
+
+    Error Context: test-results/core-e1/e3-signup-T-04-34-rejected-signup-delivers-N-03/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e3-signup-T-04-34-rejected-signup-delivers-N-03/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e3-signup-T-04-34-rejected-signup-delivers-N-03/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[13/14] e2e/core/e3-signup.spec.ts:383:5 › T-04-34 active member adds a dog and the club validates it
+[14/14] e2e/core/e3-signup.spec.ts:422:5 › T-04-34 signup.enabled=false shows only the configured closed text
+  1 failed
+    e2e/core/e3-signup.spec.ts:346:5 › T-04-34 rejected signup delivers N-03 ───────────────────────
+  2 did not run
+  11 passed (45.6s)
+
+ ELIFECYCLE  Command failed with exit code 1.

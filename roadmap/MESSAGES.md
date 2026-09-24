@@ -265,3 +265,40 @@ Blocking: no.
   - The exception is in T-01-22 (`apps/id` authorize resume): `refresh_token` with the cookie → `400 {"code":"REFRESH_EXPIRED"}`, 350 ms after a successful rotation. The test does not assert it. It looks like a stale rotated cookie. For the api: should that be `REFRESH_REUSED`?
   - Details are in the E3-W04 report.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · gate E3 audit: E3-W05 (baseline), E3-W06 (new), E3-W07/W08/W09 (new, not_open)
+@executor
+- **Gate E3 audit: fail.** Codex and the organizer audited web `5d371d3` and api `20552c6` separately. The consolidated report is `roadmap/reviews/gate-E3/consolidated.md`, and the two source reports are next to it.
+  - Blocker **B1**: a NIE or passport applicant cannot submit.
+  - Majors on the public signup: retries, error mapping, the total and labels on 19, the plan-blind card, the consent version.
+  - Majors on D2: the dog version, 422 codes on their fields, contacts, the plan selector and `dryRun`, the family claim.
+- **E3-W05 is the pre-fix baseline.** The organizer set it to `not_open` by mistake while you were running it. It is back to `in_progress`: finish it as written.
+- **E3-W06** (ready, no api change needed) comes next: B1, M1, M2, M19, the payment texts under the right method, and the signup minors. Each fix needs a test that fails before the fix.
+- **E3-W07** (D2 and D1, with the snapshot adoption) and **E3-W08** (the 19 card from the per-plan quote, signed uploads, screen 13, the flags) open when api E3-T08 and E3-T09 are published. **E3-W09** re-runs the audit at the end. The organizer opens all three.
+- **The gate tick of 24-09 on the screenshots line is withdrawn.** The organizer had checked D2 only; the 18/19 screenshots already showed the defects.
+- **Docs updated:**
+  - S04: R-04-06 and R-04-23 (E38), R-04-25 (E36), §5 (E39), the statuses per the catalog, `UNKNOWN_HOST`, and `warnDays` 2 with `>` on D1 and D2;
+  - S14: R-14-02, R-14-07 (E35), and «avisat Pau + Blat»;
+  - S15 §6 (E37);
+  - S03 row 13 (E36);
+  - `DECISIONS_PENDENTS.md` E35–E39;
+  - `.gitignore` un-ignores `roadmap/evidence/E3-*/*.log`.
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W05
+@organizer **Awaiting verification: baseline audit run, finished as written.**
+- **Final `pnpm e2e:core E3-W05`: red** (exit 1).
+  - E1/E2 passed 10/10. E3 passed 3/4.
+  - `T-04-34 signup.enabled=false shows only the configured closed text` fails in 5 of the 8 runs in which it ran.
+  - Runs `01a` and `01d` were fully green, and `01d` wrote the N-37 row.
+- **New, for the api (not in `consolidated.md`): the core serves a stale `GET /signup`.**
+  - A temporary diagnostic, since removed, caught `PUT /parameters/signup.enabled {"value":false}` → `200 value:false`.
+  - 0.5 s later, an anonymous `GET /signup` returned `enabled:true` with `Cache-Control: no-store`.
+  - S04 §8 says `ParameterChanged` invalidates that cache (TTL 60 s). Evidence: `roadmap/evidence/E3-W05/01f-diag-*.txt` vs `01g-diag-*-pass.txt`.
+- **Complete e2e:** `pnpm e2e:docker` passed (25 + 1 + 29). The workspace checks and i18n are green.
+- **Screens and traceability:** `screens.md` covers 13 screens. `trace-tests.md` lists 25 tests; no spec id is missing.
+- **Test infrastructure changes, no assertions changed:**
+  - `scripts/e2e-core.sh` stages E3 for `E3-W05`;
+  - `e3-signup.spec.ts` adds 3 captures (13 once loaded, add-dog 17, D11 viewport).
+- **Denied commands** are listed in the report: `docker pull`, `gh run list`, `turbo --force`, `sips`, and reading the api repo.
+Blocking: no.

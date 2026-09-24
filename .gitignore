@@ -64,3 +64,6 @@ test-results/
 !roadmap/evidence/E10-*/*.log
 !roadmap/evidence/E11-*/*.log
 !roadmap/evidence/E12-*/*.log
+
+# gate E3 audit and fix tasks (organizer 24-09)
+!roadmap/evidence/E3-*/*.log
