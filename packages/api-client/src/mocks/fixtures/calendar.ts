@@ -33,12 +33,18 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
   return Math.round((local - instant) / 60_000);
 }
 
-/** UTC instant of a club-local date + time (R-06-14), without milliseconds. */
+/**
+ * UTC instant of a club-local date + time (R-06-14), without milliseconds, with the api's
+ * `ZonedDateTime.of` rules: first occurrence of an ambiguous time, a time in the gap moves forward.
+ */
 export function clubInstant(date: string, time: string, timeZone = clubTimeZone): string {
-  const guess = Date.parse(`${date}T${time}:00Z`);
-  let instant = guess - zoneOffsetMinutes(guess, timeZone) * 60_000;
-  const corrected = guess - zoneOffsetMinutes(instant, timeZone) * 60_000;
-  if (corrected !== instant) instant = corrected;
+  const local = Date.parse(`${date}T${time}:00Z`);
+  const before = zoneOffsetMinutes(local - 12 * 3_600_000, timeZone);
+  const after = zoneOffsetMinutes(local + 12 * 3_600_000, timeZone);
+  const valid = [before, after]
+    .map((offset) => local - offset * 60_000)
+    .filter((instant) => local - zoneOffsetMinutes(instant, timeZone) * 60_000 === instant);
+  const instant = valid.length === 0 ? local - before * 60_000 : Math.min(...valid);
   return new Date(instant).toISOString().replace(".000Z", "Z");
 }
 

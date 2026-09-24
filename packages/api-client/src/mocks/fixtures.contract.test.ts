@@ -263,6 +263,9 @@ describe("E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBl
     expect(clubInstant("2026-10-26", "08:30")).toBe("2026-10-26T07:30:00Z");
     expect(clubInstant("2026-03-28", "08:30")).toBe("2026-03-28T07:30:00Z");
     expect(clubInstant("2026-03-30", "08:30")).toBe("2026-03-30T06:30:00Z");
+    // Ambiguous 02:30 (autumn overlap): first occurrence; 02:30 in the spring gap → 03:30 local.
+    expect(clubInstant("2026-10-25", "02:30")).toBe("2026-10-25T00:30:00Z");
+    expect(clubInstant("2026-03-29", "02:30")).toBe("2026-03-29T01:30:00Z");
   });
 });
 

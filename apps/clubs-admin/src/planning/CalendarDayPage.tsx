@@ -45,7 +45,8 @@ function initialView(): DayView {
 
 /**
  * D4 day view (`/calendari/dia/:date`): the D3b layout fed by `GET /day-grid?view=instructor`
- * (form D) — per ring (rings of the response + «Sense») or per instructor. Read-only for everyone.
+ * (form D) — per ring (the response's columns, its «Sense» included) or per instructor. Read-only
+ * for everyone.
  */
 export function CalendarDayPage({
   client,
@@ -90,13 +91,12 @@ export function CalendarDayPage({
     let columns: ScheduleColumn[];
     let columnOf: (cell: DayGridCell) => string | undefined;
     if (view === "ring") {
-      const hasNoRing = cells.some(({ cell }) => cell.ringId === null || cell.ringId === undefined);
-      columns = [
-        ...data.columns
-          .filter((column) => column.ringId !== null && column.ringId !== undefined)
-          .map((column) => ({ color: column.color, id: column.ringId ?? "", label: column.name })),
-        ...(hasNoRing ? [{ id: NO_RING, label: t("admin-scheduling:templates.day.noRing") }] : []),
-      ];
+      // Columns exactly as the api delivers them, its «Sense» column (`ringId: null`) included.
+      columns = data.columns.map((column) =>
+        column.ringId === null || column.ringId === undefined
+          ? { color: column.color, id: NO_RING, label: column.shortName }
+          : { color: column.color, id: column.ringId, label: column.name },
+      );
       columnOf = (cell) => cell.ringId ?? NO_RING;
     } else {
       const names = [
@@ -126,7 +126,7 @@ export function CalendarDayPage({
         label: timeLabel(row.time),
       })),
     };
-  }, [data, t, view]);
+  }, [data, view]);
 
   const ringName = (ringId: string | null | undefined) =>
     ringId === null || ringId === undefined

@@ -88,12 +88,21 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
   return Math.round((local - instant) / 60_000);
 }
 
-/** UTC instant of a club-local date + time, computed with the club `timeZone` (R-06-14). */
+/**
+ * UTC instant of a club-local date + time, computed with the club `timeZone` (R-06-14), with the
+ * api's `ZonedDateTime.of` rules: an ambiguous local time (autumn overlap) takes its first
+ * occurrence, and a local time inside the spring gap moves forward by the gap length.
+ */
 export function clubInstant(date: string, time: string, timeZone: string): string {
-  const guess = Date.parse(`${date}T${time}:00Z`);
-  let instant = guess - zoneOffsetMinutes(guess, timeZone) * 60_000;
-  const corrected = guess - zoneOffsetMinutes(instant, timeZone) * 60_000;
-  if (corrected !== instant) instant = corrected;
+  const local = Date.parse(`${date}T${time}:00Z`);
+  // Offsets in force half a day before and after: a zone changes at most once in between.
+  const before = zoneOffsetMinutes(local - 12 * 3_600_000, timeZone);
+  const after = zoneOffsetMinutes(local + 12 * 3_600_000, timeZone);
+  const valid = [before, after]
+    .map((offset) => local - offset * 60_000)
+    .filter((instant) => local - zoneOffsetMinutes(instant, timeZone) * 60_000 === instant);
+  // Gap: no offset matches; the offset before the transition moves the wall time forward.
+  const instant = valid.length === 0 ? local - before * 60_000 : Math.min(...valid);
   return new Date(instant).toISOString().replace(".000Z", "Z");
 }
 

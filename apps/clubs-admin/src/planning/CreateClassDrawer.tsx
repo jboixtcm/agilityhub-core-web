@@ -119,17 +119,31 @@ export function CreateClassDrawer({
     clampTime(timeOf(minutesOf(starts[0] ?? "") + 60), ends),
   );
 
+  const [bookings, setBookings] = useState<unknown[]>();
+  /**
+   * The `RING_HAS_BOOKINGS` list belongs to the ring, date and times it was answered for: any
+   * change to them drops it, so [Anul·la les reserves i desa] never confirms a slot not shown.
+   */
+  const dropBookings = () => {
+    setBookings(undefined);
+  };
+  /** A new start keeps the class length, with the end clamped to the day's closing time. */
+  const moveStart = (nextStart: string, ends: readonly string[]) => {
+    const length = Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
+    setStartTime(nextStart);
+    setEndTime(clampTime(timeOf(minutesOf(nextStart) + length), ends));
+    dropBookings();
+  };
+
   /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
   const changeDate = (value: string) => {
     const next = maskDate(value);
     setDate(next);
+    dropBookings();
     const day = parseMaskedDate(next);
     if (day === undefined) return;
     const options = optionsOf(day);
-    const nextStart = clampTime(startTime, options.starts);
-    const length = Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
-    setStartTime(nextStart);
-    setEndTime(clampTime(timeOf(minutesOf(nextStart) + length), options.ends));
+    moveStart(clampTime(startTime, options.starts), options.ends);
   };
   const [ringId, setRingId] = useState<string | null>(null);
   const [levelIds, setLevelIds] = useState<string[]>([]);
@@ -141,7 +155,6 @@ export function CreateClassDrawer({
   const [capacity, setCapacity] = useState("");
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
-  const [bookings, setBookings] = useState<unknown[]>();
 
   const holidays = useResource(
     useCallback(async () => {
@@ -263,10 +276,7 @@ export function CreateClassDrawer({
             <Select
               id="calendar-create-start"
               onChange={(event) => {
-                const next = event.currentTarget.value;
-                const length = minutesOf(endTime) - minutesOf(startTime);
-                setStartTime(next);
-                setEndTime(timeOf(minutesOf(next) + Math.max(length, settings.slotMinutes)));
+                moveStart(event.currentTarget.value, ends);
               }}
               value={startTime}
             >
@@ -286,6 +296,7 @@ export function CreateClassDrawer({
               id="calendar-create-end"
               onChange={(event) => {
                 setEndTime(event.currentTarget.value);
+                dropBookings();
               }}
               value={endTime}
             >
@@ -358,6 +369,7 @@ export function CreateClassDrawer({
                 key={ring.id}
                 onClick={() => {
                   setRingId(ring.id);
+                  dropBookings();
                 }}
                 role="radio"
                 style={colorStyle(ring.color)}
@@ -371,6 +383,7 @@ export function CreateClassDrawer({
               className="planning-chip"
               onClick={() => {
                 setRingId(null);
+                dropBookings();
               }}
               role="radio"
               type="button"

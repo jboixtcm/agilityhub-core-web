@@ -25,6 +25,11 @@ const noRingColumn: Readonly<Record<"ca" | "en" | "es", Pick<DayGridColumn, "nam
     es: { name: "Sin pista", shortName: "Sin" },
   };
 
+/** The api's «Sense» column in the reader's language (also used by the D4 calendar world). */
+export function noRingDayGridColumn(locale: "ca" | "en" | "es"): DayGridColumn {
+  return { color: brandingCanic.theme.colors.border, ringId: null, ...noRingColumn[locale] };
+}
+
 /** Screen 23 mockup day (instructor view). */
 export const DAY_GRID_INSTRUCTOR_DATE = "2026-08-03";
 /** Screen 10 mockup day (member view, the 20:00 class at risk). */
@@ -438,11 +443,7 @@ export function dayGridFixture(
     columns: classWithoutRing
       ? [
           ...ringColumns,
-          {
-            color: brandingCanic.theme.colors.border,
-            ringId: null,
-            ...noRingColumn[options.locale],
-          },
+          noRingDayGridColumn(options.locale),
         ]
       : ringColumns,
     date,

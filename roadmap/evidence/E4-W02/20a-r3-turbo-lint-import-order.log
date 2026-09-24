@@ -1,0 +1,237 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/ui:test: cache bypass, force executing 08c800dc8d376849
+@agilityhub/course-core:lint: cache bypass, force executing ef70bf6c19ae37ee
+@agilityhub/api-client:lint: cache bypass, force executing 8beaf553b50f5289
+@agilityhub/config:typecheck: cache bypass, force executing 6860c83ceac65ae7
+clubs-admin:lint: cache bypass, force executing ff848db82761c349
+@agilityhub/course-core:test: cache bypass, force executing 1c26edab867f42c5
+@agilityhub/api-client:test: cache bypass, force executing e9fd671980ae7a98
+@agilityhub/course-core:build: cache bypass, force executing 431d96cbc72fd83b
+@agilityhub/i18n:lint: cache bypass, force executing bcc5ddbced7b3279
+@agilityhub/config:lint: cache bypass, force executing 42ac5d636417f38d
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/api-client:typecheck: cache bypass, force executing 9bd35026d83512e0
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/course-core:test:  ✓ tests/geometry-primitives.test.ts (15 tests) 5ms
+@agilityhub/course-core:test:  ✓ tests/calibration.test.ts (9 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/coords.test.ts (5 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/wrapper.test.ts (5 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/geometry-transform.test.ts (6 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/marker-id.test.ts (11 tests) 7ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-colors-txt.test.ts (6 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/apriltag-36h11.test.ts (31 tests) 20ms
+@agilityhub/course-core:test:  ✓ tests/marker-svg.test.ts (29 tests) 10ms
+@agilityhub/course-core:test:  ✓ tests/ring.test.ts (7 tests) 5ms
+@agilityhub/course-core:test:  ✓ tests/placement.test.ts (20 tests) 6ms
+@agilityhub/course-core:test:  ✓ tests/summarize-course.test.ts (8 tests) 10ms
+@agilityhub/course-core:test:  ✓ tests/units.test.ts (5 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/smarter-writer.test.ts (8 tests) 11ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-txt.test.ts (113 tests) 18ms
+@agilityhub/course-core:test:  ✓ tests/warnings-engine.test.ts (13 tests) 7ms
+@agilityhub/course-core:test:  ✓ tests/warnings-rules.test.ts (26 tests) 15ms
+@agilityhub/course-core:test:  ✓ tests/smarter-fixtures.test.ts (25 tests) 6ms
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  Test Files  18 passed (18)
+@agilityhub/course-core:test:       Tests  342 passed (342)
+@agilityhub/course-core:test:    Start at  18:01:27
+@agilityhub/course-core:test:    Duration  856ms (transform 77%, import 18%, tests 3%, worker 2%)
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:   Transform  transforming modules took 3.51s · 77% of tracked time, re-done on every run
+@agilityhub/course-core:test:              persist transforms across runs with fsModuleCache: true
+@agilityhub/course-core:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+@agilityhub/course-core:test: 
+@agilityhub/course-core:typecheck: cache bypass, force executing 671f426b6643ad21
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 29ms
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/shared-types:lint: cache bypass, force executing d383151fe730994b
+@agilityhub/api-client:test:  ✓ src/index.test.ts (12 tests) 439ms
+@agilityhub/api-client:test:  ✓ src/mocks/day-grid-handlers.test.ts (11 tests) 617ms
+@agilityhub/api-client:test:  ✓ src/mocks/calendar-handlers.test.ts (6 tests) 490ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (38 tests) 518ms
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  5 passed (5)
+@agilityhub/api-client:test:       Tests  68 passed (68)
+@agilityhub/api-client:test:    Start at  18:01:27
+@agilityhub/api-client:test:    Duration  1.85s (import 36%, tests 35%, transform 28%, worker 1%)
+@agilityhub/api-client:test: 
+@agilityhub/ui:typecheck: cache bypass, force executing 9de0eb9dc94e0a8e
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (5 tests) 3ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (4 tests) 26ms
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 3ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 61ms
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 82ms
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (2 tests) 121ms
+@agilityhub/ui:test:  ✓ src/day-grid.test.tsx (7 tests) 131ms
+id:lint: cache bypass, force executing f7faf03e54849b61
+@agilityhub/ui:test:  ✓ src/components.test.tsx (27 tests) 186ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  8 passed (8)
+@agilityhub/ui:test:       Tests  49 passed (49)
+@agilityhub/ui:test:    Start at  18:01:27
+@agilityhub/ui:test:    Duration  2.20s (environment 74%, setup 13%, transform 7%, tests 5%, import 1%)
+@agilityhub/ui:test: 
+@agilityhub/auth:lint: cache bypass, force executing f4053950041e0287
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/ui:lint: cache bypass, force executing 6287cb6af693b7b7
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+clubs:lint: cache bypass, force executing ee26ec164ac2cb41
+@agilityhub/shared-types:build: cache bypass, force executing d3d69457da5c20b5
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/shared-types:typecheck: cache bypass, force executing c4a7a4d38f585971
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:test: cache bypass, force executing 30c0e8b7888e66b3
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:test: cache bypass, force executing d7a714856a34ba6a
+@agilityhub/i18n:typecheck: cache bypass, force executing 3fef704c8e0376f8
+clubs:build: cache bypass, force executing 34612e75b157e02b
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/shared-types:test:  ✓ tests/build-session-export.test.ts (21 tests) 22ms
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  Test Files  1 passed (1)
+@agilityhub/shared-types:test:       Tests  21 passed (21)
+@agilityhub/shared-types:test:    Start at  18:01:32
+@agilityhub/shared-types:test:    Duration  449ms (transform 78%, import 15%, tests 7%, worker 1%)
+@agilityhub/shared-types:test: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+id:build: cache bypass, force executing 58a1e75c16e0b073
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/masking.test.ts (9 tests) 3ms
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 2ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (22 tests) 25ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (3 tests) 27ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  4 passed (4)
+@agilityhub/i18n:test:       Tests  37 passed (37)
+@agilityhub/i18n:test:    Start at  18:01:32
+@agilityhub/i18n:test:    Duration  447ms (transform 78%, import 14%, tests 7%, worker 1%)
+@agilityhub/i18n:test: 
+clubs-admin:build: cache bypass, force executing 661c7a5fc6251a11
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/calendar-handlers.ts
+@agilityhub/api-client:lint:   37:1  error  `./day-grid-handlers` import should occur before import of `./fixtures/calendar`  import/order
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: ✖ 1 problem (1 error, 0 warnings)
+@agilityhub/api-client:lint:   1 error and 0 warnings potentially fixable with the `--fix` option.
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint:  ELIFECYCLE  Command failed with exit code 1.
+@agilityhub/api-client#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+
+ Tasks:    17 successful, 26 total
+Cached:    0 cached, 26 total
+  Time:    7.101s 
+Failed:    @agilityhub/api-client#lint
+
+ ERROR  run failed: command  exited (1)

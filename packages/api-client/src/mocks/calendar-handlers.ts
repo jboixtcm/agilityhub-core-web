@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { readerLocale } from "./day-grid-handlers";
 import {
   cancellationPreviewFor,
   classSession,
@@ -12,6 +13,7 @@ import {
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
+import { noRingDayGridColumn } from "./fixtures/day-grid";
 import {
   addDays,
   clubLocalDate,
@@ -471,7 +473,11 @@ function blockProblem(fields: BlockFields, ignoreId?: string) {
     : undefined;
 }
 
-function dayGrid(date: string, view: "instructor" | "member"): DayGrid {
+function dayGrid(
+  date: string,
+  view: "instructor" | "member",
+  locale: "ca" | "en" | "es",
+): DayGrid {
   const sessions = planningState.sessions.filter(
     (session) =>
       session.date === date &&
@@ -542,17 +548,20 @@ function dayGrid(date: string, view: "instructor" | "member"): DayGrid {
       });
     }
   }
+  const ringColumns = [...catalogState.rings]
+    .filter((ring) => usedRings.has(ring.id))
+    .sort((left, right) => left.order - right.order)
+    .map((ring) => ({
+      activeSetupId: null,
+      color: ring.color,
+      name: ring.name,
+      ringId: ring.id,
+      shortName: ring.shortName,
+    }));
+  // As the api: the «Sense» column goes last, only when a class of the day has no ring.
+  const classWithoutRing = sessions.some((session) => (session.ringId ?? null) === null);
   return {
-    columns: [...catalogState.rings]
-      .filter((ring) => usedRings.has(ring.id))
-      .sort((left, right) => left.order - right.order)
-      .map((ring) => ({
-        activeSetupId: null,
-        color: ring.color,
-        name: ring.name,
-        ringId: ring.id,
-        shortName: ring.shortName,
-      })),
+    columns: classWithoutRing ? [...ringColumns, noRingDayGridColumn(locale)] : ringColumns,
     date,
     dayOfWeek: dayNames[dayIndex(date)] ?? "MONDAY",
     rows: [...cells.keys()].sort().map((time) => ({ cells: cells.get(time) ?? [], time })),
@@ -863,6 +872,6 @@ export const calendarHandlers = [
     ) {
       return apiError("FORBIDDEN", "Forbidden", 403);
     }
-    return HttpResponse.json(dayGrid(date, view));
+    return HttpResponse.json(dayGrid(date, view, readerLocale(request)));
   }),
 ];

@@ -121,17 +121,30 @@ export function RingBlockDrawer({
       ? [...reasonsByKind[kind], block.reason]
       : reasonsByKind[kind];
 
+  /** The end stays ≥ start + `training.slotMinutes` and inside the day's opening hours. */
+  const fitTo = (start: string, end: string, options: readonly string[]) => {
+    const minimum = timeOf(minutesOf(start) + settings.trainingSlotMinutes);
+    return clampTime(end < minimum ? minimum : end, options);
+  };
+  /**
+   * The `RING_HAS_BOOKINGS` list belongs to the ring, date and times it was answered for: any
+   * change to them drops it, so [Anul·la les reserves i desa] never confirms a slot not shown.
+   */
+  const dropBookings = () => {
+    setBookings(undefined);
+  };
+
   /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
   const changeDate = (value: string) => {
     const next = maskDate(value);
     setDate(next);
+    dropBookings();
     const day = parseMaskedDate(next);
     if (day === undefined) return;
     const options = optionsOf(day);
     const nextFrom = clampTime(from, options.starts);
-    const minimumTo = timeOf(minutesOf(nextFrom) + settings.trainingSlotMinutes);
     setFrom(nextFrom);
-    setTo(clampTime(to < minimumTo ? minimumTo : to, options.ends));
+    setTo(fitTo(nextFrom, to, options.ends));
   };
   const readOnly = managed;
   const startOptions = starts.includes(from) ? starts : [from, ...starts];
@@ -266,6 +279,7 @@ export function RingBlockDrawer({
               id="calendar-block-ring"
               onChange={(event) => {
                 setRingId(event.currentTarget.value);
+                dropBookings();
               }}
               value={ringId}
             >
@@ -301,7 +315,10 @@ export function RingBlockDrawer({
               <Select
                 id="calendar-block-from"
                 onChange={(event) => {
-                  setFrom(event.currentTarget.value);
+                  const next = event.currentTarget.value;
+                  setFrom(next);
+                  setTo(fitTo(next, to, ends));
+                  dropBookings();
                 }}
                 value={from}
               >
@@ -321,6 +338,7 @@ export function RingBlockDrawer({
                 id="calendar-block-to"
                 onChange={(event) => {
                   setTo(event.currentTarget.value);
+                  dropBookings();
                 }}
                 value={to}
               >

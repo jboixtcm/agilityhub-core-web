@@ -16,7 +16,7 @@ import {
   type MockScenarioDefinition,
 } from "./scenarios";
 
-function readerLocale(request: Request): "ca" | "en" | "es" {
+export function readerLocale(request: Request): "ca" | "en" | "es" {
   const language = request.headers.get("Accept-Language")?.slice(0, 2).toLowerCase();
   return language === "es" || language === "en" ? language : "ca";
 }

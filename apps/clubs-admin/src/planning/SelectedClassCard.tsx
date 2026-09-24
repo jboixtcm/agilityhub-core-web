@@ -94,6 +94,7 @@ function diffOf(session: ClassSession, values: DraftValues, editable: boolean): 
 
 /** A chip whose value opens a small panel of toggle chips (levels, several instructors). */
 function MultiChip({
+  disabled = false,
   label,
   onToggle,
   options,
@@ -101,6 +102,7 @@ function MultiChip({
   summary,
   max,
 }: {
+  disabled?: boolean;
   label: string;
   max?: number;
   onToggle: (id: string) => void;
@@ -121,8 +123,9 @@ function MultiChip({
   return (
     <div className="calendar-chip calendar-chip--multi" onBlur={closeOnFocusOut} ref={container}>
       <button
-        aria-expanded={open}
+        aria-expanded={open && !disabled}
         className="calendar-chip__toggle"
+        disabled={disabled}
         onClick={() => {
           setOpen((value) => !value);
         }}
@@ -133,7 +136,7 @@ function MultiChip({
       >
         <span className="calendar-chip__label">{label}</span> {summary}
       </button>
-      {open ? (
+      {open && !disabled ? (
         <div aria-label={label} className="calendar-chip__panel" role="group">
           {options.map((option) => {
             const pressed = selected.includes(option.id);
@@ -172,7 +175,8 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
  * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c).
  * The parent remounts it (`key`) on every new class or version, so the values always start from
  * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
- * the message on the page while the refetch brings the new version.
+ * the message on the page while the refetch brings the new version. The editors stay disabled from
+ * the request until that remount (`busy`), so no edit is typed into a card about to be replaced.
  */
 export function SelectedClassCard({
   catalogs,
@@ -205,6 +209,9 @@ export function SelectedClassCard({
   const errorMessage = useCalendarErrorMessage();
   const [values, setValues] = useState(() => initialValues(session));
   const [pending, setPending] = useState(false);
+  // A saved change waits for the refetch that brings its new version and remounts the card.
+  const [awaitingVersion, setAwaitingVersion] = useState(false);
+  const busy = pending || awaitingVersion;
   const [error, setError] = useState<{ field: "capacity" | "general"; message: string }>();
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
@@ -258,7 +265,7 @@ export function SelectedClassCard({
   };
 
   const save = async (cancelBookings = false) => {
-    if (pending) return;
+    if (busy) return;
     setPending(true);
     setError(undefined);
     try {
@@ -267,7 +274,10 @@ export function SelectedClassCard({
         params: { path: { id: session.id } },
       });
       setRingBookings(undefined);
-      if (result.data !== undefined) onSaved(result.data);
+      if (result.data !== undefined) {
+        setAwaitingVersion(true);
+        onSaved(result.data);
+      }
     } catch (cause) {
       const code = errorCode(cause);
       if (code === "RING_HAS_BOOKINGS" && isApiError(cause)) {
@@ -289,7 +299,7 @@ export function SelectedClassCard({
   };
 
   const toggleExempt = async () => {
-    if (pending) return;
+    if (busy) return;
     setPending(true);
     setError(undefined);
     try {
@@ -297,7 +307,10 @@ export function SelectedClassCard({
         body: { exempt: !session.riskExempt },
         params: { path: { id: session.id } },
       });
-      if (result.data !== undefined) onSaved(result.data);
+      if (result.data !== undefined) {
+        setAwaitingVersion(true);
+        onSaved(result.data);
+      }
     } catch (cause) {
       const code = errorCode(cause);
       if (code === "STALE_VERSION" || code === "INVALID_STATE") {
@@ -345,6 +358,7 @@ export function SelectedClassCard({
           <label className="calendar-chip calendar-chip--select">
             <span className="calendar-chip__label">{t("admin-scheduling:classCard.ring")}</span>
             <Select
+              disabled={busy}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 set({ ringId: value === "" ? null : value });
@@ -361,6 +375,7 @@ export function SelectedClassCard({
           </label>
           {settings.levelsEnabled ? (
             <MultiChip
+              disabled={busy}
               label={t("admin-scheduling:classCard.levels")}
               onToggle={(levelId) => {
                 const levelIds = values.levelIds.includes(levelId)
@@ -381,6 +396,7 @@ export function SelectedClassCard({
                 {t("admin-scheduling:classCard.instructor")}
               </span>
               <Select
+                disabled={busy}
                 onChange={(event) => {
                   set({ instructorIds: [event.currentTarget.value] });
                 }}
@@ -400,6 +416,7 @@ export function SelectedClassCard({
             </label>
           ) : (
             <MultiChip
+              disabled={busy}
               label={t("admin-scheduling:classCard.instructors", { max: settings.maxInstructors })}
               max={settings.maxInstructors}
               onToggle={(instructorId) => {
@@ -427,6 +444,7 @@ export function SelectedClassCard({
               aria-describedby={error?.field === "capacity" ? "calendar-capacity-error" : undefined}
               aria-invalid={error?.field === "capacity" || undefined}
               className="calendar-chip__number"
+              disabled={busy}
               min={1}
               onChange={(event) => {
                 set({ capacity: event.currentTarget.value });
@@ -441,6 +459,7 @@ export function SelectedClassCard({
               {t("admin-scheduling:calendar.selected.time")}
             </span>
             <Select
+              disabled={busy}
               onChange={(event) => {
                 set({ startTime: event.currentTarget.value });
               }}
@@ -458,6 +477,7 @@ export function SelectedClassCard({
               {t("admin-scheduling:classCard.description")}
             </span>
             <Input
+              disabled={busy}
               maxLength={40}
               onChange={(event) => {
                 set({ description: event.currentTarget.value });
@@ -471,7 +491,7 @@ export function SelectedClassCard({
               aria-pressed={session.riskExempt}
               className="planning-chip"
               // Saving the exemption reloads the class: unsaved chip edits must go first.
-              disabled={pending || changed}
+              disabled={busy || changed}
               onClick={() => void toggleExempt()}
               type="button"
             >
@@ -514,6 +534,7 @@ export function SelectedClassCard({
         <label className="calendar-notes">
           <span>{t("admin-scheduling:calendar.selected.notes")}</span>
           <Textarea
+            disabled={busy}
             maxLength={500}
             onChange={(event) => {
               set({ notes: event.currentTarget.value });
@@ -542,7 +563,7 @@ export function SelectedClassCard({
         ) : (
           <>
             <Button
-              disabled={!changed}
+              disabled={!changed || awaitingVersion}
               loading={pending}
               loadingLabel={t("admin-scheduling:common.saving")}
               onClick={() => void save()}
@@ -554,7 +575,7 @@ export function SelectedClassCard({
             {session.state === "ACTIVE" ? (
               <Button
                 className="calendar-button--danger-outline"
-                disabled={pending}
+                disabled={busy}
                 onClick={() => {
                   onCancel("CLUB_MANUAL");
                 }}
@@ -566,7 +587,7 @@ export function SelectedClassCard({
             ) : null}
             {session.state === "ACTIVE" || session.state === "DRAFT" ? (
               <Button
-                disabled={pending}
+                disabled={busy}
                 onClick={() => {
                   onCancel("DELETED");
                 }}

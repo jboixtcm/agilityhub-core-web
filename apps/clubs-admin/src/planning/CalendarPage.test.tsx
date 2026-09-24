@@ -451,6 +451,11 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     expect(optionValues(to).at(-1)).toBe("14:00");
     expect(from).toHaveValue("09:00");
     expect(to).toHaveValue("09:30");
+
+    // A later start keeps the minimum length and never leaves the opening hours.
+    fireEvent.change(from, { target: { value: "13:30" } });
+    expect(to).toHaveValue("14:00");
+    expect(optionValues(to).every((time) => time <= "14:00")).toBe(true);
   });
 
   it("R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours", async () => {
@@ -472,6 +477,161 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     expect(optionValues(end).every((time) => time >= "09:10" && time <= "14:00")).toBe(true);
     expect(start).toHaveValue("09:00");
     expect(end).toHaveValue("10:00");
+
+    // The last start keeps the class length only up to the closing time (13:50 + 1 h → 14:00).
+    fireEvent.change(start, { target: { value: "13:50" } });
+    expect(start).toHaveValue("13:50");
+    expect(end).toHaveValue("14:00");
+    expect(optionValues(end).every((time) => time <= "14:00")).toBe(true);
+  });
+
+  it("R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown", async () => {
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies: Record<string, unknown>[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "POST" && new URL(request.url).pathname.endsWith("/ring-blocks")) {
+        void request
+          .clone()
+          .json()
+          .then((body: Record<string, unknown>) => bodies.push(body));
+      }
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    fireEvent.change(within(drawer).getByLabelText("Pista"), {
+      target: { value: "ring-muntanya" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "19:00" } });
+    fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "19:30" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" }));
+    expect(await within(drawer).findByText("Clara Font + Trevi")).toBeVisible();
+    expect(
+      within(drawer).getByRole("button", { name: "Anul·la les reserves i desa" }),
+    ).toBeVisible();
+
+    fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
+    expect(within(drawer).queryByText("Clara Font + Trevi")).not.toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Anul·la les reserves i desa" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" }));
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies.map((body) => body.ringId)).toEqual(["ring-muntanya", "ring-cadells"]);
+    });
+    expect(bodies.some((body) => "cancelBookings" in body)).toBe(false);
+    server.events.removeAllListeners();
+  });
+
+  it("R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation", async () => {
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies: Record<string, unknown>[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "POST" && new URL(request.url).pathname.endsWith("/class-sessions")) {
+        void request
+          .clone()
+          .json()
+          .then((body: Record<string, unknown>) => bodies.push(body));
+      }
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "19:00" } });
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Muntanya" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "CREA LA CLASSE" }));
+    expect(await within(drawer).findByText("Clara Font + Trevi")).toBeVisible();
+
+    // Another start: the list answered for 19:00 no longer applies.
+    fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "19:10" } });
+    expect(within(drawer).queryByText("Clara Font + Trevi")).not.toBeInTheDocument();
+    fireEvent.click(within(drawer).getByRole("button", { name: "CREA LA CLASSE" }));
+    expect(await within(drawer).findByText("Clara Font + Trevi")).toBeVisible();
+
+    // Another ring: same thing, and the new ring is saved without cancelBookings.
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Cadells" }));
+    expect(
+      within(drawer).queryByRole("button", { name: "Anul·la les reserves i desa" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(within(drawer).getByRole("button", { name: "CREA LA CLASSE" }));
+    await waitFor(() => {
+      expect(bodies.map((body) => body.ringId)).toEqual([
+        "ring-muntanya",
+        "ring-muntanya",
+        "ring-cadells",
+      ]);
+    });
+    expect(bodies.some((body) => "cancelBookings" in body)).toBe(false);
+    expect(await screen.findByText("Classe creada")).toBeVisible();
+    server.events.removeAllListeners();
+  });
+
+  it("R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown", async () => {
+    let releasePatch: () => void = () => undefined;
+    const patchHeld = new Promise<void>((resolve) => {
+      releasePatch = resolve;
+    });
+    let holdCalendar = false;
+    let releaseCalendar: () => void = () => undefined;
+    const calendarHeld = new Promise<void>((resolve) => {
+      releaseCalendar = resolve;
+    });
+    // Resolvers that return nothing fall through to the stateful mock once released.
+    server.use(
+      http.patch("*/api/v1/class-sessions/:id", async () => {
+        await patchHeld;
+      }),
+      http.get("*/api/v1/weeks/:id/calendar", async () => {
+        if (holdCalendar) await calendarHeld;
+      }),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+
+    const editors = () => [
+      within(selectedCard()).getByRole("spinbutton"),
+      within(selectedCard()).getByLabelText("Pista"),
+      within(selectedCard()).getByLabelText("Hora"),
+      within(selectedCard()).getByLabelText("Descripció"),
+      within(selectedCard()).getByRole("button", { name: /^Nivells/u }),
+      within(selectedCard()).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+      within(selectedCard()).getByRole("button", { name: "ANUL·LA LA CLASSE" }),
+      within(selectedCard()).getByRole("button", { name: "ELIMINA" }),
+    ];
+    // The PATCH is on its way: nothing can be edited.
+    await waitFor(() => {
+      for (const editor of editors()) expect(editor).toBeDisabled();
+    });
+
+    // The PATCH answers, the refetch is still on its way: still nothing can be edited.
+    holdCalendar = true;
+    releasePatch();
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    for (const editor of editors()) expect(editor).toBeDisabled();
+    expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(6);
+
+    // The new version arrives: the card shows the saved values and is editable again.
+    releaseCalendar();
+    await waitFor(() => {
+      expect(
+        within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/6 \+2/u }),
+      ).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(within(selectedCard()).getByRole("spinbutton")).toBeEnabled();
+    });
+    expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(6);
+    expect(within(selectedCard()).getByRole("button", { name: "ACCEPTA" })).toBeDisabled();
   });
 
   it("shows the value the class holds: inactive ring and instructor stay selected", async () => {
