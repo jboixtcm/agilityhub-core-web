@@ -90,7 +90,7 @@ export function ActivityDetailPage({
           className="activities-screen__back"
           href="/reservar"
         >
-          <span aria-hidden="true">‹</span>
+          <span aria-hidden="true">{t("activities:detail.backGlyph")}</span>
         </a>
       }
       title={<h1>{t("activities:detail.title")}</h1>}
@@ -134,10 +134,12 @@ export function ActivityDetailPage({
     detail.loadedAt < Date.parse(mine?.cancellableUntil ?? activity.cancellableUntil);
   const hours = activity.startTime ?? null;
   const place = !activity.location.atClub
-    ? [activity.location.name, activity.location.address].filter(Boolean).join(" · ")
+    ? [activity.location.name, activity.location.address]
+        .filter(Boolean)
+        .join(t("activities:detail.placeSeparator"))
     : activity.allRings
       ? t("activities:detail.allRings")
-      : activity.rings.map((ring) => ring.name).join(", ");
+      : activity.rings.map((ring) => ring.name).join(t("activities:detail.ringSeparator"));
 
   const fail = (cause: unknown) => {
     if (isApiError(cause, "ACTIVITY_FULL")) {
@@ -273,9 +275,11 @@ export function ActivityDetailPage({
         <Badge>{activity.typeDisplay}</Badge>
         {live === undefined ? null : (
           <Badge tone={live.state === "WAITLISTED" ? "warning" : "success"}>
-            {live.state === "WAITLISTED"
-              ? t("activities:detail.waitlistPosition", { position: live.position ?? "" })
-              : t("enums:activityRegistrationState.ACTIVE")}
+            {live.state !== "WAITLISTED"
+              ? t("enums:activityRegistrationState.ACTIVE")
+              : live.position === null || live.position === undefined
+                ? t("enums:activityRegistrationState.WAITLISTED")
+                : t("activities:detail.waitlistPosition", { position: live.position })}
           </Badge>
         )}
       </header>

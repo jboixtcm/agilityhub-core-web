@@ -39,7 +39,10 @@
       "levelId": "Nivel",
       "registrationOpen": "Inscripción abierta"
     },
-    "typeSuffix": "· {type}",
+    "typeSuffix": " · {type}",
+    "ringSeparator": ", ",
+    "emptyFilteredTitle": "Ninguna actividad con estos criterios",
+    "emptyFilteredDescription": "Cambie la búsqueda o los filtros para ver más resultados.",
     "allRings": "todas — bloqueadas",
     "offSite": "— (fuera del club)",
     "none": "—",
@@ -138,7 +141,8 @@
     "delete": "ELIMINAR",
     "registrants": "Inscritos ({count}) ›",
     "stale": "Otra persona ha modificado la actividad: se han cargado los datos actuales. Revísalos y vuelve a guardar.",
-    "requiredToPublish": "Necesario para publicar"
+    "requiredToPublish": "Necesario para publicar",
+    "levelSeparator": ", "
   },
   "publishDialog": {
     "confirmTitle": "Publicar la actividad",
@@ -146,7 +150,9 @@
     "notifyEmail": "Avisar también por correo",
     "confirm": "PUBLICAR",
     "conflictsTitle": "Conflictos de pista",
-    "classesLabel": "Clases en conflicto",
+    "classesLabel": "Clases y bloqueos en conflicto",
+    "ringBlock": "bloqueo de pista",
+    "ringBlockNotForceable": "Un bloqueo de pista no se puede anular desde aquí: cambia las pistas o el horario de la actividad.",
     "conflictRow": "{ring} · {label} · {from}–{to}",
     "bookedCount": "{count, plural, one {# inscrito} other {# inscritos}}",
     "trainingTitle": "Reservas de entrenamiento",
@@ -169,6 +175,7 @@
       "SMS": "SMS"
     },
     "smsPhones": "SMS ({count} teléfonos)",
+    "channelSeparator": " · ",
     "text": "Texto del aviso",
     "confirm": "{count, plural, one {CANCELAR Y AVISAR AL INSCRITO} other {CANCELAR Y AVISAR A LOS # INSCRITOS}}",
     "simpleTitle": "¿Quieres cancelar la actividad?",
@@ -185,6 +192,7 @@
     "error": "No se han podido cargar los inscritos.",
     "open": "Abrir la ficha de {name}",
     "member": "{name} · {number}",
+    "contactSeparator": " · ",
     "waitlisted": "en lista de espera ({position})",
     "statuses": {
       "all": "Todos"

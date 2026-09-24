@@ -1,0 +1,90 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 omits the block without ACTIVITIES
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ]
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable 125ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes» 69ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 omits the block without ACTIVITIES 7ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA]
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ] 58ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > an activity that is not visible shows «No disponible»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA] 87ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog 23ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text 74ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: never shows a dog, even when the data carries one
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > an activity that is not visible shows «No disponible» 11ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog 26ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight 29ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: never shows a dog, even when the data carries one 6ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert 34ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it 52ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog 31ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a waitlisted registration shows «en llista d'espera»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()» 25ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > decodes the detail path safely (a malformed /activitats/%E0 does not throw) 0ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a waitlisted registration shows «en llista d'espera» 8ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice 7ms
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  20:18:33
+   Duration  1.62s (tests 44%, transform 18%, import 17%, environment 16%, setup 4%)
+

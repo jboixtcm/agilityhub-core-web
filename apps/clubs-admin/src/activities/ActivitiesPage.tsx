@@ -339,7 +339,7 @@ export function ActivitiesPage({
           }
           return item.rings.length === 0
             ? t("admin-activities:list.none")
-            : item.rings.map((ring) => ring.name).join(", ");
+            : item.rings.map((ring) => ring.name).join(t("admin-activities:list.ringSeparator"));
         },
       },
       {
@@ -350,10 +350,13 @@ export function ActivitiesPage({
             return t("admin-activities:list.none");
           }
           if (item.maxPlaces === null || item.maxPlaces === undefined) {
-            return t("admin-activities:list.registrationsOpen");
+            // «obertes · socis» only while it is published (step 2); finished → «—».
+            return item.state === "PUBLISHED"
+              ? t("admin-activities:list.registrationsOpen")
+              : t("admin-activities:list.none");
           }
           const to = item.registrationTo;
-          return to === null || to === undefined
+          return item.state !== "PUBLISHED" || to === null || to === undefined
             ? t("admin-activities:list.registrationsCount", {
                 active: item.registrations.active,
                 max: item.maxPlaces,
@@ -425,6 +428,8 @@ export function ActivitiesPage({
     startsWith: t("census:list.operators.startsWith"),
   };
 
+  // With a search or a filter beyond «Mostra», the empty list keeps «clear filters» (no create).
+  const filtered = state.q !== "" || state.filters.some((filter) => filter.field !== "deleted");
   const labels: UniversalListLabels<ActivityListItem> = {
     addFilter: t("census:list.addFilter"),
     clearFilters: t("census:list.clearFilters"),
@@ -433,8 +438,12 @@ export function ActivitiesPage({
     createView: t("census:list.createView"),
     defaultView: t("census:list.defaultView"),
     deleteView: t("census:list.deleteView"),
-    emptyDescription: t("admin-activities:list.emptyDescription"),
-    emptyTitle: t("admin-activities:list.emptyTitle"),
+    emptyDescription: filtered
+      ? t("admin-activities:list.emptyFilteredDescription")
+      : t("admin-activities:list.emptyDescription"),
+    emptyTitle: filtered
+      ? t("admin-activities:list.emptyFilteredTitle")
+      : t("admin-activities:list.emptyTitle"),
     export: t("census:list.export"),
     filter: t("census:list.filter"),
     filterField: t("census:list.filterField"),
@@ -568,7 +577,7 @@ export function ActivitiesPage({
         appliedFilters={applied}
         caption={t("admin-activities:list.caption")}
         columns={columns}
-        {...(newButton === null ? {} : { emptyAction: newButton })}
+        {...(newButton === null || filtered ? {} : { emptyAction: newButton })}
         {...(errorMessage === undefined ? {} : { error: errorMessage })}
         exportable={!readOnly}
         filterColumns={filterColumns}

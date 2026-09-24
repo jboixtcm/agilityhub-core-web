@@ -1,0 +1,71 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/index.test.ts > typed API client > uses the configured base URL and injects locale and authorization headers 9ms
+ ✓ src/index.test.ts > typed API client > maps every non-2xx response to ApiError 3ms
+ ✓ src/index.test.ts > typed API client > maps a fetch failure to the NETWORK ApiError 1ms
+ ✓ src/index.test.ts > typed API client > adds a UUID idempotency key to configured POST operations 3ms
+ ✓ src/index.test.ts > typed API client > R-06-07 sends an Idempotency-Key on POST /weeks/{id}/generation by default 2ms
+ ✓ src/index.test.ts > typed API client > R-06-10 / R-06-11 sends an Idempotency-Key on class cancellations and ring blocks by default 3ms
+ ✓ src/index.test.ts > TanStack Query defaults > uses a 30 second stale time and retries only network and 5xx failures 0ms
+ ✓ src/index.test.ts > TanStack Query defaults > namespaces query keys by host 0ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers 7ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > serves branding, current account, club settings, token, and health fixtures 10ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > lists the D7 activities by date desc without the deleted ones (ListPage + overlay) 27ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > serves form A, the member forms, the conflicts and the cancellation preview 40ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-05 publishes the draft only after the conflict options (409 → 422 → 200) 25ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-06 cancels with registrants only with the notice text 5ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > maps every JSON fixture to an authoritative component schema 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates audit-entries.json 16ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-canic.json 17ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-minim.json 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates club-pages.json 14ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates dashboard.json 17ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates export-jobs.json 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-admin.json 14ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-08/09 registers, answers ACTIVITY_FULL, joins the waitlist and promotes FIFO 20ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-14 without WAITLIST a full activity answers ACTIVITY_FULL {waitlistAvailable: false} 3ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-09 refuses to cancel after the start (EVENT_START) 2ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-14 answers MODULE_DISABLED without ACTIVITIES and 403 to an instructor's mutation 8ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-05 another ring block (type RING_BLOCK) is never forced, not even with every option 10ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-08 a member's cancellation promotes waitlist position 1 (FIFO) 8ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-04 requires the title in the club's default locale, not in ca 11ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-impersonated.json 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-instructor.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-member.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-multi-profile.json 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates member-signup-review.json 21ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates sessions.json 12ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates signup-config-canic.json 15ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > paginates members, reports applied filters, and resolves facet labels 124ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana A template 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana B template 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Dissabtes template 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the E29 level catalog (Level.progression overlay of pending.json) 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > keeps every fixture description equal to the mock resolver, so an edit never flips «D i sup.» 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the coverage table and the week list items 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates every class session of the D4, D4b and inconsistent weeks 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > keeps every calendar fixture description equal to the mock resolver (E29: {F,G} = «F i sup.») 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates the ring block and the cancellation preview of the Wednesday 18:50 class 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > R-06-14 derives UTC instants from the club-local time across the DST change 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 member grid 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > projects the member view as the api does (R-06-12): no counts, names, notes nor staff kinds 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > carries the screen 23 counts, trainings, block and cancelled class in the instructor view 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the class sessions and ring blocks behind the screen 23 drawers 9ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > sends the «Sense» column last, translated, only when a class has no ring 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the member projections of the class and the block (S06 §6 «Altres formes») 20ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > serves 242 dogs and rejects unknown filter fields 248ms
+
+ Test Files  3 passed (3)
+      Tests  62 passed (62)
+   Start at  20:35:37
+   Duration  943ms (tests 39%, import 33%, transform 28%)
+

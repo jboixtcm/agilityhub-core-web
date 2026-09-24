@@ -310,15 +310,25 @@ function remember(request: Request, body: unknown, status: number) {
   return HttpResponse.json(body as Record<string, unknown>, { status });
 }
 
+/**
+ * R-07-05, all or nothing: another ring block (`type: RING_BLOCK`) is never forceable; classes
+ * yield only to `cancelClasses` (+ `adminText` when they have registrants), training bookings
+ * only to `cancelBookings`.
+ */
 function conflictResponse(activity: StoredActivity, options: PublicationRequest) {
   const preview = ringConflicts(activity);
-  if (preview.conflicts.length > 0 && options.cancelClasses !== true) {
+  const unresolved = preview.conflicts.filter(
+    (conflict) => conflict.type === "RING_BLOCK" || options.cancelClasses !== true,
+  );
+  if (unresolved.length > 0) {
     return apiError("RING_BLOCK_CONFLICT", "Ring block conflict", 409, {
-      conflicts: preview.conflicts,
+      conflicts: unresolved,
     });
   }
   if (
-    preview.conflicts.some((conflict) => (conflict.bookedCount ?? 0) > 0) &&
+    preview.conflicts.some(
+      (conflict) => conflict.type === "CLASS" && (conflict.bookedCount ?? 0) > 0,
+    ) &&
     (options.adminText ?? "").trim() === ""
   ) {
     return apiError("ADMIN_TEXT_REQUIRED", "Admin text required", 422);
@@ -333,7 +343,8 @@ function conflictResponse(activity: StoredActivity, options: PublicationRequest)
 
 function incompleteFields(activity: StoredActivity): { code: string; field: string }[] {
   const fields: { code: string; field: string }[] = [];
-  if ((activity.titleI18n.ca ?? "").trim() === "")
+  const defaultLocale = currentMockScenario().branding.defaultLocale;
+  if ((activity.titleI18n[defaultLocale] ?? "").trim() === "")
     fields.push({ code: "REQUIRED", field: "title" });
   if (activity.registrationFrom === null)
     fields.push({ code: "REQUIRED", field: "registrationFrom" });

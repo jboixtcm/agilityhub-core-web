@@ -38,6 +38,15 @@
   padding-left: var(--ah-space-5);
 }
 
+/* Tailwind's preflight removes the markers: the editor and `SafeHtml` both show them. */
+.ah-rich-text ul {
+  list-style: disc;
+}
+
+.ah-rich-text ol {
+  list-style: decimal;
+}
+
 .ah-rich-text blockquote {
   margin: 0 0 var(--ah-space-2);
   padding-left: var(--ah-space-3);

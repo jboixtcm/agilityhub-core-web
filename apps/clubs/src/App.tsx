@@ -35,6 +35,7 @@ import { ReserveActivitiesPage } from "./activities/ActivitiesBlock";
 import { ActivityDetailPage } from "./activities/ActivityDetailPage";
 import { HomeActivityReservations } from "./activities/ActivityReservationRow";
 import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
+import { safeDecode } from "./activities/shared";
 import { InfoPage } from "./InfoPage";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -1243,7 +1244,7 @@ export function App({
       <RequireAuth>
         <RequireModule module="ACTIVITIES">
           <ActivityDetailPage
-            activityId={decodeURIComponent(pathname.split("/")[2] ?? "")}
+            activityId={safeDecode(pathname.split("/")[2] ?? "")}
             client={apiClient}
             key={pathname}
           />

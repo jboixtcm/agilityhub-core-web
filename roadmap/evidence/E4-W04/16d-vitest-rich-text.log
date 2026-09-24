@@ -1,0 +1,21 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > keeps the mockup-safe markup and drops everything else 5ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > drops <script>, style attributes and elements, classes and ids 5ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > maps browser formatting onto the allow-list: <b> → strong, <i> → em, <strike> → s, <div> → p 1ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > keeps http(s) and mailto links with rel/target and unwraps javascript: links 2ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > keeps lists, quotes, h4 and line breaks and escapes text 1ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > serializes a DOM subtree (the editor content) with the same rules 2ms
+ ✓ src/rich-text.test.tsx > R-07-03 rich-text allow-list (T-07-02 on the front) > returns an empty string for empty input 0ms
+ ✓ src/rich-text.test.tsx > SafeHtml > re-applies the allow-list before rendering and adds rel/target to links 60ms
+ ✓ src/rich-text.test.tsx > SafeHtml > renders nothing without text 1ms
+ ✓ src/rich-text.test.tsx > RichTextEditor > offers only the allow-listed tools and emits allow-listed HTML 26ms
+ ✓ src/rich-text.test.tsx > RichTextEditor > refuses a javascript: link 30ms
+ ✓ src/rich-text.test.tsx > RichTextEditor > is read-only without a toolbar 3ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  20:18:42
+   Duration  619ms (environment 52%, tests 26%, setup 13%, transform 7%, import 1%)
+

@@ -1,6 +1,6 @@
-import type { ApiClient } from "@agilityhub/api-client";
+import { type ApiClient, isApiError } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { AppBar, Badge, Card, Icon, Skeleton, useBranding } from "@agilityhub/ui";
+import { AppBar, Badge, Button, Card, Icon, Skeleton, useBranding } from "@agilityhub/ui";
 import { useTranslation } from "react-i18next";
 
 import "./activities.css";
@@ -76,7 +76,24 @@ export function ActivitiesBlock({ client }: { client: ApiClient }) {
   const { t } = useTranslation("activities");
   const enabled = branding.modules.includes("ACTIVITIES");
   const activities = useMeActivities(client, enabled);
-  if (!enabled || activities.status === "error") return null;
+  if (!enabled) return null;
+  if (activities.status === "error") {
+    // Only a disabled module hides the block quietly; any other failure offers a retry.
+    if (isApiError(activities.error, "MODULE_DISABLED")) return null;
+    return (
+      <section aria-labelledby="activities-block-title" className="activities-block">
+        <h2 className="activities-block__title" id="activities-block-title">
+          {t("activities:block.title")}
+        </h2>
+        <Card className="activity-detail__error" role="alert">
+          <p>{t("activities:block.error")}</p>
+          <Button onClick={activities.refetch} variant="secondary">
+            {t("activities:block.retry")}
+          </Button>
+        </Card>
+      </section>
+    );
+  }
   if (activities.status === "loading") {
     return <Skeleton height="2.75rem" label={t("activities:block.loading")} />;
   }

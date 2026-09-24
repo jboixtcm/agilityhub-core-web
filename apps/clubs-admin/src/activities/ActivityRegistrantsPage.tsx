@@ -145,7 +145,9 @@ export function ActivityRegistrantsPage({
   const stateLabel = useCallback(
     (item: ActivityRegistrationListItem) => {
       if (item.state === "WAITLISTED") {
-        return t("admin-activities:registrants.waitlisted", { position: item.position ?? "" });
+        return item.position === null || item.position === undefined
+          ? t("enums:activityRegistrationState.WAITLISTED")
+          : t("admin-activities:registrants.waitlisted", { position: item.position });
       }
       if (item.state === "CANCELLED" && item.cancelReason === "ACTIVITY_CANCELLED") {
         return t("enums:activityRegistrationState.CANCELLED_BY_CLUB");
@@ -193,7 +195,7 @@ export function ActivityRegistrantsPage({
           [
             ...item.member.phones.map((phone) => `${phone.prefix} ${phone.number}`),
             ...item.member.emails,
-          ].join(" · "),
+          ].join(t("admin-activities:registrants.contactSeparator")),
       },
     ],
     [formats, stateLabel, t],
@@ -370,11 +372,16 @@ export function ActivityRegistrantsPage({
           setExportError(undefined);
           setReload((value) => value + 1);
         }}
-        onRowActivate={(item) => {
-          onNavigate(`/abonats/${item.member.id}`);
-        }}
+        // The member record is ADMIN-only: an INSTRUCTOR reads the rows as plain text.
+        {...(readOnly
+          ? {}
+          : {
+              onRowActivate: (item: ActivityRegistrationListItem) => {
+                onNavigate(`/abonats/${item.member.id}`);
+              },
+              rowHref: (item: ActivityRegistrationListItem) => `/abonats/${item.member.id}`,
+            })}
         onStateChange={update}
-        rowHref={(item) => `/abonats/${item.member.id}`}
         rowKey={(item) => item.registrationId}
         rows={data?.items ?? []}
         savedViews={savedViews.views}

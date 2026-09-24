@@ -39,7 +39,10 @@
       "levelId": "Level",
       "registrationOpen": "Registration open"
     },
-    "typeSuffix": "· {type}",
+    "typeSuffix": " · {type}",
+    "ringSeparator": ", ",
+    "emptyFilteredTitle": "No activities match these criteria",
+    "emptyFilteredDescription": "Change the search or the filters to see more results.",
     "allRings": "all — blocked",
     "offSite": "— (off site)",
     "none": "—",
@@ -138,7 +141,8 @@
     "delete": "DELETE",
     "registrants": "Registrants ({count}) ›",
     "stale": "Someone else changed the activity: the current data has been loaded. Review it and save again.",
-    "requiredToPublish": "Required to publish"
+    "requiredToPublish": "Required to publish",
+    "levelSeparator": ", "
   },
   "publishDialog": {
     "confirmTitle": "Publish the activity",
@@ -146,7 +150,9 @@
     "notifyEmail": "Also notify by email",
     "confirm": "PUBLISH",
     "conflictsTitle": "Ring conflicts",
-    "classesLabel": "Conflicting classes",
+    "classesLabel": "Conflicting classes and blocks",
+    "ringBlock": "ring block",
+    "ringBlockNotForceable": "A ring block cannot be cancelled from here: change the activity's rings or hours.",
     "conflictRow": "{ring} · {label} · {from}–{to}",
     "bookedCount": "{count, plural, one {# registrant} other {# registrants}}",
     "trainingTitle": "Training bookings",
@@ -169,6 +175,7 @@
       "SMS": "SMS"
     },
     "smsPhones": "SMS ({count} phones)",
+    "channelSeparator": " · ",
     "text": "Notice text",
     "confirm": "{count, plural, one {CANCEL AND NOTIFY THE REGISTRANT} other {CANCEL AND NOTIFY THE # REGISTRANTS}}",
     "simpleTitle": "Do you want to cancel the activity?",
@@ -185,6 +192,7 @@
     "error": "The registrants could not be loaded.",
     "open": "Open {name}'s record",
     "member": "{name} · {number}",
+    "contactSeparator": " · ",
     "waitlisted": "on the waiting list ({position})",
     "statuses": {
       "all": "All"

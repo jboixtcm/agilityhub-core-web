@@ -1,0 +1,111 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips 235ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance 181ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > disables the ring chips of an activity outside the club («— (fora del club)»)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips 131ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > disables the ring chips of an activity outside the club («— (fora del club)») 90ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST 149ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version 134ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text 232ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields 144ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > INSTRUCTOR reads D7 without actions, export or internal notes
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text 192ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > lists the registrants with the FIFO waitlist positions
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > INSTRUCTOR reads D7 without actions, export or internal notes 87ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > lists the registrants with the FIFO waitlist positions 53ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version 194ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason 199ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it 153ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so 222ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text 176ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [ELIMINA] cancels the draft with reason DELETED and returns to the list
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them 179ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [ELIMINA] cancels the draft with reason DELETED and returns to the list 71ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field 135ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja» 48ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text 126ms
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  20:18:25
+   Duration  4.27s (tests 75%, transform 9%, import 8%, environment 7%, setup 1%)
+

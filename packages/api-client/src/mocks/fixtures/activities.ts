@@ -607,20 +607,20 @@ export function activityListItem(activity: StoredActivity, locale: string): Acti
   };
 }
 
-function localDateTime(activity: StoredActivity, time: string | null, fallback: string): string {
-  return `${activity.date}T${time ?? fallback}`;
-}
-
 export function registeredActivity(
   activity: StoredActivity,
   locale: string,
 ): components["schemas"]["RegisteredActivity"] {
   return {
-    // Without an end the api repeats the start; without hours, the end of the day (S07 §3).
-    endsAtLocal: localDateTime(activity, activity.endTime ?? activity.startTime, "23:59"),
+    // As the api (`ActivityTimes`): without hours the start is `T00:00`; without an end, the
+    // end is the next day at `T00:00` (S07 §3).
+    endsAtLocal:
+      activity.endTime === null
+        ? `${nextDay(activity.date)}T00:00`
+        : `${activity.date}T${activity.endTime}`,
     id: activity.id,
     placeLabel: placeLabel(activity, locale),
-    startsAtLocal: localDateTime(activity, activity.startTime, "00:00"),
+    startsAtLocal: `${activity.date}T${activity.startTime ?? "00:00"}`,
     title: localized(activity.titleI18n, locale) ?? "",
   };
 }
@@ -764,7 +764,7 @@ export function ringConflicts(activity: StoredActivity): RingConflicts {
     return { conflicts: [], trainingBookings: [] };
   }
   const start = activity.startTime;
-  const end = activity.endTime ?? "23:59";
+  const end = activity.endTime ?? "24:00"; // without an end: until the next day at 00:00
   const conflicts: RingConflicts["conflicts"] = [];
   const trainingBookings: RingConflicts["trainingBookings"] = [];
   if (activity.ringIds.includes("ring-central") && overlaps(start, end, "18:30", "19:30")) {
@@ -776,6 +776,21 @@ export function ringConflicts(activity: StoredActivity): RingConflicts {
       ringId: "ring-central",
       to: clubInstant(activity.date, "19:30", clubTimeZone),
       type: "CLASS",
+    });
+  }
+  // A manual ring block (S06/S09) on Petita, 4 October 17:00–21:00: never forceable (R-07-05).
+  if (
+    activity.date === "2026-10-04" &&
+    activity.ringIds.includes("ring-petita") &&
+    overlaps(start, end, "17:00", "21:00")
+  ) {
+    conflicts.push({
+      from: clubInstant(activity.date, "17:00", clubTimeZone),
+      id: "ring-block-2026-10-04-petita",
+      label: "Manteniment de la pista",
+      ringId: "ring-petita",
+      to: clubInstant(activity.date, "21:00", clubTimeZone),
+      type: "RING_BLOCK",
     });
   }
   if (activity.ringIds.includes("ring-muntanya") && overlaps(start, end, "19:00", "19:30")) {

@@ -260,6 +260,15 @@ const scenarios = {
     },
     sessions: accountSessions,
   },
+  // A club whose default locale is not `ca` (R-07-04: the title is required in `defaultLocale`).
+  activitiesDefaultEs: {
+    branding: { ...canic, defaultLocale: "es" },
+    me: {
+      ...member,
+      membership: { ...memberMembership, roles: ["MEMBER", "ADMIN"] },
+    },
+    sessions: accountSessions,
+  },
   activitiesNoLevels: {
     branding: canic,
     levelsEnabled: false,

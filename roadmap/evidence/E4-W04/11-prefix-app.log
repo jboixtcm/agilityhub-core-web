@@ -1,0 +1,771 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable 150ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 omits the block without ACTIVITIES
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ]
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA]
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes» 77ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 omits the block without ACTIVITIES 7ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ] 64ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA] 88ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog 24ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > an activity that is not visible shows «No disponible»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: never shows a dog, even when the data carries one
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text 80ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > an activity that is not visible shows «No disponible» 13ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog 25ms
+ × src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight 9ms
+   → expected '2026-09-19T09:00' to be '2026-09-20T00:00' // Object.is equality
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: never shows a dog, even when the data carries one 7ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert 34ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it 10006ms
+   → Unable to find role="region" and name "Activitats"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mReservar[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activities-screen__intro"[39m
+      [36m>[39m
+        [0mSeleccioneu l'activitat o classe que vulgueu reservar.[0m
+      [36m</p>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mReservar[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activities-screen__intro"[39m
+      [36m>[39m
+        [0mSeleccioneu l'activitat o classe que vulgueu reservar.[0m
+      [36m</p>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog 46ms
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a waitlisted registration shows «en llista d'espera»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()» 10024ms
+   → Unable to find an element with the text: en llista d'espera. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTaller de contactes[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0men llista d'espera ()[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 22 d’agost · 10:00–12:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCadells[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 20 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m0 places lliures de 10[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mTaller de zones de contacte per a tots els nivells[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSURT DE LA LLISTA D'ESPERA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTaller de contactes[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0men llista d'espera ()[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 22 d’agost · 10:00–12:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCadells[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 20 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m0 places lliures de 10[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mTaller de zones de contacte per a tots els nivells[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSURT DE LA LLISTA D'ESPERA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ × src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > decodes the detail path safely (a malformed /activitats/%E0 does not throw) 2ms
+   → URI malformed
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a waitlisted registration shows «en llista d'espera» 26ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight
+AssertionError: expected '2026-09-19T09:00' to be '2026-09-20T00:00' // Object.is equality
+
+Expected: "2026-09-20T00:00"
+Received: "2026-09-19T09:00"
+
+ ❯ src/activities/activities.test.tsx:236:51
+    234|       params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    235|     });
+    236|     expect(registered.data?.activity.endsAtLocal).toBe("2026-09-20T00:…
+       |                                                   ^
+    237|     // Saturday 19 September at 12:00 in the club (10:00Z): three hour…
+    238|     vi.setSystemTime(new Date("2026-09-19T10:00:00Z"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+TestingLibraryElementError: Unable to find role="region" and name "Activitats"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mReservar[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activities-screen__intro"[39m
+      [36m>[39m
+        [0mSeleccioneu l'activitat o classe que vulgueu reservar.[0m
+      [36m</p>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mReservar[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activities-screen__intro"[39m
+      [36m>[39m
+        [0mSeleccioneu l'activitat o classe que vulgueu reservar.[0m
+      [36m</p>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:318:32
+    316|     );
+    317|     await renderWith(<ReserveActivitiesPage client={client()} />);
+    318|     const block = await screen.findByRole("region", { name: "Activitat…
+       |                                ^
+    319|     expect(await within(block).findByRole("alert")).toHaveTextContent(
+    320|       "No s'han pogut carregar les activitats.",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()»
+TestingLibraryElementError: Unable to find an element with the text: en llista d'espera. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTaller de contactes[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0men llista d'espera ()[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 22 d’agost · 10:00–12:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCadells[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 20 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m0 places lliures de 10[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mTaller de zones de contacte per a tots els nivells[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSURT DE LA LLISTA D'ESPERA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTaller de contactes[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0men llista d'espera ()[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 22 d’agost · 10:00–12:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCadells[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 20 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m0 places lliures de 10[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mTaller de zones de contacte per a tots els nivells[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSURT DE LA LLISTA D'ESPERA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:382:25
+    380|     );
+    381|     await renderWith(<ActivityDetailPage activityId={WORKSHOP} client=…
+    382|     expect(await screen.findByText("en llista d'espera")).toBeVisible(…
+       |                         ^
+    383|     expect(screen.queryByText(/\(\)/u)).toBeNull();
+    384|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > decodes the detail path safely (a malformed /activitats/%E0 does not throw)
+URIError: URI malformed
+ ❯ safeDecode src/activities/shared.ts:15:10
+     13| // PRE-FIX CHECK ONLY: the round-1 App called decodeURIComponent direc…
+     14| export function safeDecode(segment: string): string {
+     15|   return decodeURIComponent(segment);
+       |          ^
+     16| }
+     17|
+ ❯ src/activities/activities.test.tsx:388:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 14 passed (18)
+   Start at  20:16:05
+   Duration  21.93s (tests 95%, environment 2%, import 1%, transform 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities --reporter=verbose

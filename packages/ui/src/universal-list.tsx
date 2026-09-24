@@ -163,7 +163,8 @@ export interface UniversalListProps<Row> {
   onRetry: () => void;
   onRowActivate?: (row: Row) => void;
   onStateChange: (state: UniversalListState) => void;
-  rowHref: (row: Row) => string;
+  /** Omitted: the rows are plain text (e.g. a role that cannot open the record). */
+  rowHref?: (row: Row) => string;
   rowKey: (row: Row) => string;
   rows: Row[];
   savedViews: UniversalListSavedView[];
@@ -889,7 +890,7 @@ export function UniversalList<Row>({
                 ))
               : rows.map((row) => {
                   const id = rowKey(row);
-                  const href = rowHref(row);
+                  const href = rowHref?.(row);
                   return (
                     <tr key={id}>
                       {selectable ? (
@@ -913,26 +914,32 @@ export function UniversalList<Row>({
                       ) : null}
                       {visibleColumns.map((column) => (
                         <td key={column.key}>
+                          {href === undefined ? (
+                            column.render(row)
+                          ) : (
+                            <a
+                              href={href}
+                              onClick={(event) => {
+                                activateRow(event, row);
+                              }}
+                            >
+                              {column.render(row)}
+                            </a>
+                          )}
+                        </td>
+                      ))}
+                      <td className="ah-universal-list__chevron">
+                        {href === undefined ? null : (
                           <a
                             href={href}
                             onClick={(event) => {
                               activateRow(event, row);
                             }}
                           >
-                            {column.render(row)}
+                            <Icon aria-hidden="true" name="chev" />
+                            <span className="ah-sr-only">{labels.selectRow(row)}</span>
                           </a>
-                        </td>
-                      ))}
-                      <td className="ah-universal-list__chevron">
-                        <a
-                          href={href}
-                          onClick={(event) => {
-                            activateRow(event, row);
-                          }}
-                        >
-                          <Icon aria-hidden="true" name="chev" />
-                          <span className="ah-sr-only">{labels.selectRow(row)}</span>
-                        </a>
+                        )}
                       </td>
                     </tr>
                   );

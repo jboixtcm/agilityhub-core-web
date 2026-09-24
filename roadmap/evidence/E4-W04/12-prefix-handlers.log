@@ -1,0 +1,113 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > lists the D7 activities by date desc without the deleted ones (ListPage + overlay) 22ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > serves form A, the member forms, the conflicts and the cancellation preview 64ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-05 publishes the draft only after the conflict options (409 → 422 → 200) 77ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-06 cancels with registrants only with the notice text 12ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-08/09 registers, answers ACTIVITY_FULL, joins the waitlist and promotes FIFO 50ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-14 without WAITLIST a full activity answers ACTIVITY_FULL {waitlistAvailable: false} 4ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-09 refuses to cancel after the start (EVENT_START) 8ms
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-14 answers MODULE_DISABLED without ACTIVITIES and 403 to an instructor's mutation 17ms
+stderr | src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-04 requires the title in the club's default locale, not in ca
+TypeError: Cannot read properties of undefined (reading 'branding')
+    at hasModule (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/activity-handlers.ts:71:31)
+    at moduleDisabled (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/activity-handlers.ts:87:10)
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/activity-handlers.ts:510:22
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+[MSW] Encountered an unhandled exception during the handler lookup for "GET https://core.example.test/api/v1/activities/activity-demostracio-festa-major". Please see the original error above.
+
+ × src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-05 another ring block (type RING_BLOCK) is never forced, not even with every option 23ms
+   → expected [ [ 'CLASS', 'ring-central' ] ] to deeply equal [ [ 'CLASS', 'ring-central' ], …(1) ]
+ ✓ src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-08 a member's cancellation promotes waitlist position 1 (FIFO) 16ms
+ × src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-04 requires the title in the club's default locale, not in ca 19ms
+   → Cannot read properties of undefined (reading 'branding')
+ × src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api 18ms
+   → expected { …(11) } to match object { …(2) }
+(9 matching properties omitted from actual)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-05 another ring block (type RING_BLOCK) is never forced, not even with every option
+AssertionError: expected [ [ 'CLASS', 'ring-central' ] ] to deeply equal [ [ 'CLASS', 'ring-central' ], …(1) ]
+
+- Expected
++ Received
+
+  [
+    [
+      "CLASS",
+      "ring-central",
+    ],
+-   [
+-     "RING_BLOCK",
+-     "ring-petita",
+-   ],
+  ]
+
+ ❯ src/mocks/activity-handlers.test.ts:376:89
+    374|     });
+    375|     expectValid("RingConflicts", preview.data);
+    376|     expect(preview.data?.conflicts.map((conflict) => [conflict.type, c…
+       |                                                                                         ^
+    377|       ["CLASS", "ring-central"],
+    378|       ["RING_BLOCK", "ring-petita"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > R-07-04 requires the title in the club's default locale, not in ca
+ApiError: Cannot read properties of undefined (reading 'branding')
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:83:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ titleOnly src/mocks/activity-handlers.test.ts:438:23
+ ❯ src/mocks/activity-handlers.test.ts:464:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: undefined, status: 500, traceId: undefined, retryAfter: undefined }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api
+AssertionError: expected { …(11) } to match object { …(2) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "endsAtLocal": "2026-09-20T00:00",
++   "endsAtLocal": "2026-09-19T09:00",
+    "startsAtLocal": "2026-09-19T09:00",
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:474:20
+    472|     expectValid("MeActivities", data);
+    473|     const league = data?.bookable.find((row) => row.id === ACTIVITY_ID…
+    474|     expect(league).toMatchObject({
+       |                    ^
+    475|       endsAtLocal: "2026-09-20T00:00",
+    476|       startsAtLocal: "2026-09-19T09:00",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+   Start at  20:16:31
+   Duration  1.08s (import 41%, tests 34%, transform 25%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/activity-handlers.test.ts --reporter=verbose

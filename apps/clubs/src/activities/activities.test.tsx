@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -14,7 +14,7 @@ import { ReserveActivitiesPage } from "./ActivitiesBlock";
 import { ActivityDetailPage } from "./ActivityDetailPage";
 import { ActivityHistoryRow } from "./ActivityHistoryRow";
 import { ActivityReservationRow, HomeActivityReservations } from "./ActivityReservationRow";
-import type { ActivityRegistrationSummary } from "./shared";
+import { type ActivityRegistrationSummary, safeDecode } from "./shared";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -25,6 +25,7 @@ const mockupNow = new Date("2026-08-04T08:00:00Z");
 const TOURNAMENT = "activity-torneig-estiu-2026";
 const SEMINAR = "activity-seminari-handling";
 const WORKSHOP = "activity-taller-contactes";
+const LEAGUE = "activity-lliga-social-3";
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
@@ -224,6 +225,167 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       "Torneig d'Estiu 2026inscritaDivendres 7 · 18:30–20:30 · totes les pistes",
     );
     expect(row).not.toHaveTextContent(/ amb /u);
+  });
+
+  it("03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight", async () => {
+    vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
+    const registered = await client().POST("/activity-registrations", {
+      body: { activityId: LEAGUE },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    });
+    expect(registered.data?.activity.endsAtLocal).toBe("2026-09-20T00:00");
+    // Saturday 19 September at 12:00 in the club (10:00Z): three hours after the start.
+    vi.setSystemTime(new Date("2026-09-19T10:00:00Z"));
+    await renderWith(<HomeActivityReservations client={client()} fallback={<p>buit</p>} />);
+    const section = await screen.findByRole("region", { name: "Les meves reserves" });
+    expect(within(section).getByRole("link").textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Lliga social — 3a jornadainscritaDissabte 19 · 9:00 · totes les pistes",
+    );
+  });
+
+  it("03: never shows a dog, even when the data carries one", async () => {
+    const withDog = {
+      activity: {
+        endsAtLocal: "2026-08-07T20:30",
+        id: TOURNAMENT,
+        placeLabel: "totes les pistes",
+        startsAtLocal: "2026-08-07T18:30",
+        title: "Torneig d'Estiu 2026",
+      },
+      activityId: TOURNAMENT,
+      cancellableUntil: "2026-08-07T16:30:00Z",
+      dog: { id: "dog-blat", name: "Blat" },
+      id: "registration-dog",
+      origin: "APP",
+      registeredAt: "2026-07-02T08:00:00Z",
+      state: "ACTIVE",
+    } satisfies ActivityRegistrationSummary & { dog: { id: string; name: string } };
+    await renderWith(<ActivityReservationRow registration={withDog} />);
+    const row = await screen.findByRole("link");
+    expect(row.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Torneig d'Estiu 2026inscritaDivendres 7 · 18:30–20:30 · totes les pistes",
+    );
+    expect(row).not.toHaveTextContent(/Blat/u);
+  });
+
+  it("R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert", async () => {
+    const real = (await client().GET("/me/activities")).data;
+    if (real === undefined) throw new TypeError("Missing /me/activities");
+    server.use(
+      http.get("*/api/v1/me/activities", () => HttpResponse.json({ ...real, bookable: [] })),
+    );
+    await renderWith(<ReserveActivitiesPage client={client()} />);
+    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryByLabelText("Carregant les activitats")).toBeNull();
+    });
+    expect(screen.queryByRole("region", { name: "Activitats" })).toBeNull();
+    cleanup();
+
+    const seminar = real.bookable.find((row) => row.id === SEMINAR);
+    if (seminar === undefined) throw new TypeError("Missing the Seminari row");
+    server.use(
+      http.get("*/api/v1/me/activities", () =>
+        HttpResponse.json({
+          ...real,
+          bookable: [{ ...seminar, notBookableReason: "LEVEL_NOT_ALLOWED", rowState: "NOT_BOOKABLE" }],
+        }),
+      ),
+    );
+    await renderWith(<ReserveActivitiesPage client={client()} />);
+    const block = await screen.findByRole("region", { name: "Activitats" });
+    expect(within(block).queryByRole("link")).toBeNull();
+    expect(within(block).getByText("Seminari de handling").closest("[aria-disabled]")).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+  });
+
+  it("R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it", async () => {
+    let calls = 0;
+    server.use(
+      http.get("*/api/v1/me/activities", () => {
+        calls += 1;
+        return calls === 1
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+              { status: 500 },
+            )
+          : undefined;
+      }),
+    );
+    await renderWith(<ReserveActivitiesPage client={client()} />);
+    const block = await screen.findByRole("region", { name: "Activitats" });
+    expect(await within(block).findByRole("alert")).toHaveTextContent(
+      "No s'han pogut carregar les activitats.",
+    );
+    fireEvent.click(within(block).getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByRole("link", { name: /Seminari de handling/u })).toBeVisible();
+    cleanup();
+
+    server.use(
+      http.get("*/api/v1/me/activities", () =>
+        HttpResponse.json(
+          { code: "MODULE_DISABLED", details: {}, message: "off", traceId: "t" },
+          { status: 404 },
+        ),
+      ),
+    );
+    await renderWith(<ReserveActivitiesPage client={client()} />);
+    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryByLabelText("Carregant les activitats")).toBeNull();
+    });
+    expect(screen.queryByRole("region", { name: "Activitats" })).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog", async () => {
+    server.use(
+      http.post("*/api/v1/activity-registrations", () =>
+        HttpResponse.json(
+          {
+            code: "ACTIVITY_FULL",
+            details: { waitlistAvailable: false, waiting: 0 },
+            message: "full",
+            traceId: "t",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderWith(<ActivityDetailPage activityId={SEMINAR} client={client()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "INSCRIU-M'HI" }));
+    expect(await screen.findByText("Aquesta activitat està completa.")).toBeVisible();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("a waitlisted registration without a position reads «en llista d'espera», never «()»", async () => {
+    const api = client();
+    await api.POST("/activity-registrations", {
+      body: { activityId: WORKSHOP, joinWaitlist: true },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    });
+    const real = (
+      await api.GET("/me/activities/{activityId}", { params: { path: { activityId: WORKSHOP } } })
+    ).data;
+    const mine = real?.myRegistration;
+    if (real === undefined || mine === null || mine === undefined) {
+      throw new TypeError("Missing the waitlisted registration");
+    }
+    server.use(
+      http.get("*/api/v1/me/activities/:activityId", () =>
+        HttpResponse.json({ ...real, myRegistration: { ...mine, position: null } }),
+      ),
+    );
+    await renderWith(<ActivityDetailPage activityId={WORKSHOP} client={client()} />);
+    expect(await screen.findByText("en llista d'espera")).toBeVisible();
+    expect(screen.queryByText(/\(\)/u)).toBeNull();
+  });
+
+  it("decodes the detail path safely (a malformed /activitats/%E0 does not throw)", () => {
+    expect(safeDecode("torneig%20estiu")).toBe("torneig estiu");
+    expect(safeDecode("%E0")).toBe("%E0");
   });
 
   it("03: a waitlisted registration shows «en llista d'espera»", async () => {

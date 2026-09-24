@@ -3,7 +3,9 @@
     "title": "Activitats",
     "intro": "Seleccioneu l'activitat o classe que vulgueu reservar.",
     "loading": "Carregant les activitats",
-    "separator": " · "
+    "separator": " · ",
+    "error": "No s'han pogut carregar les activitats.",
+    "retry": "Torna-ho a provar"
   },
   "list": {
     "freeSeats": "{count, plural, one {# plaça} other {# places}}",
@@ -14,6 +16,9 @@
   "detail": {
     "title": "Activitat",
     "back": "Torna enrere",
+    "backGlyph": "‹",
+    "placeSeparator": " · ",
+    "ringSeparator": ", ",
     "close": "Tanca",
     "loading": "Carregant l'activitat",
     "loadError": "No s'ha pogut carregar l'activitat.",

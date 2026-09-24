@@ -9,17 +9,30 @@ export type CancellationBooking = components["schemas"]["CancellationBooking"];
 
 export const clubTimeZone = "Europe/Madrid";
 
+// One formatter per zone: `clubInstant` samples ~55 offsets per call, and building the browser
+// mock world at start-up with a new `Intl.DateTimeFormat` each time stalled the first e2e pages.
+const offsetFormatters = new Map<string, Intl.DateTimeFormat>();
+
+function offsetFormatter(timeZone: string): Intl.DateTimeFormat {
+  let formatter = offsetFormatters.get(timeZone);
+  if (formatter === undefined) {
+    formatter = new Intl.DateTimeFormat("en-US", {
+      day: "2-digit",
+      hour: "2-digit",
+      hourCycle: "h23",
+      minute: "2-digit",
+      month: "2-digit",
+      second: "2-digit",
+      timeZone,
+      year: "numeric",
+    });
+    offsetFormatters.set(timeZone, formatter);
+  }
+  return formatter;
+}
+
 function zoneOffsetMinutes(instant: number, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    day: "2-digit",
-    hour: "2-digit",
-    hourCycle: "h23",
-    minute: "2-digit",
-    month: "2-digit",
-    second: "2-digit",
-    timeZone,
-    year: "numeric",
-  }).formatToParts(new Date(instant));
+  const parts = offsetFormatter(timeZone).formatToParts(new Date(instant));
   const value = (type: Intl.DateTimeFormatPartTypes) =>
     Number(parts.find((part) => part.type === type)?.value ?? 0);
   const local = Date.UTC(

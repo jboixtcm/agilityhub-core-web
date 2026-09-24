@@ -1,0 +1,3164 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips 186ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance 165ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > disables the ring chips of an activity outside the club («— (fora del club)»)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips 129ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > disables the ring chips of an activity outside the club («— (fora del club)») 85ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST 147ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version 162ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text 209ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields 128ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > INSTRUCTOR reads D7 without actions, export or internal notes
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text 171ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > lists the registrants with the FIFO waitlist positions
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > INSTRUCTOR reads D7 without actions, export or internal notes 83ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > lists the registrants with the FIFO waitlist positions 55ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version 10171ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32mTorneig d'Estiu 2026 — final[39m[2m)[22m
+
+Expected the element to have value:
+[32m  Torneig d'Estiu 2026 — final[39m
+Received:
+[31m  Torneig d'Estiu 2026[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason 10113ms
+   → Unable to find role="dialog" and name "Conflictes de pista"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it 10146ms
+   → Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_i_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_i_"[39m
+    [36m>[39m
+      [0mConflictes de pista[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-conflicts"[39m
+    [36m>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Classes i bloquejos en conflicte"[39m
+        [33mclass[39m=[32m"activity-conflicts__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<span>[39m
+            [0mCentral · B+C · 18:30–19:30[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m3 inscrits[0m
+          [36m</strong>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-conflicts-training"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-conflicts-training"[39m
+        [36m>[39m
+          [0mReserves d'entrenament[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"activity-conflicts__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [0mMuntanya · Pau Soler + Blat · 19:00–19:30[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mAnul·la les classes en conflicte i avisa els inscrits[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mCancel·la les reserves d'entrenament[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"activity-conflicts-text"[39m
+        [36m>[39m
+          [0mText de l'avís[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"activity-conflicts-text"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mLa classe queda anul·lada[0m
+        [36m</textarea>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-switch"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Avisa també per correu"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+        [36m>[39m
+          [0mAvisa també per correu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna enrere[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-spinner"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+          [36m>[39m
+            [0mPUBLICA I APLICA[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mDesant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_i_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_i_"[39m
+    [36m>[39m
+      [0mConflictes de pista[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-conflicts"[39m
+    [36m>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Classes i bloquejos en conflicte"[39m
+        [33mclass[39m=[32m"activity-conflicts__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<span>[39m
+            [0mCentral · B+C · 18:30–19:30[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m3 inscrits[0m
+          [36m</strong>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-conflicts-training"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-conflicts-training"[39m
+        [36m>[39m
+          [0mReserves d'entrenament[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"activity-conflicts__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [0mMuntanya · Pau Soler + Blat · 19:00–19:30[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mAnul·la les classes en conflicte i avisa els inscrits[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mCancel·la les reserves d'entrenament[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"activity-conflicts-text"[39m
+        [36m>[39m
+          [0mText de l'avís[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"activity-conflicts-text"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mLa classe queda anul·lada[0m
+        [36m</textarea>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-switch"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Avisa també per correu"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+        [36m>[39m
+          [0mAvisa també per correu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna enrere[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-spinner"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+          [36m>[39m
+            [0mPUBLICA I APLICA[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mDesant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so 10293ms
+   → expected <section …(4)>…(2)</section> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text 10128ms
+   → Unable to find role="dialog" and name "Conflictes de pista"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [ELIMINA] cancels the draft with reason DELETED and returns to the list
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them 238ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [ELIMINA] cancels the draft with reason DELETED and returns to the list 96ms
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field 157ms
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja» 32ms
+   → expected [ 'obertes · socis', 'finalitzada' ] to deeply equal [ '—', 'finalitzada' ]
+stderr | src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text 166ms
+   → expected [ <a …(1)></a>, …(71) ] to have a length of +0 but got 72
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32mTorneig d'Estiu 2026 — final[39m[2m)[22m
+
+Expected the element to have value:
+[32m  Torneig d'Estiu 2026 — final[39m
+Received:
+[31m  Torneig d'Estiu 2026[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+ ❯ src/activities/ActivitiesPage.test.tsx:422:52
+    420|     expect(within(card).getByText("cartell.jpg")).toBeVisible();
+    421|     await waitFor(() => {
+    422|       expect(within(card).getByLabelText("Títol")).toHaveValue("Tornei…
+       |                                                    ^
+    423|     });
+    424|     expect(within(card).getByLabelText("Descripció curta")).toHaveValu…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+TestingLibraryElementError: Unable to find role="dialog" and name "Conflictes de pista"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:463:31
+    461|     let card = await maintenance("Demostració Festa Major");
+    462|     fireEvent.click(within(card).getByRole("button", { name: "PUBLICA"…
+    463|     let dialog = await screen.findByRole("dialog", { name: "Conflictes…
+       |                               ^
+    464|     await waitFor(() => {
+    465|       expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_i_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_i_"[39m
+    [36m>[39m
+      [0mConflictes de pista[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-conflicts"[39m
+    [36m>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Classes i bloquejos en conflicte"[39m
+        [33mclass[39m=[32m"activity-conflicts__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<span>[39m
+            [0mCentral · B+C · 18:30–19:30[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m3 inscrits[0m
+          [36m</strong>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-conflicts-training"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-conflicts-training"[39m
+        [36m>[39m
+          [0mReserves d'entrenament[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"activity-conflicts__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [0mMuntanya · Pau Soler + Blat · 19:00–19:30[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mAnul·la les classes en conflicte i avisa els inscrits[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mCancel·la les reserves d'entrenament[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"activity-conflicts-text"[39m
+        [36m>[39m
+          [0mText de l'avís[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"activity-conflicts-text"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mLa classe queda anul·lada[0m
+        [36m</textarea>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-switch"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Avisa també per correu"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+        [36m>[39m
+          [0mAvisa també per correu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna enrere[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-spinner"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+          [36m>[39m
+            [0mPUBLICA I APLICA[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mDesant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_i_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_i_"[39m
+    [36m>[39m
+      [0mConflictes de pista[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-conflicts"[39m
+    [36m>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Classes i bloquejos en conflicte"[39m
+        [33mclass[39m=[32m"activity-conflicts__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<span>[39m
+            [0mCentral · B+C · 18:30–19:30[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0m3 inscrits[0m
+          [36m</strong>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-conflicts-training"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-conflicts-training"[39m
+        [36m>[39m
+          [0mReserves d'entrenament[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"activity-conflicts__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [0mMuntanya · Pau Soler + Blat · 19:00–19:30[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mAnul·la les classes en conflicte i avisa els inscrits[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"activity-check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mCancel·la les reserves d'entrenament[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"activity-conflicts-text"[39m
+        [36m>[39m
+          [0mText de l'avís[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"activity-conflicts-text"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mLa classe queda anul·lada[0m
+        [36m</textarea>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-switch"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Avisa també per correu"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+        [36m>[39m
+          [0mAvisa també per correu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna enrere[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-spinner"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+          [36m>[39m
+            [0mPUBLICA I APLICA[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mDesant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:541:33
+    539|     });
+    540|     fireEvent.click(within(dialog).getByRole("button", { name: "PUBLIC…
+    541|     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+       |                                 ^
+    542|       "Aquest bloqueig de pista coincideix amb un altre element.",
+    543|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so
+AssertionError: expected <section …(4)>…(2)</section> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+
+- Expected:
+null
+
++ Received:
+<section
+  aria-labelledby="_r_k_"
+  aria-modal="true"
+  class="ah-modal"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_k_"
+    >
+      Conflictes de pista
+    </h2>
+    <button
+      aria-label="Tanca"
+      class="ah-overlay__close"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <div
+      class="activity-conflicts"
+    >
+      <ul
+        aria-label="Classes i bloquejos en conflicte"
+        class="activity-conflicts__list"
+      >
+        <li>
+          <span>
+            Central · B+C · 18:30–19:30
+          </span>
+          <strong>
+            3 inscrits
+          </strong>
+        </li>
+      </ul>
+      <label
+        class="activity-check"
+      >
+        <input
+          class="ah-checkbox"
+          type="checkbox"
+        />
+        <span>
+          Anul·la les classes en conflicte i avisa els inscrits
+        </span>
+      </label>
+      <div
+        class="ah-form-field"
+      >
+        <label
+          class="ah-form-field__label"
+          for="activity-conflicts-text"
+        >
+          Text de l'avís
+        </label>
+        <textarea
+          class="ah-input ah-textarea"
+          id="activity-conflicts-text"
+          maxlength="500"
+          required=""
+          rows="3"
+        >
+          La classe queda anul·lada pel torneig
+        </textarea>
+      </div>
+      <div
+        class="activity-modal__actions"
+      >
+        <button
+          class="ah-button ah-button--ghost"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            Torna enrere
+          </span>
+        </button>
+        <button
+          aria-busy="true"
+          class="ah-button ah-button--primary"
+          disabled=""
+          type="button"
+        >
+          <span
+            aria-hidden="true"
+            class="ah-spinner"
+          />
+          <span
+            class="ah-button__content ah-button__content--loading"
+          >
+            DESA I APLICA
+          </span>
+          <span
+            class="ah-sr-only"
+          >
+            Desant
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+ ❯ src/activities/ActivitiesPage.test.tsx:582:44
+    580|     ).toBeVisible();
+    581|     await waitFor(() => {
+    582|       expect(screen.queryByRole("dialog")).toBeNull();
+       |                                            ^
+    583|     });
+    584|     await waitFor(() => {
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text
+TestingLibraryElementError: Unable to find role="dialog" and name "Conflictes de pista"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:614:33
+    612|     fireEvent.click(publish);
+    613|     fireEvent.click(publish);
+    614|     const dialog = await screen.findByRole("dialog", { name: "Conflict…
+       |                                 ^
+    615|     expect(keys).toHaveLength(1);
+    616|     expect(within(dialog).getByText("Cal escriure el text de l'avís pe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+AssertionError: expected [ 'obertes · socis', 'finalitzada' ] to deeply equal [ '—', 'finalitzada' ]
+
+- Expected
++ Received
+
+  [
+-   "—",
++   "obertes · socis",
+    "finalitzada",
+  ]
+
+ ❯ src/activities/ActivitiesPage.test.tsx:704:70
+    702|     );
+    703|     await renderPage();
+    704|     expect((await listRow("Lliga social — 3a jornada")).slice(3, 5)).t…
+       |                                                                      ^
+    705|       "—",
+    706|       "finalitzada",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+AssertionError: expected [ <a …(1)></a>, …(71) ] to have a length of +0 but got 72
+
+- Expected
++ Received
+
+- 0
++ 72
+
+ ❯ src/activities/ActivitiesPage.test.tsx:777:50
+    775|       expect(within(table).getAllByText("cancel·lada pel club")).toHav…
+    776|     });
+    777|     expect(within(table).queryAllByRole("link")).toHaveLength(0);
+       |                                                  ^
+    778|   });
+    779| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: text
+ ❯ Function.fromResponse ../../packages/api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ runNextTicks node:internal/process/task_queues:64:5
+ ❯ listOnTimeout node:internal/timers:547:9
+ ❯ processTimers node:internal/timers:521:7
+ ❯ Object.onResponse ../../packages/api-client/src/client.ts:83:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:161:28
+ ❯ publishWith src/activities/ActivityPage.tsx:513:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ADMIN_TEXT_REQUIRED', details: {}, status: 422, traceId: 't', retryAfter: undefined }
+This error originated in "src/activities/ActivitiesPage.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 14 passed (21)
+     Errors  1 error
+   Start at  20:15:05
+   Duration  54.37s (tests 98%, environment 1%, transform 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities --reporter=verbose

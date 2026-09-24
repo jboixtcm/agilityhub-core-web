@@ -99,6 +99,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - The api client sends `Idempotency-Key` by default on `POST /activities/{id}/publication|cancellation` and `POST /activity-registrations`.
   - The D7 sidebar entry and routes are open to INSTRUCTOR (read-only).
   - `moduleUi.ACTIVITIES` registers the `/activitats/:id` and `/activitats/:id/inscrits` routes.
-  - The mocks answer `files.maxSizeMb` and queue the activity exports; the export-drawer file name follows the list key.
+  - The mocks answer `files.maxSizeMb` and queue the activity exports.
+- E4-W04 round 2 (review of 24-09):
+  - The 03 row reads the api's «no end» (the next day at `T00:00`) as «no end time»; the fixtures emit it as the api does.
+  - The ring-conflict dialog resets its pending state in every outcome and shows non-conflict errors inside it. A `RING_BLOCK` conflict can never be forced: it has no option, and [PUBLICA I APLICA] stays disabled with the reason. The mock refuses to force it too.
+  - After an image or document upload, the form rebases only the admin's own edits on the fresh activity, so [DESA] never overwrites another admin's changes with the new `version`.
+  - The plain publish confirm has a pending state and one `Idempotency-Key` per payload, and turns `ADMIN_TEXT_REQUIRED` into the notice-text dialog.
+  - `UniversalList.rowHref` is optional; the INSTRUCTOR reads the registrants as plain text.
+  - Other fixes: D7 «—» for a finished activity without a maximum; «clear filters» on a filtered empty list; list markers in rich text; an error state with a retry in the 04 block; the development preview out of the production bundle; the club's default locale in the mock's publication check; «en llista d'espera» without «()»; separators and `‹` from i18n; a guarded path decode; the `ADMIN_TEXT_REQUIRED` field.
+  - The export-drawer file name is `auditoria_…` again for every list, as before E4-W04.
+  - The calendar mock's `clubInstant` reuses one `Intl.DateTimeFormat` per time zone (about 11× faster, same results).
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

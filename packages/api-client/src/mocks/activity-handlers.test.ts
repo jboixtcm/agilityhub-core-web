@@ -7,7 +7,7 @@ import pendingDocument from "../../openapi/pending.json";
 import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
-import { ACTIVITY_IDS } from "./fixtures/activities";
+import { ACTIVITY_IDS, activityState, MEMBER_ID } from "./fixtures/activities";
 import { mockScenario, resetActivityState } from "./handlers";
 import { server } from "./server";
 
@@ -350,6 +350,132 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     await expect(failure(client.GET("/me/activities"))).resolves.toMatchObject({
       code: "MODULE_DISABLED",
       status: 404,
+    });
+  });
+
+  it("R-07-05 another ring block (type RING_BLOCK) is never forced, not even with every option", async () => {
+    const demonstration = await client.GET("/activities/{id}", {
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+    await client.PATCH("/activities/{id}", {
+      body: {
+        endTime: "20:30",
+        location: { atClub: true },
+        registrationFrom: "2026-09-01",
+        registrationTo: "2026-10-01",
+        ringIds: ["ring-central", "ring-petita"],
+        startTime: "18:30",
+        version: demonstration.data?.version ?? 0,
+      },
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+    const preview = await client.GET("/activities/{id}/ring-conflicts", {
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+    expectValid("RingConflicts", preview.data);
+    expect(preview.data?.conflicts.map((conflict) => [conflict.type, conflict.ringId])).toEqual([
+      ["CLASS", "ring-central"],
+      ["RING_BLOCK", "ring-petita"],
+    ]);
+    const forced = await failure(
+      client.POST("/activities/{id}/publication", {
+        body: { adminText: "Avís", cancelBookings: true, cancelClasses: true, notifyEmail: false },
+        params: {
+          header: { "Idempotency-Key": crypto.randomUUID() },
+          path: { id: ACTIVITY_IDS.demonstration },
+        },
+      }),
+    );
+    expect(forced).toMatchObject({ code: "RING_BLOCK_CONFLICT", status: 409 });
+    expect(
+      (forced.details as { conflicts: { type: string }[] }).conflicts.map(
+        (conflict) => conflict.type,
+      ),
+    ).toEqual(["RING_BLOCK"]);
+  });
+
+  it("R-07-08 a member's cancellation promotes waitlist position 1 (FIFO)", async () => {
+    // Biel Roca holds the first place of the full «Taller de contactes» (10/10 + 2 waiting).
+    const first = activityState.registrations.find(
+      (registration) => registration.id === "registration-taller-01",
+    );
+    if (first === undefined) throw new TypeError("Missing registration-taller-01");
+    first.member = {
+      emails: ["biel.roca@example.test"],
+      fullName: "Biel Roca",
+      id: MEMBER_ID,
+      memberNumber: "118",
+      phones: [],
+    };
+    mockScenario("member");
+    const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "registration-taller-01" } },
+    });
+    expectValid("ActivityRegistration", cancelled.data);
+    expect(cancelled.data).toMatchObject({ state: "CANCELLED" });
+
+    mockScenario("admin");
+    const registrants = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    expect(
+      registrants.data?.items
+        .filter((item) =>
+          ["registration-taller-11", "registration-taller-12"].includes(item.registrationId),
+        )
+        .map((item) => [item.registrationId, item.state, item.position ?? null]),
+    ).toEqual([
+      ["registration-taller-11", "ACTIVE", null],
+      ["registration-taller-12", "WAITLISTED", 2],
+    ]);
+    const workshop = await client.GET("/activities/{id}", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    expect(workshop.data?.counters).toEqual({ active: 10, waiting: 1 });
+  });
+
+  it("R-07-04 requires the title in the club's default locale, not in ca", async () => {
+    const titleOnly = async (title: Record<string, string>) => {
+      const current = await client.GET("/activities/{id}", {
+        params: { path: { id: ACTIVITY_IDS.demonstration } },
+      });
+      await client.PATCH("/activities/{id}", {
+        body: {
+          registrationFrom: "2026-09-01",
+          registrationTo: "2026-10-01",
+          title,
+          version: current.data?.version ?? 0,
+        },
+        params: { path: { id: ACTIVITY_IDS.demonstration } },
+      });
+      return client.POST("/activities/{id}/publication", {
+        body: { notifyEmail: false },
+        params: {
+          header: { "Idempotency-Key": crypto.randomUUID() },
+          path: { id: ACTIVITY_IDS.demonstration },
+        },
+      });
+    };
+    await expect(failure(titleOnly({ es: "Demostración Fiesta Mayor" }))).resolves.toMatchObject({
+      code: "ACTIVITY_INCOMPLETE",
+      details: { fieldErrors: [{ code: "REQUIRED", field: "title" }] },
+    });
+    resetActivityState();
+    mockScenario("activitiesDefaultEs");
+    const published = await titleOnly({ es: "Demostración Fiesta Mayor" });
+    expect(published.data?.state).toBe("PUBLISHED");
+  });
+
+  it("S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api", async () => {
+    mockScenario("member");
+    vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
+    const { data } = await client.GET("/me/activities");
+    expectValid("MeActivities", data);
+    const league = data?.bookable.find((row) => row.id === ACTIVITY_IDS.league);
+    expect(league).toMatchObject({
+      endsAtLocal: "2026-09-20T00:00",
+      startsAtLocal: "2026-09-19T09:00",
     });
   });
 });

@@ -63,6 +63,7 @@ import {
   sentenceCase,
   uploadFile,
   useActivityErrorMessage,
+  usePayloadKeys,
 } from "./shared";
 
 type Localized = Record<string, string>;
@@ -108,6 +109,8 @@ interface Feedback {
 }
 
 interface ConflictDialog {
+  /** The api asked for the notice text before the dialog opened (`ADMIN_TEXT_REQUIRED`). */
+  askText?: string;
   initial: ConflictOptions & { notifyEmail?: boolean };
   mode: ConflictDialogMode;
   preview: RingConflicts;
@@ -173,6 +176,51 @@ function sameLocalized(left: Localized, right: Localized): boolean {
 
 function sameList(left: readonly string[], right: readonly string[]): boolean {
   return left.length === right.length && left.every((value) => right.includes(value));
+}
+
+const LOCALIZED_KEYS = ["longDescription", "shortDescription", "title", "typeLabel"] as const;
+
+/**
+ * R-07-04 after a refetch (an upload changed the `version`): the server's copy plus only the
+ * fields — and, for texts, the locales — the user edited against the old baseline, so [DESA]
+ * never sends another admin's older values with the fresh `version`.
+ */
+function rebaseForm(form: FormState, previous: FormState, fresh: FormState): FormState {
+  const next: FormState = { ...fresh };
+  const target = next as unknown as Record<string, unknown>;
+  const mine = form as unknown as Record<string, unknown>;
+  const before = previous as unknown as Record<string, unknown>;
+  for (const key of Object.keys(form)) {
+    if ((LOCALIZED_KEYS as readonly string[]).includes(key)) continue;
+    if (JSON.stringify(mine[key]) !== JSON.stringify(before[key])) target[key] = mine[key];
+  }
+  for (const key of LOCALIZED_KEYS) {
+    const merged: Localized = { ...fresh[key] };
+    for (const locale of new Set([...Object.keys(form[key]), ...Object.keys(previous[key])])) {
+      const value = form[key][locale] ?? "";
+      if (value !== (previous[key][locale] ?? "")) merged[locale] = value;
+    }
+    next[key] = merged;
+  }
+  return next;
+}
+
+/** `details.conflicts` / `details.bookings` of a 409/422, or the current preview's lists. */
+function previewFrom(cause: unknown, current: RingConflicts | undefined): RingConflicts {
+  const details = errorDetails(cause);
+  return {
+    conflicts: Array.isArray(details.conflicts)
+      ? (details.conflicts as RingConflicts["conflicts"])
+      : (current?.conflicts ?? []),
+    trainingBookings: Array.isArray(details.bookings)
+      ? (details.bookings as RingConflicts["trainingBookings"])
+      : (current?.trainingBookings ?? []),
+  };
+}
+
+function isConflict(cause: unknown): boolean {
+  const code = errorCode(cause);
+  return code === "RING_BLOCK_CONFLICT" || code === "RING_HAS_BOOKINGS";
 }
 
 function fieldKey(field: string): FieldKey {
@@ -307,6 +355,10 @@ export function ActivityPage({
     "cancel" | "delete" | "publish" | "save" | "unpublish" | "upload"
   >();
   const [confirmPublish, setConfirmPublish] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState<string>();
+  const publicationKeys = usePayloadKeys();
+  const cancellationKeys = usePayloadKeys();
   const [notifyEmail, setNotifyEmail] = useState(false);
   const [conflictDialog, setConflictDialog] = useState<ConflictDialog>();
   const [cancelPreview, setCancelPreview] = useState<CancellationPreview>();
@@ -443,50 +495,56 @@ export function ActivityPage({
     onChanged();
   };
 
-  const failSave = (cause: unknown, options?: ConflictOptions) => {
+  /** The form field a failed `PATCH` belongs to (`general` = no field: a message instead). */
+  const saveErrorTarget = (cause: unknown): FieldKey => {
     const code = errorCode(cause);
-    const details = errorDetails(cause);
-    if (code === "RING_BLOCK_CONFLICT" || code === "RING_HAS_BOOKINGS") {
+    const fields = errorFields(cause).map(fieldKey);
+    if (code === "SLUG_LOCKED" || code === "DUPLICATE_SLUG") return "slug";
+    if (code === "CAPACITY_BELOW_REGISTRATIONS") return "maxPlaces";
+    if (
+      code === "INVALID_TIME_RANGE" ||
+      code === "INVALID_SLOT_GRANULARITY" ||
+      code === "OUTSIDE_OPENING_HOURS"
+    ) {
+      return fields[0] ?? "endTime";
+    }
+    return fields[0] ?? "general";
+  };
+
+  const failSave = (cause: unknown) => {
+    if (isConflict(cause)) {
       setConflictDialog((current) => ({
-        initial: options ?? {},
+        initial: {},
         mode: "save",
-        preview: {
-          conflicts: Array.isArray(details.conflicts)
-            ? (details.conflicts as RingConflicts["conflicts"])
-            : (current?.preview.conflicts ?? []),
-          trainingBookings: Array.isArray(details.bookings)
-            ? (details.bookings as RingConflicts["trainingBookings"])
-            : (current?.preview.trainingBookings ?? []),
-        },
+        preview: previewFrom(cause, current?.preview),
       }));
       return;
     }
-    if (code === "STALE_VERSION") {
+    if (errorCode(cause) === "STALE_VERSION") {
       setFeedback({ message: t("admin-activities:form.stale"), tone: "danger" });
       setReload((value) => value + 1);
       return;
     }
-    const fields = errorFields(cause).map(fieldKey);
-    const target: FieldKey | undefined =
-      code === "SLUG_LOCKED" || code === "DUPLICATE_SLUG"
-        ? "slug"
-        : code === "CAPACITY_BELOW_REGISTRATIONS"
-          ? "maxPlaces"
-          : code === "INVALID_TIME_RANGE" ||
-              code === "INVALID_SLOT_GRANULARITY" ||
-              code === "OUTSIDE_OPENING_HOURS"
-            ? (fields[0] ?? "endTime")
-            : fields[0];
-    if (target !== undefined && target !== "general") {
+    const target = saveErrorTarget(cause);
+    if (target !== "general") {
       setErrors({ [target]: errorMessage(cause) });
     } else {
       setFeedback({ message: errorMessage(cause), tone: "danger" });
     }
   };
 
+  /**
+   * [DESA] (`PATCH` diff + `version`). With `options` it runs from the conflict dialog: a new
+   * conflict refreshes the dialog and, like `ADMIN_TEXT_REQUIRED` or an error without a field,
+   * rejects so the dialog shows it; a stale version or a field error closes the dialog and
+   * lands on the form.
+   */
   const save = async (options?: ConflictOptions): Promise<boolean> => {
     const body = diff();
-    if (body === undefined) return false;
+    if (body === undefined) {
+      setConflictDialog(undefined);
+      return false;
+    }
     setPending("save");
     setErrors({});
     try {
@@ -499,21 +557,43 @@ export function ActivityPage({
       setConflictDialog(undefined);
       return true;
     } catch (cause) {
-      if (options !== undefined && errorCode(cause) === "ADMIN_TEXT_REQUIRED") throw cause;
-      failSave(cause, options);
+      if (options !== undefined) {
+        if (isConflict(cause)) {
+          setConflictDialog((current) =>
+            current === undefined
+              ? current
+              : { ...current, preview: previewFrom(cause, current.preview) },
+          );
+          throw cause;
+        }
+        if (errorCode(cause) === "ADMIN_TEXT_REQUIRED") throw cause;
+        if (errorCode(cause) !== "STALE_VERSION" && saveErrorTarget(cause) === "general") {
+          throw cause;
+        }
+        setConflictDialog(undefined);
+      }
+      failSave(cause);
       return false;
     } finally {
       setPending(undefined);
     }
   };
 
-  const publishWith = async (options: ConflictOptions & { notifyEmail: boolean }) => {
+  /**
+   * `POST …/publication` (R-07-05) from the plain confirm or from the conflict dialog; one
+   * `Idempotency-Key` per payload. `ACTIVITY_INCOMPLETE` closes both and marks the fields; new
+   * conflicts open (or refresh) the dialog; every other error rejects so the caller shows it
+   * inside the modal the admin is looking at.
+   */
+  const publishWith = async (
+    options: ConflictOptions & { notifyEmail: boolean },
+    source: "confirm" | "dialog",
+  ) => {
     try {
-      // A key per attempt: a retry with other options must not replay the first answer.
       const result = await client.POST("/activities/{id}/publication", {
         body: options,
         params: {
-          header: { "Idempotency-Key": crypto.randomUUID() },
+          header: { "Idempotency-Key": publicationKeys.keyFor(options) },
           path: { id: activity.id },
         },
       });
@@ -522,25 +602,17 @@ export function ActivityPage({
       setConflictDialog(undefined);
       applySaved(result.data, t("admin-activities:form.published"));
     } catch (cause) {
-      const code = errorCode(cause);
-      const details = errorDetails(cause);
-      if (code === "RING_BLOCK_CONFLICT" || code === "RING_HAS_BOOKINGS") {
+      if (isConflict(cause)) {
+        setConflictDialog((current) =>
+          current === undefined
+            ? { initial: options, mode: "publish", preview: previewFrom(cause, undefined) }
+            : { ...current, preview: previewFrom(cause, current.preview) },
+        );
+        if (source === "dialog") throw cause;
         setConfirmPublish(false);
-        setConflictDialog((current) => ({
-          initial: options,
-          mode: "publish",
-          preview: {
-            conflicts: Array.isArray(details.conflicts)
-              ? (details.conflicts as RingConflicts["conflicts"])
-              : (current?.preview.conflicts ?? []),
-            trainingBookings: Array.isArray(details.bookings)
-              ? (details.bookings as RingConflicts["trainingBookings"])
-              : (current?.preview.trainingBookings ?? []),
-          },
-        }));
         return;
       }
-      if (code === "ACTIVITY_INCOMPLETE") {
+      if (errorCode(cause) === "ACTIVITY_INCOMPLETE") {
         setConfirmPublish(false);
         setConflictDialog(undefined);
         const fields = errorFields(cause).map(fieldKey);
@@ -552,10 +624,36 @@ export function ActivityPage({
         setFeedback({ message: t("admin-activities:publishDialog.incomplete"), tone: "danger" });
         return;
       }
-      if (code === "ADMIN_TEXT_REQUIRED") throw cause;
-      setConfirmPublish(false);
-      setConflictDialog(undefined);
-      setFeedback({ message: errorMessage(cause), tone: "danger" });
+      if (errorCode(cause) === "ADMIN_TEXT_REQUIRED" && source === "confirm") {
+        // The plain confirm has no text field: reopen as the conflict dialog asking for it.
+        setConfirmPublish(false);
+        const preview = await client
+          .GET("/activities/{id}/ring-conflicts", { params: { path: { id: activity.id } } })
+          .then(
+            (result) => result.data ?? { conflicts: [], trainingBookings: [] },
+            () => ({ conflicts: [], trainingBookings: [] }),
+          );
+        setConflictDialog({
+          askText: errorMessage(cause),
+          initial: options,
+          mode: "publish",
+          preview,
+        });
+        return;
+      }
+      throw cause;
+    }
+  };
+
+  const confirmPlainPublish = async () => {
+    setPublishing(true);
+    setPublishError(undefined);
+    try {
+      await publishWith({ notifyEmail }, "confirm");
+    } catch (cause) {
+      setPublishError(errorMessage(cause));
+    } finally {
+      setPublishing(false);
     }
   };
 
@@ -567,8 +665,10 @@ export function ActivityPage({
         params: { path: { id: activity.id } },
       });
       const preview = result.data ?? { conflicts: [], trainingBookings: [] };
+      publicationKeys.reset();
       if (preview.conflicts.length === 0 && preview.trainingBookings.length === 0) {
         setNotifyEmail(false);
+        setPublishError(undefined);
         setConfirmPublish(true);
       } else {
         setConflictDialog({ initial: {}, mode: "publish", preview });
@@ -601,6 +701,7 @@ export function ActivityPage({
       const result = await client.GET("/activities/{id}/cancellation-preview", {
         params: { path: { id: activity.id } },
       });
+      cancellationKeys.reset();
       if (result.data !== undefined) setCancelPreview(result.data);
     } catch (cause) {
       setFeedback({ message: errorMessage(cause), tone: "danger" });
@@ -610,10 +711,11 @@ export function ActivityPage({
   };
 
   const cancelActivity = async (reason: "CLUB_MANUAL" | "DELETED", adminText?: string) => {
+    const body = { reason, ...(adminText === undefined ? {} : { adminText }) };
     const result = await client.POST("/activities/{id}/cancellation", {
-      body: { reason, ...(adminText === undefined ? {} : { adminText }) },
+      body,
       params: {
-        header: { "Idempotency-Key": crypto.randomUUID() },
+        header: { "Idempotency-Key": cancellationKeys.keyFor(body) },
         path: { id: activity.id },
       },
     });
@@ -628,10 +730,20 @@ export function ActivityPage({
     applySaved(result.data, t("admin-activities:form.cancelled"));
   };
 
-  /** Image and documents change the activity's version: refetch it and keep the form edits. */
+  /**
+   * Image and documents change the activity's version: refetch it and rebase only the user's
+   * own edits on the fresh copy (R-07-04), so another admin's changes are neither lost nor
+   * overwritten by the next [DESA].
+   */
   const refreshVersion = async () => {
     const result = await client.GET("/activities/{id}", { params: { path: { id: activity.id } } });
-    if (result.data !== undefined) setActivity(result.data);
+    if (result.data === undefined) return;
+    const fresh = result.data;
+    const previous = formOf(activity);
+    setActivity(fresh);
+    setForm((current) =>
+      current === undefined ? formOf(fresh) : rebaseForm(current, previous, formOf(fresh)),
+    );
   };
 
   const tooLarge = (file: File) => file.size > settings.maxSizeMb * 1024 * 1024;
@@ -781,7 +893,7 @@ export function ActivityPage({
       : levels
           .filter((level) => form.levelIds.includes(level.id))
           .map((level) => level.name)
-          .join(", ");
+          .join(t("admin-activities:form.levelSeparator"));
   const fieldError = (key: FieldKey) => (errors[key] === undefined ? {} : { error: errors[key] });
   const busy = pending !== undefined;
 
@@ -1331,6 +1443,7 @@ export function ActivityPage({
               <Button
                 disabled={busy}
                 onClick={() => {
+                  cancellationKeys.reset();
                   setConfirmDelete(true);
                 }}
                 variant="danger"
@@ -1372,6 +1485,11 @@ export function ActivityPage({
             />
             <span aria-hidden="true">{t("admin-activities:publishDialog.notifyEmail")}</span>
           </div>
+          {publishError === undefined ? null : (
+            <p className="ah-form-field__error" role="alert">
+              {publishError}
+            </p>
+          )}
           <div className="activity-modal__actions">
             <Button
               onClick={() => {
@@ -1381,7 +1499,12 @@ export function ActivityPage({
             >
               {t("admin-activities:common.back")}
             </Button>
-            <Button onClick={() => void publishWith({ notifyEmail })}>
+            <Button
+              disabled={publishing}
+              loading={publishing}
+              loadingLabel={t("admin-activities:common.saving")}
+              onClick={() => void confirmPlainPublish()}
+            >
               {t("admin-activities:publishDialog.confirm")}
             </Button>
           </div>
@@ -1389,15 +1512,15 @@ export function ActivityPage({
       ) : null}
       {conflictDialog === undefined ? null : (
         <PublishConflictsDialog
+          {...(conflictDialog.askText === undefined ? {} : { askText: conflictDialog.askText })}
           initial={conflictDialog.initial}
-          key={JSON.stringify(conflictDialog.preview)}
           mode={conflictDialog.mode}
           onClose={() => {
             setConflictDialog(undefined);
           }}
           onConfirm={async (options) => {
             if (conflictDialog.mode === "publish") {
-              await publishWith(options);
+              await publishWith(options, "dialog");
             } else {
               await save({
                 ...(options.adminText === undefined ? {} : { adminText: options.adminText }),

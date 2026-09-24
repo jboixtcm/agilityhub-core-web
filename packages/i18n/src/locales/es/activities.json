@@ -3,7 +3,9 @@
     "title": "Actividades",
     "intro": "Seleccionad la actividad o clase que queráis reservar.",
     "loading": "Cargando las actividades",
-    "separator": " · "
+    "separator": " · ",
+    "error": "No se han podido cargar las actividades.",
+    "retry": "Volver a intentarlo"
   },
   "list": {
     "freeSeats": "{count, plural, one {# plaza} other {# plazas}}",
@@ -14,6 +16,9 @@
   "detail": {
     "title": "Actividad",
     "back": "Volver",
+    "backGlyph": "‹",
+    "placeSeparator": " · ",
+    "ringSeparator": ", ",
     "close": "Cerrar",
     "loading": "Cargando la actividad",
     "loadError": "No se ha podido cargar la actividad.",

@@ -11,17 +11,37 @@ export type ActivityState = components["schemas"]["Activity"]["state"];
 const LOCAL_DATE_TIME = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/u;
 
 /**
- * Hours of a club-local `startsAtLocal`/`endsAtLocal` pair (S07 form B): the api writes
- * `T00:00` without hours and repeats the start (or `T23:59`) without an end.
+ * Hours of a club-local `startsAtLocal`/`endsAtLocal` pair (S07 form B). The api
+ * (`ActivityTimes`) writes `T00:00` as the start without hours and the next day at `T00:00`
+ * as the end without an end time: both mean «no hours» here (E4-T06 will send `null`).
  */
 export function localHours(
   startsAtLocal: string,
   endsAtLocal: string,
 ): { end: string | null; start: string | null } {
-  const start = LOCAL_DATE_TIME.exec(startsAtLocal)?.[2] ?? null;
-  const end = LOCAL_DATE_TIME.exec(endsAtLocal)?.[2] ?? null;
-  if (start === null || start === "00:00") return { end: null, start: null };
-  return { end: end === null || end === start || end === "23:59" ? null : end, start };
+  const startMatch = LOCAL_DATE_TIME.exec(startsAtLocal);
+  const endMatch = LOCAL_DATE_TIME.exec(endsAtLocal);
+  const start = startMatch?.[2] ?? null;
+  if (startMatch === null || start === null || start === "00:00") {
+    return { end: null, start: null };
+  }
+  const end =
+    endMatch === null ||
+    endMatch[1] !== startMatch[1] ||
+    endMatch[2] === undefined ||
+    endMatch[2] <= start
+      ? null
+      : endMatch[2];
+  return { end, start };
+}
+
+/** A path segment decoded, or as it came when it is malformed (`/activitats/%E0`). */
+export function safeDecode(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
 }
 
 export type LoadState<Data> =
@@ -54,6 +74,7 @@ export function useMeActivities(client: ApiClient, enabled: boolean) {
     };
   }, [client, enabled, reload]);
   const refetch = useCallback(() => {
+    setState({ status: "loading" });
     setReload((value) => value + 1);
   }, []);
   return { ...state, refetch };

@@ -3,7 +3,9 @@
     "title": "Activities",
     "intro": "Choose the activity or class you want to book.",
     "loading": "Loading the activities",
-    "separator": " · "
+    "separator": " · ",
+    "error": "The activities could not be loaded.",
+    "retry": "Try again"
   },
   "list": {
     "freeSeats": "{count, plural, one {# place} other {# places}}",
@@ -14,6 +16,9 @@
   "detail": {
     "title": "Activity",
     "back": "Go back",
+    "backGlyph": "‹",
+    "placeSeparator": " · ",
+    "ringSeparator": ", ",
     "close": "Close",
     "loading": "Loading the activity",
     "loadError": "The activity could not be loaded.",

@@ -123,7 +123,7 @@ export function CancelActivityModal({
                             defaultValue: channel,
                           }),
                     )
-                    .join(" · ")}
+                    .join(t("admin-activities:cancelModal.channelSeparator"))}
                 </td>
               </tr>
             ))}

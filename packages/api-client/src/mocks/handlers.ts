@@ -1817,7 +1817,7 @@ export const handlers = [
               ...job,
               downloadUrl: `/api/v1/exports/${job.id}/download`,
               expiresAt: "2026-08-10T10:25:00Z",
-              fileName: `${job.listKey === "audit-entries" || job.listKey === undefined ? "auditoria" : job.listKey}_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
+              fileName: `auditoria_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
               progressPct: 100,
               rows: auditEntries.length,
               status: "READY",

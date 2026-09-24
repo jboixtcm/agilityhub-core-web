@@ -1,6 +1,6 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import type { UniversalFilter, UniversalListSavedView, UniversalListState } from "@agilityhub/ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { holidayDates } from "../planning/calendar-shared";
@@ -33,6 +33,26 @@ export interface ConflictOptions {
   adminText?: string;
   cancelBookings?: boolean;
   cancelClasses?: boolean;
+}
+
+/**
+ * One `Idempotency-Key` per payload (CONVENCIONS_API §7): a retry of the same body reuses its
+ * key, any other body gets a new one. `reset()` starts a new flow (a dialog opened again).
+ */
+export function usePayloadKeys() {
+  const keys = useRef(new Map<string, string>());
+  const keyFor = useCallback((payload: unknown) => {
+    const fingerprint = JSON.stringify(payload);
+    const known = keys.current.get(fingerprint);
+    if (known !== undefined) return known;
+    const key = crypto.randomUUID();
+    keys.current.set(fingerprint, key);
+    return key;
+  }, []);
+  const reset = useCallback(() => {
+    keys.current.clear();
+  }, []);
+  return useMemo(() => ({ keyFor, reset }), [keyFor, reset]);
 }
 
 export function errorCode(error: unknown): string | undefined {

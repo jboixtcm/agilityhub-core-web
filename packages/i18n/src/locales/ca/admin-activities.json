@@ -39,7 +39,10 @@
       "levelId": "Nivell",
       "registrationOpen": "Inscripció oberta"
     },
-    "typeSuffix": "· {type}",
+    "typeSuffix": " · {type}",
+    "ringSeparator": ", ",
+    "emptyFilteredTitle": "Cap activitat amb aquests criteris",
+    "emptyFilteredDescription": "Canvieu la cerca o els filtres per veure més resultats.",
     "allRings": "totes — bloquejades",
     "offSite": "— (fora del club)",
     "none": "—",
@@ -138,7 +141,8 @@
     "delete": "ELIMINA",
     "registrants": "Inscrits ({count}) ›",
     "stale": "Algú altre ha modificat l'activitat: s'han carregat les dades actuals. Revisa-les i torna a desar.",
-    "requiredToPublish": "Cal per publicar"
+    "requiredToPublish": "Cal per publicar",
+    "levelSeparator": ", "
   },
   "publishDialog": {
     "confirmTitle": "Publicar l'activitat",
@@ -146,7 +150,9 @@
     "notifyEmail": "Avisa també per correu",
     "confirm": "PUBLICA",
     "conflictsTitle": "Conflictes de pista",
-    "classesLabel": "Classes en conflicte",
+    "classesLabel": "Classes i bloquejos en conflicte",
+    "ringBlock": "bloqueig de pista",
+    "ringBlockNotForceable": "Un bloqueig de pista no es pot anul·lar des d'aquí: canvia les pistes o l'horari de l'activitat.",
     "conflictRow": "{ring} · {label} · {from}–{to}",
     "bookedCount": "{count, plural, one {# inscrit} other {# inscrits}}",
     "trainingTitle": "Reserves d'entrenament",
@@ -169,6 +175,7 @@
       "SMS": "SMS"
     },
     "smsPhones": "SMS ({count} telèfons)",
+    "channelSeparator": " · ",
     "text": "Text de l'avís",
     "confirm": "{count, plural, one {CANCEL·LA I AVISA L'INSCRIT} other {CANCEL·LA I AVISA ELS # INSCRITS}}",
     "simpleTitle": "Vols cancel·lar l'activitat?",
@@ -185,6 +192,7 @@
     "error": "No s'han pogut carregar els inscrits.",
     "open": "Obre la fitxa de {name}",
     "member": "{name} · {number}",
+    "contactSeparator": " · ",
     "waitlisted": "en llista d'espera ({position})",
     "statuses": {
       "all": "Tots"

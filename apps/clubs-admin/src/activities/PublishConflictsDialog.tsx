@@ -13,11 +13,16 @@ import {
 export type ConflictDialogMode = "publish" | "save";
 
 /**
- * R-07-05 dialog: the classes and training bookings that collide with the activity's ring
- * blocks, the options that force them («anul·la les classes…», «cancel·la les reserves…») and
- * the notice text, required when a conflicting class has registrants. Mounted only while open.
+ * R-07-05 dialog: the classes, ring blocks and training bookings that collide with the
+ * activity's ring blocks. Only classes («anul·la les classes…») and training bookings
+ * («cancel·la les reserves…») can be forced; another ring block (`type: RING_BLOCK`) cannot,
+ * so its presence keeps [PUBLICA I APLICA] disabled with the reason. The notice text is
+ * required when a conflicting class has registrants. Mounted only while open; `onConfirm`
+ * rejects with the api error to show inside the dialog (the parent refreshes `preview` from a
+ * new `RING_BLOCK_CONFLICT`/`RING_HAS_BOOKINGS`).
  */
 export function PublishConflictsDialog({
+  askText,
   initial,
   mode,
   onClose,
@@ -25,6 +30,8 @@ export function PublishConflictsDialog({
   preview,
   ringName,
 }: {
+  /** Message of an `ADMIN_TEXT_REQUIRED` answered before the dialog opened. */
+  askText?: string;
   initial?: ConflictOptions & { notifyEmail?: boolean };
   mode: ConflictDialogMode;
   onClose: () => void;
@@ -40,13 +47,23 @@ export function PublishConflictsDialog({
   const [adminText, setAdminText] = useState(initial?.adminText ?? "");
   const [notifyEmail, setNotifyEmail] = useState(initial?.notifyEmail ?? false);
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<{ field: boolean; message: string }>();
+  const [error, setError] = useState<{ field: boolean; message: string } | undefined>(
+    askText === undefined ? undefined : { field: true, message: askText },
+  );
+  // The api may still ask for the text (e.g. a class that got registrants meanwhile).
+  const [textAsked, setTextAsked] = useState(askText !== undefined);
 
-  const withClasses = preview.conflicts.length > 0;
+  const classConflicts = preview.conflicts.filter((conflict) => conflict.type === "CLASS");
+  const blockConflicts = preview.conflicts.filter((conflict) => conflict.type === "RING_BLOCK");
+  const withClasses = classConflicts.length > 0;
+  const withBlocks = blockConflicts.length > 0;
   const withBookings = preview.trainingBookings.length > 0;
+  const withText = withClasses || textAsked;
   const textRequired =
-    cancelClasses && preview.conflicts.some((conflict) => (conflict.bookedCount ?? 0) > 0);
+    textAsked ||
+    (cancelClasses && classConflicts.some((conflict) => (conflict.bookedCount ?? 0) > 0));
   const ready =
+    !withBlocks &&
     (!withClasses || cancelClasses) &&
     (!withBookings || cancelBookings) &&
     (!textRequired || adminText.trim() !== "");
@@ -59,14 +76,14 @@ export function PublishConflictsDialog({
       await onConfirm({
         ...(withBookings ? { cancelBookings } : {}),
         ...(withClasses ? { cancelClasses } : {}),
-        ...(adminText.trim() === "" ? {} : { adminText: adminText.trim() }),
+        ...(withText && adminText.trim() !== "" ? { adminText: adminText.trim() } : {}),
         notifyEmail,
       });
     } catch (cause) {
-      setError({
-        field: errorCode(cause) === "ADMIN_TEXT_REQUIRED",
-        message: errorMessage(cause),
-      });
+      const textMissing = errorCode(cause) === "ADMIN_TEXT_REQUIRED";
+      if (textMissing) setTextAsked(true);
+      setError({ field: textMissing, message: errorMessage(cause) });
+    } finally {
       setPending(false);
     }
   };
@@ -79,7 +96,7 @@ export function PublishConflictsDialog({
       title={t("admin-activities:publishDialog.conflictsTitle")}
     >
       <div className="activity-conflicts">
-        {withClasses ? (
+        {preview.conflicts.length > 0 ? (
           <ul
             aria-label={t("admin-activities:publishDialog.classesLabel")}
             className="activity-conflicts__list"
@@ -95,13 +112,20 @@ export function PublishConflictsDialog({
                   })}
                 </span>
                 <strong>
-                  {t("admin-activities:publishDialog.bookedCount", {
-                    count: conflict.bookedCount ?? 0,
-                  })}
+                  {conflict.type === "RING_BLOCK"
+                    ? t("admin-activities:publishDialog.ringBlock")
+                    : t("admin-activities:publishDialog.bookedCount", {
+                        count: conflict.bookedCount ?? 0,
+                      })}
                 </strong>
               </li>
             ))}
           </ul>
+        ) : null}
+        {withBlocks ? (
+          <p className="activity-note activity-note--warning" role="note">
+            {t("admin-activities:publishDialog.ringBlockNotForceable")}
+          </p>
         ) : null}
         {withBookings ? (
           <section aria-labelledby="activity-conflicts-training">
@@ -145,7 +169,7 @@ export function PublishConflictsDialog({
             <span>{t("admin-activities:publishDialog.cancelBookings")}</span>
           </label>
         ) : null}
-        {withClasses ? (
+        {withText ? (
           <FormField
             {...(error?.field === true ? { error: error.message } : {})}
             id="activity-conflicts-text"
@@ -183,7 +207,7 @@ export function PublishConflictsDialog({
             {t("admin-activities:common.back")}
           </Button>
           <Button
-            disabled={!ready}
+            disabled={!ready || pending}
             loading={pending}
             loadingLabel={t("admin-activities:common.saving")}
             onClick={() => void confirm()}

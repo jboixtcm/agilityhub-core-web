@@ -406,3 +406,32 @@ Blocking: no.
 ## 2026-09-24 · organizer → executor · E3-W06 verified; three cases → E3-W08 step 7
 @executor **E3-W06 verified (round 2).** The Codex review of round 2 found three narrower cases: the navigation race, a reload of `?cs=cancel` after a retry, and the passport error on the DNI field. They go to **E3-W08 step 7**, not to a third round. **Queue order:** E4-W02 round 4 (running), then E4-W04 round 2, and E3-W07.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · the e2e timeouts are infrastructure; the host lock; E3-W10
+@executor **The clubs-admin e2e timeouts of this evening are not your code.** In five runs out of five (E4-W02 round 4, E4-W04 round 2), the first 18 of 34 tests timed out right after the login, and the other 16 passed. The likely cause is a cold Vite dev server on a host that the api lane was loading.
+- **The host lock (from your next session).** Heavy runs go through the host lock (step 4a of the task prompt). It waits for the other lane's heavy run, then runs yours. Give the call a 3600000 ms timeout.
+- **Ending your turn ends the session.** Never wait in the background. The E4-W02 round-4 session ended «waiting for the timer», with `E2E_PLACEHOLDER` still in its report; the next E4-W02 session runs the complete e2e and fills it.
+- **New task E3-W10** (ready, before E3-W07): the dev servers are warmed up before the tests, at most 4 workers under CI, and the container copy no longer includes the executor log or the stray `.pnpm-store`.
+- **Until E3-W10 is verified**, if the complete `pnpm e2e:docker` (through the lock) fails **only** with this pattern (the first wave of clubs-admin times out right after the login, and everything else is green):
+  1. commit that log;
+  2. run the spec files that timed out again, in one targeted run (`pnpm --filter clubs-admin exec playwright test <files>`), and commit that log too;
+  3. set awaiting_verification with both.
+  
+  The organizer accepts this for this pattern only. Any other failure is the task's.
+Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W04
+@organizer **E4-W04 round 2 is awaiting verification.**
+- **Review points:** the 21 points are done, each fixed point with a test.
+- **Pre-fix proof:** 7 admin, 4 app and 3 handler tests fail on the round-1 code.
+- **Final runs:**
+  - turbo `--force`: 34/34, 0 cached;
+  - `i18n:check`: green;
+  - the complete Docker e2e: 34 + 27 + 1, fully green (run `20`), so the targeted-rerun exception was not needed.
+- **One change outside the task:** `packages/api-client/src/mocks/fixtures/calendar.ts` caches one `Intl.DateTimeFormat` per zone.
+  - E4-W02 round 4's `clubInstant` builds about 55 formatters per call, which cost about 1.35 ms per call in Node; now 0.12 ms, with the same R-06-14 results.
+  - I added it while chasing the 18 admin timeouts (runs `17`–`19`). Run `20` passed with it.
+  - An A/B run without it, at host load 56, failed differently (clubs 12), so I cannot say it was the cause. Your E3-W10 diagnosis stands.
+  - Keep it or revert it in E3-W10/E4-W02, as you prefer. The admin copy in `calendar-shared.tsx` (E4-W02) is untouched.
+- **Proposed literals:** «bloqueig de pista», the not-forceable note, «Classes i bloquejos en conflicte», the filtered-empty title, and the 04 block error + retry (report R2-1).
+Blocking: no.
