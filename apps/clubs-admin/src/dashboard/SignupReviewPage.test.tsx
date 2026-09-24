@@ -17,18 +17,52 @@ beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
 afterEach(() => { cleanup(); server.resetHandlers(); resetDashboardMockState(); mockScenario("admin"); });
 afterAll(() => { server.close(); });
 
-// The real core returns a PENDING member without `plan` and with the account masked group by group.
-const pendingMemberFetch: typeof fetch = async (input, init) => {
-  const response = await fetch(input, init);
-  const request = input instanceof Request ? input : new Request(input, init);
-  if (request.method !== "GET" || !new URL(request.url).pathname.endsWith(`/members/${memberId}/signup`)) return response;
-  const body = (await response.json()) as { member: Record<string, unknown> & { paymentMethod?: Record<string, unknown> } };
+type SignupBody = Record<string, unknown> & {
+  member: Record<string, unknown> & { paymentMethod?: Record<string, unknown> | null };
+  signup: Record<string, unknown>;
+};
+
+// Rewrites the GET /members/{id}/signup response (and optionally the holder's record) the way the real core sends it.
+function signupFetch(
+  mutate: (body: SignupBody) => void,
+  holder?: (body: Record<string, unknown>) => void,
+  sent: unknown[] = [],
+): typeof fetch {
+  return async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    const path = new URL(request.url).pathname;
+    if (request.method === "POST" && path.endsWith(`/members/${memberId}/validation`)) {
+      sent.push(await request.clone().json());
+    }
+    const response = await fetch(input, init);
+    if (request.method !== "GET") return response;
+    if (path.endsWith(`/members/${memberId}/signup`)) {
+      const body = (await response.json()) as SignupBody;
+      mutate(body);
+      return Response.json(body, { status: response.status });
+    }
+    if (holder !== undefined && /\/members\/[^/]+$/u.test(path)) {
+      const body = (await response.json()) as Record<string, unknown>;
+      holder(body);
+      return Response.json(body, { status: response.status });
+    }
+    return response;
+  };
+}
+
+// The real core returns a PENDING member without `plan` and with the account masked with a single group.
+const pendingMemberFetch = signupFetch((body) => {
   delete body.member.plan;
   delete body.member.planId;
-  body.member.maskedAccount = "···· ···· ···· ···· 7719";
-  if (body.member.paymentMethod !== undefined) body.member.paymentMethod.maskedAccount = "···· ···· ···· ···· 7719";
-  return Response.json(body, { status: response.status });
-};
+  body.member.maskedAccount = "···· 7719";
+  if (body.member.paymentMethod != null) body.member.paymentMethod.maskedAccount = "···· 7719";
+});
+
+function hasNull(value: unknown): boolean {
+  if (value === null) return true;
+  if (typeof value !== "object") return false;
+  return Object.values(value as Record<string, unknown>).some(hasNull);
+}
 
 async function renderReview(onNavigate = vi.fn(), fetchOverride?: typeof fetch) {
   window.history.pushState(null, "", `/preinscripcions/${memberId}`);
@@ -45,7 +79,7 @@ describe("T-04-33 D2 signup validation", () => {
     expect(screen.getByText("47·····2K")).toBeVisible();
     expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", "https://wa.me/34655123123");
     expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi · tarifa familiar en validar")).toBeVisible();
-    expect(screen.getByText("Domiciliació · ES02 ···· 7719 · titular: la mateixa")).toBeVisible();
+    expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
     expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute("href", "https://files.example.test/cartilla_Kiwi_1.jpg");
     expect(screen.getByText("3 adjunts")).toBeVisible();
     expect(screen.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
@@ -62,7 +96,66 @@ describe("T-04-33 D2 signup validation", () => {
 
     expect(await screen.findByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
     expect(screen.getByText("obligatori")).toBeVisible();
-    expect(screen.getByText("Domiciliació · ···· 7719 · titular: la mateixa")).toBeVisible();
+    // R-03-27: the single-group form the core sends today is shown in the one masked-IBAN format.
+    expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
+  });
+
+  it.each([
+    [0, "pendent des d'avui"],
+    [1, "pendent des de fa 1 dia"],
+    [5, "pendent des de fa 5 dies"],
+  ])("shows the pending badge as an ICU plural for %i days", async (days, text) => {
+    await renderReview(vi.fn(), signupFetch((body) => { body.signup.pendingDays = days; }));
+    expect(screen.getByText(text)).toHaveClass("ah-badge");
+  });
+
+  it("tolerates null optional fields (INC-08) and never sends null back", async () => {
+    const sent: unknown[] = [];
+    const navigate = await renderReview(
+      vi.fn(),
+      signupFetch(
+        (body) => {
+          body.member.plan = null;
+          body.member.maskedAccount = null;
+          body.member.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
+          body.upfront = null;
+        },
+        (holder) => { holder.familyGroupId = null; },
+        sent,
+      ),
+    );
+    expect(screen.getByText("Domiciliació · — · titular: la mateixa")).toBeVisible();
+    expect(screen.queryByText("Import efectivament cobrat:")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
+    // The claim is FOUND but the holder has no group: D2 stops instead of sending `familyGroupId: null`.
+    expect(await screen.findByText("No s'ha pogut completar l'acció.", { exact: false })).toBeVisible();
+    expect(sent.filter((body) => typeof body === "object" && body !== null && "familyGroupId" in body)).toEqual([]);
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("validates a signup with a null payment method, upfront and family claim without sending null", async () => {
+    const sent: unknown[] = [];
+    const navigate = await renderReview(
+      vi.fn(),
+      signupFetch(
+        (body) => {
+          body.member.paymentMethod = null;
+          body.member.maskedAccount = null;
+          body.familyGroupClaim = null;
+          body.upfront = null;
+        },
+        undefined,
+        sent,
+      ),
+    );
+    expect(screen.getAllByText("—").length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
+    await waitFor(() => { expect(navigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    const validation = sent.at(-1);
+    expect(validation).toBeDefined();
+    expect(hasNull(validation)).toBe(false);
+    expect(validation).not.toHaveProperty("familyGroupId");
+    expect(validation).not.toHaveProperty("upfrontAmountPaid");
   });
 
   it("shows signup warnings as compact header badges", async () => {
@@ -84,6 +177,9 @@ describe("T-04-33 D2 signup validation", () => {
     fireEvent.change(nameInput, { target: { value: "Mariona" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    const toast = screen.getByText("Les dades s'han actualitzat.").closest(".ah-toast");
+    expect(toast).toHaveClass("ah-tone--success");
+    expect(toast).toHaveAttribute("role", "status");
 
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });

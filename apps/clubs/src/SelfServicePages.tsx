@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
+import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -1167,14 +1167,14 @@ export function MyDataPage({ client }: { client: ApiClient }) {
 
         {branding.modules.includes("BILLING") &&
         profile.paymentMethod?.type === "SEPA_DD" &&
-        profile.paymentMethod.maskedAccount !== undefined ? (
+        fmtMaskedIban(profile.paymentMethod.maskedAccount) !== null ? (
           <section>
             <h2>{t("census:myData.directDebit")}</h2>
             <Input
               aria-label={t("census:myData.directDebit")}
               className="my-data-form__masked"
               readOnly
-              value={profile.paymentMethod.maskedAccount}
+              value={fmtMaskedIban(profile.paymentMethod.maskedAccount) ?? ""}
             />
             <p className="my-data-form__help">{t("census:myData.directDebitHelp")}</p>
           </section>

@@ -34,6 +34,7 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.getByText("87%")).toBeVisible();
     expect(screen.getByText("56")).toBeVisible();
     expect(screen.getByText(/142\/163 places/u)).toBeVisible();
+    expect(screen.getByText("1 de fa més de 2 dies")).toBeVisible();
     expect(screen.getAllByText(/avisad[as]/u).length).toBeGreaterThan(0);
     expect(screen.getByText("anul·lada", { exact: true })).toBeVisible();
     expect(screen.getByText(/anul·lada · avisada Laura \+ Duna/u)).toBeVisible();
@@ -68,5 +69,18 @@ describe("T-14-25 D1 dashboard", () => {
 
     fireEvent.focus(window);
     await waitFor(() => { expect(get).toHaveBeenCalledTimes(2); });
+  });
+
+  it("uses the same ICU day plural as D2 in the pending signups card", async () => {
+    const fetchOneDay: typeof fetch = async (input, init) => {
+      const response = await fetch(input, init);
+      const request = input instanceof Request ? input : new Request(input, init);
+      if (!new URL(request.url).pathname.endsWith("/dashboard")) return response;
+      const body = (await response.json()) as { kpis: { pendingSignups: { warnDays: number } } };
+      body.kpis.pendingSignups.warnDays = 1;
+      return Response.json(body, { status: response.status });
+    };
+    await renderDashboard(vi.fn(), createApiClient({ baseUrl: `${window.location.origin}/api/v1`, fetch: fetchOneDay }));
+    expect(await screen.findByText("1 de fa més de 1 dia")).toBeVisible();
   });
 });

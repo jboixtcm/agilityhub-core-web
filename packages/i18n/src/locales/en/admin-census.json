@@ -242,7 +242,7 @@
   },
   "signupReview": {
     "header": "Signup #{number} — {name} + {dogs}",
-    "pending": "pending for {count} days",
+    "pending": "{count, plural, =0 {pending since today} one {pending for # day} other {pending for # days}}",
     "readmission": "Readmission",
     "newDog": "new dog",
     "person": "Person",

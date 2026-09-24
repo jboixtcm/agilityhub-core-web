@@ -16,7 +16,7 @@
     "week": "semana",
     "distinctMembers": "{count} personas diferentes",
     "pending": "Preinscripciones pendientes",
-    "older": "{count} de hace más de {days} días"
+    "older": "{count} de hace más de {days, plural, one {# día} other {# días}}"
   },
   "risk": {
     "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",

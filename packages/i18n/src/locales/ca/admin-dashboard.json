@@ -16,7 +16,7 @@
     "week": "setmana",
     "distinctMembers": "{count} persones diferents",
     "pending": "Preinscripcions pendents",
-    "older": "{count} de fa més de {days} dies"
+    "older": "{count} de fa més de {days, plural, one {# dia} other {# dies}}"
   },
   "risk": {
     "title": "Revisió de classes en risc — {time}, avui i {days} dies vista",

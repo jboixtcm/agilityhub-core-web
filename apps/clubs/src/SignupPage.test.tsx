@@ -401,7 +401,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament" });
     expect(await screen.findByText(/Pas 2 de 2/u)).toBeVisible();
     expect(screen.getByLabelText("Mètode de pagament actual")).toHaveValue(
-      "Domiciliació · ···· 2231",
+      "Domiciliació · ···· ···· ···· ···· 2231",
     );
     fireEvent.click(screen.getByLabelText("Accepto la política de privacitat"));
     fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));

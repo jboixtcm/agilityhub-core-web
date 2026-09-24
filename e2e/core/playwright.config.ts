@@ -34,6 +34,8 @@ function webServer(
 export default defineConfig({
   expect: { timeout: 15_000 },
   fullyParallel: false,
+  // INC-07: frames every stage's `oauth-token-calls.log` (the calls come from `oauth-token-log.ts`).
+  globalSetup: "./oauth-token-stage.ts",
   outputDir: `../../test-results/${process.env.CORE_EVIDENCE_SUBDIRECTORY ?? "core-e1"}`,
   reporter: "line",
   testDir: ".",

@@ -250,3 +250,18 @@ Blocking: no.
 - **Question:** point 4 asks for 403 on `GET /ring-blocks/{id}` for MEMBER. S06 §6, the OpenAPI («Staff or redacted MEMBER projection») and `MATRIU_PERMISOS` say MEMBER gets the redacted `RingBlockMemberView`. I implemented the redacted view; impersonation gets 403 and the cancellation gets 403 for both. If you want the 403 anyway, it is a one-line change.
 - **E4-W02 follow-up:** `CalendarDayPage` adds its own «Sense» column. Against the real `/day-grid`, which now sends one, it could show two.
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E3-W04
+@organizer **Awaiting verification + one INC-07 observation.**
+- **`fmtMaskedIban`** (`@agilityhub/i18n`) is used in D2/D5/D10/19/28. `compactMaskedAccount` is gone.
+- **D2:**
+  - the success toast now uses the success tone;
+  - ICU plurals, also on the D1 KPI «de fa més de n dies»;
+  - `null`s are treated as absent (INC-08);
+  - D2 now asks for the amount collected only when an upfront block exists. Before, a D2 with no upfront could not be validated.
+- **Real-core run:** `pnpm e2e:core E3-W04` passed 10/10 + 4/4, and `pnpm e2e` in Docker passed 1 + 25 + 29.
+- **INC-07:** `oauth-token-calls.log` now records whether a cookie was sent (never its value).
+  - Every `400` except one is the anonymous probe of a fresh context (`cookie=none`, `REFRESH_EXPIRED`).
+  - The exception is in T-01-22 (`apps/id` authorize resume): `refresh_token` with the cookie → `400 {"code":"REFRESH_EXPIRED"}`, 350 ms after a successful rotation. The test does not assert it. It looks like a stale rotated cookie. For the api: should that be `REFRESH_REUSED`?
+  - Details are in the E3-W04 report.
+Blocking: no.

@@ -1,7 +1,9 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-import { expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
+import { type Browser, type BrowserContext, type Page } from "@playwright/test";
+
+import { expect, test } from "./oauth-token-log";
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -387,16 +389,41 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const edit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
   await edit.getByLabel("IBAN").fill("ES9121000418450200051332");
+  const signupViewAfterEdit = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/members/${acceptedMemberId}/signup`) &&
+      response.request().method() === "GET",
+  );
   await edit.getByRole("button", { name: "DESA ELS CANVIS" }).click();
-  await expect(admin.getByText("Les dades s'han actualitzat.")).toBeVisible();
-  await expect(admin.getByText(/1332/u)).toBeVisible();
+  const viewAfterEdit = (await (await signupViewAfterEdit).json()) as {
+    member: { maskedAccount?: string | null; paymentMethod?: { maskedAccount?: string | null } | null };
+  };
+  // Real-core masked account after the IBAN edit; D2 shows it in the R-03-27 format.
+  writeFileSync(
+    join(evidenceDirectory, "d2-signup-masked-account-core.json"),
+    `${JSON.stringify(
+      {
+        maskedAccount: viewAfterEdit.member.maskedAccount ?? null,
+        paymentMethodMaskedAccount: viewAfterEdit.member.paymentMethod?.maskedAccount ?? null,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+  const savedToast = admin.locator(".ah-toast").filter({ hasText: "Les dades s'han actualitzat." });
+  await expect(savedToast).toBeVisible();
+  await expect(savedToast).toHaveClass(/ah-tone--success/u);
+  await expect(admin.getByText(/Domiciliació · ···· ···· ···· ···· 1332/u)).toBeVisible();
   await expect(
     admin.getByLabel("Modalitat i tarifa").locator("option:checked"),
   ).toHaveText(/€\/mes/u);
   await expect(admin.getByText("Pagament inicial pendent")).toHaveClass(/ah-badge/u);
   await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
   await screenshot(admin, "D2-signup-core-1280.png");
-  await completeValidation(admin, { nextInvoiceDate: { input: "01/10/2026", iso: "2026-10-01" } });
+  // A date different from the core's proposal, so the request proves the typed value is sent.
+  expect(view.proposals.nextInvoiceDate).not.toBe("2026-11-01");
+  await expect(admin.getByLabel("Data del proper rebut")).not.toHaveValue("01/11/2026");
+  await completeValidation(admin, { nextInvoiceDate: { input: "01/11/2026", iso: "2026-11-01" } });
   await admin.waitForTimeout(1_000);
   await navigateSpa(admin, "/abonats");
   await expect(admin.getByRole("heading", { name: "Abonats" })).toBeVisible();

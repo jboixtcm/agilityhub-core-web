@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
+import { fmtMaskedIban, fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -567,6 +567,7 @@ function MemberSummary({
     ),
   ].join(" · ");
   const memberPlan = plan?.id === member.planId ? plan : undefined;
+  const maskedIban = fmtMaskedIban(member.paymentMethod?.maskedAccount);
 
   return (
     <>
@@ -592,9 +593,7 @@ function MemberSummary({
                 {member.paymentMethod?.type === "SEPA_DD"
                   ? t("admin-census:member.payment.sepa")
                   : (member.paymentMethod?.type ?? t("admin-census:values.empty"))}
-                {member.paymentMethod?.maskedAccount === undefined ? null : (
-                  <strong> · {member.paymentMethod.maskedAccount}</strong>
-                )}{" "}
+                {maskedIban === null ? null : <strong> · {maskedIban}</strong>}{" "}
                 <Badge>{t("admin-census:member.payment.adminOnly")}</Badge>{" "}
                 <Button
                   className="census-record__inline-action"

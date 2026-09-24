@@ -1,4 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { fmtMaskedIban } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -525,7 +526,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 key: "paymentMethod",
                 label: t("census:members.columns.paymentMethod"),
                 render: (item: MemberListItem) =>
-                  item.paymentMethod?.maskedAccount ??
+                  fmtMaskedIban(item.paymentMethod?.maskedAccount) ??
                   item.paymentMethod?.channel ??
                   item.paymentMethod?.type ??
                   t("census:values.empty"),

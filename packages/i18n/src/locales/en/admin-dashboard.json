@@ -16,7 +16,7 @@
     "week": "week",
     "distinctMembers": "{count} different people",
     "pending": "Pending signups",
-    "older": "{count} older than {days} days"
+    "older": "{count} older than {days, plural, one {# day} other {# days}}"
   },
   "risk": {
     "title": "At-risk class review — {time}, today and {days} days ahead",

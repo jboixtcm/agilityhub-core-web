@@ -242,7 +242,7 @@
   },
   "signupReview": {
     "header": "Preinscripción #{number} — {name} + {dogs}",
-    "pending": "pendiente desde hace {count} días",
+    "pending": "{count, plural, =0 {pendiente desde hoy} one {pendiente desde hace # día} other {pendiente desde hace # días}}",
     "readmission": "Readmisión",
     "newDog": "perro nuevo",
     "person": "Persona",

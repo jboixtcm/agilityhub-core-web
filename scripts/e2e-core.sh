@@ -32,12 +32,21 @@ run_core_suite() {
   docker compose -f "$compose_file" --profile e2e run --rm playwright
 }
 
+# E1/E2 stage, then the E3 signup stage on a fresh seed.
+staged_e3=false
+if [[ "$evidence_subdirectory" == "E3-W03" || "$evidence_subdirectory" == "E3-W04" ]]; then
+  staged_e3=true
+fi
+
+# INC-07: every run starts a fresh oauth-token-calls.log; each stage appends its framed calls.
+: > "$evidence_directory/oauth-token-calls.log"
+
 cleanup
 # Optional second argument: run only these spec files in one seeded stage (`pnpm e2e:core E3-W03 e3-signup.spec.ts`).
 if [[ -n "${2:-}" ]]; then
   export CORE_TEST_FILES="$2"
   run_core_suite
-elif [[ "$evidence_subdirectory" == "E3-W03" ]]; then
+elif [[ "$staged_e3" == true ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
   run_core_suite
   cleanup
@@ -47,7 +56,7 @@ else
   run_core_suite
 fi
 
-if [[ "$evidence_subdirectory" == "E3-W03" ]]; then
+if [[ "$staged_e3" == true && -z "${2:-}" ]]; then
   docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
     mongodb://localhost:27017/agilityhub_e1_web --eval '
       const account = db.accounts.findOne({email: "nora.e3@example.test"});

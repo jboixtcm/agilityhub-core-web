@@ -253,7 +253,7 @@
   },
   "signupReview": {
     "header": "Preinscripció #{number} — {name} + {dogs}",
-    "pending": "pendent des de fa {count} dies",
+    "pending": "{count, plural, =0 {pendent des d'avui} one {pendent des de fa # dia} other {pendent des de fa # dies}}",
     "readmission": "Readmissió",
     "newDog": "nou gos",
     "person": "Persona",

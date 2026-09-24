@@ -47,6 +47,8 @@ test-results/
 !roadmap/evidence/E3-W03/11-playwright-all.log
 !roadmap/evidence/E3-W03/1[2-6]*.log
 !roadmap/evidence/E0-W08/*.log
+!roadmap/evidence/E3-W04/*.log
+!roadmap/evidence/E3-W05/*.log
 .DS_Store
 .env
 .env.*

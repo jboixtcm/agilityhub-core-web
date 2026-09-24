@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { useClubFormats } from "@agilityhub/i18n";
+import { fmtMaskedIban, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -64,8 +64,10 @@ function contactValue(member: Member): string {
   return [email, phone === undefined ? "" : `${phone.prefix} ${phone.number.slice(0, 3)} ··· ···`].filter(Boolean).join(" · ");
 }
 
-function compactMaskedAccount(value: string): string {
-  return value.replaceAll(/·+(?:\s+·+)+/gu, "····");
+// INC-08: a `null` group is absent, so D2 never sends `familyGroupId: null`.
+function holderFamilyGroupId(holder: object | undefined): string | undefined {
+  if (holder === undefined || !("familyGroupId" in holder)) return undefined;
+  return typeof holder.familyGroupId === "string" ? holder.familyGroupId : undefined;
 }
 
 function warningKey(warning: components["schemas"]["SignupWarning"]): string | undefined {
@@ -114,9 +116,9 @@ function EditSignupDrawer({
           contactEmails: member.contactEmails.map(({ email }) => ({ email })),
           firstName: member.firstName,
           gender: member.gender,
-          ...(member.idDocument === undefined ? {} : { idDocument: member.idDocument }),
+          ...(member.idDocument == null ? {} : { idDocument: member.idDocument }),
           lastName1: member.lastName1,
-          ...(member.lastName2 === undefined ? {} : { lastName2: member.lastName2 }),
+          ...(member.lastName2 == null ? {} : { lastName2: member.lastName2 }),
           ...(member.paymentMethod?.type === "SEPA_DD" && iban.trim() !== ""
             ? {
                 paymentMethod: {
@@ -187,7 +189,7 @@ function EditSignupDrawer({
         ))}
         <FormField id="signup-edit-id" label={t("admin-census:signupReview.fields.idDocument")}><Input id="signup-edit-id" onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, idDocument: { number: input, type: value.idDocument?.type ?? "OTHER" } })); }} value={member.idDocument?.number ?? ""} /></FormField>
         <FormField id="signup-edit-email" label={t("admin-census:signupReview.fields.email")}><Input id="signup-edit-email" onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, contactEmails: [{ bounced: false, email: input }] })); }} type="email" value={member.contactEmails[0]?.email ?? ""} /></FormField>
-        <FormField id="signup-edit-phone" label={t("admin-census:signupReview.fields.phone")}><Input id="signup-edit-phone" onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, phones: [{ ...(value.phones[0]?.label === undefined ? {} : { label: value.phones[0].label }), number: input, prefix: value.phones[0]?.prefix ?? "" }] })); }} value={member.phones[0]?.number ?? ""} /></FormField>
+        <FormField id="signup-edit-phone" label={t("admin-census:signupReview.fields.phone")}><Input id="signup-edit-phone" onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, phones: [{ ...(value.phones[0]?.label == null ? {} : { label: value.phones[0].label }), number: input, prefix: value.phones[0]?.prefix ?? "" }] })); }} value={member.phones[0]?.number ?? ""} /></FormField>
         {(["street", "postalCode", "city"] as const).map((key) => (
           <FormField id={`signup-edit-${key}`} key={key} label={t(`admin-census:signupReview.fields.${key}`)}><Input id={`signup-edit-${key}`} onChange={(event) => { const input = event.currentTarget.value; setMember((value) => ({ ...value, address: { ...value.address, [key]: input } })); }} value={member.address[key]} /></FormField>
         ))}
@@ -235,7 +237,7 @@ export function SignupReviewPage({
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [working, setWorking] = useState(false);
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<{ text: string; tone: "danger" | "success" }>();
   const [fieldErrors, setFieldErrors] = useState<Readonly<Record<string, string>>>({});
   const [levels, setLevels] = useState<Readonly<Record<string, string>>>({});
   const [planId, setPlanId] = useState("");
@@ -264,11 +266,12 @@ export function SignupReviewPage({
         setNextInvoiceInput(proposedDate === "" ? "" : formatPlainDate(proposedDate, "short"));
         const holderMemberId = result.data.familyGroupClaim?.holder?.id;
         setFamilyGroupId(undefined);
-        if (holderMemberId !== undefined) {
+        if (holderMemberId != null) {
           void client.GET("/members/{id}", { params: { path: { id: holderMemberId } } }).then(
             (holderResult) => {
-              if (holderResult.data !== undefined && "familyGroupId" in holderResult.data) {
-                setFamilyGroupId(holderResult.data.familyGroupId);
+              const holderGroupId = holderFamilyGroupId(holderResult.data);
+              if (holderGroupId !== undefined) {
+                setFamilyGroupId(holderGroupId);
               }
             },
             () => undefined,
@@ -316,19 +319,21 @@ export function SignupReviewPage({
   // A PENDING member has no plan reference yet: the proposed catalog plan decides.
   const monthly = (signup.member.plan?.type ?? proposedPlanType) === "MONTHLY";
   const stripePaid = (signup.upfront?.totalPaid.amountMinor ?? 0) > 0 && signup.upfront?.lines.every((line) => line.provider === "STRIPE" && line.status === "PAID") === true;
+  // Only an upfront block without a Stripe payment asks for the amount collected (null = no upfront, INC-08).
+  const manualUpfront = billing && signup.upfront != null && !stripePaid;
   const validationBody = (resolvedFamilyGroupId = familyGroupId): ValidationRequest => ({
     dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levels[dog.id] === undefined || levels[dog.id] === "" ? {} : { levelId: levels[dog.id] }) })),
     ...(nextInvoiceDate === "" ? {} : { nextInvoiceDate }),
     ...(planId === "" ? {} : { planId }),
     ...(priceId === "" ? {} : { priceId }),
     ...(resolvedFamilyGroupId === undefined ? {} : { familyGroupId: resolvedFamilyGroupId }),
-    ...(billing && !stripePaid ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
+    ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
     version: signup.version,
   });
 
   const validationError = (cause: unknown) => {
     setFieldErrors(errorFields(cause));
-    setMessage(isApiError(cause, "STALE_VERSION") ? t("admin-census:signupReview.stale") : isApiError(cause, "INVALID_STATE") ? t("admin-census:signupReview.invalidState") : t("admin-census:signupReview.genericError"));
+    setMessage({ text: isApiError(cause, "STALE_VERSION") ? t("admin-census:signupReview.stale") : isApiError(cause, "INVALID_STATE") ? t("admin-census:signupReview.invalidState") : t("admin-census:signupReview.genericError"), tone: "danger" });
   };
 
   const dryRun = async (nextPlanId: string) => {
@@ -345,22 +350,23 @@ export function SignupReviewPage({
   };
 
   const validate = async () => {
-    if (billing && !stripePaid && Number(manualPaid) === 0 && !confirmZero) { setMessage(t("admin-census:signupReview.confirmNothingPaid")); return; }
+    if (manualUpfront && Number(manualPaid) === 0 && !confirmZero) { setMessage({ text: t("admin-census:signupReview.confirmNothingPaid"), tone: "danger" }); return; }
     setWorking(true); setMessage(undefined); setFieldErrors({});
     try {
       let resolvedFamilyGroupId = familyGroupId;
       const holderMemberId = signup.familyGroupClaim?.holder?.id;
-      if (resolvedFamilyGroupId === undefined && holderMemberId !== undefined) {
+      if (resolvedFamilyGroupId === undefined && holderMemberId != null) {
         const holderResult = await client.GET("/members/{id}", {
           params: { path: { id: holderMemberId } },
         });
-        if (holderResult.data !== undefined && "familyGroupId" in holderResult.data) {
-          resolvedFamilyGroupId = holderResult.data.familyGroupId;
+        const holderGroupId = holderFamilyGroupId(holderResult.data);
+        if (holderGroupId !== undefined) {
+          resolvedFamilyGroupId = holderGroupId;
           setFamilyGroupId(resolvedFamilyGroupId);
         }
       }
       if (signup.familyGroupClaim?.status === "FOUND" && resolvedFamilyGroupId === undefined) {
-        setMessage(t("admin-census:signupReview.genericError"));
+        setMessage({ text: t("admin-census:signupReview.genericError"), tone: "danger" });
         setWorking(false);
         return;
       }
@@ -397,7 +403,7 @@ export function SignupReviewPage({
     .join(" + ");
   return (
     <section className="signup-review-page">
-      {message === undefined ? null : <Toast tone="danger">{message}</Toast>}
+      {message === undefined ? null : <Toast tone={message.tone}>{message.text}</Toast>}
       <header className="signup-review-page__header">
         <h1>{t("admin-census:signupReview.header", { number: signup.member.memberNumber ?? shortId(signup.member.id), name: signup.member.fullName, dogs: dogNames })}</h1>
         <Badge tone={warnDays !== undefined && signup.signup.pendingDays >= warnDays ? "warning" : "neutral"}>{t("admin-census:signupReview.pending", { count: signup.signup.pendingDays })}</Badge>
@@ -426,10 +432,12 @@ export function SignupReviewPage({
             </dd>
             <dt>{t("admin-census:signupReview.fields.payment")}</dt>
             <dd>
-              {payment === undefined
+              {payment == null
                 ? t("admin-census:values.empty")
                 : t("admin-census:signupReview.paymentSummary", {
-                    account: compactMaskedAccount(payment.maskedAccount ?? signup.member.maskedAccount ?? t("admin-census:values.empty")),
+                    account:
+                      fmtMaskedIban(payment.maskedAccount ?? signup.member.maskedAccount) ??
+                      t("admin-census:values.empty"),
                     holder:
                       payment.holderName === signup.member.fullName
                         ? t("admin-census:signupReview.sameHolder")
@@ -469,10 +477,10 @@ export function SignupReviewPage({
       </div>
       <Card className="signup-review-decision">
         <div><h2>{t("admin-census:signupReview.plan")}</h2><Select aria-label={t("admin-census:signupReview.plan")} onChange={(event) => void dryRun(event.currentTarget.value)} value={planId}><option value={signup.proposals.planId}>{planPrice === undefined ? (signup.member.plan?.name ?? planName ?? signup.proposals.planId) : t("admin-census:signupReview.planWithPrice", { plan: signup.member.plan?.name ?? planName ?? signup.proposals.planId, price: formatMoney(planPrice.amountMinor / 100) })}</option></Select></div>
-        {billing && signup.upfront !== undefined ? <div><h2>{t("admin-census:signupReview.upfront")}</h2><label>{t("admin-census:signupReview.actuallyPaid")} {stripePaid ? <><Input readOnly value={formatMoney(signup.upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></> : <Input min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); }} step="0.01" type="number" value={manualPaid} />}</label>{upfrontBreakdown === undefined || upfrontBreakdown === "" ? null : <small className="signup-review-upfront-breakdown">{t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}</small>}{stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}</div> : null}
+        {billing && signup.upfront != null ? <div><h2>{t("admin-census:signupReview.upfront")}</h2><label>{t("admin-census:signupReview.actuallyPaid")} {stripePaid ? <><Input readOnly value={formatMoney(signup.upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></> : <Input min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); }} step="0.01" type="number" value={manualPaid} />}</label>{upfrontBreakdown === undefined || upfrontBreakdown === "" ? null : <small className="signup-review-upfront-breakdown">{t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}</small>}{stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}</div> : null}
         <footer><Button onClick={() => { setEditOpen(true); }} variant="secondary"><Icon aria-hidden="true" name="edit" />{t("admin-census:signupReview.actions.edit")}</Button><Button onClick={() => { setRejectOpen(true); }} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button><Button loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button></footer>
       </Card>
-      <EditSignupDrawer client={client} key={signup.version} onClose={() => { setEditOpen(false); }} onSaved={() => { setEditOpen(false); setMessage(t("admin-census:signupReview.saved")); setReload((value) => value + 1); }} open={editOpen} signup={signup} />
+      <EditSignupDrawer client={client} key={signup.version} onClose={() => { setEditOpen(false); }} onSaved={() => { setEditOpen(false); setMessage({ text: t("admin-census:signupReview.saved"), tone: "success" }); setReload((value) => value + 1); }} open={editOpen} signup={signup} />
       <Modal closeLabel={t("admin-census:signupReview.cancel")} onClose={() => { setRejectOpen(false); }} open={rejectOpen} title={t("admin-census:signupReview.rejectTitle")}><FormField id="signup-reject-reason" label={t("admin-census:signupReview.rejectReason")}><Textarea id="signup-reject-reason" maxLength={500} minLength={3} onChange={(event) => { setRejectReason(event.currentTarget.value); }} value={rejectReason} /></FormField><p>{t("admin-census:signupReview.rejectHelp")}</p><Button disabled={rejectReason.trim().length < 3} loading={working} onClick={() => void reject()} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button></Modal>
     </section>
   );

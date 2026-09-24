@@ -1,0 +1,63 @@
+# stage start 2026-09-24T14:11:15.409Z · e1-core.spec.ts e2-core.spec.ts
+2026-09-24T14:11:16.474Z grant_type=refresh_token status=400 test="T-01-18 password login reaches the seeded account" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:16.712Z grant_type=password status=200 test="T-01-18 password login reaches the seeded account"
+2026-09-24T14:11:17.015Z grant_type=refresh_token status=200 test="T-01-18 password login reaches the seeded account"
+2026-09-24T14:11:17.479Z grant_type=refresh_token status=400 test="T-01-21 seeded administrator opens the real backoffice" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:17.710Z grant_type=password status=200 test="T-01-21 seeded administrator opens the real backoffice"
+2026-09-24T14:11:17.957Z grant_type=refresh_token status=200 test="T-01-21 seeded administrator opens the real backoffice"
+2026-09-24T14:11:18.462Z grant_type=refresh_token status=400 test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:18.600Z grant_type=password status=200 test="T-01-20 club session is restored by the core"
+2026-09-24T14:11:18.845Z grant_type=refresh_token status=200 test="T-01-20 club session is restored by the core"
+2026-09-24T14:11:19.047Z grant_type=refresh_token status=200 test="T-01-20 club session is restored by the core"
+2026-09-24T14:11:19.526Z grant_type=refresh_token status=400 test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:19.663Z grant_type=password status=200 test="T-01-20 club session is restored by the core"
+2026-09-24T14:11:19.896Z grant_type=refresh_token status=200 test="T-01-20 club session is restored by the core"
+2026-09-24T14:11:20.272Z grant_type=refresh_token status=400 test="T-01-19 magic link is delivered and exchanged end to end" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:20.732Z grant_type=refresh_token status=400 test="T-01-19 magic link is delivered and exchanged end to end" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:20.758Z grant_type=urn:agilityhub:grant:magic-link status=200 test="T-01-19 magic link is delivered and exchanged end to end"
+2026-09-24T14:11:21.100Z grant_type=refresh_token status=200 test="T-01-19 magic link is delivered and exchanged end to end"
+2026-09-24T14:11:21.504Z grant_type=refresh_token status=400 test="T-01-26 published seed enters without pending onboarding" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:21.660Z grant_type=password status=200 test="T-01-26 published seed enters without pending onboarding"
+2026-09-24T14:11:21.888Z grant_type=refresh_token status=200 test="T-01-26 published seed enters without pending onboarding"
+2026-09-24T14:11:22.307Z grant_type=refresh_token status=400 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:22.525Z grant_type=password status=200 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-09-24T14:11:22.746Z grant_type=refresh_token status=200 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-09-24T14:11:23.069Z grant_type=refresh_token status=200 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-09-24T14:11:23.581Z grant_type=refresh_token status=400 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:23.787Z grant_type=password status=200 test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-09-24T14:11:24.562Z grant_type=refresh_token status=400 test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:24.747Z grant_type=password status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:25.015Z grant_type=refresh_token status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:30.404Z grant_type=refresh_token status=400 test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:30.532Z grant_type=password status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:30.755Z grant_type=refresh_token status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:30.977Z grant_type=refresh_token status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:31.341Z grant_type=refresh_token status=200 test="T-03-42 real census flow, booking block and member profile"
+2026-09-24T14:11:42.784Z grant_type=refresh_token status=400 test="T-05-CP-07 real club page edit renders styled Markdown on screen 30" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:11:42.935Z grant_type=password status=200 test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+2026-09-24T14:11:43.190Z grant_type=refresh_token status=200 test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+2026-09-24T14:11:43.454Z grant_type=refresh_token status=200 test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+# stage end 2026-09-24T14:11:43.801Z · e1-core.spec.ts e2-core.spec.ts · 38 calls · 12 non-2xx
+# stage start 2026-09-24T14:13:17.220Z · e3-signup.spec.ts
+2026-09-24T14:13:17.916Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:18.566Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:18.933Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:19.326Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:19.847Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:20.275Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:20.457Z grant_type=password status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:20.669Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:23.313Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:23.330Z grant_type=urn:agilityhub:grant:magic-link status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:23.589Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:23.843Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:24.248Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:24.516Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:24.717Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:25.031Z grant_type=refresh_token status=400 test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-09-24T14:13:25.943Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:26.417Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:26.855Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:26.948Z grant_type=refresh_token status=200 test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-09-24T14:13:30.329Z grant_type=refresh_token status=400 test="T-04-34 signup.enabled=false shows only the configured closed text" body={"code":"REFRESH_EXPIRED"}
+# stage end 2026-09-24T14:13:30.470Z · e3-signup.spec.ts · 21 calls · 13 non-2xx

@@ -44,6 +44,8 @@ Planned: E3-W01 public stepper 16–19 (`/apuntat-hi/*`) + «add a dog» (`/goss
 
 Added 24-09: **E3-W04** follow-ups after the gate (D2 polish from the E3-W03 review, one masked-IBAN format R-03-27, null-tolerant D2, INC-07 evidence in the real-core e2e).
 
+Added 24-09 (Jordi: an exhaustive review of the E3 gate before the stage closes): **E3-W05**, the audit run (real-core e2e, complete e2e, fresh E3 screenshots against the mockups, spec-test traceability; no product change). Codex and the organizer audit the code separately; the consolidated report is `05-desenvolupament/backlog/revisio-porta-E3/` in the organizer's folder.
+
 ### Gate E3 (front — checked by the organizer)
 - [x] `pnpm e2e:core` green with the E3 scenarios (public signup → D1 → D2 → welcome mail → screen 03; rejection; add-dog → N-37; closed form). — organizer 24-09: E3-W03 round 2, `12-e2e-core.log` (10/10 + 4/4).
 - [x] Screenshots of 16–19, enviada, D1, D2 against the mockups; `signup`, `admin-dashboard`, `admin-census` keys complete in ca/es/en; vocabulary lint green. — organizer 24-09: D2 re-shot in round 2; the two cosmetic leftovers (success toast tone, «fa 0 dies») go to E3-W04.

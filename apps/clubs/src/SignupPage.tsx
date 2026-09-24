@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { LOCALE_STORAGE_KEY, productLocales, useClubFormats } from "@agilityhub/i18n";
+import { fmtMaskedIban, LOCALE_STORAGE_KEY, productLocales, useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -1434,7 +1434,7 @@ function PaymentStep({
                         paymentMethods.find(
                           (method) => method.type === config.member?.paymentMethodMasked?.type,
                         )?.label,
-                        config.member.paymentMethodMasked.maskedAccount,
+                        fmtMaskedIban(config.member.paymentMethodMasked.maskedAccount),
                       ]
                         .filter(Boolean)
                         .join(" · ")

@@ -133,7 +133,7 @@ test.describe("T-04-32 add-dog signup", () => {
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/gossos/nou/pagament");
     await expect(page.getByLabel("Mètode de pagament actual")).toHaveValue(
-      "Domiciliació · ···· 2231",
+      "Domiciliació · ···· ···· ···· ···· 2231",
     );
     await page.screenshot({
       fullPage: true,
