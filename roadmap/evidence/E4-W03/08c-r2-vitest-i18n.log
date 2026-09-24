@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ✓ src/format.test.ts > club-aware formats > formats money in ca 12ms
+ ✓ src/format.test.ts > club-aware formats > formats money in es 0ms
+ ✓ src/format.test.ts > club-aware formats > formats money in en 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in ca 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in es 0ms
+ ✓ src/format.test.ts > club-aware formats > formats durations in en 0ms
+ ✓ src/format.test.ts > club-aware formats > uses the club time zone for the same UTC instant 4ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in ca (E4-W01 D3 generation card) 2ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in es (E4-W01 D3 generation card) 2ms
+ ✓ src/format.test.ts > club-aware formats > formats ISO week ranges in en (E4-W01 D3 generation card) 1ms
+ ✓ src/format.test.ts > club-aware formats > formats numeric day and month and long weekday names 0ms
+ ✓ src/format.test.ts > club-aware formats > formats date ranges and binds branding values 1ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Auckland 1ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Kiritimati 1ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Europe/Madrid 1ms
+ ✓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in America/Bogota 1ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-13-01" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-08-32" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "2026-02-30" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "hola" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > rejects "" as a business date 0ms
+ ✓ src/format.test.ts > club-aware formats > accepts real business dates, leap days included 0ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  15:43:53
+   Duration  282ms (transform 62%, import 22%, tests 15%, worker 1%)
+

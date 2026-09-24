@@ -191,7 +191,7 @@ export function CalendarPage({
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
   const branding = useBranding();
-  const { formatDate, formatWeekRange } = useClubFormats();
+  const { formatPlainDate, formatWeekRange } = useClubFormats();
   const errorMessage = useCalendarErrorMessage();
   const waitlistEnabled = branding.modules.includes("WAITLIST");
   const currentMonday = useMemo(() => mondayOf(clubToday(branding.timeZone)), [branding.timeZone]);
@@ -368,7 +368,7 @@ export function CalendarPage({
 
   const selected = current?.classes.find((item) => item.id === selectedId);
   const headingOf = (session: ClassSession): ClassHeading => ({
-    day: dayLabel(session.date, formatDate),
+    day: dayLabel(session.date, formatPlainDate),
     description: session.displayDescription,
     instructors: instructorsOf(session.instructorIds),
     ring:
@@ -465,13 +465,13 @@ export function CalendarPage({
       const date = addDays(monday, index);
       return {
         id: date,
-        label: dayLabel(date, formatDate),
+        label: dayLabel(date, formatPlainDate),
         onSelect: () => {
           onNavigate(`/calendari/dia/${date}?${new URLSearchParams({ estat: filter }).toString()}`);
         },
       };
     });
-  }, [current, filter, formatDate, monday, onNavigate]);
+  }, [current, filter, formatPlainDate, monday, onNavigate]);
 
   const rows = useMemo(
     () =>
@@ -582,7 +582,7 @@ export function CalendarPage({
         label={t("admin-scheduling:calendar.cell.label", {
           description: session.displayDescription,
           details: details.join(" · "),
-          when: `${dayLabel(session.date, formatDate)} ${timeLabel(session.startTime)}`,
+          when: `${dayLabel(session.date, formatPlainDate)} ${timeLabel(session.startTime)}`,
         })}
         meta={meta}
         muted={cancelled}

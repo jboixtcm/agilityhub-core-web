@@ -1,0 +1,223 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > has no forbidden term nor internal code in home, instructor and enums (ca/es/en) 34ms
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > keeps the exact ca literals of mockups 10 and 23 19ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class 207ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips 199ms
+stderr | src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module 47ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class 95ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count 57ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere 73ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name 133ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles 46ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile 22ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled 15ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan 1ms
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone 36ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy 31ms
+ ✓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup 82ms
+ ✓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests 35ms
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the api «Sense» column as delivered and the activity cell
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never adds a «Sense» column of its own when the api does not send one
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation) 98ms
+stderr | src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation 90ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view 26ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-13-01
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address 83ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the api «Sense» column as delivered and the activity cell 36ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never adds a «Sense» column of its own when the api does not send one 27ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-08-32
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants 92ms
+ ✓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice 31ms
+stderr | src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-02-30
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=hola
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-13-01 41ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-08-32 35ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-02-30 35ms
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff 79ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me 18ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice 43ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=hola 35ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day 50ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day 48ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement 94ms
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day 51ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day 57ms
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it 56ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry 58ms
+stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English 112ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS 80ms
+stderr | src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing 76ms
+ ✓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile 1ms
+
+ Test Files  4 passed (4)
+      Tests  43 passed (43)
+   Start at  15:43:49
+   Duration  2.28s (tests 39%, environment 27%, transform 19%, import 9%, setup 7%)
+

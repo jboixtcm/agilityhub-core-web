@@ -63,7 +63,7 @@ export function TemplateDayPage({
   templateId: string;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const [view, setView] = useState<DayView>(initialView);
   const template = useResource(
     useCallback(async () => {
@@ -221,7 +221,7 @@ export function TemplateDayPage({
             >
               {data.days.map((candidate) => (
                 <option key={candidate} value={candidate}>
-                  {sentenceCase(weekdayLabel(candidate, formatDate, "weekdayLong"))}
+                  {sentenceCase(weekdayLabel(candidate, formatPlainDate, "weekdayLong"))}
                 </option>
               ))}
             </Select>
@@ -270,7 +270,7 @@ export function TemplateDayPage({
           <ScheduleGrid<DayCell>
             columns={grid.columns}
             label={t("admin-scheduling:templates.day.gridLabel", {
-              day: weekdayLabel(day, formatDate, "weekdayLong"),
+              day: weekdayLabel(day, formatPlainDate, "weekdayLong"),
               name: data.name,
             })}
             renderCell={({ item }) => {

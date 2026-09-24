@@ -26,14 +26,17 @@ const dayOffsets: Readonly<Record<DayOfWeek, number>> = {
 
 export const daysOfWeek = Object.keys(dayOffsets) as DayOfWeek[];
 
-/** Weekday names come from `Intl` through the club formatters (reference ISO week of 2026-08-17). */
+/**
+ * Weekday names come from `Intl` through the club formatters (reference ISO week of 2026-08-17,
+ * formatted as calendar dates so no club zone moves the weekday — R-06-14).
+ */
 export function weekdayLabel(
   day: DayOfWeek,
-  formatDate: ClubFormats["formatDate"],
+  formatPlainDate: ClubFormats["formatPlainDate"],
   presentation: "weekdayLong" | "weekdayShort",
 ): string {
-  const reference = new Date(Date.UTC(2026, 7, 17 + dayOffsets[day], 12));
-  return formatDate(reference, presentation).replaceAll(/[.,]/gu, "");
+  const reference = `2026-08-${String(17 + dayOffsets[day])}`;
+  return formatPlainDate(reference, presentation).replaceAll(/[.,]/gu, "");
 }
 
 export function sentenceCase(value: string): string {
@@ -87,15 +90,11 @@ export function clubToday(timeZone: string, now: Date = new Date()): string {
   }).format(now);
 }
 
+/** Pure UTC arithmetic on a `YYYY-MM-DD` business date (never formatted in a zone). */
 export function mondayOf(date: string): string {
   const value = new Date(`${date}T12:00:00Z`);
   value.setUTCDate(value.getUTCDate() - ((value.getUTCDay() + 6) % 7));
   return value.toISOString().slice(0, 10);
-}
-
-/** Business dates are read at noon UTC so no club time zone moves the day. */
-export function businessDate(date: string): string {
-  return `${date}T12:00:00Z`;
 }
 
 export function errorCode(error: unknown): string | undefined {

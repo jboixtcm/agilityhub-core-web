@@ -22,7 +22,9 @@ import {
   DAY_GRID_MEMBER_DATE,
   dayGridClassSessions,
   dayGridFixture,
+  dayGridMemberSession,
   dayGridState,
+  memberBlockView,
 } from "./fixtures/day-grid";
 import {
   coverageFixture,
@@ -383,5 +385,47 @@ describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, Clas
       [DAY_GRID_INSTRUCTOR_DATE, "16:00", "18:00"],
       [DAY_GRID_MEMBER_DATE, "08:30", "09:30"],
     ]);
+  });
+
+  it("sends the «Sense» column last, translated, only when a class has no ring", () => {
+    const columns = (locale: "ca" | "en" | "es") =>
+      dayGridFixture(DAY_GRID_ACTIVITY_DATE, "member", { ...allModules, locale }).columns;
+    expect(columns("ca").at(-1)).toMatchObject({ name: "Sense pista", ringId: null, shortName: "Sense" });
+    expect(columns("es").at(-1)).toMatchObject({ ringId: null, shortName: "Sin" });
+    expect(columns("en").at(-1)).toMatchObject({ ringId: null, shortName: "None" });
+    expect(columns("ca").filter((column) => column.ringId === null)).toHaveLength(1);
+    for (const date of [DAY_GRID_INSTRUCTOR_DATE, DAY_GRID_MEMBER_DATE, DAY_GRID_EMPTY_DATE]) {
+      expect(
+        dayGridFixture(date, "instructor", allModules).columns.some((column) => column.ringId === null),
+      ).toBe(false);
+    }
+  });
+
+  it("validates the member projections of the class and the block (S06 §6 «Altres formes»)", () => {
+    const session = schema("ClassSessionMemberView");
+    const staffOnly = ["counters", "instructorIds", "atRisk", "notes", "cancellation", "version"];
+    for (const item of dayGridClassSessions().filter((candidate) => candidate.state !== "CANCELLED")) {
+      const view = dayGridMemberSession(item.id, allModules.modules);
+      expect(session(view), JSON.stringify(session.errors, null, 2)).toBe(true);
+      for (const hidden of staffOnly) expect(view).not.toHaveProperty(hidden);
+    }
+    const cancelled = dayGridClassSessions().find((item) => item.state === "CANCELLED");
+    expect(dayGridMemberSession(cancelled?.id ?? "", allModules.modules)).toBeUndefined();
+    const risky = dayGridClassSessions().find(
+      (item) => item.date === DAY_GRID_MEMBER_DATE && item.displayDescription === "D i sup.",
+    );
+    expect(dayGridMemberSession(risky?.id ?? "", ["FREE_TRAINING"])).toMatchObject({
+      freeSeats: 4,
+      instructorName: null,
+      ring: { id: "ring-carretera", name: "Carretera" },
+    });
+    expect(dayGridMemberSession(risky?.id ?? "", ["FREE_TRAINING"])).not.toHaveProperty("waiting");
+    const block = schema("RingBlockMemberView");
+    for (const item of dayGridState.blocks) {
+      const view = memberBlockView(item);
+      expect(block(view), JSON.stringify(block.errors, null, 2)).toBe(true);
+      expect(view).not.toHaveProperty("note");
+      expect(view).not.toHaveProperty("createdByName");
+    }
   });
 });

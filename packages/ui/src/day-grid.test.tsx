@@ -5,7 +5,6 @@ import {
   DAY_GRID_NO_RING,
   DayGrid,
   type DayGridCellModel,
-  dayGridColumns,
   type DayGridLabels,
   dayGridTimeLabel,
 } from "./day-grid";
@@ -50,7 +49,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={[{ cells: [classCell({})], time: "08:30" }]}
         view="member"
       />,
@@ -74,7 +72,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={[
           {
             cells: [
@@ -97,23 +94,24 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
     expect(container.querySelectorAll(".ah-schedule-cell--plain")).toHaveLength(2);
   });
 
-  it("adds the «Sense» column only when a cell has no ring", () => {
+  it("renders the api's «Sense» column as delivered and never adds one of its own", () => {
     const rows = [{ cells: [classCell({ ringId: null })], time: "10:00" }];
-    expect(dayGridColumns(columns, rows, "Sense").map((column) => column.id)).toEqual([
-      "ring-mun",
-      "ring-car",
-      DAY_GRID_NO_RING,
-    ]);
-    expect(
-      dayGridColumns(columns, [{ cells: [classCell({})], time: "10:00" }], "Sense"),
-    ).toHaveLength(2);
-
-    render(
-      <DayGrid columns={columns} labels={labels} noRingLabel="Sense" rows={rows} view="member" />,
+    const withNoRing = [...columns, { color: "var(--ah-color-border)", id: DAY_GRID_NO_RING, label: "Sense" }];
+    const { rerender } = render(
+      <DayGrid columns={withNoRing} labels={labels} rows={rows} view="member" />,
     );
-    expect(screen.getByRole("columnheader", { name: "Sense" })).toBeInTheDocument();
+    expect(screen.getAllByRole("columnheader").map((header) => header.textContent)).toEqual([
+      "Hora",
+      "MUN",
+      "CAR",
+      "Sense",
+    ]);
     const slots = screen.getAllByRole("cell");
     expect(within(slot(slots, 2)).getByText("B+C")).toBeVisible();
+
+    rerender(<DayGrid columns={columns} labels={labels} rows={rows} view="member" />);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(3);
+    expect(screen.queryByText("Sense")).not.toBeInTheDocument();
   });
 
   it("never renders occupancy in the member view even when the model carries it", () => {
@@ -121,7 +119,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={[
           {
             cells: [
@@ -153,7 +150,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={rows}
         showWaiting
         view="instructor"
@@ -164,7 +160,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={rows}
         view="instructor"
       />,
@@ -178,7 +173,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         onCellPress={onCellPress}
         rows={[
           {
@@ -206,7 +200,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={[
           {
             cells: [
@@ -243,7 +236,6 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       <DayGrid
         columns={columns}
         labels={labels}
-        noRingLabel="Sense"
         rows={[{ cells: [classCell({ cancelled: true })], time: "20:00" }]}
         view="member"
       />,

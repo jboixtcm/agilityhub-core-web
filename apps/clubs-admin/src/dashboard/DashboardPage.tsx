@@ -21,14 +21,14 @@ type Dashboard = Omit<ApiDashboard, "dogsByLevel" | "kpis" | "pendingSignups" | 
 function relativeDay(
   date: string,
   today: string,
-  formatDate: (value: string, presentation: "weekdayShort") => string,
+  formatPlainDate: (value: string, presentation: "weekdayShort") => string,
   t: (key: string) => string,
 ): string {
   if (date === today) return t("admin-dashboard:risk.today");
   const tomorrow = new Date(`${today}T12:00:00Z`);
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   if (date === tomorrow.toISOString().slice(0, 10)) return t("admin-dashboard:risk.tomorrow");
-  return formatDate(`${date}T12:00:00Z`, "weekdayShort").replaceAll(/[.,]/gu, "");
+  return formatPlainDate(date, "weekdayShort").replaceAll(/[.,]/gu, "");
 }
 
 function sentenceCase(value: string): string {
@@ -52,7 +52,7 @@ export function DashboardPage({
   client: ApiClient;
   onNavigate?: (path: string) => void;
 }) {
-  const { formatDate, formatTime } = useClubFormats();
+  const { formatPlainDate, formatTime } = useClubFormats();
   const { t } = useTranslation("admin-dashboard");
   const [dashboard, setDashboard] = useState<Dashboard>();
   const [error, setError] = useState<unknown>();
@@ -107,7 +107,7 @@ export function DashboardPage({
     <section className="dashboard-page">
       {new URLSearchParams(window.location.search).get("signup") === "validated" ? <Toast tone="success">{t("admin-dashboard:signups.validated")}</Toast> : null}
       {error === undefined ? null : <Toast tone="danger">{isApiError(error) ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") }) : t("admin-dashboard:common.error")}</Toast>}
-      <h1>{t("admin-dashboard:greeting", { date: sentenceCase(formatDate(`${dashboard.today}T12:00:00Z`, "weekday")), period })}</h1>
+      <h1>{t("admin-dashboard:greeting", { date: sentenceCase(formatPlainDate(dashboard.today, "weekday")), period })}</h1>
       <div className="dashboard-kpis">
         {dashboard.kpis.activeMembers === null ? null : (
           <KpiCard detail={t("admin-dashboard:kpi.thisMonth", { count: dashboard.kpis.activeMembers.deltaThisMonth })} label={t("admin-dashboard:kpi.activeMembers")} value={dashboard.kpis.activeMembers.value} />
@@ -128,7 +128,7 @@ export function DashboardPage({
           <Card className="dashboard-risk">
             <header><h2>{t("admin-dashboard:risk.title", { time: risk.reviewTime, days: risk.lookaheadDays })}</h2><Badge tone={risk.count > 0 ? "warning" : "neutral"}>{t("admin-dashboard:risk.alerts", { count: risk.count })}</Badge></header>
             {risk.items.length === 0 ? <p>{t("admin-dashboard:risk.empty")}</p> : risk.items.map((item) => {
-              const day = relativeDay(item.date, dashboard.today, formatDate, t);
+              const day = relativeDay(item.date, dashboard.today, formatPlainDate, t);
               const names = item.notified.map((person) => `${person.memberFirstName} + ${person.dogName}`).join(", ");
               const gender = item.notified[0]?.gender === "FEMALE" ? "female" : "other";
               const notified = item.notified.length === 0 ? "" : t("admin-dashboard:risk.notified", { count: item.notified.length, gender, names });

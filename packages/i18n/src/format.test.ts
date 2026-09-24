@@ -6,8 +6,11 @@ import {
   formatDateRange,
   formatDuration,
   formatMoney,
+  formatPlainDate,
   formatTime,
   formatWeekRange,
+  isPlainDate,
+  parsePlainDate,
 } from "./format";
 
 describe("club-aware formats", () => {
@@ -71,5 +74,37 @@ describe("club-aware formats", () => {
     ).toBe("9/6/2026 – 9/8/2026");
     expect(formats.formatMoney(45)).toBe("€45.00");
     expect(formats.formatDuration(90)).toBe("1 h 30 min");
+  });
+
+  const zones = ["Pacific/Auckland", "Pacific/Kiritimati", "Europe/Madrid", "America/Bogota"];
+
+  it.each(zones)(
+    "R-06-14 formats business dates as the calendar day they name in %s",
+    (timeZone) => {
+      const formats = createClubFormats("ca", timeZone, "EUR");
+
+      expect(formats.formatPlainDate("2026-08-04", "dayMonth")).toBe("4 d’agost");
+      expect(formats.formatPlainDate("2026-08-04", "weekdayShort")).toBe("dt.");
+      expect(formats.formatPlainDate("2026-08-04")).toBe("04/08/2026");
+      expect(formatDate("2026-08-04", "ca", timeZone, "weekday")).toBe("dimarts, 4 d’agost");
+      expect(formats.formatMonth("2026-08-01")).toBe("agost del 2026");
+      expect(formatWeekRange("2026-08-31", "2026-09-06", "ca", timeZone)).toBe(
+        "31 d’agost al 6 de setembre",
+      );
+    },
+  );
+
+  it.each(["2026-13-01", "2026-08-32", "2026-02-30", "hola", ""])(
+    "rejects %j as a business date",
+    (value) => {
+      expect(parsePlainDate(value)).toBeUndefined();
+      expect(isPlainDate(value)).toBe(false);
+      expect(() => formatPlainDate(value, "ca")).toThrow(RangeError);
+    },
+  );
+
+  it("accepts real business dates, leap days included", () => {
+    expect(parsePlainDate("2028-02-29")?.toISOString()).toBe("2028-02-29T00:00:00.000Z");
+    expect(isPlainDate("2026-08-04")).toBe(true);
   });
 });

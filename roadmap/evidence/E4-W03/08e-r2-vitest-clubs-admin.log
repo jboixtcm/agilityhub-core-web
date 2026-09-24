@@ -1,0 +1,18 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Pacific/Auckland 11ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Pacific/Kiritimati 1ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Europe/Madrid 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in America/Bogota 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-13-01 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-08-32 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-02-30 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects hola 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > parses masked dates only when they are real 1ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  15:43:55
+   Duration  744ms (environment 53%, transform 25%, setup 12%, import 7%, tests 2%)
+

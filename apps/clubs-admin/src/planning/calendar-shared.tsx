@@ -1,9 +1,9 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import type { ClubFormats } from "@agilityhub/i18n";
+import { type ClubFormats, isPlainDate } from "@agilityhub/i18n";
 import { type ReactNode, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { bandLabel, businessDate, errorCode } from "./shared";
+import { bandLabel, errorCode } from "./shared";
 
 export type ClassSession = components["schemas"]["ClassSession"];
 export type RingBlock = components["schemas"]["RingBlock"];
@@ -29,13 +29,9 @@ export function parseFilter(value: string | null): CalendarFilter {
   return calendarFilters.find((filter) => filter === value) ?? "actives";
 }
 
+/** A real `YYYY-MM-DD` calendar date («2026-02-30» and «2026-13-01» are not). */
 export function isIsoDate(value: string | null | undefined): value is string {
-  return (
-    value !== null &&
-    value !== undefined &&
-    /^\d{4}-\d{2}-\d{2}$/u.test(value) &&
-    !Number.isNaN(Date.parse(`${value}T12:00:00Z`))
-  );
+  return isPlainDate(value);
 }
 
 export function addDays(date: string, days: number): string {
@@ -124,9 +120,9 @@ export function formatMaskedDate(date: string): string {
   return `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
 }
 
-/** «dc 12»: short weekday of the club formatter + day number. */
-export function dayLabel(date: string, formatDate: ClubFormats["formatDate"]): string {
-  const weekday = formatDate(businessDate(date), "weekdayShort").replaceAll(/[.,]/gu, "");
+/** «dc 12»: short weekday of the club formatter (as a calendar date, R-06-14) + day number. */
+export function dayLabel(date: string, formatPlainDate: ClubFormats["formatPlainDate"]): string {
+  const weekday = formatPlainDate(date, "weekdayShort").replaceAll(/[.,]/gu, "");
   return `${weekday} ${String(Number(date.slice(8, 10)))}`;
 }
 

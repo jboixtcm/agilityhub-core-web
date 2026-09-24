@@ -146,7 +146,7 @@ export function ClassForm({
   rings,
 }: ClassFormProps) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const [values, setValues] = useState<ClassFormValues>(() =>
     initialValues(mode, bands, days, instructors, maxInstructors),
   );
@@ -322,14 +322,14 @@ export function ClassForm({
             {days.map((day) => (
               <button
                 aria-checked={values.dayOfWeek === day}
-                aria-label={weekdayLabel(day, formatDate, "weekdayLong")}
+                aria-label={weekdayLabel(day, formatPlainDate, "weekdayLong")}
                 className="planning-chip"
                 key={day}
                 onClick={() => void change({ dayOfWeek: day }, { dayOfWeek: day })}
                 role="radio"
                 type="button"
               >
-                {weekdayLabel(day, formatDate, "weekdayShort")}
+                {weekdayLabel(day, formatPlainDate, "weekdayShort")}
               </button>
             ))}
           </div>

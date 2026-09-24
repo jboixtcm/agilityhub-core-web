@@ -38,8 +38,37 @@ const dateOptions: Record<DatePresentation, Intl.DateTimeFormatOptions> = {
   weekdayShort: { weekday: "short" },
 };
 
+const PLAIN_DATE = /^(\d{4})-(\d{2})-(\d{2})$/u;
+
+/**
+ * A business date `YYYY-MM-DD` (a calendar day, not an instant) → midnight UTC of that day, or
+ * `undefined` when it is not a real date («2026-13-01», «2026-02-30», «hola»).
+ */
+export function parsePlainDate(value: string | null | undefined): Date | undefined {
+  const match = PLAIN_DATE.exec(value ?? "");
+  if (match === null) return undefined;
+  const [year, month, day] = [Number(match[1]), Number(match[2]), Number(match[3])];
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return Number.isNaN(date.getTime()) ||
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+    ? undefined
+    : date;
+}
+
+export function isPlainDate(value: string | null | undefined): value is string {
+  return parsePlainDate(value) !== undefined;
+}
+
 function toDate(value: DateInput): Date | number {
-  return typeof value === "string" ? new Date(value) : value;
+  if (typeof value !== "string") return value;
+  return parsePlainDate(value) ?? new Date(value);
+}
+
+/** Business dates are formatted in UTC (the day they name); instants in the club's zone. */
+function zoneOf(value: DateInput, timeZone: string): string {
+  return typeof value === "string" && isPlainDate(value) ? "UTC" : timeZone;
 }
 
 function dateFormatter(
@@ -59,7 +88,22 @@ export function formatDate(
   timeZone: string,
   presentation: DatePresentation = "short",
 ): string {
-  return dateFormatter(locale, timeZone, presentation).format(toDate(value));
+  return dateFormatter(locale, zoneOf(value, timeZone), presentation).format(toDate(value));
+}
+
+/**
+ * R-06-14: a `YYYY-MM-DD` business date shows the calendar day it names in every club time zone
+ * (built with `Date.UTC`, formatted with `timeZone: "UTC"`). Throws `RangeError` when it is not a
+ * real date.
+ */
+export function formatPlainDate(
+  value: string,
+  locale: Locale,
+  presentation: DatePresentation = "short",
+): string {
+  const date = parsePlainDate(value);
+  if (date === undefined) throw new RangeError(`Invalid plain date: ${value}`);
+  return dateFormatter(locale, "UTC", presentation).format(date);
 }
 
 export function formatTime(value: DateInput, locale: Locale, timeZone: string): string {
@@ -78,37 +122,37 @@ export function formatDateRange(
   timeZone: string,
   presentation: DatePresentation = "short",
 ): string {
-  return dateFormatter(locale, timeZone, presentation).formatRange(toDate(start), toDate(end));
+  const zone = zoneOf(start, timeZone) === zoneOf(end, timeZone) ? zoneOf(start, timeZone) : timeZone;
+  return dateFormatter(locale, zone, presentation).formatRange(toDate(start), toDate(end));
 }
 
-/** Accepts `YYYY-MM-DD` business dates (read at noon UTC so no zone can move the day) or instants. */
-function toBusinessDate(value: DateInput): DateInput {
-  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(value)
-    ? `${value}T12:00:00Z`
-    : value;
-}
-
-/** «24 al 30 d'agost» (same month) · «28 de setembre al 4 d'octubre» (different months). */
+/**
+ * «24 al 30 d'agost» (same month) · «28 de setembre al 4 d'octubre» (different months). Accepts
+ * `YYYY-MM-DD` business dates (formatted as the calendar days they name) or instants.
+ */
 export function formatWeekRange(
   start: DateInput,
   end: DateInput,
   locale: Locale,
   timeZone: string,
 ): string {
-  const startDate = toBusinessDate(start);
-  const endDate = toBusinessDate(end);
-  const monthKey = new Intl.DateTimeFormat("en-US", {
-    month: "numeric",
-    timeZone,
-    year: "numeric",
-  });
-  const sameMonth = monthKey.format(toDate(startDate)) === monthKey.format(toDate(endDate));
-  const dayOnly = new Intl.DateTimeFormat(intlLocales[locale], { day: "numeric", timeZone });
+  const monthKey = (value: DateInput) =>
+    new Intl.DateTimeFormat("en-US", {
+      month: "numeric",
+      timeZone: zoneOf(value, timeZone),
+      year: "numeric",
+    }).format(toDate(value));
+  const dayOnly = (value: DateInput) =>
+    new Intl.DateTimeFormat(intlLocales[locale], {
+      day: "numeric",
+      timeZone: zoneOf(value, timeZone),
+    }).format(toDate(value));
+  const sameMonth = monthKey(start) === monthKey(end);
   const values = {
-    end: formatDate(endDate, locale, timeZone, "dayMonth"),
-    endDay: dayOnly.format(toDate(endDate)),
-    start: formatDate(startDate, locale, timeZone, "dayMonth"),
-    startDay: dayOnly.format(toDate(startDate)),
+    end: formatDate(end, locale, timeZone, "dayMonth"),
+    endDay: dayOnly(end),
+    start: formatDate(start, locale, timeZone, "dayMonth"),
+    startDay: dayOnly(start),
   };
   return sameMonth
     ? translateStatic("common:format.weekRange.sameMonth", locale, values)
@@ -159,7 +203,7 @@ export function formatMoney(amount: number, locale: Locale, currency: string): s
 export function formatMonth(value: DateInput, locale: Locale, timeZone: string): string {
   return new Intl.DateTimeFormat(intlLocales[locale], {
     month: "long",
-    timeZone,
+    timeZone: zoneOf(value, timeZone),
     year: "numeric",
   }).format(toDate(value));
 }
@@ -171,6 +215,8 @@ export interface ClubFormats {
   formatDuration: (totalMinutes: number, options?: DurationOptions) => string;
   formatMoney: (amount: number) => string;
   formatMonth: (value: DateInput) => string;
+  /** A `YYYY-MM-DD` business date, never shifted by the club's zone (R-06-14). */
+  formatPlainDate: (value: string, presentation?: DatePresentation) => string;
   formatTime: (value: DateInput) => string;
   formatWeekRange: (start: DateInput, end: DateInput) => string;
   locale: Locale;
@@ -185,6 +231,7 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatDuration: (totalMinutes, options) => formatDuration(totalMinutes, locale, options),
     formatMoney: (amount) => formatMoney(amount, locale, currency),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
+    formatPlainDate: (value, presentation) => formatPlainDate(value, locale, presentation),
     formatTime: (value) => formatTime(value, locale, timeZone),
     formatWeekRange: (start, end) => formatWeekRange(start, end, locale, timeZone),
     locale,
@@ -206,6 +253,7 @@ export const fmtDate = formatDate;
 export const fmtDateTime = formatDateTime;
 export const fmtMoney = formatMoney;
 export const fmtMonth = formatMonth;
+export const fmtPlainDate = formatPlainDate;
 export const fmtRelative = formatDuration;
 export const fmtTime = formatTime;
 export const fmtWeekRange = formatWeekRange;

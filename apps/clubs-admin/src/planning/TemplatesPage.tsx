@@ -44,7 +44,6 @@ import {
 } from "./ClassForm";
 import {
   bandLabel,
-  businessDate,
   clubToday,
   errorCode,
   errorProp,
@@ -514,7 +513,7 @@ function WeekGrid({
   template: WeekTemplate;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums"]);
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const bands = sortedBands(template.bands);
   const ringsById = new Map(catalogs.rings.map((ring) => [ring.id, ring]));
   const inconsistencyTypes = new Map(template.inconsistencies.map((item) => [item.id, item.type]));
@@ -524,7 +523,7 @@ function WeekGrid({
       <ScheduleGrid<{ columnId: string; id: string; item: TemplateClass }>
         columns={template.days.map((day) => ({
           id: day,
-          label: weekdayLabel(day, formatDate, "weekdayLong"),
+          label: weekdayLabel(day, formatPlainDate, "weekdayLong"),
           onSelect: () => {
             onDay(day);
           },
@@ -595,7 +594,7 @@ function WeekGrid({
                 return (
                   <button
                     aria-label={t("admin-scheduling:templates.emptyCell", {
-                      day: weekdayLabel(day, formatDate, "weekdayLong"),
+                      day: weekdayLabel(day, formatPlainDate, "weekdayLong"),
                       time: bandLabel(band.startTime),
                     })}
                     className="ah-schedule-cell ah-schedule-cell--empty"
@@ -649,7 +648,7 @@ function GenerationCard({
   weeks: readonly WeekListItem[] | undefined;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums"]);
-  const { formatDate, formatTime, formatWeekRange } = useClubFormats();
+  const { formatDate, formatPlainDate, formatTime, formatWeekRange } = useClubFormats();
   const proposed = candidates.find((candidate) => candidate.proposed) ?? candidates[0];
   const [chosen, setChosen] = useState<string>();
   const selected = candidates.some((candidate) => candidate.startDate === chosen)
@@ -723,7 +722,7 @@ function GenerationCard({
           {
             header: t("admin-scheduling:weeks.start"),
             key: "start",
-            render: (week) => formatDate(businessDate(week.startDate), "dayMonthNumeric"),
+            render: (week) => formatPlainDate(week.startDate, "dayMonthNumeric"),
           },
           {
             header: t("admin-scheduling:weeks.generated"),
@@ -754,7 +753,7 @@ function GenerationCard({
         <p>
           {t("admin-scheduling:templates.generation.confirm", {
             date:
-              candidate === undefined ? "" : formatDate(businessDate(candidate.startDate), "short"),
+              candidate === undefined ? "" : formatPlainDate(candidate.startDate, "short"),
           })}
         </p>
         <div className="planning-form__actions">

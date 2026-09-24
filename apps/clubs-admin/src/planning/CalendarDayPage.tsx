@@ -26,7 +26,7 @@ import {
   timeLabel,
   useCalendarErrorMessage,
 } from "./calendar-shared";
-import { businessDate, mondayOf, useResource } from "./shared";
+import { mondayOf, useResource } from "./shared";
 import type { DayView } from "./TemplateDayPage";
 
 const NO_RING = "none";
@@ -59,7 +59,7 @@ export function CalendarDayPage({
   onNavigate?: (path: string) => void;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const branding = useBranding();
   const errorMessage = useCalendarErrorMessage();
   const waitlistEnabled = branding.modules.includes("WAITLIST");
@@ -239,7 +239,7 @@ export function CalendarDayPage({
     <section className="planning-page calendar-page">
       <header className="planning-header">
         <h1>{t("admin-scheduling:calendar.title")}</h1>
-        <Chip className="planning-template-chip">{formatDate(businessDate(date), "weekday")}</Chip>
+        <Chip className="planning-template-chip">{formatPlainDate(date,"weekday")}</Chip>
         <div className="planning-day-selector">
           <IconButton
             className="planning-day-selector__previous"
@@ -299,7 +299,7 @@ export function CalendarDayPage({
       ) : layout.rows.length === 0 ? (
         <Card className="planning-grid-card">
           <EmptyState
-            description={formatDate(businessDate(date), "weekday")}
+            description={formatPlainDate(date,"weekday")}
             icon="cal"
             title={t("admin-scheduling:calendar.day.empty")}
           />
@@ -309,7 +309,7 @@ export function CalendarDayPage({
           <ScheduleGrid<DayCell>
             columns={layout.columns}
             label={t("admin-scheduling:calendar.day.gridLabel", {
-              day: formatDate(businessDate(date), "weekday"),
+              day: formatPlainDate(date,"weekday"),
             })}
             renderCell={renderCell}
             rows={layout.rows}

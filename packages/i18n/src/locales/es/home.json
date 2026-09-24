@@ -11,7 +11,6 @@
     "occupied": "Ocupada",
     "atRisk": "en riesgo ⚠",
     "activity": "Actividad · {title}",
-    "noRing": "Sin pista",
     "footer": "Ocupada = pista reservada para entrenamiento o bloqueada",
     "empty": "Ninguna clase este día",
     "loading": "Cargando el cuadro del día",

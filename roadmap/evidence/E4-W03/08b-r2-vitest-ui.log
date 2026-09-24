@@ -1,0 +1,18 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > keeps identical ring columns and strips the leading zero of each start time 87ms
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > stacks cells per slot, exposes day buttons and tints cells through --schedule-color 137ms
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > renders the D4 variants: counts, draft outline, cancelled and link cells 14ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > stacks two cells of the same ring and row and draws empty placeholders 23ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > renders the api's «Sense» column as delivered and never adds one of its own 18ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > never renders occupancy in the member view even when the model carries it 10ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > shows «n/n +e · instructor» in the instructor view, «+e» only with WAITLIST 11ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > marks risk, dims cancelled classes and renders occupied, block and activity cells 26ms
+ ✓ src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > hides cancelled classes from the member view 2ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  15:43:51
+   Duration  861ms (environment 57%, tests 22%, setup 13%, transform 6%, import 1%)
+

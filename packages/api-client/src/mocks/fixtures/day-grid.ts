@@ -1,11 +1,29 @@
 import type { components } from "../../generated/schema";
 
+import brandingCanic from "./branding-canic.json";
 import { classSession, clubInstant, type ClassSession, type RingBlock } from "./calendar";
 import { catalogState } from "./catalogs";
 
+type ClassSessionMemberView = components["schemas"]["ClassSessionMemberView"];
 type DayGrid = components["schemas"]["DayGrid"];
 type DayGridCell = components["schemas"]["DayGridCell"];
+type DayGridColumn = components["schemas"]["DayGridColumn"];
 type Occupancy = components["schemas"]["GridOccupancy"];
+type RingBlockMemberView = components["schemas"]["RingBlockMemberView"];
+
+/** The day-grid world belongs to this tenant (club slug); any other club gets 404 / empty days. */
+export const DAY_GRID_TENANT = brandingCanic.club.slug;
+
+/**
+ * The api's «Sense» column (`scheduling.noRing` in the reader's language), sent last and only when
+ * a class of the day has no ring.
+ */
+const noRingColumn: Readonly<Record<"ca" | "en" | "es", Pick<DayGridColumn, "name" | "shortName">>> =
+  {
+    ca: { name: "Sense pista", shortName: "Sense" },
+    en: { name: "No ring", shortName: "None" },
+    es: { name: "Sin pista", shortName: "Sin" },
+  };
 
 /** Screen 23 mockup day (instructor view). */
 export const DAY_GRID_INSTRUCTOR_DATE = "2026-08-03";
@@ -265,6 +283,57 @@ export function dayGridClassSessions(): ClassSession[] {
   );
 }
 
+/**
+ * `GET /class-sessions/{id}` for MEMBER (impersonation included): only `ACTIVE`/`FINISHED`, the
+ * instructor as R-06-12 decides, no counters, `waiting` only with `WAITLIST` (S06 §6 «Altres formes»).
+ */
+export function dayGridMemberSession(
+  id: string,
+  modules: readonly string[],
+): ClassSessionMemberView | undefined {
+  for (const [date, items] of Object.entries(days)) {
+    for (const item of items) {
+      if (item.kind !== "CLASS" || classId(date, item) !== id) continue;
+      if (item.cancelled === true) return undefined;
+      const ring = catalogState.rings.find((candidate) => candidate.id === item.ring);
+      return {
+        capacity: item.capacity,
+        date,
+        displayDescription: item.description,
+        endTime: item.end,
+        freeSeats: Math.max(item.capacity - item.booked, 0),
+        id,
+        instructorName: item.hiddenForMembers === true ? null : item.instructor,
+        levelIds: [],
+        ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
+        startTime: item.start,
+        state: "ACTIVE",
+        ...(modules.includes("WAITLIST") ? { waiting: item.waiting ?? 0 } : {}),
+      };
+    }
+  }
+  return undefined;
+}
+
+/** `GET /ring-blocks/{id}` for MEMBER: redacted, without `note` nor `createdByName` (S06 §6). */
+export function memberBlockView(block: RingBlock): RingBlockMemberView {
+  return {
+    activityId: block.activityId ?? null,
+    activityTitle: block.activityTitle ?? null,
+    date: block.date,
+    from: block.from,
+    fromLocal: block.fromLocal,
+    id: block.id,
+    kind: block.kind,
+    reason: block.reason,
+    ringId: block.ringId,
+    state: block.state,
+    to: block.to,
+    toLocal: block.toLocal,
+    version: block.version,
+  };
+}
+
 export interface DayGridOptions {
   locale: "ca" | "en" | "es";
   modules: readonly string[];
@@ -352,17 +421,30 @@ export function dayGridFixture(
         break;
     }
   }
+  const classWithoutRing = [...cells.values()].some((row) =>
+    row.some((cell) => cell.kind === "CLASS" && (cell.ringId ?? null) === null),
+  );
+  const ringColumns: DayGridColumn[] = [...catalogState.rings]
+    .filter((ring) => ring.active)
+    .sort((left, right) => left.order - right.order)
+    .map((ring) => ({
+      ...(options.modules.includes("COURSES") ? { activeSetupId: null } : {}),
+      color: ring.color,
+      name: ring.name,
+      ringId: ring.id,
+      shortName: ring.shortName,
+    }));
   return {
-    columns: [...catalogState.rings]
-      .filter((ring) => ring.active)
-      .sort((left, right) => left.order - right.order)
-      .map((ring) => ({
-        ...(options.modules.includes("COURSES") ? { activeSetupId: null } : {}),
-        color: ring.color,
-        name: ring.name,
-        ringId: ring.id,
-        shortName: ring.shortName,
-      })),
+    columns: classWithoutRing
+      ? [
+          ...ringColumns,
+          {
+            color: brandingCanic.theme.colors.border,
+            ringId: null,
+            ...noRingColumn[options.locale],
+          },
+        ]
+      : ringColumns,
     date,
     dayOfWeek: dayNames[(new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7] ?? "MONDAY",
     rows: [...cells.keys()].sort().map((time) => ({ cells: cells.get(time) ?? [], time })),

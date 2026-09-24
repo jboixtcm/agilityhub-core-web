@@ -2,7 +2,10 @@ import type { CSSProperties, MouseEvent } from "react";
 
 import { ScheduleCell } from "./schedule-grid";
 
-/** Column id of the «Sense» column (cells without `ringId`). */
+/**
+ * Column id of the api's «Sense» column (`DayGridColumn.ringId: null`): cells without `ringId`
+ * land there. The api sends that column, with its label, only when a class has no ring.
+ */
 export const DAY_GRID_NO_RING = "__no-ring__";
 
 export type DayGridView = "instructor" | "member";
@@ -66,9 +69,9 @@ export interface DayGridLabels {
 }
 
 export interface DayGridProps {
+  /** Columns in api order, as delivered (the «Sense» column has id `DAY_GRID_NO_RING`). */
   columns: readonly DayGridColumnModel[];
   labels: DayGridLabels;
-  noRingLabel: string;
   rows: readonly DayGridRowModel[];
   view: DayGridView;
   onCellPress?: ((cell: DayGridCellModel, element: HTMLElement) => void) | undefined;
@@ -82,19 +85,6 @@ const SEPARATOR = " · ";
 /** «08:30» → «8:30». */
 export function dayGridTimeLabel(time: string): string {
   return time.replace(/^0(?=\d)/u, "");
-}
-
-/** Ring columns in api order, plus «Sense» only when a cell has no ring (R-06-12). */
-export function dayGridColumns(
-  columns: readonly DayGridColumnModel[],
-  rows: readonly DayGridRowModel[],
-  noRingLabel: string,
-): DayGridColumnModel[] {
-  const withoutRing = rows.some((row) => row.cells.some((cell) => cell.ringId === null));
-  return [
-    ...columns.filter((column) => column.id !== DAY_GRID_NO_RING),
-    ...(withoutRing ? [{ id: DAY_GRID_NO_RING, label: noRingLabel }] : []),
-  ];
 }
 
 function counts(occupancy: DayGridOccupancyModel, showWaiting: boolean): string {
@@ -170,16 +160,14 @@ function cellText(
  * the page maps the api response and decides which cells are pressable.
  */
 export function DayGrid({
-  columns,
+  columns: allColumns,
   labels,
-  noRingLabel,
   onCellPress,
   rows,
   selectedCellId,
   showWaiting = false,
   view,
 }: DayGridProps) {
-  const allColumns = dayGridColumns(columns, rows, noRingLabel);
   const colorOf = new Map(allColumns.map((column) => [column.id, column.color]));
   const style = {
     gridTemplateColumns: `var(--ah-day-grid-time, 2.25rem) repeat(${String(allColumns.length)}, minmax(0, 1fr))`,

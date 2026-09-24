@@ -1,4 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -116,12 +117,9 @@ export function isCountryFieldValid(
   return /^\d{5}$/u.test(normalized);
 }
 
+/** «dd/mm/aaaa» of a business date: the calendar day it names in every zone (R-06-14). */
 function fullDate(value: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(new Date(`${value}T12:00:00Z`));
+  return fmtPlainDate(value, normalizeLocale(locale), "short");
 }
 
 function documentTypeOptions(value: unknown): DocumentTypeOption[] {

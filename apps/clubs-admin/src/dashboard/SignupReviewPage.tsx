@@ -225,7 +225,7 @@ export function SignupReviewPage({
   onNavigate?: (path: string) => void;
 }) {
   const branding = useBranding();
-  const { formatDate, formatMoney, formatMonth, locale } = useClubFormats();
+  const { formatMoney, formatMonth, formatPlainDate, locale } = useClubFormats();
   const { t } = useTranslation("admin-census");
   const memberId = currentMemberId();
   const [signup, setSignup] = useState<SignupView>();
@@ -261,7 +261,7 @@ export function SignupReviewPage({
         setPriceId(result.data.proposals.priceId ?? "");
         const proposedDate = result.data.proposals.nextInvoiceDate ?? "";
         setNextInvoiceDate(proposedDate);
-        setNextInvoiceInput(proposedDate === "" ? "" : formatDate(`${proposedDate}T12:00:00Z`, "short"));
+        setNextInvoiceInput(proposedDate === "" ? "" : formatPlainDate(proposedDate, "short"));
         const holderMemberId = result.data.familyGroupClaim?.holder?.id;
         setFamilyGroupId(undefined);
         if (holderMemberId !== undefined) {
@@ -298,7 +298,7 @@ export function SignupReviewPage({
       },
       () => { setLoadError(true); },
     );
-  }, [client, formatDate, memberId]);
+  }, [client, formatPlainDate, memberId]);
 
   useEffect(() => { load(); }, [load, reload]);
   useEffect(() => {
@@ -339,7 +339,7 @@ export function SignupReviewPage({
       if ("nextInvoiceDate" in result.data) {
         const proposedDate = result.data.nextInvoiceDate ?? "";
         setNextInvoiceDate(proposedDate);
-        setNextInvoiceInput(proposedDate === "" ? "" : formatDate(`${proposedDate}T12:00:00Z`, "short"));
+        setNextInvoiceInput(proposedDate === "" ? "" : formatPlainDate(proposedDate, "short"));
       }
     } catch (cause) { validationError(cause); }
   };
@@ -445,7 +445,7 @@ export function SignupReviewPage({
           <Card key={dog.id}>
             <h2>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })} {signup.signup.source === "APP_ADD_DOG" && dog.status === "PENDING" ? <Badge>{t("admin-census:signupReview.newDog")}</Badge> : null}</h2>
             <dl className="signup-review-data">
-              <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{dog.name}</strong> · {t(`admin-census:values.${dog.sex === "FEMALE" ? "female" : "male"}`)} · {dog.breed} · {formatDate(`${dog.birthMonth}-01T12:00:00Z`, "monthYear")}</dd>
+              <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{dog.name}</strong> · {t(`admin-census:values.${dog.sex === "FEMALE" ? "female" : "male"}`)} · {dog.breed} · {formatPlainDate(`${dog.birthMonth}-01`, "monthYear")}</dd>
               <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
               <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{dog.documents.flatMap((document) => document.files).map((file) => <a href={file.downloadUrl} key={file.downloadUrl}><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
               <dt>

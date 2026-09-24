@@ -2,6 +2,7 @@ import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
   Button,
+  DAY_GRID_NO_RING,
   type DayGridCellModel,
   type DayGridColumnModel,
   type DayGridLabels,
@@ -12,28 +13,24 @@ import {
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  addDays,
-  dateAtNoon,
-  type DayGridApiCell,
-  type DayGridResponse,
-  weekChipDates,
-} from "./useDayGrid";
+import { addDays, type DayGridApiCell, type DayGridResponse, weekChipDates } from "./useDayGrid";
 
 type Translate = ReturnType<typeof useTranslation>["t"];
+type FormatPlainDate = ReturnType<typeof useClubFormats>["formatPlainDate"];
 
 /** «dt.» → «dt»: the chips and the header use the bare short weekday (mockups 10 and 23). */
-function weekdayShort(date: string, formatDate: ReturnType<typeof useClubFormats>["formatDate"]) {
-  return formatDate(dateAtNoon(date), "weekdayShort").replaceAll(/[.,]/gu, "");
+function weekdayShort(date: string, formatPlainDate: FormatPlainDate) {
+  return formatPlainDate(date, "weekdayShort").replaceAll(/[.,]/gu, "");
 }
 
+/** R-06-14: the selected day is a calendar date, formatted as the day it names in any zone. */
 export function useDayLabel() {
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const { t } = useTranslation("home");
   return (date: string) =>
     t("home:today.dateHeader", {
-      date: formatDate(dateAtNoon(date), "dayMonth"),
-      weekday: weekdayShort(date, formatDate),
+      date: formatPlainDate(date, "dayMonth"),
+      weekday: weekdayShort(date, formatPlainDate),
     });
 }
 
@@ -47,7 +44,7 @@ export function DayScreenHeader({
   onDateChange: (date: string) => void;
   title: string;
 }) {
-  const { formatDate } = useClubFormats();
+  const { formatPlainDate } = useClubFormats();
   const { t } = useTranslation("home");
   const dayLabel = useDayLabel();
 
@@ -93,7 +90,7 @@ export function DayScreenHeader({
           >
             {t("home:today.dayChip", {
               day: String(Number(chip.slice(8, 10))),
-              weekday: weekdayShort(chip, formatDate),
+              weekday: weekdayShort(chip, formatPlainDate),
             })}
           </button>
         ))}
@@ -169,11 +166,12 @@ export function mapDayGrid(
     }),
     time: row.time,
   }));
-  const columns = grid.columns
-    .filter(
-      (column): column is typeof column & { ringId: string } => typeof column.ringId === "string",
-    )
-    .map((column) => ({ color: column.color, id: column.ringId, label: column.shortName }));
+  // Columns exactly as delivered, «Sense» included (`ringId: null`, label from the api).
+  const columns = grid.columns.map((column) => ({
+    color: column.color,
+    id: column.ringId ?? DAY_GRID_NO_RING,
+    label: column.shortName,
+  }));
   return { cellsById, columns, rows };
 }
 
@@ -181,7 +179,7 @@ export function ringName(
   grid: DayGridResponse,
   ringId: string | null | undefined,
 ): string | undefined {
-  return grid.columns.find((column) => column.ringId === ringId)?.name;
+  return grid.columns.find((column) => (column.ringId ?? null) === (ringId ?? null))?.name;
 }
 
 /** «08:30» → «8:30» */

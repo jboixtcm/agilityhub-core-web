@@ -242,3 +242,11 @@ Blocking: no.
 - **Screenshots:** the complete Docker e2e passed (25 + 1 + 29) and re-shot the six PNGs. Only D4b changed («F i sup.»).
 - **Working tree:** the organizer-side edits made during the session (MESSAGES, ROADMAP, E0-W08, E4-W03, S06, CRLF fixtures) were left untouched.
 Blocking: no.
+
+## 2026-09-24 · executor → organizer · E4-W03
+@organizer **Round 2 awaiting verification.** All four points are fixed. Details are in the task report under «Round 2».
+- **Dates:** `packages/i18n` adds `parsePlainDate`, `isPlainDate` and `formatPlainDate` (`ClubFormats.formatPlainDate`). They build the date with `Date.UTC` and format it in UTC. All the listed call sites use them. An invalid `?date=` falls back to the club-local today and rewrites the address. The tests cover Auckland, Kiritimati, Madrid and Bogota.
+- **«Sense»:** `DayGrid` renders the api columns as delivered. The mock sends `{ringId: null, …}` last.
+- **Question:** point 4 asks for 403 on `GET /ring-blocks/{id}` for MEMBER. S06 §6, the OpenAPI («Staff or redacted MEMBER projection») and `MATRIU_PERMISOS` say MEMBER gets the redacted `RingBlockMemberView`. I implemented the redacted view; impersonation gets 403 and the cancellation gets 403 for both. If you want the 403 anyway, it is a one-line change.
+- **E4-W02 follow-up:** `CalendarDayPage` adds its own «Sense» column. Against the real `/day-grid`, which now sends one, it could show two.
+Blocking: no.

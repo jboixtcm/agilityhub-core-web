@@ -1,4 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -56,7 +57,11 @@ function pathId(): string {
 }
 
 function formatDate(value: string, locale: string, withYear = true): string {
-  const date = new Date(value.length === 10 ? `${value}T12:00:00Z` : value);
+  if (isPlainDate(value)) {
+    // R-06-14: a business date is the calendar day it names, whatever the zone.
+    return fmtPlainDate(value, normalizeLocale(locale), withYear ? "short" : "dayMonthNumeric");
+  }
+  const date = new Date(value);
   return new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "2-digit",

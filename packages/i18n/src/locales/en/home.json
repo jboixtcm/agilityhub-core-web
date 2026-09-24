@@ -11,7 +11,6 @@
     "occupied": "Occupied",
     "atRisk": "at risk ⚠",
     "activity": "Activity · {title}",
-    "noRing": "No ring",
     "footer": "Occupied = ring booked for training or blocked",
     "empty": "No classes on this day",
     "loading": "Loading the day grid",

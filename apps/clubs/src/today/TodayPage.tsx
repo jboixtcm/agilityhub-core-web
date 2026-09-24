@@ -85,7 +85,6 @@ export function TodayPage({ client }: { client: ApiClient }) {
               <DayGrid
                 columns={mapped.columns}
                 labels={labels}
-                noRingLabel={t("home:today.noRing")}
                 onCellPress={(cell, element) => {
                   if (balloon?.cellId === cell.id) {
                     setBalloon(undefined);

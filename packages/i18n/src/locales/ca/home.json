@@ -11,7 +11,6 @@
     "occupied": "Ocupada",
     "atRisk": "en risc ⚠",
     "activity": "Activitat · {title}",
-    "noRing": "Sense",
     "footer": "Ocupada = pista reservada per a entrenament o bloquejada",
     "empty": "Cap classe aquest dia",
     "loading": "Carregant el quadre del dia",

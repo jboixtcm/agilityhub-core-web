@@ -233,14 +233,100 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     ]);
   });
 
-  it("shows the «Sense» column and the activity cell", async () => {
+  it("shows the api «Sense» column as delivered and the activity cell", async () => {
     await renderToday("/avui?date=2026-08-06");
     const grid = await screen.findByRole("table", { name: "Quadre del dia" });
 
-    expect(within(grid).getByRole("columnheader", { name: "Sense" })).toBeVisible();
+    expect(
+      within(grid)
+        .getAllByRole("columnheader")
+        .map((header) => header.textContent),
+    ).toEqual(["Hora", "MUN", "CEN", "CAR", "CAD", "PET", "Sense"]);
     expect(within(grid).getByText("Activitat · Taller d'iniciació")).toBeVisible();
     expect(within(grid).getByText("Obediència")).toBeVisible();
   });
+
+  it("never adds a «Sense» column of its own when the api does not send one", async () => {
+    server.use(
+      http.get("*/api/v1/day-grid", () =>
+        HttpResponse.json({
+          columns: [
+            { color: "var(--ah-color-info)", name: "Petita", ringId: "ring-petita", shortName: "PET" },
+          ],
+          date: "2026-08-04",
+          dayOfWeek: "TUESDAY",
+          rows: [
+            {
+              cells: [
+                { classId: "cls-a", description: "A+B", endTime: "11:00", kind: "CLASS", ringId: "ring-petita" },
+                { classId: "cls-b", description: "Obediència", endTime: "11:00", kind: "CLASS", ringId: null },
+              ],
+              time: "10:00",
+            },
+          ],
+          timeZone: "Europe/Madrid",
+          view: "MEMBER",
+        }),
+      ),
+    );
+    await renderToday();
+    const grid = await screen.findByRole("table", { name: "Quadre del dia" });
+
+    expect(
+      within(grid)
+        .getAllByRole("columnheader")
+        .map((header) => header.textContent),
+    ).toEqual(["Hora", "PET"]);
+    expect(within(grid).getByText("A+B")).toBeVisible();
+    expect(screen.queryByText("Sense")).not.toBeInTheDocument();
+  });
+
+  it.each(["2026-13-01", "2026-08-32", "2026-02-30", "hola"])(
+    "falls back to the club-local today and rewrites the address for ?date=%s",
+    async (invalid) => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-08-03T23:30:00Z"));
+      await renderToday(`/avui?date=${invalid}`);
+
+      await screen.findByRole("table", { name: "Quadre del dia" });
+      expect(window.location.search).toBe("?date=2026-08-04");
+      expect(requestedDates).toEqual(["2026-08-04|member"]);
+      expect(screen.getByText("dt 4 d’agost")).toBeVisible();
+      expect(screen.getByRole("button", { name: "dt 4" })).toHaveAttribute("aria-pressed", "true");
+    },
+  );
+
+  it.each([
+    ["Pacific/Auckland", "2026-08-04", "dt 4 d’agost", "dt 4"],
+    ["Pacific/Kiritimati", "2026-08-04", "dt 4 d’agost", "dt 4"],
+    ["Europe/Madrid", "2026-08-04", "dt 4 d’agost", "dt 4"],
+    ["America/Bogota", "2026-08-03", "dl 3 d’agost", "dl 3"],
+  ])(
+    "R-06-14 in %s: requested date, header and chips name the club's calendar day",
+    async (timeZone, today, header, chip) => {
+      const zoned: Branding = { ...branding, timeZone };
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-08-03T23:30:00Z"));
+      await renderToday("/avui", zoned);
+
+      await screen.findByRole("table", { name: "Quadre del dia" });
+      expect(requestedDates).toEqual([`${today}|member`]);
+      expect(screen.getByText(header)).toBeVisible();
+      expect(screen.getByRole("button", { name: chip })).toHaveAttribute("aria-pressed", "true");
+      expect(
+        within(screen.getByRole("group", { name: "Dies de la setmana" }))
+          .getAllByRole("button")
+          .map((button) => button.textContent),
+      ).toEqual(["dl 3", "dt 4", "dc 5", "dj 6", "dv 7", "ds 8"]);
+      cleanup();
+
+      requestedDates.length = 0;
+      await renderToday("/avui?date=2026-08-04", zoned);
+      await screen.findByRole("table", { name: "Quadre del dia" });
+      expect(requestedDates).toEqual(["2026-08-04|member"]);
+      expect(screen.getByText("dt 4 d’agost")).toBeVisible();
+    },
+  );
 
   it("shows the empty state (dayGridEmpty) and the error toast with retry", async () => {
     mockScenario("dayGridEmpty");

@@ -100,8 +100,12 @@ function ClassDrawerBody({
       <dd>
         {`${dayLabel(value.date)} · ${timeLabel(value.startTime)}–${timeLabel(value.endTime)}`}
       </dd>
-      <dt>{t("instructor:overview.class.ring")}</dt>
-      <dd>{ring ?? t("home:today.noRing")}</dd>
+      {ring === undefined ? null : (
+        <>
+          <dt>{t("instructor:overview.class.ring")}</dt>
+          <dd>{ring}</dd>
+        </>
+      )}
       {cell.instructorName === null || cell.instructorName === undefined ? null : (
         <>
           <dt>{t("instructor:overview.class.instructors")}</dt>
@@ -262,7 +266,6 @@ export function OverviewPage({ client }: { client: ApiClient }) {
               <DayGrid
                 columns={mapped.columns}
                 labels={labels}
-                noRingLabel={t("home:today.noRing")}
                 onCellPress={(cell) => {
                   const source = mapped.cellsById.get(cell.id);
                   const id = source?.kind === "CLASS" ? source.classId : source?.blockId;
