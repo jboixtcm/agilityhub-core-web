@@ -198,7 +198,9 @@ export default tseslint.config(
   },
   {
     // Printable AprilTag markers (E0-W08): the fiducial must be pure black on white to be detected,
-    // and the page is a standalone SVG file (no CSS variables); not themed UI.
+    // and the marker page is a standalone printable SVG file (no CSS variables); not themed UI.
+    // Exemption approved by the organizer as print artwork (E0-W08 verification, 2026-09-24).
+    // WP-16-E′ (D16 marker printing) decides whether the page chrome takes the club's branding colours.
     basePath: path.resolve(import.meta.dirname, "../.."),
     files: [
       "packages/course-core/src/markers/apriltag-36h11.ts",

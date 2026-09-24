@@ -19,9 +19,15 @@ S16 §14.5) with its tests and **unchanged behaviour**.
 | Local modifications at copy time | none: every copied file matched the origin's git index (`roadmap/evidence/E0-W08/provenance.py`, run 2026-09-24)                                                                       |
 | Not copied                       | `node_modules/`, `dist/`, `vitest.config.ts.timestamp-*.mjs`, the `_render-pack.mjs` / `_render-sample.mjs` dev scripts (no test uses them)                                            |
 
-`src/` is byte-identical to the origin except `src/cli/importer-summary.ts`: its default input folder
-moved from `<repo>/fixtures/smarter` to `<package>/fixtures/smarter`. `tests/` is byte-identical
-except:
+`src/` is byte-identical to the origin except:
+
+- `src/cli/importer-summary.ts`: its default input folder moved from `<repo>/fixtures/smarter` to
+  `<package>/fixtures/smarter`.
+- `src/markers/marker-svg.ts` (type-only, E0-W08 round 2): the optional properties of the private
+  `ChromeFooterArgs` and `RingDiagramOpts` interfaces accept `| undefined`, so the package
+  typechecks with `exactOptionalPropertyTypes: true` like the apps that import its sources.
+
+`tests/` is byte-identical except:
 
 - `tests/fixtures.ts`: fixture folders resolve from the package root (`fixtures/`) instead of the
   origin's repo root, and `ROUTE_VALIDATION_FIXTURES_DIR` was added.

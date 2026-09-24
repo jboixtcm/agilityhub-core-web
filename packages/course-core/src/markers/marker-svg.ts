@@ -464,7 +464,7 @@ interface ChromeFooterArgs {
   readonly placementLines: readonly string[];
   readonly uid: string;
   readonly useRealAprilTag: boolean;
-  readonly aprilTagId?: number;
+  readonly aprilTagId?: number | undefined;
   readonly diagramSvg: string;
 }
 
@@ -661,16 +661,18 @@ interface RingDiagramOpts {
   readonly y: number;
   readonly width: number;
   readonly height: number;
-  readonly ringLengthMeters?: number;
-  readonly ringWidthMeters?: number;
-  readonly highlightLabel?: string;
-  readonly highlightX?: number;
-  readonly highlightY?: number;
-  readonly diagramMarkers?: ReadonlyArray<{
-    readonly label: string;
-    readonly xMeters: number;
-    readonly yMeters: number;
-  }>;
+  readonly ringLengthMeters?: number | undefined;
+  readonly ringWidthMeters?: number | undefined;
+  readonly highlightLabel?: string | undefined;
+  readonly highlightX?: number | undefined;
+  readonly highlightY?: number | undefined;
+  readonly diagramMarkers?:
+    | ReadonlyArray<{
+        readonly label: string;
+        readonly xMeters: number;
+        readonly yMeters: number;
+      }>
+    | undefined;
 }
 
 function renderRingDiagram(opts: RingDiagramOpts): string {

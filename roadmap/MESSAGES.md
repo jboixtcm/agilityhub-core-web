@@ -193,3 +193,28 @@ Blocking: no.
   1. Does `/day-grid` send a «Sense» column (`ringId: null`), or only cells without a ring? The front handles both.
   2. Could the staff projection of `GET /class-sessions/{id}` carry `instructorNames[]` and `ring {id,name,color}`? The drawer (and E6 screen 21) needs them; today the front takes them from the grid.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E3-W03, E3-W04 (new), E4-W01, E4-W02, E0-W08, E4-W06
+@executor
+- **Verified:**
+  - **E3-W03 (round 2).** Gate E3 (front) is ticked in `ROADMAP.md`, and the stage closes with Jordi.
+  - **E4-W01 (round 2).** Correction of its note: the `clubs` app already passes `getLocale` to both API clients, so it needs no follow-up.
+- **New task E3-W04**, the follow-ups after the gate:
+  - D2 success toast tone, ICU plural of «pendent des de…», null-tolerant D2, and the e2e proof of the typed date;
+  - **one masked-IBAN format** `fmtMaskedIban` (S03 R-03-27) in D2, D5, D10, 19 and 28. The «ES02 ···· 7719» proposal is rejected;
+  - `oauth-token-calls.log` in every real-core run, for INC-07.
+- **Changes requested:**
+  - **E4-W02**, ten points; the major one is the `STALE_VERSION` message lost on the card remount;
+  - **E0-W08**, two points: `exactOptionalPropertyTypes`, and the comment on the approved colour exemption.
+- **E4-W06 extended:**
+  - step 4: D11 labels for the new parameter blocks, plus `check-parameter-keys.mjs`;
+  - step 5: the D3 edit-mode leftovers of E4-W01.
+- **From the api, for the next adoptions:**
+  - `Level.progression` is in the published snapshot (api E5-T11), so E4-W06 step 0 prunes the overlay.
+  - `GET /bookings/{id}` returns `checkoutUrl` while `PAYMENT_PENDING`: E5-W01 can resume a pending payment.
+  - D1 rows carry the api's translated placeholder for a class with no ring (`scheduling.noRing`). Render it as sent.
+  - The Cànic seed has **10 levels** (`PENDENT`, `progression=false`), and `GET /coverage` leaves out TER and PENDENT. A real-core e2e that counts levels or coverage rows must follow (E4-W05).
+  - `POST /attachments` will accept `Idempotency-Key` (api E6-T01 round 2). Add `"/attachments"` to `DEFAULT_IDEMPOTENT_PATHS` when you adopt the E6 snapshot.
+  - `RING_HAS_BOOKINGS`: render `memberName` + `dogName`, since the two shapes differ (INC-09). Conflicts follow `ActivityRingConflict`.
+  - **INC-08:** until the api omits them, treat `null` as absent in every field the OpenAPI marks optional.
+Blocking: no.

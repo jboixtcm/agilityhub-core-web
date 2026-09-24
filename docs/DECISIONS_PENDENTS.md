@@ -200,6 +200,12 @@ De l'anàlisi dels tres exports del 07-09 (`MAPATGE_CAMPS_PLAYOFF.md`). Cap bloq
 | B32 | **Nivell «Pendent»** (6 gossos): creem un nivell «Pendent» al catàleg (visible, sense classes assignades, fins que se'ls avaluï)? | sí, nivell `PENDENT` al catàleg del club (no reservable perquè cap classe el té) | els deixem sense nivell (i no poden reservar fins que en tinguin) |
 | B33 | **Emails compartits** (~20 altes comparteixen adreça amb un altre abonat): són famílies? | un compte per adreça: el primer se la queda i la resta es migren **sense compte**, amb proposta de grup familiar per revisar | ens passa la llista de qui va amb qui i es creen els grups directament |
 
+**Oberta (24-09, en verificar E5-T12) — per al Josep:**
+
+| # | Pregunta | Assumpció aplicada | Si respon diferent |
+|---|---|---|---|
+| B34 | **Modalitats «Instructors» (4 abonats) i «Competició 1 gos» (3)**: les creem al catàleg? Quant val «Competició 1 gos», i segueix viva? | cap de les dues és al seed: els 7 es migren **sense modalitat** amb l'avís `PLAN_UNMAPPED` (els instructors conserven el rol) i el club els assigna la modalitat després de la càrrega | es creen al seed (`INSTRUCTOR_FREE` a 0 €, no visible a l'alta; `COMPETICIO_1` amb el preu que digui) i el mapatge de S18 §3 ja hi apunta |
+
 També per al Josep, abans del tall (no és una decisió, és feina de dades): **26 abonats amb domiciliació i sense IBAN** i **16 gossos sense número de xip**; l'informe de migració els llistarà per número d'abonat.
 
 ## Part C — Assumpcions de detall (acceptades si no dius res)
