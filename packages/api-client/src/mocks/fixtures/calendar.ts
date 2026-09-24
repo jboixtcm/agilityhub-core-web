@@ -39,13 +39,23 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
  */
 export function clubInstant(date: string, time: string, timeZone = clubTimeZone): string {
   const local = Date.parse(`${date}T${time}:00Z`);
-  const before = zoneOffsetMinutes(local - 12 * 3_600_000, timeZone);
-  const after = zoneOffsetMinutes(local + 12 * 3_600_000, timeZone);
-  const valid = [before, after]
+  // Every offset the zone uses from wall − 26 h to wall + 26 h (hourly samples).
+  const samples = Array.from({ length: 53 }, (_, hour) => {
+    const instant = local + (hour - 26) * 3_600_000;
+    return { instant, offset: zoneOffsetMinutes(instant, timeZone) };
+  });
+  const offsets = [...new Set(samples.map((sample) => sample.offset))];
+  const valid = offsets
     .map((offset) => local - offset * 60_000)
     .filter((instant) => local - zoneOffsetMinutes(instant, timeZone) * 60_000 === instant);
-  const instant = valid.length === 0 ? local - before * 60_000 : Math.min(...valid);
-  return new Date(instant).toISOString().replace(".000Z", "Z");
+  if (valid.length > 0) {
+    return new Date(Math.min(...valid)).toISOString().replace(".000Z", "Z");
+  }
+  // Gap: the offset in force before the transition moves the wall time forward.
+  const before =
+    samples.filter((sample) => sample.instant + sample.offset * 60_000 < local).at(-1) ??
+    samples[0];
+  return new Date(local - (before?.offset ?? 0) * 60_000).toISOString().replace(".000Z", "Z");
 }
 
 /** Club-local `HH:mm` of an instant. */

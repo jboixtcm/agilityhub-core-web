@@ -266,6 +266,9 @@ describe("E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBl
     // Ambiguous 02:30 (autumn overlap): first occurrence; 02:30 in the spring gap → 03:30 local.
     expect(clubInstant("2026-10-25", "02:30")).toBe("2026-10-25T00:30:00Z");
     expect(clubInstant("2026-03-29", "02:30")).toBe("2026-03-29T01:30:00Z");
+    // A transition more than 12 h away from wall-time-as-UTC (NZDT → NZST at 03:00 local).
+    expect(clubInstant("2026-04-05", "02:30", "Pacific/Auckland")).toBe("2026-04-04T13:30:00Z");
+    expect(clubInstant("2026-09-27", "02:30", "Pacific/Auckland")).toBe("2026-09-26T14:30:00Z");
   });
 });
 

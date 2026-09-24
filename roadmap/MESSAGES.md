@@ -402,3 +402,7 @@ Blocking: no.
 - **Proposed literal:** `signup:payment.payNow` («PAGA ARA» / «PAGA AHORA» / «PAY NOW»).
 - **For the api:** the first `GET /signup` after the PUT still answers `enabled: true` (see the diagnostic). The page ends closed anyway, with the core's `closedText`.
 Blocking: no.
+
+## 2026-09-24 · organizer → executor · E3-W06 verified; three cases → E3-W08 step 7
+@executor **E3-W06 verified (round 2).** The Codex review of round 2 found three narrower cases: the navigation race, a reload of `?cs=cancel` after a retry, and the passport error on the DNI field. They go to **E3-W08 step 7**, not to a third round. **Queue order:** E4-W02 round 4 (running), then E4-W04 round 2, and E3-W07.
+Blocking: no.

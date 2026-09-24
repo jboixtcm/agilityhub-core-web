@@ -1,0 +1,120 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the exact mockup texts of the footers, the validation card and the D4c modal 23ms
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the D4 / D4b grid and card literals 3ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > uses the offset in force on each side of the DST changes 16ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > resolves an ambiguous local time (autumn overlap) to its first occurrence 4ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > moves a local time inside the spring gap forward by the gap length (ZonedDateTime.of) 5ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > works for other club zones (Canary Islands, one west of UTC) 5ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > finds both sides of a transition that is more than 12 h away from wall-time-as-UTC 7ms
+stderr | src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > takes the api's «Sense» column as delivered and never adds its own
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > takes the api's «Sense» column as delivered and never adds its own 454ms
+stderr | src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > shows exactly one «Sense» column for a ringless class of the stateful mock
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count 635ms
+ ✓ src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > shows exactly one «Sense» column for a ringless class of the stateful mock 375ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once 485ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES» 496ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal 496ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card 540ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch 394ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings 448ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button 376ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only 372ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours 383ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown 450ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation 502ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped 508ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives 497ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown 462ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected 370ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later 360ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card 355ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig» 397ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip 374ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels 375ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer 526ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c) 412ms
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view 366ms
+
+ Test Files  4 passed (4)
+      Tests  33 passed (33)
+   Start at  19:42:12
+   Duration  11.61s (tests 79%, environment 9%, transform 6%, import 4%, setup 2%)
+

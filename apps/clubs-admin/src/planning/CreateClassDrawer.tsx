@@ -1,6 +1,14 @@
 import { isApiError, type ApiClient } from "@agilityhub/api-client";
 import { Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
-import { type CSSProperties, type SyntheticEvent, useCallback, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  type SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -14,6 +22,7 @@ import {
   type OpeningHours,
   openingOf,
   parseMaskedDate,
+  placementKey,
   timeLabel,
   timeOf,
   timeOptions,
@@ -119,13 +128,13 @@ export function CreateClassDrawer({
     clampTime(timeOf(minutesOf(starts[0] ?? "") + 60), ends),
   );
 
-  const [bookings, setBookings] = useState<unknown[]>();
   /**
    * The `RING_HAS_BOOKINGS` list belongs to the ring, date and times it was answered for: any
    * change to them drops it, so [Anul·la les reserves i desa] never confirms a slot not shown.
    */
+  const [conflict, setConflict] = useState<{ bookings: unknown[]; placement: string }>();
   const dropBookings = () => {
-    setBookings(undefined);
+    setConflict(undefined);
   };
   /** A new start keeps the class length, with the end clamped to the day's closing time. */
   const moveStart = (nextStart: string, ends: readonly string[]) => {
@@ -155,6 +164,12 @@ export function CreateClassDrawer({
   const [capacity, setCapacity] = useState("");
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const placement = placementKey(ringId, isoDate, startTime, endTime);
+  /** The placement the fields show now: an answer that arrives late is checked against it. */
+  const latestPlacement = useRef(placement);
+  useEffect(() => {
+    latestPlacement.current = placement;
+  }, [placement]);
 
   const holidays = useResource(
     useCallback(async () => {
@@ -184,6 +199,7 @@ export function CreateClassDrawer({
       setErrors({ date: t("admin-scheduling:calendar.createForm.invalidDate") });
       return;
     }
+    const sent = placement;
     setPending(true);
     setErrors({});
     try {
@@ -200,13 +216,16 @@ export function CreateClassDrawer({
           ...(cancelBookings ? { cancelBookings: true } : {}),
         },
       });
-      setBookings(undefined);
+      setConflict(undefined);
       if (result.data !== undefined) onCreated(result.data);
     } catch (cause) {
       const code = errorCode(cause);
+      // The ring, date or times changed while the request was pending: its answer is about a
+      // placement the fields no longer show, so it is dropped (the admin saves again).
+      const moved = latestPlacement.current !== sent;
       if (code === "RING_HAS_BOOKINGS" && isApiError(cause)) {
         const list = (cause.details as { bookings?: unknown } | undefined)?.bookings;
-        setBookings(Array.isArray(list) ? list : []);
+        if (!moved) setConflict({ bookings: Array.isArray(list) ? list : [], placement: sent });
         return;
       }
       const validationField = fieldOfValidationError(cause);
@@ -217,6 +236,7 @@ export function CreateClassDrawer({
           : validationField === "startTime" || validationField === "endTime"
             ? "time"
             : "general");
+      if (moved && (field === "date" || field === "ringId" || field === "time")) return;
       setErrors({ [field]: errorMessage(cause) });
     } finally {
       setPending(false);
@@ -450,17 +470,17 @@ export function CreateClassDrawer({
           </FormField>
         </div>
         {listError(errors.general)}
-        {bookings === undefined ? null : (
+        {conflict?.placement !== placement ? null : (
           <div className="calendar-conflicts" role="alert">
             <p>
               <strong>{t("admin-scheduling:calendar.ringBookings.title")}</strong>
             </p>
             <p>{t("admin-scheduling:calendar.ringBookings.text")}</p>
-            <RingBookingList bookings={bookings} />
+            <RingBookingList bookings={conflict.bookings} />
             <div className="calendar-modal__actions">
               <Button
                 onClick={() => {
-                  setBookings(undefined);
+                  setConflict(undefined);
                 }}
                 variant="ghost"
               >

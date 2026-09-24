@@ -1,0 +1,88 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > uses the offset in force on each side of the DST changes 9ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > resolves an ambiguous local time (autumn overlap) to its first occurrence 0ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > moves a local time inside the spring gap forward by the gap length (ZonedDateTime.of) 1ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > works for other club zones (Canary Islands, one west of UTC) 1ms
+ × src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > finds both sides of a transition that is more than 12 h away from wall-time-as-UTC 2ms
+   → expected '2026-04-04T14:30:00Z' to be '2026-04-04T13:30:00Z' // Object.is equality
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped 657ms
+   → expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <li>
+  Clara Font + Trevi
+</li> instead
+stderr | src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives 592ms
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <li>
+  Clara Font + Trevi
+</li> instead
+ ❯ src/planning/CalendarPage.test.tsx:620:66
+    618|       expect(submit()).toBeEnabled();
+    619|     });
+    620|     expect(within(drawer).queryByText("Clara Font + Trevi")).not.toBeI…
+       |                                                                  ^
+    621|     expect(
+    622|       within(drawer).queryByRole("button", { name: "Anul·la les reserv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > finds both sides of a transition that is more than 12 h away from wall-time-as-UTC
+AssertionError: expected '2026-04-04T14:30:00Z' to be '2026-04-04T13:30:00Z' // Object.is equality
+
+Expected: "2026-04-04T13:30:00Z"
+Received: "2026-04-04T14:30:00Z"
+
+ ❯ src/planning/calendar-shared.test.ts:36:68
+     34|   it("finds both sides of a transition that is more than 12 h away fro…
+     35|     // Pacific/Auckland: NZDT (+13) → NZST (+12) at 03:00 local on 5 A…
+     36|     expect(clubInstant("2026-04-05", "02:30", "Pacific/Auckland")).toB…
+       |                                                                    ^
+     37|     expect(clubInstant("2026-04-05", "01:59", "Pacific/Auckland")).toB…
+     38|     expect(clubInstant("2026-04-05", "03:00", "Pacific/Auckland")).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 5 passed | 22 skipped (29)
+   Start at  19:40:56
+   Duration  2.34s (tests 43%, environment 26%, transform 14%, import 12%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --reporter=verbose src/planning/calendar-shared.test.ts src/planning/CalendarPage.test.tsx -t R-06-14|delayed|arrives after

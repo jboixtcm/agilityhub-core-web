@@ -1,0 +1,1096 @@
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh E4-W02
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: E4-W02
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 143, added 142
+Progress: resolved 851, reused 0, downloaded 518, added 518
+Progress: resolved 851, reused 0, downloaded 728, added 728
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.3s using pnpm v9.15.9
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+
+> agilityhub-core-web@0.0.0 e2e /work
+> turbo run e2e --concurrency=1
+
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 10 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 431d96cbc72fd83b
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing d3d69457da5c20b5
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+clubs-admin:build: cache miss, executing fd722f9c43d80205
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 490 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs-admin:build: dist/assets/index-DwvWVqsU.css                           88.74 kB │ gzip:  14.32 kB
+clubs-admin:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs-admin:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs-admin:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/activities-DR2QkLSJ.js                        1.49 kB │ gzip:   0.71 kB
+clubs-admin:build: dist/assets/admin-dashboard-CMKZRVii.js                   1.53 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/activities-BJUaKFo2.js                        1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/activities-BL6lWnbC.js                        1.58 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/admin-dashboard-Ap5_OABm.js                   1.61 kB │ gzip:   0.89 kB
+clubs-admin:build: dist/assets/admin-dashboard-CRFF2ut9.js                   1.66 kB │ gzip:   0.90 kB
+clubs-admin:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+clubs-admin:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+clubs-admin:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs-admin:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+clubs-admin:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/admin-activities-CvPvr0IQ.js                  5.56 kB │ gzip:   2.26 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/admin-activities-Nh8JrplE.js                  5.69 kB │ gzip:   2.43 kB
+clubs-admin:build: dist/assets/admin-activities-yczMFJ76.js                  5.90 kB │ gzip:   2.49 kB
+clubs-admin:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+clubs-admin:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+clubs-admin:build: dist/assets/admin-census-B_rddRVa.js                      8.62 kB │ gzip:   3.40 kB
+clubs-admin:build: dist/assets/admin-census-YEF2LUsD.js                      9.08 kB │ gzip:   3.66 kB
+clubs-admin:build: dist/assets/admin-census-C4D2RM-O.js                      9.40 kB │ gzip:   3.74 kB
+clubs-admin:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs-admin:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs-admin:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs-admin:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs-admin:build: dist/assets/browser-Dkum5NZK.js                         616.66 kB │ gzip: 212.19 kB
+clubs-admin:build: dist/assets/index-DgKbTAvo.js                           892.73 kB │ gzip: 332.25 kB
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 333ms
+id:build: cache miss, executing 512323bf2ea07bb3
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 451 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-DuIGCCQP.css                           40.29 kB │ gzip:   7.82 kB
+id:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+id:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+id:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/shell-5wrIZEiU.js                             1.34 kB │ gzip:   0.71 kB
+id:build: dist/assets/shell-BPq7tYY0.js                             1.38 kB │ gzip:   0.79 kB
+id:build: dist/assets/shell-Cc61Igy-.js                             1.41 kB │ gzip:   0.79 kB
+id:build: dist/assets/activities-DR2QkLSJ.js                        1.49 kB │ gzip:   0.71 kB
+id:build: dist/assets/admin-dashboard-CMKZRVii.js                   1.53 kB │ gzip:   0.80 kB
+id:build: dist/assets/common-BPwvFsnQ.js                            1.55 kB │ gzip:   0.82 kB
+id:build: dist/assets/activities-BJUaKFo2.js                        1.57 kB │ gzip:   0.80 kB
+id:build: dist/assets/activities-BL6lWnbC.js                        1.58 kB │ gzip:   0.80 kB
+id:build: dist/assets/admin-dashboard-Ap5_OABm.js                   1.61 kB │ gzip:   0.89 kB
+id:build: dist/assets/common-DVY9MXrC.js                            1.64 kB │ gzip:   0.89 kB
+id:build: dist/assets/admin-dashboard-CRFF2ut9.js                   1.66 kB │ gzip:   0.90 kB
+id:build: dist/assets/common-Cbueg-A3.js                            1.68 kB │ gzip:   0.92 kB
+id:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+id:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+id:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+id:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+id:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+id:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+id:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+id:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/admin-activities-CvPvr0IQ.js                  5.56 kB │ gzip:   2.26 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/admin-activities-Nh8JrplE.js                  5.69 kB │ gzip:   2.43 kB
+id:build: dist/assets/admin-activities-yczMFJ76.js                  5.90 kB │ gzip:   2.49 kB
+id:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+id:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+id:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+id:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+id:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+id:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+id:build: dist/assets/admin-census-B_rddRVa.js                      8.62 kB │ gzip:   3.40 kB
+id:build: dist/assets/admin-census-YEF2LUsD.js                      9.08 kB │ gzip:   3.66 kB
+id:build: dist/assets/admin-census-C4D2RM-O.js                      9.40 kB │ gzip:   3.74 kB
+id:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+id:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+id:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+id:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+id:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+id:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+id:build: dist/assets/index-DfEkTOI7.js                           321.28 kB │ gzip:  99.60 kB
+id:build: dist/assets/browser-BAi86oKx.js                         804.89 kB │ gzip: 355.56 kB
+id:build: 
+id:build: ✓ built in 159ms
+id:build: [plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: cache miss, executing 264110570154a33d
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 466 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                                        0.13 kB
+clubs:build: dist/index.html                                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-B595Yj6k.css                           73.87 kB │ gzip:  12.48 kB
+clubs:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/activities-DR2QkLSJ.js                        1.49 kB │ gzip:   0.71 kB
+clubs:build: dist/assets/admin-dashboard-CMKZRVii.js                   1.53 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/activities-BJUaKFo2.js                        1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/activities-BL6lWnbC.js                        1.58 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/admin-dashboard-Ap5_OABm.js                   1.61 kB │ gzip:   0.89 kB
+clubs:build: dist/assets/admin-dashboard-CRFF2ut9.js                   1.66 kB │ gzip:   0.90 kB
+clubs:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/admin-audit-BZSQ9q1n.js                       2.88 kB │ gzip:   1.34 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-qNWjTa9T.js                       3.13 kB │ gzip:   1.49 kB
+clubs:build: dist/assets/admin-audit-B9HrUHsS.js                       3.21 kB │ gzip:   1.51 kB
+clubs:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+clubs:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/admin-activities-CvPvr0IQ.js                  5.56 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/admin-activities-Nh8JrplE.js                  5.69 kB │ gzip:   2.43 kB
+clubs:build: dist/assets/admin-activities-yczMFJ76.js                  5.90 kB │ gzip:   2.49 kB
+clubs:build: dist/assets/census-2y4pkTWD.js                            5.96 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/census-CfjHQ4Uz.js                            6.29 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/census-C9vkPZEn.js                            6.47 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+clubs:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+clubs:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+clubs:build: dist/assets/admin-census-B_rddRVa.js                      8.62 kB │ gzip:   3.40 kB
+clubs:build: dist/assets/admin-census-YEF2LUsD.js                      9.08 kB │ gzip:   3.66 kB
+clubs:build: dist/assets/admin-census-C4D2RM-O.js                      9.40 kB │ gzip:   3.74 kB
+clubs:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs:build: dist/assets/index-DU70Z4Lk.js                           460.52 kB │ gzip: 137.42 kB
+clubs:build: dist/assets/browser-BAi86oKx.js                         804.89 kB │ gzip: 355.56 kB
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: ✓ built in 193ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  54 entries (1604.63 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs-admin:e2e: cache bypass, force executing 74bffb5be27641cd
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:661) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 34 tests using 9 workers
+clubs-admin:e2e: (node:795) TimeoutNegativeWarning: -4523.220999999998 is a negative number.
+clubs-admin:e2e: Timeout duration was set to 1.
+clubs-admin:e2e: (Use `node --trace-warnings ...` to show where the warning was created)
+clubs-admin:e2e: TTTTTTTTTTTTTTTTTT·····F··········
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) e2e/activities.spec.ts:47:3 › E4-W04 D7 activities › T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Activitats', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       47 |   test("T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup", async ({ page }) => {
+clubs-admin:e2e:       48 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 49 |     await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+clubs-admin:e2e:          |                                                                       ^
+clubs-admin:e2e:       50 |     await page.waitForURL("**/activitats**");
+clubs-admin:e2e:       51 |     const table = page.getByRole("table");
+clubs-admin:e2e:       52 |     const tournament = table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:49:71
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) e2e/activities.spec.ts:77:3 › E4-W04 D7 activities › T-07-29 publishing a dated draft opens the ring-conflict dialog and applies the options 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: Object with guid response@3a1c595207d435f4d6c023346fb0f990 was not bound in the connection
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   3) e2e/audit.spec.ts:37:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/abonats/member-laura", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 |   await prepareAdmin(page);
+clubs-admin:e2e:       43 |
+clubs-admin:e2e:     > 44 |   await page.goto(`${baseUrl}/abonats/member-laura`);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       45 |   await expect(page.getByRole("link", { name: "Tota l'auditoria ›" })).toHaveAttribute(
+clubs-admin:e2e:       46 |     "href",
+clubs-admin:e2e:       47 |     "/abonats/member-laura/auditoria",
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:44:14
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   4) e2e/audit.spec.ts:103:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e: 
+clubs-admin:e2e:       114 |
+clubs-admin:e2e:       115 |   for (const item of cases) {
+clubs-admin:e2e:     > 116 |     await page.goto(`${baseUrl}/auditoria`);
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       117 |     await page.locator(".shell-language select").selectOption(item.locale);
+clubs-admin:e2e:       118 |     await expect(page.getByRole("heading", { name: item.title })).toBeVisible();
+clubs-admin:e2e:       119 |     await expect(page.getByRole("table")).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:116:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   5) e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: net::ERR_ABORTED at http://127.0.0.1:4174/pistes
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/pistes", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       60 |     const page = await context.newPage();
+clubs-admin:e2e:       61 |     await prepareAdmin(page, "admin", brandingCanic);
+clubs-admin:e2e:     > 62 |     await page.goto(`${baseUrl}/pistes`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       63 |
+clubs-admin:e2e:       64 |     await expect(page.getByRole("heading", { name: "Pistes" })).toBeVisible();
+clubs-admin:e2e:       65 |     const table = page.getByRole("table", { name: "Pistes del club" });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:62:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   6) e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Instructors i administradors' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Instructors i administradors' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Instructors i administradors' })
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       102 |     await page.goto(`${baseUrl}/equip`);
+clubs-admin:e2e:       103 |
+clubs-admin:e2e:     > 104 |     await expect(page.getByRole("heading", { name: "Instructors i administradors" })).toBeVisible();
+clubs-admin:e2e:           |                                                                                       ^
+clubs-admin:e2e:       105 |     await expect(page.getByRole("heading", { exact: true, name: "Instructors" })).toBeVisible();
+clubs-admin:e2e:       106 |     await expect(page.getByRole("heading", { exact: true, name: "Administradors" })).toBeVisible();
+clubs-admin:e2e:       107 |     await expect(page.getByText("Laura Serra Vidal (Duna)").first()).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:104:87
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   7) e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e: 
+clubs-admin:e2e:       33 |   test("T-03-31 D5 shows the member filter state and approved 1280 layout", async ({ page }) => {
+clubs-admin:e2e:       34 |     await prepareAdmin(page);
+clubs-admin:e2e:     > 35 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       36 |
+clubs-admin:e2e:       37 |     await expect(page.getByRole("heading", { name: /Abonats/u })).toBeVisible();
+clubs-admin:e2e:       38 |     await expect(page.getByText("184 d'alta")).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:35:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   8) e2e/census-lists.spec.ts:46:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('link', { name: 'Laura Serra Vidal', exact: true }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       47 |     await prepareAdmin(page);
+clubs-admin:e2e:       48 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:     > 49 |     await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:          |                                                                                      ^
+clubs-admin:e2e:       50 |
+clubs-admin:e2e:       51 |     await page.locator("summary").filter({ hasText: "Columnes" }).click();
+clubs-admin:e2e:       52 |     const dogs = page.locator(".ah-universal-list__columns li").filter({
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:49:86
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Browser logs:
+clubs-admin:e2e: 
+clubs-admin:e2e:     <launching> /ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux-arm64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-PLPT8E --remote-debugging-pipe --no-startup-window
+clubs-admin:e2e:     <launched> pid=1795
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.146679:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.147386:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.147914:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.147944:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.183999:WARNING:media/gpu/vaapi/vaapi_wrapper.cc:1660] drmGetDevices2() has not found any devices
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.188013:WARNING:sandbox/policy/linux/sandbox_linux.cc:405] InitializeSandbox() called with multiple threads in process gpu-process.
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.194834:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.194920:WARNING:device/bluetooth/dbus/bluez_dbus_manager.cc:209] Floss manager service not available, cannot set Floss enable/disable.
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.195687:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.205537:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1795][err] [0924/175418.690205:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.083613:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.154801:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931135:INFO:CONSOLE:3458] "%c[MSW] Mocking enabled. color:orangered;font-weight:bold;", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3458)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931212:INFO:CONSOLE:3459] "%cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3459)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931240:INFO:CONSOLE:3460] "Found an issue? https://github.com/mswjs/msw/issues", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3460)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931321:INFO:CONSOLE:3461] "Worker script URL: http://127.0.0.1:4174/mockServiceWorker.js", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3461)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931397:INFO:CONSOLE:3462] "Worker scope: http://127.0.0.1:4174/", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3462)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931422:INFO:CONSOLE:3463] "Client ID: %s (%s) 47a3a77a-5237-4bd2-abd7-ea22e5e62945 top-level", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3463)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.931452:INFO:CONSOLE:3464] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3464)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.950765:INFO:CONSOLE:415] "[MSW] 17:54:19 GET /api/v1/branding (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.950871:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.950949:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.951028:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1795][err] [0924/175419.951460:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.061835:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.067706:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.102926:INFO:CONSOLE:415] "[MSW] 17:54:20 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.103486:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.103547:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.103578:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.103601:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.107988:INFO:CONSOLE:415] "[MSW] 17:54:20 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.108096:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.108131:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.108156:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.108183:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.558944:INFO:CONSOLE:415] "[MSW] 17:54:20 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.559003:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.559574:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.559672:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.559695:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.571442:INFO:CONSOLE:415] "[MSW] 17:54:20 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.571491:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.571508:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.571582:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.571618:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.651415:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.698060:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1795][err] [0924/175420.949639:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1795][err] [0924/175421.056347:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1795][err] [0924/175421.186289:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1795][err] [0924/175421.273241:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1795] <gracefully close start>
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   9) e2e/census-records.spec.ts:33:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: net::ERR_ABORTED at http://127.0.0.1:4174/abonats/member-laura
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/abonats/member-laura", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       35 |   }) => {
+clubs-admin:e2e:       36 |     await prepareAdmin(page);
+clubs-admin:e2e:     > 37 |     await page.goto(`${baseUrl}/abonats/member-laura`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       38 |
+clubs-admin:e2e:       39 |     await expect(page.getByRole("heading", { name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:       40 |     await expect(page.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:37:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   10) e2e/census-records.spec.ts:72:3 › E2-W02 census records › T-03-37 surfaces one stale edit and one booking conflict for concurrent D10 writes 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByRole('heading', { name: 'Laura Serra Vidal' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Laura Serra Vidal' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Laura Serra Vidal' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       75 |     await prepareAdmin(page);
+clubs-admin:e2e:       76 |     await page.goto(`${baseUrl}/abonats/member-laura`);
+clubs-admin:e2e:     > 77 |     await expect(page.getByRole("heading", { name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:          |                                                                            ^
+clubs-admin:e2e:       78 |
+clubs-admin:e2e:       79 |     const result = await page.evaluate(async () => {
+clubs-admin:e2e:       80 |       const headers = {
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:77:76
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Browser logs:
+clubs-admin:e2e: 
+clubs-admin:e2e:     <launching> /ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux-arm64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-NhEx7i --remote-debugging-pipe --no-startup-window
+clubs-admin:e2e:     <launched> pid=1793
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.146781:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.147338:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.147363:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.147376:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.183930:WARNING:media/gpu/vaapi/vaapi_wrapper.cc:1660] drmGetDevices2() has not found any devices
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.187474:WARNING:sandbox/policy/linux/sandbox_linux.cc:405] InitializeSandbox() called with multiple threads in process gpu-process.
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.200357:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.200415:WARNING:device/bluetooth/dbus/bluez_dbus_manager.cc:209] Floss manager service not available, cannot set Floss enable/disable.
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.202743:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.212016:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.605091:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1793][err] [0924/175418.924408:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.125499:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857026:INFO:CONSOLE:3458] "%c[MSW] Mocking enabled. color:orangered;font-weight:bold;", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3458)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857114:INFO:CONSOLE:3459] "%cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3459)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857209:INFO:CONSOLE:3460] "Found an issue? https://github.com/mswjs/msw/issues", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3460)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857249:INFO:CONSOLE:3461] "Worker script URL: http://127.0.0.1:4174/mockServiceWorker.js", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3461)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857277:INFO:CONSOLE:3462] "Worker scope: http://127.0.0.1:4174/", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3462)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857333:INFO:CONSOLE:3463] "Client ID: %s (%s) 8fdf226d-a961-48be-a76b-95e0e3244249 top-level", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3463)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.857352:INFO:CONSOLE:3464] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3464)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.872442:INFO:CONSOLE:415] "[MSW] 17:54:19 GET /api/v1/branding (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.872541:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.872597:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.872633:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1793][err] [0924/175419.873081:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.002756:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.036983:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.056472:INFO:CONSOLE:415] "[MSW] 17:54:20 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.058475:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.058599:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.058674:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.058708:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.063941:INFO:CONSOLE:415] "[MSW] 17:54:20 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.064002:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.064038:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.064088:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.064107:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.483755:INFO:CONSOLE:415] "[MSW] 17:54:20 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.483809:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.483827:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.483848:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.483863:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.487697:INFO:CONSOLE:415] "[MSW] 17:54:20 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.487893:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.488102:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.488128:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.488144:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.545735:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.562070:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1793][err] [0924/175420.930809:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1793][err] [0924/175421.243477:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1793][err] [0924/175421.269174:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1793][err] [0924/175421.383080:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1793] <gracefully close start>
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   11) e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/parametres", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       57 |   const admin = await adminContext.newPage();
+clubs-admin:e2e:       58 |   await loginAdmin(admin);
+clubs-admin:e2e:     > 59 |   await admin.goto(`${adminUrl}/parametres`);
+clubs-admin:e2e:          |               ^
+clubs-admin:e2e:       60 |   const rules = admin.getByRole("button", { name: /Normes del club/u });
+clubs-admin:e2e:       61 |   await expect(rules).toBeVisible();
+clubs-admin:e2e:       62 |   await admin.screenshot({
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/club-pages.spec.ts:59:15
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   12) e2e/dashboard-signup.spec.ts:32:1 › T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the counters 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByRole('heading', { name: /Bon dia!.*dilluns.*10 d’agost/iu })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: /Bon dia!.*dilluns.*10 d’agost/iu }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: /Bon dia!.*dilluns.*10 d’agost/iu })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       33 |   await login(page);
+clubs-admin:e2e:       34 |
+clubs-admin:e2e:     > 35 |   await expect(page.getByRole("heading", { name: /Bon dia!.*dilluns.*10 d’agost/iu })).toBeVisible();
+clubs-admin:e2e:          |                                                                                        ^
+clubs-admin:e2e:       36 |   await expect(page.getByText("184", { exact: true })).toBeVisible();
+clubs-admin:e2e:       37 |   await expect(page.getByText("87%", { exact: true })).toBeVisible();
+clubs-admin:e2e:       38 |   await expect(page.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/dashboard-signup.spec.ts:35:88
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   13) e2e/onboarding.spec.ts:33:3 › T-01-26 clubs-admin onboarding › shows the equivalent modal and can defer only the optional profile data 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.waitForURL: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     =========================== logs ===========================
+clubs-admin:e2e:     waiting for navigation to "**/tauler" until "load"
+clubs-admin:e2e:       navigated to "http://127.0.0.1:4174/tauler"
+clubs-admin:e2e:       "networkidle" event fired
+clubs-admin:e2e:       "domcontentloaded" event fired
+clubs-admin:e2e:       "load" event fired
+clubs-admin:e2e:     ============================================================
+clubs-admin:e2e: 
+clubs-admin:e2e:       27 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:     > 29 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       30 | }
+clubs-admin:e2e:       31 |
+clubs-admin:e2e:       32 | test.describe("T-01-26 clubs-admin onboarding", () => {
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/onboarding.spec.ts:29:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/onboarding.spec.ts:36:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   14) e2e/planning-calendar.spec.ts:48:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e: 
+clubs-admin:e2e:       50 |   }) => {
+clubs-admin:e2e:       51 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 52 |     await page.getByRole("link", { name: "Calendari de classes" }).click();
+clubs-admin:e2e:          |                                                                    ^
+clubs-admin:e2e:       53 |     await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+clubs-admin:e2e:       54 |     const week = grid(page, "10 al 16 d’agost");
+clubs-admin:e2e:       55 |     await expect(week).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/planning-calendar.spec.ts:52:68
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   15) e2e/planning-calendar.spec.ts:202:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Calendari de classes' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       202 |   test("T-06-28 INSTRUCTOR reads D4 without any action (A22 c)", async ({ page }) => {
+clubs-admin:e2e:       203 |     await signIn(page, "instructor");
+clubs-admin:e2e:     > 204 |     await page.getByRole("link", { name: "Calendari de classes" }).click();
+clubs-admin:e2e:           |                                                                    ^
+clubs-admin:e2e:       205 |     await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+clubs-admin:e2e:       206 |     const week = grid(page, "10 al 16 d’agost");
+clubs-admin:e2e:       207 |     await expect(week).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/planning-calendar.spec.ts:204:68
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Browser logs:
+clubs-admin:e2e: 
+clubs-admin:e2e:     <launching> /ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux-arm64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-slcIlL --remote-debugging-pipe --no-startup-window
+clubs-admin:e2e:     <launched> pid=1797
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.150171:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.150222:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.150240:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.150254:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.183763:WARNING:media/gpu/vaapi/vaapi_wrapper.cc:1660] drmGetDevices2() has not found any devices
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.187110:WARNING:sandbox/policy/linux/sandbox_linux.cc:405] InitializeSandbox() called with multiple threads in process gpu-process.
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.197760:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.197823:WARNING:device/bluetooth/dbus/bluez_dbus_manager.cc:209] Floss manager service not available, cannot set Floss enable/disable.
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.206062:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.206228:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+clubs-admin:e2e:     [pid=1797][err] [0924/175418.726706:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1797][err] [0924/175419.193086:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1797][err] [0924/175419.454294:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127334:INFO:CONSOLE:3458] "%c[MSW] Mocking enabled. color:orangered;font-weight:bold;", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3458)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127480:INFO:CONSOLE:3459] "%cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3459)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127527:INFO:CONSOLE:3460] "Found an issue? https://github.com/mswjs/msw/issues", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3460)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127545:INFO:CONSOLE:3461] "Worker script URL: http://127.0.0.1:4174/mockServiceWorker.js", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3461)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127570:INFO:CONSOLE:3462] "Worker scope: http://127.0.0.1:4174/", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3462)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127652:INFO:CONSOLE:3463] "Client ID: %s (%s) d7aaba7f-0c3c-4058-b367-1393df15ea55 top-level", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3463)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.127704:INFO:CONSOLE:3464] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw_browser.js?v=7e3179f7 (3464)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.142718:INFO:CONSOLE:415] "[MSW] 08:00:00 GET /api/v1/branding (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.142791:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.142834:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.142878:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.143819:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.255456:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.269961:INFO:CONSOLE:138] "[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.", source: http://127.0.0.1:4174/@fs/work/packages/ui/src/branding.tsx (138)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.293846:INFO:CONSOLE:415] "[MSW] 08:00:00 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.293916:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.293959:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.293994:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.294024:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.298085:INFO:CONSOLE:415] "[MSW] 08:00:00 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.298186:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.298214:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.298251:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.298268:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.465412:INFO:CONSOLE:415] "[MSW] 08:00:00 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.465477:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.465540:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.465577:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.465609:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.469863:INFO:CONSOLE:415] "[MSW] 08:00:00 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (415)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.469919:INFO:CONSOLE:416] "Request [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (416)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.469947:INFO:CONSOLE:417] "Handler: [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (417)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.469966:INFO:CONSOLE:418] "Response [object Object]", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (418)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.469995:INFO:CONSOLE:419] "console.groupEnd", source: http://127.0.0.1:4174/node_modules/.vite/deps/msw.js?v=fac6b822 (419)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.529561:INFO:CONSOLE:859] "[vite] connecting...", source: http://127.0.0.1:4174/@vite/client (859)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.555392:INFO:CONSOLE:968] "[vite] connected.", source: http://127.0.0.1:4174/@vite/client (968)
+clubs-admin:e2e:     [pid=1797][err] [0924/175420.786194:INFO:CONSOLE:14336] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=32b25aed (14336)
+clubs-admin:e2e:     [pid=1797] <gracefully close start>
+clubs-admin:e2e:     [pid=1797] <process did exit: exitCode=0, signal=null>
+clubs-admin:e2e:     [pid=1797] starting temporary directories cleanup
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   16) e2e/planning-templates.spec.ts:52:3 › E4-W01 D3 + D3b weekly templates › T-06-26 / T-06-27 designs, checks and generates the week, then opens the day per ring and per instructor 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Plantilla setmanal' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       54 |   }) => {
+clubs-admin:e2e:       55 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 56 |     await page.getByRole("link", { name: "Plantilla setmanal" }).click();
+clubs-admin:e2e:          |                                                                  ^
+clubs-admin:e2e:       57 |     await page.waitForURL("**/plantilles?template=template-setmana-a");
+clubs-admin:e2e:       58 |
+clubs-admin:e2e:       59 |     await expect(page.getByRole("heading", { name: "Plantilles", level: 1 })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/planning-templates.spec.ts:56:66
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/planning-templates-E4-W01--ca2e5-per-ring-and-per-instructor/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:   17) e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: Object with guid response@dec2cb6da02ebbd76d85ab20fbe6f91e was not bound in the connection
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   18) e2e/shell.spec.ts:52:3 › T-02-14 clubs-admin shell › shows the Cànic administrator sidebar ───
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Fixture "trace recording" timeout of 30000ms exceeded during teardown.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: /Bon dia!/u })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: /Bon dia!/u }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: /Bon dia!/u })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       54 |     await login(page);
+clubs-admin:e2e:       55 |
+clubs-admin:e2e:     > 56 |     await expect(page.getByRole("heading", { name: /Bon dia!/u })).toBeVisible();
+clubs-admin:e2e:          |                                                                    ^
+clubs-admin:e2e:       57 |     await page.screenshot({
+clubs-admin:e2e:       58 |       fullPage: true,
+clubs-admin:e2e:       59 |       path: resolve(evidenceDirectory, "admin-canic-1280.png"),
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/shell.spec.ts:56:68
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: browserContext.close: Target page, context or browser has been closed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+clubs-admin:e2e: 
+clubs-admin:e2e:   19) e2e/shell.spec.ts:76:3 › T-02-14 clubs-admin shell › does not show Configuració to an instructor 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('link', { name: 'Entrenaments' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('link', { name: 'Entrenaments' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Entrenaments' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       78 |     await login(page);
+clubs-admin:e2e:       79 |
+clubs-admin:e2e:     > 80 |     await expect(page.getByRole("link", { name: "Entrenaments" })).toBeVisible();
+clubs-admin:e2e:          |                                                                    ^
+clubs-admin:e2e:       81 |     await expect(page.getByRole("heading", { name: "Configuració" })).toHaveCount(0);
+clubs-admin:e2e:       82 |     await expect(page.getByRole("link", { name: "Paràmetres" })).toHaveCount(0);
+clubs-admin:e2e:       83 |   });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/shell.spec.ts:80:68
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--23d10-nfiguració-to-an-instructor/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--23d10-nfiguració-to-an-instructor/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/shell-T-02-14-clubs-admin--23d10-nfiguració-to-an-instructor/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   19 failed
+clubs-admin:e2e:     e2e/activities.spec.ts:47:3 › E4-W04 D7 activities › T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup 
+clubs-admin:e2e:     e2e/activities.spec.ts:77:3 › E4-W04 D7 activities › T-07-29 publishing a dated draft opens the ring-conflict dialog and applies the options 
+clubs-admin:e2e:     e2e/audit.spec.ts:37:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e:     e2e/audit.spec.ts:103:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:46:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e:     e2e/census-records.spec.ts:33:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e:     e2e/census-records.spec.ts:72:3 › E2-W02 census records › T-03-37 surfaces one stale edit and one booking conflict for concurrent D10 writes 
+clubs-admin:e2e:     e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e:     e2e/dashboard-signup.spec.ts:32:1 › T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the counters 
+clubs-admin:e2e:     e2e/onboarding.spec.ts:33:3 › T-01-26 clubs-admin onboarding › shows the equivalent modal and can defer only the optional profile data 
+clubs-admin:e2e:     e2e/planning-calendar.spec.ts:48:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+clubs-admin:e2e:     e2e/planning-calendar.spec.ts:202:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c) 
+clubs-admin:e2e:     e2e/planning-templates.spec.ts:52:3 › E4-W01 D3 + D3b weekly templates › T-06-26 / T-06-27 designs, checks and generates the week, then opens the day per ring and per instructor 
+clubs-admin:e2e:     e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e:     e2e/shell.spec.ts:52:3 › T-02-14 clubs-admin shell › shows the Cànic administrator sidebar ─────
+clubs-admin:e2e:     e2e/shell.spec.ts:76:3 › T-02-14 clubs-admin shell › does not show Configuració to an instructor 
+clubs-admin:e2e:   15 passed (5.1m)
+clubs-admin:e2e:  ELIFECYCLE  Command failed with exit code 1.
+id:e2e: cache bypass, force executing 46bf66a721af0586
+clubs:e2e: cache bypass, force executing fba67483bf542e9e
+clubs-admin#e2e:  ERROR  command (/work/apps/clubs-admin) /usr/bin/pnpm run e2e exited (1)
+
+ Tasks:    5 successful, 8 total
+Cached:    0 cached, 8 total
+  Time:    5m15.885s 
+Failed:    clubs-admin#e2e
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.

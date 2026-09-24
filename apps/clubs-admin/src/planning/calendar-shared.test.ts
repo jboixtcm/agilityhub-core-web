@@ -30,4 +30,15 @@ describe("R-06-14 clubInstant (club-local date + time → UTC instant)", () => {
     expect(clubInstant("2026-11-01", "01:30", "America/New_York")).toBe("2026-11-01T05:30:00Z");
     expect(clubInstant("2026-03-08", "02:30", "America/New_York")).toBe("2026-03-08T07:30:00Z");
   });
+
+  it("finds both sides of a transition that is more than 12 h away from wall-time-as-UTC", () => {
+    // Pacific/Auckland: NZDT (+13) → NZST (+12) at 03:00 local on 5 April; 02:30 happens twice.
+    expect(clubInstant("2026-04-05", "02:30", "Pacific/Auckland")).toBe("2026-04-04T13:30:00Z");
+    expect(clubInstant("2026-04-05", "01:59", "Pacific/Auckland")).toBe("2026-04-04T12:59:00Z");
+    expect(clubInstant("2026-04-05", "03:00", "Pacific/Auckland")).toBe("2026-04-04T15:00:00Z");
+    // NZST → NZDT at 02:00 local on 27 September: 02:30 does not exist → 03:30 NZDT.
+    expect(clubInstant("2026-09-27", "02:30", "Pacific/Auckland")).toBe("2026-09-26T14:30:00Z");
+    // Australia/Lord_Howe changes by 30 minutes (+11 → +10:30): 01:45 first occurrence.
+    expect(clubInstant("2026-04-05", "01:45", "Australia/Lord_Howe")).toBe("2026-04-04T14:45:00Z");
+  });
 });

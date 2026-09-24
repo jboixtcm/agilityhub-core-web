@@ -573,6 +573,129 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     server.events.removeAllListeners();
   });
 
+  it("R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped", async () => {
+    let releaseFirst: () => void = () => undefined;
+    const firstHeld = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    let calls = 0;
+    // Only the first POST waits; returning nothing falls through to the stateful mock.
+    server.use(
+      http.post("*/api/v1/class-sessions", async () => {
+        calls += 1;
+        if (calls === 1) await firstHeld;
+      }),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies: Record<string, unknown>[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "POST" && new URL(request.url).pathname.endsWith("/class-sessions")) {
+        void request
+          .clone()
+          .json()
+          .then((body: Record<string, unknown>) => bodies.push(body));
+      }
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "19:00" } });
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Muntanya" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
+    const submit = () => within(drawer).getByRole("button", { name: /^CREA LA CLASSE/u });
+    fireEvent.click(submit());
+    await waitFor(() => {
+      expect(bodies).toHaveLength(1);
+    });
+    expect(submit()).toBeDisabled();
+
+    // The Muntanya request is still pending when the admin picks Cadells; then its answer arrives.
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Cadells" }));
+    releaseFirst();
+    await waitFor(() => {
+      expect(submit()).toBeEnabled();
+    });
+    expect(within(drawer).queryByText("Clara Font + Trevi")).not.toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Anul·la les reserves i desa" }),
+    ).not.toBeInTheDocument();
+    // Dropped, not hidden: going back to Muntanya does not revive the old list either.
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Muntanya" }));
+    expect(within(drawer).queryByText("Clara Font + Trevi")).not.toBeInTheDocument();
+
+    fireEvent.click(within(drawer).getByRole("radio", { name: "Cadells" }));
+    fireEvent.click(submit());
+    expect(await screen.findByText("Classe creada")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies.map((body) => body.ringId)).toEqual(["ring-muntanya", "ring-cadells"]);
+    });
+    expect(bodies.some((body) => "cancelBookings" in body)).toBe(false);
+    server.events.removeAllListeners();
+  });
+
+  it("R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives", async () => {
+    let releaseFirst: () => void = () => undefined;
+    const firstHeld = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    let calls = 0;
+    server.use(
+      http.post("*/api/v1/ring-blocks", async () => {
+        calls += 1;
+        if (calls === 1) await firstHeld;
+      }),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies: Record<string, unknown>[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "POST" && new URL(request.url).pathname.endsWith("/ring-blocks")) {
+        void request
+          .clone()
+          .json()
+          .then((body: Record<string, unknown>) => bodies.push(body));
+      }
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    const placement = () => [
+      within(drawer).getByLabelText("Pista"),
+      within(drawer).getByLabelText("Data"),
+      within(drawer).getByLabelText("De"),
+      within(drawer).getByLabelText("A"),
+    ];
+    fireEvent.change(within(drawer).getByLabelText("Pista"), {
+      target: { value: "ring-muntanya" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "19:00" } });
+    fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "19:30" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: /^DESA EL BLOQUEIG/u }));
+    await waitFor(() => {
+      expect(bodies).toHaveLength(1);
+    });
+    // While the request is pending, the ring, date and times cannot change.
+    for (const field of placement()) expect(field).toBeDisabled();
+
+    releaseFirst();
+    expect(await within(drawer).findByText("Clara Font + Trevi")).toBeVisible();
+    for (const field of placement()) expect(field).toBeEnabled();
+    expect(within(drawer).getByLabelText("Pista")).toHaveValue("ring-muntanya");
+    // The confirmation resends the placement that was answered, the one still shown.
+    fireEvent.click(within(drawer).getByRole("button", { name: "Anul·la les reserves i desa" }));
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies.map((body) => [body.ringId, body.cancelBookings])).toEqual([
+        ["ring-muntanya", undefined],
+        ["ring-muntanya", true],
+      ]);
+    });
+    server.events.removeAllListeners();
+  });
+
   it("R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown", async () => {
     let releasePatch: () => void = () => undefined;
     const patchHeld = new Promise<void>((resolve) => {

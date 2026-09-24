@@ -95,15 +95,38 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
  */
 export function clubInstant(date: string, time: string, timeZone: string): string {
   const local = Date.parse(`${date}T${time}:00Z`);
-  // Offsets in force half a day before and after: a zone changes at most once in between.
-  const before = zoneOffsetMinutes(local - 12 * 3_600_000, timeZone);
-  const after = zoneOffsetMinutes(local + 12 * 3_600_000, timeZone);
-  const valid = [before, after]
+  // Every offset the zone uses from wall − 26 h to wall + 26 h (hourly samples): offsets stay
+  // within ±14 h, so the samples cover every transition around the real instant.
+  const samples = Array.from({ length: 53 }, (_, hour) => {
+    const instant = local + (hour - 26) * 3_600_000;
+    return { instant, offset: zoneOffsetMinutes(instant, timeZone) };
+  });
+  const offsets = [...new Set(samples.map((sample) => sample.offset))];
+  const valid = offsets
     .map((offset) => local - offset * 60_000)
     .filter((instant) => local - zoneOffsetMinutes(instant, timeZone) * 60_000 === instant);
-  // Gap: no offset matches; the offset before the transition moves the wall time forward.
-  const instant = valid.length === 0 ? local - before * 60_000 : Math.min(...valid);
-  return new Date(instant).toISOString().replace(".000Z", "Z");
+  if (valid.length > 0) {
+    return new Date(Math.min(...valid)).toISOString().replace(".000Z", "Z");
+  }
+  // Gap: the offset in force before the transition (the last sample whose local time is still
+  // earlier than the wall time) moves the wall time forward by the gap length.
+  const before =
+    samples.filter((sample) => sample.instant + sample.offset * 60_000 < local).at(-1) ??
+    samples[0];
+  return new Date(local - (before?.offset ?? 0) * 60_000).toISOString().replace(".000Z", "Z");
+}
+
+/**
+ * The ring, date and times a `RING_HAS_BOOKINGS` answer was computed for (R-06-11): its booking
+ * list and [Anul·la les reserves i desa] only apply while the fields still show that placement.
+ */
+export function placementKey(
+  ringId: string | null,
+  date: string | undefined,
+  start: string,
+  end: string,
+): string {
+  return [ringId ?? "", date ?? "", start, end].join("|");
 }
 
 /** «12/08/2026» → «2026-08-12»; `undefined` when it is not a real date. */

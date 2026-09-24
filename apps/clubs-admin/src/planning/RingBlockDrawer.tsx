@@ -1,7 +1,7 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Drawer, FormField, Input, Select, Textarea } from "@agilityhub/ui";
-import { type SyntheticEvent, useState } from "react";
+import { type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -15,6 +15,7 @@ import {
   type OpeningHours,
   openingOf,
   parseMaskedDate,
+  placementKey,
   type RingBlock,
   timeLabel,
   timeOf,
@@ -115,7 +116,14 @@ export function RingBlockDrawer({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<{ field: FieldKey; message: string }>();
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
-  const [bookings, setBookings] = useState<unknown[]>();
+  /** The `RING_HAS_BOOKINGS` list with the ring, date and times it was answered for. */
+  const [ringBookings, setRingBookings] = useState<{ bookings: unknown[]; placement: string }>();
+  const placement = placementKey(ringId, isoDate, from, to);
+  /** The placement the fields show now: an answer that arrives late is checked against it. */
+  const latestPlacement = useRef(placement);
+  useEffect(() => {
+    latestPlacement.current = placement;
+  }, [placement]);
   const reasons =
     kind === block?.kind && !reasonsByKind[kind].includes(block.reason)
       ? [...reasonsByKind[kind], block.reason]
@@ -131,7 +139,7 @@ export function RingBlockDrawer({
    * change to them drops it, so [Anul·la les reserves i desa] never confirms a slot not shown.
    */
   const dropBookings = () => {
-    setBookings(undefined);
+    setRingBookings(undefined);
   };
 
   /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
@@ -150,7 +158,7 @@ export function RingBlockDrawer({
   const startOptions = starts.includes(from) ? starts : [from, ...starts];
   const endOptions = ends.includes(to) ? ends : [...ends, to];
 
-  const fail = (cause: unknown) => {
+  const fail = (cause: unknown, sent?: string) => {
     const code = errorCode(cause);
     const details = isApiError(cause)
       ? (cause.details as Record<string, unknown> | undefined)
@@ -161,7 +169,13 @@ export function RingBlockDrawer({
       return;
     }
     if (code === "RING_HAS_BOOKINGS") {
-      setBookings(Array.isArray(details?.bookings) ? details.bookings : []);
+      // Dropped when the ring, date or times changed while the request was pending.
+      if (sent !== undefined && latestPlacement.current === sent) {
+        setRingBookings({
+          bookings: Array.isArray(details?.bookings) ? details.bookings : [],
+          placement: sent,
+        });
+      }
       return;
     }
     setError({
@@ -180,6 +194,7 @@ export function RingBlockDrawer({
       setError({ field: "date", message: t("admin-scheduling:calendar.createForm.invalidDate") });
       return;
     }
+    const sent = placement;
     setPending(true);
     setError(undefined);
     setConflicts([]);
@@ -213,10 +228,10 @@ export function RingBlockDrawer({
           params: { path: { id: block.id } },
         });
       }
-      setBookings(undefined);
+      setRingBookings(undefined);
       onSaved(t("admin-scheduling:calendar.blockForm.saved"));
     } catch (cause) {
-      fail(cause);
+      fail(cause, sent);
     } finally {
       setPending(false);
     }
@@ -419,17 +434,17 @@ export function RingBlockDrawer({
             </ul>
           </div>
         )}
-        {bookings === undefined ? null : (
+        {ringBookings?.placement !== placement ? null : (
           <div className="calendar-conflicts" role="alert">
             <p>
               <strong>{t("admin-scheduling:calendar.ringBookings.title")}</strong>
             </p>
             <p>{t("admin-scheduling:calendar.ringBookings.text")}</p>
-            <RingBookingList bookings={bookings} />
+            <RingBookingList bookings={ringBookings.bookings} />
             <div className="calendar-modal__actions">
               <Button
                 onClick={() => {
-                  setBookings(undefined);
+                  setRingBookings(undefined);
                 }}
                 variant="ghost"
               >
