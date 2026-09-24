@@ -1,0 +1,113 @@
+{
+  "common": {
+    "error": "No s'ha pogut completar l'acció.",
+    "loading": "Carregant…",
+    "retry": "Torna-ho a provar",
+    "close": "Tanca",
+    "cancel": "Cancel·la",
+    "save": "Desa",
+    "saving": "Desant…",
+    "none": "—"
+  },
+  "templates": {
+    "title": "Plantilles",
+    "weekdayTab": "dl–dv: «{name}»",
+    "weekdayTabEmpty": "dl–dv",
+    "saturdayTab": "Dissabtes",
+    "new": "Nova",
+    "duplicate": "Duplica",
+    "band": "Franja",
+    "createClass": "Crear classe",
+    "gridLabel": "Quadre setmanal de la plantilla «{name}»",
+    "gridFooter": "Clica el nom d'un dia per veure'l per pista o per instructor · color = pista · gris = sense pista",
+    "inconsistencyNote": "Incoherència: {message}. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+    "cellLabel": "{description} · {instructors} · {ring}{hasWarnings, select, yes { · {warnings}} other {}}",
+    "emptyCell": "Crear classe: {day} {time}",
+    "bandLabel": "Franja {range}",
+    "bandRange": "{start}–{end}",
+    "addAnotherInBand": "Vols afegir-ne una altra a la mateixa franja?",
+    "addAnotherYes": "Sí",
+    "addAnotherNo": "No",
+    "empty": {
+      "title": "Encara no hi ha cap plantilla",
+      "description": "Crea la primera plantilla per dissenyar l'oferta setmanal de classes."
+    },
+    "form": {
+      "newTitle": "Nova plantilla",
+      "duplicateTitle": "Duplica la plantilla",
+      "name": "Nom",
+      "kind": "Tipus",
+      "copyName": "{name} (còpia)"
+    },
+    "bandForm": {
+      "newTitle": "Nova franja",
+      "editTitle": "Franja {range}",
+      "start": "Inici",
+      "end": "Final",
+      "remove": "Esborra la franja"
+    },
+    "generation": {
+      "title": "Generar classes — per setmanes",
+      "week": "Setmana",
+      "weekOption": "Setmana del {range}",
+      "submit": "GENERAR CLASSES",
+      "blocked": "bloquejat: {count, plural, one {# incoherència} other {# incoherències}} a la plantilla",
+      "confirm": "Es generaran com a esborrany les classes de la setmana del {date}",
+      "done": "{count, plural, one {# classe generada} other {# classes generades}}",
+      "skipped": "{count, plural, one {# omesa} other {# omeses}} ({reasons})"
+    },
+    "day": {
+      "header": "Plantilla: «{name}» ({kind})",
+      "previous": "Dia anterior",
+      "next": "Dia següent",
+      "select": "Dia",
+      "viewLabel": "Visió",
+      "byRing": "Visió per pista",
+      "byInstructor": "Visió per instructor",
+      "noRing": "Sense",
+      "back": "Tornar a la visió setmanal",
+      "gridLabel": "Plantilla «{name}» · {day}"
+    }
+  },
+  "classCard": {
+    "title": "Crear classe",
+    "editTitle": "Classe seleccionada",
+    "band": "Franja",
+    "day": "Dia",
+    "instructor": "Instructor",
+    "instructors": "Instructors (màx. {max})",
+    "ring": "Pista",
+    "noRing": "Sense pista",
+    "levels": "Nivells",
+    "description": "Descripció",
+    "capacity": "Límit",
+    "submit": "CREA LA CLASSE",
+    "remove": "Treu de la plantilla",
+    "close": "Tanca"
+  },
+  "weeks": {
+    "caption": "Setmanes",
+    "year": "Any",
+    "week": "Setmana",
+    "start": "Inici",
+    "generated": "Classes generades",
+    "validated": "Validades",
+    "dateTime": "{date} · {time}",
+    "empty": "Encara no hi ha cap setmana"
+  },
+  "coverage": {
+    "title": "Cobertura per nivell (places de la setmana)",
+    "level": "Nivell",
+    "maxSeats": "Places màximes",
+    "propSeats": "Places prop.",
+    "maxRatio": "Màxim s/tots",
+    "propRatio": "Prop. s/actius*",
+    "status": "Avís",
+    "percent": "{value}%",
+    "footnote": "Places prop. = les places de cada classe repartides entre els seus nivells (una classe A+B de 5 places compta 2,5 per A i 2,5 per B) · * sobre els gossos del nivell amb alguna reserva la setmana en curs o l'anterior · avís segons Prop. s/actius: bé > {ok} % · ajustat {tight}–{ok} % · manca oferta {short}–{tight} % · cal ampliar < {short} %"
+  },
+  "description": {
+    "andAbove": "{level} i sup.",
+    "join": "+"
+  }
+}

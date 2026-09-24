@@ -627,6 +627,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * bookings
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Tenant comes from the JWT.
+         */
+        get: operations["bookings"];
+        put?: never;
+        /**
+         * confirmBooking
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId); Idempotency-Key = seatHoldId, a repeated key returns the same response, also a 409. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
+         */
+        post: operations["confirmBooking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * booking
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR, ADMIN. Detail 07 with cancellation{at, byDisplayName, byRole, late, minutesBefore, message} and displayState. Tenant comes from the JWT.
+         */
+        get: operations["booking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/{id}/calendar.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * bookingCalendar
+         * @description Roles: anyone holding the signed token of calendarLinks.ics (no JWT; the club comes from the host). Token valid until classEndsAt; any mismatch is 404.
+         */
+        get: operations["bookingCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/{id}/cancellation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * cancelBooking
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). ADMIN without impersonation → 403. R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
+         */
+        post: operations["cancelBooking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/branding": {
         parameters: {
             query?: never;
@@ -711,6 +795,26 @@ export interface paths {
         patch: operations["patchClass"];
         trace?: never;
     };
+    "/class-sessions/{id}/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * classBookings
+         * @description Roles: INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Read for 21/D4/D12: every booking of the class, any state. Tenant comes from the JWT.
+         */
+        get: operations["classBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/class-sessions/{id}/cancellation": {
         parameters: {
             query?: never;
@@ -765,6 +869,26 @@ export interface paths {
          * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["exemptClass"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/class-sessions/{id}/waitlist-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * classWaitlist
+         * @description Roles: INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Read for 21/D4/D12 and the S06 cancellation preview: every entry of the class, any state, in position order. Requires WAITLIST. Tenant comes from the JWT.
+         */
+        get: operations["classWaitlist"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1583,6 +1707,106 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * jobs
+         * @description Roles: ADMIN (impersonation → IMPERSONATION_DENIED). One row per process with a registered implementation whose module is on (D11). Tenant comes from the JWT.
+         */
+        get: operations["jobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{name}/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * jobRuns
+         * @description Roles: ADMIN. Run history of the club (universal list, CONVENCIONS_API §4); unknown name → JOB_UNKNOWN, module of the process off → MODULE_DISABLED. Tenant comes from the JWT.
+         */
+        get: operations["jobRuns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{name}/runs/{runId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * jobRun
+         * @description Roles: ADMIN. Run sheet with effects.items, errors and parametersSnapshot (R-15-21). Tenant comes from the JWT.
+         */
+        get: operations["jobRun"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{name}/switch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * switchJob
+         * @description Roles: ADMIN. Writes jobs.<name>.enabled through the parameter service (ParameterChanged, audited PARAMETER_CHANGED). Tenant comes from the JWT.
+         */
+        put: operations["switchJob"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{name}/trigger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * triggerJob
+         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). Tenant comes from the JWT.
+         */
+        post: operations["triggerJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/levels": {
         parameters: {
             query?: never;
@@ -1735,6 +1959,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/bookable-classes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * bookableClasses
+         * @description Roles: MEMBER (also the impersonation token). S08 screen 04, horizon until the end of W2; dogId absent = proposed dog (Member.lastDogForClass while accessible, else the first own dog); no accessible dog → 404 DOG_NOT_ACCESSIBLE. Classes the dog has booked or waits for are left out; row states per R-08-03, decided by the server. The class list and counters come from a 30 s base cache; the per-dog state is live. SINGLE_CLASS off: no price. Tenant comes from the JWT.
+         */
+        get: operations["bookableClasses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * memberBookings
+         * @description Roles: MEMBER (also the impersonation token). Own and family-group bookings for 03/07; the history is /me/history (S10). Tenant comes from the JWT.
+         */
+        get: operations["memberBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/data-export": {
         parameters: {
             query?: never;
@@ -1875,6 +2139,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * memberHome
+         * @description Roles: MEMBER (also the impersonation token). S08 screen 03. dogId absent = «Tots». Chips = own dogs plus the family group's (FAMILY_GROUP); limits = R-08-02 counters of W0/W1 summed over the filtered dogs; reservations = future rows (endsAt > now) of CLASS, CLASS_WAITLIST (WAITLIST), TRAINING (FREE_TRAINING) and ACTIVITY (ACTIVITIES) by startsAt; instructorName per R-08-20. Tenant comes from the JWT.
+         */
+        get: operations["memberHome"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/onboarding": {
         parameters: {
             query?: never;
@@ -2002,6 +2286,46 @@ export interface paths {
          * @description Any valid account token. R-01-10. The session must belong to this account.
          */
         delete: operations["deleteSession"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/training-bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * memberTrainingBookings
+         * @description Roles: MEMBER (also the impersonation token). Own and family-group bookings with cancellableUntil. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["memberTrainingBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/training-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * trainingSummary
+         * @description Roles: MEMBER (also the impersonation token). Eligible dogs (R-09-01), default dog (R-09-09) and the counter of the training week of date (R-09-05; default today, counted by session date). Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["trainingSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -2591,6 +2915,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/platform/clubs/{clubId}/jobs/{name}/trigger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * platformTriggerJob
+         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED.
+         */
+        post: operations["platformTriggerJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/platform/erasure-requests": {
         parameters: {
             query?: never;
@@ -2603,6 +2947,26 @@ export interface paths {
          * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
          */
         get: operations["platformErasureRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/platform/jobs/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * platformJobsOverview
+         * @description Roles: AGILITYHUB_ADMIN. Club × process matrix with the last run and health OK (last success inside the period) · WARN (PARTIAL) · ALERT (FAILED or no success in more than two periods). Only processes with an implementation and their module on; status keeps the cells of that health.
+         */
+        get: operations["platformJobsOverview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2939,6 +3303,26 @@ export interface paths {
         patch: operations["updateRing"];
         trace?: never;
     };
+    "/risk-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * riskReview
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403). S15 §6 form A for the D1 card; date defaults to today in the club zone. Tenant comes from the JWT.
+         */
+        get: operations["riskReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/saved-views": {
         parameters: {
             query?: never;
@@ -2986,6 +3370,46 @@ export interface paths {
          * @description R-03-23. Tenant-scoped preferences: own and shared views are readable; only the owner or ADMIN may edit. Unknown or restricted columns are omitted on load.
          */
         delete: operations["deleteSavedView"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seat-holds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * holdSeat
+         * @description Roles: MEMBER (also the impersonation token). R-08-07: one Mongo transaction serialised by seat_locks; re-entering refreshes the same hold. waitlistEntryId requires WAITLIST. details: CLASS_FULL{heldOnly}, NOT_YET_OPEN{opensAt}, BOOKING_LIMIT_REACHED{unit, week, limit, current, swappable[], notSelectable[], nextBookableAt}, INACTIVITY_PERIOD{from, to}. Tenant comes from the JWT.
+         */
+        post: operations["holdSeat"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seat-holds/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * releaseSeat
+         * @description Roles: MEMBER owner of the hold (also the impersonation token). 204 also when the hold is already gone (expired or consumed). Tenant comes from the JWT.
+         */
+        delete: operations["releaseSeat"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3089,6 +3513,190 @@ export interface paths {
          * @description R-04-08. ANON or MEMBER; 30/hour. Signed upload constrained by files.allowedTypes/files.maxSizeMb; at most 10 files per signup. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforced by E3-T03.
          */
         post: operations["uploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * trainingBookings
+         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["trainingBookings"];
+        put?: never;
+        /**
+         * bookTraining
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE, override{limit, reason} allowed). R-09-06 transaction; the partial unique index {clubId, ringId, startsAt, seatIndex} on ACTIVE is the final guard; without ringId («Qualsevol») the first FREE ring in catalog order. details: TRAINING_LIMIT_REACHED{limit, used, weekStart, weekEnd, cancellableBookings[]}, SLOT_TAKEN{ringId, startsAt, reason, freeRings[]}, SLOT_OUT_OF_WINDOW{from, to}. A repeated Idempotency-Key returns the same response, also a 409/422. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        post: operations["bookTraining"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-bookings/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * exportTrainingBookings
+         * @description Roles: ADMIN (S14 R-14-12: list exports are ADMIN only; INSTRUCTOR → 403). Same q/filter/sort and selected columns as GET /training-bookings (listKey training-bookings); 200 file or 202 ExportAccepted. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["exportTrainingBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * trainingBooking
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR, ADMIN; another member's booking is 404. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["trainingBooking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-bookings/{id}/cancellation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * cancelTraining
+         * @description Roles: MEMBER (own or family group, also the impersonation token). R-09-10: until startsAt - training.cancelThresholdMinutes; later only with the impersonation token and a reason (ADMIN_LATE, audited). A booking block never prevents it; a second call is INVALID_STATE. details TRAINING_CANCEL_TOO_LATE{thresholdMinutes, minutesBefore}. An optional Idempotency-Key replays the same 200. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        post: operations["cancelTraining"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * trainingSlots
+         * @description Roles: MEMBER (also the impersonation token; interval cut to the booking window, R-09-04), INSTRUCTOR, ADMIN (at most 31 days; cells add occupants[], block and classSession). R-09-03 computed grid: holidays and days without opening hours are closed; cells BLOCKED/CLASS > BLOCKED/RING_BLOCK > BOOKED/TRAINING (OWN_TRAINING for dogId) > FREE. Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["trainingSlots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/waitlist-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * joinWaitlist
+         * @description Roles: MEMBER (also the impersonation token). R-08-12: the class must be full by bookings alone (CLASS_NOT_FULL otherwise), the booking eligibility chain runs, then waitlist.maxPerClass, waitlist.maxPerDogPerWeek / maxPerDogPerWeekIfAttended (details WAITLIST_LIMIT{scope: CLASS|DOG_WEEK}) and the seat must be acceptable (BOOKING_LIMIT_REACHED). Requires WAITLIST. Tenant comes from the JWT.
+         */
+        post: operations["joinWaitlist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/waitlist-entries/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * waitlistEntry
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR, ADMIN. Screen 07 «/espera/:id»: class card, position (FIFO order), confirmBy (FIFO only), state. Requires WAITLIST. Tenant comes from the JWT.
+         */
+        get: operations["waitlistEntry"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/waitlist-entries/{id}/cancellation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * leaveWaitlist
+         * @description Roles: MEMBER (own or family group, also the impersonation token), ADMIN (D4/D12). R-08-16: ACTIVE or NOTIFIED only (WAITLIST_ENTRY_NOT_LIVE otherwise) → CANCELLED with cancelReason MEMBER, or ADMIN when an administrator acts (directly or impersonating); WaitlistLeft. Requires WAITLIST. Tenant comes from the JWT.
+         */
+        post: operations["leaveWaitlist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/waitlist-entries/{id}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * claimSeat
+         * @description Roles: MEMBER (own or family group, also the impersonation token). R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: a repeated key returns the same response, also a 409/422. Requires WAITLIST. Tenant comes from the JWT.
+         */
+        post: operations["claimSeat"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3987,7 +4595,7 @@ export interface components {
             url: string;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -4068,6 +4676,111 @@ export interface components {
             /** Format: uuid */
             id: string;
         };
+        BookableActivity: {
+            /** Format: int32 */
+            freeSeats?: number | null;
+            id: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
+            title: string;
+        };
+        BookableClass: {
+            description: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            endsAtLocal?: string | null;
+            /** Format: int32 */
+            freeSeats: number;
+            id: string;
+            /**
+             * @description Only with state NOT_BOOKABLE
+             * @enum {string|null}
+             */
+            notBookableReason?: "BLOCKED" | "INACTIVITY" | "LEAVING" | null;
+            /**
+             * Format: date-time
+             * @description Only with state NOT_YET_OPEN
+             */
+            opensAt?: string | null;
+            /** @description Only with SINGLE_CLASS */
+            price?: components["schemas"]["Money"] | null;
+            ringColor?: string | null;
+            ringName?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
+            /** @enum {string} */
+            state: "BOOKABLE" | "WAITLIST_OPEN" | "WAITLIST_FULL" | "FULL" | "WEEKLY_LIMIT_DONE" | "NOT_YET_OPEN" | "PACK_EMPTY" | "NOT_BOOKABLE";
+            /**
+             * Format: int32
+             * @description Only with WAITLIST
+             */
+            waiting?: number | null;
+            /**
+             * Format: int32
+             * @description waitlist.maxPerClass; only with WAITLIST
+             */
+            waitlistMax?: number | null;
+            /** @enum {string} */
+            week: "CURRENT" | "NEXT" | "LATER";
+        };
+        BookableClasses: {
+            /** @description Empty without ACTIVITIES */
+            activities: components["schemas"]["BookableActivity"][];
+            bookingBlock?: components["schemas"]["BookingBlockNotice"] | null;
+            classes: components["schemas"]["BookableClass"][];
+            dog: components["schemas"]["BookableDog"];
+            dogs: components["schemas"]["HomeDog"][];
+            /** @description Only with PACKS and a PACK plan */
+            pack?: components["schemas"]["PackCard"] | null;
+            /** @description Only with SINGLE_CLASS and a SINGLE_CLASS plan */
+            singleClass?: components["schemas"]["SingleClassTerms"] | null;
+        };
+        BookableDog: {
+            id: string;
+            levelId?: string | null;
+            levelName?: string | null;
+            name: string;
+            own: boolean;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+        };
+        BookedBy: {
+            displayName: string;
+            /** @description True when booked by the club (BACKOFFICE) */
+            viaClub: boolean;
+        };
+        /** @description S08 booking. INSTRUCTOR and ADMIN read the same form; PAYMENT_PENDING carries checkoutUrl. */
+        Booking: {
+            /** Format: date-time */
+            bookedAt: string;
+            bookedBy: components["schemas"]["BookedBy"];
+            calendarLinks: components["schemas"]["CalendarLinks"];
+            cancellation?: components["schemas"]["BookingCancellation"] | null;
+            /** @description Only with SINGLE_CLASS */
+            charge?: components["schemas"]["BookingCharge"] | null;
+            /**
+             * Format: uri
+             * @description Only while PAYMENT_PENDING (PAY_TO_BOOK)
+             */
+            checkoutUrl?: string | null;
+            classSession: components["schemas"]["BookingClassSession"];
+            classSessionId: string;
+            /**
+             * @description Derived label for 07; added by GET /bookings/{id}
+             * @enum {string}
+             */
+            displayState?: "CONFIRMED" | "DONE" | "NO_SHOW" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB" | "PAYMENT_PENDING";
+            dogId: string;
+            id: string;
+            /** @description Owner of the dog (the member + dog unit) */
+            memberId: string;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
+            /** @description Only with PACKS */
+            pack?: components["schemas"]["PackBalance"] | null;
+            /** @enum {string} */
+            state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
+            swapFromBookingId?: string | null;
+        };
         BookingBlock: {
             active: boolean;
             /** Format: uuid */
@@ -4076,8 +4789,91 @@ export interface components {
             /** Format: date-time */
             since?: string;
         };
+        BookingBlockNotice: {
+            reason: string;
+        };
         BookingBlockRequest: {
             reason: string;
+        };
+        BookingCancellation: {
+            /** Format: date-time */
+            at: string;
+            byDisplayName: string;
+            /** @enum {string} */
+            byRole: "MEMBER" | "INSTRUCTOR" | "ADMIN" | "SYSTEM";
+            late: boolean;
+            message?: string | null;
+            /**
+             * Format: int32
+             * @description Negative once the class has started
+             */
+            minutesBefore: number;
+        };
+        BookingCancellationRequest: {
+            /** @description Text of the club (25) */
+            message?: string | null;
+        };
+        BookingCharge: {
+            /** @enum {string} */
+            mode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
+            /** Format: date-time */
+            paidAt?: string | null;
+            price: components["schemas"]["Money"];
+        };
+        BookingClassSession: {
+            description: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            endsAtLocal: string;
+            instructorName?: string | null;
+            /** Format: date-time */
+            instructorVisibleAt?: string | null;
+            ringName?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
+        };
+        BookingImpersonation: {
+            actorName: string;
+        };
+        /** @description details of 409 BOOKING_LIMIT_REACHED */
+        BookingLimitReachedDetails: {
+            /** Format: int32 */
+            current: number;
+            /** Format: int32 */
+            limit: number;
+            /**
+             * Format: date-time
+             * @description Start of the next booking week
+             */
+            nextBookableAt: string;
+            notSelectable: components["schemas"]["NotSelectable"][];
+            swappable: components["schemas"]["SwapOption"][];
+            /** @enum {string} */
+            unit: "DOG" | "MEMBER";
+            /** @enum {string} */
+            week: "CURRENT" | "NEXT" | "LATER";
+        };
+        BookingListItem: {
+            /** Format: date-time */
+            bookedAt: string;
+            bookingWeekKey: string;
+            classSessionId: string;
+            /** Format: date-time */
+            classStartsAt: string;
+            dogId: string;
+            dogName: string;
+            id: string;
+            late?: boolean | null;
+            memberId: string;
+            memberName: string;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
+            /** @enum {string} */
+            state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
+        };
+        BookingRequest: {
+            seatHoldId: string;
+            /** @description Booking to cancel in the same transaction (R-08-09) */
+            swapBookingId?: string | null;
         };
         BrandingResponse: {
             club: components["schemas"]["ClubSummary"];
@@ -4091,6 +4887,17 @@ export interface components {
             status: string;
             theme: components["schemas"]["Theme"];
             timeZone: string;
+        };
+        CalendarLinks: {
+            /** Format: uri */
+            google: string;
+            /**
+             * Format: uri
+             * @description Signed token valid until classEndsAt
+             */
+            ics: string;
+            /** Format: uri */
+            outlook: string;
         };
         CalendarWeek: {
             /** Format: date */
@@ -4110,6 +4917,14 @@ export interface components {
             state: "PENDING" | "GENERATED" | "VALIDATED";
             /** Format: date-time */
             validatedAt?: string | null;
+        };
+        CancellableTraining: {
+            /** Format: date-time */
+            cancellableUntil: string;
+            id: string;
+            ringName: string;
+            /** Format: date-time */
+            startsAt: string;
         };
         CancellationBooking: {
             bookingId: string;
@@ -4183,6 +4998,13 @@ export interface components {
             /** Format: uri */
             successUrl: string;
         };
+        ClaimRequest: {
+            seatHoldId: string;
+            swapBookingId?: string | null;
+        };
+        ClassBookings: {
+            items: components["schemas"]["BookingListItem"][];
+        };
         ClassCancellation: {
             adminText?: string | null;
             /** Format: int32 */
@@ -4213,6 +5035,10 @@ export interface components {
             cancelled: number;
             /** Format: int32 */
             draft: number;
+        };
+        /** @description details of 409 CLASS_FULL; heldOnly = a live hold of another dog takes the last seat */
+        ClassFullDetails: {
+            heldOnly: boolean;
         };
         ClassOccupancyKpi: {
             /** Format: int32 */
@@ -4318,6 +5144,9 @@ export interface components {
             startTime?: string;
             /** Format: int64 */
             version: number;
+        };
+        ClassWaitlist: {
+            items: components["schemas"]["WaitlistEntry"][];
         };
         ClubAddress: {
             city?: string;
@@ -4790,6 +5619,15 @@ export interface components {
             /** Format: int32 */
             totalActiveDogs: number;
         };
+        EligibleDog: {
+            id: string;
+            levelName?: string | null;
+            name: string;
+            /** @description Owner of a family-group dog */
+            ownerName?: string | null;
+            /** @enum {string} */
+            rightSource: "LEVEL" | "MANUAL";
+        };
         EmptyRequest: Record<string, never>;
         EntryFee: {
             amount?: components["schemas"]["Money"];
@@ -5059,6 +5897,27 @@ export interface components {
             status: string;
             version: string;
         };
+        HoldClassSession: {
+            description: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            endsAtLocal: string;
+            levelNames: string[];
+            ringColor?: string | null;
+            ringName?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
+        };
+        HoldDog: {
+            id: string;
+            name: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+        };
+        HoldPayment: {
+            /** @enum {string} */
+            mode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
+            price: components["schemas"]["Money"];
+        };
         Holiday: {
             /** Format: date */
             date: string;
@@ -5070,6 +5929,37 @@ export interface components {
             value: components["schemas"]["Holiday"][];
             /** Format: int64 */
             version: number;
+        };
+        HomeDog: {
+            id: string;
+            levelName?: string | null;
+            name: string;
+            own: boolean;
+            /** @description Owner of a family-group dog */
+            ownerFirstName?: string | null;
+        };
+        HomeHistory: {
+            /** Format: int32 */
+            monthsVisible: number;
+        };
+        HomeLimits: {
+            currentWeek: components["schemas"]["WeekCount"];
+            nextWeek: components["schemas"]["WeekCount"];
+            /** @enum {string} */
+            unit: "DOG" | "MEMBER";
+        };
+        HomeMember: {
+            firstName: string;
+            /**
+             * @description Null when never declared
+             * @enum {string|null}
+             */
+            gender?: "MALE" | "FEMALE" | "OTHER" | null;
+            id: string;
+        };
+        HomeNotifications: {
+            /** Format: int32 */
+            unreadCount: number;
         };
         Icon: {
             purpose: string;
@@ -5116,6 +6006,19 @@ export interface components {
              */
             launchUrl?: string;
             token: string;
+        };
+        /** @description details of 422 INACTIVITY_PERIOD */
+        InactivityPeriodDetails: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to?: string | null;
+        };
+        InactivityWindow: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to?: string | null;
         };
         Inconsistency: {
             bandId?: string;
@@ -5190,6 +6093,139 @@ export interface components {
             /** Format: uuid */
             id: string;
             status: string;
+        };
+        JobEffectItem: {
+            action: string;
+            detail?: {
+                [key: string]: unknown;
+            } | null;
+            entityId: string;
+            entityType: string;
+        };
+        JobEffects: {
+            /** @description Counter name to value */
+            counters: {
+                [key: string]: number;
+            };
+            /** @description At most 500 items; the rest are only counted */
+            items: components["schemas"]["JobEffectItem"][];
+        };
+        JobError: {
+            code: string;
+            /** @description Null for a job-level failure */
+            entityId?: string | null;
+            message: string;
+            traceId: string;
+        };
+        JobLastRun: {
+            counters: {
+                [key: string]: number;
+            };
+            dryRun: boolean;
+            /** Format: date-time */
+            finishedAt?: string | null;
+            runId: string;
+            /** @enum {string} */
+            status: "RUNNING" | "SUCCEEDED" | "PARTIAL" | "FAILED" | "SKIPPED";
+            /** @enum {string} */
+            trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
+        };
+        /** @description S15 §3 execution trace; in a dry run effects.items is the plan (actions prefixed WOULD_). */
+        JobRun: {
+            /** @description Only for MANUAL runs */
+            actorAccountId?: string | null;
+            dryRun: boolean;
+            /** Format: int64 */
+            durationMs?: number | null;
+            effects: components["schemas"]["JobEffects"];
+            errors: components["schemas"]["JobError"][];
+            /** Format: date-time */
+            finishedAt?: string | null;
+            /** @enum {string} */
+            job: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER";
+            /** @description Values of the parameters the run read, for example classes.minDogs */
+            parametersSnapshot: {
+                [key: string]: unknown;
+            };
+            runId: string;
+            /** Format: date-time */
+            scheduledFor: string;
+            /** @example 2026-10-05T07:30 */
+            scheduledForLocal: string;
+            /** @enum {string|null} */
+            skipReason?: "DISABLED" | "MODULE_OFF" | "CLUB_INACTIVE" | "MISSED_WINDOW" | "LOCKED" | "NOT_DUE" | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** @enum {string} */
+            status: "RUNNING" | "SUCCEEDED" | "PARTIAL" | "FAILED" | "SKIPPED";
+            /** @example Europe/Madrid */
+            timeZone: string;
+            /** @enum {string} */
+            trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
+        };
+        JobRunListItem: {
+            counters: {
+                [key: string]: number;
+            };
+            dryRun: boolean;
+            /** Format: int64 */
+            durationMs?: number | null;
+            /** Format: int32 */
+            errorCount: number;
+            /** Format: date-time */
+            finishedAt?: string | null;
+            runId: string;
+            /** Format: date-time */
+            scheduledFor: string;
+            scheduledForLocal: string;
+            /** @enum {string|null} */
+            skipReason?: "DISABLED" | "MODULE_OFF" | "CLUB_INACTIVE" | "MISSED_WINDOW" | "LOCKED" | "NOT_DUE" | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** @enum {string} */
+            status: "RUNNING" | "SUCCEEDED" | "PARTIAL" | "FAILED" | "SKIPPED";
+            /** @enum {string} */
+            trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
+        };
+        JobScheduleView: {
+            /** Format: int32 */
+            dayOfMonth?: number | null;
+            /** @enum {string|null} */
+            dayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY" | null;
+            /** @enum {string} */
+            kind: "DAILY" | "WEEKLY" | "MONTHLY" | "CONTINUOUS";
+            /** @example 07:30 */
+            localTime?: string | null;
+        };
+        JobSummaries: {
+            /** @description Only processes with a registered implementation and an enabled module */
+            items: components["schemas"]["JobSummary"][];
+        };
+        JobSummary: {
+            enabled: boolean;
+            /** @enum {string} */
+            jobName: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER";
+            lastRun?: components["schemas"]["JobLastRun"] | null;
+            /** @enum {string|null} */
+            module?: "FREE_TRAINING" | "BILLING" | "PACKS" | "SINGLE_CLASS" | "ACTIVITIES" | "FAMILY_GROUP" | "WAITLIST" | "TASKS" | "FAQ" | "SMS" | "PUSH" | "INACTIVITY" | "COURSES" | "LEARN_LINK" | "STATS" | "SOCIAL_LEAGUE" | null;
+            /**
+             * @description R-15-01 route id
+             * @example risk-review
+             */
+            name: string;
+            /** @example 2026-10-06T07:30 */
+            nextScheduledForLocal?: string | null;
+            schedule: components["schemas"]["JobScheduleView"];
+        };
+        JobSwitchRequest: {
+            enabled: boolean;
+        };
+        JobSwitchResponse: {
+            enabled: boolean;
+            name: string;
+        };
+        JobTriggerRequest: {
+            dryRun: boolean;
         };
         JwkSet: {
             keys: components["schemas"]["PublicJwk"][];
@@ -5308,6 +6344,20 @@ export interface components {
             number: string;
             organisation: string;
         };
+        LimitStatus: {
+            /** Format: int32 */
+            count: number;
+            /** Format: int32 */
+            max: number;
+            notSelectable: components["schemas"]["NotSelectable"][];
+            reached: boolean;
+            /** @description R-08-09: ACTIVE bookings of that week cancellable in time */
+            swappable: components["schemas"]["SwapOption"][];
+            /** @enum {string} */
+            unit: "DOG" | "MEMBER";
+            /** @enum {string} */
+            week: "CURRENT" | "NEXT" | "LATER";
+        };
         ListPage: {
             appliedFilters: components["schemas"]["Filter"][];
             items: unknown[];
@@ -5356,6 +6406,18 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
+        ListPageBookingListItem: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["BookingListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
         ListPageClassSession: {
             appliedFilters: components["schemas"]["Filter"][];
             items: components["schemas"]["ClassSession"][];
@@ -5392,6 +6454,18 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
+        ListPageJobRunListItem: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["JobRunListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
         ListPageMemberListItem: {
             appliedFilters: components["schemas"]["Filter"][];
             items: (components["schemas"]["MemberListItem"] | components["schemas"]["MemberInstructorView"])[];
@@ -5419,6 +6493,18 @@ export interface components {
         ListPageSecurityEventView: {
             appliedFilters: components["schemas"]["Filter"][];
             items: components["schemas"]["SecurityEventView"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        ListPageTrainingBookingListItem: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["TrainingBookingListItem"][];
             /** Format: int32 */
             page: number;
             /** Format: int32 */
@@ -5518,6 +6604,19 @@ export interface components {
             /** Format: uuid */
             id: string;
             members: components["schemas"]["FamilyMember"][];
+        };
+        MeHome: {
+            dogs: components["schemas"]["HomeDog"][];
+            history: components["schemas"]["HomeHistory"];
+            /** @description Present while an admin acts as the member */
+            impersonation?: components["schemas"]["BookingImpersonation"] | null;
+            limits: components["schemas"]["HomeLimits"];
+            member: components["schemas"]["HomeMember"];
+            notifications: components["schemas"]["HomeNotifications"];
+            /** @description Future rows only (endsAt > now), ordered by startsAt */
+            reservations: components["schemas"]["ReservationRow"][];
+            /** @description Null = «Tots» */
+            selectedDogId?: string | null;
         };
         MeProfile: {
             address: components["schemas"]["Address"];
@@ -5634,6 +6733,9 @@ export interface components {
             typeDisplay: string;
             waitlistEnabled: boolean;
         };
+        MemberBookings: {
+            items: components["schemas"]["Booking"][];
+        };
         MemberConsents: {
             imageRights: components["schemas"]["ImageRights"];
             privacyPolicy: components["schemas"]["PrivacyPolicyConsent"];
@@ -5749,6 +6851,9 @@ export interface components {
             version: number;
             warnings: components["schemas"]["SignupWarning"][];
         };
+        MemberTrainingBookings: {
+            items: components["schemas"]["TrainingBooking"][];
+        };
         MembershipSummary: {
             activeProfile?: components["schemas"]["Profile"];
             /** Format: uuid */
@@ -5791,6 +6896,19 @@ export interface components {
             amount: components["schemas"]["Money"];
             /** Format: date */
             date: string;
+        };
+        NotSelectable: {
+            bookingId: string;
+            description?: string | null;
+            /** @enum {string} */
+            reason: "DONE" | "LATE_WINDOW";
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal?: string | null;
+        };
+        /** @description details of 422 NOT_YET_OPEN */
+        NotYetOpenDetails: {
+            /** Format: date-time */
+            opensAt: string;
         };
         NoteAttachment: {
             id: string;
@@ -5878,6 +6996,25 @@ export interface components {
             memberNumber?: number;
             /** @enum {string} */
             status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
+        };
+        PackBalance: {
+            /** Format: int32 */
+            available: number;
+            /** Format: date */
+            expiresOn?: string | null;
+        };
+        PackCard: {
+            /** Format: int32 */
+            available: number;
+            /** Format: int32 */
+            consumed: number;
+            /** Format: date */
+            expiresOn: string;
+            planName: string;
+            /** Format: int32 */
+            sessionsTotal: number;
+            /** @enum {string} */
+            state: "ACTIVE" | "EXPIRING" | "EXPIRED" | "EMPTY";
         };
         PackSettings: {
             /** Format: int32 */
@@ -6203,6 +7340,22 @@ export interface components {
             /** @description Existing Learn bcrypt hash, preserved on import */
             passwordHash?: string;
         };
+        PlatformClubJobs: {
+            clubId: string;
+            jobs: components["schemas"]["PlatformJobCell"][];
+            name: string;
+            timeZone: string;
+        };
+        PlatformJobCell: {
+            enabled: boolean;
+            /** @enum {string} */
+            health: "OK" | "WARN" | "ALERT";
+            lastRun?: components["schemas"]["JobLastRun"] | null;
+            name: string;
+        };
+        PlatformJobsOverview: {
+            clubs: components["schemas"]["PlatformClubJobs"][];
+        };
         PlatformRoles: {
             platformRoles: "AGILITYHUB_ADMIN"[];
         };
@@ -6445,6 +7598,27 @@ export interface components {
             url: string;
             version: string;
         } | null;
+        ReservationRow: {
+            dogId?: string | null;
+            dogName?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            endsAtLocal?: string | null;
+            id: string;
+            /** @description Null until bookings.showInstructorHoursBefore (R-08-20) */
+            instructorName?: string | null;
+            /** Format: date-time */
+            instructorVisibleAt?: string | null;
+            ringName?: string | null;
+            /** Format: date-time */
+            startsAt?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
+            /** @enum {string} */
+            state: "CONFIRMED" | "PAYMENT_PENDING" | "WAITLISTED" | "REGISTERED";
+            title: string;
+            /** @enum {string} */
+            type: "CLASS" | "CLASS_WAITLIST" | "TRAINING" | "ACTIVITY";
+        };
         RevokeRequest: {
             /** @description BODY refresh token or impersonation JWT. Omit for COOKIE clients to revoke the bearer session. */
             token?: string;
@@ -6562,6 +7736,10 @@ export interface components {
             /** Format: int32 */
             trainingCapacity?: number;
         };
+        /** @description details of 422 RING_HAS_BOOKINGS */
+        RingHasBookingsDetails: {
+            bookings: components["schemas"]["SlotOccupant"][];
+        };
         RingOrder: {
             ringIds: string[];
         };
@@ -6592,6 +7770,15 @@ export interface components {
             shortName: string;
             /** Format: int64 */
             version: number;
+        };
+        RingSetupSummary: {
+            /** Format: date-time */
+            builtAt: string;
+            /** Format: date */
+            expectedUntil?: string | null;
+            id: string;
+            kind: string;
+            levelNames: string[];
         };
         RingUsage: {
             /** Format: int32 */
@@ -6637,6 +7824,50 @@ export interface components {
             lookaheadDays: number;
             reviewTime: string;
         };
+        /** @description S15 §6 form A: ACTIVE classes at risk and the ones already CANCELLED{RISK_REVIEW} of [date, date + lookaheadDays], by startsAt */
+        RiskReviewForm: {
+            autoCancelSameDay: boolean;
+            /** Format: date */
+            date: string;
+            items: components["schemas"]["RiskReviewItem"][];
+            /** Format: int32 */
+            lookaheadDays: number;
+            /** Format: int32 */
+            minDogs: number;
+            /** @example 07:30 */
+            reviewTime: string;
+        };
+        RiskReviewItem: {
+            /** Format: int32 */
+            bookedCount: number;
+            /**
+             * Format: date-time
+             * @description AUTO_CANCELLED only
+             */
+            cancelledAt?: string | null;
+            classId: string;
+            /** Format: date */
+            date: string;
+            /** @enum {string} */
+            dayLabel: "TODAY" | "TOMORROW" | "OTHER";
+            displayDescription: string;
+            /** @description From risk.notifiedBookingIds, or the affected bookings when cancelled */
+            notified: components["schemas"]["RiskReviewNotified"][];
+            /**
+             * Format: date-time
+             * @description classes.riskReviewTime of the class day
+             */
+            reviewAt?: string | null;
+            ringName?: string | null;
+            /** @example 09:30 */
+            startTime: string;
+            /** @enum {string} */
+            status: "AUTO_CANCELLED" | "AT_RISK" | "WILL_CANCEL" | "WILL_REVIEW";
+        };
+        RiskReviewNotified: {
+            dogName: string;
+            memberName: string;
+        };
         RolesRequest: {
             roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
         };
@@ -6674,6 +7905,36 @@ export interface components {
             sort: string[];
             /** Format: int64 */
             version: number;
+        };
+        SeatHoldRequest: {
+            classSessionId: string;
+            dogId: string;
+            /** @description [AGAFA LA PLAÇA] of N-15; requires WAITLIST */
+            waitlistEntryId?: string | null;
+        };
+        SeatHoldResponse: {
+            classSession: components["schemas"]["HoldClassSession"];
+            classSessionId: string;
+            dog: components["schemas"]["HoldDog"];
+            dogId: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /**
+             * Format: int32
+             * @description bookings.seatHoldSeconds
+             */
+            holdSeconds: number;
+            id: string;
+            limit: components["schemas"]["LimitStatus"];
+            /** @description Only with PACKS */
+            pack?: components["schemas"]["PackBalance"] | null;
+            /** @description Only with SINGLE_CLASS */
+            payment?: components["schemas"]["HoldPayment"] | null;
+            /**
+             * Format: date-time
+             * @description Countdown = expiresAt - serverNow, immune to a skewed device clock
+             */
+            serverNow: string;
         };
         SecurityEventView: {
             /** Format: uuid */
@@ -7010,6 +8271,11 @@ export interface components {
             /** @enum {string} */
             chargeMode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
         };
+        SingleClassTerms: {
+            /** @enum {string} */
+            chargeMode: "CHARGE_ON_ATTENDANCE" | "PAY_TO_BOOK";
+            pricePerClass: components["schemas"]["Money"];
+        };
         SkippedClasses: {
             /** Format: int32 */
             count: number;
@@ -7017,6 +8283,61 @@ export interface components {
             date: string;
             /** @enum {string} */
             reason: "HOLIDAY" | "PAST";
+        };
+        SlotBlock: {
+            createdByName: string;
+            id: string;
+            /** @enum {string} */
+            kind: "BLOCK" | "RESERVATION";
+            note?: string | null;
+            /** @enum {string} */
+            reason: "MAINTENANCE" | "PRIVATE_CLASS" | "THERAPY" | "PREPARATION" | "ACTIVITY" | "OTHER";
+        };
+        SlotCell: {
+            /** @description Only for INSTRUCTOR and ADMIN; never in the MEMBER projection (R-09-12). */
+            block?: components["schemas"]["SlotBlock"] | null;
+            /** @description Own booking (OWN_TRAINING) */
+            bookingId?: string | null;
+            /** @description Only for INSTRUCTOR and ADMIN; never in the MEMBER projection (R-09-12). */
+            classSession?: components["schemas"]["SlotClassSession"] | null;
+            /** @description Only for INSTRUCTOR and ADMIN; never in the MEMBER projection (R-09-12). */
+            occupants?: components["schemas"]["SlotOccupant"][] | null;
+            /** @enum {string|null} */
+            reason?: "CLASS" | "RING_BLOCK" | "TRAINING" | "OWN_TRAINING" | null;
+            /** @enum {string} */
+            state: "FREE" | "BOOKED" | "BLOCKED";
+        };
+        SlotClassSession: {
+            description: string;
+            id: string;
+        };
+        SlotOccupant: {
+            bookingId: string;
+            dogName: string;
+            memberName: string;
+        };
+        /** @description details of 422 SLOT_OUT_OF_WINDOW */
+        SlotOutOfWindowDetails: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+        };
+        /** @description details of 409 SLOT_TAKEN */
+        SlotTakenDetails: {
+            freeRings: string[];
+            /** @enum {string} */
+            reason: "CLASS" | "RING_BLOCK" | "TRAINING" | "OWN_TRAINING";
+            ringId: string;
+            /** Format: date-time */
+            startsAt: string;
+        };
+        SwapOption: {
+            bookingId: string;
+            description: string;
+            ringName?: string | null;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm */
+            startsAtLocal: string;
         };
         TaskItem: {
             /** Format: int64 */
@@ -7137,11 +8458,201 @@ export interface components {
             name: string;
             region: string;
         };
+        TrainingBooking: {
+            /** @enum {string|null} */
+            cancelReason?: "MEMBER_REQUEST" | "ADMIN_LATE" | "INACTIVITY" | "MEMBER_LEFT" | "RING_BLOCK" | "CLASS_CONFLICT" | "RING_NOT_RESERVABLE" | null;
+            /**
+             * Format: date-time
+             * @description startsAt - training.cancelThresholdMinutes
+             */
+            cancellableUntil: string;
+            /** Format: date-time */
+            cancelledAt?: string | null;
+            /** @enum {string|null} */
+            cancelledBy?: "MEMBER" | "ADMIN" | "SYSTEM" | null;
+            counter: components["schemas"]["TrainingCounter"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date */
+            date: string;
+            dogId: string;
+            dogName: string;
+            /** Format: date-time */
+            endsAt: string;
+            /** @example 09:00 */
+            endsAtLocal: string;
+            id: string;
+            impersonation?: components["schemas"]["TrainingImpersonation"] | null;
+            memberId: string;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE";
+            ringId: string;
+            ringName: string;
+            slotId: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** @example 08:30 */
+            startsAtLocal: string;
+            /** @enum {string} */
+            state: "ACTIVE" | "CANCELLED" | "CANCELLED_BY_CLUB";
+        };
+        TrainingBookingBlock: {
+            reason: string;
+        };
+        TrainingBookingListItem: {
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date */
+            date: string;
+            dogId: string;
+            dogName: string;
+            id: string;
+            memberId: string;
+            memberName: string;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE";
+            ringId: string;
+            ringName: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** @example 08:30 */
+            startsAtLocal: string;
+            /** @enum {string} */
+            state: "ACTIVE" | "CANCELLED" | "CANCELLED_BY_CLUB";
+        };
+        TrainingBookingRequest: {
+            dogId: string;
+            /** @description Impersonation only (R-09-16); otherwise 422 OVERRIDE_NOT_ALLOWED */
+            override?: components["schemas"]["TrainingOverride"];
+            /** @description Absent = «Qualsevol»: first FREE ring by catalog order (R-09-07) */
+            ringId?: string | null;
+            /** Format: date-time */
+            startsAt: string;
+        };
         TrainingBookingsKpi: {
             /** Format: int32 */
             distinctMembers: number;
             /** Format: int32 */
             value: number;
+        };
+        /** @description details of 422 TRAINING_CANCEL_TOO_LATE */
+        TrainingCancelTooLateDetails: {
+            /** Format: int32 */
+            minutesBefore: number;
+            /** Format: int32 */
+            thresholdMinutes: number;
+        };
+        TrainingCancellationRequest: {
+            /** @description Required for a late cancellation with the impersonation token (ADMIN_LATE, R-09-10) */
+            reason?: string | null;
+        };
+        TrainingCounter: {
+            /** Format: int32 */
+            limit: number;
+            /** Format: int32 */
+            remaining: number;
+            /** Format: date-time */
+            resetsAt?: string | null;
+            /** Format: int32 */
+            used: number;
+        };
+        TrainingDay: {
+            /** @description Holiday or no opening hours: no slots */
+            closed: boolean;
+            /** Format: date */
+            date: string;
+            slots: components["schemas"]["TrainingSlot"][];
+        };
+        TrainingImpersonation: {
+            actorName: string;
+        };
+        /** @description details of 409 TRAINING_LIMIT_REACHED */
+        TrainingLimitReachedDetails: {
+            cancellableBookings: components["schemas"]["CancellableTraining"][];
+            /** Format: int32 */
+            limit: number;
+            /** Format: int32 */
+            used: number;
+            /** Format: date-time */
+            weekEnd: string;
+            /** Format: date-time */
+            weekStart: string;
+        };
+        TrainingOverride: {
+            limit: boolean;
+            reason: string;
+        };
+        TrainingRing: {
+            /**
+             * Format: int32
+             * @description Ring.trainingCapacity ?? training.capacityPerRingSlot
+             */
+            capacity: number;
+            color: string;
+            id: string;
+            name: string;
+            /** Format: int32 */
+            order: number;
+            /** @description Only with COURSES (and courses.showSetupToMembers for MEMBER), R-09-15 */
+            setup?: components["schemas"]["RingSetupSummary"] | null;
+            shortName: string;
+        };
+        TrainingSlot: {
+            /** @description Some ring is FREE («Qualsevol») */
+            anyFree: boolean;
+            /** @description MEMBER: FREE, startsAt > now and inside the window (R-09-04) */
+            bookable: boolean;
+            /** @example 09:00 */
+            endsAtLocal: string;
+            /** @description Cell per ring id */
+            rings: {
+                [key: string]: components["schemas"]["SlotCell"];
+            };
+            /** Format: date-time */
+            startsAt: string;
+            /** @example 08:30 */
+            startsAtLocal: string;
+        };
+        TrainingSlots: {
+            days: components["schemas"]["TrainingDay"][];
+            /** @description Whether dogId may free-train (R-09-01); true without dogId */
+            dogEligible: boolean;
+            rings: components["schemas"]["TrainingRing"][];
+            /**
+             * Format: int32
+             * @description training.slotMinutes
+             */
+            slotMinutes: number;
+            /** @example Europe/Madrid */
+            timeZone: string;
+            window: components["schemas"]["TrainingWindow"];
+        };
+        TrainingSummary: {
+            bookingBlock?: components["schemas"]["TrainingBookingBlock"] | null;
+            /** @description Future ACTIVE bookings still cancellable (R-09-10) */
+            cancellableBookings: components["schemas"]["CancellableTraining"][];
+            counter: components["schemas"]["TrainingCounter"];
+            /** @description Member.lastDogForTraining while eligible, else the first eligible dog */
+            defaultDogId?: string | null;
+            eligibleDogs: components["schemas"]["EligibleDog"][];
+            inactivity?: components["schemas"]["InactivityWindow"] | null;
+            /** @enum {string} */
+            limitUnit: "DOG" | "MEMBER";
+            week: components["schemas"]["TrainingWeek"];
+            weekOpensAt: components["schemas"]["WeekOpensAt"];
+        };
+        TrainingWeek: {
+            current: boolean;
+            /** Format: date-time */
+            end: string;
+            /** Format: date-time */
+            start: string;
+        };
+        TrainingWindow: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
         };
         UpfrontLine: {
             amount: components["schemas"]["Money"];
@@ -7235,6 +8746,44 @@ export interface components {
             /** Format: int32 */
             number: number;
         };
+        WaitlistEntry: {
+            bookingId?: string | null;
+            /** @enum {string|null} */
+            cancelReason?: "MEMBER" | "CLASS_CANCELLED" | "CLASS_STARTED" | "ADMIN" | "BOOKED_DIRECTLY" | "MEMBER_LEFT" | null;
+            /** Format: date-time */
+            cancelledAt?: string | null;
+            classSession: components["schemas"]["BookingClassSession"];
+            classSessionId: string;
+            /**
+             * Format: date-time
+             * @description FIFO only (R-08-14)
+             */
+            confirmBy?: string | null;
+            dogId: string;
+            dogName?: string | null;
+            id: string;
+            /** Format: date-time */
+            joinedAt: string;
+            memberId: string;
+            /** Format: date-time */
+            notifiedAt?: string | null;
+            /**
+             * Format: int32
+             * @description FIFO order; kept but unused in ALL_AT_ONCE
+             */
+            position: number;
+            /** @enum {string} */
+            state: "ACTIVE" | "NOTIFIED" | "CONSOLIDATED" | "EXPIRED" | "CANCELLED";
+        };
+        WaitlistEntryRequest: {
+            classSessionId: string;
+            dogId: string;
+        };
+        /** @description details of 409 WAITLIST_LIMIT */
+        WaitlistLimitDetails: {
+            /** @enum {string} */
+            scope: "CLASS" | "DOG_WEEK";
+        };
         Week: {
             /** Format: date */
             endDate: string;
@@ -7268,6 +8817,14 @@ export interface components {
             rows: string[];
             week: components["schemas"]["CalendarWeek"];
         };
+        WeekCount: {
+            /** Format: int32 */
+            count: number;
+            /** Format: int32 */
+            max: number;
+            /** @description bookingWeekKey YYYY-MM-DD (R-08-01) */
+            weekKey: string;
+        };
         WeekCreateRequest: {
             /**
              * Format: date
@@ -7294,6 +8851,12 @@ export interface components {
             /** Format: date-time */
             validatedAt?: string | null;
             weekdayTemplateName?: string | null;
+        };
+        WeekOpensAt: {
+            /** @enum {string} */
+            dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+            /** @example 20:00 */
+            time: string;
         };
         WeekTemplate: {
             active: boolean;
@@ -12152,6 +13715,642 @@ export interface operations {
             };
         };
     };
+    bookings: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ListPage<BookingListItem> */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListPageBookingListItem"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    confirmBooking: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingRequest"];
+            };
+        };
+        responses: {
+            /** @description Booking */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Booking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SEAT_HOLD_EXPIRED, CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN, IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    booking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Booking */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Booking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    bookingCalendar: {
+        parameters: {
+            query?: {
+                token?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description iCalendar file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/calendar": string;
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    cancelBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["BookingCancellationRequest"];
+            };
+        };
+        responses: {
+            /** @description Booking */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Booking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description BOOKING_NOT_CANCELLABLE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     branding: {
         parameters: {
             query?: never;
@@ -12916,6 +15115,129 @@ export interface operations {
             };
         };
     };
+    classBookings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ClassBookings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassBookings"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     cancelClass: {
         parameters: {
             query?: never;
@@ -13229,6 +15551,129 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    classWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ClassWaitlist */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassWaitlist"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -19843,6 +22288,645 @@ export interface operations {
             };
         };
     };
+    jobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description JobSummaries */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobSummaries"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    jobRuns: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path: {
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ListPage<JobRunListItem> */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListPageJobRunListItem"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    jobRun: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                name: string;
+                runId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description JobRun */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobRun"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    switchJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobSwitchRequest"];
+            };
+        };
+        responses: {
+            /** @description JobSwitchResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobSwitchResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    triggerJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobTriggerRequest"];
+            };
+        };
+        responses: {
+            /** @description JobRun */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobRun"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_ALREADY_RUNNING */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     listLevels: {
         parameters: {
             query?: {
@@ -21207,6 +24291,255 @@ export interface operations {
             };
         };
     };
+    bookableClasses: {
+        parameters: {
+            query?: {
+                dogId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description BookableClasses */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookableClasses"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description DOG_NOT_ACCESSIBLE */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    memberBookings: {
+        parameters: {
+            query?: {
+                dogId?: string;
+                state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MemberBookings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberBookings"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description DOG_NOT_ACCESSIBLE */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     exportMyData: {
         parameters: {
             query?: never;
@@ -22010,6 +25343,129 @@ export interface operations {
                 };
             };
             /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    memberHome: {
+        parameters: {
+            query?: {
+                dogId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MeHome */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeHome"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description DOG_NOT_ACCESSIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -23113,6 +26569,255 @@ export interface operations {
                 };
             };
             /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    memberTrainingBookings: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                state?: "ACTIVE" | "CANCELLED" | "CANCELLED_BY_CLUB";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MemberTrainingBookings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberTrainingBookings"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    trainingSummary: {
+        parameters: {
+            query?: {
+                dogId?: string;
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingSummary */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingSummary"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED, DOG_NOT_ACCESSIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -28027,6 +31732,135 @@ export interface operations {
             };
         };
     };
+    platformTriggerJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                clubId: string;
+                /** @description R-15-01 route id */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobTriggerRequest"];
+            };
+        };
+        responses: {
+            /** @description JobRun */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobRun"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_ALREADY_RUNNING */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description JOB_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     platformErasureRequests: {
         parameters: {
             query?: {
@@ -28059,6 +31893,130 @@ export interface operations {
                 };
             };
             /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    platformJobsOverview: {
+        parameters: {
+            query?: {
+                clubId?: string;
+                status?: "OK" | "WARN" | "ALERT";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PlatformJobsOverview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformJobsOverview"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -30936,6 +34894,129 @@ export interface operations {
             };
         };
     };
+    riskReview: {
+        parameters: {
+            query?: {
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description RiskReviewForm */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskReviewForm"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     savedViews: {
         parameters: {
             query: {
@@ -31453,6 +35534,252 @@ export interface operations {
                 content?: never;
             };
             /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    holdSeat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SeatHoldRequest"];
+            };
+        };
+        responses: {
+            /** @description SeatHoldResponse */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeatHoldResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, DOG_NOT_ACCESSIBLE, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY, WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    releaseSeat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description void */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32260,6 +36587,1291 @@ export interface operations {
                 };
             };
             /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    trainingBookings: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ListPage<TrainingBookingListItem> */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListPageTrainingBookingListItem"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    bookTraining: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrainingBookingRequest"];
+            };
+        };
+        responses: {
+            /** @description TrainingBooking */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingBooking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED, DOG_NOT_ACCESSIBLE */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SLOT_TAKEN, TRAINING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description DOG_ALREADY_BOOKED, SLOT_NOT_ON_GRID, DOG_NOT_ALLOWED, RING_NOT_RESERVABLE, SLOT_OUT_OF_WINDOW, CLUB_CLOSED, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE, OVERRIDE_NOT_ALLOWED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    exportTrainingBookings: {
+        parameters: {
+            query: {
+                format: "xlsx" | "pdf";
+                columns?: string;
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size. */
+                size?: number;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated response column keys. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            /** @description Queued export */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportAccepted"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_TOO_LARGE, EXPORT_LIMIT */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    trainingBooking: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingBooking */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingBooking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    cancelTraining: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["TrainingCancellationRequest"];
+            };
+        };
+        responses: {
+            /** @description TrainingBooking */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingBooking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description TRAINING_CANCEL_TOO_LATE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    trainingSlots: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+                dogId?: string;
+                ringId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingSlots */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingSlots"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED, DOG_NOT_ACCESSIBLE */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    joinWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WaitlistEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description WaitlistEntry */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitlistEntry"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, DOG_NOT_ACCESSIBLE, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description ALREADY_BOOKED, ALREADY_ON_WAITLIST, WAITLIST_LIMIT, BOOKING_LIMIT_REACHED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLASS_NOT_FULL, BOOKING_BLOCKED, INACTIVITY_PERIOD, PACK_EMPTY, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    waitlistEntry: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WaitlistEntry */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitlistEntry"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    leaveWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WaitlistEntry */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitlistEntry"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description WAITLIST_ENTRY_NOT_LIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    claimSeat: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClaimRequest"];
+            };
+        };
+        responses: {
+            /** @description Booking */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Booking"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SEAT_TAKEN, SEAT_HOLD_EXPIRED, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, SWAP_NOT_ALLOWED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     /** @description Seconds before retrying */

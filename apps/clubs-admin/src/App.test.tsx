@@ -99,6 +99,13 @@ describe("T-02-14 clubs-admin shell", () => {
     expect(screen.queryByRole("link", { name: "Paràmetres" })).not.toBeInTheDocument();
   });
 
+  it("T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10)", async () => {
+    await renderNavigation(["INSTRUCTOR"]);
+
+    expect(screen.getByRole("link", { name: "Plantilla setmanal" })).toHaveAttribute("href", "/plantilles");
+    expect(screen.queryByRole("link", { name: "Calendari de classes" })).not.toBeInTheDocument();
+  });
+
   it("shows the fixed sidebar groups to administrators", async () => {
     await renderNavigation(["ADMIN"]);
 
@@ -114,6 +121,7 @@ describe("T-02-14 clubs-admin shell", () => {
         "/tauler",
         "/preinscripcions/:id",
         "/plantilles",
+        "/plantilles/:templateId/dia/:dayOfWeek",
         "/calendari",
         "/abonats",
         "/abonats/:id",

@@ -1,0 +1,173 @@
+.ah-schedule-grid {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.ah-schedule-grid__scroll {
+  overflow-x: auto;
+}
+
+.ah-schedule-grid__table {
+  width: 100%;
+  min-width: calc(3.75rem + var(--schedule-columns, 5) * 8rem);
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.75rem;
+}
+
+.ah-schedule-grid__corner,
+.ah-schedule-grid__row-label {
+  width: 3.75rem;
+}
+
+.ah-schedule-grid__column {
+  padding: 0 var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ah-schedule-grid__column--colored {
+  color: color-mix(in srgb, var(--schedule-color) 70%, var(--ah-color-text));
+}
+
+.ah-schedule-grid__column-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ah-space-1);
+  width: 100%;
+  min-height: 1.75rem;
+  padding: var(--ah-space-1);
+  color: var(--ah-color-primary);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--ah-color-primary) 50%, transparent);
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-schedule-grid__column-button .ah-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.ah-schedule-grid__row {
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.ah-schedule-grid__row-label {
+  padding-right: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-weight: 500;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.ah-schedule-grid__row-button {
+  padding: var(--ah-space-1);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-schedule-grid__row-button:hover {
+  color: var(--ah-color-primary);
+  border-color: color-mix(in srgb, var(--ah-color-primary) 50%, transparent);
+}
+
+.ah-schedule-grid__slot {
+  padding: var(--ah-space-1);
+  vertical-align: top;
+}
+
+.ah-schedule-grid__stack {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.ah-schedule-grid__column-button:focus-visible,
+.ah-schedule-grid__row-button:focus-visible,
+.ah-schedule-cell:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.ah-schedule-cell {
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.35rem 0.45rem;
+  color: color-mix(
+    in srgb,
+    var(--schedule-color, var(--ah-color-text-muted)) 72%,
+    var(--ah-color-text)
+  );
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  background: color-mix(
+    in srgb,
+    var(--schedule-color, var(--ah-color-text-muted)) 15%,
+    transparent
+  );
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+}
+
+button.ah-schedule-cell {
+  cursor: pointer;
+}
+
+.ah-schedule-cell--neutral {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border-color: var(--ah-color-border);
+}
+
+.ah-schedule-cell--empty {
+  display: block;
+  min-height: 2.6rem;
+  background: transparent;
+  border: 1px dashed var(--ah-color-border);
+}
+
+button.ah-schedule-cell--empty:hover {
+  border-color: var(--ah-color-primary);
+}
+
+.ah-schedule-cell--muted {
+  opacity: 0.55;
+}
+
+.ah-schedule-cell--warning {
+  border-color: var(--ah-color-warning);
+}
+
+.ah-schedule-cell--selected {
+  border-color: var(--ah-color-primary);
+  box-shadow: 0 0 0 1px var(--ah-color-primary);
+}
+
+.ah-schedule-cell__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ah-schedule-cell__subtitle {
+  overflow: hidden;
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

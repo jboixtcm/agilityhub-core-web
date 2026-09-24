@@ -88,6 +88,7 @@ const level = (
   capacity: number,
   order: number,
   grantsFreeTraining: boolean,
+  nameEs = name,
 ): Level => ({
   active: true,
   capacity,
@@ -101,21 +102,21 @@ const level = (
     at: "2026-09-09T16:30:00Z",
   },
   name,
-  nameI18n: { ca: name, en: name, es: name },
+  nameI18n: { ca: name, en: name, es: nameEs },
   order,
   version: 1,
 });
 
 const initialLevels: Level[] = [
-  level("P", "Cadells", ringColor(3), 5, 0, false),
-  level("A", "Nivell A", ringColor(0), 5, 10, false),
-  level("B", "Nivell B", ringColor(0), 5, 20, false),
-  level("C", "Nivell C", ringColor(1), 5, 30, false),
-  level("D", "Nivell D", ringColor(1), 5, 40, true),
-  level("E", "Nivell E", ringColor(4), 4, 50, true),
-  level("F", "Nivell F", ringColor(4), 4, 60, true),
-  level("G", "Nivell G", ringColor(2), 4, 70, true),
-  level("T", "Teràpia", ringColor(2), 1, 80, false),
+  level("P", "Cadells", ringColor(3), 5, 0, false, "Cachorros"),
+  level("A", "A", ringColor(0), 5, 10, false),
+  level("B", "B", ringColor(0), 5, 20, false),
+  level("C", "C", ringColor(1), 5, 30, false),
+  level("D", "D", ringColor(1), 5, 40, true),
+  level("E", "E", ringColor(4), 4, 50, true),
+  level("F", "F", ringColor(4), 4, 60, true),
+  level("G", "G", ringColor(2), 4, 70, true),
+  level("T", "Teràpia", ringColor(2), 1, 80, false, "Terapia"),
 ];
 
 const initialInstructors: Instructor[] = [

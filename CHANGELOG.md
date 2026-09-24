@@ -28,8 +28,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Add the Clubs Admin audit trail, masked change inspection, entity-scoped last-change links, and global asynchronous export drawer with translated filters, status handling, and browser evidence.
 - Add the public four-step club signup and authenticated add-dog flows with draft recovery, identity and family lookup, signed document uploads, module-aware plans and payments, consent and checkout handling, three-locale copy, MSW contracts, and mobile browser evidence.
 - Add the Clubs Admin operational dashboard and signup-review flow with API-backed KPIs, risk and pending-signup cards, an accessible dogs-by-level chart, validation and rejection actions, live menu counters, three-locale copy, and desktop browser evidence.
+- Add the Clubs Admin weekly templates (D3 `/plantilles`) and template day view (D3b `/plantilles/:templateId/dia/:dayOfWeek`): weekday/Saturday template tabs remembered per kind, band × day grid on the new shared `ScheduleGrid`/`ScheduleCell` (`@agilityhub/ui`), class card with automatic description preview and manual override, band drawer, inconsistency marks and footer notes, week generation with confirmation and `Idempotency-Key`, SETMANES table, coverage by level, read-only INSTRUCTOR access, `admin-scheduling` and `enums` namespaces in ca/es/en, `formatWeekRange`/`dayMonthNumeric` formatters, stateful S06 MSW handlers with the `planningNoLevels` and `planningTwoInstructors` scenarios, and desktop browser evidence (E4-W01).
 
 ### Changed
+
+- Adopt the api snapshot `8117f37` as `packages/api-client/openapi/openapi.json` (E5 booking, waitlist, training and job contracts; `AuditAction` reordered) and regenerate the client types (E4-W01).
+- Mock level catalog names follow the S05 seed (`A`…`G`, «Cadells» / «Cachorros», «Teràpia» / «Terapia») instead of «Nivell A»… (E4-W01).
 
 - Complete the E3 frontend integration gate against the published core with public signup, dashboard validation and rejection, welcome activation, authenticated add-dog validation, N-37 delivery, signup closure, real-data screenshots, and isolated seeded authentication stages.
 - Complete the E2 frontend integration gate against the published core with the 184-member/242-dog demo census, real catalog, parameter, audit, export and club-page round trips, deterministic Playwright execution, performance evidence and real-data screenshots.

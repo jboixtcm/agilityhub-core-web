@@ -154,6 +154,11 @@ const dynamicKeyPrefixes = [
   "admin-settings:enum.",
   "admin-settings:modules.",
   "admin-settings:param.",
+  "enums:coverageStatus.",
+  "enums:inconsistencyType.",
+  "enums:skipReason.",
+  "enums:templateKind.",
+  "enums:weekState.",
 ];
 
 const settingsFixture = await readFile(

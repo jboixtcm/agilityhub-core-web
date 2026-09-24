@@ -7,6 +7,7 @@ import {
   formatDuration,
   formatMoney,
   formatTime,
+  formatWeekRange,
 } from "./format";
 
 describe("club-aware formats", () => {
@@ -35,6 +36,26 @@ describe("club-aware formats", () => {
     expect(formatTime(instant, "ca", "Europe/Madrid")).toBe("01:30");
     expect(formatDate(instant, "ca", "America/Argentina/Buenos_Aires")).toBe("06/09/2026");
     expect(formatTime(instant, "ca", "America/Argentina/Buenos_Aires")).toBe("20:30");
+  });
+
+  it.each([
+    ["ca", "24 al 30 d’agost", "28 de setembre al 4 d’octubre"],
+    ["es", "24 al 30 de agosto", "28 de septiembre al 4 de octubre"],
+    ["en", "August 24–30", "September 28 – October 4"],
+  ] as const)(
+    "formats ISO week ranges in %s (E4-W01 D3 generation card)",
+    (locale, same, different) => {
+      expect(formatWeekRange("2026-08-24", "2026-08-30", locale, "Europe/Madrid")).toBe(same);
+      expect(formatWeekRange("2026-09-28", "2026-10-04", locale, "Europe/Madrid")).toBe(different);
+    },
+  );
+
+  it("formats numeric day and month and long weekday names", () => {
+    expect(formatDate("2026-08-17T07:12:00Z", "ca", "Europe/Madrid", "dayMonthNumeric")).toBe(
+      "17/08",
+    );
+    expect(formatDate("2026-08-19T12:00:00Z", "ca", "UTC", "weekdayLong")).toBe("dimecres");
+    expect(formatDate("2026-08-19T12:00:00Z", "en", "UTC", "weekdayLong")).toBe("Wednesday");
   });
 
   it("formats date ranges and binds branding values", () => {

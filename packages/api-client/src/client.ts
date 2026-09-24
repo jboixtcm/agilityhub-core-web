@@ -8,6 +8,7 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly (string | RegExp)[] = [
   "/bookings",
   "/training-bookings",
   /^\/waitlist-entries\/[^/]+\/claim$/,
+  /^\/weeks\/[^/]+\/generation$/,
   "/checkout-sessions",
   "/signup",
   "/me/dogs/signup",

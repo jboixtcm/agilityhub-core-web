@@ -1,0 +1,31 @@
+{
+  "templateKind": {
+    "WEEKDAYS": "dl–dv",
+    "SATURDAY": "dissabtes"
+  },
+  "weekState": {
+    "PENDING": "pendent",
+    "GENERATED": "generada",
+    "VALIDATED": "validada"
+  },
+  "coverageStatus": {
+    "OK": "bé",
+    "TIGHT": "ajustat",
+    "SHORT": "manca oferta",
+    "EXPAND": "cal ampliar",
+    "NO_DOGS": "sense gossos"
+  },
+  "inconsistencyType": {
+    "RING_DOUBLE_BOOKED": "Pista amb dues classes alhora",
+    "INSTRUCTOR_DOUBLE_BOOKED": "Instructor assignat a dues classes alhora",
+    "RING_BLOCKED": "Pista bloquejada",
+    "RING_TRAINING_CONFLICT": "Pista amb reserves d'entrenament",
+    "LEVEL_INACTIVE": "Nivell desactivat",
+    "RING_INACTIVE": "Pista desactivada",
+    "INSTRUCTOR_INACTIVE": "Instructor desactivat"
+  },
+  "skipReason": {
+    "HOLIDAY": "festiu",
+    "PAST": "dies passats"
+  }
+}

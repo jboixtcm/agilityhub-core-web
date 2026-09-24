@@ -1,0 +1,31 @@
+{
+  "templateKind": {
+    "WEEKDAYS": "lu–vi",
+    "SATURDAY": "sábados"
+  },
+  "weekState": {
+    "PENDING": "pendiente",
+    "GENERATED": "generada",
+    "VALIDATED": "validada"
+  },
+  "coverageStatus": {
+    "OK": "bien",
+    "TIGHT": "ajustado",
+    "SHORT": "falta oferta",
+    "EXPAND": "hay que ampliar",
+    "NO_DOGS": "sin perros"
+  },
+  "inconsistencyType": {
+    "RING_DOUBLE_BOOKED": "Pista con dos clases a la vez",
+    "INSTRUCTOR_DOUBLE_BOOKED": "Instructor asignado a dos clases a la vez",
+    "RING_BLOCKED": "Pista bloqueada",
+    "RING_TRAINING_CONFLICT": "Pista con reservas de entrenamiento",
+    "LEVEL_INACTIVE": "Nivel desactivado",
+    "RING_INACTIVE": "Pista desactivada",
+    "INSTRUCTOR_INACTIVE": "Instructor desactivado"
+  },
+  "skipReason": {
+    "HOLIDAY": "festivo",
+    "PAST": "días pasados"
+  }
+}

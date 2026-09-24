@@ -39,6 +39,9 @@ import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
+import { parseDay } from "./planning/shared";
+import { TemplateDayPage } from "./planning/TemplateDayPage";
+import { TemplatesPage } from "./planning/TemplatesPage";
 
 interface AdminRouteDefinition {
   path: string;
@@ -51,8 +54,9 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/tauler", roles: ["ADMIN"] },
   // Screen D2.
   { path: "/preinscripcions/:id", roles: ["ADMIN"] },
-  // Screens D3 and D3b.
-  { path: "/plantilles", roles: ["ADMIN"] },
+  // Screens D3 and D3b (INSTRUCTOR reads them without actions, S06 §13-10).
+  { path: "/plantilles", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/plantilles/:templateId/dia/:dayOfWeek", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screens D4, D4b and D4c.
   { path: "/calendari", roles: ["ADMIN"] },
   // Screens D5 and D10.
@@ -220,7 +224,7 @@ export function AdminNavigation({
           icon: "cal",
           id: "weekly-template",
           label: t("shell:nav.weeklyTemplate"),
-          roles: ["ADMIN"],
+          roles: ["INSTRUCTOR", "ADMIN"],
         },
         {
           href: "/calendari",
@@ -340,11 +344,38 @@ function PlatformRoleGuard({ children }: { children: ReactNode }) {
   return <RequireAuth>{allowed ? children : null}</RequireAuth>;
 }
 
+function PlanningTemplatesRoute({
+  client,
+  onNavigate,
+}: {
+  client: ReturnType<typeof createAuthenticatedApiClient>;
+  onNavigate: (path: string) => void;
+}) {
+  const session = useSession();
+  return <TemplatesPage client={client} onNavigate={onNavigate} readOnly={!session.roles.includes("ADMIN")} />;
+}
+
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
   onNavigate: (path: string) => void,
+  pathname: string,
 ) {
+  if (route.path === "/plantilles") {
+    return <PlanningTemplatesRoute client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/plantilles/:templateId/dia/:dayOfWeek") {
+    const [, , templateId = "", , day] = pathname.split("/");
+    return (
+      <TemplateDayPage
+        client={client}
+        dayOfWeek={parseDay(day)}
+        key={pathname}
+        onNavigate={onNavigate}
+        templateId={decodeURIComponent(templateId)}
+      />
+    );
+  }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;
   }
@@ -613,7 +644,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell client={client} pathname={pathname}>{gatedRoute(route, routeContent(route, client, navigate))}</AdminShell>
+        <AdminShell client={client} pathname={pathname}>{gatedRoute(route, routeContent(route, client, navigate, pathname))}</AdminShell>
       </ExportJobsProvider>
     </OnboardingExperience>
   );

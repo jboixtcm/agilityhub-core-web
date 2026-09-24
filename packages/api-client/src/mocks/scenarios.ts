@@ -21,6 +21,10 @@ export interface MockScenarioDefinition {
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
+  /** Parameter `levels.enabled` (R-06-15); default true. */
+  levelsEnabled?: boolean;
+  /** Parameter `classes.maxInstructorsPerClass` (R-06-15); default 1. */
+  maxInstructorsPerClass?: number;
   onboarding?: OnboardingState;
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
@@ -65,6 +69,18 @@ const scenarios = {
   member: {
     branding: canic,
     me: member,
+    sessions: accountSessions,
+  },
+  planningNoLevels: {
+    branding: canic,
+    levelsEnabled: false,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  planningTwoInstructors: {
+    branding: canic,
+    maxInstructorsPerClass: 2,
+    me: meAdmin as Me,
     sessions: accountSessions,
   },
   instructor: {

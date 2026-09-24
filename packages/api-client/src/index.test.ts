@@ -150,6 +150,28 @@ describe("typed API client", () => {
 
     expect(idempotencyKey).toBe("123e4567-e89b-42d3-a456-426614174000");
   });
+
+  it("R-06-07 sends an Idempotency-Key on POST /weeks/{id}/generation by default", async () => {
+    let idempotencyKey = "";
+    server.use(
+      http.post("https://core.example.test/api/v1/weeks/:id/generation", ({ request }) => {
+        idempotencyKey = request.headers.get("Idempotency-Key") ?? "";
+        return HttpResponse.json({ classCount: 0, skipped: [], weekId: "week-1" });
+      }),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174001",
+    });
+
+    await client.POST("/weeks/{id}/generation", {
+      body: { saturdayTemplateId: null, weekdayTemplateId: "template-a" },
+      // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+      params: { path: { id: "week-1" } },
+    });
+
+    expect(idempotencyKey).toBe("123e4567-e89b-42d3-a456-426614174001");
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -185,7 +207,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(126);
+    expect(handlers).toHaveLength(142);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

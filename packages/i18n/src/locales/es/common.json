@@ -2,6 +2,10 @@
   "format": {
     "duration": {
       "before": "{duration} antes"
+    },
+    "weekRange": {
+      "sameMonth": "{startDay} al {end}",
+      "differentMonth": "{start} al {end}"
     }
   },
   "unavailable": {

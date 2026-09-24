@@ -1,0 +1,31 @@
+{
+  "templateKind": {
+    "WEEKDAYS": "Mon–Fri",
+    "SATURDAY": "Saturdays"
+  },
+  "weekState": {
+    "PENDING": "pending",
+    "GENERATED": "generated",
+    "VALIDATED": "validated"
+  },
+  "coverageStatus": {
+    "OK": "good",
+    "TIGHT": "tight",
+    "SHORT": "short on offer",
+    "EXPAND": "needs more",
+    "NO_DOGS": "no dogs"
+  },
+  "inconsistencyType": {
+    "RING_DOUBLE_BOOKED": "Ring with two classes at once",
+    "INSTRUCTOR_DOUBLE_BOOKED": "Instructor assigned to two classes at once",
+    "RING_BLOCKED": "Ring blocked",
+    "RING_TRAINING_CONFLICT": "Ring with training bookings",
+    "LEVEL_INACTIVE": "Level deactivated",
+    "RING_INACTIVE": "Ring deactivated",
+    "INSTRUCTOR_INACTIVE": "Instructor deactivated"
+  },
+  "skipReason": {
+    "HOLIDAY": "holiday",
+    "PAST": "past days"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "common": {
+    "error": "No se ha podido completar la acción.",
+    "loading": "Cargando…",
+    "retry": "Vuelve a intentarlo",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "none": "—"
+  },
+  "templates": {
+    "title": "Plantillas",
+    "weekdayTab": "lu–vi: «{name}»",
+    "weekdayTabEmpty": "lu–vi",
+    "saturdayTab": "Sábados",
+    "new": "Nueva",
+    "duplicate": "Duplica",
+    "band": "Franja",
+    "createClass": "Crear clase",
+    "gridLabel": "Cuadro semanal de la plantilla «{name}»",
+    "gridFooter": "Haz clic en el nombre de un día para verlo por pista o por instructor · color = pista · gris = sin pista",
+    "inconsistencyNote": "Incoherencia: {message}. Mientras haya incoherencias no se pueden generar clases de esta plantilla.",
+    "cellLabel": "{description} · {instructors} · {ring}{hasWarnings, select, yes { · {warnings}} other {}}",
+    "emptyCell": "Crear clase: {day} {time}",
+    "bandLabel": "Franja {range}",
+    "bandRange": "{start}–{end}",
+    "addAnotherInBand": "¿Quieres añadir otra en la misma franja?",
+    "addAnotherYes": "Sí",
+    "addAnotherNo": "No",
+    "empty": {
+      "title": "Todavía no hay ninguna plantilla",
+      "description": "Crea la primera plantilla para diseñar la oferta semanal de clases."
+    },
+    "form": {
+      "newTitle": "Nueva plantilla",
+      "duplicateTitle": "Duplica la plantilla",
+      "name": "Nombre",
+      "kind": "Tipo",
+      "copyName": "{name} (copia)"
+    },
+    "bandForm": {
+      "newTitle": "Nueva franja",
+      "editTitle": "Franja {range}",
+      "start": "Inicio",
+      "end": "Final",
+      "remove": "Borra la franja"
+    },
+    "generation": {
+      "title": "Generar clases — por semanas",
+      "week": "Semana",
+      "weekOption": "Semana del {range}",
+      "submit": "GENERAR CLASES",
+      "blocked": "bloqueado: {count, plural, one {# incoherencia} other {# incoherencias}} en la plantilla",
+      "confirm": "Se generarán como borrador las clases de la semana del {date}",
+      "done": "{count, plural, one {# clase generada} other {# clases generadas}}",
+      "skipped": "{count, plural, one {# omitida} other {# omitidas}} ({reasons})"
+    },
+    "day": {
+      "header": "Plantilla: «{name}» ({kind})",
+      "previous": "Día anterior",
+      "next": "Día siguiente",
+      "select": "Día",
+      "viewLabel": "Vista",
+      "byRing": "Vista por pista",
+      "byInstructor": "Vista por instructor",
+      "noRing": "Sin",
+      "back": "Volver a la vista semanal",
+      "gridLabel": "Plantilla «{name}» · {day}"
+    }
+  },
+  "classCard": {
+    "title": "Crear clase",
+    "editTitle": "Clase seleccionada",
+    "band": "Franja",
+    "day": "Día",
+    "instructor": "Instructor",
+    "instructors": "Instructores (máx. {max})",
+    "ring": "Pista",
+    "noRing": "Sin pista",
+    "levels": "Niveles",
+    "description": "Descripción",
+    "capacity": "Límite",
+    "submit": "CREA LA CLASE",
+    "remove": "Quita de la plantilla",
+    "close": "Cerrar"
+  },
+  "weeks": {
+    "caption": "Semanas",
+    "year": "Año",
+    "week": "Semana",
+    "start": "Inicio",
+    "generated": "Clases generadas",
+    "validated": "Validadas",
+    "dateTime": "{date} · {time}",
+    "empty": "Todavía no hay ninguna semana"
+  },
+  "coverage": {
+    "title": "Cobertura por nivel (plazas de la semana)",
+    "level": "Nivel",
+    "maxSeats": "Plazas máximas",
+    "propSeats": "Plazas prop.",
+    "maxRatio": "Máximo s/todos",
+    "propRatio": "Prop. s/activos*",
+    "status": "Aviso",
+    "percent": "{value}%",
+    "footnote": "Plazas prop. = las plazas de cada clase repartidas entre sus niveles (una clase A+B de 5 plazas cuenta 2,5 para A y 2,5 para B) · * sobre los perros del nivel con alguna reserva la semana en curso o la anterior · aviso según Prop. s/activos: bien > {ok} % · ajustado {tight}–{ok} % · falta oferta {short}–{tight} % · hay que ampliar < {short} %"
+  },
+  "description": {
+    "andAbove": "{level} y sup.",
+    "join": "+"
+  }
+}

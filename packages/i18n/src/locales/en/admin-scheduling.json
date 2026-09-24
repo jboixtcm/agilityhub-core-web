@@ -1,0 +1,113 @@
+{
+  "common": {
+    "error": "The action could not be completed.",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "none": "—"
+  },
+  "templates": {
+    "title": "Templates",
+    "weekdayTab": "Mon–Fri: “{name}”",
+    "weekdayTabEmpty": "Mon–Fri",
+    "saturdayTab": "Saturdays",
+    "new": "New",
+    "duplicate": "Duplicate",
+    "band": "Time band",
+    "createClass": "Create class",
+    "gridLabel": "Weekly grid of the “{name}” template",
+    "gridFooter": "Click a day name to see it by ring or by instructor · colour = ring · grey = no ring",
+    "inconsistencyNote": "Inconsistency: {message}. While there are inconsistencies, classes cannot be generated from this template.",
+    "cellLabel": "{description} · {instructors} · {ring}{hasWarnings, select, yes { · {warnings}} other {}}",
+    "emptyCell": "Create class: {day} {time}",
+    "bandLabel": "Time band {range}",
+    "bandRange": "{start}–{end}",
+    "addAnotherInBand": "Do you want to add another one in the same time band?",
+    "addAnotherYes": "Yes",
+    "addAnotherNo": "No",
+    "empty": {
+      "title": "There are no templates yet",
+      "description": "Create the first template to design the weekly class offer."
+    },
+    "form": {
+      "newTitle": "New template",
+      "duplicateTitle": "Duplicate the template",
+      "name": "Name",
+      "kind": "Type",
+      "copyName": "{name} (copy)"
+    },
+    "bandForm": {
+      "newTitle": "New time band",
+      "editTitle": "Time band {range}",
+      "start": "Start",
+      "end": "End",
+      "remove": "Delete the time band"
+    },
+    "generation": {
+      "title": "Generate classes — by week",
+      "week": "Week",
+      "weekOption": "Week of {range}",
+      "submit": "GENERATE CLASSES",
+      "blocked": "blocked: {count, plural, one {# inconsistency} other {# inconsistencies}} in the template",
+      "confirm": "The classes of the week of {date} will be generated as drafts",
+      "done": "{count, plural, one {# class generated} other {# classes generated}}",
+      "skipped": "{count} skipped ({reasons})"
+    },
+    "day": {
+      "header": "Template: “{name}” ({kind})",
+      "previous": "Previous day",
+      "next": "Next day",
+      "select": "Day",
+      "viewLabel": "View",
+      "byRing": "View by ring",
+      "byInstructor": "View by instructor",
+      "noRing": "None",
+      "back": "Back to the weekly view",
+      "gridLabel": "Template “{name}” · {day}"
+    }
+  },
+  "classCard": {
+    "title": "Create class",
+    "editTitle": "Selected class",
+    "band": "Time band",
+    "day": "Day",
+    "instructor": "Instructor",
+    "instructors": "Instructors (max. {max})",
+    "ring": "Ring",
+    "noRing": "No ring",
+    "levels": "Levels",
+    "description": "Description",
+    "capacity": "Limit",
+    "submit": "CREATE THE CLASS",
+    "remove": "Remove from the template",
+    "close": "Close"
+  },
+  "weeks": {
+    "caption": "Weeks",
+    "year": "Year",
+    "week": "Week",
+    "start": "Start",
+    "generated": "Classes generated",
+    "validated": "Validated",
+    "dateTime": "{date} · {time}",
+    "empty": "There are no weeks yet"
+  },
+  "coverage": {
+    "title": "Coverage by level (places of the week)",
+    "level": "Level",
+    "maxSeats": "Max. places",
+    "propSeats": "Prop. places",
+    "maxRatio": "Max. / all",
+    "propRatio": "Prop. / active*",
+    "status": "Warning",
+    "percent": "{value}%",
+    "footnote": "Prop. places = each class's places split among its levels (an A+B class with 5 places counts 2.5 for A and 2.5 for B) · * over the level's dogs with a booking in the current or the previous week · warning based on Prop. / active: good > {ok} % · tight {tight}–{ok} % · short on offer {short}–{tight} % · needs more < {short} %"
+  },
+  "description": {
+    "andAbove": "{level} and up",
+    "join": "+"
+  }
+}

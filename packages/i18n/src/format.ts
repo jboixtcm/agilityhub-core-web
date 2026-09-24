@@ -7,7 +7,15 @@ import { normalizeLocale } from "./locale";
 import type { Locale } from "./types";
 
 export type DateInput = Date | number | string;
-export type DatePresentation = "dayMonth" | "long" | "monthYear" | "short" | "weekday" | "weekdayShort";
+export type DatePresentation =
+  | "dayMonth"
+  | "dayMonthNumeric"
+  | "long"
+  | "monthYear"
+  | "short"
+  | "weekday"
+  | "weekdayLong"
+  | "weekdayShort";
 
 export interface DurationOptions {
   before?: boolean;
@@ -21,10 +29,12 @@ const intlLocales: Record<Locale, string> = {
 
 const dateOptions: Record<DatePresentation, Intl.DateTimeFormatOptions> = {
   dayMonth: { day: "numeric", month: "long" },
+  dayMonthNumeric: { day: "2-digit", month: "2-digit" },
   long: { day: "numeric", month: "long", year: "numeric" },
   monthYear: { month: "2-digit", year: "numeric" },
   short: { day: "2-digit", month: "2-digit", year: "numeric" },
   weekday: { day: "numeric", month: "long", weekday: "long" },
+  weekdayLong: { weekday: "long" },
   weekdayShort: { weekday: "short" },
 };
 
@@ -69,6 +79,40 @@ export function formatDateRange(
   presentation: DatePresentation = "short",
 ): string {
   return dateFormatter(locale, timeZone, presentation).formatRange(toDate(start), toDate(end));
+}
+
+/** Accepts `YYYY-MM-DD` business dates (read at noon UTC so no zone can move the day) or instants. */
+function toBusinessDate(value: DateInput): DateInput {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(value)
+    ? `${value}T12:00:00Z`
+    : value;
+}
+
+/** «24 al 30 d'agost» (same month) · «28 de setembre al 4 d'octubre» (different months). */
+export function formatWeekRange(
+  start: DateInput,
+  end: DateInput,
+  locale: Locale,
+  timeZone: string,
+): string {
+  const startDate = toBusinessDate(start);
+  const endDate = toBusinessDate(end);
+  const monthKey = new Intl.DateTimeFormat("en-US", {
+    month: "numeric",
+    timeZone,
+    year: "numeric",
+  });
+  const sameMonth = monthKey.format(toDate(startDate)) === monthKey.format(toDate(endDate));
+  const dayOnly = new Intl.DateTimeFormat(intlLocales[locale], { day: "numeric", timeZone });
+  const values = {
+    end: formatDate(endDate, locale, timeZone, "dayMonth"),
+    endDay: dayOnly.format(toDate(endDate)),
+    start: formatDate(startDate, locale, timeZone, "dayMonth"),
+    startDay: dayOnly.format(toDate(startDate)),
+  };
+  return sameMonth
+    ? translateStatic("common:format.weekRange.sameMonth", locale, values)
+    : translateStatic("common:format.weekRange.differentMonth", locale, values);
 }
 
 export function formatDateTime(value: DateInput, locale: Locale, timeZone: string): string {
@@ -128,6 +172,7 @@ export interface ClubFormats {
   formatMoney: (amount: number) => string;
   formatMonth: (value: DateInput) => string;
   formatTime: (value: DateInput) => string;
+  formatWeekRange: (start: DateInput, end: DateInput) => string;
   locale: Locale;
 }
 
@@ -141,6 +186,7 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatMoney: (amount) => formatMoney(amount, locale, currency),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
     formatTime: (value) => formatTime(value, locale, timeZone),
+    formatWeekRange: (start, end) => formatWeekRange(start, end, locale, timeZone),
     locale,
   };
 }
@@ -162,3 +208,4 @@ export const fmtMoney = formatMoney;
 export const fmtMonth = formatMonth;
 export const fmtRelative = formatDuration;
 export const fmtTime = formatTime;
+export const fmtWeekRange = formatWeekRange;

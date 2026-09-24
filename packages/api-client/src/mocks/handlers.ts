@@ -52,6 +52,7 @@ import {
   type MemberDogSignupRequest,
   type SignupRequest,
 } from "./fixtures/signup";
+import { planningHandlers, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
   currentMockScenarioName,
@@ -1358,7 +1359,31 @@ export const handlers = [
           key,
           label: "Nivells",
           type: "BOOLEAN",
-          value: true,
+          value: scenario.levelsEnabled ?? true,
+          version: 1,
+        });
+      }
+      if (key === "classes.maxInstructorsPerClass") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          constraints: { max: 4, min: 1 },
+          default: 1,
+          key,
+          label: "Instructors per classe",
+          type: "INT",
+          value: scenario.maxInstructorsPerClass ?? 1,
+          version: 1,
+        });
+      }
+      if (key === "classes.slotMinutes") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          default: 10,
+          editableBy: "PLATFORM",
+          key,
+          label: "Granularitat de les franges",
+          type: "DURATION",
+          value: 10,
           version: 1,
         });
       }
@@ -2860,6 +2885,7 @@ export const handlers = [
     savedViews.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
   }),
+  ...planningHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
       status: "UP",
@@ -2877,6 +2903,7 @@ export {
   resetDashboardMockState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
+  resetPlanningState,
   resetSettingsState,
   type MockScenario,
 };
