@@ -1,0 +1,105 @@
+diff --git a/packages/api-client/src/mocks/fixtures/planning.ts b/packages/api-client/src/mocks/fixtures/planning.ts
+index b973819..3f3fe69 100644
+--- a/packages/api-client/src/mocks/fixtures/planning.ts
++++ b/packages/api-client/src/mocks/fixtures/planning.ts
+@@ -374,6 +374,10 @@ const fixtureInstructors: PlanningInstructor[] = [
+   { id: SERGIO, shortName: "Sergio" },
+ ];
+ 
++const e3w10ProofUntil = performance.now() + 100;
++while (performance.now() < e3w10ProofUntil) {
++  // E3-W10 round-2 proof (temporary): 100 ms of import-time work.
++}
+ export const initialWeekTemplates: readonly WeekTemplate[] = [setmanaA, setmanaB, dissabtes].map(
+   (template) => withInconsistencies(template, fixtureRings, fixtureInstructors),
+ );
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 1293ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 716ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 127.94 ms = 25.51 × the reference work (5.01 ms); budget 17 ×: expected 25.513367954915466 to be less than 17
+ ❯ src/mocks/mock-worlds.budget.test.ts:161:7
+    159|       cost.ratio,
+    160|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    161|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    162|   });
+    163|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:56:15
+   Duration  1.80s (tests 75%, transform 15%, import 10%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 1242ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 686ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 126.46 ms = 26.80 × the reference work (4.72 ms); budget 17 ×: expected 26.801216636176854 to be less than 17
+ ❯ src/mocks/mock-worlds.budget.test.ts:161:7
+    159|       cost.ratio,
+    160|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    161|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    162|   });
+    163|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:56:17
+   Duration  1.68s (tests 78%, transform 12%, import 10%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 1205ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 676ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 124.90 ms = 26.29 × the reference work (4.75 ms); budget 17 ×: expected 26.29232880749401 to be less than 17
+ ❯ src/mocks/mock-worlds.budget.test.ts:161:7
+    159|       cost.ratio,
+    160|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    161|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    162|   });
+    163|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:56:19
+   Duration  1.63s (tests 78%, transform 12%, import 10%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

@@ -110,7 +110,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - The export-drawer file name is `auditoria_…` again for every list, as before E4-W04.
   - The calendar mock's `clubInstant` reuses one `Intl.DateTimeFormat` per time zone (about 11× faster, same results).
 - Test stability (E3-W10, no product change):
-  - `mock-worlds.budget.test.ts` times the build of every stateful MSW world (each `reset…State` of the handlers, plus the day grid) against a budget: 50 ms for the planning world, 5 ms for the others. It also checks that a reset rebuilds the start-up worlds. It fails without the per-zone formatter cache of `clubInstant` (planning 142 ms).
+  - `mock-worlds.budget.test.ts` times the build of every stateful MSW world (each `reset…State` of the handlers, plus the day grid) and a fresh import of `handlers.ts` (the start-up work the browser runs, import-time initialisers included). The budgets are multiples of a fixed reference workload timed alongside, so a slower or loaded host (CI at `ca84417`: planning 59 ms against the 50 ms budget of round 1) moves both sides together: 9× for the planning world, 17× for the import, 1× for the others. It fails without the per-zone formatter cache of `clubInstant` (planning 28.6×, import 32.9×) and with 100 ms of import-time work (import 25.5–26.8×).
+  - Its parity check (a reset rebuilds the start-up worlds) runs with `Date` frozen by fake timers (`performance.now()` stays real), so it no longer fails when a run crosses the club's Monday midnight.
   - The D3b test «rewrites an unknown day in the URL…» waits for the URL rewrite, which is a passive effect that can run after the table is committed.
   - `scripts/e2e-docker.sh` no longer copies `.roadmap-*` or the stray `.pnpm-store` into the container, and prints the size of the copy (67 MB).
 - D2 and D1, gate E3 audit fixes (E3-W07):

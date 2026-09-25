@@ -1,0 +1,32 @@
+// Scratch test of round 2 (packages/api-client/src/mocks/e3w10-scratch.test.ts, deleted after the
+// run of 15-scratch-wall-vs-cpu-under-turbo.log). It fails on purpose so that Vitest prints the rows.
+import { it, vi } from "vitest";
+
+import { resetPlanningState } from "./handlers";
+
+function cpuMs(): number {
+  const usage = process.cpuUsage();
+  return (usage.user + usage.system) / 1000;
+}
+
+it("scratch: wall vs cpu", async () => {
+  const rows: string[] = [];
+  for (let run = 0; run < 10; run += 1) {
+    const wall0 = performance.now();
+    const cpu0 = cpuMs();
+    resetPlanningState();
+    rows.push(
+      `reset wall ${(performance.now() - wall0).toFixed(2)} cpu ${(cpuMs() - cpu0).toFixed(2)}`,
+    );
+  }
+  for (let run = 0; run < 5; run += 1) {
+    vi.resetModules();
+    const wall0 = performance.now();
+    const cpu0 = cpuMs();
+    await import("./handlers");
+    rows.push(
+      `import wall ${(performance.now() - wall0).toFixed(2)} cpu ${(cpuMs() - cpu0).toFixed(2)}`,
+    );
+  }
+  throw new Error(`SCRATCH\n${rows.join("\n")}`);
+});

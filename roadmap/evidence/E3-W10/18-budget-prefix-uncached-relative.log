@@ -1,0 +1,65 @@
+diff --git a/packages/api-client/src/mocks/fixtures/calendar.ts b/packages/api-client/src/mocks/fixtures/calendar.ts
+index 85d9128..f49c216 100644
+--- a/packages/api-client/src/mocks/fixtures/calendar.ts
++++ b/packages/api-client/src/mocks/fixtures/calendar.ts
+@@ -32,7 +32,16 @@ function offsetFormatter(timeZone: string): Intl.DateTimeFormat {
+ }
+ 
+ function zoneOffsetMinutes(instant: number, timeZone: string): number {
+-  const parts = offsetFormatter(timeZone).formatToParts(new Date(instant));
++  const parts = new Intl.DateTimeFormat("en-US", {
++    day: "2-digit",
++    hour: "2-digit",
++    hourCycle: "h23",
++    minute: "2-digit",
++    month: "2-digit",
++    second: "2-digit",
++    timeZone,
++    year: "numeric",
++  }).formatToParts(new Date(instant));
+   const value = (type: Intl.DateTimeFormatPartTypes) =>
+     Number(parts.find((part) => part.type === type)?.value ?? 0);
+   const local = Date.UTC(
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 2 failed) 2388ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 914ms
+     × builds resetPlanningState within its budget 820ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 175.79 ms = 28.26 × the reference work (6.22 ms); budget 15 ×: expected 28.25932894334301 to be less than 15
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:7
+    158|       cost.ratio,
+    159|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    160|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 158.19 ms = 28.63 × the reference work (5.53 ms); budget 8 ×: expected 28.629656729979306 to be less than 8
+ ❯ src/mocks/mock-worlds.budget.test.ts:167:57
+    165|     const cost = await relativeCost(reset);
+    166|
+    167|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    168|   });
+    169|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  08:53:20
+   Duration  2.96s (tests 84%, transform 8%, import 8%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

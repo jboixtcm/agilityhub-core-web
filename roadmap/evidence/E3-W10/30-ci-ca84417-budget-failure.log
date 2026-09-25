@@ -1,0 +1,22 @@
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:36:47.0446725Z       Tests  342 passed (342)
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6645989Z  ❯ src/mocks/mock-worlds.budget.test.ts (13 tests | 1 failed) 431ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6766245Z      ✓ builds resetActivityState within its budget 1ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6767675Z      ✓ builds resetAuditMockState within its budget 0ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6768854Z      ✓ builds resetCatalogState within its budget 1ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6769990Z      ✓ builds resetCensusRecordState within its budget 1ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6771238Z      ✓ builds resetDashboardMockState within its budget 1ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6772499Z      ✓ builds resetMemberSelfServiceState within its budget 1ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6774035Z      ✓ builds resetOnboardingMockState within its budget 0ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6774908Z      × builds resetPlanningState within its budget 325ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6775739Z      ✓ builds resetSettingsState within its budget 4ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6776854Z      ✓ builds resetSignupMockState within its budget 0ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6777996Z      ✓ builds resetDayGridState within its budget 17ms
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6781945Z ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6783707Z  FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6785676Z AssertionError: resetPlanningState: 59.39 ms (budget 50 ms): expected 59.38530899999989 to be less than 50
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6787255Z  ❯ src/mocks/mock-worlds.budget.test.ts:74:88
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6797430Z       Tests  1 failed | 100 passed (101)
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.6867204Z ##[error]AssertionError: resetPlanningState: 59.39 ms (budget 50 ms): expected 59.38530899999989 to be less than 50
+Frontend checks	Lint, typecheck, test, and build	 ❯ src/mocks/mock-worlds.budget.test.ts:74:88
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.8454240Z  Tasks:    5 successful, 19 total
+Frontend checks	Lint, typecheck, test, and build	2026-09-25T06:37:10.8455909Z Failed:    @agilityhub/api-client#test

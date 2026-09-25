@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > finds every stateful world the handlers reset 1ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget 168ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetActivityState within its budget 40ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetAuditMockState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCatalogState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCensusRecordState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDashboardMockState within its budget 38ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetMemberSelfServiceState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetOnboardingMockState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget 113ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSettingsState within its budget 39ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSignupMockState within its budget 38ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDayGridState within its budget 41ms
+ ✓ src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > rebuilds on reset the same worlds the browser starts with, whatever the day 18ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  08:56:59
+   Duration  1.07s (tests 70%, transform 21%, import 9%)
+
+
+> @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+
+
+> @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> tsc --noEmit
+

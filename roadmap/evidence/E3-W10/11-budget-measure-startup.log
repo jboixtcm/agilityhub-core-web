@@ -1,0 +1,90 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 316ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 180ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 32.91 ms (budget 0 ms): expected 32.911249999999995 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:112:7
+    110|       fastest,
+    111|       `import of the mock modules: ${fastest.toFixed(2)} ms (budget ${…
+    112|     ).toBeLessThan(startupBudgetMs);
+       |       ^
+    113|   });
+    114|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:45:04
+   Duration  842ms (tests 44%, transform 41%, import 14%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 237ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 141ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 23.16 ms (budget 0 ms): expected 23.15662500000002 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:112:7
+    110|       fastest,
+    111|       `import of the mock modules: ${fastest.toFixed(2)} ms (budget ${…
+    112|     ).toBeLessThan(startupBudgetMs);
+       |       ^
+    113|   });
+    114|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:45:13
+   Duration  640ms (transform 44%, tests 44%, import 12%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 264ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 153ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 26.07 ms (budget 0 ms): expected 26.071041999999977 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:112:7
+    110|       fastest,
+    111|       `import of the mock modules: ${fastest.toFixed(2)} ms (budget ${…
+    112|     ).toBeLessThan(startupBudgetMs);
+       |       ^
+    113|   });
+    114|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:45:14
+   Duration  625ms (tests 49%, transform 38%, import 13%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

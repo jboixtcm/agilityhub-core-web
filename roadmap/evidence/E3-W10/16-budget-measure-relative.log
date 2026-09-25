@@ -1,0 +1,519 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 12 failed) 741ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 196ms
+     × builds resetActivityState within its budget 41ms
+     × builds resetAuditMockState within its budget 40ms
+     × builds resetCatalogState within its budget 41ms
+     × builds resetCensusRecordState within its budget 40ms
+     × builds resetDashboardMockState within its budget 39ms
+     × builds resetMemberSelfServiceState within its budget 41ms
+     × builds resetOnboardingMockState within its budget 40ms
+     × builds resetPlanningState within its budget 116ms
+     × builds resetSettingsState within its budget 42ms
+     × builds resetSignupMockState within its budget 40ms
+     × builds resetDayGridState within its budget 44ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 27.33 ms = 4.61 × the reference work (5.93 ms); budget 0 ×: expected 4.605227477927581 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:153:7
+    151|       cost.ratio,
+    152|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    153|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    154|   });
+    155|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetActivityState within its budget
+AssertionError: resetActivityState: 0.06 ms = 0.01 × the reference work (4.83 ms); budget 0 ×: expected 0.012656042009997122 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetAuditMockState within its budget
+AssertionError: resetAuditMockState: 0.01 ms = 0.00 × the reference work (4.82 ms); budget 0 ×: expected 0.0018667199304117095 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCatalogState within its budget
+AssertionError: resetCatalogState: 0.06 ms = 0.01 × the reference work (4.71 ms); budget 0 ×: expected 0.011705057373558238 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCensusRecordState within its budget
+AssertionError: resetCensusRecordState: 0.04 ms = 0.01 × the reference work (4.68 ms); budget 0 ×: expected 0.008854911956520195 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDashboardMockState within its budget
+AssertionError: resetDashboardMockState: 0.03 ms = 0.01 × the reference work (4.79 ms); budget 0 ×: expected 0.0055356816460698415 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetMemberSelfServiceState within its budget
+AssertionError: resetMemberSelfServiceState: 0.02 ms = 0.00 × the reference work (4.79 ms); budget 0 ×: expected 0.004290047474126019 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetOnboardingMockState within its budget
+AssertionError: resetOnboardingMockState: 0.01 ms = 0.00 × the reference work (4.84 ms); budget 0 ×: expected 0.0011793388429807595 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 14.65 ms = 2.82 × the reference work (5.19 ms); budget 0 ×: expected 2.823612954117348 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSettingsState within its budget
+AssertionError: resetSettingsState: 0.11 ms = 0.02 × the reference work (4.72 ms); budget 0 ×: expected 0.023626840854093 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSignupMockState within its budget
+AssertionError: resetSignupMockState: 0.01 ms = 0.00 × the reference work (4.87 ms); budget 0 ×: expected 0.001120058674839995 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDayGridState within its budget
+AssertionError: resetDayGridState: 0.52 ms = 0.10 × the reference work (5.31 ms); budget 0 ×: expected 0.09757183196287567 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 2 passed (14)
+   Start at  08:52:06
+   Duration  1.17s (tests 68%, transform 23%, import 8%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 12 failed) 731ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 189ms
+     × builds resetActivityState within its budget 40ms
+     × builds resetAuditMockState within its budget 40ms
+     × builds resetCatalogState within its budget 40ms
+     × builds resetCensusRecordState within its budget 41ms
+     × builds resetDashboardMockState within its budget 40ms
+     × builds resetMemberSelfServiceState within its budget 42ms
+     × builds resetOnboardingMockState within its budget 40ms
+     × builds resetPlanningState within its budget 114ms
+     × builds resetSettingsState within its budget 41ms
+     × builds resetSignupMockState within its budget 39ms
+     × builds resetDayGridState within its budget 42ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 24.36 ms = 5.04 × the reference work (4.83 ms); budget 0 ×: expected 5.041742045630869 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:153:7
+    151|       cost.ratio,
+    152|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    153|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    154|   });
+    155|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetActivityState within its budget
+AssertionError: resetActivityState: 0.06 ms = 0.01 × the reference work (4.80 ms); budget 0 ×: expected 0.012756102291898495 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetAuditMockState within its budget
+AssertionError: resetAuditMockState: 0.01 ms = 0.00 × the reference work (4.78 ms); budget 0 ×: expected 0.0022246649916257116 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCatalogState within its budget
+AssertionError: resetCatalogState: 0.07 ms = 0.01 × the reference work (4.99 ms); budget 0 ×: expected 0.013539540944172404 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCensusRecordState within its budget
+AssertionError: resetCensusRecordState: 0.06 ms = 0.01 × the reference work (5.07 ms); budget 0 ×: expected 0.012362041349386047 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDashboardMockState within its budget
+AssertionError: resetDashboardMockState: 0.04 ms = 0.01 × the reference work (4.88 ms); budget 0 ×: expected 0.008239039212255281 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetMemberSelfServiceState within its budget
+AssertionError: resetMemberSelfServiceState: 0.04 ms = 0.01 × the reference work (6.58 ms); budget 0 ×: expected 0.006835573173437476 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetOnboardingMockState within its budget
+AssertionError: resetOnboardingMockState: 0.01 ms = 0.00 × the reference work (4.78 ms); budget 0 ×: expected 0.0018748561264004112 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 14.45 ms = 2.77 × the reference work (5.21 ms); budget 0 ×: expected 2.7738278641335636 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSettingsState within its budget
+AssertionError: resetSettingsState: 0.13 ms = 0.02 × the reference work (5.96 ms); budget 0 ×: expected 0.02125552712170117 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSignupMockState within its budget
+AssertionError: resetSignupMockState: 0.00 ms = 0.00 × the reference work (4.76 ms); budget 0 ×: expected 0.000367511944141431 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDayGridState within its budget
+AssertionError: resetDayGridState: 0.50 ms = 0.10 × the reference work (5.08 ms); budget 0 ×: expected 0.09885979871987902 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 2 passed (14)
+   Start at  08:52:08
+   Duration  1.08s (tests 73%, transform 20%, import 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 12 failed) 728ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 188ms
+     × builds resetActivityState within its budget 40ms
+     × builds resetAuditMockState within its budget 41ms
+     × builds resetCatalogState within its budget 40ms
+     × builds resetCensusRecordState within its budget 40ms
+     × builds resetDashboardMockState within its budget 40ms
+     × builds resetMemberSelfServiceState within its budget 39ms
+     × builds resetOnboardingMockState within its budget 41ms
+     × builds resetPlanningState within its budget 114ms
+     × builds resetSettingsState within its budget 40ms
+     × builds resetSignupMockState within its budget 40ms
+     × builds resetDayGridState within its budget 43ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 24.40 ms = 5.05 × the reference work (4.83 ms); budget 0 ×: expected 5.0470980321171135 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:153:7
+    151|       cost.ratio,
+    152|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    153|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    154|   });
+    155|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetActivityState within its budget
+AssertionError: resetActivityState: 0.06 ms = 0.01 × the reference work (4.81 ms); budget 0 ×: expected 0.012574929899273881 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetAuditMockState within its budget
+AssertionError: resetAuditMockState: 0.01 ms = 0.00 × the reference work (4.78 ms); budget 0 ×: expected 0.0013088777723673194 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCatalogState within its budget
+AssertionError: resetCatalogState: 0.07 ms = 0.02 × the reference work (4.84 ms); budget 0 ×: expected 0.015123007363392291 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetCensusRecordState within its budget
+AssertionError: resetCensusRecordState: 0.04 ms = 0.01 × the reference work (4.79 ms); budget 0 ×: expected 0.00897750404509758 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDashboardMockState within its budget
+AssertionError: resetDashboardMockState: 0.02 ms = 0.00 × the reference work (4.77 ms); budget 0 ×: expected 0.004352196065703069 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetMemberSelfServiceState within its budget
+AssertionError: resetMemberSelfServiceState: 0.02 ms = 0.00 × the reference work (4.71 ms); budget 0 ×: expected 0.004524836874661478 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetOnboardingMockState within its budget
+AssertionError: resetOnboardingMockState: 0.01 ms = 0.00 × the reference work (4.85 ms); budget 0 ×: expected 0.0012972749185577786 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 14.57 ms = 2.76 × the reference work (5.28 ms); budget 0 ×: expected 2.7589120863513616 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSettingsState within its budget
+AssertionError: resetSettingsState: 0.10 ms = 0.02 × the reference work (4.74 ms); budget 0 ×: expected 0.020598397142210737 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetSignupMockState within its budget
+AssertionError: resetSignupMockState: 0.00 ms = 0.00 × the reference work (5.25 ms); budget 0 ×: expected 0.0004608014666189742 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetDayGridState within its budget
+AssertionError: resetDayGridState: 0.49 ms = 0.10 × the reference work (4.79 ms); budget 0 ×: expected 0.10184895017237303 to be less than 0
+ ❯ src/mocks/mock-worlds.budget.test.ts:160:57
+    158|     const cost = await relativeCost(reset);
+    159|
+    160|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    161|   });
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 2 passed (14)
+   Start at  08:52:09
+   Duration  1.06s (tests 74%, transform 19%, import 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

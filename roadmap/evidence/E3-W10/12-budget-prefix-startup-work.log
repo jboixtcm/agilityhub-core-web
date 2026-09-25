@@ -1,0 +1,45 @@
+diff --git a/packages/api-client/src/mocks/fixtures/planning.ts b/packages/api-client/src/mocks/fixtures/planning.ts
+index b973819..3f3fe69 100644
+--- a/packages/api-client/src/mocks/fixtures/planning.ts
++++ b/packages/api-client/src/mocks/fixtures/planning.ts
+@@ -374,6 +374,10 @@ const fixtureInstructors: PlanningInstructor[] = [
+   { id: SERGIO, shortName: "Sergio" },
+ ];
+ 
++const e3w10ProofUntil = performance.now() + 100;
++while (performance.now() < e3w10ProofUntil) {
++  // E3-W10 round-2 proof (temporary): 100 ms of import-time work.
++}
+ export const initialWeekTemplates: readonly WeekTemplate[] = [setmanaA, setmanaB, dissabtes].map(
+   (template) => withInconsistencies(template, fixtureRings, fixtureInstructors),
+ );
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (14 tests | 1 failed) 759ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (14)
+     × imports the mock modules afresh within the start-up budget 639ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 125.71 ms (budget 90 ms): expected 125.71387500000003 to be less than 90
+ ❯ src/mocks/mock-worlds.budget.test.ts:114:7
+    112|       fastest,
+    113|       `import of the mock modules: ${fastest.toFixed(2)} ms (budget ${…
+    114|     ).toBeLessThan(startupBudgetMs);
+       |       ^
+    115|   });
+    116|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:45:57
+   Duration  1.34s (tests 61%, transform 24%, import 15%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts

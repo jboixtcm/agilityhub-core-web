@@ -1,0 +1,141 @@
+diff --git a/packages/api-client/src/mocks/mock-worlds.budget.test.ts b/packages/api-client/src/mocks/mock-worlds.budget.test.ts
+index 767a55a..aa9b94a 100644
+--- a/packages/api-client/src/mocks/mock-worlds.budget.test.ts
++++ b/packages/api-client/src/mocks/mock-worlds.budget.test.ts
+@@ -1,31 +1,53 @@
+-import { describe, expect, it } from "vitest";
+-
+-import { censusRecordState } from "./fixtures/census";
+-import { dayGridState, resetDayGridState } from "./fixtures/day-grid";
+-import { settingsState } from "./fixtures/settings";
+-import * as handlerModule from "./handlers";
+-import { activityState, catalogState, planningState } from "./handlers";
++import { describe, expect, it, vi } from "vitest";
+ 
+ type Reset = () => void;
+ 
++// The last millisecond of a club week (Sunday 27-09-2026 23:59:59.999 in Europe/Madrid, CEST): the
++// planning world depends on the current club week, so the parity check below builds both of its
++// sides with `Date` frozen here. Only `Date` is faked: `performance.now()` stays real for the timings.
++const frozenNow = new Date("2026-09-27T21:59:59.999Z");
++
++function freezeDate(): void {
++  vi.useFakeTimers({ now: frozenNow, toFake: ["Date"] });
++}
++
++async function importMockModules() {
++  const [handlers, census, dayGrid, settings] = await Promise.all([
++    import("./handlers"),
++    import("./fixtures/census"),
++    import("./fixtures/day-grid"),
++    import("./fixtures/settings"),
++  ]);
++  return { census, dayGrid, handlers, settings };
++}
++
++type MockModules = Awaited<ReturnType<typeof importMockModules>>;
++
++function worldsOf({ census, dayGrid, handlers, settings }: MockModules) {
++  return {
++    activityState: handlers.activityState,
++    catalogState: handlers.catalogState,
++    censusRecordState: census.censusRecordState,
++    dayGridState: dayGrid.dayGridState,
++    planningState: handlers.planningState,
++    settingsState: settings.settingsState,
++  };
++}
++
+ // The start-up worlds, captured before any reset: the browser builds exactly these when MSW starts.
+-const startupWorlds = structuredClone({
+-  activityState,
+-  catalogState,
+-  censusRecordState,
+-  dayGridState,
+-  planningState,
+-  settingsState,
+-});
++freezeDate();
++const startup = await importMockModules();
++const startupWorlds = structuredClone(worldsOf(startup));
++vi.useRealTimers();
+ 
+ // Every stateful world `handlers.ts` exports (found by name, so a new world is timed too), plus the
+ // day grid, which the planning reset rebuilds.
+ const worlds: [string, Reset][] = [
+-  ...Object.entries(handlerModule).filter(
++  ...Object.entries(startup.handlers).filter(
+     (entry): entry is [string, Reset] =>
+       /^reset[A-Za-z]+State$/.test(entry[0]) && typeof entry[1] === "function",
+   ),
+-  ["resetDayGridState", resetDayGridState],
++  ["resetDayGridState", startup.dayGrid.resetDayGridState],
+ ];
+ 
+ // Fastest of five builds on 24-09 (Node 22, the executor's Mac; single test files took about as
+@@ -37,6 +59,13 @@ const worlds: [string, Reset][] = [
+ const budgetMs: Readonly<Record<string, number>> = { resetPlanningState: 50 };
+ const defaultBudgetMs = 5;
+ 
++// A reset only rebuilds what depends on the date or on the requests: the rest is built once, when
++// the modules are imported (`initialWeekTemplates` runs `withInconsistencies`, the JSON fixtures, the
++// handler list), and the reset budgets never time it. A fresh import of `handlers.ts` runs all of
++// it, as `startMockWorker` does. Fastest of five imports on 25-09 (same Mac): 23–33 ms. The budget
++// is about three times that.
++const startupBudgetMs = 90;
++
+ // The fastest of a few builds: the budget guards the cost of the code, not the load of the host.
+ function fastestBuildMs(reset: Reset, runs = 5): number {
+   let fastest = Number.POSITIVE_INFINITY;
+@@ -67,6 +96,24 @@ describe("E3-W10 build-time budget of the MSW mock worlds", () => {
+     );
+   });
+ 
++  it("imports the mock modules afresh within the start-up budget", async () => {
++    let fastest = Number.POSITIVE_INFINITY;
++    let fresh: typeof startup.handlers = startup.handlers;
++    for (let run = 0; run < 5; run += 1) {
++      vi.resetModules();
++      const started = performance.now();
++      fresh = await import("./handlers");
++      fastest = Math.min(fastest, performance.now() - started);
++    }
++
++    // A cached module would time nothing: each import must build its own worlds.
++    expect(fresh.planningState).not.toBe(startup.handlers.planningState);
++    expect(
++      fastest,
++      `import of the mock modules: ${fastest.toFixed(2)} ms (budget ${String(startupBudgetMs)} ms)`,
++    ).toBeLessThan(startupBudgetMs);
++  });
++
+   it.each(worlds)("builds %s within its budget", (name, reset) => {
+     const budget = budgetMs[name] ?? defaultBudgetMs;
+     const elapsed = fastestBuildMs(reset);
+@@ -76,16 +123,15 @@ describe("E3-W10 build-time budget of the MSW mock worlds", () => {
+     );
+   });
+ 
+-  it("rebuilds on reset the same worlds the browser starts with", () => {
+-    for (const [, reset] of worlds) reset();
+-
+-    expect({
+-      activityState,
+-      catalogState,
+-      censusRecordState,
+-      dayGridState,
+-      planningState,
+-      settingsState,
+-    }).toEqual(startupWorlds);
++  it("rebuilds on reset the same worlds the browser starts with, whatever the day", () => {
++    vi.useFakeTimers({ now: frozenNow.getTime() + 200, toFake: ["Date"] }); // E3-W10 proof (temporary)
++    try {
++      expect(new Date().getTime()).toBe(frozenNow.getTime() + 200);
++      for (const [, reset] of worlds) reset();
++
++      expect(worldsOf(startup)).toEqual(startupWorlds);
++    } finally {
++      vi.useRealTimers();
++    }
+   });
+ });

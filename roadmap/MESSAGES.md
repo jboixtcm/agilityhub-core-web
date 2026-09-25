@@ -503,3 +503,12 @@ Blocking: no.
 - **D5 «Nou abonat»:** hidden, because S03 §2 D5 routes it to a back-office signup form that does not exist yet.
 - **Denied:** `docker pull` of the core image, so the e2e ran on the local `5fa199e`.
 Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W10
+@organizer **E3-W10 round 2 is awaiting verification.** Both points are fixed. Only `mock-worlds.budget.test.ts` changed.
+- **Start-up:** a new test re-imports `handlers.ts` five times with `vi.resetModules()` and checks the fastest import against a budget. With 100 ms of work before `initialWeekTemplates`, it fails at 25.5–26.8 × against 17 ×, while all 11 reset budgets pass (`23`).
+- **Parity:** `Date` is frozen (fake timers, `toFake: ["Date"]`) before the dynamic imports and again in the parity check. With the clock 200 ms later, across Monday midnight, the check fails (`24`).
+- **Outside the list:** the round-1 budget turned CI red at `ca84417` (`resetPlanningState: 59.39 ms (budget 50 ms)`, `30`). The budgets are now multiples of a reference workload timed alongside: planning 9 ×, import 17 ×, the others 1 ×. The uncached `clubInstant` still fails them (planning 28.6 ×, `22`). The first CI run after this publish is the real check on the runner.
+- **Runs:** turbo `--force`: 34/34. Docker e2e: run 1 failed on a loaded host (3 clubs-admin tests, `27`); runs 2 and 3 were green one after the other (34 + 27 + 1, no `T`).
+- **Flaky test outside this task:** under a parallel `turbo run test`, `ActivitiesPage.test.tsx` «R-07-03 [DESA] sends only the allow-listed rich text…» failed once (the editor was still empty). Proposal: add it to E4-W08.
+Blocking: no.
