@@ -278,7 +278,8 @@
       "phoneLabel": "Descripción",
       "holderTaxId": "NIF del titular",
       "requestedPlan": "Modalidad solicitada",
-      "planName": "Modalidad"
+      "planName": "Modalidad",
+      "paymentMethod": "Método de pago"
     },
     "sameHolder": "titular: la misma",
     "paymentSummary": "{method} · {account} · {holder}",

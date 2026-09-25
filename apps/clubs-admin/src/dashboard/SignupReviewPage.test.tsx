@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -16,6 +16,10 @@ const canic: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixt
 const memberId = "42000000-0000-4000-8000-000000000001";
 const kiwiId = "44000000-0000-4000-8000-000000000001";
 const pack6 = "10000000-0000-4000-8000-000000000002|20000000-0000-4000-8000-000000000002";
+const pack10 = "10000000-0000-4000-8000-000000000003|20000000-0000-4000-8000-000000000003";
+const abonat = "10000000-0000-4000-8000-000000000001|20000000-0000-4000-8000-000000000001";
+// The i18n instance of the last render, so a test can switch the language.
+let reviewI18n: Awaited<ReturnType<typeof createI18n>> | undefined;
 
 beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
 afterEach(() => { cleanup(); server.resetHandlers(); resetDashboardMockState(); mockScenario("admin"); });
@@ -43,6 +47,7 @@ interface Recorded {
 function recordingFetch(
   mutate?: (body: SignupBody) => void,
   holder?: (body: Record<string, unknown>) => void,
+  club?: (body: Record<string, unknown>) => void,
 ): { fetch: typeof fetch; requests: Recorded[] } {
   const requests: Recorded[] = [];
   const recording: typeof fetch = async (input, init) => {
@@ -60,6 +65,11 @@ function recordingFetch(
     if (holder !== undefined && /\/members\/[^/]+$/u.test(url.pathname)) {
       const body = (await response.json()) as Record<string, unknown>;
       holder(body);
+      return Response.json(body, { status: response.status });
+    }
+    if (club !== undefined && url.pathname.endsWith("/api/v1/club")) {
+      const body = (await response.json()) as Record<string, unknown>;
+      club(body);
       return Response.json(body, { status: response.status });
     }
     return response;
@@ -112,6 +122,7 @@ async function renderReview({
 } = {}) {
   window.history.pushState(null, "", `/preinscripcions/${memberId}`);
   const i18n = await createI18n({ branding, browserLanguages: [language], initialNamespaces: ["admin-census"], storage: undefined });
+  reviewI18n = i18n;
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1`, ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }) });
   render(
     <I18nextProvider i18n={i18n}>
@@ -726,5 +737,199 @@ describe("E3-W07 step 8 · the D2 minors", () => {
     expect(screen.queryByText("Pagament inicial (anticipat)")).toBeNull();
     expect(screen.queryByLabelText("Data del proper rebut")).toBeNull();
     expect(screen.getByText("Abonat")).toBeVisible();
+  });
+});
+
+describe("E3-W07 round 2 · 1 the invoice date is canonical (R-04-15, S04 §10)", () => {
+  it("10/11/2026 typed in ca still sends 2026-11-10 after a switch to en, shown in the en format", async () => {
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ branding: { ...canic, locales: ["ca", "es", "en"] }, fetchOverride: over, onNavigate });
+    fireEvent.change(screen.getByLabelText("Data del proper rebut"), { target: { value: "10/11/2026" } });
+
+    await act(async () => { await reviewI18n?.changeLanguage("en"); });
+    expect(await screen.findByLabelText("Next invoice date")).toHaveValue("11/10/2026");
+    fireEvent.click(screen.getByRole("button", { name: "VALIDATE SIGNUP" }));
+
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({ nextInvoiceDate: "2026-11-10" });
+  });
+});
+
+describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2)", () => {
+  it("Pack 6 is quoted, then the Pack 10 quote fails: no 135 € breakdown or max remains, and VALIDA is disabled", async () => {
+    mockScenario("adminSignupReviewManual");
+    await renderReview();
+    const select = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
+    fireEvent.change(select, { target: { value: pack6 } });
+    expect(await screen.findByText(/^Pack 135,00 € · es registra/u)).toBeVisible();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "135.00");
+
+    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("PLAN_NOT_AVAILABLE", 422)));
+    fireEvent.change(select, { target: { value: pack10 } });
+
+    await waitFor(() => { expect(document.getElementById("signup-plan-error")).toHaveTextContent("Aquest pla no està disponible."); });
+    expect(screen.queryByText(/^Pack 135,00 €/u)).toBeNull();
+    expect(screen.queryByLabelText("Import efectivament cobrat:")).toBeNull();
+    expect(document.querySelector("input[max]")).toBeNull();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
+
+    // A retry that succeeds shows Pack 10's own quote, and VALIDA comes back.
+    server.resetHandlers();
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByText(/^Pack 180,00 € · es registra/u)).toBeVisible();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "180.00");
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+  });
+
+  it("a reload after a full payment shows no editable amount (the old quote is discarded)", async () => {
+    mockScenario("adminSignupReviewManual");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const select = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
+    fireEvent.change(select, { target: { value: pack6 } });
+    expect(await screen.findByText(/^Pack 135,00 €/u)).toBeVisible();
+    fireEvent.change(select, { target: { value: abonat } });
+    expect(await screen.findByText(/^Entrada 100,00 € \+ agost 30,00 €/u)).toBeVisible();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "130.00");
+
+    // Meanwhile the applicant pays both lines by card (the mockup's Stripe-paid view), and the
+    // validation answers STALE_VERSION: the admin reloads.
+    mockScenario("admin");
+    server.use(
+      http.post("*/api/v1/members/:id/validation", ({ request }) =>
+        new URL(request.url).searchParams.get("dryRun") === "true" ? undefined : apiErrorResponse("STALE_VERSION", 409),
+      ),
+    );
+    fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
+    validate();
+    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    if (banner === null) throw new TypeError("No error banner");
+    const dryRuns = sent(requests, "POST", "/validation", true).length;
+    fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
+
+    expect(await screen.findByText("cobrat")).toBeVisible();
+    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Abonat · 60,00 €/mes");
+    // The admin's plan is quoted again on the fresh view.
+    expect(sent(requests, "POST", "/validation", true)).toHaveLength(dryRuns + 1);
+  });
+
+  it("drops a Pack 6 answer that lands after the change to Pack 10", async () => {
+    mockScenario("adminSignupReviewManual");
+    let releasePack6: () => void = () => undefined;
+    let pack6Answered = false;
+    server.use(
+      http.post("*/api/v1/members/:id/validation", async ({ request }) => {
+        const body = (await request.clone().json()) as { planId?: string };
+        if (body.planId === pack6.split("|")[0]) {
+          await new Promise<void>((resolve) => { releasePack6 = resolve; });
+          pack6Answered = true;
+        }
+        return undefined;
+      }),
+    );
+    await renderReview();
+    const select = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
+    fireEvent.change(select, { target: { value: pack6 } });
+    fireEvent.change(select, { target: { value: pack10 } });
+    expect(await screen.findByText(/^Pack 180,00 € · es registra/u)).toBeVisible();
+
+    releasePack6();
+    await waitFor(() => { expect(pack6Answered).toBe(true); });
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 50)); });
+    expect(screen.getByText(/^Pack 180,00 € · es registra/u)).toBeVisible();
+    expect(screen.queryByText(/^Pack 135,00 €/u)).toBeNull();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "180.00");
+  });
+});
+
+describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10)", () => {
+  it("moves a cash applicant to direct debit with IBAN and holder, among the club's methods", async () => {
+    let first = true;
+    const { fetch: over, requests } = recordingFetch((body) => {
+      if (!first) return;
+      first = false;
+      body.member.paymentMethod = { type: "MANUAL" };
+      delete body.member.maskedAccount;
+    });
+    await renderReview({ fetchOverride: over });
+    expect(screen.getByText(dataRow(/^Efectiu$/u))).toBeVisible();
+    const drawer = openDrawer();
+    const method = within(drawer).getByLabelText("Mètode de pagament");
+    await waitFor(() => {
+      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
+    });
+    expect(method).toHaveValue("MANUAL");
+    expect(within(drawer).queryByLabelText("IBAN")).toBeNull();
+
+    fireEvent.change(method, { target: { value: "SEPA_DD" } });
+    // R-04-10: the holder is pre-filled with the applicant's full name.
+    expect(within(drawer).getByLabelText("Titular del compte")).toHaveValue("Marta Roca Pujol");
+    fireEvent.change(within(drawer).getByLabelText("IBAN"), { target: { value: "ES91 2100 0418 4502 0005 1332" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      paymentMethod: { sepa: { holderName: "Marta Roca Pujol", iban: "ES9121000418450200051332" }, type: "SEPA_DD" },
+      version: 3,
+    });
+    expect(sent(requests, "GET", "/club")).toHaveLength(1);
+    expect(await screen.findByText("Domiciliació · ···· ···· ···· ···· 1332 · titular: la mateixa")).toBeVisible();
+  });
+
+  it("moves a direct-debit applicant to cash: only the type is sent, and D2 reads «Efectiu»", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const method = within(drawer).getByLabelText("Mètode de pagament");
+    await waitFor(() => { expect(within(method).getAllByRole("option")).toHaveLength(2); });
+    expect(method).toHaveValue("SEPA_DD");
+    fireEvent.change(method, { target: { value: "MANUAL" } });
+    expect(within(drawer).queryByLabelText("IBAN")).toBeNull();
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({ paymentMethod: { type: "MANUAL" }, version: 3 });
+    expect(await screen.findByText(dataRow(/^Efectiu$/u))).toBeVisible();
+  });
+
+  it("offers every provider the club has, whatever its enabled flag (the real core's GET /club for the seed)", async () => {
+    const { fetch: over } = recordingFetch(undefined, undefined, (club) => {
+      // roadmap/evidence/E3-W07/d2-payment-methods-core.json: GET /signup still offers both.
+      club.paymentProviders = { SEPA_XML: { configured: false, enabled: false }, MANUAL: { configured: false, enabled: false } };
+    });
+    await renderReview({ fetchOverride: over });
+    const method = within(openDrawer()).getByLabelText("Mètode de pagament");
+    await waitFor(() => {
+      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
+    });
+  });
+
+  it("offers the card too when the club has Stripe enabled", async () => {
+    mockScenario("signupStripe");
+    await renderReview();
+    const method = within(openDrawer()).getByLabelText("Mètode de pagament");
+    await waitFor(() => {
+      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Targeta", "Efectiu"]);
+    });
+  });
+
+  it("add-dog (R-04-25): the method stays read-only and the club's methods are never asked for", async () => {
+    mockScenario("adminSignupReviewAddDog");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ dogs: "Nit", fetchOverride: over });
+    const drawer = openDrawer();
+    expect(within(drawer).getByLabelText("Mètode de pagament")).toBeDisabled();
+    expect(within(drawer).getByLabelText("Mètode de pagament")).toHaveValue("SEPA_DD");
+    expect(sent(requests, "GET", "/club")).toEqual([]);
+  });
+
+  it("without BILLING the drawer has no payment method", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ branding: { ...canic, modules: canic.modules.filter((module) => module !== "BILLING") }, fetchOverride: over });
+    const drawer = openDrawer();
+    expect(within(drawer).queryByLabelText("Mètode de pagament")).toBeNull();
+    expect(sent(requests, "GET", "/club")).toEqual([]);
   });
 });

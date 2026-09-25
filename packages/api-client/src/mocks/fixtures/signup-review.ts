@@ -175,13 +175,17 @@ export function derivedSignupReview(base: MemberSignupView, pending: PendingSign
  * (the requested plan keeps the start frozen at submission; another starts today, a full month);
  * PACK → the pack; a MAINTENANCE plan (Teràpia) → its entry fee only.
  */
-function quoteLines(view: MemberSignupView, planId: string): {
+function quoteLines(
+  view: MemberSignupView,
+  planId: string,
+  priceId?: string,
+): {
   firstMonth?: SignupUpfrontReview["firstMonth"];
   lines: { amount: number; concept: UpfrontLine["concept"] }[];
   nextInvoiceDate?: string;
 } {
   const plan = view.planOptions.find((option) => option.planId === planId);
-  const price = plan?.prices[0];
+  const price = plan?.prices.find((candidate) => candidate.priceId === priceId) ?? plan?.prices[0];
   if (plan === undefined || price === undefined) return { lines: [] };
   if (plan.type === "PACK") return { lines: [{ amount: price.amount.amountMinor, concept: "PACK" }] };
   if (price.concept === "MAINTENANCE_FEE") {
@@ -204,12 +208,39 @@ function quoteLines(view: MemberSignupView, planId: string): {
 }
 
 /**
- * The upfront block of a plan (S04 §5, E39): PAID and PARTIAL rows are kept as they are and their
- * paid amount is deducted from the new amount due; DUE rows are replaced by the new plan's lines.
+ * The upfront block of a plan (S04 §5, E39 and E39b): PAID rows are kept and their paid amount is
+ * deducted from the new amount due; DUE rows are replaced by the new plan's lines. A plan change
+ * closes a PARTIAL row: it becomes CANCELLED with its amounts intact, and a new PAID row records
+ * what was really collected (50 € paid of a 100 € entry, then a 60 € plan → 10 € still due).
  */
-function quoteUpfront(view: MemberSignupView, planId: string, warnings: Warning[]): SignupUpfrontReview {
-  const quote = quoteLines(view, planId);
-  const kept = (view.upfront?.lines ?? []).filter((line) => line.status === "PAID" || line.status === "PARTIAL");
+function quoteUpfront(
+  view: MemberSignupView,
+  planId: string,
+  warnings: Warning[],
+  priceId?: string,
+): SignupUpfrontReview {
+  const quote = quoteLines(view, planId, priceId);
+  const planChanged = planId !== view.signup.planIdRequested;
+  const closed: UpfrontLine[] = [];
+  const kept: UpfrontLine[] = [];
+  (view.upfront?.lines ?? []).forEach((line, index) => {
+    const collected = line.paidAmount?.amountMinor ?? 0;
+    if (line.status === "PAID" || (line.status === "PARTIAL" && !planChanged)) {
+      kept.push(line);
+    } else if (line.status === "PARTIAL") {
+      closed.push({ ...line, status: "CANCELLED" });
+      if (collected > 0) {
+        kept.push({
+          amount: eur(collected),
+          concept: line.concept,
+          id: `45000000-0000-4000-8000-0000000002${String(index).padStart(2, "0")}`,
+          paidAmount: eur(collected),
+          ...(line.provider === undefined ? {} : { provider: line.provider }),
+          status: "PAID",
+        });
+      }
+    }
+  });
   const paid = kept.reduce((sum, line) => sum + (line.paidAmount?.amountMinor ?? 0), 0);
   const quoteTotal = quote.lines.reduce((sum, line) => sum + line.amount, 0);
   let remaining = Math.max(0, quoteTotal - paid);
@@ -227,7 +258,7 @@ function quoteUpfront(view: MemberSignupView, planId: string, warnings: Warning[
       status: "DUE",
     });
   });
-  const lines = [...kept, ...fresh];
+  const lines = [...closed, ...kept, ...fresh];
   const upfront: SignupUpfrontReview = { lines, ...totals(lines) };
   if (quote.firstMonth !== undefined) upfront.firstMonth = quote.firstMonth;
   if (paid > quoteTotal) {
@@ -245,8 +276,8 @@ export function signupReviewDryRun(view: MemberSignupView, body: ValidationReque
   const warnings: Warning[] = view.warnings.filter((warning) => warning !== "UPFRONT_UNPAID");
   const checkoutPending = (view.upfront?.lines ?? []).some((line) => line.status === "CHECKOUT_PENDING");
   if (checkoutPending && planId !== view.signup.planIdRequested) warnings.push("CHECKOUT_PENDING");
-  const upfront = quoteUpfront(view, planId, warnings);
-  const quote = quoteLines(view, planId);
+  const upfront = quoteUpfront(view, planId, warnings, price?.priceId);
+  const quote = quoteLines(view, planId, price?.priceId);
   if (upfront.totalPaid.amountMinor < upfront.totalDue.amountMinor) warnings.push("UPFRONT_UNPAID");
   return {
     ...(body.nextInvoiceDate === undefined

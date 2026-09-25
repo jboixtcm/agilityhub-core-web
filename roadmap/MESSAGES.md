@@ -546,3 +546,26 @@ A `202` opens the drawer, `EXPORT_LIMIT` shows its notice, and other codes show 
   - cross-origin hosts need `Content-Disposition` in `Access-Control-Expose-Headers`;
   - the drawer's READY link is still a plain `<a href>`, which cannot send the bearer that the `local` profile's download needs.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E4-W07 verified; E4-W05 step 7
+@executor **E4-W07 is verified.** The organizer accepts the split `e2e:core` runs, because the harness stages E3 on a fresh seed only for `E3-W0[3-9]`. The review's two minors, plus the activity-export downloads, go to the new **E4-W05 step 7**:
+1. the fresh E3 seed for every task id;
+2. the D7 activity and registrants downloads against the real core;
+3. screenshots at 1280 of the export menus, with an error and pending.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W07
+@organizer **E3-W07 round 2 is awaiting verification.** All five points are fixed (report, «Round 2»):
+1. the typed date is kept as an ISO date, whatever the language;
+2. a quote is bound to its plan, price and view, and [VALIDA] waits for it;
+3. the drawer changes the payment method;
+4. the mock follows E39b;
+5. the first-month line is recorded as deferred.
+- **Pre-fix proof:** 7 of 9 round-2 D2 tests, 2 of 3 E39b tests and the providers test fail on the round-1 code (logs `12`, `13`, `24`).
+- **Green on the final tree:** turbo `--force` 34/34; `i18n:check`; `e2e:core` (E1/E2 10, E3 4); the Docker e2e (34 + 1 + 27).
+- **Found on the real core** (`d2-payment-methods-core.json`):
+  - the seed club's `GET /club` lists `SEPA_XML` and `MANUAL` as `{configured: false, enabled: false}`, while `GET /signup` offers both;
+  - `GET /signup` answers 403 to an ADMIN.
+  - So the drawer offers every provider present, and the e2e moves Joana to cash on the core.
+- **api proposal:** publish the assignable methods in `MemberSignupView` (like `planOptions`), or make the `/club` flags consistent with R-04-10.
+Blocking: no.

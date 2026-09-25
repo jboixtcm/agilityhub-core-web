@@ -19,6 +19,18 @@ type MemberPatch = components["schemas"]["MemberPatch"];
 type DogPatch = components["schemas"]["DogPatch"];
 type DogDocument = components["schemas"]["DogDocument"];
 type Gender = Member["gender"];
+type PaymentType = components["schemas"]["PaymentMethodPatch"]["type"];
+
+/**
+ * R-04-10: the method each provider of `CLUB.paymentProviders` offers. The public form (`GET
+ * /signup`, which answers 403 to an ADMIN) offers every provider the club has, whatever its
+ * `enabled`/`configured` status, so the drawer offers the same list.
+ */
+const providerMethods: Readonly<Record<string, PaymentType | undefined>> = {
+  MANUAL: "MANUAL",
+  SEPA_XML: "SEPA_DD",
+  STRIPE: "CARD",
+};
 
 interface PersonForm {
   accountHolder: string;
@@ -33,6 +45,7 @@ interface PersonForm {
   idDocument: string;
   lastName1: string;
   lastName2: string;
+  paymentType: PaymentType | "";
   phone1Label: string;
   phone1Number: string;
   phone1Prefix: string;
@@ -52,7 +65,7 @@ interface DogForm {
   sex: Dog["sex"];
 }
 
-type PersonTextKey = Exclude<keyof PersonForm, "gender">;
+type PersonTextKey = Exclude<keyof PersonForm, "gender" | "paymentType">;
 type DogTextKey = Exclude<keyof DogForm, "notesToInstructors" | "sex">;
 
 function personForm(member: Member): PersonForm {
@@ -72,6 +85,7 @@ function personForm(member: Member): PersonForm {
     idDocument: member.idDocument?.number ?? "",
     lastName1: member.lastName1,
     lastName2: member.lastName2 ?? "",
+    paymentType: member.paymentMethod?.type ?? "",
     phone1Label: phone1?.label ?? "",
     phone1Number: phone1?.number ?? "",
     phone1Prefix: phone1?.prefix ?? "",
@@ -149,11 +163,13 @@ function memberPatch(
       street: value.street.trim(),
     };
   }
+  const methodChanged = changed.has("paymentType");
   if (
     billing &&
-    member.paymentMethod?.type === "SEPA_DD" &&
-    (changed.has("iban") || changed.has("accountHolder") || changed.has("holderTaxId"))
+    value.paymentType === "SEPA_DD" &&
+    (methodChanged || changed.has("iban") || changed.has("accountHolder") || changed.has("holderTaxId"))
   ) {
+    // R-04-10: the IBAN is optional (without it the member shows «Compte no informat»).
     body.paymentMethod = {
       sepa: {
         holderName: value.accountHolder.trim(),
@@ -162,6 +178,9 @@ function memberPatch(
       },
       type: "SEPA_DD",
     };
+  } else if (billing && methodChanged && value.paymentType !== "") {
+    // R-04-10: nothing is captured here for a card (R-04-26) or cash (the channel is set on D10).
+    body.paymentMethod = { type: value.paymentType };
   }
   return Object.keys(body).length > 1 ? body : undefined;
 }
@@ -389,8 +408,46 @@ export function SignupEditDrawer({
   const [dogEdits, setDogEdits] = useState<Readonly<Record<string, Partial<DogForm>>>>({});
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<{ stale: boolean; text: string }>();
+  const [clubMethods, setClubMethods] = useState<readonly PaymentType[]>();
+  const [methodsError, setMethodsError] = useState<string>();
+  // The club's methods are read once, when the person block can change the method.
+  const loadMethods = open && billing && !addDogMode && clubMethods === undefined;
+
+  useEffect(() => {
+    if (!loadMethods) return undefined;
+    let active = true;
+    client.GET("/club", {}).then(
+      (result) => {
+        if (!active) return;
+        setClubMethods(
+          Object.keys(result.data?.paymentProviders ?? {}).flatMap((provider) => {
+            const method = providerMethods[provider];
+            return method === undefined ? [] : [method];
+          }),
+        );
+      },
+      (cause: unknown) => {
+        if (!active) return;
+        setClubMethods([]);
+        setMethodsError(
+          isApiError(cause)
+            ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
+            : t("admin-census:signupReview.genericError"),
+        );
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [client, loadMethods, t]);
 
   const person: PersonForm = { ...personForm(member), ...personEdits };
+  const storedMethod = member.paymentMethod?.type;
+  // The applicant's method stays selectable even if its provider was switched off since.
+  const methodOptions =
+    storedMethod === undefined || (clubMethods ?? []).includes(storedMethod)
+      ? (clubMethods ?? [])
+      : [storedMethod, ...(clubMethods ?? [])];
   const requestedPlanId = signup.signup.planIdRequested ?? signup.proposals.planId;
   const requestedPlan =
     signup.planOptions.find((plan) => plan.planId === requestedPlanId)?.name ??
@@ -529,7 +586,32 @@ export function SignupEditDrawer({
           {personInput("street", t("admin-census:signupReview.fields.street"))}
           {personInput("postalCode", t("admin-census:signupReview.fields.postalCode"))}
           {personInput("city", t("admin-census:signupReview.fields.city"))}
-          {billing && member.paymentMethod?.type === "SEPA_DD" ? (
+          {billing ? (
+            <FormField
+              {...(methodsError === undefined ? {} : { error: methodsError })}
+              id="signup-edit-paymentType"
+              label={t("admin-census:signupReview.fields.paymentMethod")}
+            >
+              <Select
+                aria-busy={loadMethods || undefined}
+                aria-describedby={methodsError === undefined ? undefined : "signup-edit-paymentType-error"}
+                id="signup-edit-paymentType"
+                onChange={(event) => {
+                  const input = event.currentTarget.value as PaymentType;
+                  setPersonEdits((current) => ({ ...current, paymentType: input }));
+                }}
+                value={person.paymentType}
+              >
+                {person.paymentType === "" ? <option value="">{t("admin-census:values.empty")}</option> : null}
+                {methodOptions.map((method) => (
+                  <option key={method} value={method}>
+                    {t(`admin-census:signupReview.paymentMethod.${method}`)}
+                  </option>
+                ))}
+              </Select>
+            </FormField>
+          ) : null}
+          {billing && person.paymentType === "SEPA_DD" ? (
             <>
               {/* The api replaces the SEPA data: a stored IBAN must be typed again with a new holder. */}
               {personInput("iban", t("admin-census:signupReview.fields.iban"), "text", hasStoredIban && paymentTouched)}

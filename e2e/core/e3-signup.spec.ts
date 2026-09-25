@@ -665,6 +665,66 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   expect((await backQuote).status()).toBe(200);
   await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
 
+  // Round 2 (R-04-19, R-04-10): the drawer moves the applicant from direct debit to cash, among the
+  // methods of the club's active providers; the reload discards the quote and asks for it again.
+  const clubSettings = admin.waitForResponse(
+    (response) => response.url().endsWith("/api/v1/club") && response.request().method() === "GET",
+  );
+  await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
+  const methodEdit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+  const clubResponse = await clubSettings;
+  expect(clubResponse.status()).toBe(200);
+  // Real-core sources of the club's methods (R-04-10); the bearer is used, never written.
+  const authorization = (await clubResponse.request().allHeaders()).authorization;
+  const signupMethods = await admin.evaluate(
+    async ({ auth, url }) => {
+      const probe = async (headers: Record<string, string>) => {
+        const response = await fetch(url, { headers });
+        const body = response.ok
+          ? (((await response.json()) as { paymentMethods?: unknown }).paymentMethods ?? null)
+          : await response.text();
+        return { paymentMethods: body, status: response.status };
+      };
+      return { admin: auth === undefined ? null : await probe({ Authorization: auth }), anonymous: await probe({}) };
+    },
+    { auth: authorization, url: clubResponse.url().replace(/\/club$/u, "/signup") },
+  );
+  writeFileSync(
+    join(evidenceDirectory, "d2-payment-methods-core.json"),
+    `${JSON.stringify(
+      {
+        clubPaymentProviders: ((await clubResponse.json()) as { paymentProviders?: unknown }).paymentProviders ?? null,
+        signup: signupMethods,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+  const method = methodEdit.getByLabel("Mètode de pagament");
+  await expect(method).toHaveValue("SEPA_DD");
+  await expect(method.locator("option", { hasText: "Efectiu" })).toHaveCount(1);
+  await method.selectOption("MANUAL");
+  await expect(methodEdit.getByLabel("IBAN")).toHaveCount(0);
+  // Viewport capture: the selector is below the fold of the drawer's own scroll.
+  await method.scrollIntoViewIfNeeded();
+  await admin.screenshot({ path: join(evidenceDirectory, "D2-signup-payment-method-core-1280.png") });
+  const methodPatch = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/members/${passportMemberId}`) && response.request().method() === "PATCH",
+  );
+  const requote = admin.waitForResponse(
+    (response) => response.url().includes("/validation?dryRun=true") && response.request().method() === "POST",
+  );
+  await methodEdit.getByRole("button", { name: "DESA ELS CANVIS" }).click();
+  const methodPatchResponse = await methodPatch;
+  expect(methodPatchResponse.status(), await methodPatchResponse.text()).toBe(200);
+  expect(methodPatchResponse.request().postDataJSON()).toMatchObject({ paymentMethod: { type: "MANUAL" } });
+  expect((await requote).status()).toBe(200);
+  await expect(methodEdit).not.toBeVisible();
+  await expect(admin.locator(".signup-review-data dd").filter({ hasText: /^Efectiu$/u })).toBeVisible();
+  await expect(admin.locator(".signup-review-warning--danger")).toHaveCount(0);
+  await expect(admin.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+
   // Nothing collected yet (manual): confirmed, so the next VALIDA reaches the family decision.
   await admin.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }).check();
   await admin.getByRole("button", { name: "VALIDA L'ALTA" }).click();

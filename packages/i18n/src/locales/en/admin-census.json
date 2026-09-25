@@ -278,7 +278,8 @@
       "phoneLabel": "Description",
       "holderTaxId": "Account holder tax ID",
       "requestedPlan": "Requested plan",
-      "planName": "Plan"
+      "planName": "Plan",
+      "paymentMethod": "Payment method"
     },
     "sameHolder": "holder: same person",
     "paymentSummary": "{method} · {account} · {holder}",

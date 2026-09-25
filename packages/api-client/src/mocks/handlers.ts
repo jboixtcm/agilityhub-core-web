@@ -880,6 +880,50 @@ function signupConfiguration(request: Request) {
   return config;
 }
 
+/**
+ * `CLUB.paymentProviders` of the mock club, in the order the public form offers its methods
+ * (R-04-10): SEPA_XML → SEPA_DD, STRIPE → CARD (Stripe scenario only), MANUAL → MANUAL. Like the
+ * real core, cash is listed with `enabled: false` and still offered by `GET /signup`.
+ */
+function clubPaymentProviders(): NonNullable<ClubSettings["paymentProviders"]> {
+  const scenario = currentMockScenario();
+  if (!scenario.branding.modules.includes("BILLING")) return {};
+  return {
+    SEPA_XML: { configured: true, enabled: true },
+    ...(scenario.signupStripe === true ? { STRIPE: { configured: true, enabled: true } } : {}),
+    MANUAL: { configured: false, enabled: false },
+  };
+}
+
+const paymentMethodProviders = { CARD: "STRIPE", MANUAL: "MANUAL", SEPA_DD: "SEPA_XML" } as const;
+
+/**
+ * The masked payment method of a pending member after a `PATCH /members/{id}` (R-04-19): a SEPA
+ * IBAN is kept as its last four digits only; SEPA without any IBAN is «Compte no informat».
+ */
+function signupPaymentMethod(
+  member: components["schemas"]["Member"],
+  patch: components["schemas"]["PaymentMethodPatch"],
+): { accountMissing: boolean; paymentMethod: components["schemas"]["PaymentMethodView"] } {
+  if (patch.type !== "SEPA_DD") {
+    return {
+      accountMissing: false,
+      paymentMethod: { ...(patch.manual === undefined ? {} : { channel: patch.manual.channel }), type: patch.type },
+    };
+  }
+  const iban = patch.sepa?.iban;
+  const stored = member.paymentMethod?.type === "SEPA_DD" ? member.paymentMethod.maskedAccount : undefined;
+  const maskedAccount = iban === undefined ? stored : `···· ···· ···· ···· ${iban.slice(-4)}`;
+  return {
+    accountMissing: maskedAccount === undefined,
+    paymentMethod: {
+      holderName: patch.sepa?.holderName ?? member.paymentMethod?.holderName ?? member.fullName,
+      ...(maskedAccount === undefined ? {} : { maskedAccount }),
+      type: "SEPA_DD",
+    },
+  };
+}
+
 function signupUpfront(addDog = false) {
   return signupUpfrontFixture({
     addDog,
@@ -1653,9 +1697,7 @@ export const handlers = [
       locales: branding.locales,
       modules: branding.modules,
       name: branding.club.name,
-      paymentProviders: {
-        SEPA_XML: { configured: true, enabled: true },
-      },
+      paymentProviders: clubPaymentProviders(),
       slug: branding.club.slug,
       status: branding.status,
       theme: branding.theme,
@@ -1970,9 +2012,14 @@ export const handlers = [
       const { consents, contactEmails, paymentMethod, ...memberPatch } = body;
       // `signup.planIdRequested` is not edited from D2 (the requested plan is read-only there).
       delete memberPatch.signup;
-      const iban = paymentMethod?.sepa?.iban;
-      const maskedAccount =
-        iban === undefined ? member.paymentMethod?.maskedAccount : `···· ···· ···· ···· ${iban.slice(-4)}`;
+      // R-04-10: only a method of one of the club's providers.
+      if (
+        paymentMethod !== undefined &&
+        clubPaymentProviders()[paymentMethodProviders[paymentMethod.type]] === undefined
+      ) {
+        return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
+      }
+      const payment = paymentMethod === undefined ? undefined : signupPaymentMethod(member, paymentMethod);
       const updated: components["schemas"]["Member"] = {
         ...member,
         ...memberPatch,
@@ -1980,17 +2027,9 @@ export const handlers = [
           ? {}
           : { contactEmails: contactEmails.map((entry) => ({ ...entry, bounced: false })) }),
         // The view keeps the payment method masked (S04 §6): never the typed IBAN.
-        ...(paymentMethod?.type !== "SEPA_DD" || paymentMethod.sepa === undefined
+        ...(payment === undefined
           ? {}
-          : {
-              paymentMethod: {
-                ...(paymentMethod.sepa.holderName === undefined
-                  ? {}
-                  : { holderName: paymentMethod.sepa.holderName }),
-                ...(maskedAccount === undefined ? {} : { maskedAccount }),
-                type: "SEPA_DD" as const,
-              },
-            }),
+          : { accountMissing: payment.accountMissing, paymentMethod: payment.paymentMethod }),
         ...(consents?.imageRights === undefined
           ? {}
           : {
@@ -2012,6 +2051,15 @@ export const handlers = [
         ].filter(Boolean).join(" "),
         version: member.version + 1,
       };
+      if (payment !== undefined) {
+        if (payment.paymentMethod.maskedAccount === undefined) delete updated.maskedAccount;
+        else updated.maskedAccount = payment.paymentMethod.maskedAccount;
+        // T-04-20: an IBAN, or another method, clears «Compte no informat»; SEPA without one sets it.
+        signupView.warnings = [
+          ...signupView.warnings.filter((warning) => warning !== "ACCOUNT_NOT_PROVIDED"),
+          ...(payment.accountMissing ? (["ACCOUNT_NOT_PROVIDED"] as const) : []),
+        ];
+      }
       // The view's `version` is the member's (S04 §6); each dog keeps its own.
       signupView.member = updated;
       signupView.version = updated.version;

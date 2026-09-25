@@ -1,0 +1,75 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/fixtures.contract.test.ts (47 tests | 2 failed | 44 skipped) 13ms
+   ❯ E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) (9)
+     ❯ E39b: a plan change closes a PARTIAL line (S04 §5) (3)
+       × a 60 € quote leaves 10 € to pay: the PARTIAL line is CANCELLED and a PAID line records the 50 € 11ms
+       × a 40 € quote adds no line to pay and warns PAID_EXCEEDS_QUOTE for the 10 € to refund 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > E39b: a plan change closes a PARTIAL line (S04 §5) > a 60 € quote leaves 10 € to pay: the PARTIAL line is CANCELLED and a PAID line records the 50 €
+AssertionError: expected [ …(2) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+@@ -1,17 +1,11 @@
+  [
+    [
+      "ENTRY_FEE",
+      10000,
+      5000,
+-     "CANCELLED",
+-   ],
+-   [
+-     "ENTRY_FEE",
+-     5000,
+-     5000,
+-     "PAID",
++     "PARTIAL",
+    ],
+    [
+      "PACK",
+      1000,
+      null,
+
+ ❯ src/mocks/fixtures.contract.test.ts:564:9
+    562|           line.status,
+    563|         ]),
+    564|       ).toEqual([
+       |         ^
+    565|         ["ENTRY_FEE", 10000, 5000, "CANCELLED"],
+    566|         ["ENTRY_FEE", 5000, 5000, "PAID"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > E39b: a plan change closes a PARTIAL line (S04 §5) > a 40 € quote adds no line to pay and warns PAID_EXCEEDS_QUOTE for the 10 € to refund
+AssertionError: expected [ 'PARTIAL' ] to deeply equal [ 'CANCELLED', 'PAID' ]
+
+- Expected
++ Received
+
+  [
+-   "CANCELLED",
+-   "PAID",
++   "PARTIAL",
+  ]
+
+ ❯ src/mocks/fixtures.contract.test.ts:579:63
+    577|     it("a 40 € quote adds no line to pay and warns PAID_EXCEEDS_QUOTE …
+    578|       const quote = dryRun("10000000-0000-4000-8000-000000000091");
+    579|       expect(quote.upfront?.lines.map((line) => line.status)).toEqual(…
+       |                                                               ^
+    580|       expect(quote.upfront?.paidExceedsQuote).toEqual(eur(1000));
+    581|       expect(quote.warnings).toContain("PAID_EXCEEDS_QUOTE");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 44 skipped (47)
+   Start at  10:17:50
+   Duration  756ms (import 60%, transform 37%, tests 2%)
+

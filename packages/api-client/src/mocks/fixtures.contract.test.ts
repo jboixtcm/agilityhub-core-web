@@ -503,4 +503,88 @@ describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignup
     expect(therapy.warnings).toContain("PAID_EXCEEDS_QUOTE");
     expect(therapy.upfront?.paidExceedsQuote).toEqual({ amountMinor: 8000, currency: "EUR" });
   });
+
+  describe("E39b: a plan change closes a PARTIAL line (S04 §5)", () => {
+    const eur = (amountMinor: number) => ({ amountMinor, currency: "EUR" });
+    // 50 € collected of a 100 € entry fee; the club offers a 60 € and a 40 € pack.
+    const partial = (): typeof signupReviewBaseline => {
+      const view = signupReviewVariant(signupReviewBaseline, "manual");
+      view.upfront = {
+        lines: [
+          {
+            amount: eur(10000),
+            concept: "ENTRY_FEE",
+            id: "45000000-0000-4000-8000-000000000001",
+            paidAmount: eur(5000),
+            provider: "MANUAL",
+            status: "PARTIAL",
+          },
+        ],
+        totalDue: eur(10000),
+        totalPaid: eur(5000),
+      };
+      view.planOptions = [
+        ...view.planOptions,
+        ...[6000, 4000].map((amountMinor, index) => ({
+          name: `Pack ${String(amountMinor / 100)}`,
+          planId: `10000000-0000-4000-8000-00000000009${String(index)}`,
+          prices: [
+            {
+              amount: eur(amountMinor),
+              concept: "PACK" as const,
+              periodicity: "ONE_OFF" as const,
+              priceId: `20000000-0000-4000-8000-00000000009${String(index)}`,
+            },
+          ],
+          type: "PACK" as const,
+        })),
+      ];
+      return view;
+    };
+    const dryRun = (planId: string) => {
+      const view = partial();
+      return signupReviewDryRun(view, {
+        dogs: [{ dogId: "44000000-0000-4000-8000-000000000001" }],
+        planId,
+        version: view.version,
+      });
+    };
+
+    it("a 60 € quote leaves 10 € to pay: the PARTIAL line is CANCELLED and a PAID line records the 50 €", () => {
+      const quote = dryRun("10000000-0000-4000-8000-000000000090");
+      const validate = schema("ValidationDryRun");
+      expect(validate(quote), JSON.stringify(validate.errors)).toBe(true);
+      expect(
+        quote.upfront?.lines.map((line) => [
+          line.concept,
+          line.amount.amountMinor,
+          line.paidAmount?.amountMinor ?? null,
+          line.status,
+        ]),
+      ).toEqual([
+        ["ENTRY_FEE", 10000, 5000, "CANCELLED"],
+        ["ENTRY_FEE", 5000, 5000, "PAID"],
+        ["PACK", 1000, null, "DUE"],
+      ]);
+      expect(quote.upfront?.totalDue).toEqual(eur(6000));
+      expect(quote.upfront?.totalPaid).toEqual(eur(5000));
+      expect(
+        (quote.upfront?.totalDue.amountMinor ?? 0) - (quote.upfront?.totalPaid.amountMinor ?? 0),
+      ).toBe(1000);
+      expect(quote.warnings).not.toContain("PAID_EXCEEDS_QUOTE");
+    });
+
+    it("a 40 € quote adds no line to pay and warns PAID_EXCEEDS_QUOTE for the 10 € to refund", () => {
+      const quote = dryRun("10000000-0000-4000-8000-000000000091");
+      expect(quote.upfront?.lines.map((line) => line.status)).toEqual(["CANCELLED", "PAID"]);
+      expect(quote.upfront?.paidExceedsQuote).toEqual(eur(1000));
+      expect(quote.warnings).toContain("PAID_EXCEEDS_QUOTE");
+    });
+
+    it("the requested plan keeps the PARTIAL line open (no plan change)", () => {
+      const quote = dryRun("10000000-0000-4000-8000-000000000001");
+      expect(quote.upfront?.lines[0]?.status).toBe("PARTIAL");
+      expect(quote.upfront?.lines.some((line) => line.status === "CANCELLED")).toBe(false);
+    });
+  });
 });

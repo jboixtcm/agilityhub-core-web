@@ -1,5 +1,5 @@
 import { type ApiClient, type components } from "@agilityhub/api-client";
-import { fmtMaskedIban, useClubFormats } from "@agilityhub/i18n";
+import { fmtMaskedIban, type Locale, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -15,7 +15,7 @@ import {
   Toast,
   useBranding,
 } from "@agilityhub/ui";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useRefreshCounters } from "./counters";
@@ -40,6 +40,32 @@ interface FamilyCandidate {
 /** The admin's family decision for a `NOT_FOUND_PENDING` claim (R-04-13). */
 type FamilyDecision = { familyGroupId: string; holderName: string; kind: "group" } | { kind: "none" };
 
+interface PlanChoice {
+  planId: string;
+  priceId?: string;
+}
+
+/**
+ * A date the admin typed (R-04-15): the ISO date it names is what is sent; the text is shown as
+ * typed only in the language it was typed in, so a language change never changes the date.
+ */
+interface TypedDate {
+  iso: string | undefined;
+  locale: Locale;
+  text: string;
+}
+
+/**
+ * A dry run (S04 §2 D2), bound to the view it was asked on (so to its version) and to the plan and
+ * price of its `key`: an answer for anything else is never shown or validated against.
+ */
+interface Quote {
+  error?: SignupReviewError;
+  key: string;
+  result?: ValidationDryRun;
+  view: SignupView;
+}
+
 // Warnings shown elsewhere on D2: the image notice in the person card, the missing account in red.
 const INLINE_WARNINGS: readonly Warning[] = ["NO_IMAGE_CONSENT"];
 
@@ -51,7 +77,7 @@ function shortId(id: string): string {
   return id.slice(0, 8);
 }
 
-function isoDateFromInput(value: string, locale: "ca" | "es" | "en"): string | undefined {
+function isoDateFromInput(value: string, locale: Locale): string | undefined {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/u.exec(value);
   if (match === null) return undefined;
   const first = Number(match[1]);
@@ -68,7 +94,7 @@ function planValue(planId: string | undefined, priceId: string | undefined): str
   return planId === undefined ? "" : `${planId}|${priceId ?? ""}`;
 }
 
-function planChoiceOf(value: string): { planId: string; priceId?: string } {
+function planChoiceOf(value: string): PlanChoice {
   const [planId = "", priceId = ""] = value.split("|");
   return priceId === "" ? { planId } : { planId, priceId };
 }
@@ -108,18 +134,17 @@ export function SignupReviewPage({
   const [decisionError, setDecisionError] = useState<SignupReviewError>();
   // The admin's own decisions: they outlive a reload of the view (an edit, a stale version).
   const [levelChoice, setLevelChoice] = useState<Readonly<Record<string, string>>>({});
-  const [planChoice, setPlanChoice] = useState<{ planId: string; priceId?: string }>();
-  const [dateInput, setDateInput] = useState<string>();
+  const [planChoice, setPlanChoice] = useState<PlanChoice>();
+  const [typedDate, setTypedDate] = useState<TypedDate>();
   const [manualPaid, setManualPaid] = useState("0");
   const [confirmZero, setConfirmZero] = useState(false);
-  const [quote, setQuote] = useState<ValidationDryRun>();
-  const [quotePending, setQuotePending] = useState(false);
+  const [quote, setQuote] = useState<Quote>();
+  const [quoteRetry, setQuoteRetry] = useState(0);
   const [familyDecision, setFamilyDecision] = useState<FamilyDecision>();
   const [familyQuery, setFamilyQuery] = useState("");
   const [familyResults, setFamilyResults] = useState<readonly FamilyCandidate[]>();
   const [familySearching, setFamilySearching] = useState(false);
   const loadSeq = useRef(0);
-  const dryRunSeq = useRef(0);
 
   const load = useCallback(() => {
     const seq = ++loadSeq.current;
@@ -144,6 +169,52 @@ export function SignupReviewPage({
   const familyModule = branding.modules.includes("FAMILY_GROUP");
   const claim = signup?.familyGroupClaim;
   const pendingClaim = familyModule && claim?.status === "NOT_FOUND_PENDING";
+
+  const familyGroupFor = (view: SignupView): string | undefined => {
+    if (!familyModule) return undefined;
+    if (view.familyGroupClaim?.status === "FOUND") return view.proposals.familyGroupId;
+    return familyDecision?.kind === "group" ? familyDecision.familyGroupId : undefined;
+  };
+
+  // A plan change is quoted for its plan, price and the view's version; a reload asks again.
+  const quoteKey =
+    signup === undefined || planChoice === undefined
+      ? undefined
+      : `${planValue(planChoice.planId, planChoice.priceId)}|${String(signup.version)}`;
+
+  // The dry run carries the admin's other choices as they are when it is asked (levels, group).
+  const requestQuote = useEffectEvent((view: SignupView, plan: PlanChoice, key: string, isActive: () => boolean) => {
+    const dogs = view.dogs.map((dog) => ({ id: dog.id, levelId: levelChoice[dog.id] ?? dog.levelId ?? "" }));
+    const groupId = familyGroupFor(view);
+    const body: ValidationRequest = {
+      dogs: dogs.map((dog) => ({ dogId: dog.id, ...(dog.levelId === "" ? {} : { levelId: dog.levelId }) })),
+      ...(groupId === undefined ? {} : { familyGroupId: groupId }),
+      planId: plan.planId,
+      ...(plan.priceId === undefined ? {} : { priceId: plan.priceId }),
+      version: view.version,
+    };
+    client.POST("/members/{id}/validation", { body, params: { path: { id: memberId }, query: { dryRun: true } } }).then(
+      (result) => {
+        if (!isActive()) return;
+        setQuote(isDryRun(result.data) ? { key, result: result.data, view } : { error: { code: "UNKNOWN", kind: "general" }, key, view });
+      },
+      (cause: unknown) => {
+        if (!isActive()) return;
+        const error = classifySignupReviewError(cause, dogs);
+        if (error.kind === "resolved") setLoadState("resolved");
+        setQuote({ error, key, view });
+      },
+    );
+  });
+
+  useEffect(() => {
+    if (signup === undefined || planChoice === undefined || quoteKey === undefined) return undefined;
+    let active = true;
+    requestQuote(signup, planChoice, quoteKey, () => active);
+    return () => {
+      active = false;
+    };
+  }, [planChoice, quoteKey, quoteRetry, signup]);
 
   useEffect(() => {
     const query = familyQuery.trim();
@@ -215,10 +286,19 @@ export function SignupReviewPage({
   const selectedPrice = selectedOption?.prices.find((price) => price.priceId === selectedPlan?.priceId);
   const planType = selectedOption?.type ?? member.plan?.type;
   const monthly = planType === "MONTHLY";
-  const proposedDate = quote === undefined ? signup.proposals.nextInvoiceDate : quote.nextInvoiceDate;
-  const nextInvoiceDate = dateInput === undefined ? (proposedDate ?? "") : (isoDateFromInput(dateInput, locale) ?? "");
-  const nextInvoiceText = dateInput ?? (proposedDate === undefined ? "" : formatPlainDate(proposedDate, "short"));
-  const upfront: Upfront | undefined = quote?.upfront ?? signup.upfront ?? undefined;
+  // Without a plan change the view is the api's own quote; after one, only its current answer counts.
+  const currentQuote = quote?.view === signup && quote.key === quoteKey ? quote : undefined;
+  const quoteResult = currentQuote?.result;
+  const quoteError = currentQuote?.error;
+  const quotePending = quoteKey !== undefined && currentQuote === undefined;
+  const quoteReady = quoteKey === undefined || quoteResult !== undefined;
+  const proposedDate = quoteKey === undefined ? signup.proposals.nextInvoiceDate : quoteResult?.nextInvoiceDate;
+  const nextInvoiceDate = typedDate === undefined ? (proposedDate ?? "") : (typedDate.iso ?? "");
+  const nextInvoiceText =
+    typedDate === undefined
+      ? proposedDate === undefined ? "" : formatPlainDate(proposedDate, "short")
+      : typedDate.locale === locale || typedDate.iso === undefined ? typedDate.text : formatPlainDate(typedDate.iso, "short");
+  const upfront: Upfront | undefined = quoteKey === undefined ? (signup.upfront ?? undefined) : quoteResult?.upfront;
   const liveLines = (upfront?.lines ?? []).filter((line) => line.status !== "CANCELLED" && line.status !== "REFUNDED");
   const stripePaid = (upfront?.totalPaid.amountMinor ?? 0) > 0 && liveLines.every((line) => line.provider === "STRIPE" && line.status === "PAID");
   // Only an upfront block without a Stripe payment asks for the amount collected (null = no upfront, INC-08).
@@ -226,19 +306,12 @@ export function SignupReviewPage({
   const amountDue = Math.max(0, (upfront?.totalDue.amountMinor ?? 0) - (upfront?.totalPaid.amountMinor ?? 0));
   const readmission = signup.signup.readmission || signup.warnings.includes("READMISSION");
 
-  const familyGroupId = (): string | undefined => {
-    if (!familyModule) return undefined;
-    if (claim?.status === "FOUND") return signup.proposals.familyGroupId;
-    return familyDecision?.kind === "group" ? familyDecision.familyGroupId : undefined;
-  };
-
-  // A plan change's dry run leaves `nextInvoiceDate` out, so the api proposes the new plan's date.
-  const validationBody = (plan = selectedPlan, withDate = true): ValidationRequest => {
-    const groupId = familyGroupId();
+  const validationBody = (): ValidationRequest => {
+    const groupId = familyGroupFor(signup);
     return {
       dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levelOf(dog) === "" ? {} : { levelId: levelOf(dog) }) })),
-      ...(withDate && billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
-      ...(plan === undefined ? {} : { planId: plan.planId, ...(plan.priceId === undefined ? {} : { priceId: plan.priceId }) }),
+      ...(billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
+      ...(selectedPlan === undefined ? {} : { planId: selectedPlan.planId, ...(selectedPlan.priceId === undefined ? {} : { priceId: selectedPlan.priceId }) }),
       ...(groupId === undefined ? {} : { familyGroupId: groupId }),
       ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
       version: signup.version,
@@ -271,30 +344,16 @@ export function SignupReviewPage({
 
   const reloadView = () => { setReload((value) => value + 1); };
 
-  const changePlan = async (value: string) => {
-    const plan = planChoiceOf(value);
-    const seq = ++dryRunSeq.current;
-    setPlanChoice(plan);
-    // The new plan's proposed date replaces the typed one, unless the admin types again meanwhile.
-    setDateInput(undefined);
+  // The dry run leaves `nextInvoiceDate` out, so the api proposes the new plan's date.
+  const changePlan = (value: string) => {
+    setPlanChoice(planChoiceOf(value));
+    setTypedDate(undefined);
     setDecisionError(undefined);
-    setQuotePending(true);
-    try {
-      const result = await client.POST("/members/{id}/validation", {
-        body: validationBody(plan, false),
-        params: { path: { id: memberId }, query: { dryRun: true } },
-      });
-      if (seq !== dryRunSeq.current) return;
-      if (!isDryRun(result.data)) { setDecisionError({ code: "UNKNOWN", kind: "general" }); return; }
-      setQuote(result.data);
-    } catch (cause) {
-      if (seq === dryRunSeq.current) setDecisionError(classify(cause));
-    } finally {
-      if (seq === dryRunSeq.current) setQuotePending(false);
-    }
   };
 
   const validate = async () => {
+    // [VALIDA] waits for the quote of the current plan and price (S04 §2 D2).
+    if (!quoteReady) return;
     if (manualUpfront && Number(manualPaid) === 0 && !confirmZero) {
       setDecisionError({ code: "CONFIRM_NOTHING_PAID", kind: "upfront" });
       return;
@@ -340,7 +399,13 @@ export function SignupReviewPage({
       : decisionError.code === "CONFIRM_NOTHING_PAID"
         ? t("admin-census:signupReview.confirmNothingPaid")
         : errorText(decisionError);
-  const planError = decisionError?.kind === "plan" || decisionError?.kind === "planCard" ? errorText(decisionError) : undefined;
+  // A failed quote shows on the plan card, whatever its code.
+  const planError =
+    quoteError !== undefined
+      ? errorText(quoteError)
+      : decisionError?.kind === "plan" || decisionError?.kind === "planCard"
+        ? errorText(decisionError)
+        : undefined;
   const familyError =
     decisionError?.kind !== "family"
       ? undefined
@@ -373,7 +438,7 @@ export function SignupReviewPage({
   const planLabel = (plan: PlanOption, price: PlanOption["prices"][number] | undefined) => {
     if (price === undefined) return plan.name;
     // The selected price reads the dry run's answer once there is one (S04 §2 D2: «es recalcula»).
-    const quoted = quote?.price?.id === price.priceId ? quote.price : undefined;
+    const quoted = quoteResult?.price?.id === price.priceId ? quoteResult.price : undefined;
     return t("admin-census:signupReview.planWithPrice", {
       periodicity: quoted?.periodicity ?? price.periodicity,
       plan: plan.name,
@@ -390,7 +455,7 @@ export function SignupReviewPage({
     planOptions.unshift({ label: selectedOption?.name ?? member.plan?.name ?? t("admin-census:values.empty"), value: selectedValue });
   }
   // The warnings a plan change brings (PAID_EXCEEDS_QUOTE, CHECKOUT_PENDING…) show on the plan card.
-  const quoteWarnings = (quote?.warnings ?? []).filter((warning) => !signup.warnings.includes(warning));
+  const quoteWarnings = (quoteResult?.warnings ?? []).filter((warning) => !signup.warnings.includes(warning));
   const headerWarnings = signup.warnings.filter(
     (warning) =>
       !INLINE_WARNINGS.includes(warning) &&
@@ -492,11 +557,13 @@ export function SignupReviewPage({
                 <dd>
                   {payment == null
                     ? t("admin-census:values.empty")
-                    : t("admin-census:signupReview.paymentSummary", {
-                        account: fmtMaskedIban(payment.maskedAccount ?? member.maskedAccount) ?? t("admin-census:values.empty"),
-                        holder: payment.holderName === member.fullName ? t("admin-census:signupReview.sameHolder") : (payment.holderName ?? t("admin-census:values.empty")),
-                        method: t(`admin-census:signupReview.paymentMethod.${payment.type}`),
-                      })}
+                    : payment.type !== "SEPA_DD"
+                      ? t(`admin-census:signupReview.paymentMethod.${payment.type}`)
+                      : t("admin-census:signupReview.paymentSummary", {
+                          account: fmtMaskedIban(payment.maskedAccount ?? member.maskedAccount) ?? t("admin-census:values.empty"),
+                          holder: payment.holderName === member.fullName ? t("admin-census:signupReview.sameHolder") : (payment.holderName ?? t("admin-census:values.empty")),
+                          method: t(`admin-census:signupReview.paymentMethod.${payment.type}`),
+                        })}
                 </dd>
               </>
             ) : null}
@@ -531,7 +598,7 @@ export function SignupReviewPage({
                 )}
                 {billing && monthly && index === 0 ? (
                   <FormField {...(dateError === undefined ? {} : { error: dateError })} id={`signup-invoice-${dog.id}`} label={t("admin-census:signupReview.fields.nextInvoice")}>
-                    <Input aria-describedby={dateError === undefined ? undefined : `signup-invoice-${dog.id}-error`} aria-invalid={dateError !== undefined || undefined} id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { setDateInput(event.currentTarget.value); if (dateError !== undefined) setDecisionError(undefined); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceText} />
+                    <Input aria-describedby={dateError === undefined ? undefined : `signup-invoice-${dog.id}-error`} aria-invalid={dateError !== undefined || undefined} id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { const text = event.currentTarget.value; setTypedDate({ iso: isoDateFromInput(text, locale), locale, text }); if (dateError !== undefined) setDecisionError(undefined); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceText} />
                     <Badge tone="danger">{t("admin-census:signupReview.required")}</Badge>
                   </FormField>
                 ) : null}
@@ -544,7 +611,7 @@ export function SignupReviewPage({
         <div aria-busy={quotePending || undefined} className="signup-review-plan">
           <h2 id="signup-plan-title">{billing ? t("admin-census:signupReview.plan") : t("admin-census:signupReview.fields.planName")}</h2>
           {billing && planOptions.length > 0 ? (
-            <Select aria-describedby={planError === undefined ? undefined : "signup-plan-error"} aria-invalid={planError !== undefined || undefined} aria-label={t("admin-census:signupReview.plan")} disabled={working} onChange={(event) => void changePlan(event.currentTarget.value)} value={selectedValue}>
+            <Select aria-describedby={planError === undefined ? undefined : "signup-plan-error"} aria-invalid={planError !== undefined || undefined} aria-label={t("admin-census:signupReview.plan")} disabled={working} onChange={(event) => { changePlan(event.currentTarget.value); }} value={selectedValue}>
               {selectedPlan === undefined ? <option value="">{t("admin-census:values.empty")}</option> : null}
               {planOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </Select>
@@ -552,6 +619,11 @@ export function SignupReviewPage({
             <p>{selectedOption?.name ?? member.plan?.name ?? t("admin-census:values.empty")}</p>
           )}
           {planError === undefined ? null : <p className="ah-form-field__error" id="signup-plan-error" role="alert">{planError}</p>}
+          {quoteError === undefined ? null : quoteError.kind === "stale" ? (
+            <Button onClick={reloadView} variant="ghost">{t("admin-census:signupReview.actions.reload")}</Button>
+          ) : (
+            <Button onClick={() => { setQuote(undefined); setQuoteRetry((value) => value + 1); }} variant="ghost">{t("admin-census:signupReview.retry")}</Button>
+          )}
           {quoteWarnings.map((warning) => <p className="signup-review-warning" key={warning}>{t(`admin-census:signupReview.warning.${warning}`)}</p>)}
         </div>
         {billing && upfront !== undefined ? (
@@ -579,7 +651,7 @@ export function SignupReviewPage({
         <footer>
           <Button disabled={working} onClick={() => { setSaved(false); setEditOpen(true); }} variant="ghost"><Icon aria-hidden="true" name="edit" />{t("admin-census:signupReview.actions.edit")}</Button>
           <Button disabled={working} onClick={() => { setRejectError(undefined); setRejectOpen(true); }} variant="ghost">{t("admin-census:signupReview.actions.reject")}</Button>
-          <Button disabled={quotePending} loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button>
+          <Button disabled={!quoteReady} loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button>
         </footer>
       </Card>
       <SignupEditDrawer client={client} onClose={() => { setEditOpen(false); }} onReload={reloadView} onSaved={() => { setEditOpen(false); setSaved(true); reloadView(); }} open={editOpen} signup={signup} />
