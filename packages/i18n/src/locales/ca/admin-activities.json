@@ -192,6 +192,7 @@
     "error": "No s'han pogut carregar els inscrits.",
     "open": "Obre la fitxa de {name}",
     "member": "{name} · {number}",
+    "memberSeparator": ", ",
     "contactSeparator": " · ",
     "waitlisted": "en llista d'espera ({position})",
     "statuses": {
@@ -207,7 +208,8 @@
     "filters": {
       "state": "Estat",
       "origin": "Origen",
-      "registeredAt": "Data d'inscripció"
+      "registeredAt": "Data d'inscripció",
+      "memberId": "Abonat"
     }
   }
 }

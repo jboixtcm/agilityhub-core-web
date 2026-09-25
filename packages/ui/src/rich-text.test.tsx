@@ -170,4 +170,39 @@ describe("RichTextEditor", () => {
       "false",
     );
   });
+
+  it("E4-W08 R-07-04 while busy (its form saving) refuses input, keeps the toolbar disabled, and unlocks after", () => {
+    const changes: string[] = [];
+    const editor = (busy: boolean) => (
+      <RichTextEditor
+        busy={busy}
+        id="busy"
+        label="Descripció"
+        labels={labels}
+        onChange={(html) => {
+          changes.push(html);
+        }}
+        value="<p>Desat</p>"
+      />
+    );
+    const { rerender } = render(editor(true));
+    const content = screen.getByRole("textbox", { name: "Descripció" });
+    expect(content).toHaveAttribute("contenteditable", "false");
+    expect(content).toHaveAttribute("aria-readonly", "true");
+    const tools = screen.getAllByRole("button");
+    expect(tools).toHaveLength(10);
+    for (const tool of tools) expect(tool).toBeDisabled();
+
+    content.innerHTML = "<p>Escrit mentre desa</p>";
+    fireEvent.input(content);
+    expect(content.innerHTML).toBe("<p>Desat</p>");
+    expect(changes).toEqual([]);
+
+    rerender(editor(false));
+    expect(content).toHaveAttribute("contenteditable", "true");
+    expect(content).not.toHaveAttribute("aria-readonly");
+    content.innerHTML = "<p>Després</p>";
+    fireEvent.input(content);
+    expect(changes).toEqual(["<p>Després</p>"]);
+  });
 });

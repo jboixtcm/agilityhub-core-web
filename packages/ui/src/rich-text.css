@@ -92,6 +92,15 @@
   outline-offset: 1px;
 }
 
+.ah-rich-text-editor__tool:disabled {
+  color: var(--ah-color-text-muted);
+  cursor: not-allowed;
+}
+
+.ah-rich-text-editor[aria-busy="true"] .ah-rich-text-editor__content {
+  cursor: progress;
+}
+
 .ah-rich-text-editor__tool--italic span {
   font-style: italic;
 }

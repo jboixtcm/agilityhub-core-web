@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -288,17 +288,18 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       http.get("*/api/v1/me/activities", () =>
         HttpResponse.json({
           ...real,
-          bookable: [{ ...seminar, notBookableReason: "LEVEL_NOT_ALLOWED", rowState: "NOT_BOOKABLE" }],
+          bookable: [
+            { ...seminar, notBookableReason: "LEVEL_NOT_ALLOWED", rowState: "NOT_BOOKABLE" },
+          ],
         }),
       ),
     );
     await renderWith(<ReserveActivitiesPage client={client()} />);
     const block = await screen.findByRole("region", { name: "Activitats" });
     expect(within(block).queryByRole("link")).toBeNull();
-    expect(within(block).getByText("Seminari de handling").closest("[aria-disabled]")).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(
+      within(block).getByText("Seminari de handling").closest("[aria-disabled]"),
+    ).toHaveAttribute("aria-disabled", "true");
   });
 
   it("R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it", async () => {
@@ -455,5 +456,178 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       "ds 12/07Seminari d'obstacles" + "cancel·lada pel club",
     );
     expect(screen.getByText("«Pluja forta: pistes tancades»")).toBeVisible();
+  });
+});
+
+/** JSON bodies of `POST /activity-registrations/{id}/cancellation`, in order. */
+function recordCancellationBodies() {
+  const bodies: unknown[] = [];
+  const listener = ({ request }: { request: Request }) => {
+    if (
+      request.method !== "POST" ||
+      !/\/activity-registrations\/[^/]+\/cancellation$/u.test(new URL(request.url).pathname)
+    ) {
+      return;
+    }
+    const index = bodies.length;
+    bodies.push(undefined);
+    void request
+      .clone()
+      .json()
+      .then((body: unknown) => {
+        bodies[index] = body;
+      });
+  };
+  server.events.on("request:start", listener);
+  return {
+    bodies,
+    stop: () => {
+      server.events.removeListener("request:start", listener);
+    },
+  };
+}
+
+const CONTACT_CLUB = "Per anul·lar la inscripció, posa't en contacte amb el club";
+
+describe("E4-W08 app detail follow-ups of the E4-W04 round-2 review", () => {
+  it.each([422, 400])(
+    "R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (%i) stays on the field",
+    async (status) => {
+      mockScenario("impersonated");
+      await client().POST("/activity-registrations", {
+        body: { activityId: TOURNAMENT },
+        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+      });
+      const recorded = recordCancellationBodies();
+      let answered = 0;
+      server.use(
+        http.post("*/api/v1/activity-registrations/:id/cancellation", () => {
+          answered += 1;
+          return answered === 1
+            ? HttpResponse.json(
+                {
+                  code: "VALIDATION_ERROR",
+                  details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }] },
+                  message: "Validation failed",
+                  traceId: "t",
+                },
+                { status },
+              )
+            : undefined;
+        }),
+      );
+      await renderWith(
+        <ActivityDetailPage activityId={TOURNAMENT} client={client()} impersonated />,
+      );
+      fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+      const dialog = await screen.findByRole("dialog", {
+        name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+      });
+      const reason = within(dialog).getByLabelText("Motiu");
+      const confirm = within(dialog).getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" });
+      expect(reason).toBeRequired();
+      expect(reason).toHaveAttribute("maxlength", "500");
+      expect(confirm).toBeDisabled();
+      fireEvent.change(reason, { target: { value: "   " } });
+      expect(confirm).toBeDisabled();
+      fireEvent.change(reason, { target: { value: "Ho demana per telèfon" } });
+      expect(confirm).toBeEnabled();
+
+      fireEvent.click(confirm);
+      expect(
+        await within(dialog).findByText("Escriu el motiu de l'anul·lació (fins a 500 caràcters)."),
+      ).toBeVisible();
+      expect(reason).toHaveAttribute("aria-invalid", "true");
+      expect(reason).toHaveAccessibleDescription(
+        "Escriu el motiu de l'anul·lació (fins a 500 caràcters).",
+      );
+      expect(reason).toHaveValue("Ho demana per telèfon");
+
+      fireEvent.click(confirm);
+      expect(await screen.findByText("Inscripció anul·lada")).toBeVisible();
+      expect(screen.queryByRole("dialog")).toBeNull();
+      await waitFor(() => {
+        expect(recorded.bodies).toEqual([
+          { reason: "Ho demana per telèfon" },
+          { reason: "Ho demana per telèfon" },
+        ]);
+      });
+      recorded.stop();
+    },
+  );
+
+  it("R-07-09 a member session asks for no reason and keeps sending {}", async () => {
+    const recorded = recordCancellationBodies();
+    await renderWith(<ActivityDetailPage activityId={TOURNAMENT} client={client()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    });
+    expect(within(dialog).queryByLabelText("Motiu")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    expect(await screen.findByText("Inscripció anul·lada")).toBeVisible();
+    await waitFor(() => {
+      expect(recorded.bodies).toEqual([{}]);
+    });
+    recorded.stop();
+  });
+
+  it("R-07-09 the deadline is live: opened a minute before, the button becomes the contact text when it passes, without a remount", async () => {
+    vi.useRealTimers();
+    // The Torneig starts on 7 August at 18:30 in the club (16:30Z): `cancellableUntil`.
+    vi.useFakeTimers({
+      now: new Date("2026-08-07T16:29:00Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+    await renderWith(<ActivityDetailPage activityId={TOURNAMENT} client={client()} />);
+    expect(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" })).toBeVisible();
+    const heading = screen.getByRole("heading", { name: "Torneig d'Estiu 2026" });
+    expect(screen.queryByText(CONTACT_CLUB)).toBeNull();
+
+    act(() => {
+      vi.advanceTimersByTime(61_000);
+    });
+    expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+    expect(screen.queryByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" })).toBeNull();
+    // The same heading element: the page re-evaluated the deadline, it was not mounted again.
+    expect(screen.getByRole("heading", { name: "Torneig d'Estiu 2026" })).toBe(heading);
+  });
+
+  it("R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it)", async () => {
+    vi.useRealTimers();
+    vi.useFakeTimers({
+      now: new Date("2026-08-07T16:29:30Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+    await renderWith(<ActivityDetailPage activityId={TOURNAMENT} client={client()} />);
+    const button = await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" });
+    // A device that slept: the clock is past the deadline and the timer has not fired yet.
+    vi.setSystemTime(new Date("2026-08-07T16:31:00Z"));
+    fireEvent.click(button);
+    expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("R-07-09 a confirmation left open past the deadline closes instead of sending", async () => {
+    vi.useRealTimers();
+    vi.useFakeTimers({
+      now: new Date("2026-08-07T16:29:30Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+    const recorded = recordCancellationBodies();
+    await renderWith(<ActivityDetailPage activityId={TOURNAMENT} client={client()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    });
+    vi.setSystemTime(new Date("2026-08-07T16:31:00Z"));
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(recorded.bodies).toEqual([]);
+    recorded.stop();
   });
 });

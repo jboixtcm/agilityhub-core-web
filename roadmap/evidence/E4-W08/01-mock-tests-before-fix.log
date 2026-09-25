@@ -1,0 +1,51 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (15 tests | 2 failed | 12 skipped) 27ms
+   ❯ E4-W08 activity mocks answer like the api (impersonation, parameters) (3)
+     × R-07-09/10 an impersonated cancellation without a reason is 422 VALIDATION_ERROR on reason; with it, ADMIN 21ms
+     × MATRIU_PERMISOS `/parameters/{key}` answers 403 FORBIDDEN to an INSTRUCTOR, the value to an ADMIN 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W08 activity mocks answer like the api (impersonation, parameters) > R-07-09/10 an impersonated cancellation without a reason is 422 VALIDATION_ERROR on reason; with it, ADMIN
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:501:8
+    499|           }),
+    500|         ),
+    501|       ).resolves.toEqual({
+       |        ^
+    502|         code: "VALIDATION_ERROR",
+    503|         details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }…
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:494:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W08 activity mocks answer like the api (impersonation, parameters) > MATRIU_PERMISOS `/parameters/{key}` answers 403 FORBIDDEN to an INSTRUCTOR, the value to an ADMIN
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:534:6
+    532|     await expect(
+    533|       failure(client.GET("/parameters/{key}", { params: { path: { key:…
+    534|     ).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
+       |      ^
+    535|     mockScenario("activitiesInstructorNoLevels");
+    536|     await expect(
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 12 skipped (15)
+   Start at  11:07:45
+   Duration  677ms (import 50%, transform 45%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/activity-handlers.test.ts -t E4-W08

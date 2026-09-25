@@ -81,6 +81,51 @@ test.describe("E4-W04 activities in the app", () => {
     await page.screenshot({ path: resolve(evidenceDirectory, "activitat-llista-espera-375.png") });
   });
 
+  test("E4-W08 R-07-09/10 impersonated: the cancellation asks for «Motiu» and sends it", async ({
+    page,
+  }) => {
+    const followUpEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W08");
+    mkdirSync(followUpEvidence, { recursive: true });
+    await page.clock.setFixedTime(mockupNow);
+    await page.addInitScript(
+      ({ cachedBranding }) => {
+        localStorage.setItem("agilityhub.locale", "ca");
+        localStorage.setItem("agilityhub.mockScenario", "impersonated");
+        localStorage.setItem(
+          `agilityhub.branding:${location.host}`,
+          JSON.stringify(cachedBranding),
+        );
+      },
+      { cachedBranding: brandingCanic },
+    );
+    const bodies: unknown[] = [];
+    page.on("request", (request) => {
+      if (/\/activity-registrations\/[^/]+\/cancellation$/u.test(new URL(request.url()).pathname)) {
+        bodies.push(request.postDataJSON());
+      }
+    });
+    await page.goto(
+      `${baseUrl}/activitats/activity-torneig-estiu-2026#impersonation=mock-impersonation-token`,
+    );
+    await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    await page.getByRole("button", { name: "INSCRIU-M'HI" }).click();
+    await expect(page.getByText("T'hi has inscrit")).toBeVisible();
+    await page.getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }).click();
+    const dialog = page.getByRole("dialog", {
+      name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    });
+    const confirm = dialog.getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" });
+    await expect(confirm).toBeDisabled();
+    await dialog.getByLabel("Motiu").fill("Ho demana per telèfon");
+    await expect(confirm).toBeEnabled();
+    await page.screenshot({
+      path: resolve(followUpEvidence, "activitat-anullacio-motiu-375.png"),
+    });
+    await confirm.click();
+    await expect(page.getByText("Inscripció anul·lada")).toBeVisible();
+    expect(bodies).toEqual([{ reason: "Ho demana per telèfon" }]);
+  });
+
   test("T-07-30 25 activity rows (component preview; /me/history is S10/E6)", async ({ page }) => {
     await login(page);
     await page.goto(`${baseUrl}/_gallery/historic-activitats`);

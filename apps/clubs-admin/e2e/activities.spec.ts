@@ -154,3 +154,66 @@ test.describe("E4-W04 D7 activities", () => {
     await expect(card.getByRole("button", { name: "DESA" })).toHaveCount(0);
   });
 });
+
+test.describe("E4-W08 D7 follow-ups", () => {
+  const followUpEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W08");
+
+  test.beforeAll(() => {
+    mkdirSync(followUpEvidence, { recursive: true });
+  });
+
+  test("S07 §6 registrants: the member filter (memberId) names the member in its chip", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.goto(`${baseUrl}/activitats/activity-taller-contactes/inscrits`);
+    const table = page.getByRole("table");
+    await expect(table.getByText("en llista d'espera (1)")).toBeVisible();
+    const filterSummary = page.locator("summary", { hasText: /^Filtre/u });
+    const filterMenu = page.locator("details", { has: filterSummary });
+    await filterSummary.click();
+    await filterMenu.getByLabel("Columna").selectOption("memberId");
+    const value = filterMenu.getByLabel("Valor");
+    await expect(value).toBeEnabled();
+    await value.selectOption({ index: 1 });
+    const picked = (await value.locator("option:checked").textContent()) ?? "";
+    const member = picked.replace(/ \(\d+\)$/u, "");
+    await filterMenu.getByRole("button", { name: "Afegeix el filtre" }).click();
+    await expect(table.getByRole("row")).toHaveCount(2);
+    await expect(filterSummary).toContainText(`Filtre (1): Abonat = «${member}»`);
+    await expect(table).toContainText(member);
+    await page.screenshot({
+      path: resolve(followUpEvidence, "D7-inscrits-filtre-abonat-1280.png"),
+    });
+  });
+
+  test("R-07-14 an INSTRUCTOR sees no «Nivells» on an activity without levels (no /parameters access)", async ({
+    page,
+  }) => {
+    await signIn(page, "instructor");
+    await page.goto(`${baseUrl}/activitats/activity-torneig-estiu-2026`);
+    const card = maintenance(page, "Torneig d'Estiu 2026");
+    await expect(card.getByLabel("Títol", { exact: true })).toBeDisabled();
+    await expect(card.getByText("Llista d'espera: sí")).toBeVisible();
+    await expect(card.getByText(/^Nivells:/u)).toHaveCount(0);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(followUpEvidence, "D7-instructor-sense-nivells-1280.png"),
+    });
+  });
+
+  test("R-07-05 an activity away from the club takes 6:00 although the club opens at 7:00", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.goto(`${baseUrl}/activitats/activity-demostracio-festa-major`);
+    const card = maintenance(page, "Demostració Festa Major");
+    await card.getByLabel("Hora d'inici").selectOption("06:00");
+    await card.getByRole("button", { name: "DESA" }).click();
+    await expect(page.getByText("Canvis desats")).toBeVisible();
+    await expect(card.getByLabel("Hora d'inici")).toHaveValue("06:00");
+    await page.screenshot({
+      path: resolve(followUpEvidence, "D7-fora-del-club-6h-1280.png"),
+    });
+  });
+});

@@ -6,10 +6,12 @@ import {
   Button,
   Card,
   EmptyState,
+  FormField,
   Icon,
   Modal,
   SafeHtml,
   Skeleton,
+  Textarea,
   Toast,
   type Tone,
 } from "@agilityhub/ui";
@@ -26,16 +28,46 @@ interface Feedback {
   tone: Tone;
 }
 
+// `setTimeout` holds at most 2^31 − 1 ms (~24.8 days): a later deadline is reached in steps.
+const MAX_TIMER_MS = 2_147_483_647;
+
+/**
+ * R-07-09: whether `now < deadline`, kept live: one timer to the deadline flips it when it
+ * passes (no remount), and `recheck()` compares with the clock again on demand (a device that
+ * slept past the deadline before its timer could fire).
+ */
+function useBeforeDeadline(deadline: number) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!Number.isFinite(deadline) || now >= deadline) return undefined;
+    // A deadline that already passed (e.g. while the detail loaded) fires at once.
+    const remaining = Math.max(deadline - Date.now(), 0);
+    const timer = window.setTimeout(
+      () => {
+        setNow(Date.now());
+      },
+      Math.min(remaining, MAX_TIMER_MS),
+    );
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [deadline, now]);
+  const recheck = useCallback(() => {
+    const current = Date.now();
+    setNow(current);
+    return current < deadline;
+  }, [deadline]);
+  return { before: now < deadline, recheck };
+}
+
 function useActivityDetail(client: ApiClient, activityId: string) {
   const [state, setState] = useState<LoadState<MemberActivityDetail>>({ status: "loading" });
-  const [loadedAt, setLoadedAt] = useState(0);
   const [reload, setReload] = useState(0);
   useEffect(() => {
     let current = true;
     void client.GET("/me/activities/{activityId}", { params: { path: { activityId } } }).then(
       (result) => {
         if (!current) return;
-        setLoadedAt(Date.now());
         setState(
           result.data === undefined
             ? { error: new TypeError("Missing activity"), status: "error" }
@@ -53,7 +85,7 @@ function useActivityDetail(client: ApiClient, activityId: string) {
   const refetch = useCallback(() => {
     setReload((value) => value + 1);
   }, []);
-  return { ...state, loadedAt, refetch };
+  return { ...state, refetch };
 }
 
 function waitlistAvailable(error: unknown): boolean {
@@ -62,17 +94,37 @@ function waitlistAvailable(error: unknown): boolean {
   return details?.waitlistAvailable === true;
 }
 
+/** A 400/422 `VALIDATION_ERROR` whose `details.fieldErrors[]` names `field` (mapped by code). */
+function isFieldError(error: unknown, field: string): boolean {
+  if (!isApiError(error, "VALIDATION_ERROR")) return false;
+  const details = error.details as { fieldErrors?: unknown } | undefined;
+  return (
+    Array.isArray(details?.fieldErrors) &&
+    details.fieldErrors.some(
+      (item: unknown) =>
+        typeof item === "object" && item !== null && "field" in item && item.field === field,
+    )
+  );
+}
+
+const REASON_MAX_LENGTH = 500;
+
 /**
  * Activity detail of the app (`/activitats/:id`, S07 §2, no mockup): image, title, type, day and
  * hours, place, texts (rich text through `SafeHtml`), documents, registration deadline and places,
  * and the R-07-07/08/09 action by `myRegistration` / `rowState`.
+ *
+ * `impersonated` (R-07-09/10): the admin cancels «as the member» and the api requires a
+ * `reason`, so the confirmation asks for «Motiu»; a member's own cancellation sends `{}`.
  */
 export function ActivityDetailPage({
   activityId,
   client,
+  impersonated = false,
 }: {
   activityId: string;
   client: ApiClient;
+  impersonated?: boolean;
 }) {
   const { t } = useTranslation(["activities", "enums", "errors", "common"]);
   const formats = useClubFormats();
@@ -80,6 +132,14 @@ export function ActivityDetailPage({
   const [dialog, setDialog] = useState<Dialog>();
   const [pending, setPending] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>();
+  const [reason, setReason] = useState("");
+  const [reasonError, setReasonError] = useState<string>();
+  // R-07-09: the api's deadline (never computed here), compared with the clock while open.
+  const deadline = useBeforeDeadline(
+    detail.status === "ready"
+      ? Date.parse(detail.data.myRegistration?.cancellableUntil ?? detail.data.cancellableUntil)
+      : Number.POSITIVE_INFINITY,
+  );
 
   const bar = (
     <AppBar
@@ -129,9 +189,6 @@ export function ActivityDetailPage({
 
   const activity = detail.data;
   const mine = activity.myRegistration;
-  // R-07-09: the deadline is compared with the moment the detail was (re)loaded.
-  const beforeDeadline =
-    detail.loadedAt < Date.parse(mine?.cancellableUntil ?? activity.cancellableUntil);
   const hours = activity.startTime ?? null;
   const place = !activity.location.atClub
     ? [activity.location.name, activity.location.address]
@@ -186,11 +243,17 @@ export function ActivityDetailPage({
 
   const cancel = async () => {
     if (mine === null || mine === undefined) return;
+    // A confirmation left open past the deadline closes instead of sending (R-07-09).
+    if (!deadline.recheck()) {
+      setDialog(undefined);
+      return;
+    }
     setPending(true);
     setFeedback(undefined);
+    setReasonError(undefined);
     try {
       await client.POST("/activity-registrations/{id}/cancellation", {
-        body: {},
+        body: impersonated ? { reason: reason.trim() } : {},
         params: { path: { id: mine.id } },
       });
       setDialog(undefined);
@@ -203,6 +266,11 @@ export function ActivityDetailPage({
       });
       detail.refetch();
     } catch (cause) {
+      if (impersonated && isFieldError(cause, "reason")) {
+        // The reason stays where the admin wrote it, inside the confirmation.
+        setReasonError(t("activities:detail.reasonInvalid", { max: REASON_MAX_LENGTH }));
+        return;
+      }
       setDialog(undefined);
       fail(cause);
     } finally {
@@ -210,14 +278,22 @@ export function ActivityDetailPage({
     }
   };
 
+  const openCancellation = (next: "cancel" | "leave") => {
+    // The deadline may have passed without the timer (a device that slept): check the clock.
+    if (!deadline.recheck()) return;
+    setReason("");
+    setReasonError(undefined);
+    setDialog(next);
+  };
+
   const live = mine !== null && mine !== undefined && mine.state !== "CANCELLED" ? mine : undefined;
   let action = null;
   if (activity.state === "PUBLISHED") {
     if (live !== undefined) {
-      action = beforeDeadline ? (
+      action = deadline.before ? (
         <Button
           onClick={() => {
-            setDialog(live.state === "WAITLISTED" ? "leave" : "cancel");
+            openCancellation(live.state === "WAITLISTED" ? "leave" : "cancel");
           }}
           variant="secondary"
         >
@@ -355,7 +431,7 @@ export function ActivityDetailPage({
           </div>
         </Modal>
       ) : null}
-      {dialog === "cancel" || dialog === "leave" ? (
+      {(dialog === "cancel" || dialog === "leave") && (deadline.before || pending) ? (
         <Modal
           closeLabel={t("activities:detail.close")}
           onClose={() => {
@@ -368,6 +444,31 @@ export function ActivityDetailPage({
               : t("activities:detail.cancelQuestion", { title: activity.title })
           }
         >
+          {impersonated ? (
+            <FormField
+              {...(reasonError === undefined ? {} : { error: reasonError })}
+              help={t("activities:detail.reasonHelp")}
+              id="activity-cancel-reason"
+              label={t("activities:detail.reason")}
+            >
+              <Textarea
+                aria-describedby={
+                  reasonError === undefined ? undefined : "activity-cancel-reason-error"
+                }
+                aria-invalid={reasonError === undefined ? undefined : true}
+                disabled={pending}
+                id="activity-cancel-reason"
+                maxLength={REASON_MAX_LENGTH}
+                onChange={(event) => {
+                  setReason(event.currentTarget.value);
+                  setReasonError(undefined);
+                }}
+                required
+                rows={3}
+                value={reason}
+              />
+            </FormField>
+          ) : null}
           <div className="activity-detail__dialog">
             <Button
               onClick={() => {
@@ -378,6 +479,7 @@ export function ActivityDetailPage({
               {t("activities:detail.back")}
             </Button>
             <Button
+              disabled={impersonated && reason.trim() === ""}
               loading={pending}
               loadingLabel={t("activities:detail.sending")}
               onClick={() => void cancel()}

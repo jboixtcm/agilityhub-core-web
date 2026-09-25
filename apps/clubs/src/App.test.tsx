@@ -1,6 +1,7 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
   mockScenario,
+  resetActivityState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
 } from "@agilityhub/api-client/mocks";
@@ -68,7 +69,16 @@ async function renderApplication(
   const i18n = await createI18n({
     branding,
     browserLanguages: [locale],
-    initialNamespaces: ["auth", "census", "errors", "shell", "signup"],
+    initialNamespaces: [
+      "activities",
+      "auth",
+      "census",
+      "common",
+      "enums",
+      "errors",
+      "shell",
+      "signup",
+    ],
     storage: undefined,
   });
   render(
@@ -414,6 +424,93 @@ describe("T-01-21 profile access rows and impersonation", () => {
 
     expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     expect(screen.getByRole("button", { name: "Surt" })).toBeVisible();
+  });
+});
+
+describe("E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3)", () => {
+  const TOURNAMENT_PATH = "/activitats/activity-torneig-estiu-2026";
+
+  function recordMeActivities() {
+    const paths: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const path = new URL(request.url).pathname;
+      if (path.includes("/me/activities")) paths.push(path);
+    };
+    server.events.on("request:start", listener);
+    return {
+      paths,
+      stop: () => {
+        server.events.removeListener("request:start", listener);
+      },
+    };
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers({
+      now: new Date("2026-08-04T08:00:00Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
+    resetActivityState();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    resetActivityState();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("an instructor-only session gets the usual no-access path: no detail, no /me/activities call", async () => {
+    mockScenario("instructor");
+    const requests = recordMeActivities();
+    const client = authClient();
+    await client.login("ivet.puig@example.test", "secret-password");
+    window.history.pushState(null, "", TOURNAMENT_PATH);
+    await renderApplication(client);
+
+    expect(await screen.findByRole("link", { name: "Visió global" })).toBeInTheDocument();
+    await expect(
+      screen.findByRole("heading", { name: "Activitat" }, { timeout: 400 }),
+    ).rejects.toThrow();
+    expect(screen.queryByRole("heading", { name: "Torneig d'Estiu 2026" })).toBeNull();
+    expect(requests.paths).toEqual([]);
+    requests.stop();
+  });
+
+  it("a member session opens the detail", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.pushState(null, "", TOURNAMENT_PATH);
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Torneig d'Estiu 2026" })).toBeVisible();
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    });
+    expect(within(dialog).queryByLabelText("Motiu")).toBeNull();
+  });
+
+  it("an impersonated session opens the detail and its cancellation asks for «Motiu»", async () => {
+    mockScenario("impersonated");
+    await createApiClient({ baseUrl: `${window.location.origin}/api/v1` }).POST(
+      "/activity-registrations",
+      {
+        body: { activityId: "activity-torneig-estiu-2026" },
+        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+      },
+    );
+    const client = authClient();
+    await client.acceptImpersonation("mock-impersonation-token");
+    window.history.pushState(null, "", TOURNAMENT_PATH);
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Torneig d'Estiu 2026" })).toBeVisible();
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    });
+    expect(within(dialog).getByLabelText("Motiu")).toBeRequired();
   });
 });
 

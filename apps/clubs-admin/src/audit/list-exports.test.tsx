@@ -376,4 +376,25 @@ describe("T-14-26 R-14-12 E4-W07 one export at a time", () => {
     expect(request?.searchParams.getAll("sort")).toEqual(["memberLastName,asc"]);
     expect(request?.searchParams.get("columns")).toBe("member,state,registeredAt,origin");
   });
+
+  it("registrants: the member filter (memberId, E4-W08 #10) reaches the export", async () => {
+    const registrants = BUTTONS.find((button) => button.listKey === "activity-registrations");
+    if (registrants === undefined) throw new TypeError("Expected the registrants button");
+    await renderButton({
+      ...registrants,
+      location: `/activitats/${WORKSHOP}/inscrits?filter=memberId%3Aeq%3Amember-taller-02`,
+    });
+    await registrants.click();
+
+    await waitFor(() => {
+      expect(clickedLinks).toHaveLength(1);
+    });
+    expect(exportRequests[0]?.searchParams.getAll("filter")).toEqual([
+      `activityId:eq:${WORKSHOP}`,
+      "memberId:eq:member-taller-02",
+    ]);
+    const blob = savedBlobs[0];
+    if (blob === undefined) throw new TypeError("Expected the saved file");
+    expect(new Uint8Array(await blob.arrayBuffer())).toEqual(mockExportBody("xlsx"));
+  });
 });

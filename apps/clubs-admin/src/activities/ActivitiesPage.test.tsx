@@ -247,7 +247,10 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     await renderPage({ selectedId: TOURNAMENT });
     const card = await maintenance("Torneig d'Estiu 2026");
     const editor = within(card).getByRole("textbox", { name: "Descripció llarga (text ric)" });
-    expect(editor.innerHTML).toContain("<h3>Horaris</h3>");
+    // The editor fills its content in an effect after the maintenance renders (E3-W10 flake).
+    await waitFor(() => {
+      expect(editor.innerHTML).toContain("<h3>Horaris</h3>");
+    });
     editor.innerHTML =
       '<p onclick="x()">Cal <b>portar</b> <img src="x.png"> la <i>cartilla</i></p><script>x</script><a href="javascript:x">y</a>';
     fireEvent.input(editor);
@@ -777,5 +780,294 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
       expect(within(table).getAllByText("cancel·lada pel club")).toHaveLength(12);
     });
     expect(within(table).queryAllByRole("link")).toHaveLength(0);
+  });
+});
+
+/** Requests whose path ends with `suffix`: method, JSON body and `Idempotency-Key`. */
+function recordRequests(suffix: string) {
+  const seen: { body: unknown; key: string | null; method: string; url: URL }[] = [];
+  const listener = ({ request }: { request: Request }) => {
+    const url = new URL(request.url);
+    if (!url.pathname.endsWith(suffix)) return;
+    const entry = {
+      body: undefined as unknown,
+      key: request.headers.get("Idempotency-Key"),
+      method: request.method,
+      url,
+    };
+    seen.push(entry);
+    if (request.method !== "GET") {
+      void request
+        .clone()
+        .json()
+        .then(
+          (body: unknown) => {
+            entry.body = body;
+          },
+          () => undefined,
+        );
+    }
+  };
+  server.events.on("request:start", listener);
+  return {
+    seen,
+    stop: () => {
+      server.events.removeListener("request:start", listener);
+    },
+  };
+}
+
+async function renderRegistrantsPage(activityId: string, search = "") {
+  window.history.replaceState(null, "", `/activitats/${activityId}/inscrits${search}`);
+  const i18n = await createI18n({
+    branding,
+    browserLanguages: ["ca"],
+    initialNamespaces: ["admin-activities", "census", "enums", "errors"],
+    storage: undefined,
+  });
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <ActivityRegistrantsPage
+          activityId={activityId}
+          client={client()}
+          onNavigate={vi.fn()}
+          readOnly={false}
+        />
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+}
+
+/** Opens the universal list's `<details>` menu whose summary starts with `name`. */
+function menu(name: string) {
+  const summary = [...document.querySelectorAll("summary")].find((element) =>
+    element.textContent.trim().startsWith(name),
+  );
+  const details = summary?.parentElement;
+  if (summary === undefined || !(details instanceof HTMLElement)) {
+    throw new TypeError(`Missing the menu ${name}`);
+  }
+  fireEvent.click(summary);
+  return details;
+}
+
+describe("E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
+  it("R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost", async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let held = 0;
+    server.use(
+      http.patch("*/api/v1/activities/:id", async () => {
+        held += 1;
+        if (held === 1) await gate;
+        return undefined;
+      }),
+    );
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    const editor = within(card).getByRole("textbox", { name: "Descripció llarga (text ric)" });
+    await waitFor(() => {
+      expect(editor.innerHTML).toContain("<h3>Horaris</h3>");
+    });
+    expect(editor).toHaveAttribute("contenteditable", "true");
+    editor.innerHTML = "<p>Abans de desar</p>";
+    fireEvent.input(editor);
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+
+    // While the PATCH is pending the editor refuses input (aria-readonly), toolbar included.
+    await waitFor(() => {
+      expect(editor).toHaveAttribute("contenteditable", "false");
+    });
+    expect(editor).toHaveAttribute("aria-readonly", "true");
+    for (const tool of within(
+      within(card).getByRole("toolbar", { name: "Format del text" }),
+    ).getAllByRole("button")) {
+      expect(tool).toBeDisabled();
+    }
+    editor.innerHTML = "<p>Escrit durant el desat</p>";
+    fireEvent.input(editor);
+    expect(editor.innerHTML).toBe("<p>Abans de desar</p>");
+
+    release();
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    expect(editor).toHaveAttribute("contenteditable", "true");
+    expect(editor).not.toHaveAttribute("aria-readonly");
+    expect(editor.innerHTML).toBe("<p>Abans de desar</p>");
+    expect(patchBodies).toHaveLength(1);
+    expect(patchBodies[0]).toMatchObject({ longDescription: { ca: "<p>Abans de desar</p>" } });
+    expect(within(card).getByRole("button", { name: "DESA" })).toBeDisabled();
+
+    // Typing again after the save is kept and sent.
+    editor.innerHTML = "<p>Després del desat</p>";
+    fireEvent.input(editor);
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+    await waitFor(() => {
+      expect(patchBodies).toHaveLength(2);
+    });
+    expect(patchBodies[1]).toMatchObject({ longDescription: { ca: "<p>Després del desat</p>" } });
+  });
+
+  it("R-07-14 an INSTRUCTOR (403 on /parameters) of a club without levels sees no «Nivells» on an activity without levels", async () => {
+    const parameters = recordRequests("/parameters/levels.enabled");
+    mockScenario("activitiesInstructorNoLevels");
+    await renderPage({ readOnly: true, selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    await waitFor(() => {
+      expect(parameters.seen).toHaveLength(1);
+    });
+    await waitFor(() => {
+      expect(within(card).queryByText(/^Nivells:/u)).toBeNull();
+    });
+    parameters.stop();
+  });
+
+  it("R-07-14 an INSTRUCTOR sees «Nivells» when the activity itself has levels (the D4 rule)", async () => {
+    const seminar = await client().GET("/activities/{id}", {
+      params: { path: { id: "activity-seminari-handling" } },
+    });
+    await client().PATCH("/activities/{id}", {
+      body: { levelIds: ["level-a", "level-b"], version: seminar.data?.version ?? 0 },
+      params: { path: { id: "activity-seminari-handling" } },
+    });
+    mockScenario("instructor");
+    await renderPage({ readOnly: true, selectedId: "activity-seminari-handling" });
+    const card = await maintenance("Seminari de handling");
+    expect(await within(card).findByText("Nivells: A, B")).toBeVisible();
+  });
+
+  it("R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00", async () => {
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    const start = within(card).getByLabelText("Hora d'inici");
+    await waitFor(() => {
+      expect(within(start).getByRole("option", { name: "0:00" })).toBeInTheDocument();
+    });
+    expect(within(start).getByRole("option", { name: "6:00" })).toBeInTheDocument();
+    expect(within(start).getByRole("option", { name: "23:50" })).toBeInTheDocument();
+    fireEvent.change(start, { target: { value: "06:00" } });
+    expect(start).toHaveValue("06:00");
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    expect(patchBodies).toEqual([{ startTime: "06:00", version: 1 }]);
+    cleanup();
+
+    // At the club with linked rings the ring blocks keep the opening hours (7:00–22:00).
+    await renderPage({ selectedId: TOURNAMENT });
+    const club = await maintenance("Torneig d'Estiu 2026");
+    const clubStart = within(club).getByLabelText("Hora d'inici");
+    await waitFor(() => {
+      expect(within(clubStart).getByRole("option", { name: "7:00" })).toBeInTheDocument();
+    });
+    expect(within(clubStart).queryByRole("option", { name: "6:00" })).toBeNull();
+  });
+
+  it("R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text", async () => {
+    let previews = 0;
+    server.use(
+      http.get("*/api/v1/activities/:id/cancellation-preview", () => {
+        previews += 1;
+        // Nobody was registered when the modal opened; 22 registered before the confirmation.
+        return previews === 1
+          ? HttpResponse.json({ activeCount: 0, registrations: [], waitingCount: 0 })
+          : undefined;
+      }),
+    );
+    const cancellations = recordRequests(`/activities/${TOURNAMENT}/cancellation`);
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    fireEvent.click(within(card).getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }));
+    const simple = await screen.findByRole("dialog", { name: "Vols cancel·lar l'activitat?" });
+    fireEvent.click(within(simple).getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }));
+
+    const modal = await screen.findByRole("dialog", {
+      name: "Cancel·lar l'activitat — Torneig d'Estiu 2026",
+    });
+    expect(previews).toBe(2);
+    const text = within(modal).getByLabelText("Text de l'avís");
+    expect(text).toHaveAccessibleDescription("Cal escriure el text de l'avís per als alumnes.");
+    expect(within(modal).getAllByRole("row")).toHaveLength(22);
+    fireEvent.change(text, { target: { value: "Pluja forta: pistes tancades" } });
+    fireEvent.click(
+      within(modal).getByRole("button", { name: "CANCEL·LA I AVISA ELS 22 INSCRITS" }),
+    );
+    expect(await screen.findByText("Activitat cancel·lada")).toBeVisible();
+    await waitFor(() => {
+      expect(cancellations.seen.map((request) => request.body)).toEqual([
+        { reason: "CLUB_MANUAL" },
+        { adminText: "Pluja forta: pistes tancades", reason: "CLUB_MANUAL" },
+      ]);
+    });
+    const [first, second] = cancellations.seen;
+    expect(first?.key).not.toBe(second?.key);
+    cancellations.stop();
+  });
+
+  it("S07 §6 the registrants filter by member (memberId): values from the registrants, the name in the chip, saved views and the URL", async () => {
+    const registrants = await client().GET("/activities/{id}/registrations", {
+      params: { path: { id: WORKSHOP } },
+    });
+    const member = registrants.data?.items[1]?.member;
+    if (member === undefined) throw new TypeError("Missing the second registrant");
+    const label = `${member.fullName} · ${member.memberNumber}`;
+    const lists = recordRequests(`/activities/${WORKSHOP}/registrations`);
+    const views = recordRequests("/saved-views");
+    await renderRegistrantsPage(WORKSHOP);
+    const table = await screen.findByRole("table");
+    await within(table).findByText(label);
+
+    const filters = menu("Filtre");
+    const field = within(filters).getByLabelText("Columna");
+    expect(
+      within(field)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["Estat", "Origen", "Data d'inscripció", "Abonat"]);
+    fireEvent.change(field, { target: { value: "memberId" } });
+    const value = within(filters).getByLabelText("Valor");
+    await waitFor(() => {
+      expect(within(value).getByRole("option", { name: `${label} (1)` })).toBeInTheDocument();
+    });
+    fireEvent.change(value, { target: { value: member.id } });
+    fireEvent.click(within(filters).getByRole("button", { name: "Afegeix el filtre" }));
+
+    await waitFor(() => {
+      expect(lists.seen.map((request) => request.url.searchParams.getAll("filter"))).toContainEqual(
+        [`memberId:eq:${member.id}`],
+      );
+    });
+    await waitFor(() => {
+      expect(within(table).getAllByRole("row")).toHaveLength(2);
+    });
+    expect(filters.querySelector("summary")).toHaveTextContent(`Filtre (1): Abonat = «${label}»`);
+    expect(within(filters).getByText(`Abonat = «${label}»`)).toBeVisible();
+    expect(new URLSearchParams(window.location.search).getAll("filter")).toEqual([
+      `memberId:eq:${member.id}`,
+    ]);
+
+    // Saved view: the filter is stored with the view.
+    const viewsMenu = menu("Vistes");
+    fireEvent.change(within(viewsMenu).getByLabelText("Nom de la vista"), {
+      target: { value: "Només un abonat" },
+    });
+    fireEvent.click(within(viewsMenu).getByRole("button", { name: "Desa la vista" }));
+    await waitFor(() => {
+      expect(views.seen.find((request) => request.method === "POST")?.body).toMatchObject({
+        filters: [{ field: "memberId", op: "eq", value: member.id }],
+        listKey: "activity-registrations",
+      });
+    });
+    cleanup();
+
+    // The URL (reload or shared link): the filter and its member label come back.
+    await renderRegistrantsPage(WORKSHOP, `?filter=memberId%3Aeq%3A${member.id}`);
+    expect(await screen.findByText(`Abonat = «${label}»`)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(2);
+    });
+    lists.stop();
+    views.stop();
   });
 });

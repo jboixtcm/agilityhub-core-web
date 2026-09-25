@@ -10,16 +10,23 @@ import { type CancellationPreview, errorCode, useActivityErrorMessage } from "./
  * R-07-06 (D4c pattern): with registrants or a waitlist, the list from the cancellation
  * preview and the required notice text (1–500) — [CANCEL·LA I AVISA ELS {n} INSCRITS] stays
  * disabled without it; without anyone, a simple confirmation. Mounted only while open.
+ *
+ * Someone may register between the preview and the confirmation: the api then answers
+ * `ADMIN_TEXT_REQUIRED`, the preview is fetched again (`onRefreshPreview`) and the notice field
+ * shows with the error, even if the fresh preview still reads empty.
  */
 export function CancelActivityModal({
   onClose,
   onConfirm,
+  onRefreshPreview,
   preview,
   reason = "CLUB_MANUAL",
   title,
 }: {
   onClose: () => void;
   onConfirm: (adminText: string | undefined) => Promise<void>;
+  /** Fetches `GET …/cancellation-preview` again and passes the fresh one as `preview`. */
+  onRefreshPreview?: () => Promise<void>;
   preview: CancellationPreview;
   /** `DELETED` = [ELIMINA] of a draft (simple confirmation, R-07-04). */
   reason?: "CLUB_MANUAL" | "DELETED";
@@ -30,15 +37,22 @@ export function CancelActivityModal({
   const [text, setText] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<{ field: boolean; message: string }>();
+  const [textRequired, setTextRequired] = useState(false);
   const count = preview.activeCount + preview.waitingCount;
+  const askText = count > 0 || textRequired;
 
   const confirm = async () => {
     setPending(true);
     setError(undefined);
     try {
-      await onConfirm(count > 0 ? text.trim() : undefined);
+      await onConfirm(askText ? text.trim() : undefined);
     } catch (cause) {
-      setError({ field: errorCode(cause) === "ADMIN_TEXT_REQUIRED", message: errorMessage(cause) });
+      const missingText = errorCode(cause) === "ADMIN_TEXT_REQUIRED";
+      if (missingText && !askText) {
+        await onRefreshPreview?.().catch(() => undefined);
+        setTextRequired(true);
+      }
+      setError({ field: missingText, message: errorMessage(cause) });
       setPending(false);
     }
   };
@@ -49,7 +63,7 @@ export function CancelActivityModal({
     </Button>
   );
 
-  if (count === 0) {
+  if (!askText) {
     return (
       <Modal
         closeLabel={t("admin-activities:common.close")}
@@ -83,58 +97,70 @@ export function CancelActivityModal({
     );
   }
 
+  const fieldError = error?.field === true ? error.message : undefined;
   return (
     <Modal
       closeLabel={t("admin-activities:common.close")}
       onClose={onClose}
       open
-      title={t("admin-activities:cancelModal.title", { title })}
+      title={
+        count > 0
+          ? t("admin-activities:cancelModal.title", { title })
+          : t("admin-activities:cancelModal.simpleTitle")
+      }
     >
       <div className="activity-cancel">
-        <p className="activity-cancel__intro">
-          <Emphasized
-            phrase={t("admin-activities:cancelModal.introCount", { count })}
-            text={t("admin-activities:cancelModal.intro", { count })}
-          />
-        </p>
-        <table
-          aria-label={t("admin-activities:cancelModal.listLabel")}
-          className="activity-cancel__list"
-        >
-          <tbody>
-            {preview.registrations.map((registration) => (
-              <tr key={registration.registrationId}>
-                <th scope="row">
-                  <strong>{registration.memberName}</strong>
-                </th>
-                <td>
-                  <Badge tone={registration.state === "WAITLISTED" ? "warning" : "success"}>
-                    {t(`enums:activityRegistrationState.${registration.state}`)}
-                  </Badge>
-                </td>
-                <td className="activity-cancel__channels">
-                  {registration.channels
-                    .map((channel) =>
-                      channel === "SMS" && registration.phoneCount > 1
-                        ? t("admin-activities:cancelModal.smsPhones", {
-                            count: registration.phoneCount,
-                          })
-                        : t(`admin-activities:cancelModal.channel.${channel}`, {
-                            defaultValue: channel,
-                          }),
-                    )
-                    .join(t("admin-activities:cancelModal.channelSeparator"))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {count > 0 ? (
+          <>
+            <p className="activity-cancel__intro">
+              <Emphasized
+                phrase={t("admin-activities:cancelModal.introCount", { count })}
+                text={t("admin-activities:cancelModal.intro", { count })}
+              />
+            </p>
+            <table
+              aria-label={t("admin-activities:cancelModal.listLabel")}
+              className="activity-cancel__list"
+            >
+              <tbody>
+                {preview.registrations.map((registration) => (
+                  <tr key={registration.registrationId}>
+                    <th scope="row">
+                      <strong>{registration.memberName}</strong>
+                    </th>
+                    <td>
+                      <Badge tone={registration.state === "WAITLISTED" ? "warning" : "success"}>
+                        {t(`enums:activityRegistrationState.${registration.state}`)}
+                      </Badge>
+                    </td>
+                    <td className="activity-cancel__channels">
+                      {registration.channels
+                        .map((channel) =>
+                          channel === "SMS" && registration.phoneCount > 1
+                            ? t("admin-activities:cancelModal.smsPhones", {
+                                count: registration.phoneCount,
+                              })
+                            : t(`admin-activities:cancelModal.channel.${channel}`, {
+                                defaultValue: channel,
+                              }),
+                        )
+                        .join(t("admin-activities:cancelModal.channelSeparator"))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        ) : null}
         <FormField
-          {...(error?.field === true ? { error: error.message } : {})}
+          {...(fieldError === undefined ? {} : { error: fieldError })}
           id="activity-cancel-text"
           label={t("admin-activities:cancelModal.text")}
         >
           <Textarea
+            aria-describedby={fieldError === undefined ? undefined : "activity-cancel-text-error"}
+            aria-invalid={fieldError === undefined ? undefined : true}
+            disabled={pending}
             id="activity-cancel-text"
             maxLength={500}
             onChange={(event) => {
@@ -160,7 +186,9 @@ export function CancelActivityModal({
             variant="danger"
           >
             <Icon aria-hidden="true" name="x" />
-            {t("admin-activities:cancelModal.confirm", { count })}
+            {count > 0
+              ? t("admin-activities:cancelModal.confirm", { count })
+              : t("admin-activities:cancelModal.simpleConfirm")}
           </Button>
         </div>
       </div>

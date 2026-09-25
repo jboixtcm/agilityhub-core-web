@@ -13,7 +13,7 @@ import {
   readUniversalListState,
   universalListSearchParams,
 } from "@agilityhub/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useListExport } from "../audit/useListExport";
@@ -27,7 +27,58 @@ interface ListData {
   totalPages: number;
 }
 
+type RegistrantMember = ActivityRegistrationListItem["member"];
+
 const DEFAULT_COLUMNS = ["member", "state", "registeredAt", "origin", "contact"];
+// The api's largest page: an activity's registrants fit in one (≤ 1000 rows).
+const MEMBER_VALUES_SIZE = 1000;
+
+/**
+ * Values of the `memberId` filter (S07 §6): the members registered to this activity, with their
+ * number of registrations, read once from the list itself (there is no filter-values endpoint
+ * for registrants). Loaded when the filter is offered or already applied (URL, saved view).
+ */
+function useRegistrantMembers(client: ApiClient, activityId: string, needed: boolean) {
+  type Values = { count: number; member: RegistrantMember }[];
+  const [members, setMembers] = useState<{ activityId: string; values: Values }>();
+  const request = useRef<{ activityId: string; promise: Promise<Values> } | undefined>(undefined);
+  const load = useCallback(() => {
+    if (request.current?.activityId === activityId) return request.current.promise;
+    const promise = client
+      .GET("/activities/{id}/registrations", {
+        params: {
+          path: { id: activityId },
+          query: { size: MEMBER_VALUES_SIZE, sort: ["memberLastName,asc"] },
+        },
+      })
+      .then(
+        (response) => {
+          const counted = new Map<string, { count: number; member: RegistrantMember }>();
+          for (const item of response.data?.items ?? []) {
+            const known = counted.get(item.member.id);
+            counted.set(item.member.id, {
+              count: (known?.count ?? 0) + 1,
+              member: item.member,
+            });
+          }
+          const values = [...counted.values()];
+          setMembers({ activityId, values });
+          return values;
+        },
+        (error: unknown) => {
+          if (request.current?.promise === promise) request.current = undefined;
+          throw error;
+        },
+      );
+    request.current = { activityId, promise };
+    return promise;
+  }, [activityId, client]);
+  useEffect(() => {
+    if (needed) void load().catch(() => undefined);
+  }, [load, needed]);
+  // Another activity's late answer never names this one's members.
+  return { load, members: members?.activityId === activityId ? members.values : undefined };
+}
 
 function filterValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
@@ -87,6 +138,11 @@ export function ActivityRegistrantsPage({
     }));
   }, []);
   const savedViews = useSavedViews(client, "activity-registrations", applyView);
+  const { load: loadMembers, members } = useRegistrantMembers(
+    client,
+    activityId,
+    state.filters.some((filter) => filter.field === "memberId"),
+  );
 
   useEffect(() => {
     let current = true;
@@ -256,12 +312,68 @@ export function ActivityRegistrantsPage({
     views: t("census:list.views"),
   };
 
-  const stateOptions = [
-    { label: t("admin-activities:registrants.statuses.all"), value: "" },
-    { label: t("enums:activityRegistrationState.ACTIVE"), value: "ACTIVE" },
-    { label: t("enums:activityRegistrationState.WAITLISTED"), value: "WAITLISTED" },
-    { label: t("enums:activityRegistrationState.CANCELLED"), value: "CANCELLED" },
-  ];
+  const stateOptions = useMemo(
+    () => [
+      { label: t("admin-activities:registrants.statuses.all"), value: "" },
+      { label: t("enums:activityRegistrationState.ACTIVE"), value: "ACTIVE" },
+      { label: t("enums:activityRegistrationState.WAITLISTED"), value: "WAITLISTED" },
+      { label: t("enums:activityRegistrationState.CANCELLED"), value: "CANCELLED" },
+    ],
+    [t],
+  );
+  const memberLabel = useCallback(
+    (member: RegistrantMember) =>
+      t("admin-activities:registrants.member", {
+        name: member.fullName,
+        number: member.memberNumber,
+      }),
+    [t],
+  );
+
+  // Stable, so the list does not reload the values (and reset the picked one) on every render.
+  const loadFilterValues = useCallback(
+    (field: string): Promise<{ count: number; label: string; value: string }[]> => {
+      if (field === "memberId") {
+        return loadMembers().then((values) =>
+          values.map(({ count, member }) => ({
+            count,
+            label: memberLabel(member),
+            value: member.id,
+          })),
+        );
+      }
+      return Promise.resolve(
+        field === "state"
+          ? stateOptions
+              .filter((option) => option.value !== "")
+              .map((option) => ({ count: 0, ...option }))
+          : field === "origin"
+            ? (["APP", "BACKOFFICE"] as const).map((value) => ({
+                count: 0,
+                label: t(`enums:activityOrigin.${value}`),
+                value,
+              }))
+            : [],
+      );
+    },
+    [loadMembers, memberLabel, stateOptions, t],
+  );
+
+  /** The chip of an applied filter: the member's name for `memberId`, the state's label. */
+  const valueLabel = (field: string, value: string): string => {
+    if (field === "memberId") {
+      return value
+        .split(",")
+        .map((id) => {
+          const member =
+            members?.find((entry) => entry.member.id === id)?.member ??
+            data?.items.find((item) => item.member.id === id)?.member;
+          return member === undefined ? id : memberLabel(member);
+        })
+        .join(t("admin-activities:registrants.memberSeparator"));
+    }
+    return stateOptions.find((option) => option.value === value)?.label ?? value;
+  };
 
   // The list's `q`, filters and sort (CONVENCIONS_API §4) within this activity; `contact` is not an
   // export column of `activity-registrations`.
@@ -308,9 +420,7 @@ export function ActivityRegistrantsPage({
           }),
           operator: filter.op,
           value: filterValue(filter.value),
-          valueLabel:
-            stateOptions.find((option) => option.value === filterValue(filter.value))?.label ??
-            filterValue(filter.value),
+          valueLabel: valueLabel(filter.field, filterValue(filter.value)),
         }))}
         caption={t("admin-activities:registrants.caption")}
         columns={columns}
@@ -326,24 +436,16 @@ export function ActivityRegistrantsPage({
             label: t("admin-activities:registrants.filters.registeredAt"),
             type: "date",
           },
+          {
+            key: "memberId",
+            label: t("admin-activities:registrants.filters.memberId"),
+            operators: ["eq", "ne"],
+            type: "relation",
+          },
         ]}
         labels={labels}
         listKey="activity-registrations"
-        loadFilterValues={(field) =>
-          Promise.resolve(
-            field === "state"
-              ? stateOptions
-                  .filter((option) => option.value !== "")
-                  .map((option) => ({ count: 0, ...option }))
-              : field === "origin"
-                ? (["APP", "BACKOFFICE"] as const).map((value) => ({
-                    count: 0,
-                    label: t(`enums:activityOrigin.${value}`),
-                    value,
-                  }))
-                : [],
-          )
-        }
+        loadFilterValues={loadFilterValues}
         loading={result.key !== key}
         onCreateView={savedViews.create}
         onDeleteView={savedViews.remove}

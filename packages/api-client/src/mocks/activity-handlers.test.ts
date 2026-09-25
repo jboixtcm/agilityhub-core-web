@@ -479,3 +479,67 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     });
   });
 });
+
+describe("E4-W08 activity mocks answer like the api (impersonation, parameters)", () => {
+  it("R-07-09/10 an impersonated cancellation without a reason is 422 VALIDATION_ERROR on reason; with it, ADMIN", async () => {
+    mockScenario("impersonated");
+    const registered = await client.POST("/activity-registrations", {
+      body: { activityId: ACTIVITY_IDS.tournament },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    });
+    expect(registered.data).toMatchObject({ origin: "BACKOFFICE", state: "ACTIVE" });
+    const id = registered.data?.id ?? "";
+
+    for (const body of [{}, { reason: "   " }]) {
+      await expect(
+        failure(
+          client.POST("/activity-registrations/{id}/cancellation", {
+            body,
+            params: { path: { id } },
+          }),
+        ),
+      ).resolves.toEqual({
+        code: "VALIDATION_ERROR",
+        details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }] },
+        status: 422,
+      });
+    }
+    const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {
+      body: { reason: "Ho demana per telèfon" },
+      params: { path: { id } },
+    });
+    expectValid("ActivityRegistration", cancelled.data);
+    expect(cancelled.data).toMatchObject({
+      cancellation: { byRole: "ADMIN", reason: "ADMIN" },
+      state: "CANCELLED",
+    });
+  });
+
+  it("R-07-09 a member's own cancellation keeps sending {} and is recorded as MEMBER", async () => {
+    mockScenario("member");
+    const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "registration-torneig-03" } },
+    });
+    expect(cancelled.data).toMatchObject({
+      cancellation: { byRole: "MEMBER", reason: "MEMBER" },
+      state: "CANCELLED",
+    });
+  });
+
+  it("MATRIU_PERMISOS `/parameters/{key}` answers 403 FORBIDDEN to an INSTRUCTOR, the value to an ADMIN", async () => {
+    mockScenario("instructor");
+    await expect(
+      failure(client.GET("/parameters/{key}", { params: { path: { key: "levels.enabled" } } })),
+    ).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
+    mockScenario("activitiesInstructorNoLevels");
+    await expect(
+      failure(client.GET("/parameters/{key}", { params: { path: { key: "levels.enabled" } } })),
+    ).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
+    mockScenario("activitiesNoLevels");
+    const admin = await client.GET("/parameters/{key}", {
+      params: { path: { key: "levels.enabled" } },
+    });
+    expect(admin.data?.value).toBe(false);
+  });
+});

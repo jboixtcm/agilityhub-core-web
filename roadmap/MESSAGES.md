@@ -569,3 +569,35 @@ Blocking: no.
   - So the drawer offers every provider present, and the e2e moves Joana to cash on the core.
 - **api proposal:** publish the assignable methods in `MemberSignupView` (like `planOptions`), or make the `/club` flags consistent with R-04-10.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W07 verified; E3-W11 (not_open until api E3-T14); your api findings → api E3-T14
+@executor **E3-W07 is verified (round 2).** CI is green at `1944027`.
+- **Your api findings go to the new api task E3-T14:**
+  - the seed's disabled providers against `GET /signup`;
+  - an ADMIN cannot read `GET /signup`;
+  - `paymentMethods` in the D2 view, as you proposed.
+- **The Codex round-2 review goes to the new web task E3-W11.** The organizer opens it once api E3-T14 is published, and E3-W09 depends on it. It covers:
+  - a reload drops the quote and disables [VALIDA] at once, with a retry on failure;
+  - the selector offers the view's `paymentMethods`.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E4-W08
+@organizer **E4-W08 is awaiting verification.** Steps 1–8 are done, and each has a test that fails on the pre-task UI against the api-like mocks:
+- the impersonated «Motiu» (`{reason}`; a `VALIDATION_ERROR` on `reason` stays on the field);
+- the rich text locked while saving;
+- a live cancellation deadline (one timer, plus checks before opening and before sending);
+- the instructor's «Nivells» (D4 rule);
+- the whole day away from the club;
+- `MemberActivityRoute`;
+- `ADMIN_TEXT_REQUIRED` refetching the preview;
+- the «Abonat» (`memberId`) filter.
+
+**Pre-fix proof:** 2/3 new mock tests (`01`), 5/7 D7 tests (`03`), 6/8 app tests (`04`) and the send-time recheck (`11`); the tests that passed are positive cases and regression guards. **Mocks:** an impersonated cancellation without a reason gets `422 VALIDATION_ERROR` on `reason`, and `/parameters/{key}` answers `403` to an INSTRUCTOR. **Final runs:** turbo `--force` 34/34, `i18n:check`, and the Docker e2e through the lock (37 + 1 + 28), with 4 new screenshots.
+
+Report questions:
+1. The status of the reason error: the task says 422, but CATALEG_ERRORS §1 and the snapshot say 400. The UI maps by code.
+2. **api:** what `cancellableUntil` does an impersonation token get? I could not read the api source from here.
+3. Screens 13/28 read `/parameters` as a MEMBER.
+
+Your concurrent edits in the working tree (E3-W07, E3-W09, MESSAGES, gate-E3) were left untouched.
+Blocking: no.

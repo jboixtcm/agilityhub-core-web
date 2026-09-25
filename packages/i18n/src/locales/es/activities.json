@@ -42,7 +42,10 @@
     "waitlisted": "Estás en la lista de espera",
     "cancelled": "Inscripción anulada",
     "left": "Has salido de la lista de espera",
-    "error": "No se ha podido completar la acción. Inténtalo de nuevo."
+    "error": "No se ha podido completar la acción. Inténtalo de nuevo.",
+    "reason": "Motivo",
+    "reasonHelp": "Anulas en nombre del abonado: el motivo queda registrado.",
+    "reasonInvalid": "Escribe el motivo de la anulación (hasta {max} caracteres)."
   },
   "rows": {
     "sectionTitle": "Mis reservas",

@@ -38,6 +38,7 @@ type ActivityImageRequest = components["schemas"]["ActivityImageRequest"];
 type ActivityDocumentRequest = components["schemas"]["ActivityDocumentRequest"];
 type ActivityCancellationRequest = components["schemas"]["ActivityCancellationRequest"];
 type ActivityRegistrationRequest = components["schemas"]["ActivityRegistrationRequest"];
+type RegistrationCancellationRequest = components["schemas"]["RegistrationCancellationRequest"];
 interface PublicationRequest {
   adminText?: string | null;
   cancelBookings?: boolean;
@@ -924,7 +925,7 @@ export const activityHandlers = [
     }
     return HttpResponse.json(registrationResource(registration, activity, readerLocale(request)));
   }),
-  http.post("*/api/v1/activity-registrations/:id/cancellation", ({ params, request }) => {
+  http.post("*/api/v1/activity-registrations/:id/cancellation", async ({ params, request }) => {
     const disabled = moduleDisabled();
     if (disabled !== undefined) return disabled;
     const registration = activityState.registrations.find((item) => item.id === String(params.id));
@@ -938,6 +939,15 @@ export const activityHandlers = [
     }
     if (registration.state === "CANCELLED")
       return apiError("INVALID_STATE", "Already cancelled", 409);
+    // R-07-09/10: under impersonation the admin cancels «as the member» with a required reason
+    // (the api's `CancellationDeadline.check`: 422 VALIDATION_ERROR on `reason`).
+    const impersonated = currentMockScenario().me.impersonation !== undefined;
+    const body = (await request.json().catch(() => ({}))) as RegistrationCancellationRequest;
+    if (impersonated && (body.reason ?? "").trim() === "") {
+      return apiError("VALIDATION_ERROR", "Reason required", 422, {
+        fieldErrors: [{ code: "REQUIRED", field: "reason" }],
+      });
+    }
     if (Date.now() >= Date.parse(startsAt(activity))) {
       return apiError("REGISTRATION_NOT_CANCELLABLE", "Registration not cancellable", 422, {
         deadline: startsAt(activity),
@@ -945,9 +955,9 @@ export const activityHandlers = [
     }
     const wasActive = registration.state === "ACTIVE";
     registration.state = "CANCELLED";
-    registration.cancelReason = "MEMBER";
+    registration.cancelReason = impersonated ? "ADMIN" : "MEMBER";
     registration.cancelledAt = new Date().toISOString();
-    registration.cancelledBy = "MEMBER";
+    registration.cancelledBy = impersonated ? "ADMIN" : "MEMBER";
     registration.position = null;
     if (wasActive) promote(activity);
     return HttpResponse.json(registrationResource(registration, activity, readerLocale(request)));

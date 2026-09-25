@@ -301,6 +301,13 @@ const scenarios = {
     },
     sessions: accountSessions,
   },
+  /** `levels.enabled = false` read by an INSTRUCTOR, who cannot read `/parameters` (403). */
+  activitiesInstructorNoLevels: {
+    branding: canic,
+    levelsEnabled: false,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
   signupClosed: {
     branding: {
       ...canic,

@@ -42,7 +42,10 @@
     "waitlisted": "You are on the waiting list",
     "cancelled": "Registration cancelled",
     "left": "You left the waiting list",
-    "error": "The action could not be completed. Try again."
+    "error": "The action could not be completed. Try again.",
+    "reason": "Reason",
+    "reasonHelp": "You are cancelling on the member's behalf: the reason is recorded.",
+    "reasonInvalid": "Write the reason for the cancellation (up to {max} characters)."
   },
   "rows": {
     "sectionTitle": "My bookings",

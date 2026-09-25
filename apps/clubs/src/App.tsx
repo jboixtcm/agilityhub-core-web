@@ -85,7 +85,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 25.
   { path: "/historic" },
-  // Activity detail (S07 §2, no mockup; ACTIVITIES through `moduleUi`).
+  // Activity detail (S07 §2, no mockup; ACTIVITIES through `moduleUi`): MEMBER and impersonated
+  // sessions only (`MemberActivityRoute`).
   { path: "/activitats/:id" },
   // Screen 30.
   { path: "/info" },
@@ -1101,6 +1102,26 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
   );
 }
 
+/**
+ * `/activitats/:id` (S07 §6): `/me/activities/*` is MEMBER only, and an impersonation token acts
+ * as the member (MATRIU_PERMISOS). Any other session takes the usual `RequireRole` path; the
+ * module gate follows (AGENTS rule 3).
+ */
+function MemberActivityRoute({ activityId, client }: { activityId: string; client: ApiClient }) {
+  const { me } = useSession();
+  const impersonated = me?.impersonation !== undefined;
+  const page = (
+    <RequireModule module="ACTIVITIES">
+      <ActivityDetailPage activityId={activityId} client={client} impersonated={impersonated} />
+    </RequireModule>
+  );
+  return impersonated ? (
+    <RequireAuth>{page}</RequireAuth>
+  ) : (
+    <RequireRole roles={["MEMBER"]}>{page}</RequireRole>
+  );
+}
+
 function LegacyAccessRedirect() {
   useEffect(() => {
     window.location.replace("/entrar");
@@ -1241,15 +1262,11 @@ export function App({
         <OverviewPage client={apiClient} />
       </RequireRole>
     ) : route.path === "/activitats/:id" ? (
-      <RequireAuth>
-        <RequireModule module="ACTIVITIES">
-          <ActivityDetailPage
-            activityId={safeDecode(pathname.split("/")[2] ?? "")}
-            client={apiClient}
-            key={pathname}
-          />
-        </RequireModule>
-      </RequireAuth>
+      <MemberActivityRoute
+        activityId={safeDecode(pathname.split("/")[2] ?? "")}
+        client={apiClient}
+        key={pathname}
+      />
     ) : pathname === "/reservar" ? (
       // Screen 04 placeholder with the S07 block; E5 (S08) owns the page.
       <RequireAuth>

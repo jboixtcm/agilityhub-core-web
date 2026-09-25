@@ -59,6 +59,11 @@ export interface RichTextEditorProps {
   labels: RichTextEditorLabels;
   onChange: (html: string) => void;
   value: string;
+  /**
+   * The form is saving: the content is read-only (`aria-readonly`) and the toolbar stays in place
+   * but disabled, so nothing can be typed that the saved answer would then overwrite.
+   */
+  busy?: boolean;
   describedBy?: string;
   placeholder?: string;
   readOnly?: boolean;
@@ -92,6 +97,7 @@ function runCommand(command: string, value?: string): void {
  * No runtime dependency.
  */
 export function RichTextEditor({
+  busy = false,
   describedBy,
   id,
   label,
@@ -101,6 +107,7 @@ export function RichTextEditor({
   readOnly = false,
   value,
 }: RichTextEditorProps) {
+  const locked = readOnly || busy;
   const editorRef = useRef<HTMLDivElement>(null);
   const lastEmitted = useRef<string | undefined>(undefined);
   const savedRange = useRef<Range | undefined>(undefined);
@@ -126,6 +133,11 @@ export function RichTextEditor({
   const emit = () => {
     const editor = editorRef.current;
     if (editor === null) return;
+    if (locked) {
+      // Input that reached a locked editor anyway is refused: the content stays the value.
+      editor.innerHTML = sanitizeRichText(value);
+      return;
+    }
     const html = serializeRichText(editor);
     const text = editor.textContent.trim();
     setEmpty(text === "");
@@ -140,7 +152,7 @@ export function RichTextEditor({
   };
 
   const apply = (tool: RichTextTool) => {
-    if (readOnly) return;
+    if (locked) return;
     if (tool === "link") {
       const selection = window.getSelection();
       savedRange.current =
@@ -157,6 +169,7 @@ export function RichTextEditor({
   };
 
   const applyLink = () => {
+    if (locked) return;
     const href = safeRichTextHref(linkValue);
     if (href === undefined) {
       setLinkError(true);
@@ -175,6 +188,7 @@ export function RichTextEditor({
 
   const paste = (event: ClipboardEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (locked) return;
     const html = event.clipboardData.getData("text/html");
     const text = event.clipboardData.getData("text/plain");
     if (html !== "") {
@@ -196,7 +210,10 @@ export function RichTextEditor({
   };
 
   return (
-    <div className={`ah-rich-text-editor${readOnly ? " ah-rich-text-editor--read-only" : ""}`}>
+    <div
+      aria-busy={busy || undefined}
+      className={`ah-rich-text-editor${readOnly ? " ah-rich-text-editor--read-only" : ""}`}
+    >
       {readOnly ? null : (
         <div
           aria-controls={id}
@@ -208,6 +225,7 @@ export function RichTextEditor({
             <button
               aria-label={labels.tools[tool].label}
               className={`ah-rich-text-editor__tool ah-rich-text-editor__tool--${tool}`}
+              disabled={busy}
               key={tool}
               onClick={() => {
                 apply(tool);
@@ -234,6 +252,7 @@ export function RichTextEditor({
             aria-describedby={linkError ? `${linkInputId}-error` : undefined}
             aria-invalid={linkError || undefined}
             className="ah-input"
+            disabled={busy}
             id={linkInputId}
             onChange={(event) => {
               setLinkValue(event.currentTarget.value);
@@ -245,7 +264,12 @@ export function RichTextEditor({
             type="url"
             value={linkValue}
           />
-          <button className="ah-button ah-button--secondary" onClick={applyLink} type="button">
+          <button
+            className="ah-button ah-button--secondary"
+            disabled={busy}
+            onClick={applyLink}
+            type="button"
+          >
             <span className="ah-button__content">{labels.linkApply}</span>
           </button>
           <button
@@ -268,15 +292,15 @@ export function RichTextEditor({
         aria-describedby={describedBy}
         aria-label={label}
         aria-multiline="true"
-        aria-readonly={readOnly || undefined}
+        aria-readonly={locked || undefined}
         className="ah-input ah-rich-text ah-rich-text-editor__content"
-        contentEditable={!readOnly}
+        contentEditable={!locked}
         data-empty={empty || undefined}
         data-placeholder={placeholder}
         id={id}
-        onBlur={readOnly ? undefined : emit}
+        onBlur={locked ? undefined : emit}
         onInput={emit}
-        onPaste={readOnly ? undefined : paste}
+        onPaste={locked ? undefined : paste}
         ref={editorRef}
         role="textbox"
         suppressContentEditableWarning

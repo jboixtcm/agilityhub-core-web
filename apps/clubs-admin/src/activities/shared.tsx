@@ -108,16 +108,19 @@ export function displayUrl(url: string | null | undefined): string {
 
 export interface ActivitySettings {
   holidays: string[];
-  levelsEnabled: boolean;
+  /** `null`: the reader cannot read `/parameters` (INSTRUCTOR, 403 — MATRIU_PERMISOS). */
+  levelsEnabled: boolean | null;
   maxSizeMb: number;
   slotMinutes: number;
 }
 
+const PARAMETER_DENIED = Symbol("parameter denied");
+
 async function parameterValue(client: ApiClient, key: string): Promise<unknown> {
   try {
     return (await client.GET("/parameters/{key}", { params: { path: { key } } })).data?.value;
-  } catch {
-    return undefined;
+  } catch (error) {
+    return isApiError(error) && error.status === 403 ? PARAMETER_DENIED : undefined;
   }
 }
 
@@ -136,7 +139,7 @@ export async function loadActivitySettings(client: ApiClient): Promise<ActivityS
     typeof value === "number" && value > 0 ? value : fallback;
   return {
     holidays,
-    levelsEnabled: levelsEnabled !== false,
+    levelsEnabled: levelsEnabled === PARAMETER_DENIED ? null : levelsEnabled !== false,
     maxSizeMb: positive(maxSizeMb, 25),
     slotMinutes: positive(slotMinutes, 10),
   };

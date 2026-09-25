@@ -143,5 +143,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     - `202` above that, or always under the new `adminExportsQueued` scenario;
     - the rows follow the list's `q` and filters (members and dogs accept `id`, the registrants list and export apply `q`), and queued jobs turn READY with the api's file name and a binary download.
   - The real-core e2e downloads a D5 members export and checks the file name and the magic bytes.
+- D7 and the app activities, follow-ups of the E4-W04 round-2 review (E4-W08):
+  - App detail `/activitats/:id`:
+    - under impersonation the cancellation asks for «Motiu» (1–500, required) and sends `{reason}`; a `VALIDATION_ERROR` on `reason` stays on the field inside the confirmation; a member session still sends `{}` (R-07-09/10);
+    - the cancellation deadline (`cancellableUntil`, from the api) is live: one timer to the deadline turns the button into «Per anul·lar la inscripció, posa't en contacte amb el club» without a remount, and the clock is checked again before opening the confirmation and before sending it;
+    - the route is for MEMBER and impersonated sessions only (`MemberActivityRoute`); any other session takes the usual `RequireRole` path (AGENTS rule 3).
+  - D7 maintenance:
+    - `RichTextEditor` takes `busy`: while [DESA] (or another action) is pending the content is read-only (`aria-readonly`), the toolbar stays in place but disabled, and input that still reaches it is refused (R-07-04);
+    - an INSTRUCTOR, who gets 403 on `/parameters/{key}`, sees «Nivells» only when the activity itself has levels (the D4 rule of R-06-15; R-07-14);
+    - away from the club, or without linked rings, the hours offer the whole day (00:00–23:50 in `classes.slotMinutes` steps); the opening hours limit only ring blocks (R-07-05);
+    - `ADMIN_TEXT_REQUIRED` after an empty cancellation preview fetches the preview again and shows «Text de l'avís» with the error (R-07-06).
+  - Registrants: the «Abonat» filter (`memberId`, `eq`/`ne`) with the registered members as values, the member's name in the chip, kept in the URL, the saved views and the export (S07 §6). The list's filter values are loaded once and keep their identity, so the picked value is no longer reset.
+  - Mocks answer like the api: an impersonated registration cancellation without a reason is `422 VALIDATION_ERROR` on `reason` and is recorded as `ADMIN`; `GET /parameters/{key}` is `403 FORBIDDEN` to an INSTRUCTOR session (MATRIU_PERMISOS); new `activitiesInstructorNoLevels` scenario.
+  - The R-07-03 D7 test waits for the editor's content (the flake reported by E3-W10).
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

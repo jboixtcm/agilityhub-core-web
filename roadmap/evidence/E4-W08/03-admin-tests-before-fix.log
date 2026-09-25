@@ -1,0 +1,1450 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-14 an INSTRUCTOR (403 on /parameters) of a club without levels sees no «Nivells» on an activity without levels
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > S07 §6 the registrants filter by member (memberId): values from the registrants, the name in the chip, saved views and the URL
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ❯ src/activities/ActivitiesPage.test.tsx (27 tests | 5 failed | 21 skipped) 40608ms
+   ❯ E4-W08 D7 follow-ups of the E4-W04 round-2 review (6)
+     × R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost 10244ms
+     × R-07-14 an INSTRUCTOR (403 on /parameters) of a club without levels sees no «Nivells» on an activity without levels 10072ms
+     × R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00 10078ms
+     × R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text 10107ms
+     × S07 §6 the registrants filter by member (memberId): values from the registrants, the name in the chip, saved views and the URL 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"contenteditable"[32m[39m[2m, [22m[32m[32m"false"[32m[39m[2m) // element.getAttribute("contenteditable") === "false"[22m
+
+Expected the element to have attribute:
+[32m  contenteditable="false"[39m
+Received:
+[31m  contenteditable="true"[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+ ❯ src/activities/ActivitiesPage.test.tsx:882:22
+    880|     // While the PATCH is pending the editor refuses input (aria-reado…
+    881|     await waitFor(() => {
+    882|       expect(editor).toHaveAttribute("contenteditable", "false");
+       |                      ^
+    883|     });
+    884|     expect(editor).toHaveAttribute("aria-readonly", "true");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-14 an INSTRUCTOR (403 on /parameters) of a club without levels sees no «Nivells» on an activity without levels
+AssertionError: expected <summary class="activity-chip"></summary> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"in"[39m
+                    [36m>[39m
+                      [0més un de[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"nin"[39m
+                    [36m>[39m
+                      [0mno és cap de[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mValor[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"PUBLISHED"[39m
+                    [36m>[39m
+                      [0mpublicada (4)[0m
+                  ...
+
+- Expected:
+null
+
++ Received:
+<summary
+  class="activity-chip"
+>
+  Nivells: tots
+</summary>
+
+ ❯ src/activities/ActivitiesPage.test.tsx:922:54
+    920|     });
+    921|     await waitFor(() => {
+    922|       expect(within(card).queryByText(/^Nivells:/u)).toBeNull();
+       |                                                      ^
+    923|     });
+    924|     parameters.stop();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00
+TestingLibraryElementError: Unable to find role="option" and name "0:00"
+
+Ignored nodes: comments, script, style
+[36m<select[39m
+  [33mclass[39m=[32m"ah-input ah-select"[39m
+  [33mid[39m=[32m"activity-start"[39m
+[36m>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m>[39m
+    [0m—[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:00"[39m
+  [36m>[39m
+    [0m7:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:10"[39m
+  [36m>[39m
+    [0m7:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:20"[39m
+  [36m>[39m
+    [0m7:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:30"[39m
+  [36m>[39m
+    [0m7:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:40"[39m
+  [36m>[39m
+    [0m7:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:50"[39m
+  [36m>[39m
+    [0m7:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:00"[39m
+  [36m>[39m
+    [0m8:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:10"[39m
+  [36m>[39m
+    [0m8:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:20"[39m
+  [36m>[39m
+    [0m8:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:30"[39m
+  [36m>[39m
+    [0m8:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:40"[39m
+  [36m>[39m
+    [0m8:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:50"[39m
+  [36m>[39m
+    [0m8:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:00"[39m
+  [36m>[39m
+    [0m9:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:10"[39m
+  [36m>[39m
+    [0m9:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:20"[39m
+  [36m>[39m
+    [0m9:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:30"[39m
+  [36m>[39m
+    [0m9:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:40"[39m
+  [36m>[39m
+    [0m9:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:50"[39m
+  [36m>[39m
+    [0m9:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:00"[39m
+  [36m>[39m
+    [0m10:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:10"[39m
+  [36m>[39m
+    [0m10:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:20"[39m
+  [36m>[39m
+    [0m10:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:30"[39m
+  [36m>[39m
+    [0m10:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:40"[39m
+  [36m>[39m
+    [0m10:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:50"[39m
+  [36m>[39m
+    [0m10:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:00"[39m
+  [36m>[39m
+    [0m11:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:10"[39m
+  [36m>[39m
+    [0m11:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:20"[39m
+  [36m>[39m
+    [0m11:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:30"[39m
+  [36m>[39m
+    [0m11:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:40"[39m
+  [36m>[39m
+    [0m11:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:50"[39m
+  [36m>[39m
+    [0m11:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:00"[39m
+  [36m>[39m
+    [0m12:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:10"[39m
+  [36m>[39m
+    [0m12:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:20"[39m
+  [36m>[39m
+    [0m12:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:30"[39m
+  [36m>[39m
+    [0m12:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:40"[39m
+  [36m>[39m
+    [0m12:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:50"[39m
+  [36m>[39m
+    [0m12:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:00"[39m
+  [36m>[39m
+    [0m13:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:10"[39m
+  [36m>[39m
+    [0m13:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:20"[39m
+  [36m>[39m
+    [0m13:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:30"[39m
+  [36m>[39m
+    [0m13:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:40"[39m
+  [36m>[39m
+    [0m13:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:50"[39m
+  [36m>[39m
+    [0m13:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:00"[39m
+  [36m>[39m
+    [0m14:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:10"[39m
+  [36m>[39m
+    [0m14:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:20"[39m
+  [36m>[39m
+    [0m14:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:30"[39m
+  [36m>[39m
+    [0m14:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:40"[39m
+  [36m>[39m
+    [0m14:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:50"[39m
+  [36m>[39m
+    [0m14:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:00"[39m
+  [36m>[39m
+    [0m15:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:10"[39m
+  [36m>[39m
+    [0m15:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:20"[39m
+  [36m>[39m
+    [0m15:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:30"[39m
+  [36m>[39m
+    [0m15:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:40"[39m
+  [36m>[39m
+    [0m15:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:50"[39m
+  [36m>[39m
+    [0m15:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:00"[39m
+  [36m>[39m
+    [0m16:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:10"[39m
+  [36m>[39m
+    [0m16:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:20"[39m
+  [36m>[39m
+    [0m16:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:30"[39m
+  [36m>[39m
+    [0m16:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:40"[39m
+  [36m>[39m
+    [0m16:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:50"[39m
+  [36m>[39m
+    [0m16:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:00"[39m
+  [36m>[39m
+    [0m17:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:10"[39m
+  [36m>[39m
+    [0m17:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:20"[39m
+  [36m>[39m
+    [0m17:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:30"[39m
+  [36m>[39m
+    [0m17:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:40"[39m
+  [36m>[39m
+    [0m17:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:50"[39m
+  [36m>[39m
+    [0m17:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:00"[39m
+  [36m>[39m
+    [0m18:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:10"[39m
+  [36m>[39m
+    [0m18:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:20"[39m
+  [36m>[39m
+    [0m18:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:30"[39m
+  [36m>[39m
+    [0m18:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:40"[39m
+  [36m>[39m
+    [0m18:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:50"[39m
+  [36m>[39m
+    [0m18:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:00"[39m
+  [36m>[39m
+    [0m19:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:10"[39m
+  [36m>[39m
+    [0m19:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:20"[39m
+  [36m>[39m
+    [0m19:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:30"[39m
+  [36m>[39m
+    [0m19:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:40"[39m
+  [36m>[39m
+    [0m19:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:50"[39m
+  [36m>[39m
+    [0m19:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:00"[39m
+  [36m>[39m
+    [0m20:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:10"[39m
+  [36m>[39m
+    [0m20:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:20"[39m
+  [36m>[39m
+    [0m20:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:30"[39m
+  [36m>[39m
+    [0m20:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:40"[39m
+  [36m>[39m
+    [0m20:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:50"[39m
+  [36m>[39m
+    [0m20:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:00"[39m
+  [36m>[39m
+    [0m21:00[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:10"[39m
+  [36m>[39m
+    [0m21:10[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:20"[39m
+  [36m>[39m
+    [0m21:20[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:30"[39m
+  [36m>[39m
+    [0m21:30[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:40"[39m
+  [36m>[39m
+    [0m21:40[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:50"[39m
+  [36m>[39m
+    [0m21:50[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"22:00"[39m
+  [36m>[39m
+    [0m22:00[0m
+  [36m</option>[39m
+[36m</select>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/activities/ActivitiesPage.test.tsx:945:11
+    943|     const card = await maintenance("Demostració Festa Major");
+    944|     const start = within(card).getByLabelText("Hora d'inici");
+    945|     await waitFor(() => {
+       |           ^
+    946|       expect(within(start).getByRole("option", { name: "0:00" })).toBe…
+    947|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text
+TestingLibraryElementError: Unable to find role="dialog" and name "Cancel·lar l'activitat — Torneig d'Estiu 2026"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:985:32
+    983|     fireEvent.click(within(simple).getByRole("button", { name: "CANCEL…
+    984|
+    985|     const modal = await screen.findByRole("dialog", {
+       |                                ^
+    986|       name: "Cancel·lar l'activitat — Torneig d'Estiu 2026",
+    987|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E4-W08 D7 follow-ups of the E4-W04 round-2 review > S07 §6 the registrants filter by member (memberId): values from the registrants, the name in the chip, saved views and the URL
+AssertionError: expected [ 'Estat', 'Origen', …(1) ] to deeply equal [ 'Estat', 'Origen', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "Estat",
+    "Origen",
+    "Data d'inscripció",
+-   "Abonat",
+  ]
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1025:7
+    1023|         .getAllByRole("option")
+    1024|         .map((option) => option.textContent),
+    1025|     ).toEqual(["Estat", "Origen", "Data d'inscripció", "Abonat"]);
+       |       ^
+    1026|     fireEvent.change(field, { target: { value: "memberId" } });
+    1027|     const value = within(filters).getByLabelText("Valor");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 2 passed | 48 skipped (55)
+   Start at  11:13:13
+   Duration  41.88s (tests 94%, environment 2%, transform 2%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx src/audit/list-exports.test.tsx -t E4-W08

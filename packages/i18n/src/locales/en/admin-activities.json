@@ -192,6 +192,7 @@
     "error": "The registrants could not be loaded.",
     "open": "Open {name}'s record",
     "member": "{name} · {number}",
+    "memberSeparator": ", ",
     "contactSeparator": " · ",
     "waitlisted": "on the waiting list ({position})",
     "statuses": {
@@ -207,7 +208,8 @@
     "filters": {
       "state": "Status",
       "origin": "Origin",
-      "registeredAt": "Registration date"
+      "registeredAt": "Registration date",
+      "memberId": "Member"
     }
   }
 }

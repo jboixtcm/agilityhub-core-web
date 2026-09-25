@@ -192,6 +192,7 @@
     "error": "No se han podido cargar los inscritos.",
     "open": "Abrir la ficha de {name}",
     "member": "{name} · {number}",
+    "memberSeparator": ", ",
     "contactSeparator": " · ",
     "waitlisted": "en lista de espera ({position})",
     "statuses": {
@@ -207,7 +208,8 @@
     "filters": {
       "state": "Estado",
       "origin": "Origen",
-      "registeredAt": "Fecha de inscripción"
+      "registeredAt": "Fecha de inscripción",
+      "memberId": "Abonado"
     }
   }
 }

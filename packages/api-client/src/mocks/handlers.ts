@@ -1530,6 +1530,11 @@ export const handlers = [
       const key = params.key;
       const locale = request.headers.get("Accept-Language")?.split(/[-,]/u)[0] ?? "ca";
       const scenario = currentMockScenario();
+      // MATRIU_PERMISOS: parameters are ADMIN; an instructor's session gets 403 (R-06-15, R-07-14).
+      const roles = scenario.me.membership?.roles ?? [];
+      if (roles.includes("INSTRUCTOR") && !roles.includes("ADMIN")) {
+        return apiError("FORBIDDEN", "Forbidden", 403);
+      }
       const configured = findParameter(key);
       if (configured !== undefined) {
         if (

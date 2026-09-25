@@ -1,0 +1,1141 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (422) stays on the field
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (400) stays on the field
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ❯ src/App.test.tsx (21 tests | 2 failed | 18 skipped) 182ms
+   ❯ E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) (3)
+     × an instructor-only session gets the usual no-access path: no detail, no /me/activities call 114ms
+     × an impersonated session opens the detail and its cancellation asks for «Motiu» 32ms
+stderr | src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 the deadline is live: opened a minute before, the button becomes the contact text when it passes, without a remount
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ❯ src/activities/activities.test.tsx (23 tests | 4 failed | 18 skipped) 20975ms
+   ❯ E4-W08 app detail follow-ups of the E4-W04 round-2 review (5)
+     × R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (422) stays on the field 122ms
+     × R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (400) stays on the field 24ms
+     × R-07-09 the deadline is live: opened a minute before, the button becomes the contact text when it passes, without a remount 10450ms
+     × R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it) 10340ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call
+AssertionError: promise resolved "<h1></h1>" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
+- }
++ <h1>
++   Activitat
++ </h1>
+
+ ❯ src/App.test.tsx:464:6
+    462|     await expect(
+    463|       screen.findByRole("heading", { name: "Activitat" }, { timeout: 4…
+    464|     ).rejects.toThrow();
+       |      ^
+    465|     expect(screen.queryByRole("heading", { name: "Torneig d'Estiu 2026…
+    466|     expect(requests.paths).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu»
+TestingLibraryElementError: Unable to find a label with the text of: Motiu
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_1_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_1_"[39m
+    [36m>[39m
+      [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-detail__dialog"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna enrere[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mANUL·LA LA INSCRIPCIÓ[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:504:27
+    502|       name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    503|     });
+    504|     expect(within(dialog).getByLabelText("Motiu")).toBeRequired();
+       |                           ^
+    505|   });
+    506| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (422) stays on the field
+TestingLibraryElementError: Unable to find a label with the text of: Motiu
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-detail__dialog"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna enrere[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mANUL·LA LA INSCRIPCIÓ[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/activities/activities.test.tsx:525:37
+    523|         name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    524|       });
+    525|       const reason = within(dialog).getByLabelText("Motiu");
+       |                                     ^
+    526|       const confirm = within(dialog).getByRole("button", { name: "ANUL…
+    527|       expect(reason).toBeRequired();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (400) stays on the field
+TestingLibraryElementError: Unable to find a label with the text of: Motiu
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_1_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_1_"[39m
+    [36m>[39m
+      [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-detail__dialog"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna enrere[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mANUL·LA LA INSCRIPCIÓ[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/activities/activities.test.tsx:525:37
+    523|         name: "Vols anul·lar la inscripció a Torneig d'Estiu 2026?",
+    524|       });
+    525|       const reason = within(dialog).getByLabelText("Motiu");
+       |                                     ^
+    526|       const confirm = within(dialog).getByRole("button", { name: "ANUL…
+    527|       expect(reason).toBeRequired();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 the deadline is live: opened a minute before, the button becomes the contact text when it passes, without a remount
+TestingLibraryElementError: Unable to find an element with the text: Per anul·lar la inscripció, posa't en contacte amb el club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:590:25
+    588|       vi.advanceTimersByTime(61_000);
+    589|     });
+    590|     expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+       |                         ^
+    591|     expect(screen.queryByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ…
+    592|     // The same heading element: the page re-evaluated the deadline, i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it)
+TestingLibraryElementError: Unable to find an element with the text: Per anul·lar la inscripció, posa't en contacte amb el club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_3_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_3_"[39m
+            [36m>[39m
+              [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"activity-detail__dialog"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mTorna enrere[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mANUL·LA LA INSCRIPCIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_3_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_3_"[39m
+            [36m>[39m
+              [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"activity-detail__dialog"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mTorna enrere[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mANUL·LA LA INSCRIPCIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:608:25
+    606|     vi.setSystemTime(new Date("2026-08-07T16:31:00Z"));
+    607|     fireEvent.click(button);
+    608|     expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+       |                         ^
+    609|     expect(screen.queryByRole("dialog")).toBeNull();
+    610|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 2 passed | 36 skipped (44)
+   Start at  11:14:06
+   Duration  22.11s (tests 91%, environment 4%, transform 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/activities.test.tsx src/App.test.tsx -t E4-W08

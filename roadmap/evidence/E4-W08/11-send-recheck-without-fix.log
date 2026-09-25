@@ -1,0 +1,427 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 a confirmation left open past the deadline closes instead of sending
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ❯ src/activities/activities.test.tsx (24 tests | 1 failed | 23 skipped) 10953ms
+   ❯ E4-W08 app detail follow-ups of the E4-W04 round-2 review (6)
+     × R-07-09 a confirmation left open past the deadline closes instead of sending 10950ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 a confirmation left open past the deadline closes instead of sending
+TestingLibraryElementError: Unable to find an element with the text: Per anul·lar la inscripció, posa't en contacte amb el club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mAquesta inscripció ja no es pot anul·lar.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mAquesta inscripció ja no es pot anul·lar.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33mclass[39m=[32m"activity-detail__image"[39m
+        [33msrc[39m=[32m"https://files.example.test/imatge_torneig.jpg"[39m
+      [36m/>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mTorneig d'Estiu 2026[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mcompetició[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0minscrita[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mdv 7 d’agost · 18:30–20:30[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mtotes les pistes[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 d’agost[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m18 places lliures de 40[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mJornada social de tancament de l'estiu[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-rich-text activity-detail__long"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mHoraris[0m
+        [36m</h3>[39m
+        [36m<p>[39m
+          [0mRecollida de dorsals a les [0m
+          [36m<strong>[39m
+            [0m18:00[0m
+          [36m</strong>[39m
+          [0m.[0m
+        [36m</p>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [0mCategories per nivell[0m
+          [36m</li>[39m
+          [36m<li>[39m
+            [0mCal portar la cartilla[0m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"activity-documents"[39m
+        [33mclass[39m=[32m"activity-detail__documents"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"activity-documents"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h3>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"https://files.example.test/normativa.pdf"[39m
+          [33mrel[39m=[32m"noreferrer"[39m
+          [33mtarget[39m=[32m"_blank"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mnormativa.pdf[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mANUL·LA LA INSCRIPCIÓ[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:627:25
+    625|     vi.setSystemTime(new Date("2026-08-07T16:31:00Z"));
+    626|     fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·L…
+    627|     expect(await screen.findByText(CONTACT_CLUB)).toBeVisible();
+       |                         ^
+    628|     expect(screen.queryByRole("dialog")).toBeNull();
+    629|     expect(recorded.bodies).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 skipped (24)
+   Start at  11:23:59
+   Duration  11.67s (tests 94%, transform 2%, environment 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/activities.test.tsx -t left open past the deadline

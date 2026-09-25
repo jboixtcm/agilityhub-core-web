@@ -116,6 +116,8 @@ interface ConflictDialog {
   preview: RingConflicts;
 }
 
+const WHOLE_DAY = { close: "23:59", open: "00:00" };
+
 const stateTone: Readonly<Record<Activity["state"], Tone>> = {
   CANCELLED: "danger",
   DRAFT: "neutral",
@@ -710,6 +712,17 @@ export function ActivityPage({
     }
   };
 
+  /** R-07-06: someone registered after the preview (`ADMIN_TEXT_REQUIRED`): show who, fresh. */
+  const refreshCancelPreview = async () => {
+    const result = await client.GET("/activities/{id}/cancellation-preview", {
+      params: { path: { id: activity.id } },
+    });
+    const fresh = result.data;
+    if (fresh !== undefined) {
+      setCancelPreview((current) => (current === undefined ? current : fresh));
+    }
+  };
+
   const cancelActivity = async (reason: "CLUB_MANUAL" | "DELETED", adminText?: string) => {
     const body = { reason, ...(adminText === undefined ? {} : { adminText }) };
     const result = await client.POST("/activities/{id}/cancellation", {
@@ -833,8 +846,14 @@ export function ActivityPage({
   };
 
   const isoDate = parseMaskedDate(form.date);
-  const openingWindow =
-    isoDate === undefined ? { close: "22:00", open: "07:00" } : openingOf(opening, isoDate);
+  // R-07-05: only a ring block must fit the opening hours; away from the club or without linked
+  // rings the activity may be at any time of the day.
+  const blocksRings = form.atClub && form.ringIds.length > 0;
+  const openingWindow = !blocksRings
+    ? WHOLE_DAY
+    : isoDate === undefined
+      ? { close: "22:00", open: "07:00" }
+      : openingOf(opening, isoDate);
   const options = timeOptions(openingWindow.open, openingWindow.close, settings.slotMinutes);
   const withValue = (value: string) =>
     value === "" || options.includes(value) ? options : [...options, value].sort();
@@ -894,6 +913,9 @@ export function ActivityPage({
           .filter((level) => form.levelIds.includes(level.id))
           .map((level) => level.name)
           .join(t("admin-activities:form.levelSeparator"));
+  // R-07-14 with the D4 rule (R-06-15): a reader who cannot read `levels.enabled` (INSTRUCTOR)
+  // sees «Nivells» only when the activity itself has levels (the api empties them when disabled).
+  const showLevels = settings.levelsEnabled ?? baseline.levelIds.length > 0;
   const fieldError = (key: FieldKey) => (errors[key] === undefined ? {} : { error: errors[key] });
   const busy = pending !== undefined;
 
@@ -980,6 +1002,7 @@ export function ActivityPage({
                 {t("admin-activities:form.longDescription")}
               </span>
               <RichTextEditor
+                busy={busy}
                 describedBy="activity-long-label"
                 id={`activity-long-${locale}`}
                 key={locale}
@@ -1235,7 +1258,7 @@ export function ActivityPage({
                   value={form.maxPlaces}
                 />
               </FormField>
-              {settings.levelsEnabled ? (
+              {showLevels ? (
                 <details className="activity-chip-menu">
                   <summary className="activity-chip">
                     {t("admin-activities:form.levels", { levels: levelSummary })}
@@ -1543,6 +1566,7 @@ export function ActivityPage({
             setCancelPreview(undefined);
           }}
           onConfirm={(adminText) => cancelActivity("CLUB_MANUAL", adminText)}
+          onRefreshPreview={refreshCancelPreview}
           preview={cancelPreview}
           title={title}
         />

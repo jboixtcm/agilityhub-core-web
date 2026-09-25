@@ -42,7 +42,10 @@
     "waitlisted": "Ets a la llista d'espera",
     "cancelled": "Inscripció anul·lada",
     "left": "Has sortit de la llista d'espera",
-    "error": "No s'ha pogut completar l'acció. Torna-ho a provar."
+    "error": "No s'ha pogut completar l'acció. Torna-ho a provar.",
+    "reason": "Motiu",
+    "reasonHelp": "Anul·les en nom de l'abonat: el motiu queda registrat.",
+    "reasonInvalid": "Escriu el motiu de l'anul·lació (fins a {max} caràcters)."
   },
   "rows": {
     "sectionTitle": "Les meves reserves",
