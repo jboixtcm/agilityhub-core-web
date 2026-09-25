@@ -482,6 +482,12 @@
   background: color-mix(in srgb, var(--ah-color-primary) 12%, transparent);
 }
 
+/* The menu counters are filled with the primary colour (mockups D1–D19). */
+.ah-sidebar__count.ah-badge {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+}
+
 .ah-empty-state {
   display: grid;
   justify-items: center;

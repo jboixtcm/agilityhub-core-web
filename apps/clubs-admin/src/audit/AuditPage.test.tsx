@@ -91,6 +91,38 @@ describe("T-14-26 member audit and exports", () => {
     expect(drawer).toHaveTextContent("···· ···· ···· ···· 8867");
   });
 
+  it("E3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC)", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [
+            {
+              action: "SIGNUP_SUBMITTED",
+              at: "2026-08-08T10:02:00Z",
+              changes: [],
+              entityId: "00000000-0000-4000-8000-000000000087",
+              entityLabel: "Laura Serra Vidal",
+              entityType: "Member",
+              id: "00000000-0000-4000-8000-000000000199",
+              memberId: "00000000-0000-4000-8000-000000000087",
+              origin: "PUBLIC",
+            },
+          ],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+    );
+    window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
+    await renderAudit();
+
+    expect(await screen.findByRole("link", { name: "Sol·licitud d'alta enviada" })).toBeVisible();
+    expect(screen.getByText("Formulari públic")).toHaveClass("ah-badge");
+  });
+
   it("opens the exports drawer for a queued job and exposes its READY download", async () => {
     window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
     await renderAudit();

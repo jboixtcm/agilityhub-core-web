@@ -2,7 +2,9 @@
   "club": {
     "slug": "canic",
     "name": "Club Agility Cànic",
-    "city": "Cabrera de Mar"
+    "city": "Cabrera de Mar",
+    "legalName": "Club Agility Cànic",
+    "taxId": "G00000000"
   },
   "locales": [
     "ca",

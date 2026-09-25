@@ -70,6 +70,7 @@ export function classifySignupReviewError(
     case "MEMBERSHIP_EXISTS":
       return { code, kind: "banner" };
     case "FAMILY_HOLDER_NOT_FOUND":
+    case "FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP":
       return { code, kind: "family" };
     case "STALE_VERSION":
       return { code, kind: "stale" };

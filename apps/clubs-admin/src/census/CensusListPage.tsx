@@ -978,12 +978,8 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               : t("census:dogs.activeCount", { count: activeCount })}
           </Badge>
         </h1>
-        {kind === "members" ? (
-          <a className="census-page__new" href="/preinscripcions/nova">
-            <Icon aria-hidden="true" name="plus" />
-            {t("census:members.new")}
-          </a>
-        ) : null}
+        {/* «Nou abonat» opens the S04 signup form inside the back office (S03 §2 D5, open point 1);
+            that form does not exist yet, so the button stays hidden instead of a dead link. */}
       </header>
 
       {kind === "members" ? (

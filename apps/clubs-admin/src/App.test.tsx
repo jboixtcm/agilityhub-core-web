@@ -153,6 +153,59 @@ describe("T-02-14 clubs-admin shell", () => {
   });
 });
 
+describe("E3-W07 step 9 menu counters (S14 R-14-08)", () => {
+  function countCounterRequests(): () => number {
+    let count = 0;
+    server.events.on("request:start", ({ request }) => {
+      if (new URL(request.url).pathname.endsWith("/dashboard/counters")) count += 1;
+    });
+    return () => count;
+  }
+
+  afterEach(() => {
+    server.events.removeAllListeners();
+  });
+
+  it("reads the counters once for an ADMIN, again on focus, and not on every navigation", async () => {
+    const counters = countCounterRequests();
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /Preinscripcions\s*3/u })).toBeVisible();
+    });
+    expect(screen.getByRole("link", { name: /Preinscripcions\s*3/u }).querySelector(".ah-sidebar__count")).not.toBeNull();
+    expect(counters()).toBe(1);
+
+    window.history.pushState(null, "", "/abonats");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.history.pushState(null, "", "/tauler");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    await screen.findByRole("heading", { level: 1 });
+    expect(counters()).toBe(1);
+
+    fireEvent.focus(window);
+    await waitFor(() => {
+      expect(counters()).toBe(2);
+    });
+  });
+
+  it("never asks an INSTRUCTOR for the counters (ADMIN only, no 403)", async () => {
+    mockScenario("instructor");
+    const counters = countCounterRequests();
+    const client = authClient();
+    await client.login("pere.vidal@example.test", "secret-password");
+    window.history.pushState(null, "", "/calendari");
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: "Calendari de classes" })).toBeVisible();
+    });
+    fireEvent.focus(window);
+    expect(counters()).toBe(0);
+  });
+});
+
 describe("T-01-18 clubs-admin access", () => {
   it("offers magic-link and password entry with the shared auth components", async () => {
     window.history.pushState(null, "", "/entrar");

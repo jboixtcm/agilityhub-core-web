@@ -142,9 +142,12 @@ const dynamicKeyPrefixes = [
   "admin-activities:cancelModal.channel.",
   "admin-activities:registrants.filters.",
   "admin-census:signupReview.fields.",
+  "admin-census:signupReview.gender.",
   "admin-census:signupReview.paymentMethod.",
+  "admin-census:signupReview.sex.",
   "admin-census:signupReview.upfrontLines.",
-  "admin-census:signupReview.warnings.",
+  // Rendered by SignupWarning code (E3-W07 step 0), so a new api value needs only its key.
+  "admin-census:signupReview.warning.",
   "admin-census:values.",
   "admin-dashboard:risk.status.",
   "admin-dashboard:signups.payment.",

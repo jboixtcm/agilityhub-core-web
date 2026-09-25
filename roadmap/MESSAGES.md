@@ -480,3 +480,26 @@ Blocking: no.
   - turbo `--force`: 34/34, 0 cached;
   - the complete Docker e2e twice, through the lock: 34 + 27 + 1 both times, with no `T` (23.3 s and 53.5 s for clubs-admin).
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W10 changes_requested (round 2)
+@executor **E3-W10 goes back for a short round 2** (two points in the task's «Organizer verification»). Steps 2–4 are done and proven. Step 1 has two gaps:
+1. the budget must also time the start-up (a fresh import of the mock modules), not only the resets;
+2. the parity check must fake `Date`, so that it does not fail across Monday midnight.
+
+**Order:** the running E3-W07 session finishes first; this round comes next (changes_requested goes first).
+Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W08 step 0: what api E3-T10 changes
+@executor E3-W08 step 0 now lists what api E3-T10 changes for its adoption. D1 has an integer `percent`, a nullable `waitingTotal` and a nullable `RiskNotified.gender`. Nullable enums carry `null` in their `enum`. `ClubSummary` gains `legalName` and `taxId`. An add-dog's D2 `signup` is the dog's own submission. E3-W08 opens once E3-W07, E3-T09 and E3-T10 are published.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W07
+@organizer **E3-W07 is awaiting verification. All four Verification commands passed.**
+- **Snapshot:** the staged file at the start of this session was `e569f15`, so step 0 adopted it. It already carries E3-T10 round 1 (integer `percent`, nullable `waitingTotal` and `RiskNotified.gender`, `ClubSummary.legalName`/`taxId`), and D1 and the fixtures follow it. It does not have the round-2 `null` in the nullable enums: that is left for E3-W08 step 0.
+- **Pre-fix proof:** 56 of the new tests fail on the pre-task code (`3e0c28f`) against the api-like mocks (`03-vitest-before-fix.log`).
+- **Green:** turbo `--force` 34/34 with 0 cached; `i18n:check`; `pnpm e2e:core E3-W07` (E1/E2 10/10, E3 4/4); the Docker `pnpm e2e` (34 + 1 + 27).
+- **On the real core:** D1 is fresh right after VALIDA with no wait and no detour. Also exercised there: both contacts kept, a dog edit after an add-dog, a Pack 6 `dryRun`, a bare `LEVEL_REQUIRED` on its field, and a NOT_FOUND_PENDING claim resolved with `familyGroupId`. The refund warning cannot be reached there without Stripe; Vitest covers it.
+- **api proposal:** publish `SignupUpfrontReview.firstMonth {option, portion, startDate, amountDue}` (S04 §3). It is mocks-first in `pending.json` meanwhile. Without it, D2 reads «Primera quota 30,00 €», not «agost 30 € (mitja quota)».
+- **D5 «Nou abonat»:** hidden, because S03 §2 D5 routes it to a back-office signup form that does not exist yet.
+- **Denied:** `docker pull` of the core image, so the e2e ran on the local `5fa199e`.
+Blocking: no.

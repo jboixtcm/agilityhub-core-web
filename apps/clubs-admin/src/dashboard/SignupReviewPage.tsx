@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { type ApiClient, type components } from "@agilityhub/api-client";
 import { fmtMaskedIban, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -19,8 +19,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useRefreshCounters } from "./counters";
-import { SignupEditDrawer } from "./SignupEditDrawer";
 import { classifySignupReviewError, type SignupReviewError } from "./signup-review-errors";
+import { SignupEditDrawer } from "./SignupEditDrawer";
 
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
@@ -153,7 +153,8 @@ export function SignupReviewPage({
       setFamilySearching(true);
       client
         .GET("/members", {
-          params: { query: { filter: ["status:eq:ACTIVE"], q: query, size: 20 } },
+          // `familyGroup` is not a default column of D5: ask for it (S03 §6 `fields`).
+          params: { query: { fields: "id,fullName,dogs,familyGroup", filter: ["status:eq:ACTIVE"], q: query, size: 20 } },
         })
         .then(
           (result) => {
@@ -163,6 +164,7 @@ export function SignupReviewPage({
                 .filter((item) => item.id !== memberId)
                 .map((item) => ({
                   dogs: item.dogs.map((dog) => dog.name),
+                  // ADMIN gets MemberListItem; the INSTRUCTOR projection has no family group.
                   familyGroup: "familyGroup" in item ? item.familyGroup : undefined,
                   fullName: item.fullName,
                   id: item.id,
@@ -188,7 +190,7 @@ export function SignupReviewPage({
     return (
       <section className="signup-review-page">
         <Toast tone="info">{t("admin-census:signupReview.resolved")}</Toast>
-        <a className="ah-button ah-button--ghost signup-review-page__record" href={`/abonats/${memberId}`}>
+        <a className="ah-button ah-button--ghost signup-review-page__record" href={`/abonats/${memberId}`} onClick={(event) => { event.preventDefault(); onNavigate(`/abonats/${memberId}`); }}>
           {t("admin-census:signupReview.resolvedLink")}
         </a>
       </section>
@@ -230,11 +232,12 @@ export function SignupReviewPage({
     return familyDecision?.kind === "group" ? familyDecision.familyGroupId : undefined;
   };
 
-  const validationBody = (plan = selectedPlan): ValidationRequest => {
+  // A plan change's dry run leaves `nextInvoiceDate` out, so the api proposes the new plan's date.
+  const validationBody = (plan = selectedPlan, withDate = true): ValidationRequest => {
     const groupId = familyGroupId();
     return {
       dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levelOf(dog) === "" ? {} : { levelId: levelOf(dog) }) })),
-      ...(billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
+      ...(withDate && billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
       ...(plan === undefined ? {} : { planId: plan.planId, ...(plan.priceId === undefined ? {} : { priceId: plan.priceId }) }),
       ...(groupId === undefined ? {} : { familyGroupId: groupId }),
       ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
@@ -278,7 +281,7 @@ export function SignupReviewPage({
     setQuotePending(true);
     try {
       const result = await client.POST("/members/{id}/validation", {
-        body: validationBody(plan),
+        body: validationBody(plan, false),
         params: { path: { id: memberId }, query: { dryRun: true } },
       });
       if (seq !== dryRunSeq.current) return;
@@ -367,14 +370,16 @@ export function SignupReviewPage({
           });
     })
     .join(" + ");
-  const planLabel = (plan: PlanOption, price: PlanOption["prices"][number] | undefined) =>
-    price === undefined
-      ? plan.name
-      : t("admin-census:signupReview.planWithPrice", {
-          periodicity: price.periodicity,
-          plan: plan.name,
-          price: formatMoney(price.amount.amountMinor / 100),
-        });
+  const planLabel = (plan: PlanOption, price: PlanOption["prices"][number] | undefined) => {
+    if (price === undefined) return plan.name;
+    // The selected price reads the dry run's answer once there is one (S04 §2 D2: «es recalcula»).
+    const quoted = quote?.price?.id === price.priceId ? quote.price : undefined;
+    return t("admin-census:signupReview.planWithPrice", {
+      periodicity: quoted?.periodicity ?? price.periodicity,
+      plan: plan.name,
+      price: formatMoney((quoted?.amount ?? price.amount).amountMinor / 100),
+    });
+  };
   const planOptions = signup.planOptions.flatMap((plan) =>
     plan.prices.length === 0
       ? [{ label: planLabel(plan, undefined), value: planValue(plan.planId, undefined) }]
@@ -473,6 +478,10 @@ export function SignupReviewPage({
                     </>
                   ) : (
                     t("admin-census:values.no")
+                  )}
+                  {/* The search field carries its own error; any other family error shows here. */}
+                  {familyError === undefined || (pendingClaim && familyDecision === undefined) ? null : (
+                    <p className="ah-form-field__error" role="alert">{familyError}</p>
                   )}
                 </dd>
               </>

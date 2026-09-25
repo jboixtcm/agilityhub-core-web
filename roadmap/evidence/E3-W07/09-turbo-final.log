@@ -1,0 +1,1601 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/auth:lint: cache hit, replaying logs f4053950041e0287
+@agilityhub/course-core:typecheck: cache hit, replaying logs 671f426b6643ad21
+clubs:lint: cache hit, replaying logs 62ebf1b88cf9b1b8
+@agilityhub/ui:lint: cache hit, replaying logs 1fa560e40ffe0aa9
+@agilityhub/config:lint: cache hit, replaying logs 42ac5d636417f38d
+@agilityhub/course-core:lint: cache hit, replaying logs ef70bf6c19ae37ee
+@agilityhub/api-client:test: cache hit, replaying logs d3fed5ca3d959e2c
+@agilityhub/ui:test: cache hit, replaying logs a02fe556cb9f5565
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 80[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 98[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 186[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 194[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[32m 240[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m61 passed[39m[22m[90m (61)[39m
+@agilityhub/ui:test: [2m   Start at [22m 08:17:07
+@agilityhub/ui:test: [2m   Duration [22m 2.21s[2m (environment 75%, setup 11%, transform 7%, tests 6%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/course-core:build: cache hit, replaying logs 431d96cbc72fd83b
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/ui:typecheck: cache hit, replaying logs 0cfb0dd58e560a8f
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+@agilityhub/config:lint: 
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 451[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 338[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 635[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 717[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1059[2mms[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[32m101 passed[39m[22m[90m (101)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 08:17:07
+@agilityhub/api-client:lint: cache hit, replaying logs 38666733c80a561c
+@agilityhub/i18n:lint: cache hit, replaying logs cb5e5243d0fa6d83
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:lint: cache hit, replaying logs d383151fe730994b
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/api-client:test: [2m   Duration [22m 2.12s[2m (import 42%, tests 31%, transform 27%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 3.02s[39m[2m · 27% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/course-core:test: cache hit, replaying logs 1c26edab867f42c5
+clubs-admin:lint: cache miss, executing 9b37dbb4a2914de3
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+id:lint: cache hit, replaying logs f7faf03e54849b61
+@agilityhub/api-client:typecheck: cache hit, replaying logs e57846a56ca47560
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:test: cache hit, replaying logs 30c0e8b7888e66b3
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/i18n:test: cache hit, replaying logs 769ce610a869da81
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/i18n:typecheck: cache hit, replaying logs 979869c4098e4bf9
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/i18n:typecheck: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4a7a4d38f585971
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:build: cache hit, replaying logs d3d69457da5c20b5
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+id:lint: 
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m18 passed[39m[22m[90m (18)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m342 passed[39m[22m[90m (342)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 21:15:37
+@agilityhub/course-core:test: [2m   Duration [22m 755ms[2m (transform 81%, import 15%, tests 3%, worker 1%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 4.16s[39m[2m · 81% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 21:15:39
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/i18n:test:  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/format.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@agilityhub/shared-types:test: [2m   Duration [22m 518ms[2m (transform 75%, import 17%, tests 7%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+@agilityhub/i18n:test: [2m      Tests [22m [1m[32m51 passed[39m[22m[90m (51)[39m
+@agilityhub/i18n:test: [2m   Start at [22m 08:17:09
+@agilityhub/i18n:test: [2m   Duration [22m 393ms[2m (transform 72%, import 16%, tests 11%, worker 2%)[22m
+@agilityhub/i18n:test: 
+id:build: cache hit, replaying logs 12dfbee87f58a5aa
+clubs-admin:build: cache miss, executing 2db8b535e3f4bdcf
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 452 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CqlSad7N.css                           40.46 kB │ gzip:   7.84 kB
+id:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+id:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+id:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/shell-5wrIZEiU.js                             1.34 kB │ gzip:   0.71 kB
+id:build: dist/assets/shell-BPq7tYY0.js                             1.38 kB │ gzip:   0.79 kB
+id:build: dist/assets/shell-Cc61Igy-.js                             1.41 kB │ gzip:   0.79 kB
+id:build: dist/assets/common-BPwvFsnQ.js                            1.55 kB │ gzip:   0.82 kB
+id:build: dist/assets/activities-Cqrv-UGl.js                        1.61 kB │ gzip:   0.75 kB
+id:build: dist/assets/common-DVY9MXrC.js                            1.64 kB │ gzip:   0.89 kB
+id:build: dist/assets/common-Cbueg-A3.js                            1.68 kB │ gzip:   0.92 kB
+id:build: dist/assets/activities-ZukiIS3N.js                        1.70 kB │ gzip:   0.84 kB
+id:build: dist/assets/activities-D4sCSPEM.js                        1.71 kB │ gzip:   0.84 kB
+id:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+id:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+id:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+id:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+id:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+id:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+id:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+id:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+id:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+id:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/admin-activities-Bgo202BR.js                  5.93 kB │ gzip:   2.39 kB
+id:build: dist/assets/census-BsHpyBaD.js                            5.94 kB │ gzip:   2.38 kB
+id:build: dist/assets/admin-activities-CtjgXV19.js                  6.09 kB │ gzip:   2.59 kB
+id:build: dist/assets/census-BnAFYYgw.js                            6.27 kB │ gzip:   2.63 kB
+id:build: dist/assets/admin-activities-6JcP_7op.js                  6.29 kB │ gzip:   2.64 kB
+id:build: dist/assets/census-CvYcVWE8.js                            6.45 kB │ gzip:   2.66 kB
+id:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+id:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+id:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+@agilityhub/auth:typecheck: cache hit, replaying logs 2dc444ea64c23b15
+id:build: dist/assets/admin-census-C9vKTkLJ.js                      9.94 kB │ gzip:   3.95 kB
+id:build: dist/assets/admin-census-q4DOaAxU.js                     10.47 kB │ gzip:   4.24 kB
+id:build: dist/assets/admin-census-BlnLlThR.js                     10.80 kB │ gzip:   4.32 kB
+id:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+id:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+id:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+id:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+id:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+@agilityhub/auth:test: cache hit, replaying logs 1fdd90a5cdd86c15
+id:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+id:build: dist/assets/index-BqXowjf5.js                           321.28 kB │ gzip:  99.60 kB
+id:build: dist/assets/browser-C2lpw_gW.js                         815.53 kB │ gzip: 358.16 kB
+id:build: 
+id:build: ✓ built in 364ms
+id:build: [plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: 
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  [32m✓[39m src/auth-client.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/session.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 126[2mms[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/auth:test: [2m      Tests [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+@agilityhub/auth:test: [2m   Start at [22m 08:17:12
+@agilityhub/auth:test: [2m   Duration [22m 1.00s[2m (environment 53%, transform 17%, import 15%, tests 14%, worker 1%)[22m
+@agilityhub/auth:test: 
+clubs:build: cache hit, replaying logs 64f1c7282e6a2cb5
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 467 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                                        0.13 kB
+clubs:build: dist/index.html                                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-t8PpB0mj.css                           74.04 kB │ gzip:  12.50 kB
+clubs:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/activities-Cqrv-UGl.js                        1.61 kB │ gzip:   0.75 kB
+clubs:build: dist/assets/activities-ZukiIS3N.js                        1.70 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-D4sCSPEM.js                        1.71 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+clubs:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+clubs:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+clubs:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+clubs:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/admin-activities-Bgo202BR.js                  5.93 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/census-BsHpyBaD.js                            5.94 kB │ gzip:   2.38 kB
+clubs:build: dist/assets/admin-activities-CtjgXV19.js                  6.09 kB │ gzip:   2.59 kB
+clubs:build: dist/assets/census-BnAFYYgw.js                            6.27 kB │ gzip:   2.63 kB
+clubs:build: dist/assets/admin-activities-6JcP_7op.js                  6.29 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/census-CvYcVWE8.js                            6.45 kB │ gzip:   2.66 kB
+clubs:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+clubs:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+clubs:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+clubs:build: dist/assets/admin-census-C9vKTkLJ.js                      9.94 kB │ gzip:   3.95 kB
+clubs:build: dist/assets/admin-census-q4DOaAxU.js                     10.47 kB │ gzip:   4.24 kB
+clubs:build: dist/assets/admin-census-BlnLlThR.js                     10.80 kB │ gzip:   4.32 kB
+clubs:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs:build: dist/assets/index-DDPnC2I3.js                           460.99 kB │ gzip: 137.40 kB
+clubs:build: dist/assets/browser-C2lpw_gW.js                         815.53 kB │ gzip: 358.16 kB
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs-admin:typecheck: cache miss, executing ebbca3378de0da69
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: ✓ built in 204ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  54 entries (1622.57 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs:typecheck: cache hit, replaying logs dfbdc121ae6129ba
+clubs-admin:test: cache miss, executing 595dc443cce22f2f
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+id:test: cache hit, replaying logs 09a156dfadeccd55
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+id:test: 
+id:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id[39m
+id:test: 
+id:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 673[2mms[22m[39m
+id:test: 
+id:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+id:test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+id:test: [2m   Start at [22m 08:17:14
+id:test: [2m   Duration [22m 3.96s[2m (environment 53%, tests 18%, transform 15%, setup 12%, import 2%)[22m
+id:test: 
+id:typecheck: cache hit, replaying logs d1a5cbfbbc82f8e5
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+clubs:test: cache hit, replaying logs 848abcdae9ac056b
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+clubs:test: 
+clubs:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs[39m
+clubs:test: 
+clubs:test:  [32m✓[39m src/today/literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 137[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/InfoPage.test.tsx[2m > [22m[2mT-05-CP-07 screen 30 Info[2m > [22m[2mshows FAQ, rules and other active pages only
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mdraws the 04 block with the exact badges; the full row with waitlist stays tappable
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mdraws the mockup grid with identical ring columns, the date header and the week chips
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2mshows n/n +e with the planned instructor, training names, the block and the cancelled class
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mpersists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/InfoPage.test.tsx[2m > [22m[2mT-05-CP-07 screen 30 Info[2m > [22m[2mkeeps Info available without the FAQ module and omits the FAQ tab
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/InfoPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 259[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs shell[2m > [22m[2muses the compact mark with the runtime club name
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs shell[2m > [22m[2mfilters the six-tab mockup navigation by modules and roles
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mrenders «Ocupada» + generic reason in grey without background and never a count
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2mdrops «+e» when the club has no WAITLIST module
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-14 omits the block without ACTIVITIES
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mOPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ]
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs shell[2m > [22m[2mE4-W03 turns the «Avui» slot into «Visió global» for the instructor profile
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs shell[2m > [22m[2momits Entrenaments when FREE_TRAINING is disabled
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mopens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2mopens the class drawer with the instructor projection of the tapped class
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mFULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA]
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-18 access screen[2m > [22m[2muses the exact access actions, focuses an empty email and gates signup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mpersists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-18 access screen[2m > [22m[2muses the exact access actions, focuses an empty email and gates signup
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mpersists a current draft, expires it after 24 hours and maps identity states
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2muses the club's today (Europe/Madrid) whatever the device time zone
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-18 access screen[2m > [22m[2mshows the Retry-After countdown and disables requests
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mkeeps the draft and refetches localized configuration after a language change
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2mopens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-19 activation screen[2m > [22m[2mrenders gender-aware, reset and invalid-link variants
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mregistered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mmasks and validates the browser-independent birth date control
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-19 activation screen[2m > [22m[2mrenders gender-aware, reset and invalid-link variants
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mnever shows a count in the member view even when a cell carries occupancy
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-19 activation screen[2m > [22m[2mrenders gender-aware, reset and invalid-link variants
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mmoves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-19 activation screen[2m > [22m[2mrenders gender-aware, reset and invalid-link variants
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mregistered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2man activity that is not visible shows «No disponible»
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2m03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-19 activation screen[2m > [22m[2mrenders gender-aware, reset and invalid-link variants
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2m03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-20 profile choice[2m > [22m[2mshows cards for every available role and sends the remember choice
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2mmaps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-21 profile access rows and impersonation[2m > [22m[2mrenders the mockup rows in order without account sessions or backoffice handoff
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mM2 checks the ES postal code and a past birth date from 1900 before any request
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2m03: never shows a dog, even when the data carries one
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mshows the api «Sense» column as delivered and the activity cell
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2mR-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mnever adds a «Sense» column of its own when the api does not send one
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-21 profile access rows and impersonation[2m > [22m[2mkeeps the impersonation banner visible from /me
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2ma waitlisted registration without a position reads «en llista d'espera», never «()»
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders configured fields and sends consent, profile data and image choice
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/OverviewPage.test.tsx[2m > [22m[2mT-06-29 screen 23 «Visió global»[2m > [22m[2manswers 403 to a member asking for the instructor view
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mfalls back to the club-local today and rewrites the address for ?date=2026-13-01
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2m03: a waitlisted registration shows «en llista d'espera»
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/today/OverviewPage.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1227[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/activities/activities.test.tsx[2m > [22m[2mT-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25[2m > [22m[2m25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/activities/activities.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 1251[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mfocuses the first error after it renders and links each field to its message
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mredirects blocking onboarding and permits a policy postponement
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mfalls back to the club-local today and rewrites the address for ?date=2026-08-32
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mkeeps fields typed while the town lookup is in flight
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mredirects blocking onboarding and permits a policy postponement
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mfalls back to the club-local today and rewrites the address for ?date=2026-02-30
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mreloads an outdated policy version before accepting it
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-29 signup person and draft[2m > [22m[2mGENERIC profile: the first document type of the profile and an editable prefix
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mfalls back to the club-local today and rewrites the address for ?date=hola
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2muploads sequentially named vaccination pages and renders API plans
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 imported-account onboarding and policy re-consent[2m > [22m[2mrenders the screen and pop-up in Catalan, Spanish and English
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-03-40 mobile own dogs[2m > [22m[2mrenders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mremoves amounts without BILLING and the family offer and step without FAMILY_GROUP
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-03-40 mobile own dogs[2m > [22m[2mrenders own dogs, saves the note, shows task totals and gates TASKS
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mremoves amounts without BILLING and the family offer and step without FAMILY_GROUP
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-03-41 mobile own data[2m > [22m[2mkeeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mgates offerLabel by FAMILY_GROUP even when the configuration sends it
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mvalidates and normalises the chip per country profile and the birth month
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mR-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-03-41 mobile own data[2m > [22m[2mkeeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+clubs:test: [22m[39m[BrandingProvider] Club Mínim: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mvalidates and normalises the chip per country profile and the birth month
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 1739[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mshows the empty state (dayGridEmpty) and the error toast with retry
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/today/TodayPage.test.tsx[2m > [22m[2mT-06-29 screen 10 «Classes del dia»[2m > [22m[2mshows the empty state (dayGridEmpty) and the error toast with retry
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-30 signup dog, uploads, plans and module gates[2m > [22m[2mkeeps fields typed while an upload is in flight
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/today/TodayPage.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 1962[2mms[22m[39m
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-31 signup family lookup[2m > [22m[2mcontinues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-31 signup family lookup[2m > [22m[2mcontinues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-31 signup family lookup[2m > [22m[2mcontinues empty, resolves the fixture family and supports a pending lookup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-31 signup family lookup[2m > [22m[2mkeeps the dog draft when returning from the family step
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-31 signup family lookup[2m > [22m[2mprefills the account holder with the group holder when the group is found (R-04-10)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mrenders API totals and payment conditions and submits only after privacy consent
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mshows each payment text only under its method (T-04-32, M7 web half)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mshows each payment text only under its method (T-04-32, M7 web half)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mredirects through checkout when Stripe is enabled
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2muses the member plan and payment method and posts the add-dog flow
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mthe add-dog success page does not promise a welcome email
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2msends notesToInstructors from 17 and holderTaxId from 19 (§2, §3)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mdrops the IBAN from the session draft when the method changes away from SEPA
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mchecks the IBAN mod-97 before sending
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2momits planId and planIdRequested when the club has no signup plans (R-04-09)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2momits planId and planIdRequested when the club has no signup plans (R-04-09)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mhides the honeypot from assistive technology and the tab order
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mreads the image-consent text from texts.imageConsent, then legal.imageConsentText
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mT-04-32 signup payment, checkout and add-dog mode[2m > [22m[2mreads the image-consent text from texts.imageConsent, then legal.imageConsentText
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mB1 identity document at submission (R-04-01)[2m > [22m[2msubmits a DNI applicant with the identity-check document
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mB1 identity document at submission (R-04-01)[2m > [22m[2msubmits a NIE applicant with the identity-check document
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mB1 identity document at submission (R-04-01)[2m > [22m[2msubmits a passport only applicant with the identity-check document
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM1 stable retries (CONVENCIONS_API §7, R-04-26/27)[2m > [22m[2mretries a lost 201 with the same Idempotency-Key and gets the same 201
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM1 stable retries (CONVENCIONS_API §7, R-04-26/27)[2m > [22m[2mchanging a payload field after a failure uses a new key
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM1 stable retries (CONVENCIONS_API §7, R-04-26/27)[2m > [22m[2madd-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM1 stable retries (CONVENCIONS_API §7, R-04-26/27)[2m > [22m[2ma cancelled checkout returns to 19 with the data and retries only the checkout
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM1 stable retries (CONVENCIONS_API §7, R-04-26/27)[2m > [22m[2ma cancelled checkout returns to 19 with the data and retries only the checkout
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mINVALID_ID_DOCUMENT (400) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mID_DOCUMENT_AMBIGUOUS (422) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mINVALID_PHONE (400) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mINVALID_IBAN (400) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mPLAN_NOT_AVAILABLE (422) → /apuntat-hi/gos
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mDOG_DOCUMENT_REQUIRED (422) → /apuntat-hi/gos
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mFILE_NOT_FOUND (400) → /apuntat-hi/gos
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mDOG_CHIP_ALREADY_REGISTERED (422) → /apuntat-hi/gos
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mFAMILY_HOLDER_NOT_FOUND (422) → /apuntat-hi/familia
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mCONSENT_VERSION_OUTDATED (422) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mMEMBER_ALREADY_EXISTS (409) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mSIGNUP_ALREADY_PENDING (422) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mSIGNUP_CLOSED (422) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mRATE_LIMITED (429) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mPAYMENT_METHOD_NOT_AVAILABLE (422) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mSOMETHING_NEW (422) → undefined
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mVALIDATION_ERROR (400) → /apuntat-hi
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM2 api errors land on their field and step (§2, CATALEG_ERRORS)[2m > [22m[2mVALIDATION_ERROR (400) → /apuntat-hi/gos
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM19 the consent version sent is the accepted one (R-04-17)[2m > [22m[2mclears an acceptance of other legal texts and sends the version accepted again
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mM19 the consent version sent is the accepted one (R-04-17)[2m > [22m[2ma saved acceptance of an older version is not carried into the new texts
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#1 an INVALID_IBAN from 19 stays on 19, on the IBAN field (production navigator)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#1 an INVALID_ID_DOCUMENT routed to 16 survives the full page load and focuses the document
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#1 an INVALID_ID_DOCUMENT routed to 16 survives the full page load and focuses the document
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#2 after a cancelled checkout 19 is read-only and the retry charges the committed signup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#2 after a cancelled checkout 19 is read-only and the retry charges the committed signup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#2 after a cancelled checkout 19 is read-only and the retry charges the committed signup
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#3 the fingerprint is a SHA-256 digest and the IBAN leaves the draft after a failed submission
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#3 a config reload that drops SEPA removes the IBAN from the draft
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10)
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#4 a holder typed by the applicant is kept when the claim changes
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#5 the birth date is checked against the club's today, not the browser's
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test: [90mstderr[2m | src/SignupPage.test.tsx[2m > [22m[2mE3-W06 round 2[2m > [22m[2m#5 the dog's birth month is checked against the club's month, not the browser's
+clubs:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs:test: 
+clubs:test:  [32m✓[39m src/SignupPage.test.tsx [2m([22m[2m62 tests[22m[2m)[22m[33m 4224[2mms[22m[39m
+clubs:test:    [32m✓[39m T-04-29 signup person and draft [2m(7)[22m
+clubs:test:      [33m[2m✓[22m[39m persists a current draft, expires it after 24 hours and maps identity states[33m 716[2mms[22m[39m
+clubs:test: 
+clubs:test: [2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+clubs:test: [2m      Tests [22m [1m[32m125 passed[39m[22m[90m (125)[39m
+clubs:test: [2m   Start at [22m 08:17:14
+clubs:test: [2m   Duration [22m 7.96s[2m (environment 40%, tests 31%, transform 15%, setup 8%, import 5%)[22m
+clubs:test: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+clubs-admin:test: 
+clubs-admin:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin[39m
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/planning/calendar-literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/plain-dates.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/calendar-shared.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/description.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mshows only the rings used that day in catalog order, plus «Sense» when a class has no ring
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mT-14-25 D1 dashboard[2m > [22m[2mrenders the server aggregate, all risk rows, pending signups, and accessible chart
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusListPage.test.tsx[2m > [22m[2mT-03-38 D5 universal member list[2m > [22m[2mrenders applied filters and preserves selection when page size changes
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/catalogs/ParameterSettings.test.tsx[2m > [22m[2mT-02-13 D11 parameter rows[2m > [22m[2mkeeps module-less parameters that the core sends with module null
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusRecordPage.test.tsx[2m > [22m[2mT-03-39 D10 member record[2m > [22m[2mrenders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mfilters by action and opens the masked before/after change drawer
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarDayPage.test.tsx[2m > [22m[2mT-06-28 D4 day view (/calendari/dia/:date, form D)[2m > [22m[2mtakes the api's «Sense» column as delivered and never adds its own
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/catalogs/ClubPagesCard.test.tsx[2m > [22m[2mT-05-CP-07 club page editor[2m > [22m[2mwarns about provisional text and confirms the next consent version before publishing
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mprefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mE3-W07 step 9 a D1 risk row opens D4 on its class[2m > [22m[2mselects the class of `?classe=` in the week of `?setmana=`
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mdraws the four mockup rows with the R-07-13 dates, rings, registrations and state chips
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/catalogs/ParameterSettings.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 272[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mdrops unused rings and the «Sense» column on a day without them
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mT-14-25 D1 dashboard[2m > [22m[2mhides nullable module blocks and refetches when the window regains the focus
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarDayPage.test.tsx[2m > [22m[2mT-06-28 D4 day view (/calendari/dia/:date, form D)[2m > [22m[2mshows exactly one «Sense» column for a ringless class of the stateful mock
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/catalogs/ClubPagesCard.test.tsx[2m > [22m[2mT-05-CP-07 club page editor[2m > [22m[2mmaps STALE_VERSION to the page-specific reload message
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mT-14-25 D1 dashboard[2m > [22m[2muses the same ICU day plural as D2 in the pending signups card
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mswitches to one column per instructor with a class that day
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/catalogs/derived-settings.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/census/CensusRecordPage.test.tsx[2m > [22m[2mT-03-39 D10 member record[2m > [22m[2mblocks and unblocks new bookings with the required reason
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs-admin shell[2m > [22m[2muses the compact mark with the runtime club name
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mgives each VALIDA its own accessible name
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/planning/CalendarDayPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 440[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/ClubPagesCard.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 467[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-05-CP-07 club page editor [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m warns about provisional text and confirms the next consent version before publishing[33m 366[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows the pending badge as an ICU plural for 0 days
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mmarks an add-dog row «(nou gos)»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows the pending badge as an ICU plural for 1 days
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mR-14-05 paints the submission date red only when pendingDays > warnDays
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mE3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs-admin shell[2m > [22m[2mhides the Configuració group from instructors
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mopens «Esborrany» on the first week with drafts, with the validation card and its count
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2msigns the members delta 3 as «+3 aquest mes»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mmoves between days and goes back to the weekly view of the same template
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows the pending badge as an ICU plural for 5 days
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2m«Nova activitat» creates a draft with title and type and opens its maintenance
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs-admin shell[2m > [22m[2mT-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs-admin shell[2m > [22m[2mT-06-28 shows «Calendari de classes» to instructors (read-only D4, A22 c)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2msigns the members delta -2 as «−2 aquest mes»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mR-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-02-14 clubs-admin shell[2m > [22m[2mshows the fixed sidebar groups to administrators
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusListPage.test.tsx[2m > [22m[2mT-03-38 D5 universal member list[2m > [22m[2mtoggles visible columns and synchronizes the ordered fields to the URL
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mopens the exports drawer for a queued job and exposes its READY download
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mR-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mrewrites an unsupported day in the URL to the template's first day
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusRecordPage.test.tsx[2m > [22m[2mT-03-39 D10 member record[2m > [22m[2mmaps STALE_VERSION when another administrator edited the member
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2msigns the members delta 0 as «0 aquest mes»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mstep 0 renders each review warning by its code, so a new api value needs only its key
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mcounts 1 risk alert(s) with an ICU plural
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2m«Nova activitat» creates a draft with title and type and opens its maintenance
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mE3-W07 step 9 menu counters (S14 R-14-08)[2m > [22m[2mreads the counters once for an ADMIN, again on focus, and not on every navigation
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mrewrites an unknown day in the URL to the template's first day
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mcounts 4 risk alert(s) with an ICU plural
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mtolerates null optional fields (INC-08) and never sends null back
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mwrites times as «7:30» and links each risk row to D4 on its class
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplateDayPage.test.tsx[2m > [22m[2mT-06-27 D3b day view per ring / per instructor[2m > [22m[2mshows the Saturday template with its single day
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusRecordPage.test.tsx[2m > [22m[2mT-03-38 dog record[2m > [22m[2mshows the complete dog record and changes level without a booking warning
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mshows at most 6 risk rows, then «+{n} més» to D4 on the first hidden one
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/planning/TemplateDayPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 792[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-27 D3b day view per ring / per instructor [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows only the rings used that day in catalog order, plus «Sense» when a class has no ring[33m 321[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mputs the warning icon on the risk card title
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mshows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mE35 paints one column per progression level with the level name as tooltip, never `others`
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mE3-W07 step 9 menu counters (S14 R-14-08)[2m > [22m[2mnever asks an INSTRUCTOR for the counters (ADMIN only, no 403)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-18 clubs-admin access[2m > [22m[2moffers magic-link and password entry with the shared auth components
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mfollows coverage.activeDogWeeks = 1 in the chart legend
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mT-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mfollows coverage.activeDogWeeks = 2 in the chart legend
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-20 clubs-admin handoff[2m > [22m[2mexchanges the one-time handoff code on the landing route
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2m[VALIDAR LA SETMANA] turns every draft of the week active at once
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 clubs-admin onboarding[2m > [22m[2mshows profile completion as a non-dismissible backoffice modal
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mfollows coverage.activeDogWeeks = 3 in the chart legend
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2msaves every change of a full cell at once with the template version
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/DashboardPage.test.tsx[2m > [22m[2mE3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)[2m > [22m[2mR-04-23 keeps the refund notice after a rejection with a collected payment
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusListPage.test.tsx[2m > [22m[2mT-03-42 D15 translated dog list[2m > [22m[2mrenders the approved columns and dog record links
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/dashboard/DashboardPage.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 978[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-25 D1 dashboard [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the server aggregate, all risk rows, pending signups, and accessible chart[33m 340[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mvalidates a signup with a null payment method, upfront and family claim without sending null
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/census/CensusRecordPage.test.tsx[2m > [22m[2mT-03-38 dog record[2m > [22m[2mdeactivates and reactivates a dog without deleting its record
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/App.test.tsx[2m > [22m[2mT-01-26 clubs-admin onboarding[2m > [22m[2mremoves the postpone action when the policy limit is exhausted
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 634[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mdisables the ring chips of an activity outside the club («— (fora del club)»)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mshows signup warnings as compact header badges
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mT-04-33 D2 signup validation[2m > [22m[2mrequires explicit confirmation when a manual upfront payment is zero
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mcancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)[2m > [22m[2medits the member and the dog in one save: the dog PATCH carries the dog's version, not the member's
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/census/CensusRecordPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1189[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 D10 member record [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL[33m 406[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)[2m > [22m[2madd-dog: the person is read-only and the new dog is saved with its version 0 while the member is at 7 (R-04-25)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)[2m > [22m[2mafter a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mqueues two quick changes of a full cell and sends each PATCH with the latest version
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2m[ELIMINA] of an active class goes through the same D4c modal
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 async drawer: nothing typed during a save is lost[2m > [22m[2mlocks the fields while the save is in flight
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mLEVEL_REQUIRED (422, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mLEVEL_NOT_ACTIVE (422, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mNEXT_INVOICE_DATE_REQUIRED (422, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mVALIDATION_ERROR (400, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mreloads the template and remounts the card on STALE_VERSION
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mUPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mPLAN_NOT_AVAILABLE (422, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mINVALID_STATE (409, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/census/CensusListPage.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1864[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-38 D5 universal member list [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders applied filters and preserves selection when page size changes[33m 581[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m toggles visible columns and synchronizes the ordered fields to the URL[33m 357[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-42 D15 translated dog list [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved columns and dog record links[33m 923[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mMEMBERSHIP_EXISTS (409, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mMEMBER_ERASED (409, bare as the api sends it) is shown on its field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mshows the catalogued EXPORT_LIMIT explanation in the exports drawer
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mcaps the amount input at the amount due
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)[2m > [22m[2mmaps the mock's own answers too: a missing level and a missing date
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)[2m > [22m[2mediting the first email keeps the second, and the untouched phones are not sent
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)[2m > [22m[2mediting the second phone sends both phones, each with its label
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mINSTRUCTOR reads D7 without actions, export or internal notes
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mroutes a queued members list export into the global drawer
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mputs the form back to the saved class when a PATCH fails
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)[2m > [22m[2moffers gender (three values), the notes, holderTaxId and the requested plan read-only
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mroutes a queued dogs list export into the global drawer
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mlists the registrants with the FIFO waitlist positions
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/audit/AuditPage.test.tsx[2m > [22m[2mT-14-26 member audit and exports[2m > [22m[2mlinks LastChange to the entity-scoped audit trail
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/audit/AuditPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2224[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 member audit and exports [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m filters by action and opens the masked before/after change drawer[33m 477[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m opens the exports drawer for a queued job and exposes its READY download[33m 1307[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)[2m > [22m[2madds a dog document forwarding the signed upload headers, and removes one
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mshows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)[2m > [22m[2mlists planOptions with their periodicity and runs dryRun on a change to Pack 6: lines, date and body updated
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mshows each band error on the field that caused it
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)[2m > [22m[2mrenders the dry run's warnings on the plan card (PAID_EXCEEDS_QUOTE on a cheaper plan)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)[2m > [22m[2ma NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mmarks the inconsistency on the cells and in the footer note and blocks the generation
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mconfirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mthe plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)[2m > [22m[2ma NOT_FOUND_PENDING claim is resolved with an explicit «Sense grup»: no familyGroupId
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mhides every action from INSTRUCTOR and keeps the cells inert (A22 c)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)[2m > [22m[2mafter VALIDA navigates to /tauler and refreshes the menu counters
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mshows the coverage table with the D3 vocabulary and one-decimal places
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2m[DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)[2m > [22m[2ma signup with nothing pending (409 INVALID_STATE NOT_PENDING) says it is resolved and links to D10
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)[2m > [22m[2ma VALIDA on a signup another admin already resolved shows the resolved state
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 7 · the refund warning (R-04-23)[2m > [22m[2mwarns before rejecting a signup with a collected payment and keeps the refund flag for D1
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mR-06-15 offers instructor chips with maxInstructorsPerClass = 2
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2m[DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 7 · the refund warning (R-04-23)[2m > [22m[2mrejects a signup with nothing collected without the warning
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/TemplatesPage.test.tsx[2m > [22m[2mT-06-26 D3 weekly templates[2m > [22m[2mR-06-15 hides levels and coverage with levels.enabled = false and requires a manual description
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 8 · the D2 minors[2m > [22m[2mSTALE_VERSION offers a reload that keeps the admin's own choices
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2m[ELIMINA] cancels the draft with reason DELETED and returns to the list
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/planning/TemplatesPage.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 3528[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 D3 weekly templates [2m(13)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band[33m 882[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m saves every change of a full cell at once with the template version[33m 500[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m queues two quick changes of a full cell and sends each PATCH with the latest version[33m 323[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m reloads the template and remounts the card on STALE_VERSION[33m 362[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 8 · the D2 minors[2m > [22m[2mshows a rejection error inside the modal, with the reload action
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 8 · the D2 minors[2m > [22m[2mnames the first month and its portion from upfront.firstMonth: a full month has no «(mitja quota)»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mR-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 8 · the D2 minors[2m > [22m[2men: gender OTHER → «them»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/dashboard/SignupReviewPage.test.tsx[2m > [22m[2mE3-W07 step 8 · the D2 minors[2m > [22m[2mgates the plan, payment and upfront blocks on BILLING and the group row on FAMILY_GROUP
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/dashboard/SignupReviewPage.test.tsx [2m([22m[2m45 tests[22m[2m)[22m[33m 3648[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-04-33 D2 signup validation [2m(12)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment[33m 352[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group[33m 546[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mD7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mD7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mregistrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/activities/ActivitiesPage.test.tsx[2m > [22m[2mT-07-29 D7 activities (list, maintenance, publication, cancellation)[2m > [22m[2mregistrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:build: ✓ 494 modules transformed.
+clubs-admin:test:  [32m✓[39m src/activities/ActivitiesPage.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 3832[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 D7 activities (list, maintenance, publication, cancellation) [2m(21)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips[33m 360[2mms[22m[39m
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs-admin:build: dist/assets/index-CEqstReG.css                           90.83 kB │ gzip:  14.62 kB
+clubs-admin:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs-admin:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs-admin:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/activities-Cqrv-UGl.js                        1.61 kB │ gzip:   0.75 kB
+clubs-admin:build: dist/assets/activities-ZukiIS3N.js                        1.70 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-D4sCSPEM.js                        1.71 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+clubs-admin:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+clubs-admin:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+clubs-admin:build: dist/assets/auth-B2g8lbGP.js                              4.30 kB │ gzip:   1.88 kB
+clubs-admin:build: dist/assets/auth-CPbUJNgL.js                              4.74 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/auth-DjeifVuz.js                              4.80 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/signup-eMaPvNNk.js                            5.09 kB │ gzip:   2.35 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/signup-D8va-3gE.js                            5.31 kB │ gzip:   2.60 kB
+clubs-admin:build: dist/assets/signup-hTFsmQy7.js                            5.41 kB │ gzip:   2.61 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/admin-activities-Bgo202BR.js                  5.93 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/census-BsHpyBaD.js                            5.94 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/admin-activities-CtjgXV19.js                  6.09 kB │ gzip:   2.59 kB
+clubs-admin:build: dist/assets/census-BnAFYYgw.js                            6.27 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-activities-6JcP_7op.js                  6.29 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/census-CvYcVWE8.js                            6.45 kB │ gzip:   2.66 kB
+clubs-admin:build: dist/assets/admin-scheduling-CzXsS4mt.js                  7.53 kB │ gzip:   2.83 kB
+clubs-admin:build: dist/assets/admin-scheduling-DDQankpt.js                  7.89 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/admin-scheduling-Rj6gg9sd.js                  7.89 kB │ gzip:   3.07 kB
+clubs-admin:build: dist/assets/admin-census-C9vKTkLJ.js                      9.94 kB │ gzip:   3.95 kB
+clubs-admin:build: dist/assets/admin-census-q4DOaAxU.js                     10.47 kB │ gzip:   4.24 kB
+clubs-admin:build: dist/assets/admin-census-BlnLlThR.js                     10.80 kB │ gzip:   4.32 kB
+clubs-admin:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs-admin:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs-admin:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs-admin:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs-admin:build: dist/assets/browser-tFYIctSc.js                         627.25 kB │ gzip: 214.77 kB
+clubs-admin:build: dist/assets/index-xQc7OFiI.js                           911.07 kB │ gzip: 336.22 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 254ms
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mshows the value the class holds: inactive ring and instructor stay selected
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mshows a RESERVATION block as it is when FREE_TRAINING was turned off later
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-15 with levels.enabled=false the card has no «Nivells» chip
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mR-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mINSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test: [90mstderr[2m | src/planning/CalendarPage.test.tsx[2m > [22m[2mT-06-28 D4 / D4b / D4c class calendar (front half, MSW)[2m > [22m[2mshows the week warnings and selects the class of a warning; day headers open the day view
+clubs-admin:test: [22m[39m[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+clubs-admin:test: 
+clubs-admin:test:  [32m✓[39m src/planning/CalendarPage.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 5116[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 9 a D1 risk row opens D4 on its class [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m selects the class of `?classe=` in the week of `?setmana=`[33m 370[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-28 D4 / D4b / D4c class calendar (front half, MSW) [2m(24)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m opens «Esborrany» on the first week with drafts, with the validation card and its count[33m 371[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card[33m 387[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation[33m 303[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped[33m 313[2mms[22m[39m
+clubs-admin:test: 
+clubs-admin:test: [2m Test Files [22m [1m[32m18 passed[39m[22m[90m (18)[39m
+clubs-admin:test: [2m      Tests [22m [1m[32m187 passed[39m[22m[90m (187)[39m
+clubs-admin:test: [2m   Start at [22m 08:32:07
+clubs-admin:test: [2m   Duration [22m 7.76s[2m (tests 39%, environment 32%, transform 14%, setup 8%, import 8%)[22m
+clubs-admin:test: 
+
+ Tasks:    34 successful, 34 total
+Cached:    30 cached, 34 total
+  Time:    13.723s 
+

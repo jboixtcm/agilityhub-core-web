@@ -5,58 +5,89 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
+import { CountersRefreshContext } from "./counters";
 import { SignupReviewPage } from "./SignupReviewPage";
 
-const branding: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixture.theme, mode: "dark" } };
+const canic: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixture.theme, mode: "dark" } };
 const memberId = "42000000-0000-4000-8000-000000000001";
+const kiwiId = "44000000-0000-4000-8000-000000000001";
+const pack6 = "10000000-0000-4000-8000-000000000002|20000000-0000-4000-8000-000000000002";
 
 beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
 afterEach(() => { cleanup(); server.resetHandlers(); resetDashboardMockState(); mockScenario("admin"); });
 afterAll(() => { server.close(); });
 
 type SignupBody = Record<string, unknown> & {
+  dogs: (Record<string, unknown> & { id: string })[];
   member: Record<string, unknown> & { paymentMethod?: Record<string, unknown> | null };
+  proposals: Record<string, unknown>;
   signup: Record<string, unknown>;
+  upfront?: (Record<string, unknown> & { firstMonth?: Record<string, unknown>; lines: Record<string, unknown>[] }) | null;
 };
 
-// Rewrites the GET /members/{id}/signup response (and optionally the holder's record) the way the real core sends it.
-function signupFetch(
-  mutate: (body: SignupBody) => void,
+interface Recorded {
+  body: unknown;
+  method: string;
+  path: string;
+  query: string;
+}
+
+/**
+ * A fetch that records every api request (method, path, JSON body) and can rewrite the
+ * `GET /members/{id}/signup` answer (and the holder's record) the way the real core sends it.
+ */
+function recordingFetch(
+  mutate?: (body: SignupBody) => void,
   holder?: (body: Record<string, unknown>) => void,
-  sent: unknown[] = [],
-): typeof fetch {
-  return async (input, init) => {
+): { fetch: typeof fetch; requests: Recorded[] } {
+  const requests: Recorded[] = [];
+  const recording: typeof fetch = async (input, init) => {
     const request = input instanceof Request ? input : new Request(input, init);
-    const path = new URL(request.url).pathname;
-    if (request.method === "POST" && path.endsWith(`/members/${memberId}/validation`)) {
-      sent.push(await request.clone().json());
-    }
+    const url = new URL(request.url);
+    const text = request.method === "GET" || request.method === "DELETE" ? "" : await request.clone().text();
+    requests.push({ body: text === "" ? undefined : JSON.parse(text), method: request.method, path: url.pathname, query: url.search });
     const response = await fetch(input, init);
-    if (request.method !== "GET") return response;
-    if (path.endsWith(`/members/${memberId}/signup`)) {
+    if (request.method !== "GET" || !response.ok) return response;
+    if (mutate !== undefined && url.pathname.endsWith(`/members/${memberId}/signup`)) {
       const body = (await response.json()) as SignupBody;
       mutate(body);
       return Response.json(body, { status: response.status });
     }
-    if (holder !== undefined && /\/members\/[^/]+$/u.test(path)) {
+    if (holder !== undefined && /\/members\/[^/]+$/u.test(url.pathname)) {
       const body = (await response.json()) as Record<string, unknown>;
       holder(body);
       return Response.json(body, { status: response.status });
     }
     return response;
   };
+  return { fetch: recording, requests };
+}
+
+function sent(requests: readonly Recorded[], method: string, suffix: string, dryRun?: boolean): Recorded[] {
+  return requests.filter(
+    (request) =>
+      request.method === method &&
+      request.path.endsWith(suffix) &&
+      (dryRun === undefined || request.query.includes("dryRun=true") === dryRun),
+  );
+}
+
+function apiErrorResponse(code: string, status: number, details: Record<string, unknown> = {}) {
+  return HttpResponse.json({ code, details, message: code, traceId: "test-trace" }, { status });
 }
 
 // The real core returns a PENDING member without `plan` and with the account masked with a single group.
-const pendingMemberFetch = signupFetch((body) => {
-  delete body.member.plan;
-  delete body.member.planId;
-  body.member.maskedAccount = "···· 7719";
-  if (body.member.paymentMethod != null) body.member.paymentMethod.maskedAccount = "···· 7719";
-});
+const pendingMemberFetch = () =>
+  recordingFetch((body) => {
+    delete body.member.plan;
+    delete body.member.planId;
+    body.member.maskedAccount = "···· 7719";
+    if (body.member.paymentMethod != null) body.member.paymentMethod.maskedAccount = "···· 7719";
+  });
 
 function hasNull(value: unknown): boolean {
   if (value === null) return true;
@@ -64,35 +95,83 @@ function hasNull(value: unknown): boolean {
   return Object.values(value as Record<string, unknown>).some(hasNull);
 }
 
-async function renderReview(onNavigate = vi.fn(), fetchOverride?: typeof fetch) {
+async function renderReview({
+  branding = canic,
+  dogs = "Kiwi",
+  fetchOverride,
+  language = "ca",
+  onNavigate = vi.fn(),
+  refreshCounters = vi.fn(),
+}: {
+  branding?: Branding;
+  dogs?: string;
+  fetchOverride?: typeof fetch;
+  language?: "ca" | "en";
+  onNavigate?: (path: string) => void;
+  refreshCounters?: () => void;
+} = {}) {
   window.history.pushState(null, "", `/preinscripcions/${memberId}`);
-  const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-census"], storage: undefined });
-  render(<I18nextProvider i18n={i18n}><BrandingProvider branding={branding}><SignupReviewPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1`, ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }) })} onNavigate={onNavigate} /></BrandingProvider></I18nextProvider>);
-  await screen.findByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u });
+  const i18n = await createI18n({ branding, browserLanguages: [language], initialNamespaces: ["admin-census"], storage: undefined });
+  const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1`, ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }) });
+  render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <CountersRefreshContext.Provider value={refreshCounters}>
+          <SignupReviewPage client={client} onNavigate={onNavigate} />
+        </CountersRefreshContext.Provider>
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+  if (language === "ca") {
+    // «#» written as #: the colour lint reads «#1042» in a string as a hex colour.
+    await screen.findByRole("heading", { name: new RegExp(`Preinscripció \\u00231042 — Marta Roca Pujol \\+ ${dogs}`, "u") });
+  }
   return onNavigate;
 }
 
+/** A `<dd>` whose whole text (with the bold name) matches. */
+function dataRow(pattern: RegExp) {
+  return (_content: string, element: Element | null) => element?.tagName === "DD" && pattern.test(element.textContent);
+}
+
+function openDrawer() {
+  fireEvent.click(screen.getByRole("button", { name: "EDITA LES DADES" }));
+  return screen.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+}
+
+function validate() {
+  fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
+}
+
 describe("T-04-33 D2 signup validation", () => {
-  it("shows masked data, signed documents, consent warning, level, invoice, and Stripe payment", async () => {
+  it("shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment", async () => {
     await renderReview();
 
-    expect(screen.getByText("47·····2K")).toBeVisible();
-    expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", "https://wa.me/34655123123");
-    expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi · tarifa familiar en validar")).toBeVisible();
+    // Organizer ruling 24-09: the DNI/NIE stays in full, as on D10; R-03-27: the phone in clear.
+    expect(screen.getByText("47123456K")).toBeVisible();
+    expect(screen.getByText("marta.roca@example.test · +34 655123123")).toBeVisible();
+    const whatsapp = screen.getByRole("link", { name: "WhatsApp" });
+    expect(whatsapp).toHaveAttribute("href", "https://wa.me/34655123123");
+    expect(whatsapp).toHaveClass("ah-badge");
+    expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi")).toBeVisible();
+    expect(screen.getByText("tarifa familiar en validar")).toBeVisible();
     expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
     expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute("href", "https://files.example.test/cartilla_Kiwi_1.jpg");
     expect(screen.getByText("3 adjunts")).toBeVisible();
+    expect(screen.getByText(dataRow(/^Kiwi · Femella · Whippet · /u))).toBeVisible();
     expect(screen.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
     expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
     expect(screen.getByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
-    expect(await screen.findByDisplayValue(/Abonat · 60,00 €\/mes/u)).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Abonat · 60,00 €/mes");
     expect(screen.getByDisplayValue(/130,00/u)).toBeVisible();
     expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € \(mitja quota\)/u)).toBeVisible();
     expect(screen.getByText("cobrat")).toBeVisible();
+    // The mockup's neutral outline button.
+    expect(screen.getByRole("button", { name: "REBUTJA (amb motiu)" })).toHaveClass("ah-button--ghost");
   });
 
   it("shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet", async () => {
-    await renderReview(vi.fn(), pendingMemberFetch);
+    await renderReview({ fetchOverride: pendingMemberFetch().fetch });
 
     expect(await screen.findByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
     expect(screen.getByText("obligatori")).toBeVisible();
@@ -105,53 +184,78 @@ describe("T-04-33 D2 signup validation", () => {
     [1, "pendent des de fa 1 dia"],
     [5, "pendent des de fa 5 dies"],
   ])("shows the pending badge as an ICU plural for %i days", async (days, text) => {
-    await renderReview(vi.fn(), signupFetch((body) => { body.signup.pendingDays = days; }));
+    await renderReview({ fetchOverride: recordingFetch((body) => { body.signup.pendingDays = days; }).fetch });
     expect(screen.getByText(text)).toHaveClass("ah-badge");
   });
 
+  it("R-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view", async () => {
+    const { fetch: over, requests } = recordingFetch((body) => { body.signup.pendingDays = 3; });
+    await renderReview({ fetchOverride: over });
+    expect(screen.getByText("pendent des de fa 3 dies")).toHaveClass("ah-tone--warning");
+    cleanup();
+
+    await renderReview({ fetchOverride: recordingFetch((body) => { body.signup.pendingDays = 2; }).fetch });
+    expect(screen.getByText("pendent des de fa 2 dies")).toHaveClass("ah-tone--neutral");
+    // M11: D2 never asks the dashboard for warnDays.
+    expect(requests.some((request) => request.path.includes("/dashboard"))).toBe(false);
+  });
+
+  it("step 0 renders each review warning by its code, so a new api value needs only its key", async () => {
+    await renderReview({
+      fetchOverride: recordingFetch((body) => { body.warnings = ["DOCUMENT_PENDING", "PAID_EXCEEDS_QUOTE"]; }).fetch,
+    });
+    const header = screen.getByRole("heading", { name: /Preinscripció #1042/u }).closest("header");
+    expect(header).not.toBeNull();
+    if (header === null) return;
+    expect(within(header).getByText("Document pendent")).toHaveClass("ah-badge");
+    expect(within(header).getByText(/El que s'ha cobrat supera el nou import/u)).toHaveClass("ah-badge");
+  });
+
   it("tolerates null optional fields (INC-08) and never sends null back", async () => {
-    const sent: unknown[] = [];
-    const navigate = await renderReview(
-      vi.fn(),
-      signupFetch(
-        (body) => {
-          body.member.plan = null;
-          body.member.maskedAccount = null;
-          body.member.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
-          body.upfront = null;
-        },
-        (holder) => { holder.familyGroupId = null; },
-        sent,
-      ),
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch(
+      (body) => {
+        body.member.plan = null;
+        body.member.maskedAccount = null;
+        body.member.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
+        body.upfront = null;
+      },
+      (holder) => { holder.familyGroupId = null; },
     );
+    await renderReview({ fetchOverride: over, onNavigate });
     expect(screen.getByText("Domiciliació · — · titular: la mateixa")).toBeVisible();
     expect(screen.queryByText("Import efectivament cobrat:")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
-    // The claim is FOUND but the holder has no group: D2 stops instead of sending `familyGroupId: null`.
-    expect(await screen.findByText("No s'ha pogut completar l'acció.", { exact: false })).toBeVisible();
-    expect(sent.filter((body) => typeof body === "object" && body !== null && "familyGroupId" in body)).toEqual([]);
-    expect(navigate).not.toHaveBeenCalled();
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    const [validation] = sent(requests, "POST", "/validation", false);
+    expect(hasNull(validation?.body)).toBe(false);
+  });
+
+  it("T-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group)", async () => {
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch((body) => { delete body.proposals.familyGroupId; });
+    await renderReview({ fetchOverride: over, onNavigate });
+    expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi")).toBeVisible();
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    const [validation] = sent(requests, "POST", "/validation", false);
+    expect(validation?.body).toBeDefined();
+    expect(validation?.body).not.toHaveProperty("familyGroupId");
   });
 
   it("validates a signup with a null payment method, upfront and family claim without sending null", async () => {
-    const sent: unknown[] = [];
-    const navigate = await renderReview(
-      vi.fn(),
-      signupFetch(
-        (body) => {
-          body.member.paymentMethod = null;
-          body.member.maskedAccount = null;
-          body.familyGroupClaim = null;
-          body.upfront = null;
-        },
-        undefined,
-        sent,
-      ),
-    );
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch((body) => {
+      body.member.paymentMethod = null;
+      body.member.maskedAccount = null;
+      body.familyGroupClaim = null;
+      body.upfront = null;
+    });
+    await renderReview({ fetchOverride: over, onNavigate });
     expect(screen.getAllByText("—").length).toBeGreaterThan(0);
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
-    await waitFor(() => { expect(navigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
-    const validation = sent.at(-1);
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    const validation = sent(requests, "POST", "/validation", false).at(-1)?.body;
     expect(validation).toBeDefined();
     expect(hasNull(validation)).toBe(false);
     expect(validation).not.toHaveProperty("familyGroupId");
@@ -167,63 +271,460 @@ describe("T-04-33 D2 signup validation", () => {
     expect(within(header).getByText("Pagament inicial pendent")).toHaveClass("ah-badge");
   });
 
-  it("edits pending data, requires a rejection reason, and validates through the server", async () => {
-    const navigate = await renderReview();
-    fireEvent.click(screen.getByRole("button", { name: "EDITA LES DADES" }));
-    const drawer = screen.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
-    const nameInput = within(drawer).getAllByLabelText("Nom")[0];
-    expect(nameInput).toBeDefined();
-    if (nameInput === undefined) return;
-    fireEvent.change(nameInput, { target: { value: "Mariona" } });
+  it("requires explicit confirmation when a manual upfront payment is zero", async () => {
+    mockScenario("adminSignupReviewManual");
+    const onNavigate = await renderReview();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveValue(0);
+
+    validate();
+    expect(await screen.findByText("Confirma que no s'ha cobrat cap import")).toBeVisible();
+    expect(onNavigate).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+  });
+});
+
+describe("E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)", () => {
+  it("edits the member and the dog in one save: the dog PATCH carries the dog's version, not the member's", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
+    fireEvent.change(within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Raça"), { target: { value: "Llebrer" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
-    const toast = screen.getByText("Les dades s'han actualitzat.").closest(".ah-toast");
-    expect(toast).toHaveClass("ah-tone--success");
-    expect(toast).toHaveAttribute("role", "status");
-
-    fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
-    const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
-    expect(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" })).toBeDisabled();
-    fireEvent.click(within(modal).getByRole("button", { name: "Cancel·la" }));
-
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
-    await waitFor(() => { expect(navigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    expect(sent(requests, "PATCH", `/members/${memberId}`).map((request) => request.body)).toEqual([{ firstName: "Mariona", version: 3 }]);
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([{ breed: "Llebrer", version: 1 }]);
+    expect(await screen.findByText(dataRow(/^Kiwi · Femella · Llebrer · /u))).toBeVisible();
   });
 
-  it("maps validation errors to the level and next-invoice fields", async () => {
-    const navigate = await renderReview();
+  it("add-dog: the person is read-only and the new dog is saved with its version 0 while the member is at 7 (R-04-25)", async () => {
+    mockScenario("adminSignupReviewAddDog");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ dogs: "Nit", fetchOverride: over });
+    expect(screen.getByText("nou gos")).toHaveClass("ah-badge");
+    const drawer = openDrawer();
+    expect(within(drawer).getByRole("group", { name: "Persona" })).toBeDisabled();
+    const dogGroup = within(drawer).getByRole("group", { name: "Gos (1 de 1)" });
+    expect(dogGroup).toBeEnabled();
+    fireEvent.change(within(dogGroup).getByLabelText("Xip"), { target: { value: "941000031415927" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(requests.filter((request) => request.method === "PATCH" && request.path.includes("/members/"))).toEqual([]);
+    expect(sent(requests, "PATCH", "/dogs/44000000-0000-4000-8000-000000000009").map((request) => request.body)).toEqual([
+      { chip: "941000031415927", version: 0 },
+    ]);
+  });
+
+  it("after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    server.use(http.patch("*/api/v1/dogs/:id", () => apiErrorResponse("CHIP_ALREADY_EXISTS", 409)));
+    const drawer = openDrawer();
+    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
+    fireEvent.change(within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Xip"), { target: { value: "941000024681358" } });
+    const loadsBefore = sent(requests, "GET", `/members/${memberId}/signup`).length;
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent("Aquest número de xip ja està registrat.");
+    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loadsBefore + 1); });
+
+    server.resetHandlers();
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)).toHaveLength(1);
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
+      { chip: "941000024681358", version: 1 },
+      { chip: "941000024681358", version: 1 },
+    ]);
+  });
+});
+
+describe("E3-W07 async drawer: nothing typed during a save is lost", () => {
+  it("locks the fields while the save is in flight", async () => {
+    let release: () => void = () => undefined;
+    server.use(
+      http.patch("*/api/v1/members/:id", async () => {
+        await new Promise<void>((resolve) => { release = resolve; });
+        return undefined;
+      }),
+    );
+    await renderReview();
+    const drawer = openDrawer();
+    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    await waitFor(() => { expect(within(drawer).getByRole("group", { name: "Persona" })).toBeDisabled(); });
+    expect(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).toBeDisabled();
+    release();
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+  });
+});
+
+describe("E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)", () => {
+  const dateError = `signup-invoice-${kiwiId}-error`;
+  const levelError = `signup-level-${kiwiId}-error`;
+  it.each([
+    ["LEVEL_REQUIRED", 422, {}, levelError, "Selecciona el nivell inicial."],
+    ["LEVEL_NOT_ACTIVE", 422, {}, levelError, "Aquest nivell no està actiu."],
+    ["NEXT_INVOICE_DATE_REQUIRED", 422, {}, dateError, "Indica la data del proper rebut."],
+    ["VALIDATION_ERROR", 400, { fieldErrors: [{ code: "INVALID_DATE", field: "nextInvoiceDate" }] }, dateError, "La data del proper rebut no és vàlida."],
+    ["UPFRONT_AMOUNT_EXCEEDS_DUE", 422, {}, "signup-upfront-error", "L'import inicial supera l'import pendent."],
+    ["PLAN_NOT_AVAILABLE", 422, {}, "signup-plan-error", "Aquest pla no està disponible."],
+    ["INVALID_STATE", 409, { reason: "CHECKOUT_PENDING" }, "signup-plan-error", "Hi ha un pagament amb targeta en curs: la modalitat no es pot canviar fins que acabi."],
+    ["MEMBERSHIP_EXISTS", 409, {}, "banner", "Aquest abonament ja existeix."],
+    ["MEMBER_ERASED", 409, {}, "banner", "Aquest abonat ha estat suprimit i ja no es pot modificar."],
+  ] as const)("%s (%i, bare as the api sends it) is shown on its field", async (code, status, details, target, text) => {
+    mockScenario("adminSignupReviewManual");
+    const onNavigate = await renderReview();
+    server.use(
+      http.post("*/api/v1/members/:id/validation", ({ request }) =>
+        new URL(request.url).searchParams.get("dryRun") === "true" ? undefined : apiErrorResponse(code, status, details),
+      ),
+    );
+    fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), { target: { value: "200" } });
+    validate();
+
+    if (target === "banner") {
+      const banner = await screen.findByText(text);
+      expect(banner.closest(".signup-review-error")).toHaveAttribute("role", "alert");
+    } else {
+      await waitFor(() => { expect(document.getElementById(target)).toHaveTextContent(text); });
+      const field = document.querySelector(`[aria-describedby="${target}"]`);
+      expect(field).toHaveAttribute("aria-invalid", "true");
+    }
+    expect(onNavigate).not.toHaveBeenCalled();
+  });
+
+  it("caps the amount input at the amount due", async () => {
+    mockScenario("adminSignupReviewManual");
+    await renderReview();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "130.00");
+  });
+
+  it("maps the mock's own answers too: a missing level and a missing date", async () => {
+    const onNavigate = await renderReview();
     fireEvent.change(screen.getByLabelText("Nivell inicial"), { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
+    validate();
     expect(await screen.findByText("Selecciona el nivell inicial.")).toBeVisible();
-    expect(navigate).not.toHaveBeenCalled();
 
     fireEvent.change(screen.getByLabelText("Nivell inicial"), { target: { value: "43000000-0000-4000-8000-000000000001" } });
     fireEvent.change(screen.getByLabelText("Data del proper rebut"), { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
+    validate();
     expect(await screen.findByText("Indica la data del proper rebut.")).toBeVisible();
-    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Data del proper rebut")).toHaveAttribute("aria-invalid", "true");
+    expect(onNavigate).not.toHaveBeenCalled();
+  });
+});
+
+describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)", () => {
+  it("editing the first email keeps the second, and the untouched phones are not sent", async () => {
+    const { fetch: over, requests } = recordingFetch((body) => {
+      body.member.contactEmails = [
+        { bounced: false, email: "marta.roca@example.test" },
+        { bounced: false, email: "marta.feina@example.test" },
+      ];
+      body.member.phones = [
+        { label: "Mòbil", number: "655123123", prefix: "+34" },
+        { label: "Feina", number: "937000000", prefix: "+34" },
+      ];
+    });
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    expect(within(drawer).getByLabelText("Segon correu electrònic")).toHaveValue("marta.feina@example.test");
+    fireEvent.change(within(drawer).getByLabelText("Correu electrònic"), { target: { value: "marta.r@example.test" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    const [patch] = sent(requests, "PATCH", `/members/${memberId}`);
+    expect(patch?.body).toEqual({
+      contactEmails: [{ email: "marta.r@example.test" }, { email: "marta.feina@example.test" }],
+      version: 3,
+    });
   });
 
-  it("requires explicit confirmation when a manual upfront payment is zero", async () => {
-    mockScenario("adminSignupReviewManual");
-    const navigate = await renderReview();
-    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveValue(0);
+  it("editing the second phone sends both phones, each with its label", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const second = within(drawer).getByRole("group", { name: "Segon telèfon" });
+    fireEvent.change(within(second).getByLabelText("Telèfon"), { target: { value: "937000000" } });
+    fireEvent.change(within(second).getByLabelText("Descripció"), { target: { value: "Feina" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
-    expect(await screen.findByText("Confirma que no s'ha cobrat cap import")).toBeVisible();
-    expect(navigate).not.toHaveBeenCalled();
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      phones: [
+        { label: "Mòbil", number: "655123123", prefix: "+34" },
+        { label: "Feina", number: "937000000", prefix: "+34" },
+      ],
+      version: 3,
+    });
+  });
+
+  it("offers gender (three values), the notes, holderTaxId and the requested plan read-only", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const gender = within(drawer).getByLabelText("Gènere");
+    expect(within(gender).getAllByRole("option").map((option) => option.textContent)).toEqual(["Femení", "Masculí", "Altres / No binari"]);
+    expect(within(drawer).getByLabelText("Modalitat sol·licitada")).toHaveAttribute("readonly");
+    expect(within(drawer).getByLabelText("Modalitat sol·licitada")).toHaveValue("Abonat");
+    fireEvent.change(gender, { target: { value: "OTHER" } });
+    fireEvent.change(within(drawer).getByLabelText("NIF del titular"), { target: { value: "47123456K" } });
+    fireEvent.change(within(drawer).getByLabelText("IBAN"), { target: { value: "ES00 0000 0000 0000 0000 0000" } });
+    fireEvent.change(within(drawer).getByLabelText("Notes als instructors"), { target: { value: "Poruga amb els sorolls" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      gender: "OTHER",
+      paymentMethod: {
+        sepa: { holderName: "Marta Roca Pujol", holderTaxId: "47123456K", iban: "ES0000000000000000000000" },
+        type: "SEPA_DD",
+      },
+      version: 3,
+    });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({ notesToInstructors: "Poruga amb els sorolls", version: 1 });
+  });
+
+  it("adds a dog document forwarding the signed upload headers, and removes one", async () => {
+    const putHeaders: Record<string, string>[] = [];
+    server.use(
+      http.put("https://uploads.example.test/*", ({ request }) => {
+        putHeaders.push(Object.fromEntries(request.headers.entries()));
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    expect(await within(drawer).findAllByRole("button", { name: "Retira" })).toHaveLength(3);
+    fireEvent.change(within(drawer).getByLabelText("Tipus de document"), { target: { value: "INSURANCE" } });
+    fireEvent.change(within(drawer).getByLabelText("Fitxer"), {
+      target: { files: [new File(["pdf"], "assegurança_2026.pdf", { type: "application/pdf" })] },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Puja el document" }));
+
+    expect(await within(drawer).findByRole("link", { name: /assegurança_2026.pdf/u })).toBeVisible();
+    // R-04-08: every signed header goes to the storage unchanged.
+    expect(putHeaders).toEqual([expect.objectContaining({ "content-type": "application/pdf", "if-none-match": "*" })]);
+    expect(sent(requests, "POST", `/dogs/${kiwiId}/documents`)[0]?.body).toEqual({
+      fileKey: "mock-dog_document-assegurança_2026.pdf",
+      name: "assegurança_2026.pdf",
+      type: "INSURANCE",
+    });
+    // The page reloads the view, so D2 lists the new file too.
+    await waitFor(() => { expect(screen.getAllByRole("link", { name: /assegurança_2026.pdf/u })).toHaveLength(2); });
+
+    const [firstRemove] = within(drawer).getAllByRole("button", { name: "Retira" });
+    if (firstRemove === undefined) throw new TypeError("No remove button");
+    fireEvent.click(firstRemove);
+    await waitFor(() => { expect(sent(requests, "DELETE", "/files/48000000-0000-4000-8000-000001000000")).toHaveLength(1); });
+    await waitFor(() => { expect(within(drawer).queryByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toBeNull(); });
+  });
+});
+
+describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)", () => {
+  it("lists planOptions with their periodicity and runs dryRun on a change to Pack 6: lines, date and body updated", async () => {
+    mockScenario("adminSignupReviewManual");
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over, onNavigate });
+    const select = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
+    expect(within(select).getAllByRole("option").map((option) => option.textContent)).toEqual([
+      "Abonat · 60,00 €/mes",
+      "Abonat familiar · 30,00 €/mes",
+      "Pack 6 · 135,00 €",
+      "Pack 10 · 180,00 €",
+      "Teràpia · 10,00 €/mes",
+    ]);
+    expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € \(mitja quota\)/u)).toBeVisible();
+
+    fireEvent.change(select, { target: { value: pack6 } });
+    expect(await screen.findByText(/^Pack 135,00 € · es registra el cobrament/u)).toBeVisible();
+    expect(screen.queryByLabelText("Data del proper rebut")).toBeNull();
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "135.00");
+    const [dryRun] = sent(requests, "POST", "/validation", true);
+    expect(dryRun?.body).toMatchObject({
+      planId: "10000000-0000-4000-8000-000000000002",
+      priceId: "20000000-0000-4000-8000-000000000002",
+    });
+    expect(dryRun?.body).not.toHaveProperty("nextInvoiceDate");
 
     fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
-    fireEvent.click(screen.getByRole("button", { name: "VALIDA L'ALTA" }));
-    await waitFor(() => { expect(navigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    const [validation] = sent(requests, "POST", "/validation", false);
+    expect(validation?.body).toMatchObject({
+      planId: "10000000-0000-4000-8000-000000000002",
+      priceId: "20000000-0000-4000-8000-000000000002",
+    });
+    expect(validation?.body).not.toHaveProperty("nextInvoiceDate");
   });
 
-  it("rejects a pending signup only after receiving a valid reason", async () => {
-    const navigate = await renderReview();
+  it("renders the dry run's warnings on the plan card (PAID_EXCEEDS_QUOTE on a cheaper plan)", async () => {
+    await renderReview();
+    fireEvent.change(screen.getByRole("combobox", { name: "Modalitat i tarifa" }), {
+      target: { value: "10000000-0000-4000-8000-000000000004|20000000-0000-4000-8000-000000000004" },
+    });
+    expect(await screen.findByText("El que s'ha cobrat supera el nou import: caldrà retornar la diferència des de Facturació.")).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Teràpia · 10,00 €/mes");
+  });
+
+  it("a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group", async () => {
+    mockScenario("adminSignupReviewFamilyPending");
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over, onNavigate });
+    expect(screen.getByText("Pendent — ha indicat: Laura Serra + gos Duna")).toBeVisible();
+
+    validate();
+    expect(await screen.findByText("Tria el grup del titular o «Sense grup».")).toBeVisible();
+    expect(sent(requests, "POST", "/validation", false)).toEqual([]);
+
+    fireEvent.change(screen.getByLabelText("Cerca el titular"), { target: { value: "Serra" } });
+    fireEvent.click(await screen.findByRole("button", { name: "Afegeix al grup de Laura Serra Vidal" }, { timeout: 3_000 }));
+    expect(screen.getByText("Grup de Laura Serra Vidal")).toBeVisible();
+    const search = sent(requests, "GET", "/members").at(-1);
+    expect(decodeURIComponent(search?.query ?? "")).toContain("fields=id,fullName,dogs,familyGroup");
+
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({ familyGroupId: "family-laura" });
+  });
+
+  it("a NOT_FOUND_PENDING claim is resolved with an explicit «Sense grup»: no familyGroupId", async () => {
+    mockScenario("adminSignupReviewFamilyPending");
+    const onNavigate = vi.fn();
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over, onNavigate });
+    fireEvent.click(screen.getByRole("button", { name: "Sense grup" }));
+    expect(screen.getByText("Sense grup")).toHaveClass("ah-badge");
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).not.toHaveProperty("familyGroupId");
+  });
+});
+
+describe("E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)", () => {
+  it("after VALIDA navigates to /tauler and refreshes the menu counters", async () => {
+    const refreshCounters = vi.fn();
+    const onNavigate = await renderReview({ refreshCounters });
+    validate();
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    expect(refreshCounters).toHaveBeenCalledTimes(1);
+  });
+
+  it("a signup with nothing pending (409 INVALID_STATE NOT_PENDING) says it is resolved and links to D10", async () => {
+    const onNavigate = vi.fn();
+    server.use(http.get("*/api/v1/members/:id/signup", () => apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" })));
+    window.history.pushState(null, "", `/preinscripcions/${memberId}`);
+    const i18n = await createI18n({ branding: canic, browserLanguages: ["ca"], initialNamespaces: ["admin-census"], storage: undefined });
+    render(<I18nextProvider i18n={i18n}><BrandingProvider branding={canic}><SignupReviewPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} onNavigate={onNavigate} /></BrandingProvider></I18nextProvider>);
+
+    expect(await screen.findByText("Aquesta preinscripció ja s'ha resolt")).toBeVisible();
+    const link = screen.getByRole("link", { name: "Obre la fitxa de l'abonat" });
+    expect(link).toHaveAttribute("href", `/abonats/${memberId}`);
+    fireEvent.click(link);
+    expect(onNavigate).toHaveBeenCalledWith(`/abonats/${memberId}`);
+  });
+
+  it("a VALIDA on a signup another admin already resolved shows the resolved state", async () => {
+    await renderReview();
+    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" })));
+    validate();
+    expect(await screen.findByText("Aquesta preinscripció ja s'ha resolt")).toBeVisible();
+  });
+});
+
+describe("E3-W07 step 7 · the refund warning (R-04-23)", () => {
+  it("warns before rejecting a signup with a collected payment and keeps the refund flag for D1", async () => {
+    const refreshCounters = vi.fn();
+    const onNavigate = await renderReview({ refreshCounters });
+    fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
+    const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
+    expect(within(modal).getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació")).toBeVisible();
+    expect(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" })).toBeDisabled();
+    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
+    fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=rejected-refund"); });
+    expect(refreshCounters).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects a signup with nothing collected without the warning", async () => {
+    mockScenario("adminSignupReviewManual");
+    const onNavigate = await renderReview();
+    fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
+    const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
+    expect(within(modal).queryByText(/Hi ha un pagament cobrat/u)).toBeNull();
+    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
+    fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
+    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler"); });
+  });
+});
+
+describe("E3-W07 step 8 · the D2 minors", () => {
+  it("STALE_VERSION offers a reload that keeps the admin's own choices", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    fireEvent.change(screen.getByLabelText("Nivell inicial"), { target: { value: "43000000-0000-4000-8000-000000000002" } });
+    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)));
+    validate();
+    const alert = await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.");
+    const loads = sent(requests, "GET", `/members/${memberId}/signup`).length;
+    const banner = alert.closest<HTMLElement>(".signup-review-error");
+    if (banner === null) throw new TypeError("No error banner");
+    fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
+    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loads + 1); });
+    expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000002");
+  });
+
+  it("shows a rejection error inside the modal, with the reload action", async () => {
+    await renderReview();
+    server.use(http.post("*/api/v1/members/:id/rejection", () => apiErrorResponse("STALE_VERSION", 409)));
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
     fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
     fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
-    await waitFor(() => { expect(navigate).toHaveBeenCalledWith("/tauler"); });
+    expect(await within(modal).findByRole("alert")).toHaveTextContent("La preinscripció ha canviat. Torna-la a carregar.");
+    expect(within(modal).getByRole("button", { name: "Torna a carregar" })).toBeVisible();
+  });
+
+  it("names the first month and its portion from upfront.firstMonth: a full month has no «(mitja quota)»", async () => {
+    await renderReview({
+      fetchOverride: recordingFetch((body) => {
+        if (body.upfront == null) return;
+        body.upfront.firstMonth = { amountDue: { amountMinor: 6000, currency: "EUR" }, option: "ALTERNATIVE", portion: "FULL", startDate: "2026-09-01" };
+        const line = body.upfront.lines[1];
+        if (line !== undefined) line.amount = { amountMinor: 6000, currency: "EUR" };
+      }).fetch,
+    });
+    expect(screen.getByText(/Entrada 100,00 € \+ setembre 60,00 € · es registra/u)).toBeVisible();
+    expect(screen.queryByText(/mitja quota/u)).toBeNull();
+  });
+
+  it("en: gender OTHER → «them»", async () => {
+    const branding: Branding = { ...canic, locales: ["ca", "es", "en"] };
+    window.history.pushState(null, "", `/preinscripcions/${memberId}`);
+    await renderReview({
+      branding,
+      fetchOverride: recordingFetch((body) => { body.member.gender = "OTHER"; }).fetch,
+      language: "en",
+    });
+    expect(await screen.findByText(/do not publish photos showing them\./u)).toBeVisible();
+  });
+
+  it("gates the plan, payment and upfront blocks on BILLING and the group row on FAMILY_GROUP", async () => {
+    await renderReview({ branding: { ...canic, modules: canic.modules.filter((module) => module !== "BILLING" && module !== "FAMILY_GROUP") } });
+    expect(screen.queryByText("Pagament")).toBeNull();
+    expect(screen.queryByText("Grup familiar")).toBeNull();
+    expect(screen.queryByRole("combobox", { name: "Modalitat i tarifa" })).toBeNull();
+    expect(screen.queryByText("Pagament inicial (anticipat)")).toBeNull();
+    expect(screen.queryByLabelText("Data del proper rebut")).toBeNull();
+    expect(screen.getByText("Abonat")).toBeVisible();
   });
 });

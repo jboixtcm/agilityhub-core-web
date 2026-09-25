@@ -523,7 +523,7 @@ export function Sidebar({ groups, label }: { groups: SidebarGroup[]; label: stri
               >
                 <Icon aria-hidden="true" name={entry.icon} />
                 <span>{entry.label}</span>
-                {entry.count === undefined ? null : <Badge>{entry.count}</Badge>}
+                {entry.count === undefined ? null : <Badge className="ah-sidebar__count">{entry.count}</Badge>}
               </a>
             ))}
           </section>

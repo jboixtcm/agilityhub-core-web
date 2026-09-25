@@ -223,7 +223,8 @@ async function completePublicSignup({
   dog: string;
   email: string;
   expectedDocument: { type: string; value: string };
-  family: boolean;
+  /** `found`: the seed's Laia Fictici001 + Ona 1; `pending`: a holder the club does not have (R-04-12). */
+  family: "found" | "pending" | false;
   firstName: string;
   lastName: string;
   page: Page;
@@ -250,14 +251,21 @@ async function completePublicSignup({
 
   await page.getByRole("button", { name: "CONTINUA" }).click();
   await page.waitForURL("**/apuntat-hi/familia");
-  if (family) {
+  if (family === "found") {
     await page.getByLabel("Nom del responsable").fill("Laia Fictici001");
     await page.getByLabel("Nom d'un dels seus gossos").fill("Ona 1");
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await expect(page.getByText(/Grup trobat: Laia F\./u)).toBeVisible();
     if (screenshots) await screenshot(page, "18-family-core-375.png");
   }
-  await page.getByRole("button", { name: "CONTINUA" }).click();
+  if (family === "pending") {
+    await page.getByLabel("Nom del responsable").fill("Pere Inexistent");
+    await page.getByLabel("Nom d'un dels seus gossos").fill("Tro");
+    await page.getByRole("button", { name: "CONTINUA" }).click();
+    await page.getByRole("button", { name: "Deixa-ho pendent i continua ›" }).click();
+  } else {
+    await page.getByRole("button", { name: "CONTINUA" }).click();
+  }
   await page.waitForURL("**/apuntat-hi/pagament");
   await page.getByLabel("Accepto la política de privacitat").check();
   if (screenshots) await screenshot(page, "19-payment-core-375.png");
@@ -356,7 +364,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     dog: acceptedDog,
     email: acceptedEmail,
     expectedDocument: { type: "DNI", value: "12345678Z" },
-    family: true,
+    family: "found",
     firstName: "Nora",
     lastName: "Integració E3",
     page: publicPage,
@@ -381,6 +389,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   );
   await openSignupFromDashboard(admin, acceptedDog, acceptedName);
   const view = (await (await signupView).json()) as {
+    dogs: { id: string; version?: number }[];
     member: {
       maskedAccount?: string;
       paymentMethod?: { maskedAccount?: string; type: string };
@@ -388,8 +397,14 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       planId?: string;
       status: string;
     };
+    planOptions?: unknown[];
     proposals: { nextInvoiceDate?: string; planId?: string };
+    warnDays?: number;
   };
+  // Step 0: the adopted contract (api E3-T08) on the real core.
+  expect(view.planOptions?.length).toBeGreaterThan(0);
+  expect(typeof view.warnDays).toBe("number");
+  expect(view.dogs.every((dog) => typeof dog.version === "number")).toBe(true);
   // Real-core shape behind the D2 plan/date/account rendering (fictional member).
   writeFileSync(
     join(evidenceDirectory, "d2-signup-view-core.json"),
@@ -415,6 +430,10 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const edit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
   await edit.getByLabel("IBAN").fill("ES9121000418450200051332");
+  // M14: the second email and the second phone (R-04-03), kept by the next edit below.
+  await edit.locator("#signup-edit-email2").fill("nora.feina.e3@example.test");
+  await edit.locator("#signup-edit-phone2Number").fill("699000911");
+  await edit.locator("#signup-edit-phone2Label").fill("Feina");
   const signupViewAfterEdit = admin.waitForResponse(
     (response) =>
       response.url().endsWith(`/members/${acceptedMemberId}/signup`) &&
@@ -440,6 +459,22 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(savedToast).toBeVisible();
   await expect(savedToast).toHaveClass(/ah-tone--success/u);
   await expect(admin.getByText(/Domiciliació · ···· ···· ···· ···· 1332/u)).toBeVisible();
+  // M14 on the real core: editing the first phone keeps the second phone and both emails.
+  await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
+  await expect(edit.locator("#signup-edit-email2")).toHaveValue("nora.feina.e3@example.test");
+  await edit.locator("#signup-edit-phone1Number").fill("699000921");
+  const phonePatch = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/members/${acceptedMemberId}`) && response.request().method() === "PATCH",
+  );
+  await edit.getByRole("button", { name: "DESA ELS CANVIS" }).click();
+  const phonePatchResponse = await phonePatch;
+  expect(phonePatchResponse.status(), await phonePatchResponse.text()).toBe(200);
+  await expect(edit).not.toBeVisible();
+  const contact = admin.locator(".signup-review-data dd").filter({ hasText: "nora.feina.e3@example.test" });
+  await expect
+    .poll(async () => ((await contact.textContent()) ?? "").replaceAll(/\s/gu, ""))
+    .toMatch(/nora\.e3@example\.test·nora\.feina\.e3@example\.test·\+?\d*699000921·\+?\d*699000911/u);
   await expect(
     admin.getByLabel("Modalitat i tarifa").locator("option:checked"),
   ).toHaveText(/€\/mes/u);
@@ -449,15 +484,12 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   // A date different from the core's proposal, so the request proves the typed value is sent.
   expect(view.proposals.nextInvoiceDate).not.toBe("2026-11-01");
   await expect(admin.getByLabel("Data del proper rebut")).not.toHaveValue("01/11/2026");
-  await completeValidation(admin, { nextInvoiceDate: { input: "01/11/2026", iso: "2026-11-01" } });
-  await admin.waitForTimeout(1_000);
-  await navigateSpa(admin, "/abonats");
-  await expect(admin.getByRole("heading", { name: "Abonats" })).toBeVisible();
+  // M11 (R-14-01): VALIDA lands on D1, whose first read already omits the signup (no wait, no detour).
   const refreshedDashboard = admin.waitForResponse(
     (response) =>
       response.url().endsWith("/api/v1/dashboard") && response.request().method() === "GET",
   );
-  await navigateSpa(admin, "/tauler");
+  await completeValidation(admin, { nextInvoiceDate: { input: "01/11/2026", iso: "2026-11-01" } });
   const dashboardResponse = await refreshedDashboard;
   expect(dashboardResponse.status()).toBe(200);
   const dashboard = (await dashboardResponse.json()) as {
@@ -473,6 +505,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       exact: true,
     }),
   ).toBeVisible();
+  // The menu count is refreshed by the command itself (R-14-08), not by a navigation.
+  await expect(signupNavigation).toHaveText(new RegExp(`Preinscripcions\\s*${String(initialPendingCount - 1)}$`, "u"));
   await screenshot(admin, "D1-dashboard-after-validation-core-1280.png");
 
   const welcomeMessage = await waitForMessage(
@@ -513,14 +547,15 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   });
   await rejectedContext.close();
   // A passport-only applicant (DNI / NIE empty) reaches «Sol·licitud enviada» too (B1, R-04-01).
+  // She names a family holder the club does not have and leaves it pending (NOT_FOUND_PENDING).
   const passportContext = await localizedContext(browser, { height: 844, width: 375 });
-  await completePublicSignup({
+  const passportMemberId = await completePublicSignup({
     chip: "941000000009904",
     document: "",
     dog: passportDog,
     email: passportEmail,
     expectedDocument: { type: "PASSPORT", value: "PA1234567" },
-    family: false,
+    family: "pending",
     firstName: "Joana",
     lastName: "Passaport E3",
     page: await passportContext.newPage(),
@@ -534,6 +569,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(admin.getByRole("heading", { name: new RegExp(rejectedName, "u") })).toBeVisible();
   await admin.getByRole("button", { name: "REBUTJA (amb motiu)" }).click();
   const rejectModal = admin.getByRole("dialog", { name: "Rebutja la preinscripció" });
+  // R-04-23: nothing was collected, so there is no refund warning.
+  await expect(rejectModal.getByText(/Hi ha un pagament cobrat/u)).toHaveCount(0);
   await rejectModal.getByLabel("Motiu del rebuig").fill("Dades de prova rebutjades");
   await rejectModal.getByRole("button", { name: "REBUTJA (amb motiu)" }).click();
   await admin.waitForURL("**/tauler");
@@ -576,8 +613,89 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   });
   await openSignupFromDashboard(admin, additionalDog, additionalDog);
   await expect(admin.getByText("nou gos")).toBeVisible();
+  // M12 on the real core: the member (ACTIVE, edited above) and the new dog have different versions;
+  // the dog PATCH sends the dog's own. R-04-25: the person is read-only in add-dog mode.
+  await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
+  const addDogEdit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+  // Playwright reads `disabled` on the controls a disabled fieldset contains, not on the fieldset.
+  await expect(addDogEdit.locator("#signup-edit-firstName")).toBeDisabled();
+  await expect(addDogEdit.locator("#signup-edit-dog-0-breed")).toBeEnabled();
+  await addDogEdit.locator("#signup-edit-dog-0-breed").fill("Gos d'atura");
+  const dogPatch = admin.waitForResponse(
+    (response) => /\/api\/v1\/dogs\/[^/]+$/u.test(response.url()) && response.request().method() === "PATCH",
+  );
+  await addDogEdit.getByRole("button", { name: "DESA ELS CANVIS" }).click();
+  const dogPatchResponse = await dogPatch;
+  expect(dogPatchResponse.status(), await dogPatchResponse.text()).toBe(200);
+  await expect(admin.locator(".ah-toast").filter({ hasText: "Les dades s'han actualitzat." })).toBeVisible();
+  await expect(admin.locator(".signup-review-data dd").filter({ hasText: "Gos d'atura" }).first()).toBeVisible();
+  await screenshot(admin, "D2-signup-add-dog-core-1280.png");
   await completeValidation(admin);
   additionalDogValidated = true;
+
+  // M15 on the real core: the NOT_FOUND_PENDING claim, a plan change with dryRun, a bare 422 on its
+  // field, then the claim resolved by attaching the found holder's group (R-04-13).
+  await navigateSpa(admin, `/preinscripcions/${passportMemberId}`);
+  await expect(admin.getByRole("heading", { name: /Joana Passaport E3/u })).toBeVisible();
+  await expect(admin.getByText("Pendent — ha indicat: Pere Inexistent + gos Tro")).toBeVisible();
+  await screenshot(admin, "D2-signup-family-pending-core-1280.png");
+  const planSelect = admin.getByLabel("Modalitat i tarifa");
+  const requestedPlan = await planSelect.inputValue();
+  const packValue = await planSelect
+    .locator("option", { hasText: /^Pack 6 · / })
+    .getAttribute("value");
+  expect(packValue).not.toBeNull();
+  const packQuote = admin.waitForResponse(
+    (response) => response.url().includes("/validation?dryRun=true") && response.request().method() === "POST",
+  );
+  await planSelect.selectOption(packValue ?? "");
+  const packQuoteResponse = await packQuote;
+  expect(packQuoteResponse.status(), await packQuoteResponse.text()).toBe(200);
+  expect(packQuoteResponse.request().postDataJSON()).toMatchObject({
+    planId: (packValue ?? "").split("|")[0],
+    priceId: (packValue ?? "").split("|")[1],
+  });
+  await expect(admin.locator(".signup-review-upfront-breakdown")).toContainText("Pack");
+  await expect(admin.getByLabel("Data del proper rebut")).toHaveCount(0);
+  await screenshot(admin, "D2-signup-plan-change-core-1280.png");
+  const backQuote = admin.waitForResponse(
+    (response) => response.url().includes("/validation?dryRun=true") && response.request().method() === "POST",
+  );
+  await planSelect.selectOption(requestedPlan);
+  expect((await backQuote).status()).toBe(200);
+  await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
+
+  // Nothing collected yet (manual): confirmed, so the next VALIDA reaches the family decision.
+  await admin.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }).check();
+  await admin.getByRole("button", { name: "VALIDA L'ALTA" }).click();
+  await expect(admin.getByText("Tria el grup del titular o «Sense grup».")).toBeVisible();
+  const holderSearch = admin.waitForResponse(
+    (response) => response.url().includes("/api/v1/members?") && response.request().method() === "GET",
+  );
+  await admin.getByLabel("Cerca el titular").fill("Laia Fictici001");
+  expect((await holderSearch).status()).toBe(200);
+  await admin.getByRole("button", { name: /^Afegeix al grup de Laia Fictici001\b/u }).first().click();
+  await expect(admin.getByText(/^Grup de Laia Fictici001\b/u)).toBeVisible();
+
+  // A bare 422 from the core lands on its field: LEVEL_REQUIRED on «Nivell inicial».
+  await admin.getByLabel("Nivell inicial").first().selectOption("");
+  const levelRequired = admin.waitForResponse(
+    (response) => response.url().includes("/validation?") && response.request().method() === "POST",
+  );
+  await admin.getByRole("button", { name: "VALIDA L'ALTA" }).click();
+  const levelRequiredResponse = await levelRequired;
+  expect(levelRequiredResponse.status()).toBe(422);
+  expect(((await levelRequiredResponse.json()) as { code: string }).code).toBe("LEVEL_REQUIRED");
+  await expect(admin.locator(".ah-form-field__error").filter({ hasText: "Selecciona el nivell inicial." })).toBeVisible();
+  await expect(admin.getByLabel("Nivell inicial").first()).toHaveAttribute("aria-invalid", "true");
+  await screenshot(admin, "D2-signup-level-required-core-1280.png");
+
+  const familyValidation = admin.waitForRequest(
+    (request) => request.url().includes("/validation?dryRun=false") && request.method() === "POST",
+  );
+  await completeValidation(admin);
+  const familyBody = (await familyValidation).postDataJSON() as { familyGroupId?: string };
+  expect(familyBody.familyGroupId).toMatch(/^[0-9a-f-]{36}$/u);
 
   const parametersResponse = admin.waitForResponse(
     (response) =>

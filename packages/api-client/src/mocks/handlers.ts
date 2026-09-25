@@ -41,7 +41,6 @@ import {
   type MeDogs,
   type MeProfile,
 } from "./fixtures/member-self-service";
-import memberSignupReviewFixture from "./fixtures/member-signup-review.json";
 import {
   findParameter,
   replaceParameter,
@@ -56,6 +55,19 @@ import {
   type MemberDogSignupRequest,
   type SignupRequest,
 } from "./fixtures/signup";
+import {
+  addDogPendingSignup,
+  addDogSignupReview,
+  derivedSignupReview,
+  type SignupReviewVariant,
+  signupReviewBaseline,
+  signupReviewDryRun,
+  signupReviewHasCollectedPayment,
+  signupReviewNeedsInvoiceDate,
+  signupDogDocuments,
+  signupReviewVariant,
+  storeSignupDogDocuments,
+} from "./fixtures/signup-review";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -147,13 +159,48 @@ type NullableDashboard = Omit<Dashboard, "dogsByLevel" | "kpis" | "pendingSignup
 };
 
 const initialDashboard = dashboardFixture as NullableDashboard;
-const initialMemberSignupReview = memberSignupReviewFixture as MemberSignupView;
 let dashboardState = structuredClone(initialDashboard);
-let memberSignupReviewState = structuredClone(initialMemberSignupReview);
+let signupReviewWorld: { variant: SignupReviewVariant | undefined; view: MemberSignupView } | undefined;
+// Members whose signup was validated or rejected: `GET /members/{id}/signup` answers NOT_PENDING.
+const resolvedSignups = new Set<string>();
+
+/** The D2 view of the Marta Roca signup for the current scenario's variant, with its edits. */
+function currentSignupReview(): MemberSignupView {
+  const variant = currentMockScenario().signupReview;
+  const world = signupReviewWorld;
+  if (world !== undefined && world.variant === variant) return world.view;
+  const view =
+    variant === "addDog"
+      ? addDogSignupReview(signupReviewBaseline)
+      : signupReviewVariant(signupReviewBaseline, variant);
+  signupReviewWorld = { variant, view };
+  return view;
+}
 
 function resetDashboardMockState(): void {
   dashboardState = structuredClone(initialDashboard);
-  memberSignupReviewState = structuredClone(initialMemberSignupReview);
+  signupReviewWorld = undefined;
+  resolvedSignups.clear();
+}
+
+/** A decided signup leaves D1 and the menu count at once (R-14-01; api E3-T08). */
+function resolveSignup(memberId: string): void {
+  resolvedSignups.add(memberId);
+  const pendingSignups = dashboardState.pendingSignups;
+  if (pendingSignups === null) return;
+  pendingSignups.items = pendingSignups.items.filter((item) => item.memberId !== memberId);
+  pendingSignups.count = pendingSignups.items.length;
+  if (dashboardState.kpis.pendingSignups !== null) {
+    dashboardState.kpis.pendingSignups.value = pendingSignups.count;
+  }
+}
+
+/** The api's `409 INVALID_STATE` with its `details.reason` (S04 §6). */
+function invalidState(reason: string) {
+  return HttpResponse.json<ApiErrorResponse>(
+    { code: "INVALID_STATE", details: { reason }, message: "Invalid state", traceId: "mock-trace-id" },
+    { status: 409 },
+  );
 }
 
 function pageText(source: Record<string, string>, locale: string): string {
@@ -945,6 +992,12 @@ export const handlers = [
     const scenario = currentMockScenario();
     const modules = scenario.branding.modules;
     const response = structuredClone(dashboardState);
+    if (scenario.signupReview === "addDog" && response.pendingSignups !== null) {
+      const addDogMemberId = signupReviewBaseline.member.id;
+      response.pendingSignups.items = response.pendingSignups.items.map((item) =>
+        item.memberId === addDogMemberId ? addDogPendingSignup(item) : item,
+      );
+    }
     if (!modules.includes("FREE_TRAINING")) response.kpis.trainingBookings = null;
     if (scenario.dashboardNulls === true) {
       response.dogsByLevel = null;
@@ -980,123 +1033,90 @@ export const handlers = [
   }),
   http.get("*/api/v1/members/:id/signup", ({ params }) => {
     const id = String(params.id);
+    if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
     const pending = dashboardState.pendingSignups?.items.find((item) => item.memberId === id);
     if (pending === undefined) return apiError("NOT_FOUND", "Signup not found", 404);
-    if (id === memberSignupReviewState.member.id) {
-      if (currentMockScenario().signupReviewManual === true) {
-        const response = structuredClone(memberSignupReviewState);
-        if (response.upfront !== undefined) {
-          response.upfront.lines = response.upfront.lines.map((line) => {
-            const dueLine = { ...line, provider: "MANUAL" as const, status: "DUE" as const };
-            delete dueLine.paidAmount;
-            return dueLine;
-          });
-          response.upfront.totalPaid.amountMinor = 0;
-        }
-        response.warnings = [...response.warnings, "UPFRONT_UNPAID"];
-        return HttpResponse.json(response);
-      }
-      return HttpResponse.json(memberSignupReviewState);
-    }
-    const response = structuredClone(memberSignupReviewState);
-    response.member.id = id;
-    response.member.firstName = pending.shortName.split(" ")[0] ?? pending.shortName;
-    response.member.fullName = pending.shortName;
-    response.member.accountMissing = (pending.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED");
-    if (response.member.accountMissing) {
-      response.member.paymentMethod = { type: "SEPA_DD" };
-    }
-    response.signup.pendingDays = pending.pendingDays;
-    response.signup.source = pending.dogs.some((dog) => dog.isAddDog) ? "APP_ADD_DOG" : "PUBLIC";
-    response.warnings = [...(pending.warnings ?? [])];
-    const dogTemplate = response.dogs[0];
-    if (dogTemplate === undefined) return apiError("NOT_FOUND", "Signup dog not found", 404);
-    response.dogs = pending.dogs.map((dog, index) => ({
-      ...dogTemplate,
-      breed: dog.breed,
-      id: `44000000-0000-4000-8000-00000000000${String(index + 2)}`,
-      name: dog.name,
-    }));
-    return HttpResponse.json(response);
+    const view = currentSignupReview();
+    return HttpResponse.json(id === view.member.id ? view : derivedSignupReview(view, pending));
   }),
   http.post("*/api/v1/members/:id/validation", async ({ params, request }) => {
-    if (String(params.id) !== memberSignupReviewState.member.id) {
-      return apiError("NOT_FOUND", "Signup not found", 404);
-    }
+    const id = String(params.id);
+    const view = currentSignupReview();
+    if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
+    if (id !== view.member.id) return apiError("NOT_FOUND", "Signup not found", 404);
     const body = (await request.json()) as ValidationRequest;
-    if (body.version !== memberSignupReviewState.version) {
+    const dryRun = new URL(request.url).searchParams.get("dryRun") === "true";
+    // The api answers these business codes bare, with empty `details` (S04 §6; statuses per
+    // CATALEG_ERRORS rule 0); only a malformed date is a VALIDATION_ERROR with its field.
+    if (!dryRun && body.version !== view.version) {
       return apiError("STALE_VERSION", "Stale signup version", 409);
     }
-    const missingLevel = body.dogs.findIndex((dog) => dog.levelId === undefined);
-    if (missingLevel >= 0) {
-      return HttpResponse.json<ApiErrorResponse>(
-        {
-          code: "LEVEL_REQUIRED",
-          details: { fieldErrors: [{ code: "LEVEL_REQUIRED", field: `dogs.${String(missingLevel)}.levelId` }] },
-          message: "Initial level is required",
-          traceId: "mock-trace-id",
-        },
-        { status: 422 },
-      );
-    }
+    const plan =
+      body.planId === undefined ? undefined : view.planOptions.find((option) => option.planId === body.planId);
     if (
-      currentMockScenario().branding.modules.includes("BILLING") &&
-      body.planId === "10000000-0000-4000-8000-000000000001" &&
-      body.nextInvoiceDate === undefined
+      body.planId !== undefined &&
+      (plan === undefined ||
+        (body.priceId !== undefined && !plan.prices.some((price) => price.priceId === body.priceId)))
     ) {
-      return HttpResponse.json<ApiErrorResponse>(
-        {
-          code: "NEXT_INVOICE_DATE_REQUIRED",
-          details: { fieldErrors: [{ code: "NEXT_INVOICE_DATE_REQUIRED", field: "nextInvoiceDate" }] },
-          message: "Next invoice date is required",
-          traceId: "mock-trace-id",
-        },
-        { status: 422 },
-      );
+      return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
     }
-    const dryRun = new URL(request.url).searchParams.get("dryRun") === "true";
-    if (dryRun) {
-      return HttpResponse.json({
-        nextInvoiceDate: body.nextInvoiceDate ?? memberSignupReviewState.proposals.nextInvoiceDate,
-        price: {
-          amount: { amountMinor: 6000, currency: "EUR" },
-          id: body.priceId ?? "20000000-0000-4000-8000-000000000001",
-          periodicity: "MONTHLY" as const,
-        },
-        upfront: memberSignupReviewState.upfront,
-        warnings: memberSignupReviewState.warnings,
-      });
+    // S04 §5 (E39): no plan change while a card checkout of the submission is running.
+    const planChanged = body.planId !== undefined && body.planId !== view.signup.planIdRequested;
+    const checkoutPending = (view.upfront?.lines ?? []).some((line) => line.status === "CHECKOUT_PENDING");
+    if (!dryRun && planChanged && checkoutPending) return invalidState("CHECKOUT_PENDING");
+    if (dryRun) return HttpResponse.json(signupReviewDryRun(view, body));
+    const levels = new Set(view.proposals.levels.map((level) => level.id));
+    if (body.dogs.some((dog) => dog.levelId === undefined)) {
+      return apiError("LEVEL_REQUIRED", "Initial level is required", 422);
     }
-    const pendingSignups = dashboardState.pendingSignups;
-    if (pendingSignups !== null) {
-      pendingSignups.items = pendingSignups.items.filter((item) => item.memberId !== String(params.id));
-      pendingSignups.count = pendingSignups.items.length;
-      if (dashboardState.kpis.pendingSignups !== null) {
-        dashboardState.kpis.pendingSignups.value = pendingSignups.count;
-      }
+    if (body.dogs.some((dog) => dog.levelId !== undefined && !levels.has(dog.levelId))) {
+      return apiError("LEVEL_NOT_ACTIVE", "Level not active", 422);
     }
+    const billing = currentMockScenario().branding.modules.includes("BILLING");
+    if (billing && signupReviewNeedsInvoiceDate(view, body) && body.nextInvoiceDate === undefined) {
+      return apiError("NEXT_INVOICE_DATE_REQUIRED", "Next invoice date is required", 422);
+    }
+    const firstMonthStart = view.upfront?.firstMonth?.startDate;
+    if (
+      body.nextInvoiceDate !== undefined &&
+      firstMonthStart !== undefined &&
+      body.nextInvoiceDate < firstMonthStart
+    ) {
+      return validationError([{ code: "INVALID_DATE", field: "nextInvoiceDate" }]);
+    }
+    const quote = signupReviewDryRun(view, body).upfront;
+    const due = Math.max(0, (quote?.totalDue.amountMinor ?? 0) - (quote?.totalPaid.amountMinor ?? 0));
+    if ((body.upfrontAmountPaid?.amountMinor ?? 0) > due) {
+      return apiError("UPFRONT_AMOUNT_EXCEEDS_DUE", "Upfront amount exceeds the amount due", 422);
+    }
+    resolveSignup(id);
     return HttpResponse.json({
       accountId: "46000000-0000-4000-8000-000000000001",
       dogIds: body.dogs.map((dog) => dog.dogId),
-      memberId: memberSignupReviewState.member.id,
-      number: 1042,
+      memberId: view.member.id,
+      number: view.member.memberNumber ?? 1042,
+      warnings: [],
     });
   }),
   http.post("*/api/v1/members/:id/rejection", async ({ params, request }) => {
-    if (String(params.id) !== memberSignupReviewState.member.id) {
-      return apiError("NOT_FOUND", "Signup not found", 404);
-    }
+    const id = String(params.id);
+    const view = currentSignupReview();
+    if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
+    if (id !== view.member.id) return apiError("NOT_FOUND", "Signup not found", 404);
     const body = (await request.json()) as RejectionRequest;
-    if (body.version !== memberSignupReviewState.version) {
+    if (body.version !== view.version) {
       return apiError("STALE_VERSION", "Stale signup version", 409);
     }
     if (body.reason.trim().length < 3 || body.reason.length > 500) {
       return validationError([{ code: "INVALID_LENGTH", field: "reason" }]);
     }
+    resolveSignup(id);
     return HttpResponse.json({
-      dogIds: memberSignupReviewState.dogs.map((dog) => dog.id),
-      memberId: memberSignupReviewState.member.id,
-      status: "LEFT" as const,
+      dogIds: view.dogs.map((dog) => dog.id),
+      memberId: view.member.id,
+      // R-04-23: a collected payment stays recorded and must be refunded from billing.
+      paidPaymentRequiresRefund: signupReviewHasCollectedPayment(view),
+      status: view.member.status === "ACTIVE" ? ("ACTIVE" as const) : ("LEFT" as const),
     });
   }),
   http.get("*/api/v1/me/onboarding", () => HttpResponse.json(currentOnboardingState())),
@@ -1910,9 +1930,10 @@ export const handlers = [
   ),
   http.get("*/api/v1/members/:id", ({ params }) => {
     const id = String(params.id);
-    if (id === memberSignupReviewState.member.id) {
+    const signupView = currentSignupReview();
+    if (id === signupView.member.id) {
       return HttpResponse.json({
-        ...memberSignupReviewState.member,
+        ...signupView.member,
         familyGroupId: "47000000-0000-4000-8000-000000000001",
       });
     }
@@ -1921,19 +1942,37 @@ export const handlers = [
       : apiError("NOT_FOUND", "Member not found", 404);
   }),
   http.patch("*/api/v1/members/:id", async ({ params, request }) => {
-    if (String(params.id) === memberSignupReviewState.member.id) {
+    const signupView = currentSignupReview();
+    if (String(params.id) === signupView.member.id) {
       const body = (await request.json()) as MemberPatchRequest;
-      const member = memberSignupReviewState.member;
+      const member = signupView.member;
       if (body.version !== member.version) {
         return apiError("STALE_VERSION", "Stale version", 409);
       }
-      const { consents, contactEmails, ...memberPatch } = body;
-      const updated = {
+      const { consents, contactEmails, paymentMethod, ...memberPatch } = body;
+      // `signup.planIdRequested` is not edited from D2 (the requested plan is read-only there).
+      delete memberPatch.signup;
+      const iban = paymentMethod?.sepa?.iban;
+      const maskedAccount =
+        iban === undefined ? member.paymentMethod?.maskedAccount : `···· ···· ···· ···· ${iban.slice(-4)}`;
+      const updated: components["schemas"]["Member"] = {
         ...member,
         ...memberPatch,
         ...(contactEmails === undefined
           ? {}
           : { contactEmails: contactEmails.map((entry) => ({ ...entry, bounced: false })) }),
+        // The view keeps the payment method masked (S04 §6): never the typed IBAN.
+        ...(paymentMethod?.type !== "SEPA_DD" || paymentMethod.sepa === undefined
+          ? {}
+          : {
+              paymentMethod: {
+                ...(paymentMethod.sepa.holderName === undefined
+                  ? {}
+                  : { holderName: paymentMethod.sepa.holderName }),
+                ...(maskedAccount === undefined ? {} : { maskedAccount }),
+                type: "SEPA_DD" as const,
+              },
+            }),
         ...(consents?.imageRights === undefined
           ? {}
           : {
@@ -1955,8 +1994,9 @@ export const handlers = [
         ].filter(Boolean).join(" "),
         version: member.version + 1,
       };
-      memberSignupReviewState.member = updated;
-      memberSignupReviewState.version = updated.version;
+      // The view's `version` is the member's (S04 §6); each dog keeps its own.
+      signupView.member = updated;
+      signupView.version = updated.version;
       return HttpResponse.json(updated);
     }
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
@@ -2169,30 +2209,34 @@ export const handlers = [
     return dog === undefined ? apiError("NOT_FOUND", "Dog not found", 404) : HttpResponse.json(dog);
   }),
   http.patch("*/api/v1/dogs/:id", async ({ params, request }) => {
-    const signupDog = memberSignupReviewState.dogs.find((candidate) => candidate.id === String(params.id));
+    const signupView = currentSignupReview();
+    const signupDog = signupView.dogs.find((candidate) => candidate.id === String(params.id));
     if (signupDog !== undefined) {
       const body = (await request.json()) as DogPatchRequest;
-      if (body.version !== memberSignupReviewState.version) {
+      // R-04-19: a dog PATCH compares the dog's own version, never the member's.
+      if (body.version !== signupDog.version) {
         return apiError("STALE_VERSION", "Stale version", 409);
       }
       signupDog.name = body.name ?? signupDog.name;
       signupDog.breed = body.breed ?? signupDog.breed;
       signupDog.chip = body.chip ?? signupDog.chip;
       signupDog.sex = body.sex ?? signupDog.sex;
-      if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
-      memberSignupReviewState.version += 1;
+      if (body.notesToInstructors !== undefined) signupDog.notesToInstructors = body.notesToInstructors;
+      if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
+      else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
+      signupDog.version += 1;
       return HttpResponse.json({
         birthDate: `${signupDog.birthMonth}-01`,
         breed: signupDog.breed,
         chip: signupDog.chip,
         id: signupDog.id,
         licenses: [],
-        memberId: memberSignupReviewState.member.id,
+        memberId: signupView.member.id,
         name: signupDog.name,
-        registeredAt: memberSignupReviewState.signup.submittedAt,
+        registeredAt: signupView.signup.submittedAt,
         sex: signupDog.sex,
         status: signupDog.status,
-        version: memberSignupReviewState.version,
+        version: signupDog.version,
       });
     }
     const dog = currentDog(String(params.id));
@@ -2331,12 +2375,29 @@ export const handlers = [
     return HttpResponse.json({ photoUrl: dog.dog.photoUrl });
   }),
   http.get("*/api/v1/dogs/:id/documents", ({ params }) => {
+    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    if (signupDog !== undefined) return HttpResponse.json(signupDogDocuments(signupDog));
     const dog = currentDog(String(params.id));
     return dog === undefined
       ? apiError("NOT_FOUND", "Dog not found", 404)
       : HttpResponse.json(dog.documents);
   }),
   http.post("*/api/v1/dogs/:id/documents", async ({ params, request }) => {
+    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    if (signupDog !== undefined) {
+      const body = (await request.json()) as DogDocumentUploadRequest;
+      const documents = signupDogDocuments(signupDog);
+      const document = documents.find((candidate) => candidate.type === body.type);
+      if (document === undefined) return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 422);
+      document.files = [
+        ...document.files,
+        { id: "", name: body.name, uploadedAt: "2026-08-10T09:00:00Z", url: `https://files.example.test/${body.fileKey}` },
+      ];
+      document.state = "RECEIVED";
+      storeSignupDogDocuments(signupDog, documents);
+      const stored = signupDogDocuments(signupDog).find((candidate) => candidate.type === body.type);
+      return HttpResponse.json(stored, { status: 201 });
+    }
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2357,6 +2418,16 @@ export const handlers = [
     return HttpResponse.json(document, { status: 201 });
   }),
   http.delete("*/api/v1/dogs/:id/documents/:docId/files/:fileId", ({ params }) => {
+    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    if (signupDog !== undefined) {
+      const documents = signupDogDocuments(signupDog);
+      const document = documents.find((candidate) => candidate.id === String(params.docId));
+      if (document === undefined) return apiError("NOT_FOUND", "Document not found", 404);
+      document.files = document.files.filter((file) => file.id !== String(params.fileId));
+      document.state = document.files.length === 0 ? "PENDING" : "RECEIVED";
+      storeSignupDogDocuments(signupDog, documents);
+      return new HttpResponse(null, { status: 204 });
+    }
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2398,7 +2469,8 @@ export const handlers = [
       {
         expiresAt: "2026-09-09T22:00:00Z",
         fileKey,
-        headers: { "Content-Type": body.mimeType },
+        // R-04-08: the storage signs both headers; S3 answers 403 when the PUT drops one.
+        headers: { "Content-Type": body.mimeType, "If-None-Match": "*" },
         uploadUrl: `https://uploads.example.test/${fileKey}`,
       },
       { status: 201 },

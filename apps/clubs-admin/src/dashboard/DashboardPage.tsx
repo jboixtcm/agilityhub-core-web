@@ -7,7 +7,8 @@ import { useTranslation } from "react-i18next";
 import { mondayOf } from "../planning/shared";
 
 type ApiDashboard = components["schemas"]["Dashboard"];
-type ClassOccupancy = Omit<ApiDashboard["kpis"]["classOccupancy"], "percent"> & { percent: number | null };
+type ClassOccupancy = ApiDashboard["kpis"]["classOccupancy"];
+// The generator drops the `null` of a `$ref` block; S14 §6 sends every disabled block as null.
 type Dashboard = Omit<ApiDashboard, "dogsByLevel" | "kpis" | "pendingSignups" | "riskReview"> & {
   dogsByLevel: ApiDashboard["dogsByLevel"] | null;
   kpis: Omit<ApiDashboard["kpis"], "activeMembers" | "classOccupancy" | "pendingSignups" | "trainingBookings"> & {

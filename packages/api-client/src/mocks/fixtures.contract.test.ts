@@ -33,6 +33,13 @@ import {
   mockDisplayDescription,
   mockWeek,
 } from "./fixtures/planning";
+import {
+  addDogSignupReview,
+  derivedSignupReview,
+  signupReviewBaseline,
+  signupReviewDryRun,
+  signupReviewVariant,
+} from "./fixtures/signup-review";
 import { planningLevels } from "./planning-handlers";
 
 const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
@@ -433,5 +440,67 @@ describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, Clas
       expect(view).not.toHaveProperty("note");
       expect(view).not.toHaveProperty("createdByName");
     }
+  });
+});
+
+describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const pendingRow = {
+    dogs: [{ breed: "border", isAddDog: false, name: "Bruc" }],
+    memberId: "42000000-0000-4000-8000-000000000002",
+    paymentMethodType: "MANUAL" as const,
+    pendingDays: 1,
+    planName: "Pack 6",
+    shortName: "Pol C.",
+    submittedAt: "2026-08-09T10:02:00Z",
+    warnings: [],
+  };
+
+  it.each([
+    ["the mockup", signupReviewBaseline],
+    ["manual", signupReviewVariant(signupReviewBaseline, "manual")],
+    ["family pending", signupReviewVariant(signupReviewBaseline, "familyPending")],
+    ["add-dog", addDogSignupReview(signupReviewBaseline)],
+    ["a derived D1 row", derivedSignupReview(signupReviewBaseline, pendingRow)],
+  ])("validates the %s view, each dog with its own version", (_name, view) => {
+    const validate = schema("MemberSignupView");
+    expect(validate(view), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    for (const dog of view.dogs) expect(typeof dog.version).toBe("number");
+  });
+
+  it("validates every plan's dry run and deducts what was paid (S04 §5, E39)", () => {
+    const validate = schema("ValidationDryRun");
+    const manual = signupReviewVariant(signupReviewBaseline, "manual");
+    for (const view of [signupReviewBaseline, manual]) {
+      for (const plan of view.planOptions) {
+        const body = {
+          dogs: [{ dogId: "44000000-0000-4000-8000-000000000001" }],
+          planId: plan.planId,
+          version: view.version,
+        };
+        const dryRun = signupReviewDryRun(view, body);
+        expect(validate(dryRun), `${plan.name}: ${JSON.stringify(validate.errors)}`).toBe(true);
+      }
+    }
+    const pack = signupReviewDryRun(manual, {
+      dogs: [{ dogId: "44000000-0000-4000-8000-000000000001" }],
+      planId: "10000000-0000-4000-8000-000000000002",
+      version: manual.version,
+    });
+    expect(pack.upfront?.lines.map((line) => [line.concept, line.amount.amountMinor, line.status])).toEqual([
+      ["PACK", 13500, "DUE"],
+    ]);
+    expect(pack).not.toHaveProperty("nextInvoiceDate");
+    const therapy = signupReviewDryRun(signupReviewBaseline, {
+      dogs: [{ dogId: "44000000-0000-4000-8000-000000000001" }],
+      planId: "10000000-0000-4000-8000-000000000004",
+      version: signupReviewBaseline.version,
+    });
+    expect(therapy.warnings).toContain("PAID_EXCEEDS_QUOTE");
+    expect(therapy.upfront?.paidExceedsQuote).toEqual({ amountMinor: 8000, currency: "EUR" });
   });
 });

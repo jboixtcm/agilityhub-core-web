@@ -1,7 +1,9 @@
 {
   "club": {
     "slug": "minim",
-    "name": "Club Mínim"
+    "name": "Club Mínim",
+    "legalName": null,
+    "taxId": null
   },
   "locales": ["ca", "es", "en"],
   "defaultLocale": "ca",

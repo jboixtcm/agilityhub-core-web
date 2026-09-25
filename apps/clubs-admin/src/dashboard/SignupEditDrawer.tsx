@@ -443,11 +443,7 @@ export function SignupEditDrawer({
         const dogBody = dog.status === "PENDING" && edits !== undefined ? dogPatch(dog, edits) : undefined;
         if (dogBody === undefined) continue;
         await client.PATCH("/dogs/{id}", { body: dogBody, params: { path: { id: dog.id } } });
-        setDogEdits((current) => {
-          const next = { ...current };
-          delete next[dog.id];
-          return next;
-        });
+        setDogEdits((current) => Object.fromEntries(Object.entries(current).filter(([id]) => id !== dog.id)));
         saved = true;
       }
       reset();
@@ -491,7 +487,8 @@ export function SignupEditDrawer({
       title={t("admin-census:signupReview.editTitle")}
     >
       <form className="signup-edit-form" onSubmit={(event) => void save(event)}>
-        <fieldset disabled={addDogMode}>
+        {/* Locked while saving: an edit typed during the request would be lost with the saved ones. */}
+        <fieldset disabled={addDogMode || working}>
           <legend>{t("admin-census:signupReview.person")}</legend>
           {personInput("firstName", t("admin-census:signupReview.fields.firstName"))}
           {personInput("lastName1", t("admin-census:signupReview.fields.lastName1"))}
@@ -559,7 +556,7 @@ export function SignupEditDrawer({
             </FormField>
           );
           return (
-            <fieldset disabled={dog.status !== "PENDING"} key={dog.id}>
+            <fieldset disabled={dog.status !== "PENDING" || working} key={dog.id}>
               <legend>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })}</legend>
               {dogInput("name")}
               {dogInput("breed")}

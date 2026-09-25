@@ -9,6 +9,7 @@ import meMember from "./fixtures/me-member.json";
 import meMultiProfile from "./fixtures/me-multi-profile.json";
 import { importedAccountOnboarding, policyReconsentOnboarding } from "./fixtures/onboarding";
 import sessions from "./fixtures/sessions.json";
+import type { SignupReviewVariant } from "./fixtures/signup-review";
 
 type Branding = components["schemas"]["BrandingResponse"];
 type Me = components["schemas"]["Me"];
@@ -29,7 +30,8 @@ export interface MockScenarioDefinition {
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
   signupStripe?: boolean;
-  signupReviewManual?: boolean;
+  /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
+  signupReview?: SignupReviewVariant;
 }
 
 const canic = brandingCanic as Branding;
@@ -64,7 +66,19 @@ const scenarios = {
     branding: canic,
     me: meAdmin as Me,
     sessions: accountSessions,
-    signupReviewManual: true,
+    signupReview: "manual",
+  },
+  adminSignupReviewAddDog: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReview: "addDog",
+  },
+  adminSignupReviewFamilyPending: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReview: "familyPending",
   },
   member: {
     branding: canic,

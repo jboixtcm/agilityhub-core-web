@@ -115,6 +115,14 @@ function selectedCard() {
   return screen.getByRole("region", { name: /^Classe seleccionada/u });
 }
 
+describe("E3-W07 step 9 a D1 risk row opens D4 on its class", () => {
+  it("selects the class of `?classe=` in the week of `?setmana=`", async () => {
+    await renderCalendar({ search: `?classe=${WEDNESDAY_1850}&estat=actives&setmana=2026-08-10` });
+    await grid(/del 10 al 16 d.agost$/u);
+    expect(selectedCard()).toHaveTextContent("Classe seleccionada — dc 12 · 18:50 · B+C · Central · Marc");
+  });
+});
+
 describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
   it("opens «Esborrany» on the first week with drafts, with the validation card and its count", async () => {
     await renderCalendar();

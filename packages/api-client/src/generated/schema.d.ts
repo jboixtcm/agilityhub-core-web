@@ -2928,7 +2928,7 @@ export interface paths {
         };
         /**
          * Review member signup
-         * @description S04 §6. ADMIN D2 aggregate with masked payment details and signed document downloads. Other-tenant resources return NOT_FOUND. A member with nothing pending answers 409 INVALID_STATE with details.reason = NOT_PENDING. A pending readmission (R-04-06, E38) adds `readmission`: the LEFT record's values and the submitted ones, with changedFields; validation applies the submitted ones.
+         * @description S04 §6. ADMIN D2 aggregate with masked payment details and signed document downloads. Other-tenant resources return NOT_FOUND. A member with nothing pending answers 409 INVALID_STATE with details.reason = NOT_PENDING; a requested plan that is no longer assignable, 422 PLAN_NOT_AVAILABLE. For an ACTIVE member (add-dog), `signup` is the oldest pending dog's own submission. A pending readmission (R-04-06, E38) adds `readmission`: the LEFT record's values and the submitted ones, with changedFields; validation applies the submitted ones.
          */
         get: operations["review"];
         put?: never;
@@ -2950,7 +2950,7 @@ export interface paths {
         put?: never;
         /**
          * Validate member signup
-         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change while a checkout of the submission is in progress, S04 §5 E39; dryRun warns CHECKOUT_PENDING). nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate.
+         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change while a checkout of the submission is in progress, S04 §5 E39; dryRun warns CHECKOUT_PENDING). nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted.
          */
         post: operations["validate"];
         delete?: never;
@@ -5619,10 +5619,16 @@ export interface components {
             booked: number;
             /** Format: int32 */
             capacity: number;
-            /** Format: double */
+            /**
+             * Format: int32
+             * @description R-14-03: round(100·booked/capacity) HALF_UP; null when capacity = 0.
+             */
             percent: number | null;
-            /** Format: int32 */
-            waitingTotal: number;
+            /**
+             * Format: int32
+             * @description Σ counters.waiting; null when WAITLIST is disabled (S14 §9).
+             */
+            waitingTotal: number | null;
         };
         ClassOrigin: {
             templateClassId?: string;
@@ -5843,8 +5849,10 @@ export interface components {
         };
         ClubSummary: {
             city?: string | null;
+            legalName: string | null;
             name: string;
             slug: string;
+            taxId: string | null;
         };
         /** @description Versioned edit of club identity, contact and theme. Omitted fields are preserved. Console fields are rejected with PLATFORM_ONLY; a timeZone change with existing classes returns TIMEZONE_CHANGE_BLOCKED. */
         ClubUpdate: {
@@ -8716,8 +8724,11 @@ export interface components {
         };
         RiskNotified: {
             dogName: string;
-            /** @enum {string} */
-            gender: "MALE" | "FEMALE" | "OTHER";
+            /**
+             * @description Member.gender; null when the member has none on file.
+             * @enum {string|null}
+             */
+            gender: "MALE" | "FEMALE" | "OTHER" | null;
             memberFirstName: string;
         };
         RiskReview: {
@@ -16061,7 +16072,7 @@ export interface operations {
                     "application/json": components["schemas"]["CheckoutSession"];
                 };
             };
-            /** @description Bad Request */
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -16088,7 +16099,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_FOUND */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -16097,7 +16108,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
+            /** @description MEMBER_ERASED, INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -27697,7 +27708,7 @@ export interface operations {
                     "application/json": components["schemas"]["AddDogSignupResult"];
                 };
             };
-            /** @description FILE_NOT_FOUND */
+            /** @description VALIDATION_ERROR, FILE_NOT_FOUND, FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -27733,7 +27744,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -27742,7 +27753,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, CONSENT_VERSION_OUTDATED */
+            /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -32240,7 +32251,7 @@ export interface operations {
                     "application/json": components["schemas"]["RejectionResult"];
                 };
             };
-            /** @description Bad Request */
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32526,7 +32537,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
+            /** @description MEMBER_ERASED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -32535,7 +32546,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description PLAN_NOT_AVAILABLE */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -32619,7 +32630,7 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationDryRun"] | components["schemas"]["ValidationResult"];
                 };
             };
-            /** @description Bad Request */
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32655,7 +32666,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, MEMBERSHIP_EXISTS */
+            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, MEMBERSHIP_EXISTS, FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -32664,7 +32675,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LEVEL_REQUIRED, NEXT_INVOICE_DATE_REQUIRED, UPFRONT_AMOUNT_EXCEEDS_DUE, PLAN_NOT_AVAILABLE, FAMILY_HOLDER_NOT_FOUND */
+            /** @description LEVEL_REQUIRED, LEVEL_NOT_ACTIVE, NEXT_INVOICE_DATE_REQUIRED, UPFRONT_AMOUNT_EXCEEDS_DUE, PLAN_NOT_AVAILABLE, FAMILY_HOLDER_NOT_FOUND */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -39040,7 +39051,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description INVALID_ID_DOCUMENT, INVALID_PHONE, FILE_NOT_FOUND */
+            /** @description VALIDATION_ERROR, INVALID_ID_DOCUMENT, INVALID_PHONE, INVALID_IBAN, FILE_NOT_FOUND, FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -39076,7 +39087,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ALREADY_EXISTS */
+            /** @description MEMBER_ALREADY_EXISTS, MEMBER_ERASED, ID_DOCUMENT_ALREADY_EXISTS, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -39085,7 +39096,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SIGNUP_CLOSED, SIGNUP_ALREADY_PENDING, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, CONSENT_VERSION_OUTDATED, FAMILY_HOLDER_NOT_FOUND */
+            /** @description SIGNUP_CLOSED, SIGNUP_ALREADY_PENDING, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED, FAMILY_HOLDER_NOT_FOUND */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -39335,7 +39346,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ID_DOCUMENT_AMBIGUOUS, SIGNUP_CLOSED */
+            /** @description SIGNUP_CLOSED */
             422: {
                 headers: {
                     [name: string]: unknown;

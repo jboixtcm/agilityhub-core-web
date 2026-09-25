@@ -131,20 +131,6 @@ select {
   font: 800 1.5rem/1.2 var(--ah-font-display);
 }
 
-.census-page__new {
-  display: inline-flex;
-  min-height: 2.5rem;
-  align-items: center;
-  gap: var(--ah-space-2);
-  padding: var(--ah-space-2) var(--ah-space-4);
-  color: var(--ah-color-primary);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid var(--ah-color-primary);
-  border-radius: var(--ah-radius-md);
-}
-
 .census-page .ah-universal-list__table-wrap {
   max-height: calc(100dvh - 18rem);
 }
@@ -1511,11 +1497,48 @@ select {
   margin-inline-start: auto;
 }
 
-.dashboard-page h2,
 .signup-review-page h2 {
   margin: 0;
   font-size: 0.85rem;
   text-transform: uppercase;
+}
+
+/* D1 card titles: bold, sentence case, as in the mockup. */
+.dashboard-page h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dashboard-page .ah-card > header .ah-badge {
+  flex: none;
+  white-space: nowrap;
+}
+
+.dashboard-risk__row > a {
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard-risk__row > a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-risk__more {
+  display: inline-block;
+  padding-top: var(--ah-space-2);
+  color: var(--ah-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.dashboard-signups__row .dashboard-signups__date--overdue {
+  color: var(--ah-color-danger);
 }
 
 .dashboard-risk__row,
@@ -1552,7 +1575,13 @@ select {
 
 .signup-review-page .ah-card {
   display: grid;
+  align-content: start;
   gap: var(--ah-space-3);
+}
+
+/* The plan and its price fit on one line («Abonat · 2 gossos (familiar) · 90,00 €/mes»). */
+.signup-review-plan .ah-select {
+  width: 100%;
 }
 
 .signup-review-data {
@@ -1622,7 +1651,7 @@ select {
 }
 
 .signup-review-decision {
-  grid-template-columns: minmax(14rem, 0.7fr) minmax(18rem, 1.3fr);
+  grid-template-columns: minmax(20rem, 1fr) minmax(18rem, 1.3fr);
 }
 
 .signup-review-decision > div {
@@ -1642,6 +1671,87 @@ select {
   justify-content: flex-end;
   padding-top: var(--ah-space-3);
   border-top: 1px solid var(--ah-color-border);
+}
+
+.signup-review-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  text-decoration: none;
+}
+
+.signup-review-family,
+.signup-review-family__search {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.signup-review-family__results {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signup-review-family__results li,
+.signup-review-family__decision {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.signup-review-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-danger);
+  border: 1px solid var(--ah-color-danger);
+  border-radius: var(--ah-radius-md);
+  background: color-mix(in srgb, var(--ah-color-danger) 10%, transparent);
+}
+
+.signup-review-decision > .signup-review-error {
+  grid-column: 1 / -1;
+}
+
+.signup-review-page__record {
+  justify-self: start;
+}
+
+.signup-edit-form__row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.4fr) 1fr;
+  gap: var(--ah-space-3);
+}
+
+.signup-edit-form__row:has(> :nth-child(3)) {
+  grid-template-columns: minmax(5rem, 0.4fr) 1fr 1fr;
+}
+
+.signup-edit-documents,
+.signup-edit-documents__add {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.signup-edit-documents ul {
+  display: grid;
+  gap: var(--ah-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signup-edit-documents li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
 }
 
 .signup-edit-form,

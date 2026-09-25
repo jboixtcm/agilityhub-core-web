@@ -367,6 +367,7 @@ const featuredMembers = [
       { id: "dog-duna", levelCode: "C", name: "Duna" },
       { id: "dog-rock", levelCode: "D", name: "Rock" },
     ],
+    familyGroup: { id: "family-laura", name: "Laura Serra Vidal" },
     firstName: "Laura",
     freeTrainingAllowed: true,
     fullName: "Laura Serra Vidal",
@@ -568,6 +569,7 @@ function memberListItem(input: MemberFixtureInput): MemberListItem {
       phones: [{ number: phone.replaceAll(" ", ""), prefix: "+34" }],
     },
     displayStatus: input.displayStatus,
+    ...("familyGroup" in input ? { familyGroup: input.familyGroup } : {}),
     dogs: input.dogs.map((dog) => ({
       id: dog.id,
       level: {

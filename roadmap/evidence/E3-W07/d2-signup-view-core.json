@@ -1,0 +1,18 @@
+{
+  "member": {
+    "maskedAccount": null,
+    "paymentMethod": {
+      "type": "SEPA_DD",
+      "maskedAccount": null,
+      "holderName": "Laia Fictici001",
+      "channel": null
+    },
+    "plan": null,
+    "planId": null,
+    "status": "PENDING"
+  },
+  "proposals": {
+    "nextInvoiceDate": "2026-10-01",
+    "planId": "b12dd3c7-1229-4070-ba81-0af2a76c4bf3"
+  }
+}
