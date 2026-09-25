@@ -26,6 +26,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { PublicFooter } from "./PublicFooter";
 import { clubToday } from "./today/useDayGrid";
 
 type SignupConfig = components["schemas"]["SignupConfig"];
@@ -660,26 +661,6 @@ function StepMessage({ message }: { message: string | undefined }) {
   );
 }
 
-/**
- * The public footer (mockups 16–19; Jordi 25-09): «{legalName} · {taxId} · {city}», from
- * `/branding` (the entity's public identifiers, LSSI art. 10); without a tax id, «{name} · {city}».
- */
-function footerText(branding: ReturnType<typeof useBranding>, t: Translate): string {
-  const city = branding.club.city?.trim() ?? "";
-  const taxId = branding.club.taxId?.trim() ?? "";
-  if (taxId === "") {
-    const club = branding.club.name;
-    return city === ""
-      ? t("signup:common.footer", { club })
-      : t("signup:common.footerWithCity", { city, club });
-  }
-  const legalName = branding.club.legalName?.trim() ?? "";
-  const club = legalName === "" ? branding.club.name : legalName;
-  return city === ""
-    ? t("signup:common.footerWithTaxId", { club, taxId })
-    : t("signup:common.footerWithTaxIdAndCity", { city, club, taxId });
-}
-
 function Layout({ children }: { children: ReactNode }) {
   const branding = useBranding();
   const { i18n, t } = useTranslation("signup");
@@ -721,7 +702,7 @@ function Layout({ children }: { children: ReactNode }) {
         </label>
       </header>
       <div className="signup-page__body">{children}</div>
-      <footer className="signup-footer">{footerText(branding, t)}</footer>
+      <PublicFooter className="signup-footer" />
     </main>
   );
 }

@@ -1,9 +1,16 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-import { type Browser, type BrowserContext, type Page } from "@playwright/test";
+import {
+  type Browser,
+  type BrowserContext,
+  type Page,
+  type Request,
+  type Response as PlaywrightResponse,
+} from "@playwright/test";
 
 import { expect, test } from "./oauth-token-log";
+import { brandingClub, expectPublicFooter } from "./public-footer";
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -53,6 +60,50 @@ interface SignupQuoteConfig {
     }[];
     today: string;
   };
+}
+
+/** `MemberSignupView.paymentMethods` (api E3-T14): the D2 drawer's method selector. */
+interface SignupMethodOption {
+  assignable: boolean;
+  current: boolean;
+  label: string;
+  type: "CARD" | "MANUAL" | "SEPA_DD";
+}
+
+/** The ca labels D2 gives each method type (`admin-census:signupReview.paymentMethod`). */
+const methodLabels = { CARD: "Targeta", MANUAL: "Efectiu", SEPA_DD: "Domiciliació" } as const;
+
+/** The payment methods and the member of a `GET /members/{id}/signup` answer (the D2 view). */
+async function signupViewMethods(
+  view: PlaywrightResponse,
+): Promise<{ member: { id: string; version: number }; paymentMethods: SignupMethodOption[] }> {
+  expect(view.status()).toBe(200);
+  return (await view.json()) as { member: { id: string; version: number }; paymentMethods: SignupMethodOption[] };
+}
+
+/**
+ * A `PATCH /members/{id}` with only a payment method, sent with the page's own bearer (read from
+ * the view request, never written): the answer the core gives to a method D2 must not assign.
+ */
+async function patchPaymentMethod(page: Page, view: PlaywrightResponse, type: string, version: number) {
+  const authorization = (await view.request().allHeaders()).authorization;
+  return page.evaluate(
+    async ({ auth, url, methodType, memberVersion }) => {
+      const response = await fetch(url, {
+        body: JSON.stringify({ paymentMethod: { type: methodType }, version: memberVersion }),
+        headers: { ...(auth === undefined ? {} : { Authorization: auth }), "Content-Type": "application/json" },
+        method: "PATCH",
+      });
+      return { body: (await response.json()) as unknown, status: response.status };
+    },
+    { auth: authorization, memberVersion: version, methodType: type, url: view.url().replace(/\/signup$/u, "") },
+  );
+}
+
+function nextSignupView(page: Page) {
+  return page.waitForResponse(
+    (response) => /\/api\/v1\/members\/[^/]+\/signup$/u.test(response.url()) && response.request().method() === "GET",
+  );
 }
 
 /** `formatMoney` in ca for the amounts of the seed (below 1 000 €). */
@@ -828,7 +879,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await admin.evaluate(() => {
     window.dispatchEvent(new Event("focus"));
   });
+  const addDogViewResponse = nextSignupView(admin);
   await openSignupFromDashboard(admin, additionalDog, additionalDog);
+  const addDogView = await addDogViewResponse;
+  const { member: addDogMember, paymentMethods: addDogMethods } = await signupViewMethods(addDogView);
+  writeFileSync(join(evidenceDirectory, "d2-payment-methods-add-dog-core.json"), `${JSON.stringify(addDogMethods, null, 2)}\n`);
   await expect(admin.getByText("nou gos")).toBeVisible();
   // M12 on the real core: the member (ACTIVE, edited above) and the new dog have different versions;
   // the dog PATCH sends the dog's own. R-04-25: the person is read-only in add-dog mode.
@@ -836,6 +891,22 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const addDogEdit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
   // Playwright reads `disabled` on the controls a disabled fieldset contains, not on the fieldset.
   await expect(addDogEdit.locator("#signup-edit-firstName")).toBeDisabled();
+  // E3-W11 step 2 (R-04-19, api E3-T14): an add-dog lists only the member's method, not assignable,
+  // and the drawer shows it read-only (the method is changed on D10).
+  expect(addDogMethods).toHaveLength(1);
+  const [addDogMethod] = addDogMethods;
+  if (addDogMethod === undefined) throw new TypeError("The add-dog view lists no payment method");
+  expect(addDogMethod).toMatchObject({ assignable: false, current: true });
+  const addDogMethodField = addDogEdit.locator("#signup-edit-paymentType");
+  await expect(addDogMethodField).toHaveJSProperty("tagName", "INPUT");
+  await expect(addDogMethodField).toHaveAttribute("readonly", "");
+  await expect(addDogMethodField).toHaveValue(methodLabels[addDogMethod.type]);
+  await addDogMethodField.scrollIntoViewIfNeeded();
+  await admin.screenshot({ path: join(evidenceDirectory, "D2-signup-add-dog-method-core-1280.png") });
+  // What the core answers to the method of an add-dog (the mock answers the same, E3-W11).
+  const addDogMethodPatch = await patchPaymentMethod(admin, addDogView, "MANUAL", addDogMember.version);
+  writeFileSync(join(evidenceDirectory, "d2-add-dog-method-patch-core.json"), `${JSON.stringify(addDogMethodPatch, null, 2)}\n`);
+  expect(addDogMethodPatch.status).toBe(400);
   await expect(addDogEdit.locator("#signup-edit-dog-0-breed")).toBeEnabled();
   await addDogEdit.locator("#signup-edit-dog-0-breed").fill("Gos d'atura");
   const dogPatch = admin.waitForResponse(
@@ -860,7 +931,10 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
 
   // M15 on the real core: the NOT_FOUND_PENDING claim, a plan change with dryRun, a bare 422 on its
   // field, then the claim resolved by attaching the found holder's group (R-04-13).
+  const passportViewResponse = nextSignupView(admin);
   await navigateSpa(admin, `/preinscripcions/${passportMemberId}`);
+  const passportView = await passportViewResponse;
+  const { member: passportMember, paymentMethods: passportMethods } = await signupViewMethods(passportView);
   await expect(admin.getByRole("heading", { name: /Joana Passaport E3/u })).toBeVisible();
   await expect(admin.getByText("Pendent — ha indicat: Pere Inexistent + gos Tro")).toBeVisible();
   await screenshot(admin, "D2-signup-family-pending-core-1280.png");
@@ -890,44 +964,30 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   expect((await backQuote).status()).toBe(200);
   await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
 
-  // Round 2 (R-04-19, R-04-10): the drawer moves the applicant from direct debit to cash, among the
-  // methods of the club's active providers; the reload discards the quote and asks for it again.
-  const clubSettings = admin.waitForResponse(
-    (response) => response.url().endsWith("/api/v1/club") && response.request().method() === "GET",
-  );
+  // Round 2 (R-04-19, R-04-10) and E3-W11 step 2 (api E3-T14): the drawer moves the applicant from
+  // direct debit to cash, among the view's assignable methods (never read from /club); the reload
+  // discards the quote and asks for it again.
+  writeFileSync(join(evidenceDirectory, "d2-payment-methods-core.json"), `${JSON.stringify(passportMethods, null, 2)}\n`);
+  expect(passportMethods.filter((option) => option.current).map((option) => option.type)).toEqual(["SEPA_DD"]);
+  expect(passportMethods.some((option) => option.type === "MANUAL" && option.assignable)).toBe(true);
+  // The seed has no Stripe: the view offers no card, and the core refuses one (the mock answers the same).
+  expect(passportMethods.some((option) => option.type === "CARD")).toBe(false);
+  const cardPatch = await patchPaymentMethod(admin, passportView, "CARD", passportMember.version);
+  writeFileSync(join(evidenceDirectory, "d2-card-method-patch-core.json"), `${JSON.stringify(cardPatch, null, 2)}\n`);
+  expect(cardPatch).toMatchObject({ body: { code: "PAYMENT_METHOD_NOT_AVAILABLE" }, status: 422 });
+  const clubReads: string[] = [];
+  const onClubRequest = (request: Request) => {
+    if (new URL(request.url()).pathname.endsWith("/api/v1/club")) clubReads.push(request.method());
+  };
+  admin.on("request", onClubRequest);
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const methodEdit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
-  const clubResponse = await clubSettings;
-  expect(clubResponse.status()).toBe(200);
-  // Real-core sources of the club's methods (R-04-10); the bearer is used, never written.
-  const authorization = (await clubResponse.request().allHeaders()).authorization;
-  const signupMethods = await admin.evaluate(
-    async ({ auth, url }) => {
-      const probe = async (headers: Record<string, string>) => {
-        const response = await fetch(url, { headers });
-        const body = response.ok
-          ? (((await response.json()) as { paymentMethods?: unknown }).paymentMethods ?? null)
-          : await response.text();
-        return { paymentMethods: body, status: response.status };
-      };
-      return { admin: auth === undefined ? null : await probe({ Authorization: auth }), anonymous: await probe({}) };
-    },
-    { auth: authorization, url: clubResponse.url().replace(/\/club$/u, "/signup") },
-  );
-  writeFileSync(
-    join(evidenceDirectory, "d2-payment-methods-core.json"),
-    `${JSON.stringify(
-      {
-        clubPaymentProviders: ((await clubResponse.json()) as { paymentProviders?: unknown }).paymentProviders ?? null,
-        signup: signupMethods,
-      },
-      null,
-      2,
-    )}\n`,
-  );
   const method = methodEdit.getByLabel("Mètode de pagament");
   await expect(method).toHaveValue("SEPA_DD");
-  await expect(method.locator("option", { hasText: "Efectiu" })).toHaveCount(1);
+  const choosable = await method
+    .locator("option:not([disabled])")
+    .evaluateAll((options) => options.map((option) => option.getAttribute("value")));
+  expect(choosable).toEqual(passportMethods.filter((option) => option.assignable).map((option) => option.type));
   await method.selectOption("MANUAL");
   await expect(methodEdit.getByLabel("IBAN")).toHaveCount(0);
   // Viewport capture: the selector is below the fold of the drawer's own scroll.
@@ -940,15 +1000,21 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const requote = admin.waitForResponse(
     (response) => response.url().includes("/validation?dryRun=true") && response.request().method() === "POST",
   );
+  const reloadedView = nextSignupView(admin);
   await methodEdit.getByRole("button", { name: "DESA ELS CANVIS" }).click();
   const methodPatchResponse = await methodPatch;
   expect(methodPatchResponse.status(), await methodPatchResponse.text()).toBe(200);
   expect(methodPatchResponse.request().postDataJSON()).toMatchObject({ paymentMethod: { type: "MANUAL" } });
+  // The reloaded view marks cash as the applicant's method.
+  const { paymentMethods: reloadedMethods } = await signupViewMethods(await reloadedView);
+  expect(reloadedMethods.filter((option) => option.current).map((option) => option.type)).toEqual(["MANUAL"]);
   expect((await requote).status()).toBe(200);
   await expect(methodEdit).not.toBeVisible();
   await expect(admin.locator(".signup-review-data dd").filter({ hasText: /^Efectiu$/u })).toBeVisible();
   await expect(admin.locator(".signup-review-warning--danger")).toHaveCount(0);
   await expect(admin.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+  admin.off("request", onClubRequest);
+  expect(clubReads).toEqual([]);
 
   // Nothing collected yet (manual): confirmed, so the next VALIDA reaches the family decision.
   await admin.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }).check();
@@ -1198,5 +1264,19 @@ test("T-04-34 signup.enabled=false shows only the configured closed text", async
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "CONTINUA" })).toHaveCount(0);
   await screenshot(page, "16-signup-closed-core-375.png");
+  await publicContext.close();
+});
+
+// Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
+test("E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)", async ({
+  browser,
+}) => {
+  const publicContext = await localizedContext(browser, { height: 844, width: 375 });
+  const page = await publicContext.newPage();
+  await page.goto(`${clubsUrl}/apuntat-hi`);
+  const footer = page.locator(".signup-footer");
+  await expect(footer).toBeVisible();
+  await expectPublicFooter(footer, await brandingClub(page));
+  await screenshot(page, "16-footer-core-375.png");
   await publicContext.close();
 });

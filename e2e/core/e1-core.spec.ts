@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 
 import { expect, test } from "./oauth-token-log";
+import { brandingClub, expectPublicFooter } from "./public-footer";
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -326,5 +327,20 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   const callback = new URL(callbackUrl ?? "https://id.example.test/oidc/callback");
   expect(callback.searchParams.get("state")).toBe("e1-w04-state");
   expect(Boolean(callback.searchParams.get("code"))).toBe(true);
+  await context.close();
+});
+
+// Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
+test("E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)", async ({
+  browser,
+}) => {
+  const context = await mobileContext(browser);
+  const page = await context.newPage();
+  await page.goto(`${clubsUrl}/entrar`);
+  await expect(page.getByPlaceholder("correu@exemple.cat")).toBeVisible();
+  const club = await brandingClub(page);
+  writeFileSync(join(evidenceDirectory, "branding-club-core.json"), `${JSON.stringify(club, null, 2)}\n`);
+  await expectPublicFooter(page.locator(".auth-footer"), club);
+  await screenshot(page, "01-footer-core-375.png");
   await context.close();
 });

@@ -189,8 +189,7 @@
     "tasksSummary": "{open} pending · {completed} completed",
     "tasksTitle": "Tasks",
     "title": "My dogs",
-    "uploadDocument": "UPLOAD DOCUMENT",
-    "vaccinationCard": "Vaccination record"
+    "uploadDocument": "UPLOAD DOCUMENT"
   },
   "myData": {
     "address": "Address",

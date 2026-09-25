@@ -231,7 +231,9 @@ describe("T-01-18 access screen", () => {
       screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
-    expect(screen.getByText("Club Agility Cànic · Cabrera de Mar")).toBeVisible();
+    // E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the public footer and the registered office below it.
+    expect(screen.getByText("Club Agility Cànic · G00000000 · Cabrera de Mar")).toBeVisible();
+    expect(screen.getByText("Carrer de la Riera, 1 · 08392 Sant Andreu de Llavaneres")).toBeVisible();
 
     const magicLinkButton = screen.getByRole("button", {
       name: "Envia'm un enllaç per entrar sense contrasenya",
@@ -734,6 +736,104 @@ describe("T-03-40 mobile own dogs", () => {
     // The ACTIVE dogs keep their actions.
     expect(screen.getAllByRole("button", { name: "＋ DOC." })).toHaveLength(2);
     expect(screen.getAllByLabelText(/Notes als instructors/u)).toHaveLength(2);
+  });
+});
+
+describe("E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32)", () => {
+  interface RecordedApiRequest {
+    body?: unknown;
+    method: string;
+    path: string;
+  }
+
+  /** Every api request of the page (method, path, JSON body of a POST). */
+  function recordApi() {
+    const recorded: RecordedApiRequest[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      if (!url.pathname.startsWith("/api/v1/")) return;
+      const entry: RecordedApiRequest = { method: request.method, path: url.pathname.slice("/api/v1".length) };
+      recorded.push(entry);
+      if (request.method === "POST") {
+        void request
+          .clone()
+          .text()
+          .then((text) => {
+            entry.body = text === "" ? undefined : (JSON.parse(text) as unknown);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    return {
+      parameterReads: () => recorded.filter((request) => request.path.startsWith("/parameters")),
+      recorded,
+      stop: () => {
+        server.events.removeListener("request:start", listener);
+      },
+    };
+  }
+
+  async function openMyDogs(locale: "ca" | "es" = "ca") {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client, canicBranding, locale);
+    await screen.findByRole("heading", { name: locale === "ca" ? "Els meus gossos" : "Mis perros" });
+  }
+
+  function documentTypeOptions() {
+    const select = document.getElementById("dog-document-type");
+    if (select === null) throw new TypeError("No document type select");
+    return within(select).getAllByRole("option").map((option) => option.textContent);
+  }
+
+  it("step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read", async () => {
+    const api = recordApi();
+    await openMyDogs();
+    fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
+    const dialog = screen.getByRole("dialog", { name: "Afegeix un document de Duna" });
+    await waitFor(() => {
+      expect(documentTypeOptions()).toEqual(["Cartilla de vacunes", "Assegurança", "Altres"]);
+    });
+    fireEvent.change(within(dialog).getByLabelText("Tipus"), { target: { value: "INSURANCE" } });
+    fireEvent.change(within(dialog).getByLabelText("Nom del document"), { target: { value: "Assegurança 2026" } });
+    fireEvent.change(within(dialog).getByLabelText("Fitxer"), {
+      target: { files: [new File(["%PDF"], "asseguranca.pdf", { type: "application/pdf" })] },
+    });
+    // jsdom's constraint validation does not see the file of `fireEvent.change`: submit the form.
+    const form = within(dialog).getByRole("button", { name: "PUJA EL DOCUMENT" }).closest("form");
+    if (form === null) throw new TypeError("No document form");
+    fireEvent.submit(form);
+    expect(await screen.findByText("Document desat")).toBeVisible();
+    const upload = api.recorded.find((request) => request.method === "POST" && /^\/me\/dogs\/[^/]+\/documents$/u.test(request.path));
+    expect(upload?.body).toMatchObject({ name: "Assegurança 2026", type: "INSURANCE" });
+    // S03 25-09: a MEMBER cannot read /parameters (the api answers 403).
+    expect(api.parameterReads()).toEqual([]);
+    api.stop();
+  });
+
+  it("step 1: the labels are the reader's (es), as GET /me/dogs resolves them", async () => {
+    await openMyDogs("es");
+    fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
+    await waitFor(() => {
+      expect(documentTypeOptions()).toEqual(["Cartilla de vacunas", "Seguro", "Otros"]);
+    });
+  });
+
+  it("step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters", async () => {
+    const api = recordApi();
+    mockScenario("memberNoLevels");
+    await openMyDogs();
+    expect(screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual(["Duna", "Rock"]);
+    expect(screen.queryByText(/^Nivell /u)).toBeNull();
+
+    cleanup();
+    mockScenario("member");
+    await openMyDogs();
+    expect(screen.getByText("Nivell C")).toBeVisible();
+    expect(screen.getByText("Nivell D")).toBeVisible();
+    expect(api.parameterReads()).toEqual([]);
+    api.stop();
   });
 });
 

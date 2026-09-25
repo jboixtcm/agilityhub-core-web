@@ -37,6 +37,7 @@ import { HomeActivityReservations } from "./activities/ActivityReservationRow";
 import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
 import { safeDecode } from "./activities/shared";
 import { InfoPage } from "./InfoPage";
+import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
 import { OverviewPage } from "./today/OverviewPage";
@@ -402,7 +403,6 @@ function accessError(
 export function AccessPage({ authClient }: { authClient: AuthClient }) {
   const branding = useBranding();
   const { t } = useTranslation("auth");
-  const footerCity = branding.club.city?.trim();
   const [email, setEmail] = useState(
     () => new URLSearchParams(window.location.search).get("email") ?? "",
   );
@@ -547,14 +547,7 @@ export function AccessPage({ authClient }: { authClient: AuthClient }) {
           </div>
         ) : null}
       </section>
-      <footer className="auth-footer">
-        {footerCity
-          ? t("auth:access.footerWithLocation", {
-              club: branding.club.name,
-              city: footerCity,
-            })
-          : t("auth:access.footer", { club: branding.club.name })}
-      </footer>
+      <PublicFooter className="auth-footer" />
     </main>
   );
 }

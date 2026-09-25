@@ -85,7 +85,15 @@ test.describe("T-01-18 access screen", () => {
       page.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeVisible();
     await expect(page.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
-    await expect(page.getByText("Club Agility Cànic · Cabrera de Mar")).toBeVisible();
+    // E3-W12 step 5 (S02 R-02-02): the public footer and, below it, the registered office.
+    await expect(page.locator(".auth-footer .public-footer__line")).toHaveText([
+      "Club Agility Cànic · G00000000 · Cabrera de Mar",
+      "Carrer de la Riera, 1 · 08392 Sant Andreu de Llavaneres",
+    ]);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W12/01-footer-375.png"),
+    });
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "01-entrar-375.png"),

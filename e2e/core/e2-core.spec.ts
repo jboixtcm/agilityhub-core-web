@@ -557,3 +557,59 @@ test("T-05-CP-07 real club page edit renders styled Markdown on screen 30", asyn
   await screenshot(member, "30-info-core-375.png");
   await memberContext.close();
 });
+
+// Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
+test("E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)", async ({
+  browser,
+}) => {
+  const memberContext = await localizedContext(browser, { height: 844, width: 375 });
+  const member = await memberContext.newPage();
+  await loginMember(member);
+  const parameterReads: string[] = [];
+  member.on("request", (request) => {
+    if (new URL(request.url()).pathname.startsWith("/api/v1/parameters")) parameterReads.push(request.url());
+  });
+  const meDogsResponse = member.waitForResponse(
+    (response) => response.url().endsWith("/api/v1/me/dogs") && response.request().method() === "GET",
+  );
+  await navigateClubRoute(member, "/gossos");
+  const meDogsAnswer = await meDogsResponse;
+  expect(meDogsAnswer.status()).toBe(200);
+  const meDogs = (await meDogsAnswer.json()) as {
+    documentTypes?: { key: string; label: string; required: boolean }[];
+    dogs: { level?: { code: string } | null }[];
+  };
+  // Soft, so that the checks below still run on a core older than api E3-T16.
+  expect.soft(meDogs, "GET /me/dogs.documentTypes (api E3-T16)").toHaveProperty("documentTypes");
+  const seedDocumentTypes = meDogs.documentTypes ?? [];
+  expect.soft(seedDocumentTypes.length, "the seed's census.dogDocumentTypes").toBeGreaterThan(0);
+  await expect(member.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
+  // R-03-30: «Nivell {codi}» for exactly the dogs that carry their level.
+  await expect(member.locator(".dog-card__level")).toHaveCount(meDogs.dogs.filter((dog) => dog.level != null).length);
+  // R-03-15, R-03-32: «＋ DOC.» offers the seed's types, in the api's order and with its labels.
+  await member.getByRole("button", { name: "＋ DOC." }).first().click();
+  const documentDialog = member.getByRole("dialog", { name: /^Afegeix un document de / });
+  const documentTypes = await documentDialog
+    .getByLabel("Tipus")
+    .locator("option")
+    .evaluateAll((options) => options.map((option) => [option.getAttribute("value"), option.textContent]));
+  expect(documentTypes).toEqual(seedDocumentTypes.map((type) => [type.key, type.label]));
+  await screenshot(member, "13-document-types-core-375.png");
+  await documentDialog.getByRole("button", { name: "Tanca" }).click();
+  expect(parameterReads).toEqual([]);
+  // What the core answers a MEMBER on /parameters (the mocks answer the same); the bearer is not written.
+  const memberAuthorization = (await meDogsAnswer.request().allHeaders()).authorization;
+  const memberParameter = await member.evaluate(async (authorization) => {
+    const response = await fetch("/api/v1/parameters/levels.enabled", {
+      headers: authorization === undefined ? {} : { Authorization: authorization },
+    });
+    const body = (await response.json()) as { code?: string };
+    return { code: body.code ?? null, status: response.status };
+  }, memberAuthorization);
+  writeFileSync(
+    join(evidenceDirectory, "me-dogs-core.json"),
+    `${JSON.stringify({ documentTypes: meDogs.documentTypes ?? "absent", levels: meDogs.dogs.map((dog) => dog.level?.code ?? null), memberParameter }, null, 2)}\n`,
+  );
+  expect(memberParameter).toEqual({ code: "FORBIDDEN", status: 403 });
+  await memberContext.close();
+});

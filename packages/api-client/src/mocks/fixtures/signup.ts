@@ -97,6 +97,15 @@ function localeFrom(value: string | null): keyof typeof content {
   return locale === "es" || locale === "en" ? locale : "ca";
 }
 
+type PaymentType = NonNullable<SignupConfig["paymentMethods"]>[number]["type"];
+
+/** The label `GET /signup` gives a payment method in the reader's language (R-04-10), offered or not. */
+export function signupPaymentLabel(type: PaymentType, acceptLanguage: string | null): string {
+  const locale = localeFrom(acceptLanguage);
+  if (type === "CARD") return locale === "ca" ? "Targeta" : locale === "es" ? "Tarjeta" : "Card";
+  return translatedConfig(locale).paymentMethods?.find((method) => method.type === type)?.label ?? type;
+}
+
 function translatedConfig(locale: keyof typeof content): CompleteSignupConfig {
   const config = structuredClone(baseline);
   if (locale === "ca") {
@@ -289,7 +298,7 @@ export function signupConfig({
     config.upfront = signupUpfrontConfig(quoted, today, { memberPlanId: member?.planId });
     if (stripe) {
       config.paymentMethods?.splice(1, 0, {
-        label: locale === "ca" ? "Targeta" : locale === "es" ? "Tarjeta" : "Card",
+        label: signupPaymentLabel("CARD", locale),
         type: "CARD",
       });
     }

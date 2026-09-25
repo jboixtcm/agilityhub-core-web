@@ -86,6 +86,7 @@ export function signupReviewVariant(
     // As the api (`MemberSignupView.readmission`): the LEFT record keeps its values until validation.
     view.member = withReadmissionValues(view.member, left);
   }
+  view.paymentMethods = fixturePaymentMethods(view);
   return view;
 }
 
@@ -152,6 +153,47 @@ export function readmissionChanges(current: ReadmissionValues, submitted: Readmi
   return fields.filter((field) => JSON.stringify(current[field]) !== JSON.stringify(submitted[field]));
 }
 
+type PaymentMethodOption = MemberSignupView["paymentMethods"][number];
+type PaymentType = PaymentMethodOption["type"];
+
+/**
+ * `MemberSignupView.paymentMethods` (R-04-10, R-04-19; api E3-T14). For a PENDING member, the
+ * methods `GET /signup` offers (`offered`) are assignable, and the applicant's own method is added
+ * last, not assignable, when it is not offered any more. During a readmission the applicant's method
+ * is the submitted one. An add-dog (the member is not PENDING) lists only the current method, never
+ * assignable. Without BILLING the list is empty.
+ */
+export function signupReviewPaymentMethods(
+  view: MemberSignupView,
+  offered: readonly { label: string; type: PaymentType }[],
+  labelOf: (type: PaymentType) => string,
+  billing: boolean,
+): PaymentMethodOption[] {
+  if (!billing) return [];
+  const person = view.readmission == null ? view.member : withReadmissionValues(view.member, view.readmission.submitted);
+  const current = person.paymentMethod?.type;
+  if (view.member.status !== "PENDING") {
+    return current === undefined ? [] : [{ assignable: false, current: true, label: labelOf(current), type: current }];
+  }
+  const options = offered.map((method) => ({
+    assignable: true,
+    current: method.type === current,
+    label: method.label,
+    type: method.type,
+  }));
+  return current === undefined || options.some((option) => option.type === current)
+    ? options
+    : [...options, { assignable: false, current: true, label: labelOf(current), type: current }];
+}
+
+/** The ca labels of the fixture views (the handler resolves them in the request's language). */
+const fixtureLabels: Readonly<Record<PaymentType, string>> = { CARD: "Targeta", MANUAL: "Efectiu", SEPA_DD: "Domiciliació" };
+const fixtureOffered = (["SEPA_DD", "MANUAL"] as const).map((type) => ({ label: fixtureLabels[type], type }));
+
+function fixturePaymentMethods(view: MemberSignupView): PaymentMethodOption[] {
+  return signupReviewPaymentMethods(view, fixtureOffered, (type) => fixtureLabels[type], true);
+}
+
 /**
  * Add-dog (R-04-25): Marta is ACTIVE with Kiwi, and the pending dog is Nit, sent from the app. The
  * member's version has moved on (her own edits); the new dog has its own, lower version.
@@ -196,6 +238,7 @@ export function addDogSignupReview(base: MemberSignupView): MemberSignupView {
     totalPaid: eur(0),
   };
   view.warnings = ["UPFRONT_UNPAID"];
+  view.paymentMethods = fixturePaymentMethods(view);
   return view;
 }
 
@@ -255,6 +298,7 @@ export function derivedSignupReview(base: MemberSignupView, pending: PendingSign
     // Nothing collected yet: the plan's lines are all due.
     view.upfront = quoteUpfront({ ...view, upfront: { lines: [], totalDue: eur(0), totalPaid: eur(0) } }, plan.planId, []);
   }
+  view.paymentMethods = fixturePaymentMethods(view);
   return view;
 }
 

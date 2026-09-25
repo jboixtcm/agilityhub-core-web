@@ -118,6 +118,10 @@
       { "id": "43000000-0000-4000-8000-000000000002", "code": "A", "name": "Nivell A" }
     ]
   },
+  "paymentMethods": [
+    { "assignable": true, "current": true, "label": "Domiciliació", "type": "SEPA_DD" },
+    { "assignable": true, "current": false, "label": "Efectiu", "type": "MANUAL" }
+  ],
   "planOptions": [
     {
       "name": "Abonat",

@@ -855,14 +855,223 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
   });
 });
 
+describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15)", () => {
+  /** A gate a handler waits on, so a test can look at the page while the request is pending. */
+  function gate() {
+    let open: () => void = () => undefined;
+    const opened = new Promise<void>((resolve) => { open = resolve; });
+    return { open, opened };
+  }
+
+  function upfrontBlock() {
+    return screen.queryByRole("heading", { name: "Pagament inicial (anticipat)" });
+  }
+
+  it("a delayed reload after STALE_VERSION: no upfront block and VALIDA disabled until the reload and the new quote both land", async () => {
+    mockScenario("adminSignupReviewManual");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    fireEvent.change(screen.getByRole("combobox", { name: "Modalitat i tarifa" }), { target: { value: pack6 } });
+    expect(await screen.findByText(/^Pack 135,00 € · es registra/u)).toBeVisible();
+    fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
+
+    const reload = gate();
+    const requote = gate();
+    let stale = true;
+    server.use(
+      http.post("*/api/v1/members/:id/validation", async ({ request }) => {
+        if (new URL(request.url).searchParams.get("dryRun") !== "true") return stale ? apiErrorResponse("STALE_VERSION", 409) : undefined;
+        if (!stale) await requote.opened;
+        return undefined;
+      }),
+      http.get("*/api/v1/members/:id/signup", async () => {
+        await reload.opened;
+        return undefined;
+      }),
+    );
+    validate();
+    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    if (banner === null) throw new TypeError("No error banner");
+    stale = false;
+    fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
+
+    // The reload is pending: the old quote is gone and VALIDA waits.
+    expect(upfrontBlock()).toBeNull();
+    expect(screen.queryByText(/^Pack 135,00 €/u)).toBeNull();
+    expect(screen.queryByLabelText("Import efectivament cobrat:")).toBeNull();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
+
+    // The view lands; the new quote of Pack 6 is still pending: VALIDA still waits.
+    const dryRuns = sent(requests, "POST", "/validation", true).length;
+    reload.open();
+    await waitFor(() => { expect(sent(requests, "POST", "/validation", true)).toHaveLength(dryRuns + 1); });
+    expect(upfrontBlock()).toBeNull();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
+
+    requote.open();
+    expect(await screen.findByText(/^Pack 135,00 € · es registra/u)).toBeVisible();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+  });
+
+  it("a failed reload shows its error with a retry, never the old quote, and the retry brings a fresh one", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    expect(upfrontBlock()).toBeVisible();
+    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)));
+    validate();
+    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    if (banner === null) throw new TypeError("No error banner");
+    server.use(http.get("*/api/v1/members/:id/signup", () => apiErrorResponse("INTERNAL_ERROR", 500)));
+    fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
+
+    const failure = (await screen.findByText("No s'ha pogut carregar la preinscripció.")).closest<HTMLElement>("[role=alert]");
+    if (failure === null) throw new TypeError("No reload error");
+    expect(upfrontBlock()).toBeNull();
+    expect(screen.queryByText("cobrat")).toBeNull();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
+
+    server.resetHandlers();
+    const loads = sent(requests, "GET", `/members/${memberId}/signup`).length;
+    fireEvent.click(within(failure).getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" })).toBeVisible();
+    expect(sent(requests, "GET", `/members/${memberId}/signup`)).toHaveLength(loads + 1);
+    expect(screen.queryByText("No s'ha pogut carregar la preinscripció.")).toBeNull();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+  });
+
+  it("the reload after a drawer save drops the quote too, until the fresh view lands", async () => {
+    const reload = gate();
+    await renderReview();
+    expect(upfrontBlock()).toBeVisible();
+    server.use(
+      http.get("*/api/v1/members/:id/signup", async () => {
+        await reload.opened;
+        return undefined;
+      }),
+    );
+    const drawer = openDrawer();
+    fireEvent.change(within(drawer).getByLabelText("Població"), { target: { value: "Mataró" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    await waitFor(() => { expect(upfrontBlock()).toBeNull(); });
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
+    reload.open();
+    expect(await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
+  });
+});
+
+describe("E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19)", () => {
+  interface Option {
+    assignable: boolean;
+    current: boolean;
+    label: string;
+    type: string;
+  }
+
+  function methodSelect() {
+    return within(openDrawer()).getByLabelText("Mètode de pagament");
+  }
+
+  it("a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method", async () => {
+    // The review's probe: STRIPE {enabled: false, configured: false} on GET /club.
+    const { fetch: over, requests } = recordingFetch(undefined, undefined, (club) => {
+      club.paymentProviders = { ...(club.paymentProviders as Record<string, unknown>), STRIPE: { configured: false, enabled: false } };
+    });
+    await renderReview({ fetchOverride: over });
+    const method = methodSelect();
+    await waitFor(() => {
+      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
+    });
+    expect(method).toHaveValue("SEPA_DD");
+    expect(sent(requests, "GET", "/club")).toEqual([]);
+  });
+
+  it("the applicant's card, not assignable any more, is shown preselected but cannot be chosen again", async () => {
+    const { fetch: over, requests } = recordingFetch((body) => {
+      body.member.paymentMethod = { type: "CARD" };
+      delete body.member.maskedAccount;
+      body.paymentMethods = [
+        { assignable: true, current: false, label: "Domiciliació", type: "SEPA_DD" },
+        { assignable: true, current: false, label: "Efectiu", type: "MANUAL" },
+        { assignable: false, current: true, label: "Targeta", type: "CARD" },
+      ] satisfies Option[];
+    });
+    await renderReview({ fetchOverride: over });
+    const method = methodSelect();
+    expect(method).toHaveValue("CARD");
+    const choosable = () =>
+      within(method).getAllByRole<HTMLOptionElement>("option").filter((option) => !option.disabled).map((option) => option.textContent);
+    await waitFor(() => { expect(choosable()).toEqual(["Domiciliació", "Efectiu"]); });
+    expect(within(method).getByRole("option", { name: "Targeta" })).toBeDisabled();
+
+    // Saving another field keeps the card: no payment method is sent.
+    const drawer = screen.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+    fireEvent.change(within(drawer).getByLabelText("Població"), { target: { value: "Mataró" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty("paymentMethod");
+  });
+
+  it("the preselected method is the view's `current` one (a readmission's submitted method)", async () => {
+    const { fetch: over } = recordingFetch((body) => {
+      body.paymentMethods = [
+        { assignable: true, current: false, label: "Domiciliació", type: "SEPA_DD" },
+        { assignable: true, current: true, label: "Efectiu", type: "MANUAL" },
+      ] satisfies Option[];
+    });
+    await renderReview({ fetchOverride: over });
+    expect(methodSelect()).toHaveValue("MANUAL");
+  });
+
+  it("a PENDING applicant with no assignable method sees the current one read-only", async () => {
+    const { fetch: over } = recordingFetch((body) => {
+      body.paymentMethods = [{ assignable: false, current: true, label: "Domiciliació", type: "SEPA_DD" }] satisfies Option[];
+    });
+    await renderReview({ fetchOverride: over });
+    const method = methodSelect();
+    expect(method.tagName).toBe("INPUT");
+    expect(method).toHaveAttribute("readonly");
+    expect(method).toHaveValue("Domiciliació");
+  });
+
+  it("add-dog (R-04-19, R-04-25): the member's method is shown read-only, as the view lists it", async () => {
+    mockScenario("adminSignupReviewAddDog");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ dogs: "Nit", fetchOverride: over });
+    const method = methodSelect();
+    expect(method.tagName).toBe("INPUT");
+    expect(method).toHaveAttribute("readonly");
+    expect(method).toHaveValue("Domiciliació");
+    expect(sent(requests, "GET", "/club")).toEqual([]);
+  });
+
+  it("an empty list (an ACTIVE member without a method) shows no method row", async () => {
+    mockScenario("adminSignupReviewAddDog");
+    await renderReview({
+      dogs: "Nit",
+      fetchOverride: recordingFetch((body) => {
+        delete body.member.paymentMethod;
+        body.paymentMethods = [];
+      }).fetch,
+    });
+    const drawer = openDrawer();
+    expect(within(drawer).queryByLabelText("Mètode de pagament")).toBeNull();
+    expect(within(drawer).queryByText("Mètode de pagament")).toBeNull();
+  });
+});
+
 describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10)", () => {
-  it("moves a cash applicant to direct debit with IBAN and holder, among the club's methods", async () => {
+  it("moves a cash applicant to direct debit with IBAN and holder, among the view's methods", async () => {
     let first = true;
     const { fetch: over, requests } = recordingFetch((body) => {
       if (!first) return;
       first = false;
       body.member.paymentMethod = { type: "MANUAL" };
       delete body.member.maskedAccount;
+      body.paymentMethods = [
+        { assignable: true, current: false, label: "Domiciliació", type: "SEPA_DD" },
+        { assignable: true, current: true, label: "Efectiu", type: "MANUAL" },
+      ];
     });
     await renderReview({ fetchOverride: over });
     expect(screen.getByText(dataRow(/^Efectiu$/u))).toBeVisible();
@@ -885,7 +1094,8 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
       paymentMethod: { sepa: { holderName: "Marta Roca Pujol", iban: "ES9121000418450200051332" }, type: "SEPA_DD" },
       version: 3,
     });
-    expect(sent(requests, "GET", "/club")).toHaveLength(1);
+    // E3-W11: the methods are the view's, so the club's providers are never read.
+    expect(sent(requests, "GET", "/club")).toEqual([]);
     expect(await screen.findByText("Domiciliació · ···· ···· ···· ···· 1332 · titular: la mateixa")).toBeVisible();
   });
 
@@ -905,18 +1115,6 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     expect(await screen.findByText(dataRow(/^Efectiu$/u))).toBeVisible();
   });
 
-  it("offers every provider the club has, whatever its enabled flag (the real core's GET /club for the seed)", async () => {
-    const { fetch: over } = recordingFetch(undefined, undefined, (club) => {
-      // roadmap/evidence/E3-W07/d2-payment-methods-core.json: GET /signup still offers both.
-      club.paymentProviders = { SEPA_XML: { configured: false, enabled: false }, MANUAL: { configured: false, enabled: false } };
-    });
-    await renderReview({ fetchOverride: over });
-    const method = within(openDrawer()).getByLabelText("Mètode de pagament");
-    await waitFor(() => {
-      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
-    });
-  });
-
   it("offers the card too when the club has Stripe enabled", async () => {
     mockScenario("signupStripe");
     await renderReview();
@@ -924,16 +1122,6 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     await waitFor(() => {
       expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Targeta", "Efectiu"]);
     });
-  });
-
-  it("add-dog (R-04-25): the method stays read-only and the club's methods are never asked for", async () => {
-    mockScenario("adminSignupReviewAddDog");
-    const { fetch: over, requests } = recordingFetch();
-    await renderReview({ dogs: "Nit", fetchOverride: over });
-    const drawer = openDrawer();
-    expect(within(drawer).getByLabelText("Mètode de pagament")).toBeDisabled();
-    expect(within(drawer).getByLabelText("Mètode de pagament")).toHaveValue("SEPA_DD");
-    expect(sent(requests, "GET", "/club")).toEqual([]);
   });
 
   it("without BILLING the drawer has no payment method", async () => {

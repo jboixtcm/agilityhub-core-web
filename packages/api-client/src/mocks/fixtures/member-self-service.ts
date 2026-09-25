@@ -18,6 +18,36 @@ export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & {
 };
 export type MeProfile = components["schemas"]["MeProfile"];
 type PostalTown = components["schemas"]["PostalTown"];
+type DogDocumentType = components["schemas"]["DogDocumentType"];
+
+/** `census.dogDocumentTypes` of the mock club: the product default of CATALEG_PARAMETRES (R-03-15). */
+export const dogDocumentTypesCatalog = [
+  {
+    key: "VACCINATION_CARD",
+    label: { ca: "Cartilla de vacunes", en: "Vaccination card", es: "Cartilla de vacunas" },
+    required: true,
+  },
+  { key: "INSURANCE", label: { ca: "Assegurança", en: "Insurance", es: "Seguro" }, required: false },
+  { key: "OTHER", label: { ca: "Altres", en: "Other", es: "Otros" }, required: false },
+];
+
+/**
+ * `GET /me/dogs.documentTypes` (api E3-T16; a MEMBER cannot read `/parameters`): the catalog in its
+ * order, each label in the reader's language when the club offers it, else in the club's default
+ * language (R-03-32).
+ */
+export function meDogDocumentTypes(
+  acceptLanguage: string | null,
+  club: { defaultLocale: string; locales: readonly string[] } = { defaultLocale: "ca", locales: ["ca", "es", "en"] },
+): DogDocumentType[] {
+  const requested = acceptLanguage?.toLocaleLowerCase().split(/[-,]/u)[0] ?? club.defaultLocale;
+  const locale = club.locales.includes(requested) ? requested : club.defaultLocale;
+  return dogDocumentTypesCatalog.map(({ key, label, required }) => ({
+    key,
+    label: label[locale as keyof typeof label],
+    required,
+  }));
+}
 
 function level(index: number): components["schemas"]["LevelSummary"] {
   const value = censusLevels[index];
@@ -135,6 +165,7 @@ export const meDogsFixture: MeDogs = {
       status: "ACTIVE",
     },
   ],
+  documentTypes: meDogDocumentTypes(null),
 };
 
 export const meProfileFixture: MeProfile = {

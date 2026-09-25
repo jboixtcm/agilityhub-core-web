@@ -15,6 +15,14 @@
       "differentMonth": "{start} al {end}"
     }
   },
+  "publicFooter": {
+    "name": "{club}",
+    "nameWithCity": "{club} · {city}",
+    "withTaxId": "{club} · {taxId}",
+    "withTaxIdAndCity": "{club} · {taxId} · {city}",
+    "office": "{street} · {postalCode}",
+    "officeWithCity": "{street} · {postalCode} {city}"
+  },
   "unavailable": {
     "title": "No disponible"
   },

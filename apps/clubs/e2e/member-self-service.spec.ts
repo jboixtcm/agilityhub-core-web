@@ -87,6 +87,12 @@ test.describe("T-03-40 mobile own dogs", () => {
 
     await page.getByRole("button", { name: "＋ DOC." }).first().click();
     await expect(page.getByRole("dialog", { name: "Afegeix un document de Duna" })).toBeVisible();
+    // E3-W12 step 1 (R-03-15): the club's types of GET /me/dogs, in their order.
+    await expect(page.getByLabel("Tipus").locator("option")).toHaveText(["Cartilla de vacunes", "Assegurança", "Altres"]);
+    await page.getByLabel("Tipus").selectOption("INSURANCE");
+    await page.screenshot({
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W12/13-document-dialog-375.png"),
+    });
     await page.getByLabel("Tipus").selectOption("VACCINATION_CARD");
     await page.getByLabel("Nom del document").fill("cartilla_Duna_3.jpg");
     await page.getByLabel("Fitxer").setInputFiles({

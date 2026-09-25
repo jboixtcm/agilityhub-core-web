@@ -1,0 +1,485 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (72 tests | 6 failed | 66 skipped) 20404ms
+   ❯ E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) (6)
+     × a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method 10175ms
+     × the applicant's card, not assignable any more, is shown preselected but cannot be chosen again 10054ms
+     × the preselected method is the view's `current` one (a readmission's submitted method) 41ms
+     × a PENDING applicant with no assignable method sees the current one read-only 43ms
+     × add-dog (R-04-19, R-04-25): the member's method is shown read-only, as the view lists it 48ms
+     × an empty list (an ACTIVE member without a method) shows no method row 41ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method
+AssertionError: expected [ Array(3) ] to deeply equal [ 'Domiciliació', 'Efectiu' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"signup-review-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"signup-review-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPreinscripció #1042 — Marta Roca Pujol + Kiwi[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mpendent des de fa 2 dies[0m
+          [36m</span>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-review-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPersona[0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"signup-review-data"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mNom[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0mMarta Roca Pujol[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mDNI/NIE[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0m47123456K[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mContacte[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<span>[39m
+                  [0mmarta.roca@example.test · +34 655123123[0m
+                [36m</span>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral signup-review-whatsapp"[39m
+                  [33mhref[39m=[32m"https://wa.me/34655123123"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mWhatsApp[0m
+                [36m</a>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mGrup familiar[0m
+              [36m</dt>[39m
+              [36m<dd[39m
+                [33mclass[39m=[32m"signup-review-family"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mSí — titular: Marta Roca + gos Kiwi[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                [36m>[39m
+                  [0mtarifa familiar en validar[0m
+                [36m</span>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mPagament[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mDomiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa[0m
+              [36m</dd>[39m
+            [36m</dl>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"signup-review-warning signup-review-warning--image"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNo autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mGos (1 de 1)[0m
+              [0m [0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"signup-review-data"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mNom[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0mKiwi[0m
+                [36m</strong>[39m
+                [0m · [0m
+                [0mFemella[0m
+                [0m · [0m
+                [0mWhippet[0m
+                [0m · [0m
+                [0m04/2024[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mXip[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m941000024681357[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mDocuments[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"https://files.example.test/cartilla_Kiwi_1.jpg"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mcartilla_Kiwi_1.jpg[0m
+                [36m</a>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"https://files.example.test/cartilla_Kiwi_2.jpg"[39m
+                ...
+
+- Expected
++ Received
+
+  [
+    "Domiciliació",
+    "Efectiu",
++   "Targeta",
+  ]
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:978:89
+    976|     const method = methodSelect();
+    977|     await waitFor(() => {
+    978|       expect(within(method).getAllByRole("option").map((option) => opt…
+       |                                                                                         ^
+    979|     });
+    980|     expect(method).toHaveValue("SEPA_DD");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the applicant's card, not assignable any more, is shown preselected but cannot be chosen again
+AssertionError: expected [ Array(3) ] to deeply equal [ 'Domiciliació', 'Efectiu' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"signup-review-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"signup-review-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPreinscripció #1042 — Marta Roca Pujol + Kiwi[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mpendent des de fa 2 dies[0m
+          [36m</span>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-review-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPersona[0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"signup-review-data"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mNom[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0mMarta Roca Pujol[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mDNI/NIE[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0m47123456K[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mContacte[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<span>[39m
+                  [0mmarta.roca@example.test · +34 655123123[0m
+                [36m</span>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral signup-review-whatsapp"[39m
+                  [33mhref[39m=[32m"https://wa.me/34655123123"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mWhatsApp[0m
+                [36m</a>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mGrup familiar[0m
+              [36m</dt>[39m
+              [36m<dd[39m
+                [33mclass[39m=[32m"signup-review-family"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mSí — titular: Marta Roca + gos Kiwi[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                [36m>[39m
+                  [0mtarifa familiar en validar[0m
+                [36m</span>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mPagament[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mTargeta[0m
+              [36m</dd>[39m
+            [36m</dl>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"signup-review-warning signup-review-warning--image"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNo autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mGos (1 de 1)[0m
+              [0m [0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"signup-review-data"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mNom[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0mKiwi[0m
+                [36m</strong>[39m
+                [0m · [0m
+                [0mFemella[0m
+                [0m · [0m
+                [0mWhippet[0m
+                [0m · [0m
+                [0m04/2024[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mXip[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m941000024681357[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mDocuments[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"https://files.example.test/cartilla_Kiwi_1.jpg"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mcartilla_Kiwi_1.jpg[0m
+                [36m</a>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"https://files.example.test/cartilla_Kiwi_2.jpg"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+               ...
+
+- Expected
++ Received
+
+  [
++   "Targeta",
+    "Domiciliació",
+    "Efectiu",
+  ]
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:999:47
+    997|     const choosable = () =>
+    998|       within(method).getAllByRole<HTMLOptionElement>("option").filter(…
+    999|     await waitFor(() => { expect(choosable()).toEqual(["Domiciliació",…
+       |                                               ^
+    1000|     expect(within(method).getByRole("option", { name: "Targeta" })).to…
+    1001|
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the preselected method is the view's `current` one (a readmission's submitted method)
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32mMANUAL[39m[2m)[22m
+
+Expected the element to have value:
+[32m  MANUAL[39m
+Received:
+[31m  SEPA_DD[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1018:28
+    1016|     });
+    1017|     await renderReview({ fetchOverride: over });
+    1018|     expect(methodSelect()).toHaveValue("MANUAL");
+       |                            ^
+    1019|   });
+    1020|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a PENDING applicant with no assignable method sees the current one read-only
+AssertionError: expected 'SELECT' to be 'INPUT' // Object.is equality
+
+Expected: "INPUT"
+Received: "SELECT"
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1027:28
+    1025|     await renderReview({ fetchOverride: over });
+    1026|     const method = methodSelect();
+    1027|     expect(method.tagName).toBe("INPUT");
+       |                            ^
+    1028|     expect(method).toHaveAttribute("readonly");
+    1029|     expect(method).toHaveValue("Domiciliació");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > add-dog (R-04-19, R-04-25): the member's method is shown read-only, as the view lists it
+AssertionError: expected 'SELECT' to be 'INPUT' // Object.is equality
+
+Expected: "INPUT"
+Received: "SELECT"
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1037:28
+    1035|     await renderReview({ dogs: "Nit", fetchOverride: over });
+    1036|     const method = methodSelect();
+    1037|     expect(method.tagName).toBe("INPUT");
+       |                            ^
+    1038|     expect(method).toHaveAttribute("readonly");
+    1039|     expect(method).toHaveValue("Domiciliació");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > an empty list (an ACTIVE member without a method) shows no method row
+AssertionError: expected <select …(2)>…(1)</select> to be null
+
+- Expected:
+null
+
++ Received:
+<select
+  class="ah-input ah-select"
+  id="signup-edit-paymentType"
+>
+  <option
+    value=""
+  >
+    —
+  </option>
+</select>
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1053:67
+    1051|     });
+    1052|     const drawer = openDrawer();
+    1053|     expect(within(drawer).queryByLabelText("Mètode de pagament")).toBe…
+       |                                                                   ^
+    1054|     expect(within(drawer).queryByText("Mètode de pagament")).toBeNull(…
+    1055|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 66 skipped (72)
+   Start at  21:35:25
+   Duration  21.57s (tests 95%, environment 2%, transform 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx -t E3-W11 step 2

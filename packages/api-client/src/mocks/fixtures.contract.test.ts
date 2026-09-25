@@ -99,7 +99,22 @@ function withOverlays(schemas: SchemaMap): SchemaMap {
   return merged;
 }
 
-const mergedDocument = {
+/**
+ * The snapshot writes a nullable reference as `{$ref, type: [object, null]}` (e.g.
+ * `ClubSummary.legalAddress`, «null when the club has no street or postal code»). JSON Schema 2020-12
+ * applies both keywords, so it would refuse the `null` the api sends: read it as `$ref` or `null`.
+ */
+function nullableReferences(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(nullableReferences);
+  if (typeof node !== "object" || node === null) return node;
+  const entries = Object.entries(node).map(([key, value]) => [key, nullableReferences(value)] as const);
+  const schema = Object.fromEntries(entries) as Record<string, unknown>;
+  const { $ref: reference, type, ...rest } = schema;
+  if (typeof reference !== "string" || !Array.isArray(type) || !type.includes("null")) return schema;
+  return { ...rest, anyOf: [{ $ref: reference }, { type: "null" }] };
+}
+
+const mergedDocument = nullableReferences({
   ...openapiDocument,
   paths: { ...openapiDocument.paths, ...pendingDocument.paths },
   components: {
@@ -109,7 +124,7 @@ const mergedDocument = {
       ...(pendingDocument.components.schemas as SchemaMap),
     }),
   },
-};
+}) as AnySchema;
 
 describe("T-01-25 OpenAPI mock fixture contract", () => {
   const fixtureFiles = readdirSync(fixturesDirectory)

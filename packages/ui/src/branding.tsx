@@ -39,7 +39,12 @@ export type BrandingLogoAssets =
 export interface Branding {
   club: {
     city?: string | null;
-    /** The club's legal name and tax id (`ClubSummary`), for the public footer of the signup. */
+    /**
+     * The registered office (`ClubSummary.legalAddress`, S02 R-02-02), the public footer's second
+     * line; `null` when the club has no street or postal code.
+     */
+    legalAddress?: { city: string | null; postalCode: string; street: string } | null;
+    /** The club's legal name and tax id (`ClubSummary`), for the public footer. */
     legalName?: string | null;
     name: string;
     slug: string;

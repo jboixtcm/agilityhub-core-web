@@ -180,6 +180,9 @@ export function SignupReviewPage({
 
   useEffect(() => { load(); }, [load, reload]);
 
+  // S04 §2 D2, R-04-15: while a reload is pending or after it failed, the view on screen is known
+  // stale, so no quote of it counts (none is shown or asked for) and VALIDA waits.
+  const viewCurrent = loadState === "ready";
   const billing = branding.modules.includes("BILLING");
   const familyModule = branding.modules.includes("FAMILY_GROUP");
   const claim = signup?.familyGroupClaim;
@@ -223,13 +226,14 @@ export function SignupReviewPage({
   });
 
   useEffect(() => {
-    if (signup === undefined || planChoice === undefined || quoteKey === undefined) return undefined;
+    if (!viewCurrent || signup === undefined || planChoice === undefined || quoteKey === undefined) return undefined;
     let active = true;
     requestQuote(signup, planChoice, quoteKey, () => active);
+    // A reload that starts meanwhile drops this answer too.
     return () => {
       active = false;
     };
-  }, [planChoice, quoteKey, quoteRetry, signup]);
+  }, [planChoice, quoteKey, quoteRetry, signup, viewCurrent]);
 
   useEffect(() => {
     const query = familyQuery.trim();
@@ -282,11 +286,19 @@ export function SignupReviewPage({
       </section>
     );
   }
+  // A reload drops the current quote at once; the fresh view and, after a plan change, its new dry
+  // run bring the next one.
+  const reloadView = () => {
+    setQuote(undefined);
+    setLoadState("loading");
+    setReload((value) => value + 1);
+  };
+
   if (signup === undefined) {
     return (
       <section className="signup-review-page">
         <Toast tone="danger">{t("admin-census:signupReview.loadError")}</Toast>
-        <Button onClick={() => { setLoadState("loading"); setReload((value) => value + 1); }}>{t("admin-census:signupReview.retry")}</Button>
+        <Button onClick={reloadView}>{t("admin-census:signupReview.retry")}</Button>
       </section>
     );
   }
@@ -303,18 +315,22 @@ export function SignupReviewPage({
   const planType = selectedOption?.type ?? member.plan?.type;
   const monthly = planType === "MONTHLY";
   // Without a plan change the view is the api's own quote; after one, only its current answer counts.
-  const currentQuote = quote?.view === signup && quote.key === quoteKey ? quote : undefined;
+  const currentQuote = viewCurrent && quote?.view === signup && quote.key === quoteKey ? quote : undefined;
   const quoteResult = currentQuote?.result;
   const quoteError = currentQuote?.error;
-  const quotePending = quoteKey !== undefined && currentQuote === undefined;
-  const quoteReady = quoteKey === undefined || quoteResult !== undefined;
+  const quotePending = loadState === "loading" || (quoteKey !== undefined && currentQuote === undefined);
+  const quoteReady = viewCurrent && (quoteKey === undefined || quoteResult !== undefined);
   const proposedDate = quoteKey === undefined ? signup.proposals.nextInvoiceDate : quoteResult?.nextInvoiceDate;
   const nextInvoiceDate = typedDate === undefined ? (proposedDate ?? "") : (typedDate.iso ?? "");
   const nextInvoiceText =
     typedDate === undefined
       ? proposedDate === undefined ? "" : formatPlainDate(proposedDate, "short")
       : typedDate.locale === locale || typedDate.iso === undefined ? typedDate.text : formatPlainDate(typedDate.iso, "short");
-  const upfront: Upfront | undefined = quoteKey === undefined ? (signup.upfront ?? undefined) : quoteResult?.upfront;
+  const upfront: Upfront | undefined = !viewCurrent
+    ? undefined
+    : quoteKey === undefined
+      ? (signup.upfront ?? undefined)
+      : quoteResult?.upfront;
   const liveLines = (upfront?.lines ?? []).filter((line) => line.status !== "CANCELLED" && line.status !== "REFUNDED");
   const stripePaid = (upfront?.totalPaid.amountMinor ?? 0) > 0 && liveLines.every((line) => line.provider === "STRIPE" && line.status === "PAID");
   // Only an upfront block without a Stripe payment asks for the amount collected (null = no upfront, INC-08).
@@ -357,8 +373,6 @@ export function SignupReviewPage({
         return t(`errors:${error.code}`, { defaultValue: t("admin-census:signupReview.genericError") });
     }
   };
-
-  const reloadView = () => { setReload((value) => value + 1); };
 
   // The dry run leaves `nextInvoiceDate` out, so the api proposes the new plan's date.
   const changePlan = (value: string) => {
@@ -696,6 +710,15 @@ export function SignupReviewPage({
           )}
           {quoteWarnings.map((warning) => <p className="signup-review-warning" key={warning}>{t(`admin-census:signupReview.warning.${warning}`)}</p>)}
         </div>
+        {/* A failed reload never brings the old quote back: its error and a retry take its place. */}
+        {loadState === "error" ? (
+          <div className="signup-review-error" role="alert">
+            <span>{t("admin-census:signupReview.loadError")}</span>
+            <Button onClick={reloadView} variant="ghost">{t("admin-census:signupReview.retry")}</Button>
+          </div>
+        ) : billing && loadState === "loading" ? (
+          <Skeleton height="4.5rem" label={t("admin-census:signupReview.loading")} />
+        ) : null}
         {billing && upfront !== undefined ? (
           <div className="signup-review-upfront">
             <h2>{t("admin-census:signupReview.upfront")}</h2>

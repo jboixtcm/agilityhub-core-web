@@ -2,8 +2,10 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import type { components } from "../generated/schema";
 
+import { signupReviewBaseline, signupReviewPaymentMethods } from "./fixtures/signup-review";
 import {
   mockScenario,
+  resetDashboardMockState,
   resetMemberSelfServiceState,
   resetSignupMockState,
   setSignupMockToday,
@@ -12,6 +14,7 @@ import {
 import { server } from "./server";
 
 type SignupConfig = components["schemas"]["SignupConfig"];
+type MemberSignupView = components["schemas"]["MemberSignupView"];
 
 const origin = "http://localhost";
 
@@ -233,9 +236,10 @@ describe("E3-W08 round 2 #6: the submission mocks enforce the two signup flags, 
     const claim = { dogName: "Duna", holderName: "Laura Serra", leavePending: true };
     const refused = await signup("signupNoFamilyPending", dni, "941000012340104", { familyGroupClaim: claim });
     expect(refused.status).toBe(400);
+    // E3-W12 step 6: the core's field code is NOT_ALLOWED.
     expect(await refused.json()).toMatchObject({
       code: "VALIDATION_ERROR",
-      details: { fieldErrors: [{ field: "familyGroupClaim.leavePending" }] },
+      details: { fieldErrors: [{ code: "NOT_ALLOWED", field: "familyGroupClaim.leavePending" }] },
     });
     mockScenario("signupNoFamilyPending");
     expect(((await (await fetch(`${origin}/api/v1/signup`)).json()) as SignupConfig).allowFamilyGroupPending).toBe(false);
@@ -272,5 +276,149 @@ describe("T-04-01 / T-04-02 the signup mocks follow R-04-01 by country profile",
     expect(short.status).toBe(400);
     expect(((await short.json()) as { code: string }).code).toBe("INVALID_ID_DOCUMENT");
     expect((await identityCheck({ type: "DNI", value: "12345678Z" })).status).toBe(400);
+  });
+});
+
+describe("E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19)", () => {
+  const marta = "42000000-0000-4000-8000-000000000001";
+  type Option = MemberSignupView["paymentMethods"][number];
+
+  async function d2Methods(scenario: MockScenario, language = "ca"): Promise<Option[]> {
+    mockScenario(scenario);
+    const response = await fetch(`${origin}/api/v1/members/${marta}/signup`, { headers: { "Accept-Language": language } });
+    return ((await response.json()) as MemberSignupView).paymentMethods;
+  }
+
+  async function patchMethod(type: string, version: number) {
+    return fetch(`${origin}/api/v1/members/${marta}`, {
+      body: JSON.stringify({ paymentMethod: { type }, version }),
+      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+    });
+  }
+
+  afterEach(() => {
+    resetDashboardMockState();
+  });
+
+  it("a PENDING member: the methods GET /signup offers, assignable, in the reader's language, the applicant's marked current", async () => {
+    expect(await d2Methods("admin")).toEqual([
+      { assignable: true, current: true, label: "Domiciliació", type: "SEPA_DD" },
+      { assignable: true, current: false, label: "Efectiu", type: "MANUAL" },
+    ]);
+    expect((await d2Methods("signupStripe", "es")).map((option) => `${option.type} ${option.label}`)).toEqual([
+      "SEPA_DD Domiciliación",
+      "CARD Tarjeta",
+      "MANUAL Efectivo",
+    ]);
+    expect(await d2Methods("signupNoBilling")).toEqual([]);
+  });
+
+  it("an add-dog (the member is ACTIVE): only the current method, not assignable, and a PATCH of it is 400 READ_ONLY", async () => {
+    expect(await d2Methods("adminSignupReviewAddDog")).toEqual([
+      { assignable: false, current: true, label: "Domiciliació", type: "SEPA_DD" },
+    ]);
+    const response = await patchMethod("MANUAL", 7);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [{ code: "READ_ONLY", field: "paymentMethod" }] },
+    });
+  });
+
+  it("a method that is not assignable is 422 PAYMENT_METHOD_NOT_AVAILABLE; an assignable one becomes current", async () => {
+    await d2Methods("admin");
+    const card = await patchMethod("CARD", 3);
+    expect(card.status).toBe(422);
+    expect(((await card.json()) as { code: string }).code).toBe("PAYMENT_METHOD_NOT_AVAILABLE");
+    expect((await patchMethod("MANUAL", 3)).status).toBe(200);
+    expect((await d2Methods("admin")).filter((option) => option.current).map((option) => option.type)).toEqual(["MANUAL"]);
+  });
+
+  it("the applicant's own method whose provider is off since stays listed last, current and not assignable", () => {
+    const view = structuredClone(signupReviewBaseline);
+    view.member.paymentMethod = { type: "CARD" };
+    const offered = [
+      { label: "Domiciliació", type: "SEPA_DD" as const },
+      { label: "Efectiu", type: "MANUAL" as const },
+    ];
+    expect(signupReviewPaymentMethods(view, offered, () => "Targeta", true)).toEqual([
+      { assignable: true, current: false, label: "Domiciliació", type: "SEPA_DD" },
+      { assignable: true, current: false, label: "Efectiu", type: "MANUAL" },
+      { assignable: false, current: true, label: "Targeta", type: "CARD" },
+    ]);
+  });
+});
+
+describe("E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16)", () => {
+  async function meDogs(language: string) {
+    const response = await fetch(`${origin}/api/v1/me/dogs`, {
+      headers: { "Accept-Language": language, Authorization: "Bearer mock-access-token" },
+    });
+    return (await response.json()) as { documentTypes: unknown; dogs: Record<string, unknown>[] };
+  }
+
+  it("lists the catalog's document types in order, with the reader's labels, else the club's default language", async () => {
+    mockScenario("member");
+    expect((await meDogs("es")).documentTypes).toEqual([
+      { key: "VACCINATION_CARD", label: "Cartilla de vacunas", required: true },
+      { key: "INSURANCE", label: "Seguro", required: false },
+      { key: "OTHER", label: "Otros", required: false },
+    ]);
+    // R-03-32: the mock club offers ca and es, so an en reader reads the default (ca).
+    expect((await meDogs("en")).documentTypes).toEqual([
+      { key: "VACCINATION_CARD", label: "Cartilla de vacunes", required: true },
+      { key: "INSURANCE", label: "Assegurança", required: false },
+      { key: "OTHER", label: "Altres", required: false },
+    ]);
+  });
+
+  it("R-03-30: a dog carries its level only with levels.enabled", async () => {
+    mockScenario("member");
+    expect((await meDogs("ca")).dogs.map((dog) => (dog.level as { code: string } | undefined)?.code)).toEqual(["C", "D"]);
+    mockScenario("memberNoLevels");
+    expect((await meDogs("ca")).dogs.some((dog) => "level" in dog)).toBe(false);
+  });
+});
+
+describe("E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS)", () => {
+  async function read(scenario: MockScenario, path: string, init: RequestInit = {}) {
+    mockScenario(scenario);
+    const response = await fetch(`${origin}/api/v1${path}`, init);
+    return { body: (await response.json()) as { code?: string }, status: response.status };
+  }
+
+  it.each(["member", "instructor", "impersonated", "dayGridEmpty"] as const)("%s: every /parameters read and write is 403 FORBIDDEN", async (scenario) => {
+    for (const [path, init] of [
+      ["/parameters", {}],
+      ["/parameters/levels.enabled", {}],
+      ["/parameters/census.dogDocumentTypes", {}],
+      ["/parameters/levels.enabled/history", {}],
+      ["/parameters/levels.enabled", { body: JSON.stringify({ value: false, version: 1 }), headers: { "Content-Type": "application/json" }, method: "PUT" }],
+      ["/parameters/levels.enabled", { method: "DELETE" }],
+    ] as const) {
+      const answer = await read(scenario, path, init);
+      expect(answer, `${init.method ?? "GET"} ${path}`).toMatchObject({ body: { code: "FORBIDDEN" }, status: 403 });
+    }
+  });
+
+  it("an ADMIN reads them (the roles, not the active profile, decide); an impersonation token does not", async () => {
+    expect((await read("admin", "/parameters/levels.enabled")).status).toBe(200);
+    expect((await read("admin", "/parameters")).status).toBe(200);
+    // A multi-profile account acting as a member still has the ADMIN role in its token.
+    expect((await read("multiProfile", "/parameters/levels.enabled")).status).toBe(200);
+    const impersonation = await read("admin", "/parameters/levels.enabled", {
+      headers: { Authorization: "Bearer mock-impersonation-token" },
+    });
+    expect(impersonation).toMatchObject({ body: { code: "FORBIDDEN" }, status: 403 });
+  });
+
+  it("the ADMIN's census.dogDocumentTypes is the catalog's editable map", async () => {
+    const answer = await read("admin", "/parameters/census.dogDocumentTypes");
+    expect((answer.body as { value?: unknown }).value).toEqual([
+      { key: "VACCINATION_CARD", label: { ca: "Cartilla de vacunes", en: "Vaccination card", es: "Cartilla de vacunas" }, required: true },
+      { key: "INSURANCE", label: { ca: "Assegurança", en: "Insurance", es: "Seguro" }, required: false },
+      { key: "OTHER", label: { ca: "Altres", en: "Other", es: "Otros" }, required: false },
+    ]);
   });
 });

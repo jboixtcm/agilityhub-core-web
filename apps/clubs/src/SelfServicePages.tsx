@@ -31,14 +31,10 @@ type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
 type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
 type MeProfile = components["schemas"]["MeProfile"];
 type MeProfilePatch = components["schemas"]["MeProfilePatch"];
-type Parameter = components["schemas"]["Parameter"];
 type PostalTown = components["schemas"]["PostalTown"];
 type CountryProfile = components["schemas"]["Country"];
-
-interface DocumentTypeOption {
-  code: string;
-  label: string;
-}
+// R-03-15, R-03-32: the club's document types, with the reader's labels (`GET /me/dogs`).
+type DogDocumentType = components["schemas"]["DogDocumentType"];
 
 interface DocumentUpload {
   dogId: string;
@@ -126,21 +122,6 @@ function fullDate(value: string, locale: string): string {
   return fmtPlainDate(value, normalizeLocale(locale), "short");
 }
 
-function documentTypeOptions(value: unknown): DocumentTypeOption[] {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-  return value.flatMap((item) => {
-    if (typeof item !== "object" || item === null) {
-      return [];
-    }
-    const candidate = item as Record<string, unknown>;
-    return typeof candidate.code === "string" && typeof candidate.label === "string"
-      ? [{ code: candidate.code, label: candidate.label }]
-      : [];
-  });
-}
-
 function fieldErrors(error: unknown): { code: string; field: string }[] {
   if (!isApiError(error) || typeof error.details !== "object" || error.details === null) {
     return [];
@@ -173,15 +154,6 @@ function formFieldName(field: string): string {
     return field.slice("address.".length);
   }
   return field;
-}
-
-async function optionalParameter(client: ApiClient, key: string): Promise<Parameter | undefined> {
-  try {
-    const result = await client.GET("/parameters/{key}", { params: { path: { key } } });
-    return result.data;
-  } catch {
-    return undefined;
-  }
 }
 
 function apiMessage(error: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
@@ -437,14 +409,12 @@ function PendingDogCard({ dog }: { dog: MeDog }) {
 function DogCard({
   client,
   dog: initialDog,
-  levelsEnabled,
   modules,
   onDocument,
   onMessage,
 }: {
   client: ApiClient;
   dog: MeDog;
-  levelsEnabled: boolean;
   modules: readonly string[];
   onDocument: (upload: DocumentUpload) => void;
   onMessage: (message: string, error?: boolean) => void;
@@ -479,11 +449,12 @@ function DogCard({
             {t("census:values.years", { count: dog.ageYears })}
           </p>
         </div>
-        {levelsEnabled && dog.level !== undefined ? (
+        {/* R-03-30: the api sends `level` only with `levels.enabled` (a MEMBER cannot read /parameters). */}
+        {dog.level == null ? null : (
           <span className="dog-card__level">
             {t("census:myDogs.level", { code: dog.level.code })}
           </span>
-        ) : null}
+        )}
       </div>
       {tasksEnabled ? (
         <>
@@ -551,7 +522,7 @@ function DocumentModal({
   upload,
 }: {
   client: ApiClient;
-  documentTypes: DocumentTypeOption[];
+  documentTypes: readonly DogDocumentType[];
   onClose: () => void;
   onError: (message: string) => void;
   onUploaded: () => void;
@@ -559,13 +530,17 @@ function DocumentModal({
 }) {
   const { t } = useTranslation(["census", "errors"]);
   const [name, setName] = useState("");
-  const [type, setType] = useState(documentTypes[0]?.code ?? "VACCINATION_CARD");
+  const [chosenType, setChosenType] = useState<string>();
   const [file, setFile] = useState<File>();
   const [working, setWorking] = useState(false);
+  // The first type of the club's catalog until the member picks another (R-03-15).
+  const type = documentTypes.some((option) => option.key === chosenType)
+    ? (chosenType ?? "")
+    : (documentTypes[0]?.key ?? "");
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (upload === null || file === undefined || name.trim() === "") {
+    if (upload === null || file === undefined || name.trim() === "" || type === "") {
       return;
     }
     setWorking(true);
@@ -604,12 +579,12 @@ function DocumentModal({
           <Select
             id="dog-document-type"
             onChange={(event) => {
-              setType(event.currentTarget.value);
+              setChosenType(event.currentTarget.value);
             }}
             value={type}
           >
             {documentTypes.map((option) => (
-              <option key={option.code} value={option.code}>
+              <option key={option.key} value={option.key}>
                 {option.label}
               </option>
             ))}
@@ -637,7 +612,7 @@ function DocumentModal({
             type="file"
           />
         </FormField>
-        <Button disabled={working || file === undefined || name.trim() === ""} type="submit">
+        <Button disabled={working || file === undefined || name.trim() === "" || type === ""} type="submit">
           {t("census:myDogs.uploadDocument")}
         </Button>
       </form>
@@ -649,21 +624,16 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const { t } = useTranslation("census");
   const [data, setData] = useState<MeDogs>();
-  const [documentTypes, setDocumentTypes] = useState<DocumentTypeOption[]>([]);
-  const [levelsEnabled, setLevelsEnabled] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState<{ error?: boolean; text: string }>();
   const [documentUpload, setDocumentUpload] = useState<DocumentUpload | null>(null);
   const [reload, setReload] = useState(0);
 
+  // S03 §6 (25-09): everything 13 shows comes from GET /me/dogs; a MEMBER cannot read /parameters.
   useEffect(() => {
     let active = true;
-    void Promise.all([
-      client.GET("/me/dogs"),
-      optionalParameter(client, "census.dogDocumentTypes"),
-      optionalParameter(client, "levels.enabled"),
-    ]).then(
-      ([dogs, types, levels]) => {
+    client.GET("/me/dogs").then(
+      (dogs) => {
         if (!active) {
           return;
         }
@@ -679,18 +649,6 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
             licenses: dog.licenses ?? [],
           })),
         });
-        const options = documentTypeOptions(types?.value);
-        setDocumentTypes(
-          options.length > 0
-            ? options
-            : [
-                {
-                  code: "VACCINATION_CARD",
-                  label: t("census:myDogs.vaccinationCard"),
-                },
-              ],
-        );
-        setLevelsEnabled(typeof levels?.value === "boolean" ? levels.value : true);
       },
       () => {
         if (active) {
@@ -701,7 +659,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
     return () => {
       active = false;
     };
-  }, [client, reload, t]);
+  }, [client, reload]);
 
   return (
     <div className="self-page my-dogs-page">
@@ -755,7 +713,6 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
                   client={client}
                   dog={dog}
                   key={dog.id}
-                  levelsEnabled={levelsEnabled}
                   modules={branding.modules}
                   onDocument={setDocumentUpload}
                   onMessage={(text, messageError) => {
@@ -775,7 +732,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
       </div>
       <DocumentModal
         client={client}
-        documentTypes={documentTypes}
+        documentTypes={data?.documentTypes ?? []}
         onClose={() => {
           setDocumentUpload(null);
         }}

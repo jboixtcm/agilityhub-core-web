@@ -1,0 +1,1763 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (23 tests | 9 failed | 14 skipped) 49ms
+   ❯ E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does (3)
+     × T-04-16 leavePending with allowFamilyGroupPending=false → 400 VALIDATION_ERROR on the claim; with true → 201 15ms
+   ❯ E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16) (2)
+     × lists the catalog's document types in order, with the reader's labels, else the club's default language 2ms
+     × R-03-30: a dog carries its level only with levels.enabled 2ms
+   ❯ E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) (6)
+     × member: every /parameters read and write is 403 FORBIDDEN 9ms
+     × instructor: every /parameters read and write is 403 FORBIDDEN 6ms
+     × impersonated: every /parameters read and write is 403 FORBIDDEN 5ms
+     × dayGridEmpty: every /parameters read and write is 403 FORBIDDEN 4ms
+     × an ADMIN reads them (the roles, not the active profile, decide); an impersonation token does not 3ms
+     × the ADMIN's census.dogDocumentTypes is the catalog's editable map 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does > T-04-16 leavePending with allowFamilyGroupPending=false → 400 VALIDATION_ERROR on the claim; with true → 201
+AssertionError: expected { code: 'VALIDATION_ERROR', …(3) } to match object { code: 'VALIDATION_ERROR', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "code": "VALIDATION_ERROR",
+    "details": {
+      "fieldErrors": [
+        {
+-         "code": "NOT_ALLOWED",
++         "code": "INVALID",
+          "field": "familyGroupClaim.leavePending",
+        },
+      ],
+    },
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:240:34
+    238|     expect(refused.status).toBe(400);
+    239|     // E3-W12 step 6: the core's field code is NOT_ALLOWED.
+    240|     expect(await refused.json()).toMatchObject({
+       |                                  ^
+    241|       code: "VALIDATION_ERROR",
+    242|       details: { fieldErrors: [{ code: "NOT_ALLOWED", field: "familyGr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16) > lists the catalog's document types in order, with the reader's labels, else the club's default language
+AssertionError: expected undefined to deeply equal [ …(3) ]
+
+- Expected:
+[
+  {
+    "key": "VACCINATION_CARD",
+    "label": "Cartilla de vacunas",
+    "required": true,
+  },
+  {
+    "key": "INSURANCE",
+    "label": "Seguro",
+    "required": false,
+  },
+  {
+    "key": "OTHER",
+    "label": "Otros",
+    "required": false,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/mocks/signup-handlers.test.ts:363:48
+    361|   it("lists the catalog's document types in order, with the reader's l…
+    362|     mockScenario("member");
+    363|     expect((await meDogs("es")).documentTypes).toEqual([
+       |                                                ^
+    364|       { key: "VACCINATION_CARD", label: "Cartilla de vacunas", require…
+    365|       { key: "INSURANCE", label: "Seguro", required: false },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16) > R-03-30: a dog carries its level only with levels.enabled
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/mocks/signup-handlers.test.ts:380:69
+    378|     expect((await meDogs("ca")).dogs.map((dog) => (dog.level as { code…
+    379|     mockScenario("memberNoLevels");
+    380|     expect((await meDogs("ca")).dogs.some((dog) => "level" in dog)).to…
+       |                                                                     ^
+    381|   });
+    382| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > member: every /parameters read and write is 403 FORBIDDEN
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > instructor: every /parameters read and write is 403 FORBIDDEN
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > impersonated: every /parameters read and write is 403 FORBIDDEN
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > dayGridEmpty: every /parameters read and write is 403 FORBIDDEN
+AssertionError: GET /parameters: expected { …(2) } to match object { body: { code: 'FORBIDDEN' }, …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "FORBIDDEN",
++     "blocks": [
++       {
++         "key": "classes",
++         "rows": [
++           {
++             "block": "classes",
++             "constraints": {
++               "max": 14,
++               "min": 0,
++             },
++             "default": 2,
++             "editableBy": "CLUB",
++             "help": "bookings.maxCurrentWeek",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 2,
++               },
++             ],
++             "isOverride": false,
++             "key": "bookings.maxCurrentWeek",
++             "label": "bookings.maxCurrentWeek",
++             "lastChange": {
++               "action": "bookings.maxCurrentWeek",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 2,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {
++               "max": 14,
++               "min": 0,
++             },
++             "default": 1,
++             "editableBy": "CLUB",
++             "help": "bookings.maxNextWeek",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 1,
++               },
++             ],
++             "isOverride": false,
++             "key": "bookings.maxNextWeek",
++             "label": "bookings.maxNextWeek",
++             "lastChange": {
++               "action": "bookings.maxNextWeek",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 1,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {},
++             "default": {
++               "dayOfWeek": "SUNDAY",
++               "time": "20:00",
++             },
++             "editableBy": "CLUB",
++             "help": "bookings.weekOpensAt",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "dayOfWeek": "SUNDAY",
++                   "time": "20:00",
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "bookings.weekOpensAt",
++             "label": "bookings.weekOpensAt",
++             "lastChange": {
++               "action": "bookings.weekOpensAt",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "json",
++             "value": {
++               "dayOfWeek": "SUNDAY",
++               "time": "20:00",
++             },
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {
++               "before": true,
++               "min": 0,
++               "step": 5,
++             },
++             "default": 240,
++             "editableBy": "CLUB",
++             "help": "bookings.lateCancelThresholdMinutes",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 240,
++               },
++             ],
++             "isOverride": false,
++             "key": "bookings.lateCancelThresholdMinutes",
++             "label": "bookings.lateCancelThresholdMinutes",
++             "lastChange": {
++               "action": "bookings.lateCancelThresholdMinutes",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "duration",
++             "value": 240,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {
++               "max": 99,
++               "min": 1,
++             },
++             "default": 5,
++             "editableBy": "CLUB",
++             "help": "classes.defaultCapacity",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 5,
++               },
++             ],
++             "isOverride": false,
++             "key": "classes.defaultCapacity",
++             "label": "classes.defaultCapacity",
++             "lastChange": {
++               "action": "classes.defaultCapacity",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 5,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {},
++             "default": "07:30",
++             "editableBy": "CLUB",
++             "help": "classes.riskReviewTime",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "07:30",
++               },
++             ],
++             "isOverride": false,
++             "key": "classes.riskReviewTime",
++             "label": "classes.riskReviewTime",
++             "lastChange": {
++               "action": "classes.riskReviewTime",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "time",
++             "value": "07:30",
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {
++               "max": 30,
++               "min": 0,
++             },
++             "default": 2,
++             "editableBy": "CLUB",
++             "help": "classes.riskLookaheadDays",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 2,
++               },
++             ],
++             "isOverride": false,
++             "key": "classes.riskLookaheadDays",
++             "label": "classes.riskLookaheadDays",
++             "lastChange": {
++               "action": "classes.riskLookaheadDays",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 2,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 24,
++             "editableBy": "CLUB",
++             "help": "bookings.showInstructorHoursBefore",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 24,
++               },
++             ],
++             "isOverride": false,
++             "key": "bookings.showInstructorHoursBefore",
++             "label": "bookings.showInstructorHoursBefore",
++             "lastChange": {
++               "action": "bookings.showInstructorHoursBefore",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 24,
++             "version": 1,
++           },
++           {
++             "block": "classes",
++             "constraints": {},
++             "default": {
++               "ok": 240,
++               "short": 150,
++               "tight": 190,
++             },
++             "editableBy": "CLUB",
++             "help": "coverage.thresholds",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "ok": 240,
++                   "short": 150,
++                   "tight": 190,
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "coverage.thresholds",
++             "label": "coverage.thresholds",
++             "lastChange": {
++               "action": "coverage.thresholds",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "json",
++             "value": {
++               "ok": 240,
++               "short": 150,
++               "tight": 190,
++             },
++             "version": 1,
++           },
++         ],
++         "title": "classes",
++       },
++       {
++         "key": "freeTraining",
++         "rows": [
++           {
++             "block": "freeTraining",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 3,
++             "editableBy": "CLUB",
++             "help": "training.bookingWindowDays",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 3,
++               },
++             ],
++             "isOverride": false,
++             "key": "training.bookingWindowDays",
++             "label": "training.bookingWindowDays",
++             "lastChange": {
++               "action": "training.bookingWindowDays",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "FREE_TRAINING",
++             "type": "int",
++             "value": 3,
++             "version": 1,
++           },
++           {
++             "block": "freeTraining",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 3,
++             "editableBy": "CLUB",
++             "help": "training.maxPerWeek",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 3,
++               },
++             ],
++             "isOverride": false,
++             "key": "training.maxPerWeek",
++             "label": "training.maxPerWeek",
++             "lastChange": {
++               "action": "training.maxPerWeek",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "FREE_TRAINING",
++             "type": "int",
++             "value": 3,
++             "version": 1,
++           },
++           {
++             "block": "freeTraining",
++             "constraints": {
++               "before": true,
++               "min": 0,
++               "step": 5,
++             },
++             "default": 120,
++             "editableBy": "CLUB",
++             "help": "training.cancelThresholdMinutes",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 120,
++               },
++             ],
++             "isOverride": false,
++             "key": "training.cancelThresholdMinutes",
++             "label": "training.cancelThresholdMinutes",
++             "lastChange": {
++               "action": "training.cancelThresholdMinutes",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "FREE_TRAINING",
++             "type": "duration",
++             "value": 120,
++             "version": 1,
++           },
++           {
++             "block": "freeTraining",
++             "constraints": {
++               "min": 5,
++               "step": 5,
++             },
++             "default": 30,
++             "editableBy": "CLUB",
++             "help": "training.slotMinutes",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 30,
++               },
++             ],
++             "isOverride": false,
++             "key": "training.slotMinutes",
++             "label": "training.slotMinutes",
++             "lastChange": {
++               "action": "training.slotMinutes",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "FREE_TRAINING",
++             "type": "duration",
++             "value": 30,
++             "version": 1,
++           },
++           {
++             "block": "freeTraining",
++             "constraints": {
++               "min": 1,
++             },
++             "default": 1,
++             "editableBy": "CLUB",
++             "help": "training.capacityPerRingSlot",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 1,
++               },
++             ],
++             "isOverride": false,
++             "key": "training.capacityPerRingSlot",
++             "label": "training.capacityPerRingSlot",
++             "lastChange": {
++               "action": "training.capacityPerRingSlot",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "FREE_TRAINING",
++             "type": "int",
++             "value": 1,
++             "version": 1,
++           },
++         ],
++         "title": "freeTraining",
++       },
++       {
++         "key": "waitlist",
++         "rows": [
++           {
++             "block": "waitlist",
++             "constraints": {
++               "before": true,
++               "min": 0,
++               "step": 5,
++             },
++             "default": 30,
++             "editableBy": "CLUB",
++             "help": "waitlist.notifyThresholdMinutes",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 30,
++               },
++             ],
++             "isOverride": false,
++             "key": "waitlist.notifyThresholdMinutes",
++             "label": "waitlist.notifyThresholdMinutes",
++             "lastChange": {
++               "action": "waitlist.notifyThresholdMinutes",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "WAITLIST",
++             "type": "duration",
++             "value": 30,
++             "version": 1,
++           },
++           {
++             "block": "waitlist",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 3,
++             "editableBy": "CLUB",
++             "help": "waitlist.maxPerClass",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 3,
++               },
++             ],
++             "isOverride": false,
++             "key": "waitlist.maxPerClass",
++             "label": "waitlist.maxPerClass",
++             "lastChange": {
++               "action": "waitlist.maxPerClass",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "WAITLIST",
++             "type": "int",
++             "value": 3,
++             "version": 1,
++           },
++           {
++             "block": "waitlist",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 2,
++             "editableBy": "CLUB",
++             "help": "waitlist.maxPerDogPerWeek",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 2,
++               },
++             ],
++             "isOverride": false,
++             "key": "waitlist.maxPerDogPerWeek",
++             "label": "waitlist.maxPerDogPerWeek",
++             "lastChange": {
++               "action": "waitlist.maxPerDogPerWeek",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "WAITLIST",
++             "type": "int",
++             "value": 2,
++             "version": 1,
++           },
++           {
++             "block": "waitlist",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 1,
++             "editableBy": "CLUB",
++             "help": "waitlist.maxPerDogPerWeekIfAttended",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 1,
++               },
++             ],
++             "isOverride": false,
++             "key": "waitlist.maxPerDogPerWeekIfAttended",
++             "label": "waitlist.maxPerDogPerWeekIfAttended",
++             "lastChange": {
++               "action": "waitlist.maxPerDogPerWeekIfAttended",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "WAITLIST",
++             "type": "int",
++             "value": 1,
++             "version": 1,
++           },
++           {
++             "block": "waitlist",
++             "constraints": {
++               "values": [
++                 "ALL_AT_ONCE",
++                 "FIFO",
++               ],
++             },
++             "default": "ALL_AT_ONCE",
++             "editableBy": "CLUB",
++             "help": "waitlist.mode",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "ALL_AT_ONCE",
++               },
++             ],
++             "isOverride": false,
++             "key": "waitlist.mode",
++             "label": "waitlist.mode",
++             "lastChange": {
++               "action": "waitlist.mode",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "WAITLIST",
++             "type": "enum",
++             "value": "ALL_AT_ONCE",
++             "version": 1,
++           },
++         ],
++         "title": "waitlist",
++       },
++       {
++         "key": "billing",
++         "rows": [
++           {
++             "block": "billing",
++             "constraints": {},
++             "default": {
++               "amountMinor": 10000,
++               "currency": "EUR",
++             },
++             "editableBy": "CLUB",
++             "help": "billing.entryFeePerDog",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "amountMinor": 10000,
++                   "currency": "EUR",
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "billing.entryFeePerDog",
++             "label": "billing.entryFeePerDog",
++             "lastChange": {
++               "action": "billing.entryFeePerDog",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "BILLING",
++             "type": "money",
++             "value": {
++               "amountMinor": 10000,
++               "currency": "EUR",
++             },
++             "version": 1,
++           },
++           {
++             "block": "billing",
++             "constraints": {},
++             "default": {
++               "amountMinor": 2000,
++               "currency": "EUR",
++             },
++             "editableBy": "CLUB",
++             "help": "billing.inactivityFeeFirstMonth",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "amountMinor": 2000,
++                   "currency": "EUR",
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "billing.inactivityFeeFirstMonth",
++             "label": "billing.inactivityFeeFirstMonth",
++             "lastChange": {
++               "action": "billing.inactivityFeeFirstMonth",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "BILLING",
++             "type": "money",
++             "value": {
++               "amountMinor": 2000,
++               "currency": "EUR",
++             },
++             "version": 1,
++           },
++           {
++             "block": "billing",
++             "constraints": {},
++             "default": {
++               "amountMinor": 1000,
++               "currency": "EUR",
++             },
++             "editableBy": "CLUB",
++             "help": "billing.inactivityFeeFollowingMonths",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "amountMinor": 1000,
++                   "currency": "EUR",
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "billing.inactivityFeeFollowingMonths",
++             "label": "billing.inactivityFeeFollowingMonths",
++             "lastChange": {
++               "action": "billing.inactivityFeeFollowingMonths",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "BILLING",
++             "type": "money",
++             "value": {
++               "amountMinor": 1000,
++               "currency": "EUR",
++             },
++             "version": 1,
++           },
++           {
++             "block": "billing",
++             "constraints": {
++               "values": [
++                 "MONTHLY",
++                 "SEMESTER",
++               ],
++             },
++             "default": "SEMESTER",
++             "editableBy": "CLUB",
++             "help": "billing.cashInvoicing",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "SEMESTER",
++               },
++             ],
++             "isOverride": false,
++             "key": "billing.cashInvoicing",
++             "label": "billing.cashInvoicing",
++             "lastChange": {
++               "action": "billing.cashInvoicing",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "BILLING",
++             "type": "enum",
++             "value": "SEMESTER",
++             "version": 1,
++           },
++           {
++             "block": "billing",
++             "constraints": {},
++             "default": "{YYYY}",
++             "editableBy": "CLUB",
++             "help": "billing.invoiceSeriesPattern",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "{YYYY}",
++               },
++             ],
++             "isOverride": false,
++             "key": "billing.invoiceSeriesPattern",
++             "label": "billing.invoiceSeriesPattern",
++             "lastChange": {
++               "action": "billing.invoiceSeriesPattern",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "BILLING",
++             "type": "string",
++             "value": "{YYYY}",
++             "version": 1,
++           },
++         ],
++         "title": "billing",
++       },
++       {
++         "key": "club",
++         "rows": [
++           {
++             "block": "club",
++             "constraints": {},
++             "default": {
++               "FRIDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "MONDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "SATURDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "SUNDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "THURSDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "TUESDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "WEDNESDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++             },
++             "editableBy": "CLUB",
++             "help": "club.openingHours",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "FRIDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "MONDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "SATURDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "SUNDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "THURSDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "TUESDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                   "WEDNESDAY": {
++                     "close": "22:00",
++                     "open": "07:00",
++                   },
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "club.openingHours",
++             "label": "club.openingHours",
++             "lastChange": {
++               "action": "club.openingHours",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "json",
++             "value": {
++               "FRIDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "MONDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "SATURDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "SUNDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "THURSDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "TUESDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++               "WEDNESDAY": {
++                 "close": "22:00",
++                 "open": "07:00",
++               },
++             },
++             "version": 1,
++           },
++           {
++             "block": "club",
++             "constraints": {},
++             "default": [],
++             "editableBy": "CLUB",
++             "help": "club.holidays",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": [],
++               },
++             ],
++             "isOverride": false,
++             "key": "club.holidays",
++             "label": "club.holidays",
++             "lastChange": {
++               "action": "club.holidays",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "list",
++             "value": [],
++             "version": 1,
++           },
++           {
++             "block": "club",
++             "constraints": {},
++             "default": [
++               {
++                 "key": "UNPAID_INVOICE",
++                 "label": {
++                   "ca": "Rebut impagat",
++                   "en": "Unpaid receipt",
++                   "es": "Recibo impagado",
++                 },
++               },
++               {
++                 "key": "PENDING_DOCUMENT",
++                 "label": {
++                   "ca": "Cartilla pendent",
++                   "en": "Pending record",
++                   "es": "Cartilla pendiente",
++                 },
++               },
++               {
++                 "key": "CLUB_DECISION",
++                 "label": {
++                   "ca": "Decisió del club",
++                   "en": "Club decision",
++                   "es": "Decisión del club",
++                 },
++               },
++             ],
++             "editableBy": "CLUB",
++             "help": "census.bookingBlockReasons",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": [
++                   {
++                     "key": "UNPAID_INVOICE",
++                     "label": {
++                       "ca": "Rebut impagat",
++                       "en": "Unpaid receipt",
++                       "es": "Recibo impagado",
++                     },
++                   },
++                   {
++                     "key": "PENDING_DOCUMENT",
++                     "label": {
++                       "ca": "Cartilla pendent",
++                       "en": "Pending record",
++                       "es": "Cartilla pendiente",
++                     },
++                   },
++                   {
++                     "key": "CLUB_DECISION",
++                     "label": {
++                       "ca": "Decisió del club",
++                       "en": "Club decision",
++                       "es": "Decisión del club",
++                     },
++                   },
++                 ],
++               },
++             ],
++             "isOverride": false,
++             "key": "census.bookingBlockReasons",
++             "label": "census.bookingBlockReasons",
++             "lastChange": {
++               "action": "census.bookingBlockReasons",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "list",
++             "value": [
++               {
++                 "key": "UNPAID_INVOICE",
++                 "label": {
++                   "ca": "Rebut impagat",
++                   "en": "Unpaid receipt",
++                   "es": "Recibo impagado",
++                 },
++               },
++               {
++                 "key": "PENDING_DOCUMENT",
++                 "label": {
++                   "ca": "Cartilla pendent",
++                   "en": "Pending record",
++                   "es": "Cartilla pendiente",
++                 },
++               },
++               {
++                 "key": "CLUB_DECISION",
++                 "label": {
++                   "ca": "Decisió del club",
++                   "en": "Club decision",
++                   "es": "Decisión del club",
++                 },
++               },
++             ],
++             "version": 1,
++           },
++           {
++             "block": "club",
++             "constraints": {},
++             "default": "{websiteUrl}/activitat/{slug}",
++             "editableBy": "CLUB",
++             "help": "activities.publicUrlTemplate",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "{websiteUrl}/activitat/{slug}",
++               },
++             ],
++             "isOverride": false,
++             "key": "activities.publicUrlTemplate",
++             "label": "activities.publicUrlTemplate",
++             "lastChange": {
++               "action": "activities.publicUrlTemplate",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "ACTIVITIES",
++             "type": "string",
++             "value": "{websiteUrl}/activitat/{slug}",
++             "version": 1,
++           },
++         ],
++         "title": "club",
++       },
++       {
++         "key": "communications",
++         "rows": [
++           {
++             "block": "communications",
++             "constraints": {},
++             "default": "08:00",
++             "editableBy": "CLUB",
++             "help": "messaging.noShowNoticeTime",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": "08:00",
++               },
++             ],
++             "isOverride": false,
++             "key": "messaging.noShowNoticeTime",
++             "label": "messaging.noShowNoticeTime",
++             "lastChange": {
++               "action": "messaging.noShowNoticeTime",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "time",
++             "value": "08:00",
++             "version": 1,
++           },
++           {
++             "block": "communications",
++             "constraints": {},
++             "default": [
++               60,
++               120,
++               240,
++               360,
++               720,
++               1440,
++             ],
++             "editableBy": "CLUB",
++             "help": "messaging.reminderOptionsMinutes",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": [
++                   60,
++                   120,
++                   240,
++                   360,
++                   720,
++                   1440,
++                 ],
++               },
++             ],
++             "isOverride": false,
++             "key": "messaging.reminderOptionsMinutes",
++             "label": "messaging.reminderOptionsMinutes",
++             "lastChange": {
++               "action": "messaging.reminderOptionsMinutes",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "list",
++             "value": [
++               60,
++               120,
++               240,
++               360,
++               720,
++               1440,
++             ],
++             "version": 1,
++           },
++           {
++             "block": "communications",
++             "constraints": {},
++             "default": false,
++             "editableBy": "CLUB",
++             "help": "messaging.notifyWeekOpening",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": false,
++               },
++             ],
++             "isOverride": false,
++             "key": "messaging.notifyWeekOpening",
++             "label": "messaging.notifyWeekOpening",
++             "lastChange": {
++               "action": "messaging.notifyWeekOpening",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "bool",
++             "value": false,
++             "version": 1,
++           },
++           {
++             "block": "communications",
++             "constraints": {},
++             "default": false,
++             "editableBy": "CLUB",
++             "help": "messaging.notifyNewRingSetup",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": false,
++               },
++             ],
++             "isOverride": false,
++             "key": "messaging.notifyNewRingSetup",
++             "label": "messaging.notifyNewRingSetup",
++             "lastChange": {
++               "action": "messaging.notifyNewRingSetup",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
+              },
+-   "status": 403,
++             "module": "COURSES",
++             "type": "bool",
++             "value": false,
++             "version": 1,
++           },
++           {
++             "block": "communications",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 1000,
++             "editableBy": "CLUB",
++             "help": "messaging.sms.monthlyCap",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 1000,
++               },
++             ],
++             "isOverride": false,
++             "key": "messaging.sms.monthlyCap",
++             "label": "messaging.sms.monthlyCap",
++             "lastChange": {
++               "action": "messaging.sms.monthlyCap",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "SMS",
++             "type": "int",
++             "value": 1000,
++             "version": 1,
++           },
++         ],
++         "title": "communications",
++       },
++       {
++         "key": "signup",
++         "rows": [
++           {
++             "block": "signup",
++             "constraints": {},
++             "default": true,
++             "editableBy": "CLUB",
++             "help": "signup.enabled",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": true,
++               },
++             ],
++             "isOverride": false,
++             "key": "signup.enabled",
++             "label": "signup.enabled",
++             "lastChange": {
++               "action": "signup.enabled",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "bool",
++             "value": true,
++             "version": 1,
++           },
++           {
++             "block": "signup",
++             "constraints": {
++               "min": 1,
++             },
++             "default": 30,
++             "editableBy": "CLUB",
++             "help": "signup.pendingExpiryDays",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 30,
++               },
++             ],
++             "isOverride": false,
++             "key": "signup.pendingExpiryDays",
++             "label": "signup.pendingExpiryDays",
++             "lastChange": {
++               "action": "signup.pendingExpiryDays",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 30,
++             "version": 1,
++           },
++           {
++             "block": "signup",
++             "constraints": {},
++             "default": false,
++             "editableBy": "CLUB",
++             "help": "signup.requireDogDocumentAtSignup",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": false,
++               },
++             ],
++             "isOverride": false,
++             "key": "signup.requireDogDocumentAtSignup",
++             "label": "signup.requireDogDocumentAtSignup",
++             "lastChange": {
++               "action": "signup.requireDogDocumentAtSignup",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "bool",
++             "value": false,
++             "version": 1,
++           },
++           {
++             "block": "signup",
++             "constraints": {},
++             "default": {
++               "ca": "Autoritzo la publicació d'imatges dins les activitats del club.",
++               "en": "I authorize images to be published as part of club activities.",
++               "es": "Autorizo la publicación de imágenes en las actividades del club.",
++             },
++             "editableBy": "CLUB",
++             "help": "signup.text.imageConsent",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": {
++                   "ca": "Autoritzo la publicació d'imatges dins les activitats del club.",
++                   "en": "I authorize images to be published as part of club activities.",
++                   "es": "Autorizo la publicación de imágenes en las actividades del club.",
++                 },
++               },
++             ],
++             "isOverride": false,
++             "key": "signup.text.imageConsent",
++             "label": "signup.text.imageConsent",
++             "lastChange": {
++               "action": "signup.text.imageConsent",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "localizedText",
++             "value": {
++               "ca": "Autoritzo la publicació d'imatges dins les activitats del club.",
++               "en": "I authorize images to be published as part of club activities.",
++               "es": "Autorizo la publicación de imágenes en las actividades del club.",
++             },
++             "version": 1,
++           },
++         ],
++         "title": "signup",
++       },
++       {
++         "key": "courses",
++         "rows": [
++           {
++             "block": "courses",
++             "constraints": {
++               "min": 1,
++             },
++             "default": 7,
++             "editableBy": "CLUB",
++             "help": "courses.setupAutoExpireDays",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 7,
++               },
++             ],
++             "isOverride": false,
++             "key": "courses.setupAutoExpireDays",
++             "label": "courses.setupAutoExpireDays",
++             "lastChange": {
++               "action": "courses.setupAutoExpireDays",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "COURSES",
++             "type": "int",
++             "value": 7,
++             "version": 1,
++           },
++           {
++             "block": "courses",
++             "constraints": {
++               "min": 0,
++               "step": 0.1,
++             },
++             "default": 1.5,
++             "editableBy": "CLUB",
++             "help": "courses.placementMarginMeters",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 1.5,
++               },
++             ],
++             "isOverride": false,
++             "key": "courses.placementMarginMeters",
++             "label": "courses.placementMarginMeters",
++             "lastChange": {
++               "action": "courses.placementMarginMeters",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "COURSES",
++             "type": "decimal",
++             "value": 1.5,
++             "version": 1,
++           },
++           {
++             "block": "courses",
++             "constraints": {},
++             "default": true,
++             "editableBy": "CLUB",
++             "help": "courses.showSetupToMembers",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": true,
++               },
++             ],
++             "isOverride": false,
++             "key": "courses.showSetupToMembers",
++             "label": "courses.showSetupToMembers",
++             "lastChange": {
++               "action": "courses.showSetupToMembers",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "COURSES",
++             "type": "bool",
++             "value": true,
++             "version": 1,
++           },
++           {
++             "block": "courses",
++             "constraints": {},
++             "default": true,
++             "editableBy": "CLUB",
++             "help": "courses.allowInstructorPublish",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": true,
++               },
++             ],
++             "isOverride": false,
++             "key": "courses.allowInstructorPublish",
++             "label": "courses.allowInstructorPublish",
++             "lastChange": {
++               "action": "courses.allowInstructorPublish",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "module": "COURSES",
++             "type": "bool",
++             "value": true,
++             "version": 1,
++           },
++         ],
++         "title": "courses",
++       },
++       {
++         "key": "privacyAudit",
++         "rows": [
++           {
++             "block": "privacyAudit",
++             "constraints": {
++               "min": 1,
++             },
++             "default": 6,
++             "editableBy": "CLUB",
++             "help": "audit.retentionYears",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 6,
++               },
++             ],
++             "isOverride": false,
++             "key": "audit.retentionYears",
++             "label": "audit.retentionYears",
++             "lastChange": {
++               "action": "audit.retentionYears",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 6,
++             "version": 1,
++           },
++           {
++             "block": "privacyAudit",
++             "constraints": {
++               "min": 1,
++             },
++             "default": 6,
++             "editableBy": "CLUB",
++             "help": "rgpd.retentionYearsAfterLeave",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 6,
++               },
++             ],
++             "isOverride": false,
++             "key": "rgpd.retentionYearsAfterLeave",
++             "label": "rgpd.retentionYearsAfterLeave",
++             "lastChange": {
++               "action": "rgpd.retentionYearsAfterLeave",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 6,
++             "version": 1,
++           },
++           {
++             "block": "privacyAudit",
++             "constraints": {
++               "min": 0,
++             },
++             "default": 30,
++             "editableBy": "CLUB",
++             "help": "rgpd.erasureMinDaysAfterLeave",
++             "history": [
++               {
++                 "changedAt": "2026-08-11T09:30:00Z",
++                 "changedByAccountId": "00000000-0000-4000-8000-000000000001",
++                 "reason": "Initial configuration",
++                 "value": 30,
++               },
++             ],
++             "isOverride": false,
++             "key": "rgpd.erasureMinDaysAfterLeave",
++             "label": "rgpd.erasureMinDaysAfterLeave",
++             "lastChange": {
++               "action": "rgpd.erasureMinDaysAfterLeave",
++               "actorName": "Jordi",
++               "at": "2026-08-11T09:30:00Z",
++             },
++             "type": "int",
++             "value": 30,
++             "version": 1,
++           },
++         ],
++         "title": "privacyAudit",
++       },
++     ],
++     "lastChange": {
++       "action": "bookings.lateCancelThresholdMinutes",
++       "actorName": "Jordi",
++       "at": "2026-08-11T09:30:00Z",
++     },
++   },
++   "status": 200,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:401:57
+    399|     ] as const) {
+    400|       const answer = await read(scenario, path, init);
+    401|       expect(answer, `${init.method ?? "GET"} ${path}`).toMatchObject(…
+       |                                                         ^
+    402|     }
+    403|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > an ADMIN reads them (the roles, not the active profile, decide); an impersonation token does not
+AssertionError: expected { …(2) } to match object { body: { code: 'FORBIDDEN' }, …(1) }
+(12 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "FORBIDDEN",
++     "block": "general",
++     "constraints": {},
++     "default": null,
++     "editableBy": "CLUB",
++     "help": "",
++     "history": [],
++     "isOverride": true,
++     "key": "levels.enabled",
++     "label": "Nivells",
++     "type": "BOOLEAN",
++     "value": true,
++     "version": 1,
+    },
+-   "status": 403,
++   "status": 200,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:413:27
+    411|       headers: { Authorization: "Bearer mock-impersonation-token" },
+    412|     });
+    413|     expect(impersonation).toMatchObject({ body: { code: "FORBIDDEN" },…
+       |                           ^
+    414|   });
+    415|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MATRIU_PERMISOS) > the ADMIN's census.dogDocumentTypes is the catalog's editable map
+AssertionError: expected [ …(2) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "key": "VACCINATION_CARD",
+-     "label": {
+-       "ca": "Cartilla de vacunes",
+-       "en": "Vaccination card",
+-       "es": "Cartilla de vacunas",
+-     },
++     "code": "VACCINATION_CARD",
++     "label": "Cartilla de vacunes",
+      "required": true,
+    },
+    {
+-     "key": "INSURANCE",
+-     "label": {
+-       "ca": "Assegurança",
+-       "en": "Insurance",
+-       "es": "Seguro",
+-     },
+-     "required": false,
+-   },
+-   {
+-     "key": "OTHER",
+-     "label": {
+-       "ca": "Altres",
+-       "en": "Other",
+-       "es": "Otros",
+-     },
++     "code": "INSURANCE",
++     "label": "Assegurança",
+      "required": false,
+    },
+  ]
+
+ ❯ src/mocks/signup-handlers.test.ts:418:56
+    416|   it("the ADMIN's census.dogDocumentTypes is the catalog's editable ma…
+    417|     const answer = await read("admin", "/parameters/census.dogDocument…
+    418|     expect((answer.body as { value?: unknown }).value).toEqual([
+       |                                                        ^
+    419|       { key: "VACCINATION_CARD", label: { ca: "Cartilla de vacunes", e…
+    420|       { key: "INSURANCE", label: { ca: "Assegurança", en: "Insurance",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 14 skipped (23)
+   Start at  22:12:14
+   Duration  391ms (transform 42%, import 41%, tests 16%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts -t E3-W12|T-04-16

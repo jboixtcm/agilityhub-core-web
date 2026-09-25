@@ -1,0 +1,11 @@
+{
+  "documentTypes": "absent",
+  "levels": [
+    "CAD",
+    "E"
+  ],
+  "memberParameter": {
+    "code": "FORBIDDEN",
+    "status": 403
+  }
+}

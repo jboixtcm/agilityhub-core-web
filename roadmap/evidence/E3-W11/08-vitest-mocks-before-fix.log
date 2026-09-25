@@ -1,0 +1,135 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (16 tests | 5 failed | 11 skipped) 18ms
+   ❯ E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19) (4)
+     × a PENDING member: the methods GET /signup offers, assignable, in the reader's language, the applicant's marked current 8ms
+     × an add-dog (the member is ACTIVE): only the current method, not assignable, and a PATCH of it is 400 READ_ONLY 2ms
+     × a method that is not assignable is 422 PAYMENT_METHOD_NOT_AVAILABLE; an assignable one becomes current 6ms
+     × the applicant's own method whose provider is off since stays listed last, current and not assignable 0ms
+   ❯ E3-W11 step 0: GET /me/dogs lists the club's document types (api E3-T16) (1)
+     × in catalog order, with the labels of the reader's language 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19) > a PENDING member: the methods GET /signup offers, assignable, in the reader's language, the applicant's marked current
+AssertionError: expected undefined to deeply equal [ { assignable: true, …(3) }, …(1) ]
+
+- Expected:
+[
+  {
+    "assignable": true,
+    "current": true,
+    "label": "Domiciliació",
+    "type": "SEPA_DD",
+  },
+  {
+    "assignable": true,
+    "current": false,
+    "label": "Efectiu",
+    "type": "MANUAL",
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/mocks/signup-handlers.test.ts:304:38
+    302|
+    303|   it("a PENDING member: the methods GET /signup offers, assignable, in…
+    304|     expect(await d2Methods("admin")).toEqual([
+       |                                      ^
+    305|       { assignable: true, current: true, label: "Domiciliació", type: …
+    306|       { assignable: true, current: false, label: "Efectiu", type: "MAN…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19) > an add-dog (the member is ACTIVE): only the current method, not assignable, and a PATCH of it is 400 READ_ONLY
+AssertionError: expected undefined to deeply equal [ { assignable: false, …(3) } ]
+
+- Expected:
+[
+  {
+    "assignable": false,
+    "current": true,
+    "label": "Domiciliació",
+    "type": "SEPA_DD",
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/mocks/signup-handlers.test.ts:317:56
+    315|
+    316|   it("an add-dog (the member is ACTIVE): only the current method, not …
+    317|     expect(await d2Methods("adminSignupReviewAddDog")).toEqual([
+       |                                                        ^
+    318|       { assignable: false, current: true, label: "Domiciliació", type:…
+    319|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19) > a method that is not assignable is 422 PAYMENT_METHOD_NOT_AVAILABLE; an assignable one becomes current
+TypeError: Cannot read properties of undefined (reading 'filter')
+ ❯ src/mocks/signup-handlers.test.ts:334:39
+    332|     expect(((await card.json()) as { code: string }).code).toBe("PAYME…
+    333|     expect((await patchMethod("MANUAL", 3)).status).toBe(200);
+    334|     expect((await d2Methods("admin")).filter((option) => option.curren…
+       |                                       ^
+    335|   });
+    336|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19) > the applicant's own method whose provider is off since stays listed last, current and not assignable
+TypeError: signupReviewPaymentMethods is not a function
+ ❯ src/mocks/signup-handlers.test.ts:344:12
+    342|       { label: "Efectiu", type: "MANUAL" as const },
+    343|     ];
+    344|     expect(signupReviewPaymentMethods(view, offered, () => "Targeta", …
+       |            ^
+    345|       { assignable: true, current: false, label: "Domiciliació", type:…
+    346|       { assignable: true, current: false, label: "Efectiu", type: "MAN…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W11 step 0: GET /me/dogs lists the club's document types (api E3-T16) > in catalog order, with the labels of the reader's language
+AssertionError: expected undefined to deeply equal [ …(2) ]
+
+- Expected:
+[
+  {
+    "key": "VACCINATION_CARD",
+    "label": "Cartilla de vacunas",
+    "required": true,
+  },
+  {
+    "key": "INSURANCE",
+    "label": "Seguro",
+    "required": false,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/mocks/signup-handlers.test.ts:356:83
+    354|     mockScenario("member");
+    355|     const response = await fetch(`${origin}/api/v1/me/dogs`, { headers…
+    356|     expect(((await response.json()) as { documentTypes: unknown }).doc…
+       |                                                                                   ^
+    357|       { key: "VACCINATION_CARD", label: "Cartilla de vacunas", require…
+    358|       { key: "INSURANCE", label: "Seguro", required: false },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 11 skipped (16)
+   Start at  21:49:37
+   Duration  422ms (import 53%, transform 41%, tests 5%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts -t E3-W11

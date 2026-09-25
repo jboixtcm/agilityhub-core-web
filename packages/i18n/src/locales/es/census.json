@@ -189,8 +189,7 @@
     "tasksSummary": "{open} pendientes · {completed} hechas",
     "tasksTitle": "Tareas",
     "title": "Mis perros",
-    "uploadDocument": "SUBIR EL DOCUMENTO",
-    "vaccinationCard": "Cartilla de vacunas"
+    "uploadDocument": "SUBIR EL DOCUMENTO"
   },
   "myData": {
     "address": "Dirección",

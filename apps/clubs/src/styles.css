@@ -329,6 +329,11 @@ select {
   text-align: center;
 }
 
+/* The public footer (S02 R-02-02): the entity line, then the registered office below it. */
+.public-footer__line {
+  display: block;
+}
+
 .activation-panel {
   gap: var(--ah-space-4);
   padding-block: var(--ah-space-8);

@@ -2276,7 +2276,7 @@ export interface paths {
         };
         /**
          * My dogs
-         * @description Tenant-scoped S03 response with role and ownership checks.
+         * @description Tenant-scoped S03 response with role and ownership checks. `documentTypes` is the club's document-type catalog in the reader's locale (R-03-15, R-03-32), also under impersonation: the member never reads /parameters.
          */
         get: operations["myDogs"];
         put?: never;
@@ -5824,6 +5824,8 @@ export interface components {
             countryProfile: string;
             currency: string;
             defaultLocale: string;
+            /** @description The town shown with the club's name (S02 §3); /branding falls back to address.city without it. */
+            displayCity?: string;
             domains: components["schemas"]["ClubDomain"][];
             /** Format: uuid */
             id: string;
@@ -5839,7 +5841,6 @@ export interface components {
             pwa?: components["schemas"]["ClubPwa"];
             slug: string;
             status: string;
-            /** Format: uuid */
             taxId?: string;
             theme: components["schemas"]["Theme"];
             timeZone: string;
@@ -5848,7 +5849,10 @@ export interface components {
             websiteUrl?: string;
         };
         ClubSummary: {
-            city?: string | null;
+            /** @description The town shown with the club's name: displayCity, else the registered office's town. */
+            city: string | null;
+            /** @description The registered office (LSSI art. 10), or null when the club has no street or postal code. */
+            legalAddress: components["schemas"]["LegalAddress"];
             legalName: string | null;
             name: string;
             slug: string;
@@ -5856,11 +5860,15 @@ export interface components {
         };
         /** @description Versioned edit of club identity, contact and theme. Omitted fields are preserved. Console fields are rejected with PLATFORM_ONLY; a timeZone change with existing classes returns TIMEZONE_CHANGE_BLOCKED. */
         ClubUpdate: {
+            /** @description The registered office (S02 §3); /branding.legalAddress. */
             address?: components["schemas"]["ClubAddress"];
             contactEmail?: string;
             contactPhone?: string;
+            /** @description The town shown with the club's name (S02 §3); null clears it, and /branding shows address.city. */
+            displayCity?: string;
             legalName?: string;
             name?: string;
+            /** @description Checked by the club's country profile (ES: CIF, NIF or NIE with its check character). */
             taxId?: string;
             theme?: components["schemas"]["Theme"];
             /** @description Console-only field; cannot be changed here. */
@@ -6163,6 +6171,13 @@ export interface components {
             fileKey: string;
             name: string;
             type: string;
+        };
+        /** @description One type of the club's census.dogDocumentTypes catalog (R-03-15), label in the reader's locale (fallback club.defaultLocale, R-03-32). */
+        DogDocumentType: {
+            /** @description Catalog key; the `type` of POST /me/dogs/{id}/documents */
+            key: string;
+            label: string;
+            required: boolean;
         };
         DogLevelRequest: {
             levelId: string;
@@ -7033,6 +7048,11 @@ export interface components {
         Legal: {
             privacyPolicyUrl: string;
         };
+        LegalAddress: {
+            city: string | null;
+            postalCode: string;
+            street: string;
+        };
         /** @description ADMIN projection; reduced catalog readers omit usage and nameI18n. */
         Level: {
             active: boolean;
@@ -7415,6 +7435,8 @@ export interface components {
         };
         MeDogs: {
             canAddDog: boolean;
+            /** @description The club's document types for «＋ DOC.» (screen 13), in catalog order: a MEMBER cannot read /parameters (S03 §6, 25-09). */
+            documentTypes: components["schemas"]["DogDocumentType"][];
             dogs: components["schemas"]["MeDog"][];
         };
         MeFamilyGroup: {
@@ -7678,6 +7700,8 @@ export interface components {
             dogs: components["schemas"]["SignupDogView"][];
             familyGroupClaim?: components["schemas"]["SignupFamilyGroupView"];
             member: components["schemas"]["Member"];
+            /** @description R-04-10/R-04-19 (E3-T14): the D2 method selector. For a PENDING member: the methods of the club's enabled providers, as GET /signup offers them (assignable), plus the applicant's current method when its provider is off since (assignable = false, listed last); during a readmission, current is the submitted method. For an add-dog (member not PENDING) D2 cannot change the method: only the current one, assignable = false. Empty without BILLING */
+            paymentMethods: components["schemas"]["SignupPaymentMethodOption"][];
             /** @description The assignable plans (active, module enabled, showOnSignup or not) for the D2 plan selector */
             planOptions: components["schemas"]["SignupPlanOption"][];
             proposals: components["schemas"]["SignupProposals"];
@@ -9145,6 +9169,15 @@ export interface components {
             instructions?: string;
             label: string;
             mandateText?: string;
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+        };
+        /** @description A D2 payment method option (E3-T14): `current` marks the applicant's method; `assignable = false` for a current method whose provider is no longer enabled (PATCH answers 422 PAYMENT_METHOD_NOT_AVAILABLE) and for the method of a member who is not PENDING (PATCH answers 400 VALIDATION_ERROR, paymentMethod READ_ONLY) */
+        SignupPaymentMethodOption: {
+            assignable: boolean;
+            current: boolean;
+            /** @description Resolved in the response locale, as GET /signup */
+            label: string;
             /** @enum {string} */
             type: "SEPA_DD" | "CARD" | "MANUAL";
         };
@@ -10658,8 +10691,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -10919,8 +10952,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -11064,8 +11097,8 @@ export interface operations {
                 field: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -12449,8 +12482,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -12837,8 +12870,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -14236,8 +14269,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -14370,8 +14403,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -14506,8 +14539,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -14653,8 +14686,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -15294,8 +15327,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -16185,8 +16218,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -19669,8 +19702,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -19805,8 +19838,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -19952,8 +19985,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -23598,8 +23631,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -25100,8 +25133,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -25357,8 +25390,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -29929,8 +29962,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -30065,8 +30098,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -30212,8 +30245,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -30855,8 +30888,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -32745,8 +32778,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -34634,8 +34667,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -34888,8 +34921,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -35267,8 +35300,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -36539,8 +36572,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -40536,8 +40569,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -40799,8 +40832,8 @@ export interface operations {
                 columns?: string;
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -43074,8 +43107,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size. */
-                size?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */

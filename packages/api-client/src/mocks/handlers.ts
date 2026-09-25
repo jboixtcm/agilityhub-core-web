@@ -34,6 +34,8 @@ import {
 import dashboardFixture from "./fixtures/dashboard.json";
 import exportJobsFixture from "./fixtures/export-jobs.json";
 import {
+  dogDocumentTypesCatalog,
+  meDogDocumentTypes,
   meDogsFixture,
   meProfileFixture,
   postalTownFixtures,
@@ -51,6 +53,7 @@ import {
   SIGNUP_MOCK_TODAY,
   signupConfig,
   signupMemberFixture,
+  signupPaymentLabel,
   signupResultUpfront,
   signupTownFixtures,
   type MemberDogSignupRequest,
@@ -67,6 +70,7 @@ import {
   signupReviewDryRun,
   signupReviewHasCollectedPayment,
   signupReviewNeedsInvoiceDate,
+  signupReviewPaymentMethods,
   signupDogDocuments,
   signupReviewVariant,
   storeSignupDogDocuments,
@@ -868,6 +872,20 @@ function validationError(fieldErrors: { code: string; field: string }[]) {
   );
 }
 
+/**
+ * MATRIU_PERMISOS: `/parameters/*` is ADMIN only, and the api authorizes by the union of the JWT's
+ * roles (the active profile only changes the navigation). An impersonation token acts as the
+ * MEMBER it impersonates (rule 3). So a MEMBER, an INSTRUCTOR or an impersonation gets 403.
+ */
+function parametersForbidden(request: Request) {
+  const me = currentMockScenario().me;
+  const impersonation =
+    request.headers.get("Authorization") === "Bearer mock-impersonation-token" || me.impersonation !== undefined;
+  return impersonation || me.membership?.roles.includes("ADMIN") !== true
+    ? apiError("FORBIDDEN", "Forbidden", 403)
+    : undefined;
+}
+
 // The club's date of `GET /signup` (S04 §4: `CLUB.timeZone`); a test sets it to quote another day.
 let signupMockToday: string | undefined;
 
@@ -912,8 +930,8 @@ function submittedQuote(request: Request, planId: string | undefined) {
 
 /**
  * `CLUB.paymentProviders` of the mock club, in the order the public form offers its methods
- * (R-04-10): SEPA_XML → SEPA_DD, STRIPE → CARD (Stripe scenario only), MANUAL → MANUAL. Like the
- * real core, cash is listed with `enabled: false` and still offered by `GET /signup`.
+ * (R-04-10): SEPA_XML → SEPA_DD, STRIPE → CARD (Stripe scenario only), MANUAL → MANUAL. The offer
+ * follows `enabled` (T-04-14, 25-09); cash needs no configuration.
  */
 function clubPaymentProviders(): NonNullable<ClubSettings["paymentProviders"]> {
   const scenario = currentMockScenario();
@@ -921,11 +939,20 @@ function clubPaymentProviders(): NonNullable<ClubSettings["paymentProviders"]> {
   return {
     SEPA_XML: { configured: true, enabled: true },
     ...(scenario.signupStripe === true ? { STRIPE: { configured: true, enabled: true } } : {}),
-    MANUAL: { configured: false, enabled: false },
+    MANUAL: { configured: false, enabled: true },
   };
 }
 
-const paymentMethodProviders = { CARD: "STRIPE", MANUAL: "MANUAL", SEPA_DD: "SEPA_XML" } as const;
+/** `MemberSignupView.paymentMethods` for this request: the methods `GET /signup` offers, in its language. */
+function signupReviewMethods(request: Request, view: MemberSignupView): MemberSignupView["paymentMethods"] {
+  const acceptLanguage = request.headers.get("Accept-Language");
+  return signupReviewPaymentMethods(
+    view,
+    signupConfiguration(request).paymentMethods ?? [],
+    (type) => signupPaymentLabel(type, acceptLanguage),
+    currentMockScenario().branding.modules.includes("BILLING"),
+  );
+}
 
 /**
  * The masked payment method of a pending member after a `PATCH /members/{id}` (R-04-19): a SEPA
@@ -1154,13 +1181,15 @@ export const handlers = [
     };
     return HttpResponse.json(counters);
   }),
-  http.get("*/api/v1/members/:id/signup", ({ params }) => {
+  http.get("*/api/v1/members/:id/signup", ({ params, request }) => {
     const id = String(params.id);
     if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
     const pending = dashboardState.pendingSignups?.items.find((item) => item.memberId === id);
     if (pending === undefined) return apiError("NOT_FOUND", "Signup not found", 404);
-    const view = currentSignupReview();
-    return HttpResponse.json(id === view.member.id ? view : derivedSignupReview(view, pending));
+    const current = currentSignupReview();
+    const view = id === current.member.id ? current : derivedSignupReview(current, pending);
+    const body: MemberSignupView = { ...view, paymentMethods: signupReviewMethods(request, view) };
+    return HttpResponse.json(body);
   }),
   http.post("*/api/v1/members/:id/validation", async ({ params, request }) => {
     const id = String(params.id);
@@ -1335,7 +1364,21 @@ export const handlers = [
     };
     return HttpResponse.json(memberProfileState);
   }),
-  http.get("*/api/v1/me/dogs", () => HttpResponse.json(memberDogsState)),
+  http.get("*/api/v1/me/dogs", ({ request }) => {
+    const scenario = currentMockScenario();
+    // S03 §6: `level` only with `levels.enabled` (R-03-30); `documentTypes` for «＋ DOC.» (R-03-15).
+    const dogs = memberDogsState.dogs.map((dog) => {
+      if (scenario.levelsEnabled !== false || dog.status !== "ACTIVE") return dog;
+      const withoutLevel = { ...dog };
+      delete withoutLevel.level;
+      return withoutLevel;
+    });
+    return HttpResponse.json<MeDogs>({
+      ...memberDogsState,
+      documentTypes: meDogDocumentTypes(request.headers.get("Accept-Language"), scenario.branding),
+      dogs,
+    });
+  }),
   http.get("*/api/v1/signup", ({ request }) =>
     HttpResponse.json(signupConfiguration(request)),
   ),
@@ -1431,7 +1474,8 @@ export const handlers = [
       body.familyGroupClaim?.leavePending === true &&
       signupConfiguration(request).allowFamilyGroupPending !== true
     ) {
-      return validationError([{ code: "INVALID", field: "familyGroupClaim.leavePending" }]);
+      // The core's field code (E3-W08 round-2 question 3).
+      return validationError([{ code: "NOT_ALLOWED", field: "familyGroupClaim.leavePending" }]);
     }
     if (body.consents.privacyPolicy.version !== "2026-09") {
       return apiError("CONSENT_VERSION_OUTDATED", "Consent version outdated", 422);
@@ -1555,7 +1599,9 @@ export const handlers = [
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
     const body = (await request.json()) as DogDocumentUploadRequest;
-    if (!["INSURANCE", "VACCINATION_CARD"].includes(body.type)) {
+    // R-03-15: a key of `census.dogDocumentTypes`, else 400 DOCUMENT_TYPE_UNKNOWN.
+    const documentType = dogDocumentTypesCatalog.find((type) => type.key === body.type);
+    if (documentType === undefined) {
       return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
     }
     const existing = dog.documents.find((document) => document.type === body.type);
@@ -1570,7 +1616,10 @@ export const handlers = [
       id: `document-member-${body.type.toLocaleLowerCase()}-${dog.id}`,
       state: "PENDING",
       type: body.type,
-      typeLabel: body.type === "VACCINATION_CARD" ? "Cartilla de vacunes" : "Assegurança",
+      typeLabel:
+        meDogDocumentTypes(request.headers.get("Accept-Language"), currentMockScenario().branding).find(
+          (type) => type.key === documentType.key,
+        )?.label ?? documentType.key,
     };
     document.files = [...document.files, file];
     document.state = "RECEIVED";
@@ -1584,6 +1633,8 @@ export const handlers = [
     return HttpResponse.json(postalTownFixtures[code] ?? []);
   }),
   http.get("*/api/v1/parameters", ({ request }) => {
+    const forbidden = parametersForbidden(request);
+    if (forbidden !== undefined) return forbidden;
     const block = new URL(request.url).searchParams.get("block");
     const response = visibleParameters();
     return HttpResponse.json({
@@ -1598,11 +1649,10 @@ export const handlers = [
       const key = params.key;
       const locale = request.headers.get("Accept-Language")?.split(/[-,]/u)[0] ?? "ca";
       const scenario = currentMockScenario();
-      // MATRIU_PERMISOS: parameters are ADMIN; an instructor's session gets 403 (R-06-15, R-07-14).
-      const roles = scenario.me.membership?.roles ?? [];
-      if (roles.includes("INSTRUCTOR") && !roles.includes("ADMIN")) {
-        return apiError("FORBIDDEN", "Forbidden", 403);
-      }
+      // MATRIU_PERMISOS: an INSTRUCTOR (R-06-15, R-07-14), a MEMBER (screen 13, S03 25-09) or an
+      // impersonation gets 403.
+      const forbidden = parametersForbidden(request);
+      if (forbidden !== undefined) return forbidden;
       const configured = findParameter(key);
       if (configured !== undefined) {
         if (
@@ -1679,21 +1729,13 @@ export const handlers = [
         });
       }
       if (key === "census.dogDocumentTypes") {
-        const labels =
-          locale === "es"
-            ? ["Cartilla de vacunas", "Seguro"]
-            : locale === "en"
-              ? ["Vaccination record", "Insurance"]
-              : ["Cartilla de vacunes", "Assegurança"];
+        // CATALEG_PARAMETRES: `[{key, label: localizedText, required}]` (the ADMIN's editable map).
         return HttpResponse.json<Parameter>({
           ...base,
           key,
           label: "Documents",
-          type: "LIST",
-          value: [
-            { code: "VACCINATION_CARD", label: labels[0], required: true },
-            { code: "INSURANCE", label: labels[1], required: false },
-          ],
+          type: "JSON",
+          value: structuredClone(dogDocumentTypesCatalog),
           version: 2,
         });
       }
@@ -1719,6 +1761,8 @@ export const handlers = [
     },
   ),
   http.put("*/api/v1/parameters/:key", async ({ params, request }) => {
+    const forbidden = parametersForbidden(request);
+    if (forbidden !== undefined) return forbidden;
     const current = findParameter(String(params.key));
     if (current === undefined) {
       return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
@@ -1740,7 +1784,9 @@ export const handlers = [
     replaceParameter(next);
     return HttpResponse.json(next);
   }),
-  http.delete("*/api/v1/parameters/:key", ({ params }) => {
+  http.delete("*/api/v1/parameters/:key", ({ params, request }) => {
+    const forbidden = parametersForbidden(request);
+    if (forbidden !== undefined) return forbidden;
     const current = findParameter(String(params.key));
     if (current === undefined) {
       return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400);
@@ -1753,7 +1799,9 @@ export const handlers = [
     replaceParameter(next);
     return HttpResponse.json(next);
   }),
-  http.get("*/api/v1/parameters/:key/history", ({ params }) => {
+  http.get("*/api/v1/parameters/:key/history", ({ params, request }) => {
+    const forbidden = parametersForbidden(request);
+    if (forbidden !== undefined) return forbidden;
     const current = findParameter(String(params.key));
     return current === undefined
       ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
@@ -2097,12 +2145,14 @@ export const handlers = [
       const { consents, contactEmails, paymentMethod, ...memberPatch } = body;
       // `signup.planIdRequested` is not edited from D2 (the requested plan is read-only there).
       delete memberPatch.signup;
-      // R-04-10: only a method of one of the club's providers.
-      if (
-        paymentMethod !== undefined &&
-        clubPaymentProviders()[paymentMethodProviders[paymentMethod.type]] === undefined
-      ) {
-        return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
+      if (paymentMethod !== undefined) {
+        // R-04-19: the method of an add-dog's ACTIVE member is changed on D10, not here.
+        if (member.status !== "PENDING") return validationError([{ code: "READ_ONLY", field: "paymentMethod" }]);
+        // R-04-10: only an assignable method of the view (an enabled provider's, as GET /signup offers it).
+        const assignable = signupReviewMethods(request, signupView).some(
+          (option) => option.assignable && option.type === paymentMethod.type,
+        );
+        if (!assignable) return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
       }
       // E38 (the api's `MemberService.edit`): a readmission's edits change the submitted values;
       // `member` stays the LEFT record until the validation applies them.

@@ -2,8 +2,10 @@
   "club": {
     "slug": "minim",
     "name": "Club Mínim",
+    "city": null,
     "legalName": null,
-    "taxId": null
+    "taxId": null,
+    "legalAddress": null
   },
   "locales": ["ca", "es", "en"],
   "defaultLocale": "ca",

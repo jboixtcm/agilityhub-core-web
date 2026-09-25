@@ -1899,7 +1899,37 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(screen.getByRole("contentinfo")).toHaveTextContent(
       `${branding.club.name} · ${branding.club.city ?? ""}`,
     );
-    expect(screen.getByRole("contentinfo").textContent).not.toMatch(/·.*·/u);
+    expect(screen.getByText(`${branding.club.name} · ${branding.club.city ?? ""}`).textContent).not.toMatch(/·.*·/u);
+  });
+
+  it("E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the registered office from /branding legalAddress, below the first line", async () => {
+    const office = brandingCanicFixture.club.legalAddress;
+    await renderSignup({ path: "/apuntat-hi" });
+    const footer = screen.getByRole("contentinfo");
+    expect(within(footer).getByText(`${office.street} · ${office.postalCode} ${office.city}`)).toBeVisible();
+    // Two lines: the office is its own element after «{legalName} · {taxId} · {city}».
+    expect([...footer.children].map((line) => line.textContent)).toEqual([
+      `${brandingCanicFixture.club.legalName} · ${brandingCanicFixture.club.taxId} · ${brandingCanicFixture.club.city}`,
+      `${office.street} · ${office.postalCode} ${office.city}`,
+    ]);
+
+    // An office without its town (`city: null`) reads «{street} · {postalCode}».
+    cleanup();
+    const signupBranding = brandingFor("signup");
+    await renderSignup({
+      branding: { ...signupBranding, club: { ...signupBranding.club, legalAddress: { ...office, city: null } } },
+      path: "/apuntat-hi",
+    });
+    expect(within(screen.getByRole("contentinfo")).getByText(`${office.street} · ${office.postalCode}`)).toBeVisible();
+
+    // `legalAddress: null` (no street or postal code): one line only.
+    cleanup();
+    await renderSignup({
+      branding: { ...signupBranding, club: { ...signupBranding.club, legalAddress: null } },
+      path: "/apuntat-hi",
+    });
+    expect(screen.getByRole("contentinfo").children).toHaveLength(1);
+    expect(screen.queryByText(new RegExp(office.postalCode, "u"))).toBeNull();
   });
 
   it("A32: the club's primary buttons have dark text, AA against the primary, and BrandingProvider does not warn", async () => {
