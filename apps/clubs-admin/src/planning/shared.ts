@@ -113,6 +113,11 @@ export interface Resource<Data> {
   data: Data | undefined;
   error: unknown;
   loading: boolean;
+  /**
+   * `reload` whose promise resolves once the load it starts (or a later one) settles, with data or
+   * an error. Loads already on their way are dropped, so what settles is never older than the call.
+   */
+  refetch: () => Promise<void>;
   reload: () => void;
   setData: (data: Data) => void;
 }
@@ -124,10 +129,17 @@ export function useResource<Data>(load: (() => Promise<Data>) | undefined): Reso
   const [loading, setLoading] = useState(load !== undefined);
   const [request, setRequest] = useState(0);
   const sequence = useRef(0);
+  const waiters = useRef<(() => void)[]>([]);
 
   useEffect(() => {
+    const settle = () => {
+      const pending = waiters.current;
+      waiters.current = [];
+      for (const resolve of pending) resolve();
+    };
     if (load === undefined) {
       setLoading(false);
+      settle();
       return;
     }
     sequence.current += 1;
@@ -139,11 +151,13 @@ export function useResource<Data>(load: (() => Promise<Data>) | undefined): Reso
         setData(value);
         setError(undefined);
         setLoading(false);
+        settle();
       },
       (cause: unknown) => {
         if (current !== sequence.current) return;
         setError(cause);
         setLoading(false);
+        settle();
       },
     );
   }, [load, request]);
@@ -151,7 +165,14 @@ export function useResource<Data>(load: (() => Promise<Data>) | undefined): Reso
   const reload = useCallback(() => {
     setRequest((value) => value + 1);
   }, []);
-  return { data, error, loading, reload, setData };
+  const refetch = useCallback(() => {
+    sequence.current += 1;
+    setRequest((value) => value + 1);
+    return new Promise<void>((resolve) => {
+      waiters.current.push(resolve);
+    });
+  }, []);
+  return { data, error, loading, refetch, reload, setData };
 }
 
 export interface PlanningCatalogs {

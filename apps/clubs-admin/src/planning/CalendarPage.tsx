@@ -658,7 +658,7 @@ export function CalendarPage({
       {readOnly ? null : (
         <div className="planning-header__actions">
           <Button
-            disabled={cat === undefined}
+            disabled={cat === undefined || openingHours.data === undefined}
             onClick={() => {
               setCreateOpen(true);
             }}
@@ -668,7 +668,7 @@ export function CalendarPage({
             {t("admin-scheduling:calendar.create")}
           </Button>
           <Button
-            disabled={cat === undefined}
+            disabled={cat === undefined || openingHours.data === undefined}
             onClick={() => {
               setBlockDrawer({ kind: "create" });
             }}
@@ -780,16 +780,17 @@ export function CalendarPage({
               setSelectedId(undefined);
             }}
             onConflict={(message) => {
-              // Page-level: the refetch brings a new version and remounts the card.
+              // Page-level: the refetch brings a new version and remounts the card, which stays
+              // locked until it settles.
               setFeedback({ message, tone: "danger" });
-              calendar.reload();
+              return calendar.refetch();
             }}
             onSaved={() => {
               setFeedback({ message: t("admin-scheduling:calendar.saved"), tone: "success" });
-              calendar.reload();
               weeks.reload();
+              return calendar.refetch();
             }}
-            openingHours={openingHours.data ?? {}}
+            openingHours={openingHours.data}
             readOnly={readOnly}
             session={selected}
             settings={config}
@@ -927,7 +928,7 @@ export function CalendarPage({
           reason={cancellation.reason}
         />
       )}
-      {readOnly || !createOpen || cat === undefined ? null : (
+      {readOnly || !createOpen || cat === undefined || openingHours.data === undefined ? null : (
         <CreateClassDrawer
           catalogs={cat}
           client={client}
@@ -945,12 +946,15 @@ export function CalendarPage({
             setSelectedId(session.id);
             reloadAll();
           }}
-          openingHours={openingHours.data ?? {}}
+          openingHours={openingHours.data}
           settings={config}
           timeZone={branding.timeZone}
         />
       )}
-      {readOnly || blockDrawer === undefined || cat === undefined ? null : (
+      {readOnly ||
+      blockDrawer === undefined ||
+      cat === undefined ||
+      openingHours.data === undefined ? null : (
         <RingBlockDrawer
           client={client}
           mode={blockDrawer}
@@ -964,7 +968,7 @@ export function CalendarPage({
             setFeedback({ message, tone: "success" });
             calendar.reload();
           }}
-          openingHours={openingHours.data ?? {}}
+          openingHours={openingHours.data}
           rings={cat.rings}
           settings={config}
           timeZone={branding.timeZone}

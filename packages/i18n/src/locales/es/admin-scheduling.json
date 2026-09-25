@@ -147,6 +147,7 @@
     "saved": "Cambios guardados",
     "cancelled": "Clase anulada",
     "deleted": "Clase eliminada",
+    "closedDay": "El club está cerrado este día",
     "selected": {
       "title": "Clase seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Hora",

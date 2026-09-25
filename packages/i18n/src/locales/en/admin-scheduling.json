@@ -147,6 +147,7 @@
     "saved": "Changes saved",
     "cancelled": "Class cancelled",
     "deleted": "Class deleted",
+    "closedDay": "The club is closed on this day",
     "selected": {
       "title": "Selected class — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Time",

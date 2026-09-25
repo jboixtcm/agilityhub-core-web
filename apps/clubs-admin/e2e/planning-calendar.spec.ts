@@ -5,6 +5,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
 const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W02");
+const followUpDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W09");
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -57,6 +58,7 @@ async function expectIconsPainted(scope: Locator) {
 
 test.beforeAll(() => {
   mkdirSync(evidenceDirectory, { recursive: true });
+  mkdirSync(followUpDirectory, { recursive: true });
 });
 
 test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
@@ -233,5 +235,87 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
     await page.getByRole("button", { name: "Esborrany", exact: true }).click();
     await expect(grid(page, "17 al 23 d’agost")).toBeVisible();
     await expect(page.getByRole("button", { name: "VALIDAR LA SETMANA" })).toHaveCount(0);
+  });
+});
+
+test.describe("E4-W09 D4 time pickers and opening hours", () => {
+  test("S06 §3 R-02-09 a 07:05 opening offers slot boundaries, and a closed Sunday offers no times", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { name: "Calendari de classes" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    const week = grid(page, "10 al 16 d’agost");
+    // The grid is drawn from the mock api, so the mock worker serves this document by now: requests
+    // made earlier would reach the static server instead.
+    await expect(week).toBeVisible();
+    // 07:05–21:55 every day but Sunday (absent = closed), through the mock api. The mock state lives
+    // in this document, so from here on the test only navigates inside the app (no reload).
+    const status = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+        version: number;
+      };
+      const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+      const value = Object.fromEntries(days.map((day) => [day, { close: "21:55", open: "07:05" }]));
+      const result = await fetch("/api/v1/club/opening-hours", {
+        body: JSON.stringify({ value, version: current.version }),
+        headers,
+        method: "PUT",
+      });
+      return result.status;
+    });
+    expect(status).toBe(200);
+    // The day view and back remount D4, which reads the new opening hours.
+    await week.getByRole("button", { name: "dc 12", exact: true }).click();
+    await page.waitForURL("**/calendari/dia/2026-08-12?estat=actives");
+    await page.getByRole("button", { name: "Tornar a la visió setmanal" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    await expect(week).toBeVisible();
+
+    await page.getByRole("button", { name: "Crear classe" }).click();
+    const create = page.getByRole("dialog", { name: "Crear classe" });
+    await create.getByLabel("Data").fill("13082026");
+    await expect(create.getByLabel("Inici")).toHaveValue("07:10");
+    await expect(create.getByLabel("Final")).toHaveValue("08:10");
+    await expectIconsPainted(create);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(followUpDirectory, "D4-crear-classe-obertura-0705-1280.png"),
+    });
+    await create.getByLabel("Data").fill("16082026");
+    await expect(create.getByRole("alert")).toHaveText("El club està tancat aquest dia");
+    await expect(create.getByLabel("Inici")).toBeDisabled();
+    await expect(create.getByRole("button", { name: "CREA LA CLASSE" })).toBeDisabled();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(followUpDirectory, "D4-crear-classe-diumenge-tancat-1280.png"),
+    });
+    await create.getByRole("button", { name: "Tanca" }).click();
+
+    await page.getByRole("button", { name: "Bloqueja pista" }).click();
+    const block = page.getByRole("dialog", { name: "Bloqueja pista" });
+    await block.getByLabel("Data").fill("16082026");
+    await expect(block.getByRole("alert")).toHaveText("El club està tancat aquest dia");
+    await expect(block.getByRole("button", { name: "DESA EL BLOQUEIG" })).toBeDisabled();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(followUpDirectory, "D4-bloqueja-pista-diumenge-tancat-1280.png"),
+    });
+    await block.getByLabel("Data").fill("13082026");
+    await expect(block.getByLabel("De", { exact: true })).toHaveValue("07:10");
+    await expect(block.getByLabel("A", { exact: true })).toHaveValue("07:40");
+    const saved = page.waitForRequest(
+      (request) => request.method() === "POST" && request.url().endsWith("/ring-blocks"),
+    );
+    await block.getByRole("button", { name: "DESA EL BLOQUEIG" }).click();
+    expect((await saved).postDataJSON()).toMatchObject({
+      from: "2026-08-13T05:10:00Z",
+      to: "2026-08-13T05:40:00Z",
+    });
+    await expect(page.getByText("Bloqueig desat")).toBeVisible();
   });
 });

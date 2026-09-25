@@ -21,9 +21,9 @@ import {
   minutesOf,
   type OpeningHours,
   openingOf,
+  rangeOptions,
   timeLabel,
   timeOf,
-  timeOptions,
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import type { ClassHeading } from "./CancelClassModal";
@@ -175,8 +175,11 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
  * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c).
  * The parent remounts it (`key`) on every new class or version, so the values always start from
  * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
- * the message on the page while the refetch brings the new version. The editors stay disabled from
- * the request until that remount (`busy`), so no edit is typed into a card about to be replaced.
+ * the message on the page while the refetch brings the new version. After a save and after those
+ * two conflicts the editors stay disabled until that refetch settles (`busy`; `onSaved` and
+ * `onConflict` return it), so no edit is typed into a card about to be replaced. A card still
+ * shown once it settled was not replaced (same version, or the refetch failed): it unlocks with
+ * the admin's values kept.
  */
 export function SelectedClassCard({
   catalogs,
@@ -197,9 +200,12 @@ export function SelectedClassCard({
   heading: ClassHeading;
   onCancel: (reason: "CLUB_MANUAL" | "DELETED") => void;
   onClose: () => void;
-  onConflict: (message: string) => void;
-  onSaved: (session: ClassSession) => void;
-  openingHours: OpeningHours;
+  /** Shows the message and refetches the calendar; resolves once the refetch settles. */
+  onConflict: (message: string) => Promise<void>;
+  /** Refetches the calendar; resolves once the refetch settles. */
+  onSaved: (session: ClassSession) => Promise<void>;
+  /** `undefined` while `club.openingHours` is loading. */
+  openingHours: OpeningHours | undefined;
   readOnly: boolean;
   session: ClassSession;
   settings: CalendarSettings;
@@ -209,9 +215,15 @@ export function SelectedClassCard({
   const errorMessage = useCalendarErrorMessage();
   const [values, setValues] = useState(() => initialValues(session));
   const [pending, setPending] = useState(false);
-  // A saved change waits for the refetch that brings its new version and remounts the card.
+  // A save or a conflict waits for the refetch that brings the new version and remounts the card.
   const [awaitingVersion, setAwaitingVersion] = useState(false);
   const busy = pending || awaitingVersion;
+  const awaitVersion = (refetch: Promise<void>) => {
+    setAwaitingVersion(true);
+    void refetch.then(() => {
+      setAwaitingVersion(false);
+    });
+  };
   const [error, setError] = useState<{ field: "capacity" | "general"; message: string }>();
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
@@ -250,13 +262,13 @@ export function SelectedClassCard({
         : automaticDescription(catalogs.levels, values.levelIds, t),
     [catalogs.levels, session, t, values.levelIds],
   );
-  const opening = openingOf(openingHours, session.date);
+  // Starts on slot boundaries that keep the class length inside the day's opening hours; a closed
+  // day (R-02-09) offers none, and neither do the hours while they load: the class keeps its time.
+  const opening = openingHours === undefined ? undefined : openingOf(openingHours, session.date);
+  const closedDay = opening === null;
   const duration = minutesOf(session.endTime) - minutesOf(session.startTime);
-  const hours = timeOptions(
-    opening.open,
-    timeOf(minutesOf(opening.close) - duration),
-    settings.slotMinutes,
-  );
+  const hours =
+    opening === undefined ? [] : rangeOptions(opening, settings.slotMinutes, duration).starts;
   const hourOptions = hours.includes(session.startTime) ? hours : [session.startTime, ...hours];
 
   const set = (next: Partial<DraftValues>) => {
@@ -275,8 +287,7 @@ export function SelectedClassCard({
       });
       setRingBookings(undefined);
       if (result.data !== undefined) {
-        setAwaitingVersion(true);
-        onSaved(result.data);
+        awaitVersion(onSaved(result.data));
       }
     } catch (cause) {
       const code = errorCode(cause);
@@ -285,7 +296,7 @@ export function SelectedClassCard({
         setRingBookings(Array.isArray(bookings) ? bookings : []);
       } else if (code === "STALE_VERSION" || code === "INVALID_STATE") {
         setRingBookings(undefined);
-        onConflict(errorMessage(cause));
+        awaitVersion(onConflict(errorMessage(cause)));
       } else {
         setRingBookings(undefined);
         setError({
@@ -308,13 +319,12 @@ export function SelectedClassCard({
         params: { path: { id: session.id } },
       });
       if (result.data !== undefined) {
-        setAwaitingVersion(true);
-        onSaved(result.data);
+        awaitVersion(onSaved(result.data));
       }
     } catch (cause) {
       const code = errorCode(cause);
       if (code === "STALE_VERSION" || code === "INVALID_STATE") {
-        onConflict(errorMessage(cause));
+        awaitVersion(onConflict(errorMessage(cause)));
       } else {
         setError({ field: "general", message: errorMessage(cause) });
       }
@@ -529,6 +539,12 @@ export function SelectedClassCard({
           ) : null}
         </div>
       )}
+
+      {editable && closedDay ? (
+        <p className="planning-note planning-note--warning" role="note">
+          {t("admin-scheduling:calendar.closedDay")}
+        </p>
+      ) : null}
 
       {notesOnly ? (
         <label className="calendar-notes">

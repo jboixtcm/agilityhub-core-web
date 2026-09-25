@@ -5,6 +5,7 @@ import {
   planningState,
   resetCatalogState,
   resetPlanningState,
+  resetSettingsState,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -31,14 +32,17 @@ beforeEach(() => {
   vi.useFakeTimers({ now: mockupNow, shouldAdvanceTime: true, toFake: ["Date"] });
   resetCatalogState();
   resetPlanningState();
+  resetSettingsState();
   localStorage.clear();
 });
 afterEach(() => {
   cleanup();
   server.resetHandlers();
+  server.events.removeAllListeners();
   vi.useRealTimers();
   resetPlanningState();
   resetCatalogState();
+  resetSettingsState();
   mockScenario("admin");
 });
 afterAll(() => {
@@ -84,6 +88,25 @@ function optionValues(select: HTMLElement): string[] {
   return [...(select as HTMLSelectElement).options].map((option) => option.value);
 }
 
+function minutesOfDay(time: string): number {
+  const [hours = 0, minutes = 0] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+/** The form of a submit button (to submit it while the button is disabled). */
+function formOf(element: HTMLElement): HTMLFormElement {
+  const form = element.closest("form");
+  if (form === null) throw new TypeError("Missing form");
+  return form;
+}
+
+/** Lets a request that should not exist reach the capture before asserting it did not. */
+function settle(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 50);
+  });
+}
+
 function selectedLabel(select: HTMLElement): string | undefined {
   const element = select as HTMLSelectElement;
   return element.options[element.selectedIndex]?.textContent ?? undefined;
@@ -107,6 +130,63 @@ function openingHoursWithShortSaturday() {
   );
 }
 
+const weekdays = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+] as const;
+
+/** `club.openingHours` of the mock club, changed through the api (R-02-09: an absent day is closed). */
+async function putOpeningHours(open: string, close: string, days: readonly string[] = weekdays) {
+  const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const current = await api.GET("/club/opening-hours");
+  await api.PUT("/club/opening-hours", {
+    body: {
+      value: Object.fromEntries(days.map((day) => [day, { close, open }])),
+      version: current.data?.version ?? 1,
+    },
+  });
+}
+
+/** Captures the JSON bodies of the requests that match `method` and the path suffix. */
+function captureBodies(method: string, pathSuffix: string): Record<string, unknown>[] {
+  const bodies: Record<string, unknown>[] = [];
+  server.events.on("request:start", ({ request }) => {
+    if (request.method === method && new URL(request.url).pathname.endsWith(pathSuffix)) {
+      void request
+        .clone()
+        .json()
+        .then((body: Record<string, unknown>) => bodies.push(body));
+    }
+  });
+  return bodies;
+}
+
+/** A calendar refetch that waits until `release()` once `hold` is set. */
+function heldCalendar() {
+  let resolveHeld: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => {
+    resolveHeld = resolve;
+  });
+  const control = {
+    hold: false,
+    release: () => {
+      resolveHeld();
+    },
+  };
+  // Resolvers that return nothing fall through to the stateful mock once released.
+  server.use(
+    http.get("*/api/v1/weeks/:id/calendar", async () => {
+      if (control.hold) await held;
+    }),
+  );
+  return control;
+}
+
 function grid(range: RegExp) {
   return screen.findByRole("table", { name: range });
 }
@@ -115,11 +195,34 @@ function selectedCard() {
   return screen.getByRole("region", { name: /^Classe seleccionada/u });
 }
 
+/** Every editor and action of the selected ACTIVE class card. */
+function cardEditors() {
+  const card = selectedCard();
+  return [
+    within(card).getByRole("spinbutton"),
+    within(card).getByLabelText("Pista"),
+    within(card).getByLabelText("Hora"),
+    within(card).getByLabelText("Descripció"),
+    within(card).getByRole("button", { name: /^Nivells/u }),
+    within(card).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    within(card).getByRole("button", { name: "ACCEPTA" }),
+    within(card).getByRole("button", { name: "ANUL·LA LA CLASSE" }),
+    within(card).getByRole("button", { name: "ELIMINA" }),
+  ];
+}
+
+const STALE_MESSAGE =
+  "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.";
+const INVALID_STATE_MESSAGE = "Aquest element no està en un estat vàlid per a aquesta operació.";
+const CLOSED_DAY = "El club està tancat aquest dia";
+
 describe("E3-W07 step 9 a D1 risk row opens D4 on its class", () => {
   it("selects the class of `?classe=` in the week of `?setmana=`", async () => {
     await renderCalendar({ search: `?classe=${WEDNESDAY_1850}&estat=actives&setmana=2026-08-10` });
     await grid(/del 10 al 16 d.agost$/u);
-    expect(selectedCard()).toHaveTextContent("Classe seleccionada — dc 12 · 18:50 · B+C · Central · Marc");
+    expect(selectedCard()).toHaveTextContent(
+      "Classe seleccionada — dc 12 · 18:50 · B+C · Central · Marc",
+    );
   });
 });
 
@@ -816,7 +919,9 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
   it("R-06-15 without WAITLIST there is no «+e» in the cell nor in the card", async () => {
     await renderCalendar({ modules: branding.modules.filter((item) => item !== "WAITLIST") });
     const week = await grid(/del 10 al 16 d.agost$/u);
-    const cell = within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 · Central/u });
+    const cell = within(week).getByRole("button", {
+      name: /^dc 12 18:50 · B\+C · 4\/5 · Central/u,
+    });
     expect(cell).not.toHaveTextContent("+2");
     fireEvent.click(cell);
     expect(selectedCard().querySelector(".calendar-selected-card__counts")).toHaveTextContent(
@@ -941,5 +1046,265 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "dc 12" }));
     expect(onNavigate).toHaveBeenCalledWith("/calendari/dia/2026-08-12?estat=actives");
+  });
+});
+
+describe("E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
+  it("S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries", async () => {
+    await putOpeningHours("07:05", "21:55");
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("POST", "/class-sessions");
+
+    // The card of a 60-minute class: starts on slot boundaries that end by 21:55.
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    const hour = within(selectedCard()).getByLabelText("Hora");
+    expect(optionValues(hour)[0]).toBe("07:10");
+    expect(optionValues(hour).at(-1)).toBe("20:50");
+    expect(optionValues(hour).every((time) => minutesOfDay(time) % 10 === 0)).toBe(true);
+    expect(hour).toHaveValue("18:50");
+
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    const start = within(drawer).getByLabelText("Inici");
+    const end = within(drawer).getByLabelText("Final");
+    expect(optionValues(start)[0]).toBe("07:10");
+    expect(optionValues(start).at(-1)).toBe("21:40");
+    expect(optionValues(end)[0]).toBe("07:20");
+    expect(optionValues(end).at(-1)).toBe("21:50");
+    expect(
+      [...optionValues(start), ...optionValues(end)].every((time) => minutesOfDay(time) % 10 === 0),
+    ).toBe(true);
+    expect(start).toHaveValue("07:10");
+    expect(end).toHaveValue("08:10");
+
+    fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "CREA LA CLASSE" }));
+    expect(await screen.findByText("Classe creada")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toHaveLength(1);
+    });
+    expect(bodies[0]).toMatchObject({ date: "2026-08-13", endTime: "08:10", startTime: "07:10" });
+  });
+
+  it("R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries", async () => {
+    await putOpeningHours("07:05", "21:55");
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("POST", "/ring-blocks");
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    const from = within(drawer).getByLabelText("De");
+    const to = within(drawer).getByLabelText("A");
+    // No date yet: today's options (Wednesday 12).
+    expect(from).toHaveValue("07:10");
+    expect(to).toHaveValue("07:40");
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    expect(optionValues(from)[0]).toBe("07:10");
+    expect(optionValues(from).at(-1)).toBe("21:20");
+    expect(optionValues(to)[0]).toBe("07:40");
+    expect(optionValues(to).at(-1)).toBe("21:50");
+    expect(
+      [...optionValues(from), ...optionValues(to)].every((time) => minutesOfDay(time) % 10 === 0),
+    ).toBe(true);
+    expect(from).toHaveValue("07:10");
+    expect(to).toHaveValue("07:40");
+
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" }));
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toHaveLength(1);
+    });
+    // 07:10 and 07:40 club-local (CEST, UTC+2).
+    expect(bodies[0]).toMatchObject({ from: "2026-08-13T05:10:00Z", to: "2026-08-13T05:40:00Z" });
+  });
+
+  it("R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost", async () => {
+    const calendar = heldCalendar();
+    const { client } = await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    // Another admin raises the limit to 7 meanwhile: the class is now at version 2.
+    await concurrentPatch(client, { capacity: 7, version: 1 });
+    const bodies = captureBodies("PATCH", `/class-sessions/${WEDNESDAY_1850}`);
+
+    fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
+    calendar.hold = true;
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+
+    // The 409 has answered and the refetch that brings version 2 is still on its way: an edit
+    // typed now would be dropped by the remount, so nothing can be edited.
+    expect(await screen.findByText(STALE_MESSAGE)).toBeVisible();
+    for (const editor of cardEditors()) expect(editor).toBeDisabled();
+    expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(6);
+
+    calendar.release();
+    await waitFor(() => {
+      expect(
+        within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/7 \+2/u }),
+      ).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(within(selectedCard()).getByRole("spinbutton")).toBeEnabled();
+    });
+    // The card shows version 2, and the edit made on it is saved with it.
+    expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(7);
+    expect(screen.getByText(STALE_MESSAGE)).toBeVisible();
+    fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    await waitFor(() => {
+      expect(
+        within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/6 \+2/u }),
+      ).toBeVisible();
+    });
+    expect(bodies).toEqual([
+      { capacity: 6, version: 1 },
+      { capacity: 6, version: 2 },
+    ]);
+  });
+
+  it("R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown", async () => {
+    const calendar = heldCalendar();
+    const { client } = await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    // Another admin cancels the class meanwhile (new state, new version).
+    await client.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+      params: { header: { "Idempotency-Key": "concurrent-cancel" }, path: { id: WEDNESDAY_1850 } },
+    });
+    calendar.hold = true;
+    fireEvent.click(
+      within(selectedCard()).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    );
+
+    expect(await screen.findByText(INVALID_STATE_MESSAGE)).toBeVisible();
+    for (const editor of cardEditors()) expect(editor).toBeDisabled();
+
+    calendar.release();
+    await waitFor(() => {
+      expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dc 12 .*anul·lada0\/5/u);
+    });
+    // The cancelled class keeps only «Notes», editable again.
+    expect(within(selectedCard()).getByLabelText("Notes")).toBeEnabled();
+    expect(within(selectedCard()).queryByRole("spinbutton")).not.toBeInTheDocument();
+    expect(screen.getByText(INVALID_STATE_MESSAGE)).toBeVisible();
+  });
+
+  it("R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept", async () => {
+    let failCalendar = false;
+    server.use(
+      http.get("*/api/v1/weeks/:id/calendar", () =>
+        failCalendar
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w09" },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    const { client } = await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    await concurrentPatch(client, { capacity: 7, version: 1 });
+    fireEvent.change(within(selectedCard()).getByRole("spinbutton"), { target: { value: "6" } });
+    failCalendar = true;
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+
+    expect(await screen.findByText(STALE_MESSAGE)).toBeVisible();
+    // The refetch fails: the card is still the one shown, so it is not left locked for good.
+    expect(await screen.findByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
+    await waitFor(() => {
+      expect(within(selectedCard()).getByRole("spinbutton")).toBeEnabled();
+    });
+    expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue(6);
+    expect(within(selectedCard()).getByRole("button", { name: "ACCEPTA" })).toBeEnabled();
+  });
+
+  it("R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit", async () => {
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    // A class on Sunday 16, created while the club still opened on Sundays.
+    await api.POST("/class-sessions", {
+      body: {
+        date: "2026-08-16",
+        endTime: "11:00",
+        instructorIds: ["instructor-marc"],
+        levelIds: ["level-b"],
+        ringId: "ring-central",
+        startTime: "10:00",
+      },
+    });
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("POST", "/class-sessions");
+
+    // The Sunday class keeps its own time and offers no other.
+    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
+    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))).toEqual(["10:00"]);
+    expect(within(selectedCard()).getByText(CLOSED_DAY)).toBeVisible();
+
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    const date = within(drawer).getByLabelText("Data");
+    const start = within(drawer).getByLabelText("Inici");
+    const end = within(drawer).getByLabelText("Final");
+    const submit = within(drawer).getByRole("button", { name: "CREA LA CLASSE" });
+    fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
+    fireEvent.change(date, { target: { value: "16082026" } });
+    expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
+    expect(date).toHaveAttribute("aria-invalid", "true");
+    expect(optionValues(start)).toEqual([]);
+    expect(optionValues(end)).toEqual([]);
+    expect(start).toBeDisabled();
+    expect(end).toBeDisabled();
+    expect(submit).toBeDisabled();
+    fireEvent.submit(formOf(submit));
+    await settle();
+    expect(bodies).toEqual([]);
+
+    // Monday is open again: times from the opening and the form can be sent.
+    fireEvent.change(date, { target: { value: "17082026" } });
+    expect(within(drawer).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
+    expect(optionValues(start)[0]).toBe("07:00");
+    expect(start).toBeEnabled();
+    expect(submit).toBeEnabled();
+  });
+
+  it("R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit", async () => {
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("POST", "/ring-blocks");
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    const date = within(drawer).getByLabelText("Data");
+    const submit = within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
+    fireEvent.change(date, { target: { value: "16082026" } });
+    expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
+    expect(date).toHaveAttribute("aria-invalid", "true");
+    expect(optionValues(within(drawer).getByLabelText("De"))).toEqual([]);
+    expect(optionValues(within(drawer).getByLabelText("A"))).toEqual([]);
+    expect(submit).toBeDisabled();
+    fireEvent.submit(formOf(submit));
+    await settle();
+    expect(bodies).toEqual([]);
+
+    fireEvent.change(date, { target: { value: "17082026" } });
+    expect(within(drawer).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
+    expect(optionValues(within(drawer).getByLabelText("De"))[0]).toBe("07:00");
+    expect(submit).toBeEnabled();
   });
 });

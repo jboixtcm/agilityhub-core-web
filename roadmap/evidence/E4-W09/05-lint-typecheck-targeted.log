@@ -1,0 +1,57 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, clubs-admin
+   • Running lint, typecheck in 2 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:typecheck: cache miss, executing 0270225b304d8011
+clubs-admin:lint: cache miss, executing c79b08040b338274
+@agilityhub/api-client:lint: cache miss, executing 861341161d8de1f1
+@agilityhub/ui:typecheck: cache hit, replaying logs e34c40cf6f872d79
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/i18n:typecheck: cache miss, executing 81d160cdb2bc6071
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/auth:typecheck: cache miss, executing 286b05d6a1dcc208
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs-admin:typecheck: cache miss, executing 6023d37ed73f593e
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/calendar-handlers.test.ts
+@agilityhub/api-client:lint:   245:6  error  Use an `interface` instead of a `type`  @typescript-eslint/consistent-type-definitions
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: ✖ 1 problem (1 error, 0 warnings)
+@agilityhub/api-client:lint:   1 error and 0 warnings potentially fixable with the `--fix` option.
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint:  ELIFECYCLE  Command failed with exit code 1.
+@agilityhub/api-client#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+
+ Tasks:    4 successful, 7 total
+Cached:    1 cached, 7 total
+  Time:    15m35.507s 
+Failed:    @agilityhub/api-client#lint
+
+ ERROR  run failed: command  exited (1)

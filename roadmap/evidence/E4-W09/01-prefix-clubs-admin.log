@@ -1,0 +1,1495 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/calendar-shared.test.ts (8 tests | 3 failed | 5 skipped) 4ms
+   ❯ S06 §3 time options on slot boundaries (E4-W09) (3)
+     × R-06-09 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time 3ms
+     × R-06-09 R-06-11 a range keeps at least its minimum length on slot boundaries 0ms
+     × R-02-09 a weekday absent from club.openingHours is closed: no window, no options 1ms
+ ❯ src/planning/CalendarPage.test.tsx (32 tests | 6 failed | 25 skipped) 1082ms
+   ❯ E4-W09 D4 follow-ups of the E4-W02 round-4 review (7)
+     × S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries 195ms
+     × R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries 118ms
+     × R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost 156ms
+     × R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown 123ms
+     × R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit 110ms
+     × R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit 233ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries
+AssertionError: expected '18:50' to be '07:10' // Object.is equality
+
+Expected: "07:10"
+Received: "18:50"
+
+ ❯ src/planning/CalendarPage.test.tsx:1051:35
+    1049|     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 1…
+    1050|     const hour = within(selectedCard()).getByLabelText("Hora");
+    1051|     expect(optionValues(hour)[0]).toBe("07:10");
+       |                                   ^
+    1052|     expect(optionValues(hour).at(-1)).toBe("20:50");
+    1053|     expect(optionValues(hour).every((time) => minutesOfDay(time) % 10 …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32m07:10[39m[2m)[22m
+
+Expected the element to have value:
+[32m  07:10[39m
+Received:
+[31m  07:05[39m
+ ❯ src/planning/CalendarPage.test.tsx:1091:18
+    1089|     const to = within(drawer).getByLabelText("A");
+    1090|     // No date yet: today's options (Wednesday 12).
+    1091|     expect(from).toHaveValue("07:10");
+       |                  ^
+    1092|     expect(to).toHaveValue("07:40");
+    1093|     fireEvent.change(within(drawer).getByLabelText("Data"), { target: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<input
+  class="ah-input calendar-chip__number"
+  min="1"
+  placeholder="5"
+  type="number"
+  value="6"
+/>[39m
+ ❯ src/planning/CalendarPage.test.tsx:1129:56
+    1127|     // typed now would be dropped by the remount, so nothing can be ed…
+    1128|     expect(await screen.findByText(STALE_MESSAGE)).toBeVisible();
+    1129|     for (const editor of cardEditors()) expect(editor).toBeDisabled();
+       |                                                        ^
+    1130|     expect(within(selectedCard()).getByRole("spinbutton")).toHaveValue…
+    1131|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<input
+  class="ah-input calendar-chip__number"
+  min="1"
+  placeholder="5"
+  type="number"
+  value=""
+/>[39m
+ ❯ src/planning/CalendarPage.test.tsx:1174:56
+    1172|
+    1173|     expect(await screen.findByText(INVALID_STATE_MESSAGE)).toBeVisible…
+    1174|     for (const editor of cardEditors()) expect(editor).toBeDisabled();
+       |                                                        ^
+    1175|
+    1176|     calendar.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit
+AssertionError: expected [ '07:00', '07:10', '07:20', …(82) ] to deeply equal [ '10:00' ]
+
+- Expected
++ Received
+
+  [
++   "07:00",
++   "07:10",
++   "07:20",
++   "07:30",
++   "07:40",
++   "07:50",
++   "08:00",
++   "08:10",
++   "08:20",
++   "08:30",
++   "08:40",
++   "08:50",
++   "09:00",
++   "09:10",
++   "09:20",
++   "09:30",
++   "09:40",
++   "09:50",
+    "10:00",
++   "10:10",
++   "10:20",
++   "10:30",
++   "10:40",
++   "10:50",
++   "11:00",
++   "11:10",
++   "11:20",
++   "11:30",
++   "11:40",
++   "11:50",
++   "12:00",
++   "12:10",
++   "12:20",
++   "12:30",
++   "12:40",
++   "12:50",
++   "13:00",
++   "13:10",
++   "13:20",
++   "13:30",
++   "13:40",
++   "13:50",
++   "14:00",
++   "14:10",
++   "14:20",
++   "14:30",
++   "14:40",
++   "14:50",
++   "15:00",
++   "15:10",
++   "15:20",
++   "15:30",
++   "15:40",
++   "15:50",
++   "16:00",
++   "16:10",
++   "16:20",
++   "16:30",
++   "16:40",
++   "16:50",
++   "17:00",
++   "17:10",
++   "17:20",
++   "17:30",
++   "17:40",
++   "17:50",
++   "18:00",
++   "18:10",
++   "18:20",
++   "18:30",
++   "18:40",
++   "18:50",
++   "19:00",
++   "19:10",
++   "19:20",
++   "19:30",
++   "19:40",
++   "19:50",
++   "20:00",
++   "20:10",
++   "20:20",
++   "20:30",
++   "20:40",
++   "20:50",
++   "21:00",
+  ]
+
+ ❯ src/planning/CalendarPage.test.tsx:1240:73
+    1238|     // The Sunday class keeps its own time and offers no other.
+    1239|     fireEvent.click(within(week).getByRole("button", { name: /^dg 16 1…
+    1240|     expect(optionValues(within(selectedCard()).getByLabelText("Hora"))…
+       |                                                                         ^
+    1241|     expect(within(selectedCard()).getByText(CLOSED_DAY)).toBeVisible();
+    1242|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Bloqueja pista":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_d_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------group:
+
+  Name "":
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"planning-form__fieldset"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Pista":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"calendar-block-ring"[39m
+  [36m/>[39m
+
+  Name "De":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"calendar-block-from"[39m
+  [36m/>[39m
+
+  Name "A":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"calendar-block-to"[39m
+  [36m/>[39m
+
+  Name "Tipus":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"calendar-block-kind"[39m
+  [36m/>[39m
+
+  Name "Motiu":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"calendar-block-reason"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Muntanya":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-muntanya"[39m
+  [36m/>[39m
+
+  Name "Central":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-central"[39m
+  [36m/>[39m
+
+  Name "Carretera":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-carretera"[39m
+  [36m/>[39m
+
+  Name "Cadells":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-cadells"[39m
+  [36m/>[39m
+
+  Name "Petita":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-petita"[39m
+  [36m/>[39m
+
+  Name "7:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:00"[39m
+  [36m/>[39m
+
+  Name "7:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:10"[39m
+  [36m/>[39m
+
+  Name "7:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:20"[39m
+  [36m/>[39m
+
+  Name "7:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:30"[39m
+  [36m/>[39m
+
+  Name "7:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:40"[39m
+  [36m/>[39m
+
+  Name "7:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:50"[39m
+  [36m/>[39m
+
+  Name "8:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:00"[39m
+  [36m/>[39m
+
+  Name "8:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:10"[39m
+  [36m/>[39m
+
+  Name "8:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:20"[39m
+  [36m/>[39m
+
+  Name "8:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:30"[39m
+  [36m/>[39m
+
+  Name "8:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:40"[39m
+  [36m/>[39m
+
+  Name "8:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:50"[39m
+  [36m/>[39m
+
+  Name "9:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:00"[39m
+  [36m/>[39m
+
+  Name "9:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:10"[39m
+  [36m/>[39m
+
+  Name "9:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:20"[39m
+  [36m/>[39m
+
+  Name "9:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:30"[39m
+  [36m/>[39m
+
+  Name "9:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:40"[39m
+  [36m/>[39m
+
+  Name "9:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:50"[39m
+  [36m/>[39m
+
+  Name "10:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:00"[39m
+  [36m/>[39m
+
+  Name "10:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:10"[39m
+  [36m/>[39m
+
+  Name "10:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:20"[39m
+  [36m/>[39m
+
+  Name "10:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:30"[39m
+  [36m/>[39m
+
+  Name "10:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:40"[39m
+  [36m/>[39m
+
+  Name "10:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:50"[39m
+  [36m/>[39m
+
+  Name "11:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:00"[39m
+  [36m/>[39m
+
+  Name "11:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:10"[39m
+  [36m/>[39m
+
+  Name "11:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:20"[39m
+  [36m/>[39m
+
+  Name "11:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:30"[39m
+  [36m/>[39m
+
+  Name "11:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:40"[39m
+  [36m/>[39m
+
+  Name "11:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:50"[39m
+  [36m/>[39m
+
+  Name "12:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:00"[39m
+  [36m/>[39m
+
+  Name "12:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:10"[39m
+  [36m/>[39m
+
+  Name "12:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:20"[39m
+  [36m/>[39m
+
+  Name "12:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:30"[39m
+  [36m/>[39m
+
+  Name "12:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:40"[39m
+  [36m/>[39m
+
+  Name "12:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:50"[39m
+  [36m/>[39m
+
+  Name "13:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:00"[39m
+  [36m/>[39m
+
+  Name "13:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:10"[39m
+  [36m/>[39m
+
+  Name "13:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:20"[39m
+  [36m/>[39m
+
+  Name "13:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:30"[39m
+  [36m/>[39m
+
+  Name "13:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:40"[39m
+  [36m/>[39m
+
+  Name "13:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:50"[39m
+  [36m/>[39m
+
+  Name "14:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:00"[39m
+  [36m/>[39m
+
+  Name "14:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:10"[39m
+  [36m/>[39m
+
+  Name "14:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:20"[39m
+  [36m/>[39m
+
+  Name "14:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:30"[39m
+  [36m/>[39m
+
+  Name "14:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:40"[39m
+  [36m/>[39m
+
+  Name "14:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:50"[39m
+  [36m/>[39m
+
+  Name "15:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:00"[39m
+  [36m/>[39m
+
+  Name "15:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:10"[39m
+  [36m/>[39m
+
+  Name "15:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:20"[39m
+  [36m/>[39m
+
+  Name "15:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:30"[39m
+  [36m/>[39m
+
+  Name "15:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:40"[39m
+  [36m/>[39m
+
+  Name "15:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:50"[39m
+  [36m/>[39m
+
+  Name "16:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:00"[39m
+  [36m/>[39m
+
+  Name "16:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:10"[39m
+  [36m/>[39m
+
+  Name "16:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:20"[39m
+  [36m/>[39m
+
+  Name "16:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:30"[39m
+  [36m/>[39m
+
+  Name "16:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:40"[39m
+  [36m/>[39m
+
+  Name "16:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:50"[39m
+  [36m/>[39m
+
+  Name "17:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:00"[39m
+  [36m/>[39m
+
+  Name "17:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:10"[39m
+  [36m/>[39m
+
+  Name "17:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:20"[39m
+  [36m/>[39m
+
+  Name "17:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:30"[39m
+  [36m/>[39m
+
+  Name "17:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:40"[39m
+  [36m/>[39m
+
+  Name "17:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:50"[39m
+  [36m/>[39m
+
+  Name "18:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:00"[39m
+  [36m/>[39m
+
+  Name "18:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:10"[39m
+  [36m/>[39m
+
+  Name "18:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:20"[39m
+  [36m/>[39m
+
+  Name "18:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:30"[39m
+  [36m/>[39m
+
+  Name "18:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:40"[39m
+  [36m/>[39m
+
+  Name "18:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:50"[39m
+  [36m/>[39m
+
+  Name "19:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:00"[39m
+  [36m/>[39m
+
+  Name "19:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:10"[39m
+  [36m/>[39m
+
+  Name "19:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:20"[39m
+  [36m/>[39m
+
+  Name "19:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:30"[39m
+  [36m/>[39m
+
+  Name "19:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:40"[39m
+  [36m/>[39m
+
+  Name "19:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:50"[39m
+  [36m/>[39m
+
+  Name "20:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:00"[39m
+  [36m/>[39m
+
+  Name "20:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:10"[39m
+  [36m/>[39m
+
+  Name "20:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:20"[39m
+  [36m/>[39m
+
+  Name "20:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:30"[39m
+  [36m/>[39m
+
+  Name "20:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:40"[39m
+  [36m/>[39m
+
+  Name "20:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:50"[39m
+  [36m/>[39m
+
+  Name "21:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:00"[39m
+  [36m/>[39m
+
+  Name "21:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:10"[39m
+  [36m/>[39m
+
+  Name "21:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:20"[39m
+  [36m/>[39m
+
+  Name "21:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:30"[39m
+  [36m/>[39m
+
+  Name "7:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:30"[39m
+  [36m/>[39m
+
+  Name "7:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:40"[39m
+  [36m/>[39m
+
+  Name "7:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"07:50"[39m
+  [36m/>[39m
+
+  Name "8:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:00"[39m
+  [36m/>[39m
+
+  Name "8:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:10"[39m
+  [36m/>[39m
+
+  Name "8:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:20"[39m
+  [36m/>[39m
+
+  Name "8:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:30"[39m
+  [36m/>[39m
+
+  Name "8:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:40"[39m
+  [36m/>[39m
+
+  Name "8:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"08:50"[39m
+  [36m/>[39m
+
+  Name "9:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:00"[39m
+  [36m/>[39m
+
+  Name "9:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:10"[39m
+  [36m/>[39m
+
+  Name "9:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:20"[39m
+  [36m/>[39m
+
+  Name "9:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:30"[39m
+  [36m/>[39m
+
+  Name "9:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:40"[39m
+  [36m/>[39m
+
+  Name "9:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"09:50"[39m
+  [36m/>[39m
+
+  Name "10:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:00"[39m
+  [36m/>[39m
+
+  Name "10:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:10"[39m
+  [36m/>[39m
+
+  Name "10:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:20"[39m
+  [36m/>[39m
+
+  Name "10:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:30"[39m
+  [36m/>[39m
+
+  Name "10:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:40"[39m
+  [36m/>[39m
+
+  Name "10:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"10:50"[39m
+  [36m/>[39m
+
+  Name "11:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:00"[39m
+  [36m/>[39m
+
+  Name "11:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:10"[39m
+  [36m/>[39m
+
+  Name "11:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:20"[39m
+  [36m/>[39m
+
+  Name "11:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:30"[39m
+  [36m/>[39m
+
+  Name "11:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:40"[39m
+  [36m/>[39m
+
+  Name "11:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"11:50"[39m
+  [36m/>[39m
+
+  Name "12:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:00"[39m
+  [36m/>[39m
+
+  Name "12:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:10"[39m
+  [36m/>[39m
+
+  Name "12:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:20"[39m
+  [36m/>[39m
+
+  Name "12:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:30"[39m
+  [36m/>[39m
+
+  Name "12:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:40"[39m
+  [36m/>[39m
+
+  Name "12:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"12:50"[39m
+  [36m/>[39m
+
+  Name "13:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:00"[39m
+  [36m/>[39m
+
+  Name "13:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:10"[39m
+  [36m/>[39m
+
+  Name "13:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:20"[39m
+  [36m/>[39m
+
+  Name "13:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:30"[39m
+  [36m/>[39m
+
+  Name "13:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:40"[39m
+  [36m/>[39m
+
+  Name "13:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"13:50"[39m
+  [36m/>[39m
+
+  Name "14:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:00"[39m
+  [36m/>[39m
+
+  Name "14:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:10"[39m
+  [36m/>[39m
+
+  Name "14:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:20"[39m
+  [36m/>[39m
+
+  Name "14:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:30"[39m
+  [36m/>[39m
+
+  Name "14:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:40"[39m
+  [36m/>[39m
+
+  Name "14:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"14:50"[39m
+  [36m/>[39m
+
+  Name "15:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:00"[39m
+  [36m/>[39m
+
+  Name "15:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:10"[39m
+  [36m/>[39m
+
+  Name "15:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:20"[39m
+  [36m/>[39m
+
+  Name "15:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:30"[39m
+  [36m/>[39m
+
+  Name "15:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:40"[39m
+  [36m/>[39m
+
+  Name "15:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"15:50"[39m
+  [36m/>[39m
+
+  Name "16:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:00"[39m
+  [36m/>[39m
+
+  Name "16:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:10"[39m
+  [36m/>[39m
+
+  Name "16:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:20"[39m
+  [36m/>[39m
+
+  Name "16:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:30"[39m
+  [36m/>[39m
+
+  Name "16:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:40"[39m
+  [36m/>[39m
+
+  Name "16:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"16:50"[39m
+  [36m/>[39m
+
+  Name "17:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:00"[39m
+  [36m/>[39m
+
+  Name "17:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:10"[39m
+  [36m/>[39m
+
+  Name "17:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:20"[39m
+  [36m/>[39m
+
+  Name "17:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:30"[39m
+  [36m/>[39m
+
+  Name "17:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:40"[39m
+  [36m/>[39m
+
+  Name "17:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"17:50"[39m
+  [36m/>[39m
+
+  Name "18:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:00"[39m
+  [36m/>[39m
+
+  Name "18:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:10"[39m
+  [36m/>[39m
+
+  Name "18:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:20"[39m
+  [36m/>[39m
+
+  Name "18:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:30"[39m
+  [36m/>[39m
+
+  Name "18:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:40"[39m
+  [36m/>[39m
+
+  Name "18:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"18:50"[39m
+  [36m/>[39m
+
+  Name "19:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:00"[39m
+  [36m/>[39m
+
+  Name "19:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:10"[39m
+  [36m/>[39m
+
+  Name "19:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:20"[39m
+  [36m/>[39m
+
+  Name "19:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:30"[39m
+  [36m/>[39m
+
+  Name "19:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:40"[39m
+  [36m/>[39m
+
+  Name "19:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"19:50"[39m
+  [36m/>[39m
+
+  Name "20:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:00"[39m
+  [36m/>[39m
+
+  Name "20:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:10"[39m
+  [36m/>[39m
+
+  Name "20:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:20"[39m
+  [36m/>[39m
+
+  Name "20:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:30"[39m
+  [36m/>[39m
+
+  Name "20:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:40"[39m
+  [36m/>[39m
+
+  Name "20:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20:50"[39m
+  [36m/>[39m
+
+  Name "21:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:00"[39m
+  [36m/>[39m
+
+  Name "21:10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:10"[39m
+  [36m/>[39m
+
+  Name "21:20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:20"[39m
+  [36m/>[39m
+
+  Name "21:30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:30"[39m
+  [36m/>[39m
+
+  Name "21:40":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:40"[39m
+  [36m/>[39m
+
+  Name "21:50":
+  [36m<option[39m
+    [33mvalue[39m=[32m"21:50"[39m
+  [36m/>[39m
+
+  Name "22:00":
+  [36m<option[39m
+    [33mvalue[39m=[32m"22:00"[39m
+  [36m/>[39m
+
+  Name "Bloqueig":
+  [36m<option[39m
+    [33mvalue[39m=[32m"BLOCK"[39m
+  [36m/>[39m
+
+  Name "Reserva de pista":
+  [36m<option[39m
+    [33mvalue[39m=[32m"RESERVATION"[39m
+  [36m/>[39m
+
+  Name "manteniment":
+  [36m<option[39m
+    [33mvalue[39m=[32m"MAINTENANCE"[39m
+  [36m/>[39m
+
+  Name "altres":
+  [36m<option[39m
+    [33mvalue[39m=[32m"OTHER"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Data":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"calendar-block-date"[39m
+    [33minputmode[39m=[32m"numeric"[39m
+    [33mplaceholder[39m=[32m"dd/mm/aaaa"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m"16/08/2026"[39m
+  [36m/>[39m
+
+  Name "Nota":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+    [33mid[39m=[32m"calendar-block-note"[39m
+    [33mmaxlength[39m=[32m"200"[39m
+    [33mrows[39m=[32m"2"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "DESA EL BLOQUEIG":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mBloqueja pista[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"planning-form calendar-drawer-form"[39m
+      [33mnovalidate[39m=[32m""[39m
+    [36m>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"planning-form__fieldset"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"calendar-block-ring"[39m
+          [36m>[39m
+            [0mPista[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"calendar-block-ring"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ring-muntanya"[39m
+            [36m>[39m
+              [0mMuntanya[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ring-central"[39m
+            [36m>[39m
+              [0mCentral[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ring-carretera"[39m
+            [36m>[39m
+              [0mCarretera[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ring-cadells"[39m
+            [36m>[39m
+              [0mCadells[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ring-petita"[39m
+            [36m>[39m
+              [0mPetita[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"calendar-block-date"[39m
+          [36m>[39m
+            [0mData[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"calendar-block-date"[39m
+            [33minputmode[39m=[32m"numeric"[39m
+            [33mplaceholder[39m=[32m"dd/mm/aaaa"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"16/08/2026"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"calendar-form__pair"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"calendar-block-from"[39m
+            [36m>[39m
+              [0mDe[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"calendar-block-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:00"[39m
+              [36m>[39m
+                [0m7:00[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:10"[39m
+              [36m>[39m
+                [0m7:10[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:20"[39m
+              [36m>[39m
+                [0m7:20[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:30"[39m
+              [36m>[39m
+                [0m7:30[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:40"[39m
+              [36m>[39m
+                [0m7:40[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"07:50"[39m
+              [36m>[39m
+                [0m7:50[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:00"[39m
+              [36m>[39m
+                [0m8:00[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:10"[39m
+              [36m>[39m
+                [0m8:10[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:20"[39m
+              [36m>[39m
+                [0m8:20[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:30"[39m
+              [36m>[39m
+                [0m8:30[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:40"[39m
+              [36m>[39m
+                [0m8:40[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"08:50"[39m
+              [36m>[39m
+                [0m8:50[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:00"[39m
+              [36m>[39m
+                [0m9:00[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:10"[39m
+              [36m>[39m
+                [0m9:10[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:20"[39m
+              [36m>[39m
+                [0m9:20[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:30"[39m
+              [36m>[39m
+                [0m9:30[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:40"[39m
+              [36m>[39m
+                [0m9:40[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"09:50"[39m
+       ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/planning/CalendarPage.test.tsx:1285:27
+    1283|     const submit = within(drawer).getByRole("button", { name: "DESA EL…
+    1284|     fireEvent.change(date, { target: { value: "16082026" } });
+    1285|     expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED…
+       |                           ^
+    1286|     expect(date).toHaveAttribute("aria-invalid", "true");
+    1287|     expect(optionValues(within(drawer).getByLabelText("De"))).toEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > R-06-09 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time
+AssertionError: expected '07:05' to be '07:10' // Object.is equality
+
+Expected: "07:10"
+Received: "07:05"
+
+ ❯ src/planning/calendar-shared.test.ts:49:24
+     47|   it("R-06-09 an opening at 07:05 with 10-minute slots starts at 07:10…
+     48|     const options = timeOptions("07:05", "21:55", 10);
+     49|     expect(options[0]).toBe("07:10");
+       |                        ^
+     50|     expect(options.at(-1)).toBe("21:50");
+     51|     expect(options.every((time) => Number(time.slice(3)) % 10 === 0)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > R-06-09 R-06-11 a range keeps at least its minimum length on slot boundaries
+TypeError: rangeOptions is not a function
+ ❯ src/planning/calendar-shared.test.ts:56:21
+     54|   it("R-06-09 R-06-11 a range keeps at least its minimum length on slo…
+     55|     // Classes: one slot at least.
+     56|     const classes = rangeOptions({ close: "21:55", open: "07:05" }, 10…
+       |                     ^
+     57|     expect([classes.starts[0], classes.starts.at(-1)]).toEqual(["07:10…
+     58|     expect([classes.ends[0], classes.ends.at(-1)]).toEqual(["07:20", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > R-02-09 a weekday absent from club.openingHours is closed: no window, no options
+AssertionError: expected { close: '22:00', open: '07:00' } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "close": "22:00",
+  "open": "07:00",
+}
+
+ ❯ src/planning/calendar-shared.test.ts:72:44
+     70|     const hours = { MONDAY: { close: "22:00", open: "07:00" } };
+     71|     expect(openingOf(hours, "2026-08-17")).toEqual({ close: "22:00", o…
+     72|     expect(openingOf(hours, "2026-08-16")).toBeNull();
+       |                                            ^
+     73|     expect(rangeOptions(openingOf(hours, "2026-08-16"), 10, 10)).toEqu…
+     74|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  9 failed | 1 passed | 30 skipped (40)
+   Start at  19:40:24
+   Duration  2.16s (tests 38%, environment 31%, transform 15%, import 9%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx src/planning/calendar-shared.test.ts -t E4-W09|slot boundaries

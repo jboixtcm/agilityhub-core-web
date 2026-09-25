@@ -16,10 +16,10 @@ import {
   openingOf,
   parseMaskedDate,
   placementKey,
+  rangeOptions,
   type RingBlock,
   timeLabel,
   timeOf,
-  timeOptions,
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import { RingBookingList } from "./SelectedClassCard";
@@ -46,10 +46,11 @@ type FieldKey = "date" | "general" | "time";
 export type RingBlockDrawerMode = { kind: "create" } | { block: RingBlock; kind: "edit" };
 
 /**
- * [Bloqueja pista] (R-06-11): ring, masked date, from/to in steps of `classes.slotMinutes`
- * (duration ≥ `training.slotMinutes`), kind, reason and note; instants sent in UTC from the club
- * `timeZone`. Clicking a block opens it in edit mode (future blocks only) with its cancellation;
- * activity blocks are read-only with a link to the activity. Mounted only while open.
+ * [Bloqueja pista] (R-06-11): ring, masked date, from/to on `classes.slotMinutes` boundaries
+ * inside the day's opening hours (duration ≥ `training.slotMinutes`, S06 §3 and R-09-11), kind,
+ * reason and note; instants sent in UTC from the club `timeZone`. A closed day (R-02-09) offers no
+ * times and cannot be saved. Clicking a block opens it in edit mode (future blocks only) with its
+ * cancellation; activity blocks are read-only with a link to the activity. Mounted only while open.
  */
 export function RingBlockDrawer({
   client,
@@ -89,25 +90,14 @@ export function RingBlockDrawer({
       ? moduleKinds
       : [...moduleKinds, block.kind];
   const today = clubToday(timeZone);
-  const optionsOf = (day: string) => {
-    const opening = openingOf(openingHours, day);
-    return {
-      ends: timeOptions(
-        timeOf(minutesOf(opening.open) + settings.trainingSlotMinutes),
-        opening.close,
-        settings.slotMinutes,
-      ),
-      starts: timeOptions(
-        opening.open,
-        timeOf(minutesOf(opening.close) - settings.trainingSlotMinutes),
-        settings.slotMinutes,
-      ),
-    };
-  };
+  const optionsOf = (day: string) =>
+    rangeOptions(openingOf(openingHours, day), settings.slotMinutes, settings.trainingSlotMinutes);
   const [ringId, setRingId] = useState(block?.ringId ?? activeRings[0]?.id ?? "");
   const [date, setDate] = useState(block === undefined ? "" : formatMaskedDate(block.date));
   const isoDate = parseMaskedDate(date);
   const { ends, starts } = optionsOf(isoDate ?? today);
+  /** The typed date is a day the club is closed (absent from `club.openingHours`). */
+  const closedDay = isoDate !== undefined && openingOf(openingHours, isoDate) === null;
   const [from, setFrom] = useState(block?.fromLocal ?? starts[0] ?? "");
   const [to, setTo] = useState(block?.toLocal ?? ends[0] ?? "");
   const [kind, setKind] = useState<Kind>(block?.kind ?? "BLOCK");
@@ -155,8 +145,15 @@ export function RingBlockDrawer({
     setTo(fitTo(nextFrom, to, options.ends));
   };
   const readOnly = managed;
-  const startOptions = starts.includes(from) ? starts : [from, ...starts];
-  const endOptions = ends.includes(to) ? ends : [...ends, to];
+  // A day without times (closed, or no block fits its hours) shows none, not the times kept.
+  const noTimes = starts.length === 0;
+  const startOptions = noTimes ? [] : starts.includes(from) ? starts : [from, ...starts];
+  const endOptions = noTimes ? [] : ends.includes(to) ? ends : [...ends, to];
+  const dateError = closedDay
+    ? t("admin-scheduling:calendar.closedDay")
+    : error?.field === "date"
+      ? error.message
+      : undefined;
 
   const fail = (cause: unknown, sent?: string) => {
     const code = errorCode(cause);
@@ -194,6 +191,7 @@ export function RingBlockDrawer({
       setError({ field: "date", message: t("admin-scheduling:calendar.createForm.invalidDate") });
       return;
     }
+    if (noTimes) return;
     const sent = placement;
     setPending(true);
     setError(undefined);
@@ -306,11 +304,13 @@ export function RingBlockDrawer({
             </Select>
           </FormField>
           <FormField
-            {...errorProp(error?.field === "date" ? error.message : undefined)}
+            {...errorProp(dateError)}
             id="calendar-block-date"
             label={t("admin-scheduling:calendar.blockForm.date")}
           >
             <Input
+              aria-describedby={dateError === undefined ? undefined : "calendar-block-date-error"}
+              aria-invalid={dateError !== undefined || undefined}
               autoComplete="off"
               id="calendar-block-date"
               inputMode="numeric"
@@ -328,6 +328,7 @@ export function RingBlockDrawer({
               label={t("admin-scheduling:calendar.blockForm.from")}
             >
               <Select
+                disabled={noTimes}
                 id="calendar-block-from"
                 onChange={(event) => {
                   const next = event.currentTarget.value;
@@ -350,6 +351,7 @@ export function RingBlockDrawer({
               label={t("admin-scheduling:calendar.blockForm.to")}
             >
               <Select
+                disabled={noTimes}
                 id="calendar-block-to"
                 onChange={(event) => {
                   setTo(event.currentTarget.value);
@@ -464,6 +466,7 @@ export function RingBlockDrawer({
               </Button>
             )}
             <Button
+              disabled={isoDate !== undefined && noTimes}
               loading={pending}
               loadingLabel={t("admin-scheduling:common.saving")}
               type="submit"

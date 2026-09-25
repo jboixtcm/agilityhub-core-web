@@ -6,7 +6,7 @@ import openapiDocument from "../../openapi/openapi.json";
 import pendingDocument from "../../openapi/pending.json";
 import { createApiClient } from "../client";
 
-import { mockScenario, resetPlanningState } from "./handlers";
+import { mockScenario, resetPlanningState, resetSettingsState } from "./handlers";
 import { server } from "./server";
 
 const openapiSchemaId = "https://agilityhub.local/calendar-openapi.json";
@@ -35,6 +35,7 @@ beforeAll(() => {
 beforeEach(() => {
   vi.useFakeTimers({ now: mockupNow, toFake: ["Date"] });
   resetPlanningState();
+  resetSettingsState();
   // Created after `server.listen()` so the client uses the intercepted `fetch`.
   client = createApiClient({ baseUrl: "https://core.example.test/api/v1" });
 });
@@ -42,6 +43,7 @@ afterEach(() => {
   server.resetHandlers();
   vi.useRealTimers();
   resetPlanningState();
+  resetSettingsState();
   mockScenario("admin");
 });
 afterAll(() => {
@@ -237,5 +239,83 @@ describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)",
       "Petita",
     ]);
     expect(result.data?.rows.map((row) => row.time)).toEqual(["08:30", "09:30", "16:00", "18:50"]);
+  });
+});
+
+interface OpeningWindow {
+  close: string;
+  open: string;
+}
+
+/** `club.openingHours` through the api (R-02-09: a weekday that is absent is closed). */
+async function putOpeningHours(
+  change: (value: Record<string, OpeningWindow>) => Record<string, OpeningWindow>,
+) {
+  const current = await client.GET("/club/opening-hours");
+  const value = (current.data?.value ?? {}) as Record<string, OpeningWindow>;
+  await client.PUT("/club/opening-hours", {
+    body: { value: change(value), version: current.data?.version ?? 1 },
+  });
+}
+
+const sundayClass = {
+  date: "2026-08-16",
+  endTime: "11:00",
+  instructorIds: ["instructor-marc"],
+  levelIds: ["level-b"],
+  ringId: "ring-central",
+  startTime: "10:00",
+};
+
+describe("E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3)", () => {
+  it("R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS", async () => {
+    await putOpeningHours((value) =>
+      Object.fromEntries(Object.entries(value).filter(([day]) => day !== "SUNDAY")),
+    );
+    await expect(client.POST("/class-sessions", { body: sundayClass })).rejects.toMatchObject({
+      code: "OUTSIDE_OPENING_HOURS",
+      status: 422,
+    });
+    // 10:00–11:00 club-local (CEST).
+    await expect(
+      client.POST("/ring-blocks", {
+        body: {
+          from: "2026-08-16T08:00:00Z",
+          kind: "BLOCK",
+          reason: "MAINTENANCE",
+          ringId: "ring-central",
+          to: "2026-08-16T09:00:00Z",
+        },
+        params: { header: { "Idempotency-Key": "closed-sunday" } },
+      }),
+    ).rejects.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 422 });
+    // Only Sunday is closed: the same class on Monday is created.
+    const monday = await client.POST("/class-sessions", {
+      body: { ...sundayClass, date: "2026-08-17" },
+    });
+    expect(monday.response.status).toBe(201);
+  });
+
+  it("S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start", async () => {
+    await putOpeningHours((value) =>
+      Object.fromEntries(Object.keys(value).map((day) => [day, { close: "21:55", open: "07:05" }])),
+    );
+    const at = (startTime: string, endTime: string) =>
+      client.POST("/class-sessions", {
+        body: { ...sundayClass, date: "2026-08-13", endTime, startTime },
+      });
+    await expect(at("07:05", "08:05")).rejects.toMatchObject({
+      code: "INVALID_SLOT_GRANULARITY",
+      status: 400,
+    });
+    await expect(at("07:00", "08:00")).rejects.toMatchObject({
+      code: "OUTSIDE_OPENING_HOURS",
+      status: 422,
+    });
+    await expect(at("20:50", "22:00")).rejects.toMatchObject({
+      code: "OUTSIDE_OPENING_HOURS",
+      status: 422,
+    });
+    expect((await at("07:10", "08:10")).response.status).toBe(201);
   });
 });

@@ -147,6 +147,7 @@
     "saved": "Canvis desats",
     "cancelled": "Classe anul·lada",
     "deleted": "Classe eliminada",
+    "closedDay": "El club està tancat aquest dia",
     "selected": {
       "title": "Classe seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
       "time": "Hora",

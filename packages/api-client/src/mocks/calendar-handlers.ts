@@ -253,14 +253,27 @@ function calendarOf(week: MockWeek, filter: string): WeekCalendar {
   };
 }
 
-function openingWindow(date: string): { close: number; open: number } {
-  const value = findParameter("club.openingHours")?.value as
-    Record<string, { close: string; open: string } | undefined> | undefined;
-  const window = value?.[dayNames[dayIndex(date)] ?? "MONDAY"] ?? { close: "22:00", open: "07:00" };
-  return { close: minutes(window.close), open: minutes(window.open) };
+/**
+ * The `club.openingHours` window of a date (S02 R-02-09): `undefined` when its weekday is absent,
+ * which is a closed day. The product default (dl–dg 07:00–22:00) applies only to a club without
+ * the parameter.
+ */
+function openingWindow(date: string): { close: number; open: number } | undefined {
+  const parameter = findParameter("club.openingHours");
+  const day = dayNames[dayIndex(date)] ?? "MONDAY";
+  const window =
+    parameter === undefined
+      ? { close: "22:00", open: "07:00" }
+      : (parameter.value as Record<string, { close: string; open: string } | undefined>)[day];
+  return window === undefined
+    ? undefined
+    : { close: minutes(window.close), open: minutes(window.open) };
 }
 
-/** Time checks shared by classes and blocks: granularity (400), range (400), opening hours (422). */
+/**
+ * Time checks shared by classes and blocks: granularity (400), range (400), opening hours (422;
+ * also on a closed day).
+ */
 function timeProblem(date: string, startTime: string, endTime: string, minimum = 1) {
   if (!/^\d{2}:\d{2}$/u.test(startTime) || !/^\d{2}:\d{2}$/u.test(endTime)) {
     return validationError("startTime");
@@ -274,7 +287,7 @@ function timeProblem(date: string, startTime: string, endTime: string, minimum =
     return apiError("INVALID_TIME_RANGE", "Invalid time range", 400);
   }
   const window = openingWindow(date);
-  if (start < window.open || end > window.close) {
+  if (window === undefined || start < window.open || end > window.close) {
     return apiError("OUTSIDE_OPENING_HOURS", "Outside opening hours", 422);
   }
   return undefined;
@@ -473,11 +486,7 @@ function blockProblem(fields: BlockFields, ignoreId?: string) {
     : undefined;
 }
 
-function dayGrid(
-  date: string,
-  view: "instructor" | "member",
-  locale: "ca" | "en" | "es",
-): DayGrid {
+function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en" | "es"): DayGrid {
   const sessions = planningState.sessions.filter(
     (session) =>
       session.date === date &&

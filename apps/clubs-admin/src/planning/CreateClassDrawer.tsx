@@ -23,9 +23,9 @@ import {
   openingOf,
   parseMaskedDate,
   placementKey,
+  rangeOptions,
   timeLabel,
   timeOf,
-  timeOptions,
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import { automaticDescription } from "./description";
@@ -77,10 +77,15 @@ function colorStyle(color: string): CSSProperties {
   return { "--planning-chip-color": color } as CSSProperties;
 }
 
+/** Length of a new class until the admin picks its end. */
+const DEFAULT_LENGTH_MINUTES = 60;
+
 /**
  * [Crear classe] of D4 (R-06-09): the class fields of the D3 card (ring, levels, instructor,
- * description preview, limit) plus a masked date and start/end times. Warns when the date is a
- * holiday and when the week is validated (the class is born ACTIVE). Mounted only while open.
+ * description preview, limit) plus a masked date and start/end times on `classes.slotMinutes`
+ * boundaries inside the day's opening hours (S06 §3). Warns when the date is a holiday and when
+ * the week is validated (the class is born ACTIVE); a closed day (R-02-09) offers no times and
+ * cannot be sent. Mounted only while open.
  */
 export function CreateClassDrawer({
   catalogs,
@@ -105,27 +110,18 @@ export function CreateClassDrawer({
   const activeLevels = catalogs.levels.filter((level) => level.active);
   const activeInstructors = catalogs.instructors.filter((instructor) => instructor.active);
   const today = clubToday(timeZone);
-  const optionsOf = (day: string) => {
-    const opening = openingOf(openingHours, day);
-    return {
-      ends: timeOptions(
-        timeOf(minutesOf(opening.open) + settings.slotMinutes),
-        opening.close,
-        settings.slotMinutes,
-      ),
-      starts: timeOptions(
-        opening.open,
-        timeOf(minutesOf(opening.close) - settings.slotMinutes),
-        settings.slotMinutes,
-      ),
-    };
-  };
+  const optionsOf = (day: string) =>
+    rangeOptions(openingOf(openingHours, day), settings.slotMinutes, settings.slotMinutes);
   const [date, setDate] = useState("");
   const isoDate = parseMaskedDate(date);
   const { ends, starts } = optionsOf(isoDate ?? today);
+  /** The typed date is a day the club is closed (absent from `club.openingHours`). */
+  const closedDay = isoDate !== undefined && openingOf(openingHours, isoDate) === null;
   const [startTime, setStartTime] = useState(starts[0] ?? "");
   const [endTime, setEndTime] = useState(() =>
-    clampTime(timeOf(minutesOf(starts[0] ?? "") + 60), ends),
+    starts[0] === undefined
+      ? ""
+      : clampTime(timeOf(minutesOf(starts[0]) + DEFAULT_LENGTH_MINUTES), ends),
   );
 
   /**
@@ -138,7 +134,11 @@ export function CreateClassDrawer({
   };
   /** A new start keeps the class length, with the end clamped to the day's closing time. */
   const moveStart = (nextStart: string, ends: readonly string[]) => {
-    const length = Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
+    // No times yet (the drawer opened on a closed day): the default length.
+    const length =
+      startTime === "" || endTime === ""
+        ? DEFAULT_LENGTH_MINUTES
+        : Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
     setStartTime(nextStart);
     setEndTime(clampTime(timeOf(minutesOf(nextStart) + length), ends));
     dropBookings();
@@ -191,14 +191,18 @@ export function CreateClassDrawer({
     return capacities.length === 0 ? "" : String(Math.min(...capacities));
   }, [catalogs.levels, levelIds]);
   const isHoliday = isoDate !== undefined && (holidays.data ?? []).includes(isoDate);
-  const startOptions = starts.includes(startTime) ? starts : [startTime, ...starts];
-  const endOptions = ends.includes(endTime) ? ends : [...ends, endTime];
+  // A day without times (closed, or no class fits its hours) shows none, not the times kept.
+  const noTimes = starts.length === 0;
+  const startOptions = noTimes ? [] : starts.includes(startTime) ? starts : [startTime, ...starts];
+  const endOptions = noTimes ? [] : ends.includes(endTime) ? ends : [...ends, endTime];
+  const dateError = closedDay ? t("admin-scheduling:calendar.closedDay") : errors.date;
 
   const create = async (cancelBookings = false) => {
     if (isoDate === undefined) {
       setErrors({ date: t("admin-scheduling:calendar.createForm.invalidDate") });
       return;
     }
+    if (noTimes) return;
     const sent = placement;
     setPending(true);
     setErrors({});
@@ -264,11 +268,13 @@ export function CreateClassDrawer({
     >
       <form className="planning-form calendar-drawer-form" noValidate onSubmit={submit}>
         <FormField
-          {...errorProp(errors.date)}
+          {...errorProp(dateError)}
           id="calendar-create-date"
           label={t("admin-scheduling:calendar.createForm.date")}
         >
           <Input
+            aria-describedby={dateError === undefined ? undefined : "calendar-create-date-error"}
+            aria-invalid={dateError !== undefined || undefined}
             autoComplete="off"
             id="calendar-create-date"
             inputMode="numeric"
@@ -294,6 +300,7 @@ export function CreateClassDrawer({
             label={t("admin-scheduling:calendar.createForm.start")}
           >
             <Select
+              disabled={noTimes}
               id="calendar-create-start"
               onChange={(event) => {
                 moveStart(event.currentTarget.value, ends);
@@ -313,6 +320,7 @@ export function CreateClassDrawer({
             label={t("admin-scheduling:calendar.createForm.end")}
           >
             <Select
+              disabled={noTimes}
               id="calendar-create-end"
               onChange={(event) => {
                 setEndTime(event.currentTarget.value);
@@ -494,6 +502,7 @@ export function CreateClassDrawer({
         )}
         <div className="planning-form__actions">
           <Button
+            disabled={isoDate !== undefined && noTimes}
             loading={pending}
             loadingLabel={t("admin-scheduling:common.saving")}
             type="submit"

@@ -849,11 +849,13 @@ export function ActivityPage({
   // R-07-05: only a ring block must fit the opening hours; away from the club or without linked
   // rings the activity may be at any time of the day.
   const blocksRings = form.atClub && form.ringIds.length > 0;
+  // A day absent from `club.openingHours` (closed, R-02-09) keeps the product default here, as
+  // before E4-W09 (D4 only); the api refuses the ring block there (OUTSIDE_OPENING_HOURS).
   const openingWindow = !blocksRings
     ? WHOLE_DAY
     : isoDate === undefined
       ? { close: "22:00", open: "07:00" }
-      : openingOf(opening, isoDate);
+      : (openingOf(opening, isoDate) ?? { close: "22:00", open: "07:00" });
   const options = timeOptions(openingWindow.open, openingWindow.close, settings.slotMinutes);
   const withValue = (value: string) =>
     value === "" || options.includes(value) ? options : [...options, value].sort();

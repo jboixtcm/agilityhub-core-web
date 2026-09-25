@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { clubInstant } from "./calendar-shared";
+import { clubInstant, openingOf, rangeOptions, timeOptions } from "./calendar-shared";
 
 describe("R-06-14 clubInstant (club-local date + time → UTC instant)", () => {
   it("uses the offset in force on each side of the DST changes", () => {
@@ -40,5 +40,39 @@ describe("R-06-14 clubInstant (club-local date + time → UTC instant)", () => {
     expect(clubInstant("2026-09-27", "02:30", "Pacific/Auckland")).toBe("2026-09-26T14:30:00Z");
     // Australia/Lord_Howe changes by 30 minutes (+11 → +10:30): 01:45 first occurrence.
     expect(clubInstant("2026-04-05", "01:45", "Australia/Lord_Howe")).toBe("2026-04-04T14:45:00Z");
+  });
+});
+
+describe("S06 §3 time options on slot boundaries (E4-W09)", () => {
+  it("R-06-09 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time", () => {
+    const options = timeOptions("07:05", "21:55", 10);
+    expect(options[0]).toBe("07:10");
+    expect(options.at(-1)).toBe("21:50");
+    expect(options.every((time) => Number(time.slice(3)) % 10 === 0)).toBe(true);
+  });
+
+  it("R-06-09 R-06-11 a range keeps at least its minimum length on slot boundaries", () => {
+    // Classes: one slot at least.
+    const classes = rangeOptions({ close: "21:55", open: "07:05" }, 10, 10);
+    expect([classes.starts[0], classes.starts.at(-1)]).toEqual(["07:10", "21:40"]);
+    expect([classes.ends[0], classes.ends.at(-1)]).toEqual(["07:20", "21:50"]);
+    // Ring blocks: `training.slotMinutes` (30) at least, `to − from` a multiple of 10.
+    const blocks = rangeOptions({ close: "22:00", open: "07:05" }, 10, 30);
+    expect([blocks.starts[0], blocks.starts.at(-1)]).toEqual(["07:10", "21:30"]);
+    expect([blocks.ends[0], blocks.ends.at(-1)]).toEqual(["07:40", "22:00"]);
+    // A minimum that is not a whole number of slots is rounded up to one (25 → 30).
+    expect(rangeOptions({ close: "22:00", open: "07:00" }, 10, 25).ends[0]).toBe("07:30");
+    // A window shorter than the minimum offers nothing.
+    expect(rangeOptions({ close: "07:20", open: "07:05" }, 10, 30)).toEqual({
+      ends: [],
+      starts: [],
+    });
+  });
+
+  it("R-02-09 a weekday absent from club.openingHours is closed: no window, no options", () => {
+    const hours = { MONDAY: { close: "22:00", open: "07:00" } };
+    expect(openingOf(hours, "2026-08-17")).toEqual({ close: "22:00", open: "07:00" });
+    expect(openingOf(hours, "2026-08-16")).toBeNull();
+    expect(rangeOptions(openingOf(hours, "2026-08-16"), 10, 10)).toEqual({ ends: [], starts: [] });
   });
 });

@@ -166,5 +166,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Registrants: the «Abonat» filter (`memberId`, `eq`/`ne`) with the registered members as values, the member's name in the chip, kept in the URL, the saved views and the export (S07 §6). The list's filter values are loaded once and keep their identity, so the picked value is no longer reset.
   - Mocks answer like the api: an impersonated registration cancellation without a reason is `422 VALIDATION_ERROR` on `reason` and is recorded as `ADMIN`; `GET /parameters/{key}` is `403 FORBIDDEN` to an INSTRUCTOR session (MATRIU_PERMISOS); new `activitiesInstructorNoLevels` scenario.
   - The R-07-03 D7 test waits for the editor's content (the flake reported by E3-W10).
+- D4, follow-ups of the E4-W02 round-4 review (E4-W09):
+  - Every D4 time picker offers times on `classes.slotMinutes` boundaries (S06 §3): the first is the opening rounded up (07:05 → 07:10 with 10-minute slots) and the last end is at or before the closing time. This covers the card's «Hora», [Crear classe] and [Bloqueja pista]; the block's shortest range is `training.slotMinutes` rounded up to whole slots. The shared `timeOptions` aligns too, so D7 activity times follow the same boundaries.
+  - The selected-class card stays locked after `STALE_VERSION` / `INVALID_STATE` (also from «Exempta…»), as after a save, until the calendar refetch settles. `useResource` gains `refetch()`, which drops loads already on their way and resolves when the new load settles. A refetch that fails or returns the same version unlocks the card with the admin's values kept (R-06-09).
+  - A weekday absent from `club.openingHours` is closed (R-02-09). `openingOf` returns `null` for it, and the product default (dl–dg 07:00–22:00) applies only when the value cannot be read. On a closed day the create and block drawers:
+    - offer no times and disable [CREA LA CLASSE] / [DESA EL BLOQUEIG];
+    - show «El club està tancat aquest dia» (the S09 §1 literal; new `admin-scheduling:calendar.closedDay` in ca/es/en) as the date error.
+  - On a closed day the card keeps only the class's own time, with the same note. The drawers open once the opening hours are loaded.
+  - The calendar mock answers `422 OUTSIDE_OPENING_HOURS` for classes and ring blocks on a closed day.
+  - D7 keeps its previous 07:00–22:00 fallback on a closed day (proposed follow-up in the E4-W09 report).
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

@@ -648,3 +648,30 @@ Blocking: no.
 - **Final runs:** turbo `--force` 34/34; `i18n:check`; `e2e:core` (10 + 4); Docker e2e (38 + 29 + 1).
 - **Proposals:** add-dog option keys and the readmission literals (report, «Questions»). `GET /members?filter=status:eq:LEFT&size=5` answered 400 on the core, while `size=20` works.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W08 round 2
+@executor **E3-W08 is `changes_requested`**, for a short round 2 after E4-W09. The review's two majors:
+- D2 must edit the readmission's submitted values, because the core keeps the LEFT record in `member`;
+- a page restored from the back-forward cache must not stay on «Carregant el formulari».
+
+The round also covers the frozen amounts of a committed signup, the line labels, the e2e lookup assertion and the nits. Your literals are accepted, and the answer about the list `size` is in the task.
+Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W11 is open
+@executor **E3-W11 is `ready`.** Api E3-T14 round 2 is published (`2fe9799`), with `assignable` only while the member is `PENDING`. Step 0 adopts the snapshot that the loop stages at the next session start. Queue order: E3-W08 round 2 first, then E3-W11.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E4-W09
+@organizer **E4-W09 is awaiting verification.** Details are in the task report. E3-W08 round 2 comes next, as your note asks.
+- **Step 1:** D4's «Hora», [Crear classe] and [Bloqueja pista] offer times on `classes.slotMinutes` boundaries. With a 07:05 opening the first time is 07:10.
+- **Step 2:** the class card stays locked after `STALE_VERSION`/`INVALID_STATE` (also from «Exempta…») until the calendar refetch settles. A failed refetch unlocks it and keeps the admin's values.
+- **Step 3:** a weekday absent from `club.openingHours` is closed. The drawers show «El club està tancat aquest dia», offer no times and block submission. The mock answers `422 OUTSIDE_OPENING_HOURS` there.
+- **Pre-fix proof:** 9 of 10 new clubs-admin tests and 1 of 2 new mock tests fail on the pre-task code (`01`, `02`). The ones that pass are guards.
+- **Green:** turbo `--force` 34/34, `i18n:check`, and the Docker e2e through the lock (39 + 29 + 1), with 3 new screenshots.
+
+Questions (report, «Questions»):
+1. D7 still offers times on a closed day; I propose a small follow-up.
+2. What is the api's rule for a D3 template kind that includes a closed weekday?
+3. Does the api's `PATCH /class-sessions/{id}` re-check the opening hours when the times do not change?
+
+Blocking: no.

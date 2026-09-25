@@ -1,0 +1,156 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (8 tests | 1 failed | 6 skipped) 91ms
+   ❯ E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) (2)
+     × R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) > R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS
+AssertionError: promise resolved "{ data: { atRisk: false, …(22) }, …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "data": {
++     "atRisk": false,
++     "cancellation": null,
++     "capacity": 5,
++     "capacityMode": "AUTO",
++     "counters": {
++       "booked": 0,
++       "waiting": 0,
++     },
++     "date": "2026-08-16",
++     "description": null,
++     "displayDescription": "B",
++     "endTime": "11:00",
++     "endsAt": "2026-08-16T09:00:00Z",
++     "id": "cls-2026-08-16-2",
++     "inconsistencyIds": [],
++     "instructorIds": [
++       "instructor-marc",
++     ],
++     "levelIds": [
++       "level-b",
++     ],
++     "notes": null,
++     "origin": null,
++     "ringId": "ring-central",
++     "riskExempt": false,
++     "startTime": "10:00",
++     "startsAt": "2026-08-16T08:00:00Z",
++     "state": "ACTIVE",
++     "version": 1,
++     "weekId": "week-2026-08-10",
++   },
++   "response": FetchResponse {
++     Symbol(state): {
++       "aborted": false,
++       "body": {
++         "length": null,
++         "source": null,
++         "stream": ReadableStream {
++           "constructor": [Function ReadableStream],
++           Symbol(kType): "ReadableStream",
++           Symbol(kState): {
++             "controller": ReadableByteStreamController {
++               Symbol(kType): "ReadableByteStreamController",
++               Symbol(kState): {
++                 "autoAllocateChunkSize": undefined,
++                 "byobRequest": null,
++                 "cancelAlgorithm": undefined,
++                 "closeRequested": false,
++                 "highWaterMark": 0,
++                 "pendingPullIntos": [],
++                 "pullAgain": false,
++                 "pullAlgorithm": undefined,
++                 "pulling": false,
++                 "queue": [],
++                 "queueTotalSize": 0,
++                 "started": true,
++                 "stream": [Circular],
++               },
++             },
++             "disturbed": true,
++             "reader": ReadableStreamDefaultReader {
++               Symbol(kType): "ReadableStreamDefaultReader",
++               Symbol(kState): {
++                 "close": {
++                   "promise": Promise {},
++                   "reject": [Function anonymous],
++                   "resolve": [Function anonymous],
++                 },
++                 "readRequests": [],
++                 "stream": [Circular],
++               },
++             },
++             "state": "closed",
++             "storedError": undefined,
++             "transfer": {
++               "port1": undefined,
++               "port2": undefined,
++               "promise": undefined,
++               "writable": undefined,
++             },
++           },
++           Symbol(nodejs.webstream.isClosedPromise): {
++             "promise": Promise {},
++             "reject": [Function anonymous],
++             "resolve": [Function anonymous],
++           },
++         },
++       },
++       "cacheState": "",
++       "headersList": HeadersList {
++         "cookies": null,
++         Symbol(headers map): Map {
++           "content-type" => {
++             "name": "Content-Type",
++             "value": "application/json",
++           },
++           "content-length" => {
++             "name": "Content-Length",
++             "value": "506",
++           },
++         },
++         Symbol(headers map sorted): null,
++       },
++       "rangeRequested": false,
++       "requestIncludesCredentials": false,
++       "status": 201,
++       "statusText": "Created",
++       "timingAllowPassed": false,
++       "timingInfo": null,
++       "type": "default",
++       "urlList": [
++         "https://core.example.test/api/v1/class-sessions",
++       ],
++     },
++     Symbol(headers): Headers {},
++   },
+  }
+
+ ❯ src/mocks/calendar-handlers.test.ts:270:72
+    268|       Object.fromEntries(Object.entries(value).filter(([day]) => day !…
+    269|     );
+    270|     await expect(client.POST("/class-sessions", { body: sundayClass })…
+       |                                                                        ^
+    271|       code: "OUTSIDE_OPENING_HOURS",
+    272|       status: 422,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 6 skipped (8)
+   Start at  19:40:35
+   Duration  604ms (transform 44%, import 38%, tests 17%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/calendar-handlers.test.ts -t E4-W09

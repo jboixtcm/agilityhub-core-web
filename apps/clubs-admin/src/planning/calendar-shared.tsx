@@ -49,13 +49,51 @@ export function timeOf(total: number): string {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
-/** `HH:mm` options every `step` minutes between `open` and `close` (both included). */
-export function timeOptions(open: string, close: string, step: number): string[] {
+/** `value` rounded up to a multiple of `step`. */
+function ceilTo(value: number, step: number): number {
+  return Math.ceil(value / step) * step;
+}
+
+function slotTimes(from: number, to: number, step: number): string[] {
   const options: string[] = [];
-  for (let value = minutesOf(open); value <= minutesOf(close); value += Math.max(step, 1)) {
-    options.push(timeOf(value));
-  }
+  for (let value = ceilTo(from, step); value <= to; value += step) options.push(timeOf(value));
   return options;
+}
+
+/**
+ * `HH:mm` options on `step` boundaries (multiples of `step` from midnight, S06 §3) between `open`
+ * and `close`, both included: an opening at 07:05 with 10-minute slots starts at 07:10.
+ */
+export function timeOptions(open: string, close: string, step: number): string[] {
+  return slotTimes(minutesOf(open), minutesOf(close), Math.max(step, 1));
+}
+
+/** One day's window of `club.openingHours` (a closed day has none: R-02-09). */
+export interface OpeningWindow {
+  close: string;
+  open: string;
+}
+
+/**
+ * Start and end options of a range inside an opening window, both on `step` boundaries (S06 §3):
+ * the shortest range is `minimum` rounded up to whole steps (so `to − from` stays a multiple of
+ * `step`), the first start is the opening rounded up and the last end is at or before the closing
+ * time. A closed day offers none.
+ */
+export function rangeOptions(
+  opening: OpeningWindow | null,
+  step: number,
+  minimum: number,
+): { ends: string[]; starts: string[] } {
+  if (opening === null) return { ends: [], starts: [] };
+  const size = Math.max(step, 1);
+  const shortest = ceilTo(Math.max(minimum, 1), size);
+  const open = minutesOf(opening.open);
+  const close = minutesOf(opening.close);
+  return {
+    ends: slotTimes(ceilTo(open, size) + shortest, close, size),
+    starts: slotTimes(open, close - shortest, size),
+  };
 }
 
 /** `value` when it is an option; otherwise the first option after it, or the last one. */
@@ -217,16 +255,8 @@ export async function loadCalendarSettings(client: ApiClient): Promise<CalendarS
   };
 }
 
-export type OpeningHours = Partial<Record<string, { close: string; open: string }>>;
-
-export async function loadOpeningHours(client: ApiClient): Promise<OpeningHours> {
-  try {
-    const value = (await client.GET("/club/opening-hours")).data?.value;
-    return typeof value === "object" && value !== null ? value : {};
-  } catch {
-    return {};
-  }
-}
+/** `club.openingHours` (R-02-09): one window per weekday; a weekday that is absent is closed. */
+export type OpeningHours = Partial<Record<string, OpeningWindow>>;
 
 const weekdayKeys = [
   "SUNDAY",
@@ -238,10 +268,27 @@ const weekdayKeys = [
   "SATURDAY",
 ] as const;
 
-/** Opening window of a date (`club.openingHours`), 07:00–22:00 when the club has none. */
-export function openingOf(hours: OpeningHours, date: string): { close: string; open: string } {
+/**
+ * The product default of `club.openingHours` (CATALEG_PARAMETRES: dl–dg 07:00–22:00), used only
+ * when the club's value cannot be read; the api still checks every time against the real one.
+ */
+export const defaultOpeningHours: OpeningHours = Object.fromEntries(
+  weekdayKeys.map((day) => [day, { close: "22:00", open: "07:00" }]),
+);
+
+export async function loadOpeningHours(client: ApiClient): Promise<OpeningHours> {
+  try {
+    const value = (await client.GET("/club/opening-hours")).data?.value;
+    return typeof value === "object" && value !== null ? value : defaultOpeningHours;
+  } catch {
+    return defaultOpeningHours;
+  }
+}
+
+/** Opening window of a date (`club.openingHours`); `null` when the club is closed that weekday. */
+export function openingOf(hours: OpeningHours, date: string): OpeningWindow | null {
   const key = weekdayKeys[new Date(`${date}T12:00:00Z`).getUTCDay()] ?? "MONDAY";
-  return hours[key] ?? { close: "22:00", open: "07:00" };
+  return hours[key] ?? null;
 }
 
 export function useCalendarErrorMessage() {
