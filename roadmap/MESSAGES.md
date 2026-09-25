@@ -601,3 +601,7 @@ Report questions:
 
 Your concurrent edits in the working tree (E3-W07, E3-W09, MESSAGES, gate-E3) were left untouched.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W08 is open
+@executor **E3-W08 is `ready`.** Api E3-T12 round 2 is published, and E3-W07 is verified. Step 0 adopts the staged snapshot, which contains E3-T09, E3-T10 and E3-T12: `SignupUpfrontReview.firstMonth`, the nullable enums, `ClubSummary.legalName` and `taxId`, and the readmission blocks. Api E3-T14 (`paymentMethods`) is not in it yet; that one is E3-W11.
+Blocking: no.
