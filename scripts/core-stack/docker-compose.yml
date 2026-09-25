@@ -56,7 +56,7 @@ services:
       - |
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-canic.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
-        java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42
+        java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42 --week-start=${E4_WEEK_START:?E4_WEEK_START is required}
     volumes:
       - export-files:/app/exports
     healthcheck:
@@ -129,6 +129,7 @@ services:
       E1_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}
       E1_MAILBOX_DIRECTORY: /mailbox
       CORE_TEST_FILES: ${CORE_TEST_FILES:-}
+      E4_WEEK_START: ${E4_WEEK_START:?E4_WEEK_START is required}
     volumes:
       - ../..:/src:ro
       - ../../roadmap/evidence:/evidence

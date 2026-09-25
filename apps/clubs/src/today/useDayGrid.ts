@@ -45,15 +45,14 @@ function writeDateToLocation(date: string): void {
 
 /**
  * `?date=` when it is a real date; otherwise the club-local today. A present but invalid value
- * («2026-13-01», «hola») is replaced in the address so a shared link never crashes the page.
+ * («2026-13-01», «hola») must be replaced in the address (`rewrite`) so a shared link never
+ * crashes the page; the caller does it after mounting, never during render.
  */
-function initialDate(timeZone: string): string {
+function initialDate(timeZone: string): { date: string; rewrite: boolean } {
   const value = new URLSearchParams(window.location.search).get("date");
-  if (value === null) return clubToday(timeZone);
-  if (parsePlainDate(value) !== undefined) return value;
-  const today = clubToday(timeZone);
-  writeDateToLocation(today);
-  return today;
+  if (value === null) return { date: clubToday(timeZone), rewrite: false };
+  if (parsePlainDate(value) !== undefined) return { date: value, rewrite: false };
+  return { date: clubToday(timeZone), rewrite: true };
 }
 
 type DayGridState =
@@ -64,9 +63,14 @@ type DayGridState =
 /** Selected day (`?date=` or the club-local today) + `GET /day-grid` of that day. */
 export function useDayGrid(client: ApiClient, view: DayGridViewParam) {
   const { timeZone } = useBranding();
-  const [date, setDateState] = useState(() => initialDate(timeZone));
+  const [initial] = useState(() => initialDate(timeZone));
+  const [date, setDateState] = useState(initial.date);
   const [state, setState] = useState<DayGridState>({ status: "loading" });
   const [reload, setReload] = useState(0);
+
+  useEffect(() => {
+    if (initial.rewrite) writeDateToLocation(initial.date);
+  }, [initial]);
 
   useEffect(() => {
     let active = true;

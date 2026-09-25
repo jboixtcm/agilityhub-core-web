@@ -115,6 +115,11 @@ export function formatTime(value: DateInput, locale: Locale, timeZone: string): 
   }).format(toDate(value));
 }
 
+/**
+ * Two business dates (the days they name) or two instants (in the club's zone). A business date
+ * mixed with an instant has no single zone that keeps both days (R-06-14), so it throws
+ * `RangeError` instead of shifting one end by a day.
+ */
 export function formatDateRange(
   start: DateInput,
   end: DateInput,
@@ -122,7 +127,10 @@ export function formatDateRange(
   timeZone: string,
   presentation: DatePresentation = "short",
 ): string {
-  const zone = zoneOf(start, timeZone) === zoneOf(end, timeZone) ? zoneOf(start, timeZone) : timeZone;
+  const zone = zoneOf(start, timeZone);
+  if (zoneOf(end, timeZone) !== zone) {
+    throw new RangeError("formatDateRange mixes a business date with an instant");
+  }
   return dateFormatter(locale, zone, presentation).formatRange(toDate(start), toDate(end));
 }
 

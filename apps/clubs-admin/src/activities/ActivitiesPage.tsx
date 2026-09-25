@@ -57,6 +57,27 @@ interface ListData {
 
 const LIST_KEY = "activities";
 const DEFAULT_COLUMNS = ["title", "date", "rings", "registrations", "state"];
+/** The response keys each column reads (R-07-13 dates and hours, «totes — bloquejades», «fins el»). */
+const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
+  date: ["date", "startTime", "endTime"],
+  registrationTo: ["registrationTo"],
+  registrations: ["registrations", "maxPlaces", "registrationTo", "state"],
+  rings: ["rings", "allRings", "location"],
+  slug: ["slug"],
+  state: ["state"],
+  title: ["title", "typeDisplay"],
+  type: ["type"],
+};
+
+/**
+ * `fields` of the list request: response keys only. The core answers `400 INVALID_FILTER` to a key
+ * it does not send, and an empty value (`null`, `false`) in every key it was not asked for; it
+ * always sends `id` (E4-W05, published core).
+ */
+export function activityFields(columns: readonly string[]): string {
+  const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
+  return [...new Set(["id", ...keys])].join(",");
+}
 const DEFAULT_FILTERS: UniversalFilter[] = [{ field: "deleted", operator: "eq", value: "false" }];
 
 export const stateTone: Readonly<Record<ActivityState, Tone>> = {
@@ -111,7 +132,7 @@ function useActivities(client: ApiClient, state: UniversalListState, reload: num
       .GET("/activities", {
         params: {
           query: {
-            fields: state.columns.join(","),
+            fields: activityFields(state.columns),
             filter: apiFilters(state.filters),
             page: state.page,
             ...(state.q === "" ? {} : { q: state.q }),

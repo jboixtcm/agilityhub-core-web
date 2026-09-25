@@ -30,6 +30,24 @@ interface ListData {
 type RegistrantMember = ActivityRegistrationListItem["member"];
 
 const DEFAULT_COLUMNS = ["member", "state", "registeredAt", "origin", "contact"];
+/** The response keys each column reads (`contact` is drawn from `member`). */
+const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
+  contact: ["member"],
+  member: ["member"],
+  origin: ["origin"],
+  registeredAt: ["registeredAt"],
+  state: ["state", "position", "cancelReason"],
+};
+
+/**
+ * `fields` of the list request: response keys only. The core answers `400 INVALID_FILTER` to a
+ * column key such as `contact`, and `null` in every key it was not asked for, so the row key
+ * (`registrationId`) and the row link (`member`) are always requested (E4-W05, published core).
+ */
+export function registrantFields(columns: readonly string[]): string {
+  const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
+  return [...new Set(["registrationId", "member", ...keys])].join(",");
+}
 // The api's largest page (CONVENCIONS_API §4); an activity may have more registrations (no
 // capacity limit, cancelled rows kept), so every page is read.
 const MEMBER_VALUES_SIZE = 1000;
@@ -175,7 +193,7 @@ export function ActivityRegistrantsPage({
         params: {
           path: { id: activityId },
           query: {
-            fields: state.columns.join(","),
+            fields: registrantFields(state.columns),
             filter: apiFilters(state.filters),
             page: state.page,
             ...(state.q === "" ? {} : { q: state.q }),
@@ -424,15 +442,18 @@ export function ActivityRegistrantsPage({
         <h1>{t("admin-activities:registrants.title", { title })}</h1>
       </header>
       <UniversalList<ActivityRegistrationListItem>
-        appliedFilters={(data?.appliedFilters ?? []).map((filter) => ({
-          field: filter.field,
-          fieldLabel: t(`admin-activities:registrants.filters.${filter.field}`, {
-            defaultValue: filter.field,
-          }),
-          operator: filter.op,
-          value: filterValue(filter.value),
-          valueLabel: valueLabel(filter.field, filterValue(filter.value)),
-        }))}
+        // The core echoes the path's own `activityId` among the applied filters: not the admin's.
+        appliedFilters={(data?.appliedFilters ?? [])
+          .filter((filter) => filter.field !== "activityId")
+          .map((filter) => ({
+            field: filter.field,
+            fieldLabel: t(`admin-activities:registrants.filters.${filter.field}`, {
+              defaultValue: filter.field,
+            }),
+            operator: filter.op,
+            value: filterValue(filter.value),
+            valueLabel: valueLabel(filter.field, filterValue(filter.value)),
+          }))}
         caption={t("admin-activities:registrants.caption")}
         columns={columns}
         {...(errorMessage === undefined ? {} : { error: errorMessage })}

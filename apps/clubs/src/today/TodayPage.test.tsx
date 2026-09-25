@@ -10,7 +10,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TodayPage } from "./TodayPage";
-import { clubToday } from "./useDayGrid";
+import { clubToday, useDayGrid } from "./useDayGrid";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -251,15 +251,32 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
       http.get("*/api/v1/day-grid", () =>
         HttpResponse.json({
           columns: [
-            { color: "var(--ah-color-info)", name: "Petita", ringId: "ring-petita", shortName: "PET" },
+            {
+              color: "var(--ah-color-info)",
+              name: "Petita",
+              ringId: "ring-petita",
+              shortName: "PET",
+            },
           ],
           date: "2026-08-04",
           dayOfWeek: "TUESDAY",
           rows: [
             {
               cells: [
-                { classId: "cls-a", description: "A+B", endTime: "11:00", kind: "CLASS", ringId: "ring-petita" },
-                { classId: "cls-b", description: "Obediència", endTime: "11:00", kind: "CLASS", ringId: null },
+                {
+                  classId: "cls-a",
+                  description: "A+B",
+                  endTime: "11:00",
+                  kind: "CLASS",
+                  ringId: "ring-petita",
+                },
+                {
+                  classId: "cls-b",
+                  description: "Obediència",
+                  endTime: "11:00",
+                  kind: "CLASS",
+                  ringId: null,
+                },
               ],
               time: "10:00",
             },
@@ -269,6 +286,7 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
         }),
       ),
     );
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     await renderToday();
     const grid = await screen.findByRole("table", { name: "Quadre del dia" });
 
@@ -279,6 +297,14 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     ).toEqual(["Hora", "PET"]);
     expect(within(grid).getByText("A+B")).toBeVisible();
     expect(screen.queryByText("Sense")).not.toBeInTheDocument();
+    // Intended: a cell whose ring matches no column («Obediència», `ringId: null` without the
+    // api's «Sense» column) has nowhere to go, so it is not drawn — never silently: development
+    // builds log it (E4-W03 review #2).
+    expect(screen.queryByText("Obediència")).not.toBeInTheDocument();
+    expect(warn).toHaveBeenCalledWith(
+      "[DayGrid] cells without a matching column are not drawn: cls-b (ringId null)",
+    );
+    warn.mockRestore();
   });
 
   it.each(["2026-13-01", "2026-08-32", "2026-02-30", "hola"])(
@@ -295,6 +321,33 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
       expect(screen.getByRole("button", { name: "dt 4" })).toHaveAttribute("aria-pressed", "true");
     },
   );
+
+  it("rewrites an invalid ?date= after mounting, never during render (E4-W03 review #4)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-08-03T23:30:00Z"));
+    window.history.replaceState(null, "", "/avui?date=hola");
+    const client = createApiClient({
+      baseUrl: `${window.location.origin}/api/v1`,
+      getLocale: () => "ca",
+    });
+    const addressDuringRender: string[] = [];
+    function Probe() {
+      const grid = useDayGrid(client, "member");
+      addressDuringRender.push(window.location.search);
+      return <output>{grid.date}</output>;
+    }
+    render(
+      <BrandingProvider branding={branding}>
+        <Probe />
+      </BrandingProvider>,
+    );
+
+    expect(addressDuringRender[0]).toBe("?date=hola");
+    expect(await screen.findByText("2026-08-04")).toBeVisible();
+    await waitFor(() => {
+      expect(window.location.search).toBe("?date=2026-08-04");
+    });
+  });
 
   it.each([
     ["Pacific/Auckland", "2026-08-04", "dt 4 d’agost", "dt 4"],

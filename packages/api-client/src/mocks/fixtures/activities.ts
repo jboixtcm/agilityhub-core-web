@@ -616,10 +616,13 @@ export function registeredActivity(
 ): components["schemas"]["RegisteredActivity"] {
   return {
     // As the api: without hours the start is `T00:00`; without an end, `endsAtLocal` is `null`
-    // (S07 «Canvis» 24-09).
+    // (S07 «Canvis» 24-09). `startTime`/`endTime` carry the hours themselves, `null` when absent
+    // (E5-T15), so a date-only activity never reads 0:00.
+    endTime: activity.endTime,
     endsAtLocal: activity.endTime === null ? null : `${activity.date}T${activity.endTime}`,
     id: activity.id,
     placeLabel: placeLabel(activity, locale),
+    startTime: activity.startTime,
     startsAtLocal: `${activity.date}T${activity.startTime ?? "00:00"}`,
     title: localized(activity.titleI18n, locale) ?? "",
   };
@@ -694,12 +697,14 @@ export function activityRow(
 ): ActivityRow {
   const registered = registeredActivity(activity, locale);
   return {
+    endTime: registered.endTime,
     endsAtLocal: registered.endsAtLocal,
     freeSeats: freeSeats(activity),
     id: activity.id,
     notBookableReason: null,
     placeLabel: registered.placeLabel,
     rowState: rowState(activity, waitlistModule),
+    startTime: registered.startTime,
     startsAtLocal: registered.startsAtLocal,
     title: registered.title,
     typeLabel: typeDisplay(activity, locale),

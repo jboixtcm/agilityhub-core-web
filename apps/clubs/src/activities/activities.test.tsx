@@ -246,9 +246,11 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
   it("03: never shows a dog, even when the data carries one", async () => {
     const withDog = {
       activity: {
+        endTime: "20:30",
         endsAtLocal: "2026-08-07T20:30",
         id: TOURNAMENT,
         placeLabel: "totes les pistes",
+        startTime: "18:30",
         startsAtLocal: "2026-08-07T18:30",
         title: "Torneig d'Estiu 2026",
       },
@@ -392,9 +394,11 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
   it("03: a waitlisted registration shows «en llista d'espera»", async () => {
     const registration: ActivityRegistrationSummary = {
       activity: {
+        endTime: "12:00",
         endsAtLocal: "2026-08-22T12:00",
         id: WORKSHOP,
         placeLabel: "Cadells",
+        startTime: "10:00",
         startsAtLocal: "2026-08-22T10:00",
         title: "Taller de contactes",
       },
@@ -414,9 +418,11 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
   it("25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice", async () => {
     const done: ActivityRegistrationSummary = {
       activity: {
+        endTime: "13:00",
         endsAtLocal: "2025-07-12T13:00",
         id: "activity-seminari-obstacles",
         placeLabel: "Central",
+        startTime: "09:00",
         startsAtLocal: "2025-07-12T09:00",
         title: "Seminari d'obstacles",
       },

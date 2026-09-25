@@ -1,4 +1,4 @@
-import type { CSSProperties, MouseEvent } from "react";
+import { type CSSProperties, type MouseEvent, useEffect } from "react";
 
 import { ScheduleCell } from "./schedule-grid";
 
@@ -155,9 +155,16 @@ function cellText(
   }
 }
 
+/** Vite development builds (and Vitest); production builds replace it with `false`. */
+function isDevelopmentBuild(): boolean {
+  return (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
+}
+
 /**
  * Screens 10 and 23 (and the desktop day views): rings × start times of form D. Pure presenter —
- * the page maps the api response and decides which cells are pressable.
+ * the page maps the api response and decides which cells are pressable. A cell whose `ringId`
+ * matches no column has nowhere to go: it is not drawn, and development builds log it (R-06-12
+ * form D makes it unreachable against a correct api; an inactive or missing ring would hide it).
  */
 export function DayGrid({
   columns: allColumns,
@@ -169,6 +176,16 @@ export function DayGrid({
   view,
 }: DayGridProps) {
   const colorOf = new Map(allColumns.map((column) => [column.id, column.color]));
+  const unplaced = rows
+    .flatMap((row) => row.cells)
+    .filter((cell) => !colorOf.has(cell.ringId ?? DAY_GRID_NO_RING))
+    .map((cell) => `${cell.id} (ringId ${cell.ringId ?? "null"})`)
+    .join(", ");
+  useEffect(() => {
+    if (unplaced !== "" && isDevelopmentBuild()) {
+      console.warn(`[DayGrid] cells without a matching column are not drawn: ${unplaced}`);
+    }
+  }, [unplaced]);
   const style = {
     gridTemplateColumns: `var(--ah-day-grid-time, 2.25rem) repeat(${String(allColumns.length)}, minmax(0, 1fr))`,
   } satisfies CSSProperties;

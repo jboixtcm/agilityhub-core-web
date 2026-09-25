@@ -39,6 +39,8 @@ type ActivityDocumentRequest = components["schemas"]["ActivityDocumentRequest"];
 type ActivityCancellationRequest = components["schemas"]["ActivityCancellationRequest"];
 type ActivityRegistrationRequest = components["schemas"]["ActivityRegistrationRequest"];
 type RegistrationCancellationRequest = components["schemas"]["RegistrationCancellationRequest"];
+type ActivityRegistrationListItem = components["schemas"]["ActivityRegistrationListItem"];
+type ActivityListItem = components["schemas"]["ActivityListItem"];
 interface PublicationRequest {
   adminText?: string | null;
   cancelBookings?: boolean;
@@ -268,6 +270,64 @@ const ACTIVITY_FIELDS = [
 const REGISTRATION_FIELDS = ["state", "origin", "registeredAt", "memberId"];
 // `GET /activity-registrations/export` also takes `activityId` (the activity's registrants).
 const REGISTRATION_EXPORT_FIELDS = ["activityId", ...REGISTRATION_FIELDS];
+/** The response keys of `ActivityRegistrationListItem`: the only values `fields` accepts. */
+const REGISTRATION_ITEM_KEYS = [
+  "cancelReason",
+  "cancelledAt",
+  "member",
+  "origin",
+  "position",
+  "registeredAt",
+  "registrationId",
+  "state",
+];
+/** The response keys of `ActivityListItem`; the core always sends `id`. */
+const ACTIVITY_ITEM_KEYS = [
+  "allRings",
+  "createdAt",
+  "date",
+  "endTime",
+  "id",
+  "location",
+  "maxPlaces",
+  "registrationTo",
+  "registrations",
+  "rings",
+  "slug",
+  "startTime",
+  "state",
+  "title",
+  "type",
+  "typeDisplay",
+];
+
+/**
+ * A list's `fields` as the core applies it (seen on the published core, E4-W05): a key that is not
+ * a response key is `400 INVALID_FILTER`, and every key that was not asked for comes back empty —
+ * `null`, or `false` for a flag — except the ones the core always sends (`always`). `null` = no
+ * `fields`: whole items.
+ */
+function fieldsProjection<Item extends object>(
+  url: URL,
+  itemKeys: readonly string[],
+  always: readonly string[],
+): ((item: Item) => Item) | null | undefined {
+  const raw = url.searchParams.get("fields");
+  if (raw === null || raw.trim() === "") return null;
+  const keys = raw
+    .split(",")
+    .map((key) => key.trim())
+    .filter((key) => key !== "");
+  if (!keys.every((key) => itemKeys.includes(key))) return undefined;
+  const kept = new Set([...always, ...keys]);
+  return (item) =>
+    Object.fromEntries(
+      Object.entries(item).map(([key, value]) => [
+        key,
+        kept.has(key) ? value : typeof value === "boolean" ? false : null,
+      ]),
+    ) as Item;
+}
 
 /** The list's `q` over the activity titles in the reader's locale. */
 function searchActivities(
@@ -476,7 +536,12 @@ export const activityHandlers = [
     if (!roles().some((role) => role === "ADMIN" || role === "INSTRUCTOR")) return forbidden();
     const url = new URL(request.url);
     const filters = parseFilters(url);
-    if (filters === undefined || !knownFields(filters, ACTIVITY_FIELDS)) {
+    const projection = fieldsProjection<ActivityListItem>(url, ACTIVITY_ITEM_KEYS, ["id"]);
+    if (
+      filters === undefined ||
+      !knownFields(filters, ACTIVITY_FIELDS) ||
+      projection === undefined
+    ) {
       return apiError("INVALID_FILTER", "Invalid activity filter", 400);
     }
     const locale = readerLocale(request);
@@ -495,12 +560,9 @@ export const activityHandlers = [
             ? activity.createdAt
             : `${activity.date}T${activity.startTime ?? "00:00"}`,
     );
+    const items = ordered.map((activity) => activityListItem(activity, locale));
     return HttpResponse.json(
-      page(
-        url,
-        ordered.map((activity) => activityListItem(activity, locale)),
-        filters,
-      ),
+      page(url, projection === null ? items : items.map(projection), filters),
     );
   }),
   http.get("*/api/v1/activities/filter-values", ({ request }) => {
@@ -799,7 +861,7 @@ export const activityHandlers = [
       registration.cancelReason = "ACTIVITY_CANCELLED";
       registration.cancelledAt = now;
       registration.cancelledBy = "SYSTEM";
-      registration.position = null;
+      // A waitlisted registration keeps its position once cancelled (E5-T15).
     }
     activity.state = "CANCELLED";
     activity.cancellation = {
@@ -820,7 +882,16 @@ export const activityHandlers = [
     if (activity === undefined) return notFound();
     const url = new URL(request.url);
     const filters = parseFilters(url);
-    if (filters === undefined || !knownFields(filters, REGISTRATION_FIELDS)) {
+    const projection = fieldsProjection<ActivityRegistrationListItem>(
+      url,
+      REGISTRATION_ITEM_KEYS,
+      [],
+    );
+    if (
+      filters === undefined ||
+      !knownFields(filters, REGISTRATION_FIELDS) ||
+      projection === undefined
+    ) {
       return apiError("INVALID_FILTER", "Invalid registration filter", 400);
     }
     const rows = activityState.registrations.filter(
@@ -838,7 +909,12 @@ export const activityHandlers = [
             ? normalized(registration.member.fullName.split(" ").slice(1).join(" "))
             : registration.registeredAt,
     );
-    return HttpResponse.json(page(url, ordered.map(registrationListItem), filters));
+    const items = ordered.map(registrationListItem);
+    // As the core: the path's activity comes back last among the applied filters.
+    const applied = [...filters, { field: "activityId", op: "eq", value: activity.id }];
+    return HttpResponse.json(
+      page(url, projection === null ? items : items.map(projection), applied),
+    );
   }),
   http.post("*/api/v1/activity-registrations", async ({ request }) => {
     const disabled = moduleDisabled();
@@ -956,7 +1032,7 @@ export const activityHandlers = [
     registration.cancelReason = impersonated ? "ADMIN" : "MEMBER";
     registration.cancelledAt = new Date().toISOString();
     registration.cancelledBy = impersonated ? "ADMIN" : "MEMBER";
-    registration.position = null;
+    // A waitlisted registration keeps its position once cancelled (E5-T15); an active one has none.
     if (wasActive) promote(activity);
     return HttpResponse.json(registrationResource(registration, activity, readerLocale(request)));
   }),

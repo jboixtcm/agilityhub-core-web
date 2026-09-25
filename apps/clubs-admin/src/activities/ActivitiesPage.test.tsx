@@ -1225,3 +1225,42 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
     expect(within(card).queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
   });
 });
+
+describe("T-07-29 E4-W05 the registrants list against the published core", () => {
+  it("S07 §6 CONVENCIONS_API §4 asks `fields` in response keys (never «contact»), always with the row key and the member", async () => {
+    const lists = recordRequests(`/activities/${WORKSHOP}/registrations`);
+    await renderRegistrantsPage(WORKSHOP);
+    const table = await screen.findByRole("table");
+    await waitFor(() => {
+      expect(within(table).getAllByText("inscrita")).toHaveLength(10);
+    });
+    expect(
+      lists.seen
+        .filter((entry) => entry.url.searchParams.has("fields"))
+        .at(-1)
+        ?.url.searchParams.get("fields"),
+    ).toBe("registrationId,member,state,position,cancelReason,registeredAt,origin");
+    // The core echoes the path's `activityId` among the applied filters: no chip for it.
+    expect(screen.queryByText(/activityId/u)).toBeNull();
+    expect(screen.queryByText(/^Filtre \(\d+\)/u)).toBeNull();
+    lists.stop();
+  });
+
+  it("S07 §6 with only the «Contacte» column the rows keep their key and member (the core answers null to keys not asked for)", async () => {
+    const lists = recordRequests(`/activities/${WORKSHOP}/registrations`);
+    await renderRegistrantsPage(WORKSHOP, "?fields=contact");
+    const table = await screen.findByRole("table");
+    await waitFor(() => {
+      expect(within(table).getAllByText(/@example\.test/u).length).toBeGreaterThan(0);
+    });
+    expect(
+      lists.seen
+        .filter((entry) => entry.url.searchParams.has("fields"))
+        .at(-1)
+        ?.url.searchParams.get("fields"),
+    ).toBe("registrationId,member");
+    // 12 distinct rows: every row kept its own `registrationId` as the key.
+    expect(within(table).getAllByRole("row")).toHaveLength(13);
+    lists.stop();
+  });
+});

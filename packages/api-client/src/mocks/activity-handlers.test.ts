@@ -435,6 +435,76 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     expect(workshop.data?.counters).toEqual({ active: 10, waiting: 1 });
   });
 
+  it("CONVENCIONS_API §4 registrants `fields` as the published core: a column key is 400 INVALID_FILTER, keys not asked for come back null", async () => {
+    await expect(
+      client.GET("/activities/{id}/registrations", {
+        params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "member,contact" } },
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+    const projected = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "state" } },
+    });
+    expect(projected.data?.items[0]).toMatchObject({
+      member: null,
+      registrationId: null,
+      state: "ACTIVE",
+    });
+    const whole = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    expect(whole.data?.items[0]?.registrationId).toEqual(expect.any(String));
+
+    // The activities list: `id` always travels; a flag not asked for reads `false`.
+    const activities = await client.GET("/activities", { params: { query: { fields: "title" } } });
+    const tournament = activities.data?.items.find((item) => item.title === "Torneig d'Estiu 2026");
+    expect(tournament).toMatchObject({
+      allRings: false,
+      id: ACTIVITY_IDS.tournament,
+      startTime: null,
+      typeDisplay: null,
+    });
+    await expect(
+      client.GET("/activities", { params: { query: { fields: "title,contact" } } }),
+    ).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+  });
+
+  it("E5-T15 a cancelled waitlisted registration keeps its position; a promoted one has none", async () => {
+    // registration-taller-12 waits at position 2 of the full «Taller de contactes».
+    const waiting = activityState.registrations.find(
+      (registration) => registration.id === "registration-taller-12",
+    );
+    if (waiting === undefined) throw new TypeError("Missing registration-taller-12");
+    waiting.member = {
+      emails: ["biel.roca@example.test"],
+      fullName: "Biel Roca",
+      id: MEMBER_ID,
+      memberNumber: "118",
+      phones: [],
+    };
+    mockScenario("member");
+    const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "registration-taller-12" } },
+    });
+    expectValid("ActivityRegistration", cancelled.data);
+    expect(cancelled.data).toMatchObject({ position: 2, state: "CANCELLED" });
+
+    mockScenario("admin");
+    const registrants = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    expect(
+      registrants.data?.items
+        .filter((item) =>
+          ["registration-taller-11", "registration-taller-12"].includes(item.registrationId),
+        )
+        .map((item) => [item.registrationId, item.state, item.position ?? null]),
+    ).toEqual([
+      ["registration-taller-11", "WAITLISTED", 1],
+      ["registration-taller-12", "CANCELLED", 2],
+    ]);
+  });
+
   it("R-07-04 requires the title in the club's default locale, not in ca", async () => {
     const titleOnly = async (title: Record<string, string>) => {
       const current = await client.GET("/activities/{id}", {

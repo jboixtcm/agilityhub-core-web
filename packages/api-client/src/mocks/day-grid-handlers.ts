@@ -5,6 +5,7 @@ import {
   dayGridClassSessions,
   dayGridFixture,
   dayGridMemberSession,
+  dayGridStaffSession,
   dayGridState,
   isDayGridFixtureDate,
   memberBlockView,
@@ -68,7 +69,12 @@ export const dayGridHandlers = [
     const url = new URL(request.url);
     const date = url.searchParams.get("date") ?? "";
     if (!isRealDate(date)) return validationError("date");
-    const view = url.searchParams.get("view") === "instructor" ? "instructor" : "member";
+    // As the core: `view` defaults to `member` (absent or empty); any other value, even «MEMBER»,
+    // is a bare `400 VALIDATION_ERROR` (no `fieldErrors`, unlike a bad `date`).
+    const view = (url.searchParams.get("view") ?? "") || "member";
+    if (view !== "member" && view !== "instructor") {
+      return apiError("VALIDATION_ERROR", "Validation failed", 400);
+    }
     const scenario = currentMockScenario();
     if (view === "instructor" && !isStaff(scenario)) return denied(scenario);
     const options = {
@@ -93,7 +99,7 @@ export const dayGridHandlers = [
     const scenario = currentMockScenario();
     if (!ownTenant(scenario)) return apiError("NOT_FOUND", "Class not found", 404);
     if (isStaff(scenario)) {
-      return HttpResponse.json(dayGridClassSessions().find((session) => session.id === id));
+      return HttpResponse.json(dayGridStaffSession(id));
     }
     const view = dayGridMemberSession(id, scenario.branding.modules);
     return view === undefined

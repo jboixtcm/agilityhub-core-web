@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ❯ src/format.test.ts (35 tests | 4 failed) 21ms
+   ❯ club-aware formats (35)
+     × R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Auckland 2ms
+     × R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Kiritimati 0ms
+     × R-06-14 ranges keep business dates whole and refuse mixed ends in Europe/Madrid 0ms
+     × R-06-14 ranges keep business dates whole and refuse mixed ends in America/Bogota 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Auckland
+ FAIL  src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Kiritimati
+ FAIL  src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Europe/Madrid
+ FAIL  src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in America/Bogota
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/format.test.ts:111:89
+    109|       "3/8/2026 – 9/8/2026",
+    110|     );
+    111|     expect(() => formatDateRange("2026-08-03", "2026-08-09T10:00:00Z",…
+       |                                                                                         ^
+    112|       RangeError,
+    113|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 31 passed (35)
+   Start at  00:45:09
+   Duration  190ms (transform 60%, import 20%, tests 19%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/format.test.ts

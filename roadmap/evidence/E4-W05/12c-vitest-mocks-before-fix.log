@@ -1,0 +1,600 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (17 tests | 2 failed) 173ms
+   ❯ E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) (14)
+     × CONVENCIONS_API §4 registrants `fields` as the published core: a column key is 400 INVALID_FILTER, keys not asked for come back null 6ms
+     × E5-T15 a cancelled waitlisted registration keeps its position; a promoted one has none 5ms
+ ❯ src/mocks/calendar-handlers.test.ts (10 tests | 1 failed) 464ms
+   ❯ E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) (7)
+     × E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not 48ms
+ ❯ src/mocks/day-grid-handlers.test.ts (15 tests | 4 failed) 584ms
+   ❯ E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) (15)
+     × E5-T15 gives staff the detail-only instructorNames and ring of a class 47ms
+     × answers 400 VALIDATION_ERROR on `view` to view="foo", and serves the member view without it 31ms
+     × answers 400 VALIDATION_ERROR on `view` to view="MEMBER", and serves the member view without it 30ms
+     × answers 400 VALIDATION_ERROR on `view` to view="", and serves the member view without it 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > CONVENCIONS_API §4 registrants `fields` as the published core: a column key is 400 INVALID_FILTER, keys not asked for come back null
+AssertionError: promise resolved "{ …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "data": {
++     "appliedFilters": [],
++     "items": [
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "laura.puig@example.test",
++           ],
++           "fullName": "Laura Puig",
++           "id": "member-taller-01",
++           "memberNumber": "200",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000100",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-20T09:00:00Z",
++         "registrationId": "registration-taller-01",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "marc.riera@example.test",
++           ],
++           "fullName": "Marc Riera",
++           "id": "member-taller-02",
++           "memberNumber": "203",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000101",
++               "prefix": "+34",
++             },
++             {
++               "label": null,
++               "number": "600000201",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-20T16:00:00Z",
++         "registrationId": "registration-taller-02",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "montse.prat@example.test",
++           ],
++           "fullName": "Montse Prat",
++           "id": "member-taller-03",
++           "memberNumber": "206",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000102",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-20T23:00:00Z",
++         "registrationId": "registration-taller-03",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "pau.grau@example.test",
++           ],
++           "fullName": "Pau Grau",
++           "id": "member-taller-04",
++           "memberNumber": "209",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000103",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-21T06:00:00Z",
++         "registrationId": "registration-taller-04",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "aina.ferrer@example.test",
++           ],
++           "fullName": "Aina Ferrer",
++           "id": "member-taller-05",
++           "memberNumber": "212",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000104",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-21T13:00:00Z",
++         "registrationId": "registration-taller-05",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "jordi.roig@example.test",
++           ],
++           "fullName": "Jordi Roig",
++           "id": "member-taller-06",
++           "memberNumber": "215",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000105",
++               "prefix": "+34",
++             },
++             {
++               "label": null,
++               "number": "600000205",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "BACKOFFICE",
++         "position": null,
++         "registeredAt": "2026-07-21T20:00:00Z",
++         "registrationId": "registration-taller-06",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "nuria.codina@example.test",
++           ],
++           "fullName": "Núria Codina",
++           "id": "member-taller-07",
++           "memberNumber": "218",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000106",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-22T03:00:00Z",
++         "registrationId": "registration-taller-07",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "oriol.serra@example.test",
++           ],
++           "fullName": "Oriol Serra",
++           "id": "member-taller-08",
++           "memberNumber": "221",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000107",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-22T10:00:00Z",
++         "registrationId": "registration-taller-08",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "clara.camps@example.test",
++           ],
++           "fullName": "Clara Camps",
++           "id": "member-taller-09",
++           "memberNumber": "224",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000108",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-22T17:00:00Z",
++         "registrationId": "registration-taller-09",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "arnau.sala@example.test",
++           ],
++           "fullName": "Arnau Sala",
++           "id": "member-taller-10",
++           "memberNumber": "227",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000109",
++               "prefix": "+34",
++             },
++             {
++               "label": null,
++               "number": "600000209",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": null,
++         "registeredAt": "2026-07-23T00:00:00Z",
++         "registrationId": "registration-taller-10",
++         "state": "ACTIVE",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "berta.pons@example.test",
++           ],
++           "fullName": "Berta Pons",
++           "id": "member-taller-11",
++           "memberNumber": "230",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000110",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "APP",
++         "position": 1,
++         "registeredAt": "2026-07-23T07:00:00Z",
++         "registrationId": "registration-taller-11",
++         "state": "WAITLISTED",
++       },
++       {
++         "cancelReason": null,
++         "cancelledAt": null,
++         "member": {
++           "emails": [
++             "guillem.costa@example.test",
++           ],
++           "fullName": "Guillem Costa",
++           "id": "member-taller-12",
++           "memberNumber": "233",
++           "phones": [
++             {
++               "label": null,
++               "number": "600000111",
++               "prefix": "+34",
++             },
++           ],
++         },
++         "origin": "BACKOFFICE",
++         "position": 2,
++         "registeredAt": "2026-07-23T14:00:00Z",
++         "registrationId": "registration-taller-12",
++         "state": "WAITLISTED",
++       },
++     ],
++     "page": 0,
++     "size": 50,
++     "totalItems": 12,
++     "totalPages": 1,
++   },
++   "response": FetchResponse {
++     Symbol(state): {
++       "aborted": false,
++       "body": {
++         "length": null,
++         "source": null,
++         "stream": ReadableStream {
++           "constructor": [Function ReadableStream],
++           Symbol(kType): "ReadableStream",
++           Symbol(kState): {
++             "controller": ReadableByteStreamController {
++               Symbol(kType): "ReadableByteStreamController",
++               Symbol(kState): {
++                 "autoAllocateChunkSize": undefined,
++                 "byobRequest": null,
++                 "cancelAlgorithm": undefined,
++                 "closeRequested": false,
++                 "highWaterMark": 0,
++                 "pendingPullIntos": [],
++                 "pullAgain": false,
++                 "pullAlgorithm": undefined,
++                 "pulling": false,
++                 "queue": [],
++                 "queueTotalSize": 0,
++                 "started": true,
++                 "stream": [Circular],
++               },
++             },
++             "disturbed": true,
++             "reader": ReadableStreamDefaultReader {
++               Symbol(kType): "ReadableStreamDefaultReader",
++               Symbol(kState): {
++                 "close": {
++                   "promise": Promise {},
++                   "reject": [Function anonymous],
++                   "resolve": [Function anonymous],
++                 },
++                 "readRequests": [],
++                 "stream": [Circular],
++               },
++             },
++             "state": "closed",
++             "storedError": undefined,
++             "transfer": {
++               "port1": undefined,
++               "port2": undefined,
++               "promise": undefined,
++               "writable": undefined,
++             },
++           },
++           Symbol(nodejs.webstream.isClosedPromise): {
++             "promise": Promise {},
++             "reject": [Function anonymous],
++             "resolve": [Function anonymous],
++           },
++         },
++       },
++       "cacheState": "",
++       "headersList": HeadersList {
++         "cookies": null,
++         Symbol(headers map): Map {
++           "content-type" => {
++             "name": "Content-Type",
++             "value": "application/json",
++           },
++           "content-length" => {
++             "name": "Content-Length",
++             "value": "4441",
++           },
++         },
++         Symbol(headers map sorted): null,
++       },
++       "rangeRequested": false,
++       "requestIncludesCredentials": false,
++       "status": 200,
++       "statusText": "OK",
++       "timingAllowPassed": false,
++       "timingInfo": null,
++       "type": "default",
++       "urlList": [
++         "https://core.example.test/api/v1/activities/activity-taller-contactes/registrations?fields=member%2Ccontact",
++       ],
++     },
++     Symbol(headers): Headers {},
++   },
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:443:6
+    441|         params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields…
+    442|       }),
+    443|     ).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+       |      ^
+    444|     const projected = await client.GET("/activities/{id}/registrations…
+    445|       params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > E5-T15 a cancelled waitlisted registration keeps its position; a promoted one has none
+AssertionError: expected { activity: { …(7) }, …(11) } to match object { position: 2, state: 'CANCELLED' }
+(22 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "position": 2,
++   "position": null,
+    "state": "CANCELLED",
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:492:28
+    490|     });
+    491|     expectValid("ActivityRegistration", cancelled.data);
+    492|     expect(cancelled.data).toMatchObject({ position: 2, state: "CANCEL…
+       |                            ^
+    493|
+    494|     mockScenario("admin");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not
+AssertionError: expected { atRisk: false, …(22) } to match object { instructorNames: [ 'Marc' ], …(1) }
+(25 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "instructorNames": [
+-     "Marc",
+-   ],
+-   "ring": {
+-     "id": "ring-central",
+-     "name": "Central",
++   "atRisk": false,
++   "cancellation": null,
++   "capacity": 5,
++   "capacityMode": "AUTO",
++   "counters": {
++     "booked": 4,
++     "waiting": 2,
+    },
++   "date": "2026-08-12",
++   "description": null,
++   "displayDescription": "B+C",
++   "endTime": "19:50",
++   "endsAt": "2026-08-12T17:50:00Z",
++   "id": "cls-2026-08-12-1850-0",
++   "inconsistencyIds": [],
++   "instructorIds": [
++     "instructor-marc",
++   ],
++   "levelIds": [
++     "level-b",
++     "level-c",
++   ],
++   "notes": null,
++   "origin": null,
++   "ringId": "ring-central",
++   "riskExempt": false,
++   "startTime": "18:50",
++   "startsAt": "2026-08-12T16:50:00Z",
++   "state": "ACTIVE",
++   "version": 1,
++   "weekId": "week-2026-08-10",
+  }
+
+ ❯ src/mocks/calendar-handlers.test.ts:108:25
+    106|     const validate = schema("ClassSession");
+    107|     expect(validate(detail.data), JSON.stringify(validate.errors, null…
+    108|     expect(detail.data).toMatchObject({
+       |                         ^
+    109|       instructorNames: ["Marc"],
+    110|       ring: { id: "ring-central", name: "Central" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/mocks/day-grid-handlers.test.ts > E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) > E5-T15 gives staff the detail-only instructorNames and ring of a class
+AssertionError: expected { atRisk: false, …(21) } to match object { instructorNames: [ 'Marc' ], …(1) }
+(24 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "instructorNames": [
+-     "Marc",
+-   ],
+-   "ring": {
+-     "id": "ring-central",
+-     "name": "Central",
++   "atRisk": false,
++   "cancellation": null,
++   "capacity": 5,
++   "capacityMode": "AUTO",
++   "counters": {
++     "booked": 5,
++     "waiting": 2,
+    },
++   "date": "2026-08-03",
++   "description": null,
++   "displayDescription": "B+C",
++   "endTime": "19:50",
++   "endsAt": "2026-08-03T17:50:00Z",
++   "id": "dg-cls-2026-08-03-1850-ring-central",
++   "inconsistencyIds": [],
++   "instructorIds": [
++     "instructor-marc",
++   ],
++   "levelIds": [],
++   "origin": null,
++   "ringId": "ring-central",
++   "riskExempt": false,
++   "startTime": "18:50",
++   "startsAt": "2026-08-03T16:50:00Z",
++   "state": "ACTIVE",
++   "version": 1,
++   "weekId": "week-2026-08-03",
+  }
+
+ ❯ src/mocks/day-grid-handlers.test.ts:48:37
+     46|   it("E5-T15 gives staff the detail-only instructorNames and ring of a…
+     47|     mockScenario("admin");
+     48|     expect(await getClass(classId)).toMatchObject({
+       |                                     ^
+     49|       instructorNames: ["Marc"],
+     50|       ring: { id: "ring-central", name: "Central" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/mocks/day-grid-handlers.test.ts > E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) > answers 400 VALIDATION_ERROR on `view` to view="foo", and serves the member view without it
+ FAIL  src/mocks/day-grid-handlers.test.ts > E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) > answers 400 VALIDATION_ERROR on `view` to view="MEMBER", and serves the member view without it
+ FAIL  src/mocks/day-grid-handlers.test.ts > E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) > answers 400 VALIDATION_ERROR on `view` to view="", and serves the member view without it
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ src/mocks/day-grid-handlers.test.ts:139:31
+    137|         { headers: { Authorization: "Bearer mock-access-token" } },
+    138|       );
+    139|       expect(response.status).toBe(400);
+       |                               ^
+    140|       expect(await response.json()).toMatchObject({
+    141|         code: "VALIDATION_ERROR",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 35 passed (42)
+   Start at  00:45:09
+   Duration  1.04s (tests 51%, import 26%, transform 23%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/day-grid-handlers.test.ts src/mocks/calendar-handlers.test.ts src/mocks/activity-handlers.test.ts

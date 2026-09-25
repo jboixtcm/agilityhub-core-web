@@ -104,6 +104,21 @@ describe("club-aware formats", () => {
     },
   );
 
+  it.each(zones)(
+    "R-06-14 ranges keep business dates whole and refuse mixed ends in %s",
+    (timeZone) => {
+      expect(formatDateRange("2026-08-03", "2026-08-09", "ca", timeZone).replace(/\s/g, " ")).toBe(
+        "3/8/2026 – 9/8/2026",
+      );
+      expect(() => formatDateRange("2026-08-03", "2026-08-09T10:00:00Z", "ca", timeZone)).toThrow(
+        RangeError,
+      );
+      expect(() => formatDateRange("2026-08-03T10:00:00Z", "2026-08-09", "ca", timeZone)).toThrow(
+        RangeError,
+      );
+    },
+  );
+
   it("accepts real business dates, leap days included", () => {
     expect(parsePlainDate("2028-02-29")?.toISOString()).toBe("2028-02-29T00:00:00.000Z");
     expect(isPlainDate("2026-08-04")).toBe(true);

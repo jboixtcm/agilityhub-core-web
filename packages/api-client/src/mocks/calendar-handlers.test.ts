@@ -100,6 +100,23 @@ describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)",
     ).rejects.toMatchObject({ code: "NOTHING_TO_VALIDATE", status: 422 });
   });
 
+  it("E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not", async () => {
+    const id = "cls-2026-08-12-1850-0";
+    const detail = await client.GET("/class-sessions/{id}", { params: { path: { id } } });
+    const validate = schema("ClassSession");
+    expect(validate(detail.data), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    expect(detail.data).toMatchObject({
+      instructorNames: ["Marc"],
+      ring: { id: "ring-central", name: "Central" },
+    });
+    const patched = await client.PATCH("/class-sessions/{id}", {
+      body: { notes: "Porteu aigua", version: 1 },
+      params: { path: { id } },
+    });
+    expect(patched.data).not.toHaveProperty("instructorNames");
+    expect(patched.data).not.toHaveProperty("ring");
+  });
+
   it("R-06-10 cancels with the notice text and R-06-09 checks the version", async () => {
     const id = "cls-2026-08-12-1850-0";
     await expect(

@@ -1,0 +1,118 @@
+{
+  "runId": "hkeu6e",
+  "weekStart": "2026-09-21",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "status": 200,
+    "weekId": "788d6e63-4224-48c6-a85e-480c236c143b",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-12"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-09-28"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 hkeu6e: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "3657fe12-5b05-43fb-bb2d-0b1fad76a3f5",
+    "at": "2026-09-25T23:01:33.122Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "1e14cb7e-c574-4991-bac8-bb9599c74c9a",
+          "type": "CLASS",
+          "id": "0be8c82e-b16b-4cfa-8567-4ef17583f4a0",
+          "from": "2026-10-07T18:00:00Z",
+          "to": "2026-10-07T19:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "067244a9-2824-4bae-8fcf-9b656904eb44"
+  },
+  "ringBlock": {
+    "id": "daff2c35-52d3-466b-9374-37e034acf38c",
+    "status": 201
+  },
+  "activitiesExport": {
+    "bytes": 4061,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-0101.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+    "status": 200,
+    "suggestedFilename": "canic_activities_20260926-0101.xlsx"
+  },
+  "tournamentSaturday": "2026-10-10",
+  "seminarConflicts": {
+    "conflicts": [
+      {
+        "ringId": "1e14cb7e-c574-4991-bac8-bb9599c74c9a",
+        "type": "CLASS",
+        "id": "2b42416e-d541-4ca2-a033-f50566c0b314",
+        "from": "2026-10-17T16:30:00Z",
+        "to": "2026-10-17T17:30:00Z",
+        "label": "A+B",
+        "bookedCount": 0
+      }
+    ],
+    "trainingBookings": []
+  },
+  "waitlistCa": {
+    "member": {
+      "after": "WAITLISTED",
+      "before": 3
+    },
+    "promoted": {
+      "after": "ACTIVE",
+      "before": 1
+    }
+  },
+  "registrantsExport": {
+    "bytes": 4652,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-0101.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A06661bcf-bd6c-45c1-b08a-50e3f29ab151&format=xlsx&sort=registeredAt%2Casc",
+    "status": 200,
+    "suggestedFilename": "canic_activity-registrations_20260926-0101.xlsx"
+  },
+  "waitlistEs": {
+    "joinedPosition": 4,
+    "promoted": 2
+  },
+  "seminarCancellation": {
+    "status": 200
+  },
+  "seminarRegistrants": [
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "ACTIVITY_CANCELLED",
+      "state": "CANCELLED"
+    }
+  ]
+}

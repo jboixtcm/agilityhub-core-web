@@ -43,6 +43,14 @@ describe("E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6
     expect(await getBlock(blockId)).toMatchObject({ createdByName: "Marc" });
   });
 
+  it("E5-T15 gives staff the detail-only instructorNames and ring of a class", async () => {
+    mockScenario("admin");
+    expect(await getClass(classId)).toMatchObject({
+      instructorNames: ["Marc"],
+      ring: { id: "ring-central", name: "Central" },
+    });
+  });
+
   it.each(["member", "impersonated"] as const)(
     "gives the %s the member projection of a class, never a cancelled one",
     async (scenario) => {
@@ -119,4 +127,30 @@ describe("E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6
       });
     },
   );
+
+  // As the published core answers (E4-W05): a bare 400 for an unknown `view`, the member view
+  // when it is absent or empty.
+  it.each(["foo", "MEMBER"])(
+    "answers 400 VALIDATION_ERROR with empty details to view=%j",
+    async (view) => {
+      mockScenario("member");
+      const response = await fetch(
+        `https://core.example.test/api/v1/day-grid?date=2026-08-04&view=${view}`,
+        { headers: { Authorization: "Bearer mock-access-token" } },
+      );
+      expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({ code: "VALIDATION_ERROR", details: {} });
+    },
+  );
+
+  it.each(["", undefined])("serves the member view to view=%j", async (view) => {
+    mockScenario("member");
+    const query = view === undefined ? "" : `&view=${view}`;
+    const response = await fetch(
+      `https://core.example.test/api/v1/day-grid?date=2026-08-04${query}`,
+      { headers: { Authorization: "Bearer mock-access-token" } },
+    );
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ view: "MEMBER" });
+  });
 });

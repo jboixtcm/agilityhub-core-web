@@ -824,7 +824,7 @@ export interface paths {
         };
         /**
          * classSession
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER including impersonation sees only ACTIVE/FINISHED; no notes or instructor counts. Instructor visibility follows R-06-12. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER including impersonation sees only ACTIVE/FINISHED; no notes or instructor counts. Instructor visibility follows R-06-12. ADMIN/INSTRUCTOR also get instructorNames[] and ring (null without a ring). Tenant comes from the JWT.
          */
         get: operations["classSession"];
         put?: never;
@@ -4539,7 +4539,10 @@ export interface components {
             date?: string | null;
             documents: components["schemas"]["ActivityDocument"][];
             endTime?: string | null;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @description Derived instant (E5-T15): for an activity without endTime it is the next local 00:00, which orders and finishes it. Clients display startTime/endTime, never this instant
+             */
             endsAt?: string | null;
             /** Format: int32 */
             freeSeats?: number | null;
@@ -4809,7 +4812,7 @@ export interface components {
             origin: "APP" | "BACKOFFICE";
             /**
              * Format: int32
-             * @description WAITLISTED only; null otherwise
+             * @description The waitlist position: set while WAITLISTED and kept after a waitlisted registration is cancelled; null once promoted, or if it was never waitlisted (E5-T15)
              */
             position: number | null;
             /** Format: date-time */
@@ -4869,6 +4872,8 @@ export interface components {
             type: "CLASS" | "RING_BLOCK";
         };
         ActivityRow: {
+            /** @description Club-local HH:mm (R-07-13); null when the activity has no end (E5-T15) */
+            endTime: string | null;
             /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09) */
             endsAtLocal: string | null;
             /** Format: int32 */
@@ -4878,6 +4883,8 @@ export interface components {
             placeLabel: string;
             /** @enum {string} */
             rowState: "OPEN" | "FULL_WAITLIST" | "FULL" | "NOT_BOOKABLE";
+            /** @description Club-local HH:mm (R-07-13); null without hours (E5-T15), so a date-only activity never reads 0:00 */
+            startTime: string | null;
             /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13) */
             startsAtLocal: string;
             title: string;
@@ -5673,12 +5680,16 @@ export interface components {
             id: string;
             inconsistencyIds: string[];
             instructorIds: string[];
+            /** @description Only in GET /class-sessions/{id} (E5-T15): the instructors' names, in instructorIds order */
+            instructorNames?: string[];
             levelIds: string[];
             /** @description ADMIN only; omitted for INSTRUCTOR */
             notes?: string | null;
             origin?: components["schemas"]["ClassOrigin"] | null;
             /** @description Only with COURSES */
             placementId?: string;
+            /** @description Only in GET /class-sessions/{id} (E5-T15), where it is always sent: the ring, null for a class without a ring */
+            ring?: components["schemas"]["ClassRing"] | null;
             ringId?: string | null;
             riskExempt: boolean;
             startTime: string;
@@ -7549,7 +7560,10 @@ export interface components {
             date: string;
             documents: components["schemas"]["ActivityDocument"][];
             endTime?: string | null;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @description Derived instant (E5-T15): for an activity without endTime it is the next local 00:00, which orders and finishes it. Clients display startTime/endTime, never this instant
+             */
             endsAt: string;
             /** Format: int32 */
             freeSeats?: number | null;
@@ -8507,10 +8521,14 @@ export interface components {
             reason?: string;
         };
         RegisteredActivity: {
+            /** @description Club-local HH:mm (R-07-13); null when the activity has no end (E5-T15) */
+            endTime: string | null;
             /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09) */
             endsAtLocal: string | null;
             id: string;
             placeLabel: string;
+            /** @description Club-local HH:mm (R-07-13); null without hours (E5-T15), so a date-only activity never reads 0:00 */
+            startTime: string | null;
             /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13) */
             startsAtLocal: string;
             title: string;

@@ -1,0 +1,9 @@
+{
+  "bytes": 15424,
+  "contentDisposition": "attachment; filename=\"canic_members_20260926-0041.xlsx\"",
+  "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "magic": "504b0304",
+  "request": "/api/v1/members/export?columns=fullName%2Cdogs%2Cplan%2CdisplayStatus&format=xlsx&sort=memberNumber%2Casc&filter=status%3Aeq%3AACTIVE",
+  "status": 200,
+  "suggestedFilename": "canic_members_20260926-0041.xlsx"
+}

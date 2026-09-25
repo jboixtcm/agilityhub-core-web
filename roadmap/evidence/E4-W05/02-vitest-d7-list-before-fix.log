@@ -1,0 +1,46 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/activities/ActivitiesPage.test.tsx (32 tests | 1 failed | 31 skipped) 144ms
+   ❯ T-07-29 D7 activities (list, maintenance, publication, cancellation) (21)
+     × draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips 143ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips
+AssertionError: expected [ 'Torneig d\'Estiu 2026 ·', …(4) ] to deeply equal [ …(5) ]
+
+- Expected
++ Received
+
+  [
+-   "Torneig d'Estiu 2026 · competició",
+-   "dv 7 · 18:30–20:30",
+-   "totes — bloquejades",
+-   "22/40 · fins el 6/08",
++   "Torneig d'Estiu 2026 ·",
++   "dv 7",
++   "Muntanya, Central, Carretera, Cadells, Petita",
++   "obertes · socis",
+    "publicada",
+  ]
+
+ ❯ src/activities/ActivitiesPage.test.tsx:124:65
+    122|     expect(await screen.findByRole("heading", { name: "Activitats" }))…
+    123|     expect(screen.getByRole("button", { name: "Nova activitat" })).toB…
+    124|     expect((await listRow("Torneig d'Estiu 2026")).slice(0, 5)).toEqua…
+       |                                                                 ^
+    125|       "Torneig d'Estiu 2026 · competició",
+    126|       "dv 7 · 18:30–20:30",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  00:18:54
+   Duration  1.16s (environment 35%, transform 26%, import 17%, tests 13%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx -t draws the four mockup rows

@@ -650,9 +650,15 @@ export const calendarHandlers = [
   }),
   http.get("*/api/v1/class-sessions/:id", ({ params }) => {
     const session = findSession(String(params.id));
-    return session === undefined
-      ? apiError("NOT_FOUND", "Class not found", 404)
-      : HttpResponse.json(sessionResponse(session));
+    if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
+    // Detail only (api E5-T15): the instructors' names in `instructorIds` order and the ring,
+    // always sent (`null` for a class without a ring).
+    const ring = catalogState.rings.find((candidate) => candidate.id === session.ringId);
+    return HttpResponse.json({
+      ...sessionResponse(session),
+      instructorNames: session.instructorIds.map(instructorName),
+      ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
+    });
   }),
   http.patch("*/api/v1/class-sessions/:id", async ({ params, request }) => {
     const current = findSession(String(params.id));

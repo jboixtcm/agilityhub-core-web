@@ -18,12 +18,13 @@ export const DAY_GRID_TENANT = brandingCanic.club.slug;
  * The api's «Sense» column (`scheduling.noRing` in the reader's language), sent last and only when
  * a class of the day has no ring.
  */
-const noRingColumn: Readonly<Record<"ca" | "en" | "es", Pick<DayGridColumn, "name" | "shortName">>> =
-  {
-    ca: { name: "Sense pista", shortName: "Sense" },
-    en: { name: "No ring", shortName: "None" },
-    es: { name: "Sin pista", shortName: "Sin" },
-  };
+const noRingColumn: Readonly<
+  Record<"ca" | "en" | "es", Pick<DayGridColumn, "name" | "shortName">>
+> = {
+  ca: { name: "Sense pista", shortName: "Sense" },
+  en: { name: "No ring", shortName: "None" },
+  es: { name: "Sin pista", shortName: "Sin" },
+};
 
 /** The api's «Sense» column in the reader's language (also used by the D4 calendar world). */
 export function noRingDayGridColumn(locale: "ca" | "en" | "es"): DayGridColumn {
@@ -243,6 +244,27 @@ export function isDayGridFixtureDate(date: string): boolean {
   return date in days;
 }
 
+/**
+ * `GET /class-sessions/{id}` for ADMIN/INSTRUCTOR: the instructor projection plus the detail-only
+ * `instructorNames` and `ring` (always sent, `null` without a ring) of api E5-T15.
+ */
+export function dayGridStaffSession(id: string): ClassSession | undefined {
+  for (const [date, items] of Object.entries(days)) {
+    for (const item of items) {
+      if (item.kind !== "CLASS" || classId(date, item) !== id) continue;
+      const session = dayGridClassSessions().find((candidate) => candidate.id === id);
+      if (session === undefined) return undefined;
+      const ring = catalogState.rings.find((candidate) => candidate.id === item.ring);
+      return {
+        ...session,
+        instructorNames: [item.instructor],
+        ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
+      };
+    }
+  }
+  return undefined;
+}
+
 /** `ClassSession` instructor projection (no `notes`) of every fixture class. */
 export function dayGridClassSessions(): ClassSession[] {
   return Object.entries(days).flatMap(([date, items]) =>
@@ -440,12 +462,7 @@ export function dayGridFixture(
       shortName: ring.shortName,
     }));
   return {
-    columns: classWithoutRing
-      ? [
-          ...ringColumns,
-          noRingDayGridColumn(options.locale),
-        ]
-      : ringColumns,
+    columns: classWithoutRing ? [...ringColumns, noRingDayGridColumn(options.locale)] : ringColumns,
     date,
     dayOfWeek: dayNames[(new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7] ?? "MONDAY",
     rows: [...cells.keys()].sort().map((time) => ({ cells: cells.get(time) ?? [], time })),

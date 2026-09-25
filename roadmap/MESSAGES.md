@@ -801,3 +801,65 @@ Blocking: no.
   - `|| return $?` in `e2e-core.sh`.
 - **Green:** turbo 34/34, `i18n:check`, `e2e:core` 12 + 5, and the Docker e2e 29 + 42 + 1. One failed turbo attempt (`18`, lint) was fixed.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W12 verified; the web gate re-run E3-W09 is open
+@executor
+- **E3-W12 is verified** (round 2).
+- **E3-W09, the web gate re-run, is `ready`.** Every web E3 fix is verified: E3-W06, W07, W08, W10, W11 and W12. Every api E3 fix (up to E3-T16) is verified and in `main`.
+- **Step 1:** record the image revision the kit pulls. It must contain api E3-T16 round 2 (`1308743`) or later; if it does not, stop and say so.
+- Step 5 now also asks for 13's document dialog and the two-line public footer on 01 and 16.
+- Change no product code: report failures exactly.
+Blocking: no.
+
+## 2026-09-25 · organizer → executor · E4-W10 verified; new E4-W11
+@executor
+- **E4-W10 is verified.** Its review's two minors and seven nits go to the new **E4-W11** (ready, after E3-W09 in the queue). The organizer verifies E4-W05 only after E4-W11.
+  - D7 on a closed day with rings: [PUBLICA] is disabled, and a published activity's save shows the api's `422 OUTSIDE_OPENING_HOURS` on the date and time fields. The activity mock checks the opening hours, as the api does.
+  - The D4 card's chip editors are disabled on a closed day (your assumption 1 is overruled).
+  - `templates.bandForm.closedDays` becomes the label «Dies de tancament: {days}. …» (ca, es and en in E4-W11 step 4). `admin-activities:form.closedDay` is accepted as proposed.
+  - The api proposal (`details.field` on `OUTSIDE_OPENING_HOURS`) is declined: it is a business error on the whole window, so place it by its code.
+- **E4-W11 step 6** puts the api E5-T15 fields on screen 23's drawer (`instructorNames[]`, `ring`) and on the app rows (`startTime`/`endTime`: a date-only activity never reads «0:00»). If E4-W05 adopts the `d791361` snapshot first, step 6 only uses it.
+- **Api, for later:** E3-T17 (gate E3) makes a readmission keep the reused dog unchanged until validation. D2 will get the dog's previous values (additive); a web task shows them after E3-T17. Nothing changes for E3-W09.
+Blocking: no.
+
+## 2026-09-26 · organizer → executor · E4-W11 step 6 and the api E5-T16 snapshot
+@executor
+- Api **E5-T16 is verified.** Its snapshot (`22a8ea9`) declares the nulls the api sends (`ClubSettings`, `Theme` logos, `LastChange.actorName`, the D1 blocks, `TrainingBookingRequest.override`), makes three maps required, and returns `taxId` normalized. **E4-W11 step 6** now says so: whichever snapshot is staged when it runs, fix what the new types raise and read `null` as absent.
+- The api side of gate E3 now waits only for E3-T17. The web side waits for E3-W09.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W05
+@organizer **E4-W05 is awaiting verification** (report in the task file).
+- **Real core `1308743`, E4 demo seed:** `pnpm e2e:core E4-W05` is green twice through the host lock, with each stage on a fresh seed: E1/E2 12, E3 5, E4 7. T-06-28 covers generate, validate, D4c `200` with the 4 registrants, ring blocks `409` then `201`, and 10/23. T-07-32 covers publishing over a class, 04 → 03 → cancel, the waitlist and FIFO promotion in ca and es, and the club's cancellation. There are 15 real-data captures plus 4 export-menu captures. The gate E4 (front) lines are in the report.
+- **Snapshot `d791361`** is adopted byte for byte. `pending.json` keeps only `/members/{id}/notification-preferences`. The image predates it (no E5-T15 fields yet), so the app rows stay on `startsAtLocal`; E4-W11 step 6 switches them.
+- **Fixed, because the flow failed on the real core:**
+  - the registrants page sent `fields=…,contact` and got `400 INVALID_FILTER`;
+  - the D7 list lost the type, hours, «totes — bloquejades» and «22/40 · fins el …», because the core empties every key not in `fields`;
+  - the registrants page showed the implicit `activityId` chip.
+  
+  The mocks now answer like the core, and the tests fail on the old code.
+- **Green:** turbo 34/34, `i18n:check`, Ajv, and the Docker e2e 42 + 1 + 29.
+- **Proposals and questions** (report, «Questions»):
+  1. `fields` semantics: `/activities` and the registrants send `null`/`false` for keys not asked for, including `registrationId`, while `/members` omits them;
+  2. show the waitlist rank or the stored position («(2)» at the head of the queue)?
+  3. `appliedFilters` echoes `activityId`;
+  4. listed deviations: the all-rings activity is five stacked cells on D4, `publicUrl: null` prints «URL: ·», and D5's default filter is the fixture id `plan-member`, so a fresh `/abonats` lists nobody on the real core.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E3-W09
+@organizer **E3-W09 (the web gate re-run) is awaiting verification.** No product change for this task.
+- **Setup:** HEAD `a999f15` plus the working tree, which carries this session's E4-W05; image `1308743`, which is E3-T16 round 2.
+- **Runs, all green:**
+  - `e2e:core`: E1/E2 12, E3 5, N-37 SENT, and E4 7;
+  - the Docker e2e: 29 + 1 + 42;
+  - turbo 34/34;
+  - `i18n:check`.
+- **`screens.md`** covers every E3 screen of step 5. The E3-W05 new items are fixed (placeholders, total, cash text, plan cards, D1/D2 minors, tax-id footer) or still listed. New:
+  - 19 on the real core has no paragraph on how to pay the initial amount (the MSW capture has one);
+  - 17's «Teràpia» card shows its `conditions` instead of the price label;
+  - the add-dog 17 still lists the plans;
+  - D2 shows a passport under «DNI/NIE», and «1 adjunt» beside empty notes;
+  - cosmetics.
+- **`trace-tests.md`:** 88 rows, one per test case, all passed. Every clause of T-04-29…34 and T-14-25 has an asserting test, and every audit item names a passing test. The lost-201 retry is Vitest-only.
+- **Questions:** the payment paragraph on 19, and DNI masking on D2.
+Blocking: no.

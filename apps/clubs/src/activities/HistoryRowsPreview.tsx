@@ -11,9 +11,11 @@ export function HistoryRowsPreview() {
   // survive tree-shaking and ship in the production bundle.
   const done: ActivityRegistrationSummary = {
     activity: {
+      endTime: "13:00",
       endsAtLocal: "2025-07-12T13:00",
       id: "activity-seminari-obstacles",
       placeLabel: "Central",
+      startTime: "09:00",
       startsAtLocal: "2025-07-12T09:00",
       title: "Seminari d'obstacles",
     },
@@ -27,9 +29,11 @@ export function HistoryRowsPreview() {
 
   const cancelledByClub: ActivityRegistrationSummary = {
     activity: {
+      endTime: "12:00",
       endsAtLocal: "2025-07-19T12:00",
       id: "activity-lliga-social-2",
       placeLabel: "totes les pistes",
+      startTime: "09:00",
       startsAtLocal: "2025-07-19T09:00",
       title: "Lliga social — 2a jornada",
     },

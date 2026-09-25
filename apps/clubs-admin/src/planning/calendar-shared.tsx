@@ -173,9 +173,8 @@ export function parseMaskedDate(value: string): string | undefined {
   if (match === null) return undefined;
   const [, day, month, year] = match;
   const iso = `${year ?? ""}-${month ?? ""}-${day ?? ""}`;
-  return isIsoDate(iso) && new Date(`${iso}T12:00:00Z`).toISOString().startsWith(iso)
-    ? iso
-    : undefined;
+  // `isIsoDate` (→ `isPlainDate`) already rejects 31/02 and 2026-13-01.
+  return isIsoDate(iso) ? iso : undefined;
 }
 
 /** Masked typing for `dd/mm/aaaa` (digits only, slashes inserted). */

@@ -1,0 +1,241 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/activities/ActivitiesPage.test.tsx (32 tests | 1 failed | 30 skipped) 171ms
+   ❯ T-07-29 E4-W05 the registrants list against the published core (2)
+     × S07 §6 CONVENCIONS_API §4 asks `fields` in response keys (never «contact»), always with the row key and the member 130ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W05 the registrants list against the published core > S07 §6 CONVENCIONS_API §4 asks `fields` in response keys (never «contact»), always with the row key and the member
+TestingLibraryElementError: Found multiple elements with the text: /activityId/u
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<summary[39m
+  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+[36m>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+  [0mFiltre (1): activityId = «activity-taller-contactes»[0m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [0m▾[0m
+  [36m</span>[39m
+[36m</summary>[39m
+
+Ignored nodes: comments, script, style
+[36m<span>[39m
+  [0mactivityId = «activity-taller-contactes»[0m
+[36m</span>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"activity-back"[39m
+        [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mTorna a l'activitat[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mInscrits — Taller de contactes[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Inscrits de l'activitat"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca un abonat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca un abonat"[39m
+              [33mplaceholder[39m=[32m"Cerca un abonat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0minscrita[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"WAITLISTED"[39m
+            [36m>[39m
+              [0men llista d'espera[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"CANCELLED"[39m
+            [36m>[39m
+              [0manul·lada[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): activityId = «activity-taller-contactes»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mactivityId = «activity-taller-contactes»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de activityId"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"origin"[39m
+                  [36m>[39m
+                    [0mOrigen[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registeredAt"[39m
+                  [36m>[39m
+                    [0mData d'inscripció[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/activities/ActivitiesPage.test.tsx:1243:19
+    1241|     ).toBe("registrationId,member,state,position,cancelReason,register…
+    1242|     // The core echoes the path's `activityId` among the applied filte…
+    1243|     expect(screen.queryByText(/activityId/u)).toBeNull();
+       |                   ^
+    1244|     expect(screen.queryByText(/^Filtre \(\d+\)/u)).toBeNull();
+    1245|     lists.stop();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 30 skipped (32)
+   Start at  00:21:40
+   Duration  948ms (transform 32%, environment 28%, tests 20%, import 15%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx -t E4-W05
