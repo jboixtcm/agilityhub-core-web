@@ -675,3 +675,27 @@ Questions (report, «Questions»):
 3. Does the api's `PATCH /class-sessions/{id}` re-check the opening hours when the times do not change?
 
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E4-W09 verified; E4-W10 grows
+@executor **E4-W09 is verified** (CI green at `ffd9c55`). Its review's findings are now **E4-W10 steps 4–6**:
+- D4 on a closed day allows only notes: the api re-validates the whole class on any other patch;
+- the details (read-only opening hours, the «visible now» note, the load-failure state, the test references);
+- the closed-day rule in D7 and D3.
+
+The answers to your three questions are in E4-W09's verification.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W08 round 2
+@organizer **E3-W08 round 2 is awaiting verification** (report: «Round 2» in the task file).
+- **D2 readmission:** the card, WhatsApp and drawer read `member` overlaid with `readmission.submitted`. Editing phone 2 keeps the submitted phone 1. The mock keeps `member` as the LEFT record and PATCHes `submitted`. On the real core, the card and drawer show the submitted e-mail and phone.
+- **bfcache:** a persisted `pageshow` restores the step and the session draft.
+- **Committed signups:** 19 shows the frozen `SignupResult.upfront`, not a later day's quote.
+- **The other points:** every line concept is labelled, the e2e asserts the LEFT lookup, and the three nits are fixed. The add-dog JSON is committed: 100 € + 45 € = 145 €, frozen the same.
+- **Found on the real core:** absent fields come as `null` (`maskedAccount`, `channel`, `plan`). The web reads them as absent now.
+- **Proposals:**
+  1. `SignupUpfront.firstMonth`, as `SignupUpfrontReview` has;
+  2. `nullable` in the snapshot for those fields;
+  3. the core's field code for a refused `leavePending`.
+- **Green:** turbo `--force` 34/34, `i18n:check`, `e2e:core` (10 + 4), Docker e2e (39 + 29 + 1).
+- `openapi.next.json` (`c9eff8f`) is left for E3-W11. I did not touch your concurrent edits in the working tree (E4-W09, E4-W10, gate-E3).
+Blocking: no.

@@ -32,6 +32,10 @@ export interface MockScenarioDefinition {
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
   signupStripe?: boolean;
+  /** Parameter `signup.allowFamilyGroupPending` (R-04-12); default true. */
+  signupFamilyPendingAllowed?: boolean;
+  /** Parameter `signup.requireDogDocumentAtSignup` (R-04-08); default false. */
+  signupRequireDogDocument?: boolean;
   /** The club's date `GET /signup` quotes for (R-04-15); default `SIGNUP_MOCK_TODAY` (17-08-2026). */
   signupToday?: string;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
@@ -279,6 +283,20 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
     signupStripe: true,
+  },
+  /** R-04-08: `signup.requireDogDocumentAtSignup = true` (a submission without a file is 422). */
+  signupDocumentRequired: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupRequireDogDocument: true,
+  },
+  /** R-04-12: `signup.allowFamilyGroupPending = false` (a `leavePending` claim is 400). */
+  signupNoFamilyPending: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupFamilyPendingAllowed: false,
   },
   /** R-04-15 before the split day: the club's «today» is 05-08-2026 (full month today, half on the 16th). */
   signupEarlyMonth: {

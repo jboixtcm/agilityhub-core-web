@@ -200,7 +200,7 @@ The full lists, with file:line, are in the two source reports. The ones routed t
 ## Fix plan
 The E3 fix tasks run before the E4–E8 tasks of each queue, because the executors take the lowest stage first.
 
-| Task | Repo | Content | Depends on | Status 25-09 20:30 |
+| Task | Repo | Content | Depends on | Status 25-09 21:00 |
 |---|---|---|---|---|
 | **E3-T07** | api | Baseline audit run on `de0e17f` | — | verified |
 | **E3-T08** | api | The smoke (step 1); M5 api side (a quote per plan in `GET /signup`); M6, M7, M8 (+ `planOptions`), M9, M10 (E39), M11 server side (+ `warnDays` in the signup view), M20 api side (E36), M21; the dog `version`; the signup flags; E35 | E3-T07 | verified (2 rounds) |
@@ -215,7 +215,7 @@ The E3 fix tasks run before the E4–E8 tasks of each queue, because the executo
 | **E3-W05** | web | Baseline audit run | — | verified |
 | **E3-W06** | web | B1, M1, M2, M19, the payment texts under the right method; the signup minors (no api change needed) | E3-W04 | verified (2 rounds) |
 | **E3-W07** | web | Snapshot adoption; D2: M12–M15, M11 web side, the refund warning; the D2 and D1 minors (the E38 readmission moved to E3-W08) | E3-W06, api E3-T08 | verified (2 rounds) |
-| **E3-W08** | web | M3, M4, M5 from the per-plan quote; M16 web side; M20 web side (E36); the signup flags; 16/17 and the public shell; E38 readmission old/new; the three narrow cases of the E3-W06 round-2 review | E3-W07, api E3-T08/T09/T10/T12 | changes requested (round 1) |
+| **E3-W08** | web | M3, M4, M5 from the per-plan quote; M16 web side; M20 web side (E36); the signup flags; 16/17 and the public shell; E38 readmission old/new; the three narrow cases of the E3-W06 round-2 review | E3-W07, api E3-T08/T09/T10/T12 | round 2 in progress |
 | **E3-W10** | web | Test stability (added 24-09 20:45, re-scoped 21:05; not an audit finding): a build-time budget for the MSW mock worlds (E4-W02 round 4's uncached `clubInstant` made 5 of 5 e2e runs time out), the flaky D3b URL test (CI red at `d95b199`), and a lighter e2e container copy | — | verified (2 rounds) |
 | **E3-W11** | web | D2 follow-ups of the E3-W07 round-2 review: the quote dropped at reload start, the payment methods from the D2 view; the E3 stage of the real-core e2e for every task id (added 25-09) | E3-W07, api E3-T14 | ready (opened 25-09 19:45) |
 | **E3-W12** | web | Screen 13 without `/parameters`: the document types from `GET /me/dogs`, «Nivell» only when the dog carries `level`, mocks that refuse `/parameters` to members (added 25-09, from the E4-W08 report); the footer's registered-office line | api E3-T16 | not_open (opened when E3-T16 is published) |

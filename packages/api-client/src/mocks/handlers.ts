@@ -70,6 +70,7 @@ import {
   signupDogDocuments,
   signupReviewVariant,
   storeSignupDogDocuments,
+  withReadmissionValues,
 } from "./fixtures/signup-review";
 import {
   exportFileName,
@@ -889,7 +890,19 @@ function signupConfiguration(request: Request) {
     today: signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
     ...(request.headers.has("Authorization") ? { member: signupMemberFixture } : {}),
   });
+  config.requireDogDocumentAtSignup = scenario.signupRequireDogDocument === true;
+  if (config.allowFamilyGroupPending !== undefined) {
+    config.allowFamilyGroupPending = scenario.signupFamilyPendingAllowed !== false;
+  }
   return config;
+}
+
+/** R-04-08: with `signup.requireDogDocumentAtSignup` a submission needs at least one file. */
+function missingRequiredDogDocument(request: Request, documents: readonly { files: readonly unknown[] }[] | undefined) {
+  return (
+    signupConfiguration(request).requireDogDocumentAtSignup === true &&
+    !(documents ?? []).some((document) => document.files.length > 0)
+  );
 }
 
 /** The quote of the plan a submission requested, as the api computes it for the submission. */
@@ -1413,6 +1426,13 @@ export const handlers = [
     if (!body.consents.privacyPolicy.accepted) {
       return validationError([{ code: "REQUIRED", field: "consents.privacyPolicy.accepted" }]);
     }
+    // R-04-12, T-04-16: «Deixa-ho pendent» only with `signup.allowFamilyGroupPending`.
+    if (
+      body.familyGroupClaim?.leavePending === true &&
+      signupConfiguration(request).allowFamilyGroupPending !== true
+    ) {
+      return validationError([{ code: "INVALID", field: "familyGroupClaim.leavePending" }]);
+    }
     if (body.consents.privacyPolicy.version !== "2026-09") {
       return apiError("CONSENT_VERSION_OUTDATED", "Consent version outdated", 422);
     }
@@ -1423,6 +1443,9 @@ export const handlers = [
         : !plans.some((plan) => plan.id === body.planId)
     ) {
       return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
+    }
+    if (missingRequiredDogDocument(request, body.dog.documents)) {
+      return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
     if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
@@ -1452,6 +1475,9 @@ export const handlers = [
     const replay = signupReplays.get(`add-dog:${idempotencyKey}`);
     if (replay !== undefined) {
       return HttpResponse.json(replay, { status: 201 });
+    }
+    if (missingRequiredDogDocument(request, body.documents)) {
+      return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
     if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
@@ -2078,9 +2104,13 @@ export const handlers = [
       ) {
         return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
       }
-      const payment = paymentMethod === undefined ? undefined : signupPaymentMethod(member, paymentMethod);
+      // E38 (the api's `MemberService.edit`): a readmission's edits change the submitted values;
+      // `member` stays the LEFT record until the validation applies them.
+      const readmission = signupView.readmission;
+      const person = readmission === undefined ? member : withReadmissionValues(member, readmission.submitted);
+      const payment = paymentMethod === undefined ? undefined : signupPaymentMethod(person, paymentMethod);
       const updated: components["schemas"]["Member"] = {
-        ...member,
+        ...person,
         ...memberPatch,
         ...(contactEmails === undefined
           ? {}
@@ -2104,9 +2134,9 @@ export const handlers = [
               },
             }),
         fullName: [
-          body.firstName ?? member.firstName,
-          body.lastName1 ?? member.lastName1,
-          body.lastName2 ?? member.lastName2,
+          body.firstName ?? person.firstName,
+          body.lastName1 ?? person.lastName1,
+          body.lastName2 ?? person.lastName2,
         ].filter(Boolean).join(" "),
         version: member.version + 1,
       };
@@ -2120,17 +2150,18 @@ export const handlers = [
         ];
       }
       // The view's `version` is the member's (S04 §6); each dog keeps its own.
-      signupView.member = updated;
       signupView.version = updated.version;
-      // E38: a readmission's edits change the submitted values, never the LEFT record.
-      if (signupView.readmission !== undefined) {
+      if (readmission !== undefined) {
         const submitted = readmissionValues(updated);
         signupView.readmission = {
-          ...signupView.readmission,
-          changedFields: readmissionChanges(signupView.readmission.current, submitted),
+          ...readmission,
+          changedFields: readmissionChanges(readmission.current, submitted),
           submitted,
         };
+        signupView.member = { ...member, version: updated.version };
+        return HttpResponse.json(signupView.member);
       }
+      signupView.member = updated;
       return HttpResponse.json(updated);
     }
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {

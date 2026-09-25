@@ -9,7 +9,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider, contrastRatio } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -1191,7 +1191,10 @@ describe("M19 the consent version sent is the accepted one (R-04-17)", () => {
  * The production navigator is `window.location.assign`: a full page load. The stub keeps only what
  * a browser keeps (the session storage): the old page is unmounted and a fresh page mounts.
  */
-function stubFullPageLoads(initialPath: string, { delayMs }: { delayMs?: number } = {}): string[] {
+function stubFullPageLoads(
+  initialPath: string,
+  { aborted = false, delayMs }: { aborted?: boolean; delayMs?: number } = {},
+): string[] {
   const url = new URL(initialPath, window.location.origin);
   const loads: string[] = [];
   const assign = (next: string) => {
@@ -1204,6 +1207,8 @@ function stubFullPageLoads(initialPath: string, { delayMs }: { delayMs?: number 
       cleanup();
       void renderSignup({ path, productionNavigator: true }).catch(() => undefined);
     };
+    // An aborted navigation (or a Back before it finished) never loads the next document.
+    if (aborted) return;
     if (delayMs === undefined) queueMicrotask(load);
     else setTimeout(load, delayMs);
   };
@@ -1308,13 +1313,14 @@ describe("E3-W06 round 2", () => {
     for (const method of ["Domiciliació", "Targeta", "Efectiu"]) {
       expect(screen.getByRole("button", { name: method })).toBeDisabled();
     }
-    for (const option of screen.getAllByRole("radio")) expect(option).toBeDisabled();
+    // E3-W08 round 2 #3: the committed start is a frozen line, no longer a choice.
+    expect(screen.queryAllByRole("radio")).toEqual([]);
+    expect(upfrontLines()).toContain("Alta avui, 17 d’agost (mig mes) 30,00 €");
     expect(screen.getByLabelText("Accepto la política de privacitat")).toBeDisabled();
     expect(screen.getByLabelText("Autoritzo l'ús de la meva imatge")).toBeDisabled();
     expect(screen.queryByRole("button", { name: "ENVIA LA SOL·LICITUD" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
-    fireEvent.click(screen.getAllByRole("radio")[1] ?? document.body);
     expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
     expect((savedDraft().payment as Record<string, unknown>).type).toBe("SEPA_DD");
     expect((savedDraft().payment as Record<string, unknown>).firstMonthOption).toBe("TODAY");
@@ -1586,6 +1592,112 @@ describe("E3-W08 step 1: the «Pagament inicial» card is the selected plan's qu
   });
 });
 
+/** The card's lines (label + amount), start options excluded. */
+function upfrontLines(): string[] {
+  return Array.from(upfrontCard().querySelectorAll(".signup-upfront__line")).map((line) =>
+    Array.from(line.children)
+      .map((part) => part.textContent.replaceAll(/\s+/gu, " ").trim())
+      .join(" "),
+  );
+}
+
+describe("E3-W08 round 2: the card after the signup exists, and the line concepts", () => {
+  it("#3 submitted on 15-08 with a full month, retried on 16-08: the card keeps the frozen full month and its total", async () => {
+    const navigate = vi.fn();
+    setSignupMockToday("2026-08-15");
+    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    expect(startOptions()).toEqual([
+      "Alta avui, 15 d’agost (mes complet)60,00 €",
+      "Alta el dia 16 d’agost (mig mes)30,00 €",
+    ]);
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+
+    // Stripe's cancel URL, on the next day: the live quote now offers half a month today.
+    cleanup();
+    setSignupMockToday("2026-08-16");
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    expect(upfrontLines()).toEqual(["Entrada (1 gos) 100,00 €", "Alta avui, 15 d’agost (mes complet) 60,00 €"]);
+    expect(startOptions()).toEqual([]);
+    expect(upfrontTotal()).toBe("160,00 €");
+    expect(upfrontCard()).not.toHaveTextContent(/mig mes/u);
+  });
+
+  it("#3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card", async () => {
+    const navigate = vi.fn();
+    const eur = (amountMinor: number) => ({ amountMinor, currency: "EUR" });
+    server.use(
+      http.post("*/api/v1/signup", () =>
+        HttpResponse.json(
+          {
+            checkout: { required: true },
+            memberId: "member-signup-357",
+            signupToken: "mock-signup-token",
+            upfront: {
+              additionalDog: null,
+              lines: [
+                { amount: eur(10000), concept: "ENTRY_FEE", id: "0c2461d2-e783-459a-b9cd-1d081c914501", paidAmount: eur(0), status: "DUE" },
+                { amount: eur(3000), concept: "FIRST_MONTH", id: "0c2461d2-e783-459a-b9cd-1d081c914502", paidAmount: eur(0), status: "DUE" },
+              ],
+              totalDue: eur(13000),
+            },
+          },
+          { status: 201 },
+        ),
+      ),
+    );
+    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    cleanup();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    expect(upfrontLines()).toEqual(["Entrada (1 gos) 100,00 €", "Alta avui, 17 d’agost (mig mes) 30,00 €"]);
+    expect(upfrontTotal()).toBe("130,00 €");
+  });
+
+  it("#3 a committed add-dog shows the api's frozen additional-dog choice", async () => {
+    const navigate = vi.fn();
+    setSignupMockToday("2026-08-17");
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament", scenario: "signupStripe" });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith(expect.stringMatching(/^https:\/\/checkout\.test\//u));
+    });
+    cleanup();
+    setSignupMockToday("2026-08-26");
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament?cs=cancel", scenario: "signupStripe" });
+    expect(upfrontLines()).toEqual([
+      "Entrada (1 gos) 100,00 €",
+      "Alta avui, 17 d’agost (quota addicional d'aquest mes) 30,00 €",
+    ]);
+    expect(upfrontTotal()).toBe("130,00 €");
+  });
+
+  it("#4 every concept of a quote line has its label; the start concepts are left to the start options", async () => {
+    const config = await signupConfigJson();
+    const upfront = config.upfront as { planQuotes: { lines: unknown[]; planId: string }[] };
+    const monthly = upfront.planQuotes.find((quote) => quote.planId === MEMBER_PLAN);
+    monthly?.lines.push(
+      { amount: { amountMinor: 6000, currency: "EUR" }, concept: "FIRST_MONTH" },
+      { amount: { amountMinor: 3000, currency: "EUR" }, concept: "ADDITIONAL_DOG_FEE" },
+    );
+    server.use(http.get("*/api/v1/signup", () => HttpResponse.json(config)));
+    seedDraft();
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(upfrontLines()).toEqual(["Entrada (1 gos) 100,00 €"]);
+    expect(startOptions()).toHaveLength(2);
+  });
+});
+
 describe("E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16)", () => {
   it.each([
     ["public signup", false, "/apuntat-hi/gos"],
@@ -1708,6 +1820,18 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     );
     expect(therapy).not.toHaveTextContent("Classes de teràpia individual");
     expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€/u);
+  });
+
+  it("round 2 #6: a maintenance plan without an entry fee shows its minimum fee and no «Entrada a compte: 0,00 €»", async () => {
+    const config = await signupConfigJson();
+    const plans = config.plans.map((plan) =>
+      plan.maintenanceFee === undefined ? plan : { ...plan, entryFee: { amountMinor: 0, currency: "EUR" } },
+    );
+    server.use(http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, plans })));
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
+    expect(therapy).not.toHaveTextContent(/Entrada/u);
+    expect(therapy).toHaveTextContent(/Quota mínima durant el tractament: 10,00\s€\/mes/u);
   });
 
   it("16 (R-04-02, T-04-03): «Població» is free with no town, fixed with one and a selector with several", async () => {
@@ -1853,6 +1977,51 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
     expect(checkouts[2]?.key).toBe(checkouts[1]?.key);
     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+  });
+
+  it("round 2 #2: a page restored from the back-forward cache shows its step again, with the draft the next page left", async () => {
+    seedDraft();
+    const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
+    await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(loads).toEqual(["/apuntat-hi/familia"]);
+    });
+    expect(screen.getByText("Carregant el formulari")).toBeVisible();
+    expect(screen.queryByLabelText("Nom del gos")).toBeNull();
+
+    // 18 changed the draft, then the browser's Back restored this document from the bfcache.
+    sessionStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({ ...savedDraft(), familyClaim: { dogName: "Duna", holderName: "Laura Serra", leavePending: false } }),
+    );
+    const restored = new Event("pageshow");
+    Object.defineProperty(restored, "persisted", { value: true });
+    act(() => {
+      window.dispatchEvent(restored);
+    });
+    expect(await screen.findByLabelText("Nom del gos")).toHaveValue("Kiwi");
+    expect(screen.queryByText("Carregant el formulari")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(loads).toEqual(["/apuntat-hi/familia", "/apuntat-hi/familia"]);
+    });
+    expect(savedDraft().familyClaim).toEqual({ dogName: "Duna", holderName: "Laura Serra", leavePending: false });
+  });
+
+  it("round 2 #2: a pageshow that is not a bfcache restore changes nothing", async () => {
+    seedDraft();
+    const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
+    await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(loads).toEqual(["/apuntat-hi/familia"]);
+    });
+    act(() => {
+      window.dispatchEvent(new Event("pageshow"));
+    });
+    expect(screen.getByText("Carregant el formulari")).toBeVisible();
   });
 
   it("#3 a passport-only applicant's INVALID_ID_DOCUMENT lands on the passport field", async () => {

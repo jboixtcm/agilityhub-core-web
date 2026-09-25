@@ -2,16 +2,16 @@
   "clubPaymentProviders": {
     "SEPA_XML": {
       "configured": false,
-      "enabled": false
+      "enabled": true
     },
     "MANUAL": {
       "configured": false,
-      "enabled": false
+      "enabled": true
     }
   },
   "signup": {
     "admin": {
-      "paymentMethods": "{\"code\":\"FORBIDDEN\",\"message\":\"No tens permís per fer aquesta acció.\",\"details\":{},\"traceId\":\"489af881-cb86-44a1-bc18-417be49aa82d\"}",
+      "paymentMethods": "{\"code\":\"FORBIDDEN\",\"message\":\"No tens permís per fer aquesta acció.\",\"details\":{},\"traceId\":\"ab418988-d18e-4b88-9a33-f675a069c68c\"}",
       "status": 403
     },
     "anonymous": {

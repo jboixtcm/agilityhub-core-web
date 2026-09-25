@@ -1,0 +1,57 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (11 tests | 2 failed) 29ms
+   ❯ E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does (3)
+     × T-04-13 requireDogDocumentAtSignup=true: no file → 422 DOG_DOCUMENT_REQUIRED (public and add-dog); a file → 201 2ms
+     × T-04-16 leavePending with allowFamilyGroupPending=false → 400 VALIDATION_ERROR on the claim; with true → 201 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does > T-04-13 requireDogDocumentAtSignup=true: no file → 422 DOG_DOCUMENT_REQUIRED (public and add-dog); a file → 201
+AssertionError: expected 201 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 201
+
+ ❯ src/mocks/signup-handlers.test.ts:219:32
+    217|   it("T-04-13 requireDogDocumentAtSignup=true: no file → 422 DOG_DOCUM…
+    218|     const withoutFile = await signup("signupDocumentRequired", dni, "9…
+    219|     expect(withoutFile.status).toBe(422);
+       |                                ^
+    220|     expect(await withoutFile.json()).toMatchObject({ code: "DOG_DOCUME…
+    221|     expect((await addDog(vaccinationCard([]))).status).toBe(422);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does > T-04-16 leavePending with allowFamilyGroupPending=false → 400 VALIDATION_ERROR on the claim; with true → 201
+AssertionError: expected 201 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 201
+
+ ❯ src/mocks/signup-handlers.test.ts:235:28
+    233|     const claim = { dogName: "Duna", holderName: "Laura Serra", leaveP…
+    234|     const refused = await signup("signupNoFamilyPending", dni, "941000…
+    235|     expect(refused.status).toBe(400);
+       |                            ^
+    236|     expect(await refused.json()).toMatchObject({
+    237|       code: "VALIDATION_ERROR",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  20:56:26
+   Duration  437ms (import 47%, transform 45%, tests 8%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts

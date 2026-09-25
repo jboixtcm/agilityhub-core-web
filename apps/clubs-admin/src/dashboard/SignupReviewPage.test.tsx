@@ -978,6 +978,58 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
   });
 
+  it("round 2 #1: the person card, its WhatsApp and the drawer carry the submitted values, not the LEFT record's", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    await renderReview();
+    // `member` is the LEFT record (marta.antic@…, 655000111); the card shows what the validation applies.
+    expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34 655123123/u))).toBeVisible();
+    expect(screen.getByRole("link", { name: /WhatsApp/u })).toHaveAttribute("href", "https://wa.me/34655123123");
+    expect(screen.getByText(dataRow(/^Domiciliació · ···· ···· ···· ···· 7719/u))).toBeVisible();
+    const drawer = openDrawer();
+    expect(within(drawer).getByLabelText("Correu electrònic")).toHaveValue("marta.roca@example.test");
+    expect(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" })).toHaveValue("655123123");
+    expect(within(drawer).getByLabelText("Adreça")).toHaveValue("Carrer de la Riera, 12");
+    expect(within(drawer).getByLabelText("Mètode de pagament")).toHaveValue("SEPA_DD");
+  });
+
+  it("round 2 #1: a submitted SEPA method without an account (the core's `maskedAccount: null`) is «Compte no informat» on the card", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over } = recordingFetch((body) => {
+      const block = body.readmission as { submitted: Record<string, unknown> } | undefined;
+      if (block !== undefined) {
+        block.submitted.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
+      }
+    });
+    await renderReview({ fetchOverride: over });
+    expect(screen.getByText(dataRow(/^Domiciliació · — · titular: la mateixa$/u))).toBeVisible();
+    expect(screen.getByText("Compte no informat", { selector: ".signup-review-warning" })).toBeVisible();
+  });
+
+  it("round 2 #1: during a readmission, editing phone 2 keeps the submitted phone 1 in the PATCH", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    fireEvent.change(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone2Number" }), {
+      target: { value: "655444333" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Descripció"), { target: { value: "Feina" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/members/${memberId}`)).toHaveLength(1);
+    });
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      phones: [
+        { label: "Mòbil", number: "655123123", prefix: "+34" },
+        { label: "Feina", number: "655444333", prefix: "+34" },
+      ],
+      version: 3,
+    });
+    const block = await screen.findByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    expect(await within(block).findByText("Ara: +34 655123123 · +34 655444333")).toBeVisible();
+    expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
+  });
+
   it("the DNI/NIE is read-only while the readmission waits, and says how to correct it", async () => {
     mockScenario("adminSignupReviewReadmission");
     const { fetch: over, requests } = recordingFetch();
@@ -1021,6 +1073,16 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
   it("a signup that is not a readmission has no readmission block and an editable DNI/NIE", async () => {
     await renderReview();
     expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
+    expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
+  });
+
+  it("round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member`", async () => {
+    const { fetch: over } = recordingFetch((body) => {
+      (body as Record<string, unknown>).readmission = null;
+    });
+    await renderReview({ fetchOverride: over });
+    expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
+    expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34 655123123/u))).toBeVisible();
     expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
   });
 });

@@ -47,7 +47,13 @@ type SignupDocumentFile = components["schemas"]["SignupFile"];
 type SignupRequest = components["schemas"]["SignupRequest"];
 type AddDogSignupRequest = components["schemas"]["AddDogSignupRequest"];
 type QuoteOption = components["schemas"]["SignupQuoteOption"];
+type QuoteLine = components["schemas"]["SignupQuoteLine"];
+type SignupUpfront = components["schemas"]["SignupUpfront"];
+type Money = components["schemas"]["Money"];
 type Translate = ReturnType<typeof useTranslation>["t"];
+
+/** The start option as 19 showed it: what labels a first month (`SignupUpfront` has no first-month block). */
+type StartChoice = Pick<QuoteOption, "option" | "startDate"> & Partial<Pick<QuoteOption, "portion">>;
 
 type DraftPerson = Omit<SignupPerson, "gender"> & {
   gender: SignupPerson["gender"] | "";
@@ -58,6 +64,11 @@ interface SignupSubmission {
   checkoutKey?: string;
   /** SHA-256 of the canonical payload (never the payload: it holds the IBAN). */
   fingerprint: string;
+  /**
+   * R-04-14 «congelat en enviar»: the `upfront` of the api's answer (amounts only) and the start
+   * option 19 showed and sent. A retry on a later day shows these, never the day's live quote.
+   */
+  frozen?: { start?: StartChoice; upfront: SignupUpfront };
   idempotencyKey: string;
   memberId?: string;
   signupToken?: string;
@@ -1636,11 +1647,13 @@ function DogStep({
                     {plan.conditions === "" || plan.maintenanceFee !== undefined ? null : (
                       <small className="signup-plan__conditions">{plan.conditions}</small>
                     )}
-                    {plan.maintenanceFee === undefined || plan.entryFee === undefined ? null : (
+                    {/* No «Entrada a compte: 0,00 €» either: without an entry fee only the fee shows. */}
+                    {plan.maintenanceFee === undefined ? null : (
                       <small>
                         {t("signup:dog.maintenance", {
-                          entry: formatMoney(plan.entryFee.amountMinor / 100),
+                          entry: formatMoney((plan.entryFee?.amountMinor ?? 0) / 100),
                           fee: formatMoney(plan.maintenanceFee.amountMinor / 100),
+                          withEntry: (plan.entryFee?.amountMinor ?? 0) > 0 ? "yes" : "no",
                         })}
                       </small>
                     )}
@@ -1936,10 +1949,7 @@ function PaymentStep({
   // An option the quote no longer offers (add-dog after the cut-off day) falls back to the first.
   const selectedOption =
     quote?.options.find((option) => option.option === chosenOption) ?? quote?.options[0];
-  const quoteLines = (quote?.lines ?? []).filter((line) => line.amount.amountMinor > 0);
-  const totalDue = selectedOption?.totalDue ?? quote?.totalDue ?? { amountMinor: 0, currency: branding.currency };
-  const hasUpfront = quoteLines.length > 0 || (quote?.options.length ?? 0) > 0;
-  const optionLabel = (option: QuoteOption): string => {
+  const optionLabel = (option: StartChoice): string => {
     const date = formatPlainDate(option.startDate, "dayMonth");
     if (addDog) {
       return option.option === "TODAY"
@@ -1955,6 +1965,19 @@ function PaymentStep({
       ? t("signup:step4.firstMonth.splitDayHalf", { date })
       : t("signup:step4.firstMonth.nextMonthFull", { date });
   };
+  // Every concept has its label; the start concepts (FIRST_MONTH, ADDITIONAL_DOG_FEE) are shown by
+  // the start options, or by the frozen start row, never as a second line.
+  const conceptLabel = (concept: QuoteLine["concept"]): string | undefined => {
+    switch (concept) {
+      case "ENTRY_FEE":
+        return t("signup:payment.entryLine");
+      case "PACK":
+        return selectedPlan?.name ?? "";
+      case "FIRST_MONTH":
+      case "ADDITIONAL_DOG_FEE":
+        return undefined;
+    }
+  };
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
   const [website, setWebsite] = useState("");
@@ -1969,6 +1992,34 @@ function PaymentStep({
   // R-04-26: once the signup exists, 19 shows what was committed and only the checkout is retried.
   const committed = draft.submission?.memberId !== undefined;
   const locked = committed || working;
+  // R-04-14, T-04-32: a committed signup shows the amounts the api froze, not the live quote.
+  const frozen = committed ? draft.submission?.frozen : undefined;
+  const upfrontRows: { amount: Money; key: string; label: string }[] = [];
+  const shownLines: readonly QuoteLine[] =
+    frozen === undefined
+      ? (quote?.lines ?? [])
+      : frozen.upfront.lines.filter((line) => line.status !== "CANCELLED" && line.status !== "REFUNDED");
+  for (const [index, line] of shownLines.entries()) {
+    const label = line.amount.amountMinor > 0 ? conceptLabel(line.concept) : undefined;
+    if (label !== undefined) upfrontRows.push({ amount: line.amount, key: `${line.concept}-${String(index)}`, label });
+  }
+  if (frozen !== undefined) {
+    // A public signup has no `additionalDog` (the core sends `null`).
+    const additional = frozen.upfront.additionalDog ?? undefined;
+    const firstMonth = shownLines.find((line) => line.concept === "FIRST_MONTH");
+    if (additional !== undefined) {
+      upfrontRows.push({ amount: additional.amountDue, key: "start", label: optionLabel(additional) });
+    } else if (firstMonth !== undefined && frozen.start !== undefined) {
+      upfrontRows.push({ amount: firstMonth.amount, key: "start", label: optionLabel(frozen.start) });
+    }
+  }
+  const startOptions = frozen === undefined ? (quote?.options ?? []) : [];
+  const totalDue: Money = frozen?.upfront.totalDue ??
+    selectedOption?.totalDue ??
+    quote?.totalDue ?? { amountMinor: 0, currency: branding.currency };
+  const hasUpfront =
+    (frozen !== undefined || quote !== undefined) &&
+    (upfrontRows.length > 0 || startOptions.length > 0 || totalDue.amountMinor > 0);
   const imageConsentText =
     config.texts.imageConsent.trim() === ""
       ? config.legal.imageConsentText
@@ -2099,6 +2150,24 @@ function PaymentStep({
         const pending: SignupSubmission = { fingerprint, idempotencyKey };
         onChange((current) => ({ ...current, submission: pending }));
         const header = { "Idempotency-Key": idempotencyKey };
+        // The core writes an absent block as `null` (no BILLING: no `upfront`).
+        const freeze = (upfront: SignupUpfront | null | undefined): Pick<SignupSubmission, "frozen"> =>
+          upfront == null
+            ? {}
+            : {
+                frozen: {
+                  ...(selectedOption === undefined
+                    ? {}
+                    : {
+                        start: {
+                          option: selectedOption.option,
+                          portion: selectedOption.portion,
+                          startDate: selectedOption.startDate,
+                        },
+                      }),
+                  upfront,
+                },
+              };
         if (addDog) {
           const result = await client.POST("/me/dogs/signup", {
             body: body as AddDogSignupRequest,
@@ -2109,7 +2178,11 @@ function PaymentStep({
             onContinue(paths.sent ?? "/gossos/nou/enviada");
             return;
           }
-          submission = { ...pending, memberId: result.data.checkout.memberId };
+          submission = {
+            ...pending,
+            ...freeze(result.data.upfront),
+            memberId: result.data.checkout.memberId,
+          };
         } else {
           const result = await client.POST("/signup", {
             body: body as SignupRequest,
@@ -2122,6 +2195,7 @@ function PaymentStep({
           }
           submission = {
             ...pending,
+            ...freeze(result.data.upfront),
             memberId: result.data.memberId,
             signupToken: result.data.signupToken,
           };
@@ -2299,21 +2373,19 @@ function PaymentStep({
           )}
         </section>
       ) : null}
-      {billing && quote !== undefined && hasUpfront ? (
+      {billing && hasUpfront ? (
         <Card className="signup-upfront">
           <h2>{t("signup:payment.initialTitle")}</h2>
-          {quoteLines.map((line) => (
-            <p className="signup-upfront__line" key={line.concept}>
-              <span>
-                {line.concept === "PACK" ? (selectedPlan?.name ?? "") : t("signup:payment.entryLine")}
-              </span>
-              <strong>{formatMoney(line.amount.amountMinor / 100)}</strong>
+          {upfrontRows.map((row) => (
+            <p className="signup-upfront__line" key={row.key}>
+              <span>{row.label}</span>
+              <strong>{formatMoney(row.amount.amountMinor / 100)}</strong>
             </p>
           ))}
-          {quote.options.length === 0 ? null : (
+          {startOptions.length === 0 ? null : (
             <fieldset className="signup-upfront__options">
               <legend>{t("signup:payment.chooseStart")}</legend>
-              {quote.options.map((option) => (
+              {startOptions.map((option) => (
                 <label key={option.option}>
                   <input
                     checked={selectedOption?.option === option.option}
@@ -2494,6 +2566,22 @@ export function SignupPage({
     draftRef.current = next;
     setDraftState(next);
   }, []);
+
+  // A document restored from the back-forward cache (the browser's Back after a full page load, or
+  // a load that never finished) is this page again: it shows the step of its address, with the
+  // draft the other pages left in the session, instead of staying on «Carregant el formulari».
+  useEffect(() => {
+    const restore = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      setLeaving(false);
+      setPath(window.location.pathname);
+      updateDraft(readDraft(addDog, countryProfile(branding.countryProfile)));
+    };
+    window.addEventListener("pageshow", restore);
+    return () => {
+      window.removeEventListener("pageshow", restore);
+    };
+  }, [addDog, branding.countryProfile, updateDraft]);
   const [config, setConfig] = useState<SignupConfig>();
   const [closed, setClosed] = useState(false);
   const [loadError, setLoadError] = useState(false);

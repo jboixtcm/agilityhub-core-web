@@ -27,6 +27,7 @@ async function signup(
   scenario: MockScenario,
   idDocument: { type: string; value: string },
   chip: string,
+  { documents, familyGroupClaim }: { documents?: unknown[]; familyGroupClaim?: unknown } = {},
 ) {
   mockScenario(scenario);
   const config = (await (await fetch(`${origin}/api/v1/signup`)).json()) as {
@@ -44,9 +45,11 @@ async function signup(
         birthMonth: "2022-03",
         breed: "Mestís",
         chip,
+        ...(documents === undefined ? {} : { documents }),
         name: "Kiwi",
         sex: "FEMALE",
       },
+      ...(familyGroupClaim === undefined ? {} : { familyGroupClaim }),
       locale: "ca",
       payment: { type: "MANUAL" },
       person: {
@@ -187,6 +190,56 @@ describe("E3-W08 the upload URL and the add-dog submission mocks", () => {
     };
     const pending = dogs.dogs.find((dog) => dog.id === result.dogId);
     expect(pending).toEqual({ ageYears: 1, breed: "Mestís", id: result.dogId, name: "Neret", sex: "MALE", status: "PENDING" });
+  });
+});
+
+describe("E3-W08 round 2 #6: the submission mocks enforce the two signup flags, as the api does", () => {
+  const dni = { type: "DNI", value: "12345678Z" };
+  const vaccinationCard = (files: unknown[]) => [{ files, type: "VACCINATION_CARD" }];
+  const file = { fileKey: "signup/club/202608/uuid/cartilla_Kiwi_1.jpg", name: "cartilla_Kiwi_1.jpg" };
+
+  async function addDog(documents: unknown[]) {
+    return fetch(`${origin}/api/v1/me/dogs/signup`, {
+      body: JSON.stringify({
+        additionalDogOption: "TODAY",
+        dog: { birthMonth: "2025-03", breed: "Mestís", chip: "941000012340078", name: "Neret", sex: "MALE" },
+        documents,
+      }),
+      headers: {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+        "Idempotency-Key": crypto.randomUUID(),
+      },
+      method: "POST",
+    });
+  }
+
+  it("T-04-13 requireDogDocumentAtSignup=true: no file → 422 DOG_DOCUMENT_REQUIRED (public and add-dog); a file → 201", async () => {
+    const withoutFile = await signup("signupDocumentRequired", dni, "941000012340101", { documents: vaccinationCard([]) });
+    expect(withoutFile.status).toBe(422);
+    expect(await withoutFile.json()).toMatchObject({ code: "DOG_DOCUMENT_REQUIRED", details: {} });
+    expect((await addDog(vaccinationCard([]))).status).toBe(422);
+    const withFile = await signup("signupDocumentRequired", dni, "941000012340102", { documents: vaccinationCard([file]) });
+    expect(withFile.status).toBe(201);
+  });
+
+  it("T-04-13 requireDogDocumentAtSignup=false: no file → 201", async () => {
+    expect((await signup("signup", dni, "941000012340103", { documents: vaccinationCard([]) })).status).toBe(201);
+    mockScenario("signup");
+    expect((await addDog([])).status).toBe(201);
+  });
+
+  it("T-04-16 leavePending with allowFamilyGroupPending=false → 400 VALIDATION_ERROR on the claim; with true → 201", async () => {
+    const claim = { dogName: "Duna", holderName: "Laura Serra", leavePending: true };
+    const refused = await signup("signupNoFamilyPending", dni, "941000012340104", { familyGroupClaim: claim });
+    expect(refused.status).toBe(400);
+    expect(await refused.json()).toMatchObject({
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [{ field: "familyGroupClaim.leavePending" }] },
+    });
+    mockScenario("signupNoFamilyPending");
+    expect(((await (await fetch(`${origin}/api/v1/signup`)).json()) as SignupConfig).allowFamilyGroupPending).toBe(false);
+    expect((await signup("signup", dni, "941000012340105", { familyGroupClaim: claim })).status).toBe(201);
   });
 });
 afterAll(() => {

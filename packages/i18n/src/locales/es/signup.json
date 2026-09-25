@@ -86,7 +86,7 @@
     "monthlyPrice": "{price}/mes",
     "entryFee": "Entrada {price}",
     "packPrice": "{price} · {months} meses",
-    "maintenance": "Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes",
+    "maintenance": "{withEntry, select, yes {Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes} other {Cuota mínima durante el tratamiento: {fee}/mes}}",
     "selectPlan": "Selecciona {plan}",
     "activate": "ACTIVAR"
   },

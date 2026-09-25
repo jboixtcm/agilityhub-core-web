@@ -65,28 +65,61 @@ export function signupReviewVariant(
     // Marta left in 2025 and applies again with the same DNI, a new e-mail, phone and address.
     view.signup = { ...view.signup, readmission: true };
     view.warnings = [...view.warnings, "READMISSION"];
-    view.readmission = {
-      changedFields: [],
-      current: {
-        address: { city: "Cabrera de Mar", postalCode: "08349", street: "Carrer del Mar, 7" },
-        birthDate: "1988-04-12",
-        contactEmails: [{ bounced: false, email: "marta.antic@example.test" }],
-        firstName: "Marta",
-        gender: "FEMALE",
-        lastName1: "Roca",
-        lastName2: "Pujol",
-        paymentMethod: { channel: "Efectiu", type: "MANUAL" },
-        phones: [{ label: "Mòbil", number: "655000111", prefix: "+34" }],
-      },
-      previousLeftAt: "2025-06-30T10:00:00Z",
-      submitted: readmissionValues(view.member),
+    const left: ReadmissionValues = {
+      address: { city: "Cabrera de Mar", postalCode: "08349", street: "Carrer del Mar, 7" },
+      birthDate: "1988-04-12",
+      contactEmails: [{ bounced: false, email: "marta.antic@example.test" }],
+      firstName: "Marta",
+      gender: "FEMALE",
+      lastName1: "Roca",
+      lastName2: "Pujol",
+      paymentMethod: { channel: "Efectiu", type: "MANUAL" },
+      phones: [{ label: "Mòbil", number: "655000111", prefix: "+34" }],
     };
-    view.readmission.changedFields = readmissionChanges(view.readmission.current, view.readmission.submitted);
+    const submitted = readmissionValues(view.member);
+    view.readmission = {
+      changedFields: readmissionChanges(left, submitted),
+      current: left,
+      previousLeftAt: "2025-06-30T10:00:00Z",
+      submitted,
+    };
+    // As the api (`MemberSignupView.readmission`): the LEFT record keeps its values until validation.
+    view.member = withReadmissionValues(view.member, left);
   }
   return view;
 }
 
 type ReadmissionValues = components["schemas"]["ReadmissionValues"];
+
+/** The member with the person values of a readmission block (E38): the LEFT record, or the submitted person. */
+export function withReadmissionValues(
+  member: MemberSignupView["member"],
+  values: ReadmissionValues,
+): MemberSignupView["member"] {
+  const person: MemberSignupView["member"] = {
+    ...member,
+    address: values.address ?? member.address,
+    birthDate: values.birthDate ?? member.birthDate,
+    contactEmails: values.contactEmails.map((entry) => ({ ...entry })),
+    firstName: values.firstName,
+    fullName: [values.firstName, values.lastName1, values.lastName2].filter(Boolean).join(" "),
+    gender: values.gender ?? member.gender,
+    lastName1: values.lastName1,
+    phones: values.phones.map((phone) => ({ ...phone })),
+  };
+  if (values.lastName2 == null) delete person.lastName2;
+  else person.lastName2 = values.lastName2;
+  const payment = values.paymentMethod;
+  if (payment != null) {
+    // The core sends `maskedAccount: null` for SEPA without an account.
+    const account = payment.maskedAccount ?? undefined;
+    person.paymentMethod = { ...payment };
+    person.accountMissing = payment.type === "SEPA_DD" && account === undefined;
+    if (account === undefined) delete person.maskedAccount;
+    else person.maskedAccount = account;
+  }
+  return person;
+}
 
 /** The submitted values of a pending readmission, as the D2 view shows them (payment masked). */
 export function readmissionValues(member: MemberSignupView["member"]): ReadmissionValues {

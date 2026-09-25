@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (65 tests | 1 failed | 64 skipped) 124ms
+   ❯ E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) (9)
+     × round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member` 122ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member`
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveAttribute([22m[32m[32m"readonly"[32m[39m[2m) // element.hasAttribute("readonly")[22m
+
+Expected the element not to have attribute:
+[32m  readonly[39m
+Received:
+[31m  readonly=""[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1086:64
+    1084|     expect(screen.queryByRole("region", { name: "Canvis respecte de la…
+    1085|     expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34…
+    1086|     expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveA…
+       |                                                                ^
+    1087|   });
+    1088| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 64 skipped (65)
+   Start at  21:11:52
+   Duration  839ms (transform 32%, environment 29%, tests 16%, import 16%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx -t readmission: null

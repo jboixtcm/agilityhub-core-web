@@ -586,6 +586,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(admin.getByText(/Sí — titular: Laia Fictici001 \+ gos Ona 1/u)).toBeVisible();
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const edit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+  // E38: only a readmission locks the DNI/NIE; this ordinary signup keeps it editable on the real core.
+  await expect(edit.getByLabel("DNI/NIE")).not.toHaveAttribute("readonly");
   await edit.getByLabel("IBAN").fill("ES9121000418450200051332");
   // M14: the second email and the second phone (R-04-03), kept by the next edit below.
   await edit.locator("#signup-edit-email2").fill("nora.feina.e3@example.test");
@@ -773,12 +775,44 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await member.waitForURL("**/gossos/nou/pagament");
   await expect(member.getByLabel("Mètode de pagament actual")).toHaveValue(/Domiciliació/u);
   // E3-W08 (R-04-14): the add-dog card is the member plan's add-dog quote.
-  await expectQuoteCard(member, (await (await addDogConfig).json()) as SignupQuoteConfig, undefined);
+  const addDogQuoteConfig = (await (await addDogConfig).json()) as SignupQuoteConfig & {
+    upfront?: { additionalDogOptions?: unknown };
+  };
+  await expectQuoteCard(member, addDogQuoteConfig, undefined);
   const privacy = member.getByLabel("Accepto la política de privacitat");
   if (await privacy.isVisible()) await privacy.check();
   await screenshot(member, "19-add-dog-core-375.png");
+  // The success page is a full page load, which discards the response body: read it on the way.
+  const addDogSubmission: { result?: { upfront?: { totalDue: Money } } } = {};
+  await member.route("**/api/v1/me/dogs/signup", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+    const response = await route.fetch();
+    addDogSubmission.result = (await response.json()) as { upfront?: { totalDue: Money } };
+    await route.fulfill({ response });
+  });
   await member.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
   await member.waitForURL("**/gossos/nou/enviada");
+  await member.unroute("**/api/v1/me/dogs/signup");
+  // E3-W08 round 2 #7: the add-dog quote the card showed, and the amounts the api froze on submission.
+  expect(addDogSubmission.result).toBeDefined();
+  const memberQuote = addDogQuoteConfig.upfront?.planQuotes.find((item) => item.planId === addDogQuoteConfig.member?.planId);
+  expect(addDogSubmission.result?.upfront?.totalDue).toEqual(memberQuote?.options[0]?.totalDue ?? memberQuote?.totalDue);
+  writeFileSync(
+    join(evidenceDirectory, "signup-quote-add-dog-core.json"),
+    `${JSON.stringify(
+      {
+        additionalDogOptions: addDogQuoteConfig.upfront?.additionalDogOptions ?? null,
+        memberPlanQuote: memberQuote ?? null,
+        submittedUpfront: addDogSubmission.result?.upfront ?? null,
+        today: addDogQuoteConfig.upfront?.today ?? null,
+      },
+      null,
+      2,
+    )}\n`,
+  );
   await expect(member.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
   // The add-dog success page never promises a welcome message (the member already has access).
   await expect(member.getByText(/benvinguda/u)).toHaveCount(0);
@@ -976,13 +1010,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     },
     readmissionApi,
   );
+  // E3-W08 round 2 #5: the run itself leaves a LEFT member (the applicant rejected above), so the
+  // lookup must find one; a failed lookup fails the test instead of skipping the readmission.
+  expect(leftLookup.listStatus).toBe(200);
   const leftMember = leftLookup.member as SeedMember | null;
-  if (leftMember?.idDocument == null) {
-    writeFileSync(
-      join(evidenceDirectory, "readmission-core.json"),
-      `${JSON.stringify({ leftMemberWithDocument: false, listError: "listError" in leftLookup ? leftLookup.listError : null, listStatus: leftLookup.listStatus }, null, 2)}\n`,
-    );
-  } else {
+  expect(leftMember).not.toBeNull();
+  expect(leftMember?.idDocument).toBeTruthy();
+  if (leftMember?.idDocument != null) {
     const leftDocument = leftMember.idDocument;
     const passportOnly = leftDocument.type === "PASSPORT";
     const readmissionContext = await localizedContext(browser, { height: 844, width: 375 });
@@ -1007,7 +1041,48 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     const changes = admin.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
     await expect(changes.getByText(/^Ara: .*699000905/u)).toBeVisible();
     await expect(changes.getByText(new RegExp(`^Abans: .*${leftMember.phones[0]?.number ?? "—"}`, "u"))).toBeVisible();
+    // Round 2 #1: `member` is the LEFT record; the card and the drawer carry the submitted values.
+    await expect(admin.locator(".signup-review-data dd").filter({ hasText: /retorn\.e3@example\.test · \+34 699000905/u }).first()).toBeVisible();
+    await expect(admin.locator(".signup-review-whatsapp")).toHaveAttribute("href", "https://wa.me/34699000905");
     await screenshot(admin, "D2-readmission-core-1280.png");
+    await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
+    const readmissionDrawer = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+    await expect(readmissionDrawer.locator("#signup-edit-email1")).toHaveValue("retorn.e3@example.test");
+    await expect(readmissionDrawer.locator("#signup-edit-phone1Number")).toHaveValue("699000905");
+    await expect(readmissionDrawer.getByLabel("DNI/NIE")).toHaveAttribute("readonly", "");
+    await screenshot(admin, "D2-readmission-drawer-core-1280.png");
+    await readmissionDrawer.getByRole("button", { name: "Cancel·la" }).click();
+    await expect(readmissionDrawer).toBeHidden();
+    // The readmission block as the core sends it (its nulls included), next to the LEFT record's contact.
+    const readmissionView = (await admin.evaluate(
+      async ({ authorization, base, id }) =>
+        (await (await fetch(`${base}/members/${id}/signup`, { headers: { Authorization: authorization } })).json()) as unknown,
+      { ...readmissionApi, id: readmittedId },
+    )) as {
+      member: { contactEmails: { email: string }[]; phones: { number: string }[] };
+      readmission?: { changedFields: string[]; submitted: { contactEmails: { email: string }[]; paymentMethod?: unknown; phones: { number: string }[] } };
+    };
+    expect(readmissionView.member.phones.map((phone) => phone.number)).toEqual(leftMember.phones.map((phone) => phone.number));
+    expect(readmissionView.readmission?.submitted.phones.map((phone) => phone.number)).toEqual(["699000905"]);
+    writeFileSync(
+      join(evidenceDirectory, "d2-readmission-view-core.json"),
+      `${JSON.stringify(
+        {
+          changedFields: readmissionView.readmission?.changedFields ?? null,
+          memberContact: {
+            emails: readmissionView.member.contactEmails.map((entry) => entry.email),
+            phones: readmissionView.member.phones.map((phone) => phone.number),
+          },
+          submittedContact: {
+            emails: readmissionView.readmission?.submitted.contactEmails.map((entry) => entry.email) ?? null,
+            phones: readmissionView.readmission?.submitted.phones.map((phone) => phone.number) ?? null,
+          },
+          submittedPaymentMethod: readmissionView.readmission?.submitted.paymentMethod ?? null,
+        },
+        null,
+        2,
+      )}\n`,
+    );
     await admin.getByRole("button", { name: "REBUTJA (amb motiu)" }).click();
     const readmissionReject = admin.getByRole("dialog", { name: "Rebutja la preinscripció" });
     await readmissionReject.getByLabel("Motiu del rebuig").fill("Readmissió de prova rebutjada");

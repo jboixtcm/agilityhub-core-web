@@ -1,0 +1,112 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card
+An error occurred in the <PaymentStep> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card
+An error occurred in the <PaymentStep> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ ❯ src/SignupPage.test.tsx (89 tests | 1 failed | 88 skipped) 10141ms
+   ❯ E3-W08 round 2: the card after the signup exists, and the line concepts (4)
+     × #3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card 10138ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card
+TestingLibraryElementError: Unable to find an element with the text: /Pas \d de \d/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderSignup src/SignupPage.test.tsx:126:48
+    124|   );
+    125|   await screen.findByRole("heading", { name: "Apunta-t'hi" });
+    126|   if (!path.endsWith("/enviada")) await screen.findByText(/Pas \d de \…
+       |                                                ^
+    127|   return { i18n, navigate };
+    128| }
+ ❯ src/SignupPage.test.tsx:1661:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of null (reading 'amountDue')
+ ❯ PaymentStep src/SignupPage.tsx:2011:45
+    2009|     const firstMonth = shownLines.find((line) => line.concept === "FIR…
+    2010|     if (additional !== undefined) {
+    2011|       upfrontRows.push({ amount: additional.amountDue, key: "start", l…
+       |                                             ^
+    2012|     } else if (firstMonth !== undefined && frozen.start !== undefined)…
+    2013|       upfrontRows.push({ amount: firstMonth.amount, key: "start", labe…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/SignupPage.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "#3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of null (reading 'amountDue')
+ ❯ PaymentStep src/SignupPage.tsx:2011:45
+    2009|     const firstMonth = shownLines.find((line) => line.concept === "FIR…
+    2010|     if (additional !== undefined) {
+    2011|       upfrontRows.push({ amount: additional.amountDue, key: "start", l…
+       |                                             ^
+    2012|     } else if (firstMonth !== undefined && frozen.start !== undefined)…
+    2013|       upfrontRows.push({ amount: firstMonth.amount, key: "start", labe…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/SignupPage.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "#3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 88 skipped (89)
+     Errors  2 errors
+   Start at  21:10:52
+   Duration  10.97s (tests 93%, transform 3%, environment 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/SignupPage.test.tsx -t additionalDog: null

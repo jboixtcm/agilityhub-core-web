@@ -12,6 +12,8 @@ import {
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { signupPerson } from "./readmission";
+
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
 type Dog = SignupView["dogs"][number];
@@ -402,10 +404,12 @@ export function SignupEditDrawer({
   const { t } = useTranslation(["admin-census", "errors"]);
   const branding = useBranding();
   const billing = branding.modules.includes("BILLING");
-  const member = signup.member;
+  // E38: a readmission edits its submitted values (the api keeps `member` as the LEFT record).
+  const member = signupPerson(signup);
   const addDogMode = member.status === "ACTIVE";
   // R-04-06 (E38): the readmission matched on the document, so it is read-only while it waits.
-  const readmissionPending = signup.signup.readmission || signup.readmission !== undefined;
+  // An ordinary signup has no readmission block (absent, or `null` as the core writes it).
+  const readmissionPending = signup.signup.readmission || signup.readmission != null;
   const [personEdits, setPersonEdits] = useState<Partial<PersonForm>>({});
   const [dogEdits, setDogEdits] = useState<Readonly<Record<string, Partial<DogForm>>>>({});
   const [working, setWorking] = useState(false);

@@ -86,7 +86,7 @@
     "monthlyPrice": "{price}/month",
     "entryFee": "Joining fee {price}",
     "packPrice": "{price} · {months} months",
-    "maintenance": "Deposit: {entry} · minimum fee during treatment: {fee}/month",
+    "maintenance": "{withEntry, select, yes {Deposit: {entry} · minimum fee during treatment: {fee}/month} other {Minimum fee during treatment: {fee}/month}}",
     "selectPlan": "Select {plan}",
     "activate": "ACTIVATE"
   },

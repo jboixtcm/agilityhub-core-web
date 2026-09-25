@@ -19,6 +19,7 @@ import { Fragment, useCallback, useEffect, useEffectEvent, useRef, useState } fr
 import { useTranslation } from "react-i18next";
 
 import { useRefreshCounters } from "./counters";
+import { signupPerson } from "./readmission";
 import { classifySignupReviewError, type SignupReviewError } from "./signup-review-errors";
 import { SignupEditDrawer } from "./SignupEditDrawer";
 
@@ -290,7 +291,8 @@ export function SignupReviewPage({
     );
   }
 
-  const member: Member = signup.member;
+  // E38: a readmission shows its submitted person (the api keeps `member` as the LEFT record).
+  const member: Member = signupPerson(signup);
   const levelOf = (dog: Dog) => levelChoice[dog.id] ?? dog.levelId ?? "";
   const selectedPlan = planChoice ?? (signup.proposals.planId === undefined ? undefined : {
     planId: signup.proposals.planId,

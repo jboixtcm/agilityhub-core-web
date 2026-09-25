@@ -332,10 +332,12 @@ export function signupResultUpfront(
   if (option !== undefined && option.amountDue.amountMinor > 0) {
     concepts.push({ amount: option.amountDue, concept: addDog ? "ADDITIONAL_DOG_FEE" : "FIRST_MONTH" });
   }
+  // As the real core answers it (`signup-quote-add-dog-core.json`): each line DUE with a zero paid amount.
   const lines: UpfrontLine[] = concepts.map((line, index) => ({
     amount: line.amount,
     concept: line.concept,
     id: `30000000-0000-4000-8000-00000000000${String(index + 1)}`,
+    paidAmount: money(0, line.amount.currency),
     status: "DUE",
   }));
   return {
