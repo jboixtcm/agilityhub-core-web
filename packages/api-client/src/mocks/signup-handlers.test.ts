@@ -1,7 +1,17 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
-import { mockScenario, resetSignupMockState, type MockScenario } from "./handlers";
+import type { components } from "../generated/schema";
+
+import {
+  mockScenario,
+  resetMemberSelfServiceState,
+  resetSignupMockState,
+  setSignupMockToday,
+  type MockScenario,
+} from "./handlers";
 import { server } from "./server";
+
+type SignupConfig = components["schemas"]["SignupConfig"];
 
 const origin = "http://localhost";
 
@@ -63,7 +73,121 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers();
   resetSignupMockState();
+  resetMemberSelfServiceState();
   mockScenario("signup");
+});
+
+async function signupConfigOn(today: string, member = false): Promise<SignupConfig> {
+  mockScenario("signup");
+  setSignupMockToday(today);
+  const response = await fetch(`${origin}/api/v1/signup`, {
+    ...(member ? { headers: { Authorization: "Bearer mock-access-token" } } : {}),
+  });
+  return (await response.json()) as SignupConfig;
+}
+
+function quoteOf(config: SignupConfig, planName: string) {
+  const plan = config.plans?.find((candidate) => candidate.name === planName);
+  return config.upfront?.planQuotes.find((quote) => quote.planId === plan?.id);
+}
+
+function summary(config: SignupConfig, planName: string) {
+  const quote = quoteOf(config, planName);
+  return {
+    lines: quote?.lines.map((line) => `${line.concept} ${String(line.amount.amountMinor)}`),
+    options: quote?.options.map(
+      (option) =>
+        `${option.option} ${option.portion} ${option.startDate} ${String(option.amountDue.amountMinor)} → ${String(option.totalDue.amountMinor)}`,
+    ),
+    totalDue: quote?.totalDue.amountMinor,
+  };
+}
+
+describe("E3-W08 the mock quotes per plan like the api (R-04-14/15, T-04-05/06)", () => {
+  it("MONTHLY: d < 16 → a full month today / half from the 16th; d ≥ 16 → half today / full on the 1st", async () => {
+    expect(summary(await signupConfigOn("2026-08-05"), "Abonat")).toEqual({
+      lines: ["ENTRY_FEE 10000"],
+      options: ["TODAY FULL 2026-08-05 6000 → 16000", "ALTERNATIVE HALF 2026-08-16 3000 → 13000"],
+      totalDue: 10000,
+    });
+    expect(summary(await signupConfigOn("2026-08-16"), "Abonat").options).toEqual([
+      "TODAY HALF 2026-08-16 3000 → 13000",
+      "ALTERNATIVE FULL 2026-09-01 6000 → 16000",
+    ]);
+    expect(summary(await signupConfigOn("2026-08-17"), "Abonat").options).toEqual([
+      "TODAY HALF 2026-08-17 3000 → 13000",
+      "ALTERNATIVE FULL 2026-09-01 6000 → 16000",
+    ]);
+    expect(summary(await signupConfigOn("2026-12-31"), "Abonat").options?.[1]).toBe(
+      "ALTERNATIVE FULL 2027-01-01 6000 → 16000",
+    );
+  });
+
+  it("PACK: the pack line and no options; MAINTENANCE (Teràpia): the 50 € entry only", async () => {
+    const config = await signupConfigOn("2026-08-17");
+    expect(summary(config, "Pack 6")).toEqual({ lines: ["PACK 13500"], options: [], totalDue: 13500 });
+    expect(summary(config, "Teràpia")).toEqual({ lines: ["ENTRY_FEE 5000"], options: [], totalDue: 5000 });
+  });
+
+  it("add-dog: TODAY with the additional fee; the 1st of next month (entry only) up to day 25", async () => {
+    const day17 = await signupConfigOn("2026-08-17", true);
+    expect(summary(day17, "Abonat").options).toEqual([
+      "TODAY FULL 2026-08-17 3000 → 13000",
+      "ALTERNATIVE FULL 2026-09-01 0 → 10000",
+    ]);
+    expect(day17.upfront?.additionalDogOptions?.map((option) => option.option)).toEqual(["TODAY", "ALTERNATIVE"]);
+    const day26 = await signupConfigOn("2026-08-26", true);
+    expect(summary(day26, "Abonat").options).toEqual(["TODAY FULL 2026-08-26 3000 → 13000"]);
+    expect(day26.upfront?.additionalDogOptions?.map((option) => option.option)).toEqual(["TODAY"]);
+  });
+
+  it("the flags are sent: allowFamilyGroupPending (with FAMILY_GROUP only) and requireDogDocumentAtSignup", async () => {
+    const config = await signupConfigOn("2026-08-17");
+    expect(config.allowFamilyGroupPending).toBe(true);
+    expect(config.requireDogDocumentAtSignup).toBe(false);
+    mockScenario("signupNoFamily");
+    const noFamily = (await (await fetch(`${origin}/api/v1/signup`)).json()) as SignupConfig;
+    expect(noFamily).not.toHaveProperty("allowFamilyGroupPending");
+  });
+});
+
+describe("E3-W08 the upload URL and the add-dog submission mocks", () => {
+  it("R-04-08: the upload URL answers the headers the storage signed", async () => {
+    const response = await fetch(`${origin}/api/v1/signup/upload-urls`, {
+      body: JSON.stringify({ contentType: "image/jpeg", fileName: "cartilla_Kiwi_1.jpg", sizeBytes: 1024 }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    expect(((await response.json()) as { headers: unknown }).headers).toEqual({
+      "Content-Type": "image/jpeg",
+      "If-None-Match": "*",
+    });
+  });
+
+  it("E36: an add-dog submission lists the dog PENDING on GET /me/dogs, without documents or licences", async () => {
+    mockScenario("signup");
+    const response = await fetch(`${origin}/api/v1/me/dogs/signup`, {
+      body: JSON.stringify({
+        additionalDogOption: "TODAY",
+        dog: { birthMonth: "2025-03", breed: "Mestís", chip: "941000012340077", name: "Neret", sex: "MALE" },
+        documents: [],
+      }),
+      headers: {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+        "Idempotency-Key": crypto.randomUUID(),
+      },
+      method: "POST",
+    });
+    expect(response.status).toBe(201);
+    const result = (await response.json()) as { dogId: string; upfront: { lines: { concept: string }[] } };
+    expect(result.upfront.lines.map((line) => line.concept)).toEqual(["ENTRY_FEE", "ADDITIONAL_DOG_FEE"]);
+    const dogs = (await (await fetch(`${origin}/api/v1/me/dogs`)).json()) as {
+      dogs: Record<string, unknown>[];
+    };
+    const pending = dogs.dogs.find((dog) => dog.id === result.dogId);
+    expect(pending).toEqual({ ageYears: 1, breed: "Mestís", id: result.dogId, name: "Neret", sex: "MALE", status: "PENDING" });
+  });
 });
 afterAll(() => {
   server.close();

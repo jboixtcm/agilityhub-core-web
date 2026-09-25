@@ -701,6 +701,40 @@ describe("T-03-40 mobile own dogs", () => {
     expect(screen.queryByText("Notes als instructors", { exact: false })).not.toBeInTheDocument();
     expect(screen.queryByText("Tasques", { exact: true })).not.toBeInTheDocument();
   });
+
+  it("E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    // The add-dog submission of 17/19: the api keeps the dog PENDING until the club validates it.
+    const submitted = await fetch(`${window.location.origin}/api/v1/me/dogs/signup`, {
+      body: JSON.stringify({
+        additionalDogOption: "TODAY",
+        dog: { birthMonth: "2025-03", breed: "Mestís", chip: "941000012340036", name: "Neret", sex: "MALE" },
+        documents: [],
+      }),
+      headers: {
+        Authorization: `Bearer ${client.getAccessToken() ?? ""}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": "e36-add-dog",
+      },
+      method: "POST",
+    });
+    expect(submitted.status).toBe(201);
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+
+    const card = (await screen.findByRole("heading", { name: "Neret" })).closest<HTMLElement>(".dog-card");
+    if (card === null) throw new TypeError("Missing the pending dog card");
+    expect(within(card).getByText("pendent de validació")).toBeVisible();
+    expect(within(card).getByText(/Mestís · mascle · 1 any/u)).toBeVisible();
+    expect(within(card).queryByRole("button")).toBeNull();
+    expect(within(card).queryByRole("textbox")).toBeNull();
+    expect(card.querySelector("input")).toBeNull();
+    expect(within(card).queryByText(/Nivell|Cap document|Tasques/u)).toBeNull();
+    // The ACTIVE dogs keep their actions.
+    expect(screen.getAllByRole("button", { name: "＋ DOC." })).toHaveLength(2);
+    expect(screen.getAllByLabelText(/Notes als instructors/u)).toHaveLength(2);
+  });
 });
 
 describe("T-03-41 mobile own data", () => {

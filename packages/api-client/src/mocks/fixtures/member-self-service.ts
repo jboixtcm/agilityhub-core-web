@@ -4,11 +4,18 @@ import { censusLevels } from "./census";
 
 type License = components["schemas"]["LicenseWithPendingFields"];
 // The fixture dogs are ACTIVE, so they carry the documents and licences the api sends only for ACTIVE dogs.
-export type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
+export type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses" | "status"> & {
   documents: NonNullable<components["schemas"]["MeDog"]["documents"]>;
   licenses: License[];
+  status: "ACTIVE";
 };
-export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & { dogs: MeDog[] };
+/** A dog added from the app that waits for the club (R-04-25, E36): no documents or licences. */
+export type MePendingDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses" | "status"> & {
+  status: "PENDING";
+};
+export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & {
+  dogs: (MeDog | MePendingDog)[];
+};
 export type MeProfile = components["schemas"]["MeProfile"];
 type PostalTown = components["schemas"]["PostalTown"];
 

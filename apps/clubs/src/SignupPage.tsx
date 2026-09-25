@@ -46,6 +46,7 @@ type SignupPayment = components["schemas"]["SignupPayment"];
 type SignupDocumentFile = components["schemas"]["SignupFile"];
 type SignupRequest = components["schemas"]["SignupRequest"];
 type AddDogSignupRequest = components["schemas"]["AddDogSignupRequest"];
+type QuoteOption = components["schemas"]["SignupQuoteOption"];
 type Translate = ReturnType<typeof useTranslation>["t"];
 
 type DraftPerson = Omit<SignupPerson, "gender"> & {
@@ -648,12 +649,31 @@ function StepMessage({ message }: { message: string | undefined }) {
   );
 }
 
+/**
+ * The public footer (mockups 16–19; Jordi 25-09): «{legalName} · {taxId} · {city}», from
+ * `/branding` (the entity's public identifiers, LSSI art. 10); without a tax id, «{name} · {city}».
+ */
+function footerText(branding: ReturnType<typeof useBranding>, t: Translate): string {
+  const city = branding.club.city?.trim() ?? "";
+  const taxId = branding.club.taxId?.trim() ?? "";
+  if (taxId === "") {
+    const club = branding.club.name;
+    return city === ""
+      ? t("signup:common.footer", { club })
+      : t("signup:common.footerWithCity", { city, club });
+  }
+  const legalName = branding.club.legalName?.trim() ?? "";
+  const club = legalName === "" ? branding.club.name : legalName;
+  return city === ""
+    ? t("signup:common.footerWithTaxId", { club, taxId })
+    : t("signup:common.footerWithTaxIdAndCity", { city, club, taxId });
+}
+
 function Layout({ children }: { children: ReactNode }) {
   const branding = useBranding();
   const { i18n, t } = useTranslation("signup");
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   const locales = productLocales.filter((locale) => branding.locales.includes(locale));
-  const city = branding.club.city?.trim();
 
   return (
     <main className="signup-page">
@@ -667,6 +687,7 @@ function Layout({ children }: { children: ReactNode }) {
         )}
         <h1>{t("signup:common.title")}</h1>
         <label className="signup-language">
+          <Icon aria-hidden="true" name="globe" />
           <span className="ah-sr-only">{t("signup:common.language")}</span>
           <Select
             aria-label={t("signup:common.language")}
@@ -689,11 +710,7 @@ function Layout({ children }: { children: ReactNode }) {
         </label>
       </header>
       <div className="signup-page__body">{children}</div>
-      <footer className="signup-footer">
-        {city === undefined || city === ""
-          ? t("signup:common.footer", { club: branding.club.name })
-          : t("signup:common.footerWithCity", { city, club: branding.club.name })}
-      </footer>
+      <footer className="signup-footer">{footerText(branding, t)}</footer>
     </main>
   );
 }
@@ -744,6 +761,13 @@ function PersonStep({
   const townLookup = useRef(0);
   const isSpanishProfile = profile.code === "ES";
   const documentTypes = genericDocumentTypes(profile);
+  // A passport-only applicant (R-04-01): the document errors belong to the passport field.
+  const passportOnly =
+    isSpanishProfile &&
+    draft.person.idDocument.value.trim() === "" &&
+    draft.passport.trim() !== "";
+  const dniError = passportOnly ? undefined : errors.idDocument;
+  const passportError = passportOnly ? errors.idDocument : undefined;
 
   usePendingError(
     "person",
@@ -910,9 +934,9 @@ function PersonStep({
       <Progress current={1} label={t("signup:progress.person")} total={totalSteps} />
       {isSpanishProfile ? (
         <div className="signup-grid signup-grid--identity">
-          <FormField error={errors.idDocument} id="signup-id" label={t("signup:person.idDniNie")}>
+          <FormField error={dniError} id="signup-id" label={t("signup:person.idDniNie")}>
             <Input
-              {...invalidProps("signup-id", errors.idDocument)}
+              {...invalidProps("signup-id", dniError)}
               id="signup-id"
               onChange={(event) => {
                 const value = event.currentTarget.value;
@@ -928,8 +952,9 @@ function PersonStep({
               value={draft.person.idDocument.value}
             />
           </FormField>
-          <FormField id="signup-passport" label={t("signup:person.passport")}>
+          <FormField error={passportError} id="signup-passport" label={t("signup:person.passport")}>
             <Input
+              {...invalidProps("signup-passport", passportError)}
               disabled={draft.person.idDocument.value.trim() !== ""}
               id="signup-passport"
               onChange={(event) => {
@@ -1219,8 +1244,9 @@ function PersonStep({
           )}
         </FormField>
       </div>
-      <aside className="signup-note signup-note--neutral">
-        {t("signup:person.existingDogNote")}
+      <aside className="signup-note signup-note--neutral signup-note--info">
+        <Icon aria-hidden="true" name="info" />
+        <span>{t("signup:person.existingDogNote")}</span>
       </aside>
       {recognition?.result === "VERIFICATION_SENT" ? (
         <section className="signup-recognition" role="status">
@@ -1285,6 +1311,8 @@ function DogStep({
   const [uploading, setUploading] = useState(false);
   const files = draft.dog.documents?.[0]?.files ?? [];
   const familyOffers = branding.modules.includes("FAMILY_GROUP");
+  // R-04-08: `signup.requireDogDocumentAtSignup` makes the vaccination card required on 17.
+  const documentRequired = config.requireDogDocumentAtSignup === true;
 
   usePendingError(
     "dog",
@@ -1328,9 +1356,10 @@ function DogStep({
           body: { contentType: file.type, fileName: proposed, sizeBytes: file.size },
         });
         if (response.data === undefined) throw new TypeError("Missing upload URL response");
+        // R-04-08: the storage signed these headers (Content-Type, If-None-Match: *); sent unchanged.
         const put = await fetch(response.data.uploadUrl, {
           body: file,
-          headers: { "Content-Type": file.type },
+          headers: response.data.headers,
           method: "PUT",
         });
         if (!put.ok) throw new TypeError("Signed upload failed");
@@ -1349,6 +1378,14 @@ function DogStep({
           ],
         },
       }));
+      if (uploaded.length > 0) {
+        setErrors((current) => {
+          if (current.documents === undefined) return current;
+          const next = { ...current };
+          delete next.documents;
+          return next;
+        });
+      }
     } catch (error) {
       setMessage(
         isApiError(error, "FILE_TOO_LARGE")
@@ -1380,6 +1417,7 @@ function DogStep({
     } else if (!validChip(chip, profile.code)) {
       next.chip = t("signup:dog.invalidChip");
     }
+    if (documentRequired && files.length === 0) next.documents = t("signup:dog.documentRequired");
     setErrors(next);
     setMessage(undefined);
     if (Object.keys(next).length > 0) {
@@ -1498,6 +1536,7 @@ function DogStep({
         <Input
           {...invalidProps("signup-dog-document", errors.documents)}
           accept="application/pdf,image/*"
+          aria-required={documentRequired || undefined}
           className="signup-file-input"
           disabled={uploading}
           id="signup-dog-document"
@@ -1521,9 +1560,11 @@ function DogStep({
           {uploading ? t("signup:dog.uploading") : t("signup:dog.addPage")}
         </label>
       </div>
-      <aside className="signup-note signup-note--neutral">
-        {t("signup:dog.optionalDocument")}
-      </aside>
+      {documentRequired ? null : (
+        <aside className="signup-note signup-note--neutral">
+          {t("signup:dog.optionalDocument")}
+        </aside>
+      )}
       {config.texts.freeTrainingConditions === "" ? null : (
         <p className="signup-copy">{config.texts.freeTrainingConditions}</p>
       )}
@@ -1558,10 +1599,14 @@ function DogStep({
                     }}
                     type="button"
                   >
+                    {/* The name, the conditions on one line and the price: the long description is
+                        already in the step's intro texts (E3-W05 17a–d). */}
                     <span className="signup-plan__head">
                       <strong>{plan.name}</strong>
                       {plan.maintenanceFee !== undefined ? (
-                        <small>{plan.description}</small>
+                        plan.conditions === "" ? null : (
+                          <small className="signup-plan__conditions">{plan.conditions}</small>
+                        )
                       ) : plan.price === undefined || plan.type === "PACK" ? null : (
                         <b>
                           {t("signup:dog.monthlyPrice", {
@@ -1578,17 +1623,19 @@ function DogStep({
                         })}
                       </small>
                     )}
-                    {plan.entryFee === undefined || plan.maintenanceFee !== undefined ? null : (
+                    {/* R-04-14: a plan without an entry fee (or a zero one) shows no entry line. */}
+                    {plan.entryFee === undefined ||
+                    plan.entryFee.amountMinor <= 0 ||
+                    plan.maintenanceFee !== undefined ? null : (
                       <small>
                         {t("signup:dog.entryFee", {
                           price: formatMoney(plan.entryFee.amountMinor / 100),
                         })}
                       </small>
                     )}
-                    {plan.maintenanceFee !== undefined ? null : (
-                      <small>{plan.description}</small>
+                    {plan.conditions === "" || plan.maintenanceFee !== undefined ? null : (
+                      <small className="signup-plan__conditions">{plan.conditions}</small>
                     )}
-                    {plan.conditions === "" ? null : <small>{plan.conditions}</small>}
                     {plan.maintenanceFee === undefined || plan.entryFee === undefined ? null : (
                       <small>
                         {t("signup:dog.maintenance", {
@@ -1780,19 +1827,25 @@ function FamilyStep({
         </aside>
       ) : lookup?.result === "NOT_FOUND" ? (
         <aside className="signup-note signup-note--danger" role="alert">
-          {t("signup:family.notFound")}{" "}
-          <button
-            onClick={() => {
-              onChange((current) => ({
-                ...current,
-                familyClaim: { ...current.familyClaim, leavePending: true },
-              }));
-              onContinue("/apuntat-hi/pagament");
-            }}
-            type="button"
-          >
-            {t("signup:family.leavePending")}
-          </button>
+          {t("signup:family.notFound")}
+          {/* R-04-12: only with `signup.allowFamilyGroupPending`; otherwise correct or empty the fields. */}
+          {config.allowFamilyGroupPending === true ? (
+            <>
+              {" "}
+              <button
+                onClick={() => {
+                  onChange((current) => ({
+                    ...current,
+                    familyClaim: { ...current.familyClaim, leavePending: true },
+                  }));
+                  onContinue("/apuntat-hi/pagament");
+                }}
+                type="button"
+              >
+                {t("signup:family.leavePending")}
+              </button>
+            </>
+          ) : null}
         </aside>
       ) : null}
       <StepMessage message={message} />
@@ -1870,12 +1923,38 @@ function PaymentStep({
 }) {
   const branding = useBranding();
   const profile = countryProfile(branding.countryProfile);
-  const { formatDate, formatMoney } = useClubFormats();
+  const { formatMoney, formatPlainDate } = useClubFormats();
   const { i18n, t } = useTranslation(["signup", "errors"]);
   const formRef = useRef<HTMLFormElement>(null);
   const focusFirstError = useFocusFirstError(formRef);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [imageOpen, setImageOpen] = useState(false);
+  // R-04-14/15: the api's quote of the selected plan (api E3-T08); the web never computes one.
+  const selectedPlan = config.plans.find((plan) => plan.id === draft.planId);
+  const quote = config.upfront?.planQuotes.find((candidate) => candidate.planId === draft.planId);
+  const chosenOption = addDog ? draft.additionalDogOption : draft.payment.firstMonthOption;
+  // An option the quote no longer offers (add-dog after the cut-off day) falls back to the first.
+  const selectedOption =
+    quote?.options.find((option) => option.option === chosenOption) ?? quote?.options[0];
+  const quoteLines = (quote?.lines ?? []).filter((line) => line.amount.amountMinor > 0);
+  const totalDue = selectedOption?.totalDue ?? quote?.totalDue ?? { amountMinor: 0, currency: branding.currency };
+  const hasUpfront = quoteLines.length > 0 || (quote?.options.length ?? 0) > 0;
+  const optionLabel = (option: QuoteOption): string => {
+    const date = formatPlainDate(option.startDate, "dayMonth");
+    if (addDog) {
+      return option.option === "TODAY"
+        ? t("signup:step4.additionalDog.today", { date })
+        : t("signup:step4.additionalDog.nextMonth", { date });
+    }
+    if (option.option === "TODAY") {
+      return option.portion === "HALF"
+        ? t("signup:step4.firstMonth.todayHalf", { date })
+        : t("signup:step4.firstMonth.todayFull", { date });
+    }
+    return option.portion === "HALF"
+      ? t("signup:step4.firstMonth.splitDayHalf", { date })
+      : t("signup:step4.firstMonth.nextMonthFull", { date });
+  };
   const [message, setMessage] = useState<string>();
   const [working, setWorking] = useState(false);
   const [website, setWebsite] = useState("");
@@ -1975,9 +2054,11 @@ function PaymentStep({
     try {
       let submission = draft.submission;
       if (submission?.memberId === undefined) {
+        // The option shown selected is the one sent (the total itself is never sent, T-04-32).
+        const startOption = selectedOption?.option;
         const body: AddDogSignupRequest | SignupRequest = addDog
           ? {
-              additionalDogOption: draft.additionalDogOption,
+              additionalDogOption: startOption ?? draft.additionalDogOption,
               dog,
               documents: dog.documents ?? [],
               ...(draft.planId === "" ? {} : { planIdRequested: draft.planId }),
@@ -1988,7 +2069,15 @@ function PaymentStep({
               dog,
               ...(draft.familyClaim.holderName === "" ? {} : { familyGroupClaim: draft.familyClaim }),
               locale: i18n.resolvedLanguage ?? branding.defaultLocale,
-              ...(billing ? { payment: paymentBody(draft.payment) } : {}),
+              ...(billing
+                ? {
+                    payment: paymentBody(
+                      startOption === undefined
+                        ? draft.payment
+                        : { ...draft.payment, firstMonthOption: startOption },
+                    ),
+                  }
+                : {}),
               person: {
                 ...draft.person,
                 birthDate: birthDateToIso(draft.person.birthDate) ?? draft.person.birthDate,
@@ -2210,37 +2299,24 @@ function PaymentStep({
           )}
         </section>
       ) : null}
-      {billing && config.upfront !== undefined ? (
+      {billing && quote !== undefined && hasUpfront ? (
         <Card className="signup-upfront">
           <h2>{t("signup:payment.initialTitle")}</h2>
-          {config.plans.find((plan) => plan.id === draft.planId)?.entryFee === undefined ? null : (
-            <p className="signup-upfront__line">
-              <span>{t("signup:payment.entryLine")}</span>
-              <strong>
-                {formatMoney(
-                  (config.plans.find((plan) => plan.id === draft.planId)?.entryFee?.amountMinor ??
-                    0) / 100,
-                )}
-              </strong>
+          {quoteLines.map((line) => (
+            <p className="signup-upfront__line" key={line.concept}>
+              <span>
+                {line.concept === "PACK" ? (selectedPlan?.name ?? "") : t("signup:payment.entryLine")}
+              </span>
+              <strong>{formatMoney(line.amount.amountMinor / 100)}</strong>
             </p>
-          )}
-          {(addDog
-            ? (config.upfront.additionalDogOptions ?? [])
-            : config.upfront.firstMonthOptions
-          ).length === 0 ? null : (
+          ))}
+          {quote.options.length === 0 ? null : (
             <fieldset className="signup-upfront__options">
               <legend>{t("signup:payment.chooseStart")}</legend>
-              {(addDog
-                ? (config.upfront.additionalDogOptions ?? [])
-                : config.upfront.firstMonthOptions
-              ).map((option) => (
+              {quote.options.map((option) => (
                 <label key={option.option}>
                   <input
-                    checked={
-                      addDog
-                        ? draft.additionalDogOption === option.option
-                        : draft.payment.firstMonthOption === option.option
-                    }
+                    checked={selectedOption?.option === option.option}
                     disabled={locked}
                     name="signup-start"
                     onChange={() => {
@@ -2256,16 +2332,17 @@ function PaymentStep({
                     }}
                     type="radio"
                   />
-                  <span>
-                    {option.option === "TODAY"
-                      ? t("signup:payment.startToday", { date: formatDate(option.startDate, "dayMonth") })
-                      : t("signup:payment.startAlternative", { date: formatDate(option.startDate, "dayMonth") })}
-                  </span>
-                  <strong>{formatMoney(option.amount.amountMinor / 100)}</strong>
+                  <span>{optionLabel(option)}</span>
+                  <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
                 </label>
               ))}
             </fieldset>
           )}
+          {/* T-04-32: display-only; the club computes and charges the total, it is never sent. */}
+          <p className="signup-upfront__total">
+            <span>{t("signup:step4.total")}</span>
+            <b>{formatMoney(totalDue.amountMinor / 100)}</b>
+          </p>
           <p>{stripe ? t("signup:payment.stripeSubmit") : manualInstructions}</p>
         </Card>
       ) : null}
@@ -2381,12 +2458,20 @@ export function SignupPage({
   const profile = countryProfile(branding.countryProfile);
   const { i18n, t } = useTranslation(["signup", "errors"]);
   const paths = signupPaths(addDog);
-  const cancelled = new URLSearchParams(window.location.search).get("cs") === "cancel";
-  const initialPath =
-    cancelled && (window.location.pathname === paths.sent || window.location.pathname === "/apuntat-hi/enviada")
+  // The `?cs=cancel` marker of Stripe's return is read once, when the document loads, and then
+  // removed from the address (below): a reload never cancels a later attempt.
+  const [cancelled] = useState(
+    () => new URLSearchParams(window.location.search).get("cs") === "cancel",
+  );
+  const [path, setPath] = useState(() =>
+    cancelled &&
+    (window.location.pathname === paths.sent || window.location.pathname === "/apuntat-hi/enviada")
       ? (paths.payment ?? window.location.pathname)
-      : window.location.pathname;
-  const [path, setPath] = useState(initialPath);
+      : window.location.pathname,
+  );
+  // A full page load is on its way: the departing document never renders the next step, so it
+  // never shows nor consumes that step's routed error (it stays in the draft for the next page).
+  const [leaving, setLeaving] = useState(false);
   const [draft, setDraftState] = useState(() => {
     const saved = readDraft(addDog, profile);
     // A cancelled checkout resolved that attempt: the retry asks for a new checkout session
@@ -2396,6 +2481,11 @@ export function SignupPage({
     delete submission.checkoutKey;
     return { ...saved, submission };
   });
+
+  useEffect(() => {
+    if (!cancelled) return;
+    window.history.replaceState(window.history.state, "", paths.payment ?? window.location.pathname);
+  }, [cancelled, paths.payment]);
   // The latest draft, updated synchronously: the production navigator is a full page load, so
   // the draft is written to the session before leaving, with every update of the same tick.
   const draftRef = useRef(draft);
@@ -2408,7 +2498,8 @@ export function SignupPage({
   const [closed, setClosed] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [reload, setReload] = useState(0);
-  const sent = path === paths.sent && !cancelled;
+  // A cancelled checkout that came back to the «sent» address starts on 19 (initial path above).
+  const sent = path === paths.sent;
   const committed = draft.submission?.memberId !== undefined;
 
   useEffect(() => {
@@ -2478,8 +2569,19 @@ export function SignupPage({
     } else {
       safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draftRef.current, savedAt: Date.now() }));
     }
-    setPath(nextPath);
+    const target = new URL(nextPath, window.location.href);
     onNavigate(nextPath);
+    // A same-document navigator has moved the address already: show the step. The production
+    // navigator (`location.assign`) has not: this document keeps its step until it unloads.
+    const moved =
+      target.origin === window.location.origin &&
+      target.pathname === window.location.pathname &&
+      target.search === window.location.search;
+    if (moved || nextPath === paths.sent) {
+      setPath(nextPath);
+    } else if (target.origin === window.location.origin) {
+      setLeaving(true);
+    }
   };
 
   const go = (nextPath: string) => {
@@ -2521,6 +2623,16 @@ export function SignupPage({
     return (
       <Layout>
         <SuccessStep addDog={addDog} />
+      </Layout>
+    );
+  }
+
+  if (leaving) {
+    return (
+      <Layout>
+        <p className="signup-state" role="status">
+          {t("signup:common.loading")}
+        </p>
       </Layout>
     );
   }

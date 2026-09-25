@@ -39,8 +39,11 @@ export type BrandingLogoAssets =
 export interface Branding {
   club: {
     city?: string | null;
+    /** The club's legal name and tax id (`ClubSummary`), for the public footer of the signup. */
+    legalName?: string | null;
     name: string;
     slug: string;
+    taxId?: string | null;
   };
   countryProfile: unknown;
   currency: string;

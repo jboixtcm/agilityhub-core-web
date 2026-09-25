@@ -184,6 +184,7 @@
     "notesHelp": "(qué quieres obtener del club, aspectos a tener en cuenta…)",
     "notesTitle": "Notas a los instructores",
     "pack": "Bono {count}",
+    "pendingValidation": "pendiente de validación",
     "photoSaved": "Foto de {dog} guardada",
     "tasksSummary": "{open} pendientes · {completed} hechas",
     "tasksTitle": "Tareas",

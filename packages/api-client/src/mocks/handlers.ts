@@ -48,10 +48,11 @@ import {
   settingsState,
 } from "./fixtures/settings";
 import {
+  SIGNUP_MOCK_TODAY,
   signupConfig,
   signupMemberFixture,
+  signupResultUpfront,
   signupTownFixtures,
-  signupUpfrontFixture,
   type MemberDogSignupRequest,
   type SignupRequest,
 } from "./fixtures/signup";
@@ -59,6 +60,8 @@ import {
   addDogPendingSignup,
   addDogSignupReview,
   derivedSignupReview,
+  readmissionChanges,
+  readmissionValues,
   type SignupReviewVariant,
   signupReviewBaseline,
   signupReviewDryRun,
@@ -864,6 +867,14 @@ function validationError(fieldErrors: { code: string; field: string }[]) {
   );
 }
 
+// The club's date of `GET /signup` (S04 §4: `CLUB.timeZone`); a test sets it to quote another day.
+let signupMockToday: string | undefined;
+
+/** Sets the club's «today» the signup quotes are computed for (R-04-15); reset with the signup state. */
+function setSignupMockToday(today: string | undefined): void {
+  signupMockToday = today;
+}
+
 function signupConfiguration(request: Request) {
   const scenario = currentMockScenario();
   const modules = scenario.branding.modules;
@@ -875,9 +886,15 @@ function signupConfiguration(request: Request) {
     packs: modules.includes("PACKS"),
     privacyPolicyUrl: scenario.branding.legal.privacyPolicyUrl,
     stripe: scenario.signupStripe === true,
+    today: signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
     ...(request.headers.has("Authorization") ? { member: signupMemberFixture } : {}),
   });
   return config;
+}
+
+/** The quote of the plan a submission requested, as the api computes it for the submission. */
+function submittedQuote(request: Request, planId: string | undefined) {
+  return signupConfiguration(request).upfront?.planQuotes.find((quote) => quote.planId === planId);
 }
 
 /**
@@ -924,13 +941,6 @@ function signupPaymentMethod(
   };
 }
 
-function signupUpfront(addDog = false) {
-  return signupUpfrontFixture({
-    addDog,
-    currency: currentMockScenario().branding.currency,
-  });
-}
-
 // Idempotent signup replays (CONVENCIONS_API §7): a key returns its first 201; the committed
 // people and chips make a retry with a fresh key fail like the api does.
 const signupReplays = new Map<string, unknown>();
@@ -941,6 +951,14 @@ function resetSignupMockState(): void {
   signupReplays.clear();
   submittedSignupIdentities.clear();
   submittedDogChips.clear();
+  signupMockToday = undefined;
+}
+
+/** Whole years between a `YYYY-MM` birth month and the club's `YYYY-MM-DD` today. */
+function ageYears(birthMonth: string, today: string): number {
+  const [birthYear = 0, birthMonthNumber = 1] = birthMonth.split("-").map(Number);
+  const [year = 0, month = 1] = today.split("-").map(Number);
+  return Math.max(0, year - birthYear - (month < birthMonthNumber ? 1 : 0));
 }
 
 const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -982,8 +1000,9 @@ function validIban(value: string): boolean {
   return remainder === 1;
 }
 
+/** The member's own ACTIVE dog: a PENDING dog has no actions (R-04-25, E36). */
 function currentMemberDog(id: string): MeDog | undefined {
-  return memberDogsState.dogs.find((dog) => dog.id === id);
+  return memberDogsState.dogs.find((dog): dog is MeDog => dog.id === id && dog.status === "ACTIVE");
 }
 
 function currentDog(id: string): DogDetail | undefined {
@@ -1347,9 +1366,11 @@ export const handlers = [
       return apiError("FILE_TOO_LARGE", "File too large", 400);
     }
     const fileKey = `signup/mock/202609/mock-upload/${encodeURIComponent(body.fileName)}`;
+    // R-04-08 (api E3-T09): the headers the storage signed, which the PUT must send unchanged.
     return HttpResponse.json({
       expiresAt: "2026-09-09T18:15:00Z",
       fileKey,
+      headers: { "Content-Type": body.contentType, "If-None-Match": "*" },
       uploadUrl: `https://uploads.example.test/${fileKey}`,
     });
   }),
@@ -1412,11 +1433,12 @@ export const handlers = [
     submittedSignupIdentities.add(identity);
     submittedDogChips.add(body.dog.chip);
     const checkoutRequired = scenario.signupStripe === true;
+    const upfront = signupResultUpfront(submittedQuote(request, body.planId), body.payment?.firstMonthOption);
     const result = {
       checkout: { required: checkoutRequired },
       memberId: "member-signup-357",
       signupToken: "mock-signup-token",
-      upfront: signupUpfront(),
+      ...(scenario.branding.modules.includes("BILLING") ? { upfront } : {}),
     };
     if (idempotencyKey !== "") signupReplays.set(`signup:${idempotencyKey}`, result);
     return HttpResponse.json(result, { status: 201 });
@@ -1435,10 +1457,30 @@ export const handlers = [
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
     submittedDogChips.add(body.dog.chip);
+    const scenario = currentMockScenario();
+    const dogId = `dog-pending-${String(memberDogsState.dogs.length + 1)}`;
+    // E36: screen 13 lists the member's own PENDING dog until the club validates it.
+    memberDogsState = {
+      ...memberDogsState,
+      dogs: [
+        ...memberDogsState.dogs,
+        {
+          ageYears: ageYears(body.dog.birthMonth, signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY),
+          breed: body.dog.breed,
+          id: dogId,
+          name: body.dog.name,
+          sex: body.dog.sex,
+          status: "PENDING",
+        },
+      ],
+    };
+    const quote = submittedQuote(request, body.planIdRequested ?? signupMemberFixture.planId);
     const result = {
-      checkout: { memberId: "member-signup-357", required: currentMockScenario().signupStripe === true },
-      dogId: "dog-pending-new",
-      upfront: signupUpfront(true),
+      checkout: { memberId: "member-signup-357", required: scenario.signupStripe === true },
+      dogId,
+      ...(scenario.branding.modules.includes("BILLING")
+        ? { upfront: signupResultUpfront(quote, body.additionalDogOption, { addDog: true }) }
+        : {}),
     };
     if (idempotencyKey !== "") signupReplays.set(`add-dog:${idempotencyKey}`, result);
     return HttpResponse.json(result, { status: 201 });
@@ -2014,6 +2056,18 @@ export const handlers = [
       if (body.version !== member.version) {
         return apiError("STALE_VERSION", "Stale version", 409);
       }
+      // R-04-06 (E38): the readmission matched on the document, so it cannot change while pending.
+      if (signupView.signup.readmission && body.idDocument !== undefined) {
+        return HttpResponse.json<ApiErrorResponse>(
+          {
+            code: "INVALID_STATE",
+            details: { reason: "READMISSION_PENDING" },
+            message: "Invalid state",
+            traceId: "mock-trace-id",
+          },
+          { status: 409 },
+        );
+      }
       const { consents, contactEmails, paymentMethod, ...memberPatch } = body;
       // `signup.planIdRequested` is not edited from D2 (the requested plan is read-only there).
       delete memberPatch.signup;
@@ -2068,6 +2122,15 @@ export const handlers = [
       // The view's `version` is the member's (S04 §6); each dog keeps its own.
       signupView.member = updated;
       signupView.version = updated.version;
+      // E38: a readmission's edits change the submitted values, never the LEFT record.
+      if (signupView.readmission !== undefined) {
+        const submitted = readmissionValues(updated);
+        signupView.readmission = {
+          ...signupView.readmission,
+          changedFields: readmissionChanges(signupView.readmission.current, submitted),
+          submitted,
+        };
+      }
       return HttpResponse.json(updated);
     }
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
@@ -3199,5 +3262,6 @@ export {
   resetPlanningState,
   resetSettingsState,
   resetSignupMockState,
+  setSignupMockToday,
   type MockScenario,
 };

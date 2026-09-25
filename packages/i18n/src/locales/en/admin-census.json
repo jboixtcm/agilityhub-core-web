@@ -279,7 +279,10 @@
       "holderTaxId": "Account holder tax ID",
       "requestedPlan": "Requested plan",
       "planName": "Plan",
-      "paymentMethod": "Payment method"
+      "paymentMethod": "Payment method",
+      "contactEmails": "Email addresses",
+      "phones": "Phones",
+      "address": "Address"
     },
     "sameHolder": "holder: same person",
     "paymentSummary": "{method} · {account} · {holder}",
@@ -358,7 +361,13 @@
       "FEMALE": "Female",
       "MALE": "Male"
     },
-    "familyCandidate": "{name} + {dogs}"
+    "familyCandidate": "{name} + {dogs}",
+    "readmission": {
+      "title": "Changes from the former record",
+      "previous": "Before: {value}",
+      "submitted": "Now: {value}",
+      "documentLocked": "The ID document cannot change during a readmission: to correct it, reject the readmission."
+    }
   },
   "values": {
     "empty": "—",

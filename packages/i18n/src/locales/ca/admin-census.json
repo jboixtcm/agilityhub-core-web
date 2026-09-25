@@ -290,7 +290,10 @@
       "holderTaxId": "NIF del titular",
       "requestedPlan": "Modalitat sol·licitada",
       "planName": "Modalitat",
-      "paymentMethod": "Mètode de pagament"
+      "paymentMethod": "Mètode de pagament",
+      "contactEmails": "Correus electrònics",
+      "phones": "Telèfons",
+      "address": "Adreça"
     },
     "sameHolder": "titular: la mateixa",
     "paymentSummary": "{method} · {account} · {holder}",
@@ -369,7 +372,13 @@
       "FEMALE": "Femella",
       "MALE": "Mascle"
     },
-    "familyCandidate": "{name} + {dogs}"
+    "familyCandidate": "{name} + {dogs}",
+    "readmission": {
+      "title": "Canvis respecte de la fitxa de baixa",
+      "previous": "Abans: {value}",
+      "submitted": "Ara: {value}",
+      "documentLocked": "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió."
+    }
   },
   "values": {
     "empty": "—",

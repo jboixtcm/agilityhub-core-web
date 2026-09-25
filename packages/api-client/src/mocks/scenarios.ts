@@ -32,6 +32,8 @@ export interface MockScenarioDefinition {
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
   signupStripe?: boolean;
+  /** The club's date `GET /signup` quotes for (R-04-15); default `SIGNUP_MOCK_TODAY` (17-08-2026). */
+  signupToday?: string;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
   signupReview?: SignupReviewVariant;
 }
@@ -88,6 +90,13 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
     signupReview: "familyPending",
+  },
+  /** R-04-06 (E38): a pending readmission, with the LEFT record's values and the submitted ones. */
+  adminSignupReviewReadmission: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReview: "readmission",
   },
   member: {
     branding: canic,
@@ -270,6 +279,13 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
     signupStripe: true,
+  },
+  /** R-04-15 before the split day: the club's «today» is 05-08-2026 (full month today, half on the 16th). */
+  signupEarlyMonth: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupToday: "2026-08-05",
   },
   /**
    * S07 R-07-14 variants: `WAITLIST` off, and `levels.enabled = false`. The account is the member

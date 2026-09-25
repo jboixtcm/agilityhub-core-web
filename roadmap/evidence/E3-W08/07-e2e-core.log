@@ -1,0 +1,415 @@
+heavy.sh: 19:02 waiting for the host lock, held by: 19:00 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 19:05 got the host lock after 2 min 45 s
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E3-W08
+
+ Network agilityhub-e1-w04_default Creating 
+ Volume agilityhub-e1-w04_mongo-data Creating 
+ Volume agilityhub-e1-w04_export-files Creating 
+ Volume agilityhub-e1-w04_mongo-data Creating 
+ Network agilityhub-e1-w04_default Creating 
+ Volume agilityhub-e1-w04_export-files Creating 
+ Volume agilityhub-e1-w04_mailbox Creating 
+ Volume agilityhub-e1-w04_mailbox Creating 
+ Volume agilityhub-e1-w04_mongo-data Created 
+ Volume agilityhub-e1-w04_mongo-data Created 
+ Volume agilityhub-e1-w04_export-files Created 
+ Volume agilityhub-e1-w04_export-files Created 
+ Volume agilityhub-e1-w04_mailbox Created 
+ Volume agilityhub-e1-w04_mailbox Created 
+ Network agilityhub-e1-w04_default Created 
+ Network agilityhub-e1-w04_default Created 
+ Container agilityhub-e1-w04-mongo-1 Creating 
+ Container agilityhub-e1-w04-mongo-1 Created 
+ Container agilityhub-e1-w04-seed-1 Creating 
+ Container agilityhub-e1-w04-seed-1 Created 
+ Container agilityhub-e1-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e1-w04-activate-demo-club-1 Created 
+ Container agilityhub-e1-w04-core-1 Creating 
+ Container agilityhub-e1-w04-core-1 Created 
+ Container agilityhub-e1-w04-mongo-1 Starting 
+ Container agilityhub-e1-w04-mongo-1 Started 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-seed-1 Starting 
+ Container agilityhub-e1-w04-seed-1 Started 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Started 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Starting 
+ Container agilityhub-e1-w04-core-1 Started 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-core-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Running 
+ Container agilityhub-e1-w04-mongo-1 Running 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-seed-1 Starting 
+ Container agilityhub-e1-w04-seed-1 Started 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Started 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Waiting 
+ Container agilityhub-e1-w04-core-1 Healthy 
+ Container agilityhub-e1-w04-playwright-run-9e64c483a4bb Creating 
+ Container agilityhub-e1-w04-playwright-run-9e64c483a4bb Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 47, added 46
+Progress: resolved 851, reused 0, downloaded 82, added 82
+Progress: resolved 851, reused 0, downloaded 106, added 106
+Progress: resolved 851, reused 0, downloaded 157, added 157
+Progress: resolved 851, reused 0, downloaded 186, added 186
+Progress: resolved 851, reused 0, downloaded 204, added 204
+Progress: resolved 851, reused 0, downloaded 237, added 237
+Progress: resolved 851, reused 0, downloaded 282, added 282
+Progress: resolved 851, reused 0, downloaded 305, added 305
+Progress: resolved 851, reused 0, downloaded 318, added 317
+Progress: resolved 851, reused 0, downloaded 337, added 337
+Progress: resolved 851, reused 0, downloaded 347, added 347
+Progress: resolved 851, reused 0, downloaded 362, added 362
+Progress: resolved 851, reused 0, downloaded 409, added 409
+Progress: resolved 851, reused 0, downloaded 443, added 443
+Progress: resolved 851, reused 0, downloaded 500, added 500
+Progress: resolved 851, reused 0, downloaded 515, added 515
+Progress: resolved 851, reused 0, downloaded 525, added 525
+Progress: resolved 851, reused 0, downloaded 532, added 532
+Progress: resolved 851, reused 0, downloaded 537, added 537
+Progress: resolved 851, reused 0, downloaded 538, added 537
+Progress: resolved 851, reused 0, downloaded 538, added 538
+ WARN  GET https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.3.3.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/tldts/-/tldts-7.4.11.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/prettier/-/prettier-3.9.6.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.69.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/rolldown/-/rolldown-1.2.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-gnu/-/oxide-linux-arm64-gnu-4.3.3.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.25.12.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/playwright-core/-/playwright-core-1.63.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/react-i18next/-/react-i18next-17.0.13.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@turbo/linux-arm64/-/linux-arm64-2.10.12.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/msw/-/msw-2.15.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 539, added 538
+Progress: resolved 851, reused 0, downloaded 541, added 541
+Progress: resolved 851, reused 0, downloaded 542, added 541
+Progress: resolved 851, reused 0, downloaded 543, added 543
+Progress: resolved 851, reused 0, downloaded 545, added 545
+Progress: resolved 851, reused 0, downloaded 550, added 550
+Progress: resolved 851, reused 0, downloaded 561, added 561
+Progress: resolved 851, reused 0, downloaded 571, added 571
+Progress: resolved 851, reused 0, downloaded 584, added 584
+Progress: resolved 851, reused 0, downloaded 590, added 590
+Progress: resolved 851, reused 0, downloaded 595, added 595
+Progress: resolved 851, reused 0, downloaded 596, added 596
+Progress: resolved 851, reused 0, downloaded 602, added 602
+ WARN  GET https://registry.npmjs.org/@oxc-project/types/-/types-0.148.0.tgz error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 611, added 611
+Progress: resolved 851, reused 0, downloaded 619, added 619
+Progress: resolved 851, reused 0, downloaded 629, added 629
+Progress: resolved 851, reused 0, downloaded 641, added 641
+Progress: resolved 851, reused 0, downloaded 655, added 655
+Progress: resolved 851, reused 0, downloaded 668, added 668
+Progress: resolved 851, reused 0, downloaded 679, added 679
+Progress: resolved 851, reused 0, downloaded 692, added 692
+Progress: resolved 851, reused 0, downloaded 701, added 701
+Progress: resolved 851, reused 0, downloaded 713, added 713
+Progress: resolved 851, reused 0, downloaded 720, added 720
+Progress: resolved 851, reused 0, downloaded 724, added 724
+ WARN  GET https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.33.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 730, added 730
+Progress: resolved 851, reused 0, downloaded 737, added 737
+Progress: resolved 851, reused 0, downloaded 758, added 758
+Progress: resolved 851, reused 0, downloaded 777, added 777
+Progress: resolved 851, reused 0, downloaded 787, added 787
+Progress: resolved 851, reused 0, downloaded 812, added 812
+Progress: resolved 851, reused 0, downloaded 829, added 829
+Progress: resolved 851, reused 0, downloaded 839, added 839
+Progress: resolved 851, reused 0, downloaded 841, added 841
+Progress: resolved 851, reused 0, downloaded 843, added 843
+Progress: resolved 851, reused 0, downloaded 844, added 843
+Progress: resolved 851, reused 0, downloaded 845, added 845
+Progress: resolved 851, reused 0, downloaded 846, added 846
+Progress: resolved 851, reused 0, downloaded 847, added 846
+Progress: resolved 851, reused 0, downloaded 847, added 847
+ WARN  GET https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 848, added 847
+Progress: resolved 851, reused 0, downloaded 848, added 848
+ WARN  GET https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.3.3.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/tldts/-/tldts-7.4.11.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+Progress: resolved 851, reused 0, downloaded 849, added 848
+Progress: resolved 851, reused 0, downloaded 849, added 849
+Progress: resolved 851, reused 0, downloaded 850, added 849
+Progress: resolved 851, reused 0, downloaded 850, added 850
+Progress: resolved 851, reused 0, downloaded 851, added 850
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4m 49s using pnpm v9.15.9
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:214) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 10 tests using 1 worker
+
+[1/10] e2e/core/e1-core.spec.ts:156:5 › T-01-18 password login reaches the seeded account
+[2/10] e2e/core/e1-core.spec.ts:172:5 › T-01-21 seeded administrator opens the real backoffice
+[3/10] e2e/core/e1-core.spec.ts:188:5 › T-01-20 club session is restored by the core
+[4/10] e2e/core/e1-core.spec.ts:211:5 › T-01-19 magic link is delivered and exchanged end to end
+[5/10] e2e/core/e1-core.spec.ts:233:5 › T-01-26 published seed enters without pending onboarding
+[6/10] e2e/core/e1-core.spec.ts:243:5 › T-01-22 apps/id resumes a real authorize flow through oauth2/session
+[7/10] e2e/core/e2-core.spec.ts:206:5 › T-03-42 real census flow, booking block and member profile
+[8/10] e2e/core/e2-core.spec.ts:337:5 › T-05-22/T-05-25 real catalog create, edit and deactivate round trips
+[9/10] e2e/core/e2-core.spec.ts:422:5 › T-02-13/T-14-26 real parameter history, export and audit
+[10/10] e2e/core/e2-core.spec.ts:509:5 › T-05-CP-07 real club page edit renders styled Markdown on screen 30
+  10 passed (18.6s)
+ Network agilityhub-e1-w04_default Creating 
+ Volume agilityhub-e1-w04_export-files Creating 
+ Volume agilityhub-e1-w04_export-files Creating 
+ Volume agilityhub-e1-w04_mongo-data Creating 
+ Volume agilityhub-e1-w04_mailbox Creating 
+ Volume agilityhub-e1-w04_mongo-data Creating 
+ Volume agilityhub-e1-w04_mailbox Creating 
+ Network agilityhub-e1-w04_default Creating 
+ Volume agilityhub-e1-w04_mailbox Created 
+ Volume agilityhub-e1-w04_mailbox Created 
+ Volume agilityhub-e1-w04_export-files Created 
+ Volume agilityhub-e1-w04_export-files Created 
+ Volume agilityhub-e1-w04_mongo-data Created 
+ Volume agilityhub-e1-w04_mongo-data Created 
+ Network agilityhub-e1-w04_default Created 
+ Network agilityhub-e1-w04_default Created 
+ Container agilityhub-e1-w04-mongo-1 Creating 
+ Container agilityhub-e1-w04-mongo-1 Created 
+ Container agilityhub-e1-w04-seed-1 Creating 
+ Container agilityhub-e1-w04-seed-1 Created 
+ Container agilityhub-e1-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e1-w04-activate-demo-club-1 Created 
+ Container agilityhub-e1-w04-core-1 Creating 
+ Container agilityhub-e1-w04-core-1 Created 
+ Container agilityhub-e1-w04-mongo-1 Starting 
+ Container agilityhub-e1-w04-mongo-1 Started 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-seed-1 Starting 
+ Container agilityhub-e1-w04-seed-1 Started 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Started 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Starting 
+ Container agilityhub-e1-w04-core-1 Started 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-core-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Running 
+ Container agilityhub-e1-w04-mongo-1 Running 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-seed-1 Starting 
+ Container agilityhub-e1-w04-seed-1 Started 
+ Container agilityhub-e1-w04-seed-1 Waiting 
+ Container agilityhub-e1-w04-seed-1 Exited 
+ Container agilityhub-e1-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Started 
+ Container agilityhub-e1-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e1-w04-mongo-1 Waiting 
+ Container agilityhub-e1-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e1-w04-mongo-1 Healthy 
+ Container agilityhub-e1-w04-core-1 Waiting 
+ Container agilityhub-e1-w04-core-1 Healthy 
+ Container agilityhub-e1-w04-playwright-run-5b6c51519646 Creating 
+ Container agilityhub-e1-w04-playwright-run-5b6c51519646 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 32, added 32
+Progress: resolved 851, reused 0, downloaded 76, added 76
+Progress: resolved 851, reused 0, downloaded 121, added 121
+Progress: resolved 851, reused 0, downloaded 147, added 147
+Progress: resolved 851, reused 0, downloaded 178, added 178
+Progress: resolved 851, reused 0, downloaded 238, added 238
+Progress: resolved 851, reused 0, downloaded 298, added 298
+Progress: resolved 851, reused 0, downloaded 319, added 319
+Progress: resolved 851, reused 0, downloaded 334, added 334
+Progress: resolved 851, reused 0, downloaded 385, added 385
+Progress: resolved 851, reused 0, downloaded 420, added 420
+Progress: resolved 851, reused 0, downloaded 468, added 468
+Progress: resolved 851, reused 0, downloaded 504, added 504
+Progress: resolved 851, reused 0, downloaded 513, added 513
+Progress: resolved 851, reused 0, downloaded 521, added 521
+Progress: resolved 851, reused 0, downloaded 523, added 523
+Progress: resolved 851, reused 0, downloaded 531, added 531
+Progress: resolved 851, reused 0, downloaded 538, added 538
+Progress: resolved 851, reused 0, downloaded 540, added 540
+Progress: resolved 851, reused 0, downloaded 547, added 547
+Progress: resolved 851, reused 0, downloaded 553, added 553
+Progress: resolved 851, reused 0, downloaded 558, added 558
+Progress: resolved 851, reused 0, downloaded 562, added 562
+Progress: resolved 851, reused 0, downloaded 568, added 568
+Progress: resolved 851, reused 0, downloaded 570, added 570
+Progress: resolved 851, reused 0, downloaded 573, added 573
+Progress: resolved 851, reused 0, downloaded 579, added 579
+Progress: resolved 851, reused 0, downloaded 585, added 585
+Progress: resolved 851, reused 0, downloaded 597, added 597
+Progress: resolved 851, reused 0, downloaded 614, added 614
+Progress: resolved 851, reused 0, downloaded 638, added 638
+Progress: resolved 851, reused 0, downloaded 645, added 645
+Progress: resolved 851, reused 0, downloaded 658, added 658
+Progress: resolved 851, reused 0, downloaded 696, added 696
+Progress: resolved 851, reused 0, downloaded 708, added 708
+Progress: resolved 851, reused 0, downloaded 714, added 714
+Progress: resolved 851, reused 0, downloaded 716, added 716
+Progress: resolved 851, reused 0, downloaded 731, added 731
+Progress: resolved 851, reused 0, downloaded 740, added 740
+Progress: resolved 851, reused 0, downloaded 749, added 749
+Progress: resolved 851, reused 0, downloaded 757, added 757
+Progress: resolved 851, reused 0, downloaded 766, added 766
+Progress: resolved 851, reused 0, downloaded 782, added 782
+Progress: resolved 851, reused 0, downloaded 797, added 797
+Progress: resolved 851, reused 0, downloaded 820, added 820
+Progress: resolved 851, reused 0, downloaded 843, added 843
+Progress: resolved 851, reused 0, downloaded 844, added 843
+Progress: resolved 851, reused 0, downloaded 845, added 845
+Progress: resolved 851, reused 0, downloaded 846, added 845
+Progress: resolved 851, reused 0, downloaded 846, added 846
+Progress: resolved 851, reused 0, downloaded 847, added 846
+Progress: resolved 851, reused 0, downloaded 848, added 848
+Progress: resolved 851, reused 0, downloaded 849, added 849
+Progress: resolved 851, reused 0, downloaded 850, added 849
+Progress: resolved 851, reused 0, downloaded 850, added 850
+Progress: resolved 851, reused 0, downloaded 851, added 850
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 1m 5s using pnpm v9.15.9
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:214) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+[1/4] e2e/core/e3-signup.spec.ts:496:5 › T-04-34 public signup is validated and enters through the N-02 welcome link
+[2/4] e2e/core/e3-signup.spec.ts:1079:5 › T-04-34 rejected signup delivers N-03
+[3/4] e2e/core/e3-signup.spec.ts:1086:5 › T-04-34 active member adds a dog and the club validates it
+[4/4] e2e/core/e3-signup.spec.ts:1090:5 › T-04-34 signup.enabled=false shows only the configured closed text
+  4 passed (18.6s)
+{"action":"OPEN_DOG","channel":"APP","code":"N-37","dogName":"Neret E3","status":"SENT"}

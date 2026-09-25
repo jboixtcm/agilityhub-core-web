@@ -605,3 +605,46 @@ Blocking: no.
 ## 2026-09-25 · organizer → executor · E3-W08 is open
 @executor **E3-W08 is `ready`.** Api E3-T12 round 2 is published, and E3-W07 is verified. Step 0 adopts the staged snapshot, which contains E3-T09, E3-T10 and E3-T12: `SignupUpfrontReview.firstMonth`, the nullable enums, `ClubSummary.legalName` and `taxId`, and the readmission blocks. Api E3-T14 (`paymentMethods`) is not in it yet; that one is E3-W11.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E4-W08 verified; E4-W10 and E3-W12 are new
+@executor **E4-W08 is verified.** The Codex review's two minors and its nit go to the new task **E4-W10** (ready, order 48), and E4-W05 depends on it:
+- the reason error in the core's real shape: `400 VALIDATION_ERROR` with `details.field`. E4-W08 step 1 said 422, and that was the organizer's error;
+- every page of the member choices;
+- the T-07-29 and T-07-30 ids.
+
+Answers to your report's questions:
+1. 400, as above.
+2. Under impersonation, the api returns `startsAt` as `cancellableUntil` (`CancellationDeadline.deadline`). Nothing to change.
+3. The member's reads of `/parameters` on screen 13 are a real bug: the api refuses them (ADMIN only, never under impersonation). S03 is amended (25-09). New task **E3-W12**, `not_open` until api E3-T16 publishes `documentTypes` in `GET /me/dogs`. E3-W09 depends on it.
+4. No registrants `filter-values` for now.
+
+E3-W11 (still `not_open`) now also asks you to stage E3 on a fresh seed in `scripts/e2e-core.sh` for every task id: today only `E3-W03`…`E3-W09` get the E3 stage.
+Blocking: no.
+
+## 2026-09-25 · organizer → executor · the Cànic's legal identity on the real core
+@executor Jordi gave the Cànic's legal identity: «Club Agility Cànic», G63189617, registered office in Sant Andreu de Llavaneres. Api E3-T16 puts it in the seed. After that, the real core's `/branding` gives `city` «Sant Andreu de Llavaneres», instead of the mockups' «Cabrera de Mar». The footer format of the mockups stays: `{legalName} · {taxId} · {city}`.
+Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W11 waits for E3-T14 round 2; the public footer
+@executor
+- **E3-W11** opens when api E3-T14 round 2 is published. Its step 2 now says how to use `assignable`: only assignable methods can be chosen, and an add-dog shows the current method read-only (R-04-19).
+- **The public footer (Jordi, 25-09):** «{legalName} · {taxId} · {city}», as E3-W08 builds it, with the registered office on a second line. Api E3-T16 gives `city` «Cabrera de Mar» (from the new `displayCity`) and `legalAddress`. The web part is **E3-W12 step 5**. This replaces my earlier note: the footer city stays «Cabrera de Mar».
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W08
+@organizer **E3-W08 is awaiting verification.** Steps 0–8 are done (report in the task file).
+- **19** renders the selected plan's `planQuotes` entry: lines above zero, options labelled by `option`/`portion`, and «Total a pagar al club» (never sent). On the real core (day 25): 100 + 30 = 130 €; Pack 6 = 135 €; add-dog = 100 + 45 = 145 €. The day-before-16 capture comes from MSW (the core's clock cannot move).
+- **M16:** the uploads forward the signed headers. On the real core the PUT sent `If-None-Match: *`, and the signup with that file was accepted.
+- **13** shows PENDING dogs with «pendent de validació» and no actions. On the real core the add-dog dog was pending, then active after D2.
+- **Flags:** both are enforced, with Vitest for both values of each. On the real core, 17 was run with the document required.
+- **16/17/footer:** the plan cards no longer repeat the descriptions or show a zero entry fee. The footer is «{legalName} · {taxId} · {city}», per your 25-09 note. The core's `/branding` has no `taxId` yet, so the core captures fall back to «{name} · {city}».
+- **A32:** the fixture's `onPrimary` is `#0B0B0B`, and a CSS guard test checks it. The `[BrandingProvider]` warning is gone.
+- **D2 readmission (E38):** D2 shows «Abans / Ara» for each changed field, and the DNI is read-only. On the real core, the applicant rejected earlier in the run was readmitted and then rejected again, and the LEFT record kept its phones and e-mails.
+- **E3-W06 round-2 cases:**
+  - the departing page never consumes a routed error;
+  - the `?cs=cancel` marker is consumed once;
+  - the passport error lands on the passport field.
+- **Pre-fix proof:** 17/21 new clubs tests and 4/6 D2 tests fail on the HEAD product code (`01`, `02`).
+- **Final runs:** turbo `--force` 34/34; `i18n:check`; `e2e:core` (10 + 4); Docker e2e (38 + 29 + 1).
+- **Proposals:** add-dog option keys and the readmission literals (report, «Questions»). `GET /members?filter=status:eq:LEFT&size=5` answered 400 on the core, while `size=20` works.
+Blocking: no.

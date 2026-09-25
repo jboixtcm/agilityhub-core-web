@@ -33,6 +33,7 @@ import {
   mockDisplayDescription,
   mockWeek,
 } from "./fixtures/planning";
+import { signupConfig, signupMemberFixture, signupResultUpfront } from "./fixtures/signup";
 import {
   addDogSignupReview,
   derivedSignupReview,
@@ -443,6 +444,43 @@ describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, Clas
   });
 });
 
+describe("E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+
+  it.each([
+    ["2026-08-05", false],
+    ["2026-08-17", false],
+    ["2026-12-31", false],
+    ["2026-08-17", true],
+    ["2026-08-26", true],
+  ] as const)("validates GET /signup on %s (add-dog: %s) and each submission upfront", (today, member) => {
+    const config = signupConfig({
+      acceptLanguage: "ca",
+      billing: true,
+      enabled: true,
+      familyGroup: true,
+      packs: true,
+      privacyPolicyUrl: "https://canic.example.test/privacitat",
+      stripe: false,
+      today,
+      ...(member ? { member: signupMemberFixture } : {}),
+    });
+    const validateConfig = schema("SignupConfig");
+    expect(validateConfig(config), JSON.stringify(validateConfig.errors, null, 2)).toBe(true);
+    const validateUpfront = schema("SignupUpfront");
+    for (const quote of config.upfront?.planQuotes ?? []) {
+      for (const option of [undefined, "TODAY", "ALTERNATIVE"] as const) {
+        const upfront = signupResultUpfront(quote, option, { addDog: member });
+        expect(validateUpfront(upfront), JSON.stringify(validateUpfront.errors, null, 2)).toBe(true);
+      }
+    }
+  });
+});
+
 describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun)", () => {
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
@@ -466,6 +504,7 @@ describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignup
     ["family pending", signupReviewVariant(signupReviewBaseline, "familyPending")],
     ["add-dog", addDogSignupReview(signupReviewBaseline)],
     ["a derived D1 row", derivedSignupReview(signupReviewBaseline, pendingRow)],
+    ["readmission (E38)", signupReviewVariant(signupReviewBaseline, "readmission")],
   ])("validates the %s view, each dog with its own version", (_name, view) => {
     const validate = schema("MemberSignupView");
     expect(validate(view), JSON.stringify(validate.errors, null, 2)).toBe(true);

@@ -35,6 +35,95 @@ interface MailMessage {
   to?: string | string[];
 }
 
+interface Money {
+  amountMinor: number;
+  currency: string;
+}
+
+/** The part of `GET /signup` the «Pagament inicial» card reads (api E3-T08 `planQuotes`). */
+interface SignupQuoteConfig {
+  member?: { planId?: string };
+  plans?: { id: string; name: string }[];
+  upfront?: {
+    planQuotes: {
+      lines: { amount: Money; concept: string }[];
+      options: { amountDue: Money; option: string; portion: string; startDate: string; totalDue: Money }[];
+      planId: string;
+      totalDue: Money;
+    }[];
+    today: string;
+  };
+}
+
+/** `formatMoney` in ca for the amounts of the seed (below 1 000 €). */
+function euros(amount: Money): string {
+  return `${(amount.amountMinor / 100).toFixed(2).replace(".", ",")} €`;
+}
+
+/**
+ * R-04-14/15 on the real core: 19 renders the selected plan's quote from `GET /signup`, with the
+ * labels of each option's `option`/`portion` and the total of the default (first) option.
+ */
+async function expectQuoteCard(page: Page, config: SignupQuoteConfig, planName: string | undefined) {
+  // Add-dog mode quotes the member's own plan (preselected on 17).
+  const addDog = config.member !== undefined;
+  const planId = addDog
+    ? config.member?.planId
+    : (planName === undefined ? config.plans?.[0] : config.plans?.find((item) => item.name === planName))?.id;
+  const quote = config.upfront?.planQuotes.find((item) => item.planId === planId);
+  if (quote === undefined) throw new Error(`No quote for ${planName ?? "the first plan"}: ${JSON.stringify(config.upfront)}`);
+  const card = page.locator(".signup-upfront");
+  await expect(card.getByRole("radio")).toHaveCount(quote.options.length);
+  for (const [index, option] of quote.options.entries()) {
+    const label = addDog
+      ? option.option === "TODAY" ? /^Alta avui, .+ \(quota addicional d'aquest mes\)/u : /^Alta l’1 .+ \(ara només l'entrada\)/u
+      : option.option === "TODAY"
+        ? option.portion === "HALF" ? /^Alta avui, .+ \(mig mes\)/u : /^Alta avui, .+ \(mes complet\)/u
+        : option.portion === "HALF" ? /^Alta el dia .+ \(mig mes\)/u : /^Alta l’1 .+ \(mes complet\)/u;
+    const text = (await card.locator("fieldset label").nth(index).textContent()) ?? "";
+    expect(text).toMatch(label);
+    expect(text).toContain(euros(option.amountDue));
+  }
+  for (const line of quote.lines.filter((item) => item.amount.amountMinor > 0)) {
+    await expect(card.locator(".signup-upfront__line").filter({ hasText: euros(line.amount) })).toHaveCount(1);
+  }
+  await expect(card.locator(".signup-upfront__total")).toContainText(euros(quote.options[0]?.totalDue ?? quote.totalDue));
+}
+
+/** A club parameter set through the api with the admin's bearer (S02 §6: versioned, audited). */
+async function setParameter(
+  page: Page,
+  api: { authorization: string; base: string },
+  key: string,
+  value: unknown,
+): Promise<number> {
+  return page.evaluate(
+    async ({ authorization, base, parameter, next }) => {
+      const current = await fetch(`${base}/parameters/${parameter}`, { headers: { Authorization: authorization } });
+      const { version } = (await current.json()) as { version: number };
+      const response = await fetch(`${base}/parameters/${parameter}`, {
+        body: JSON.stringify({ reason: "E3-W08 e2e", value: next, version }),
+        headers: { Authorization: authorization, "Content-Type": "application/json" },
+        method: "PUT",
+      });
+      return response.status;
+    },
+    { authorization: api.authorization, base: api.base, next: value, parameter: key },
+  );
+}
+
+/** The admin's bearer and the api base, read from the request D11 makes when it mounts. */
+async function adminApi(page: Page): Promise<{ authorization: string; base: string }> {
+  const request = page.waitForRequest(
+    (candidate) => candidate.url().endsWith("/api/v1/parameters") && candidate.method() === "GET",
+  );
+  await navigateSpa(page, "/parametres");
+  const parameters = await request;
+  const authorization = (await parameters.allHeaders()).authorization;
+  if (authorization === undefined) throw new Error("The admin request carried no bearer");
+  return { authorization, base: parameters.url().replace(/\/parameters$/u, "") };
+}
+
 function requiredEnvironment(name: string): string {
   const value = process.env[name];
   if (value === undefined || value === "") throw new Error(`${name} is required`);
@@ -207,6 +296,7 @@ async function fillDog(page: Page, name: string, chip: string): Promise<void> {
 async function completePublicSignup({
   chip,
   document,
+  documentRequired = false,
   dog,
   email,
   expectedDocument,
@@ -215,11 +305,15 @@ async function completePublicSignup({
   lastName,
   page,
   passport,
+  paymentScreenshot,
   phone,
+  plan,
   screenshots,
 }: {
   chip: string;
   document: string;
+  /** `signup.requireDogDocumentAtSignup = true` (R-04-08): 17 asks for the card, then it is uploaded. */
+  documentRequired?: boolean;
   dog: string;
   email: string;
   expectedDocument: { type: string; value: string };
@@ -229,7 +323,11 @@ async function completePublicSignup({
   lastName: string;
   page: Page;
   passport?: string;
+  /** A capture of 19 under this name (the card is checked against `GET /signup` either way). */
+  paymentScreenshot?: string;
   phone: string;
+  /** The plan chosen on 17; the first plan (preselected) otherwise. */
+  plan?: string;
   screenshots: boolean;
 }): Promise<string> {
   await page.goto(`${clubsUrl}/apuntat-hi`);
@@ -247,7 +345,35 @@ async function completePublicSignup({
   await page.getByRole("button", { name: "CONTINUA" }).click();
   await page.waitForURL("**/apuntat-hi/gos");
   await fillDog(page, dog, chip);
+  if (plan !== undefined) await page.getByRole("button", { name: `Selecciona ${plan}` }).click();
   if (screenshots) await screenshot(page, "17-dog-core-375.png");
+  if (documentRequired) {
+    // R-04-08: without the card, 17 stays with an actionable error on the file control.
+    await expect(page.getByText(/si ara no la tens a mà/u)).toHaveCount(0);
+    await page.getByRole("button", { name: "CONTINUA" }).click();
+    const card = page.getByLabel("Cartilla de vacunes");
+    await expect(card).toBeFocused();
+    await expect(page.getByText(/Cal adjuntar la cartilla de vacunes per continuar/u)).toBeVisible();
+    await expect(page).toHaveURL(/\/apuntat-hi\/gos$/u);
+    await screenshot(page, "17-document-required-core-375.png");
+    // M16 on the real core: the PUT forwards the signed headers of the upload URL.
+    const uploadUrl = page.waitForResponse(
+      (response) => response.url().endsWith("/signup/upload-urls") && response.request().method() === "POST",
+    );
+    const put = page.waitForRequest((request) => request.method() === "PUT");
+    await card.setInputFiles({ buffer: Buffer.from("fictional-vaccination-page"), mimeType: "image/jpeg", name: "scan.jpg" });
+    const signed = (await (await uploadUrl).json()) as { headers?: Record<string, string> };
+    const sentHeaders = await (await put).allHeaders();
+    for (const [name, value] of Object.entries(signed.headers ?? {})) {
+      expect(sentHeaders[name.toLowerCase()], name).toBe(value);
+    }
+    writeFileSync(
+      join(evidenceDirectory, "signup-upload-headers-core.json"),
+      `${JSON.stringify({ sentOnPut: Object.keys(signed.headers ?? {}).map((name) => [name, sentHeaders[name.toLowerCase()] ?? null]), signed: signed.headers ?? null }, null, 2)}\n`,
+    );
+    await expect(page.getByText(`cartilla_${dog.replaceAll(/[^A-Za-z0-9]+/gu, "_")}_1.jpg pujada`)).toBeVisible();
+    await expect(card).not.toHaveAttribute("aria-invalid", "true");
+  }
 
   await page.getByRole("button", { name: "CONTINUA" }).click();
   await page.waitForURL("**/apuntat-hi/familia");
@@ -258,6 +384,13 @@ async function completePublicSignup({
     await expect(page.getByText(/Grup trobat: Laia F\./u)).toBeVisible();
     if (screenshots) await screenshot(page, "18-family-core-375.png");
   }
+  // 19 is a full page load that reads `GET /signup` again: its quotes are what the card must show.
+  const paymentConfig = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/signup") &&
+      response.request().method() === "GET" &&
+      new URL(page.url()).pathname === "/apuntat-hi/pagament",
+  );
   if (family === "pending") {
     await page.getByLabel("Nom del responsable").fill("Pere Inexistent");
     await page.getByLabel("Nom d'un dels seus gossos").fill("Tro");
@@ -267,8 +400,16 @@ async function completePublicSignup({
     await page.getByRole("button", { name: "CONTINUA" }).click();
   }
   await page.waitForURL("**/apuntat-hi/pagament");
+  const config = (await (await paymentConfig).json()) as SignupQuoteConfig;
+  await expect(page.locator(".signup-upfront__total")).toBeVisible();
+  await expectQuoteCard(page, config, plan);
+  writeFileSync(
+    join(evidenceDirectory, `signup-quote-${dog.replaceAll(/[^A-Za-z0-9]+/gu, "-").toLowerCase()}-core.json`),
+    `${JSON.stringify({ plan: plan ?? config.plans?.[0]?.name ?? null, today: config.upfront?.today ?? null, planQuotes: config.upfront?.planQuotes ?? null }, null, 2)}\n`,
+  );
   await page.getByLabel("Accepto la política de privacitat").check();
   if (screenshots) await screenshot(page, "19-payment-core-375.png");
+  if (paymentScreenshot !== undefined) await screenshot(page, paymentScreenshot);
   let signupResult: { memberId: string } | undefined;
   let signupBody = "";
   await page.route(
@@ -355,7 +496,8 @@ test.describe.configure({ mode: "serial" });
 test("T-04-34 public signup is validated and enters through the N-02 welcome link", async ({
   browser,
 }) => {
-  test.setTimeout(300_000);
+  // E3-W08 adds a Pack 6 signup check, the document-required 17 and a readmission.
+  test.setTimeout(480_000);
   const publicContext = await localizedContext(browser, { height: 844, width: 375 });
   const publicPage = await publicContext.newPage();
   const acceptedMemberId = await completePublicSignup({
@@ -399,12 +541,27 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     };
     planOptions?: unknown[];
     proposals: { nextInvoiceDate?: string; planId?: string };
+    upfront?: { firstMonth?: { option: string; portion: string | null; startDate: string } } | null;
     warnDays?: number;
   };
   // Step 0: the adopted contract (api E3-T08) on the real core.
   expect(view.planOptions?.length).toBeGreaterThan(0);
   expect(typeof view.warnDays).toBe("number");
   expect(view.dogs.every((dog) => typeof dog.version === "number")).toBe(true);
+  // E3-W08 step 0 (api E3-T12): the D2 first-month line names the month and «(mitja quota)» from
+  // the frozen `upfront.firstMonth` (E3-W07 left it deferred).
+  const firstMonth = view.upfront?.firstMonth;
+  writeFileSync(join(evidenceDirectory, "d2-first-month-core.json"), `${JSON.stringify(firstMonth ?? null, null, 2)}\n`);
+  expect(firstMonth).toBeDefined();
+  if (firstMonth !== undefined) {
+    const breakdown = admin.locator(".signup-review-upfront-breakdown");
+    const monthName = new Intl.DateTimeFormat("ca", { month: "long", timeZone: "UTC" }).format(
+      new Date(`${firstMonth.startDate}T00:00:00Z`),
+    );
+    await expect(breakdown).toContainText(monthName);
+    if (firstMonth.portion === "HALF") await expect(breakdown).toContainText("(mitja quota)");
+    else await expect(breakdown).not.toContainText("(mitja quota)");
+  }
   // Real-core shape behind the D2 plan/date/account rendering (fictional member).
   writeFileSync(
     join(evidenceDirectory, "d2-signup-view-core.json"),
@@ -542,27 +699,39 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     firstName: "Pau",
     lastName: "Rebuig E3",
     page: rejectedPage,
+    // E3-W08 (R-04-14): a PACK plan's card is its pack line, with no start options.
+    paymentScreenshot: "19-payment-pack6-core-375.png",
     phone: "699000902",
+    plan: "Pack 6",
     screenshots: false,
   });
   await rejectedContext.close();
+  // E3-W08 (R-04-08): with `signup.requireDogDocumentAtSignup`, 17 requires the vaccination card.
+  const adminParameters = await adminApi(admin);
+  expect(await setParameter(admin, adminParameters, "signup.requireDogDocumentAtSignup", true)).toBe(200);
   // A passport-only applicant (DNI / NIE empty) reaches «Sol·licitud enviada» too (B1, R-04-01).
   // She names a family holder the club does not have and leaves it pending (NOT_FOUND_PENDING).
   const passportContext = await localizedContext(browser, { height: 844, width: 375 });
-  const passportMemberId = await completePublicSignup({
-    chip: "941000000009904",
-    document: "",
-    dog: passportDog,
-    email: passportEmail,
-    expectedDocument: { type: "PASSPORT", value: "PA1234567" },
-    family: "pending",
-    firstName: "Joana",
-    lastName: "Passaport E3",
-    page: await passportContext.newPage(),
-    passport: "pa1234567",
-    phone: "699000904",
-    screenshots: false,
-  });
+  let passportMemberId: string;
+  try {
+    passportMemberId = await completePublicSignup({
+      chip: "941000000009904",
+      document: "",
+      documentRequired: true,
+      dog: passportDog,
+      email: passportEmail,
+      expectedDocument: { type: "PASSPORT", value: "PA1234567" },
+      family: "pending",
+      firstName: "Joana",
+      lastName: "Passaport E3",
+      page: await passportContext.newPage(),
+      passport: "pa1234567",
+      phone: "699000904",
+      screenshots: false,
+    });
+  } finally {
+    expect(await setParameter(admin, adminParameters, "signup.requireDogDocumentAtSignup", false)).toBe(200);
+  }
   await passportContext.close();
   const mailboxBeforeRejection = mailboxFiles();
   await navigateSpa(admin, `/preinscripcions/${rejectedMemberId}`);
@@ -594,9 +763,17 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await member.waitForURL("**/gossos/nou");
   await fillDog(member, additionalDog, "941000000009903");
   await screenshot(member, "17-add-dog-core-375.png");
+  const addDogConfig = member.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/signup") &&
+      response.request().method() === "GET" &&
+      new URL(member.url()).pathname === "/gossos/nou/pagament",
+  );
   await member.getByRole("button", { name: "CONTINUA" }).click();
   await member.waitForURL("**/gossos/nou/pagament");
   await expect(member.getByLabel("Mètode de pagament actual")).toHaveValue(/Domiciliació/u);
+  // E3-W08 (R-04-14): the add-dog card is the member plan's add-dog quote.
+  await expectQuoteCard(member, (await (await addDogConfig).json()) as SignupQuoteConfig, undefined);
   const privacy = member.getByLabel("Accepto la política de privacitat");
   if (await privacy.isVisible()) await privacy.check();
   await screenshot(member, "19-add-dog-core-375.png");
@@ -606,7 +783,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   // The add-dog success page never promises a welcome message (the member already has access).
   await expect(member.getByText(/benvinguda/u)).toHaveCount(0);
   await screenshot(member, "enviada-add-dog-core-375.png");
-  await memberContext.close();
+  // E36 (R-04-25): screen 13 lists the new dog as pending, with no actions, until the club validates it.
+  await navigateSpa(member, "/gossos");
+  const pendingCard = member.locator(".dog-card").filter({ has: member.getByRole("heading", { name: additionalDog }) });
+  await expect(pendingCard.getByText("pendent de validació")).toBeVisible();
+  await expect(pendingCard.getByRole("button")).toHaveCount(0);
+  await expect(pendingCard.locator("input, textarea")).toHaveCount(0);
+  await screenshot(member, "13-pending-dog-core-375.png");
   await navigateSpa(admin, "/tauler");
   await admin.evaluate(() => {
     window.dispatchEvent(new Event("focus"));
@@ -632,6 +815,14 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await screenshot(admin, "D2-signup-add-dog-core-1280.png");
   await completeValidation(admin);
   additionalDogValidated = true;
+  // E36: after the validation, 13 shows the dog as an ordinary active dog.
+  await navigateSpa(member, "/inici");
+  await navigateSpa(member, "/gossos");
+  const validatedCard = member.locator(".dog-card").filter({ has: member.getByRole("heading", { name: additionalDog }) });
+  await expect(validatedCard.getByRole("button", { name: "＋ DOC." })).toBeVisible();
+  await expect(validatedCard.getByText("pendent de validació")).toHaveCount(0);
+  await screenshot(member, "13-validated-dog-core-375.png");
+  await memberContext.close();
 
   // M15 on the real core: the NOT_FOUND_PENDING claim, a plan change with dryRun, a bare 422 on its
   // field, then the claim resolved by attaching the found holder's group (R-04-13).
@@ -756,6 +947,89 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await completeValidation(admin);
   const familyBody = (await familyValidation).postDataJSON() as { familyGroupId?: string };
   expect(familyBody.familyGroupId).toMatch(/^[0-9a-f-]{36}$/u);
+
+  // E3-W08 step 6 (R-04-06, E38): a LEFT member of the seed applies again with a new phone; D2
+  // shows the old and new values; the club rejects the readmission and the record stays as it was.
+  const readmissionApi = await adminApi(admin);
+  interface SeedMember {
+    contactEmails: { email: string }[];
+    firstName: string;
+    id: string;
+    idDocument?: { number: string; type: string } | null;
+    lastName1: string;
+    phones: { number: string; prefix: string }[];
+    status: string;
+  }
+  const leftLookup = await admin.evaluate(
+    async ({ authorization, base }) => {
+      const headers = { Authorization: authorization };
+      // The D5 «baixa» chip (R-03-03): `status:eq:LEFT`, with a page size the list offers.
+      const list = await fetch(`${base}/members?filter=${encodeURIComponent("status:eq:LEFT")}&size=20`, { headers });
+      if (!list.ok) return { listError: await list.text(), listStatus: list.status, member: null };
+      const items = ((await list.json()) as { items?: { id: string }[] }).items ?? [];
+      for (const item of items) {
+        const detail = await fetch(`${base}/members/${item.id}`, { headers });
+        const member = (await detail.json()) as { idDocument?: { number?: string } | null };
+        if (detail.ok && typeof member.idDocument?.number === "string") return { listStatus: list.status, member };
+      }
+      return { listStatus: list.status, member: null };
+    },
+    readmissionApi,
+  );
+  const leftMember = leftLookup.member as SeedMember | null;
+  if (leftMember?.idDocument == null) {
+    writeFileSync(
+      join(evidenceDirectory, "readmission-core.json"),
+      `${JSON.stringify({ leftMemberWithDocument: false, listError: "listError" in leftLookup ? leftLookup.listError : null, listStatus: leftLookup.listStatus }, null, 2)}\n`,
+    );
+  } else {
+    const leftDocument = leftMember.idDocument;
+    const passportOnly = leftDocument.type === "PASSPORT";
+    const readmissionContext = await localizedContext(browser, { height: 844, width: 375 });
+    const readmittedId = await completePublicSignup({
+      chip: "941000000009905",
+      document: passportOnly ? "" : leftDocument.number,
+      dog: "Retorn E3",
+      email: "retorn.e3@example.test",
+      expectedDocument: { type: leftDocument.type, value: leftDocument.number },
+      family: false,
+      firstName: leftMember.firstName,
+      lastName: leftMember.lastName1,
+      page: await readmissionContext.newPage(),
+      ...(passportOnly ? { passport: leftDocument.number } : {}),
+      phone: "699000905",
+      screenshots: false,
+    });
+    await readmissionContext.close();
+    expect(readmittedId).toBe(leftMember.id);
+    await navigateSpa(admin, `/preinscripcions/${readmittedId}`);
+    await expect(admin.locator(".ah-badge", { hasText: "Readmissió" }).first()).toBeVisible();
+    const changes = admin.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    await expect(changes.getByText(/^Ara: .*699000905/u)).toBeVisible();
+    await expect(changes.getByText(new RegExp(`^Abans: .*${leftMember.phones[0]?.number ?? "—"}`, "u"))).toBeVisible();
+    await screenshot(admin, "D2-readmission-core-1280.png");
+    await admin.getByRole("button", { name: "REBUTJA (amb motiu)" }).click();
+    const readmissionReject = admin.getByRole("dialog", { name: "Rebutja la preinscripció" });
+    await readmissionReject.getByLabel("Motiu del rebuig").fill("Readmissió de prova rebutjada");
+    await readmissionReject.getByRole("button", { name: "REBUTJA (amb motiu)" }).click();
+    await admin.waitForURL("**/tauler");
+    const after = await admin.evaluate(
+      async ({ authorization, base, id }) =>
+        (await (await fetch(`${base}/members/${id}`, { headers: { Authorization: authorization } })).json()) as unknown,
+      { ...readmissionApi, id: readmittedId },
+    ) as SeedMember;
+    expect(after.status).toBe("LEFT");
+    expect(after.phones).toEqual(leftMember.phones);
+    expect(after.contactEmails.map((entry) => entry.email)).toEqual(leftMember.contactEmails.map((entry) => entry.email));
+    await navigateSpa(admin, `/abonats/${readmittedId}`);
+    await expect(admin.getByText(leftMember.phones[0]?.number ?? leftMember.firstName, { exact: false }).first()).toBeVisible();
+    await expect(admin.getByText(/699000905/u)).toHaveCount(0);
+    await screenshot(admin, "D10-after-rejected-readmission-core-1280.png");
+    writeFileSync(
+      join(evidenceDirectory, "readmission-core.json"),
+      `${JSON.stringify({ leftMemberWithDocument: true, phonesKeptAfterRejection: true, statusAfterRejection: after.status }, null, 2)}\n`,
+    );
+  }
 
   const parametersResponse = admin.waitForResponse(
     (response) =>

@@ -9,6 +9,8 @@
     "back": "Torna al pas anterior",
     "footer": "{club}",
     "footerWithCity": "{club} · {city}",
+    "footerWithTaxId": "{club} · {taxId}",
+    "footerWithTaxIdAndCity": "{club} · {taxId} · {city}",
     "required": "Aquest camp és obligatori.",
     "invalidEmail": "El correu electrònic no és vàlid.",
     "duplicateEmail": "Els dos correus han de ser diferents.",
@@ -79,6 +81,7 @@
     "uploading": "Pujant el document",
     "tooManyFiles": "Es poden adjuntar com a màxim 10 fitxers.",
     "optionalDocument": "És imprescindible per començar les classes: si ara no la tens a mà, te la demanarem més endavant.",
+    "documentRequired": "Cal adjuntar la cartilla de vacunes per continuar: toca «Cartilla de vacunes» i puja'n una foto o un PDF.",
     "planTitle": "Modalitat",
     "monthlyPrice": "{price}/mes",
     "entryFee": "Entrada {price}",
@@ -112,8 +115,6 @@
     "initialTitle": "Pagament inicial",
     "entryLine": "Entrada (1 gos)",
     "chooseStart": "Quota mensual — tria quan vols començar:",
-    "startToday": "Alta avui, {date} (mig mes)",
-    "startAlternative": "Alta l’{date} (mes complet)",
     "stripeSubmit": "El pagament es fa en enviar",
     "privacy": "Accepto la política de privacitat",
     "privacyLink": "Pots consultar-la aquí",
@@ -126,6 +127,19 @@
     "addDogReviewFooter": "El club revisarà la sol·licitud i el pagament del gos nou, i t'avisarem a l'app quan l'hagi validat.",
     "consentOutdated": "La política ha canviat. Revisa-la i torna a acceptar-la.",
     "cancelled": "El pagament no s'ha completat: pots reintentar-lo des del correu que t'hem enviat."
+  },
+  "step4": {
+    "firstMonth": {
+      "todayFull": "Alta avui, {date} (mes complet)",
+      "todayHalf": "Alta avui, {date} (mig mes)",
+      "splitDayHalf": "Alta el dia {date} (mig mes)",
+      "nextMonthFull": "Alta l’{date} (mes complet)"
+    },
+    "additionalDog": {
+      "today": "Alta avui, {date} (quota addicional d'aquest mes)",
+      "nextMonth": "Alta l’{date} (ara només l'entrada)"
+    },
+    "total": "Total a pagar al club"
   },
   "success": {
     "title": "Sol·licitud enviada",

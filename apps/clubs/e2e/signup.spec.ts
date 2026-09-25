@@ -5,6 +5,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
 const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W01");
+const quoteEvidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W08");
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -119,6 +120,67 @@ test.describe("T-04-29–32 public signup", () => {
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "enviada-375.png"),
+    });
+  });
+});
+
+test.describe("E3-W08 T-04-32 the «Pagament inicial» card before the split day (MSW clock 05-08-2026)", () => {
+  test("a full month today, half a month from the 16th, and the total with the entry fee", async ({
+    page,
+  }) => {
+    await prepareScenario(page, "signupEarlyMonth");
+    // A complete fictional draft at 19 (the same applicant as the flow above).
+    await page.addInitScript(() => {
+      sessionStorage.setItem(
+        "signup.draft.v1",
+        JSON.stringify({
+          additionalDogOption: "TODAY",
+          consentVersion: "",
+          dog: {
+            birthMonth: "03/2022",
+            breed: "Mestís",
+            chip: "941000012345678",
+            documents: [{ files: [], type: "VACCINATION_CARD" }],
+            name: "Kiwi",
+            notesToInstructors: "",
+            sex: "FEMALE",
+          },
+          familyClaim: { dogName: "", holderName: "", leavePending: false },
+          familyFound: false,
+          holderFromGroup: false,
+          imageConsent: false,
+          mode: "public",
+          passport: "",
+          payment: { firstMonthOption: "TODAY", type: "SEPA_DD" },
+          person: {
+            address: { postalCode: "08349", street: "Carrer de la Font, 3", town: "Cabrera de Mar" },
+            birthDate: "05/04/1992",
+            emails: ["nora.soler@example.test", ""],
+            firstName: "Nora",
+            gender: "OTHER",
+            idDocument: { type: "DNI", value: "12345678Z" },
+            lastName1: "Soler",
+            lastName2: "Pons",
+            phones: [
+              { label: "Mòbil", number: "612345678", prefix: "+34" },
+              { label: "", number: "", prefix: "+34" },
+            ],
+          },
+          planId: "10000000-0000-4000-8000-000000000001",
+          privacyAccepted: false,
+          savedAt: Date.now(),
+        }),
+      );
+    });
+    await page.goto(`${baseUrl}/apuntat-hi/pagament`);
+    await expect(page.getByText(/Pas 4 de 4/u)).toBeVisible();
+    await expect(page.getByRole("radio", { name: /Alta avui, 5 d’agost \(mes complet\)/u })).toBeChecked();
+    await expect(page.getByRole("radio", { name: /Alta el dia 16 d’agost \(mig mes\)/u })).toBeVisible();
+    await expect(page.locator(".signup-upfront__total")).toContainText("160,00 €");
+    await expect(page.locator(".signup-footer")).toHaveText(/ · G\d+ · /u);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(quoteEvidenceDirectory, "19-payment-early-month-mock-375.png"),
     });
   });
 });

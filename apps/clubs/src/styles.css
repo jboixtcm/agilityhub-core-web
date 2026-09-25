@@ -735,6 +735,20 @@ select {
   opacity: 0.55;
 }
 
+.dog-photo--static {
+  cursor: default;
+}
+
+.dog-card__pending {
+  width: max-content;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-warning);
+  background: color-mix(in srgb, var(--ah-color-warning) 14%, transparent);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .dog-photo img {
   width: 100%;
   height: 100%;
@@ -786,13 +800,28 @@ select {
 }
 
 .signup-language {
+  position: relative;
+  display: flex;
   width: auto;
+  align-items: center;
+}
+
+.signup-language .ah-icon {
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: var(--ah-space-3);
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--ah-color-text-muted);
+  pointer-events: none;
 }
 
 .signup-language .ah-select {
   width: auto;
   min-height: 2.25rem;
   padding: var(--ah-space-2) var(--ah-space-3);
+  /* Room for the globe icon before «CAT» (mockup 16). */
+  padding-inline-start: calc(var(--ah-space-3) + 1.25rem);
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -988,6 +1017,19 @@ select {
   color: var(--ah-color-text-muted);
   background: var(--ah-color-surface);
   border-color: var(--ah-color-border);
+}
+
+.signup-note--info {
+  display: flex;
+  gap: var(--ah-space-2);
+  align-items: flex-start;
+}
+
+.signup-note--info .ah-icon {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.1rem;
 }
 
 .signup-note--success,
@@ -1269,10 +1311,12 @@ select {
   flex: 1;
 }
 
-.signup-upfront__total {
+.signup-upfront .signup-upfront__total {
   padding-top: var(--ah-space-2);
+  color: var(--ah-color-text);
   border-top: 1px solid var(--ah-color-border);
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .signup-upfront__total b {

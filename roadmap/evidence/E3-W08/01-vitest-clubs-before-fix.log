@@ -1,0 +1,1046 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 05-08-2026 (before the split day): a full month today, half a month from the 16th
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps the draft and refetches localized configuration after a language change
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > masks and validates the browser-independent birth date control
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > M2 checks the ES postal code and a past birth date from 1900 before any request
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > focuses the first error after it renders and links each field to its message
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps fields typed while the town lookup is in flight
+ ↓ src/SignupPage.test.tsx > T-04-29 signup person and draft > GENERIC profile: the first document type of the profile and an editable prefix
+ ↓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > uploads sequentially named vaccination pages and renders API plans
+ ↓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > removes amounts without BILLING and the family offer and step without FAMILY_GROUP
+ ↓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > gates offerLabel by FAMILY_GROUP even when the configuration sends it
+ ↓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > validates and normalises the chip per country profile and the birth month
+ ↓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > keeps fields typed while an upload is in flight
+ ↓ src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+ ↓ src/SignupPage.test.tsx > T-04-31 signup family lookup > keeps the dog draft when returning from the family step
+ ↓ src/SignupPage.test.tsx > T-04-31 signup family lookup > prefills the account holder with the group holder when the group is found (R-04-10)
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > renders API totals and payment conditions and submits only after privacy consent
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > shows each payment text only under its method (T-04-32, M7 web half)
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > redirects through checkout when Stripe is enabled
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > uses the member plan and payment method and posts the add-dog flow
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > the add-dog success page does not promise a welcome email
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > sends notesToInstructors from 17 and holderTaxId from 19 (§2, §3)
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > drops the IBAN from the session draft when the method changes away from SEPA
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > checks the IBAN mod-97 before sending
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > omits planId and planIdRequested when the club has no signup plans (R-04-09)
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > hides the honeypot from assistive technology and the tab order
+ ↓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > reads the image-consent text from texts.imageConsent, then legal.imageConsentText
+ ↓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a DNI applicant with the identity-check document
+ ↓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a NIE applicant with the identity-check document
+ ↓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a passport only applicant with the identity-check document
+ ↓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > retries a lost 201 with the same Idempotency-Key and gets the same 201
+ ↓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > changing a payload field after a failure uses a new key
+ ↓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > add-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog
+ ↓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > a cancelled checkout returns to 19 with the data and retries only the checkout
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_ID_DOCUMENT (400) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > ID_DOCUMENT_AMBIGUOUS (422) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_PHONE (400) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_IBAN (400) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PLAN_NOT_AVAILABLE (422) → /apuntat-hi/gos
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_DOCUMENT_REQUIRED (422) → /apuntat-hi/gos
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FILE_NOT_FOUND (400) → /apuntat-hi/gos
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_CHIP_ALREADY_REGISTERED (422) → /apuntat-hi/gos
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FAMILY_HOLDER_NOT_FOUND (422) → /apuntat-hi/familia
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > CONSENT_VERSION_OUTDATED (422) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > MEMBER_ALREADY_EXISTS (409) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_ALREADY_PENDING (422) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_CLOSED (422) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > RATE_LIMITED (429) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PAYMENT_METHOD_NOT_AVAILABLE (422) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SOMETHING_NEW (422) → undefined
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi
+ ↓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi/gos
+ ↓ src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > clears an acceptance of other legal texts and sends the version accepted again
+ ↓ src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > a saved acceptance of an older version is not carried into the new texts
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #1 an INVALID_IBAN from 19 stays on 19, on the IBAN field (production navigator)
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #1 an INVALID_ID_DOCUMENT routed to 16 survives the full page load and focuses the document
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #2 after a cancelled checkout 19 is read-only and the retry charges the committed signup
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #3 the fingerprint is a SHA-256 digest and the IBAN leaves the draft after a failed submission
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #3 a config reload that drops SEPA removes the IBAN from the draft
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10)
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #4 a holder typed by the applicant is kept when the claim changes
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #5 the birth date is checked against the club's today, not the browser's
+ ↓ src/SignupPage.test.tsx > E3-W06 round 2 > #5 the dog's birth month is checked against the club's month, not the browser's
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 31-12-2026: the alternative starts on the 1st of January (full month)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > Pack 6: the pack line and no start options; Teràpia: its 50 € entry fee only
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ↓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+ ↓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+ ↓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile
+ ↓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+ ↓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan
+ ↓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+ ↓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+ ↓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+ ↓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+ ↓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+ ↓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+ ↓ src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call
+ ↓ src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > a member session opens the detail
+ ↓ src/App.test.tsx > E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu»
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+ ↓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > a zero line of the quote is hidden (no «Entrada 0,00 €»)
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions 113ms
+   → Unable to find an element with the text: pendent de validació. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card dog-card"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"dog-card__identity"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"dog-photo"[39m
+      [33mfor[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mCanvia la foto de Neret[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33maccept[39m=[32m"image/*"[39m
+        [33mid[39m=[32m"_r_3_"[39m
+        [33mtype[39m=[32m"file"[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<div>[39m
+      [36m<h2>[39m
+        [0mNeret[0m
+      [36m</h2>[39m
+      [36m<p>[39m
+        [0mMestís[0m
+        [0m ·[0m
+        [0m [0m
+        [0mmascle[0m
+        [0m ·[0m
+        [0m [0m
+        [0m1 any[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<section[39m
+    [33mclass[39m=[32m"dog-card__section dog-note"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mfor[39m=[32m"dog-note-dog-pending-3"[39m
+    [36m>[39m
+      [0mNotes als instructors[0m
+      [0m [0m
+      [36m<span>[39m
+        [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+      [36m</span>[39m
+    [36m</label>[39m
+    [36m<textarea[39m
+      [33mclass[39m=[32m"ah-input ah-textarea"[39m
+      [33mid[39m=[32m"dog-note-dog-pending-3"[39m
+      [33mmaxlength[39m=[32m"2000"[39m
+    [36m/>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+      [33mdisabled[39m=[32m""[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mDESA[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</section>[39m
+  [36m<section[39m
+    [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [36m<div>[39m
+      [36m<small>[39m
+        [0mCap document[0m
+      [36m</small>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0m＋ DOC.[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</section>[39m
+[36m</div>[39m
+ ↓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+ ↓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile
+stderr | src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > public signup: the PUT carries every header the storage signed
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 05-08-2026 (before the split day): a full month today, half a month from the 16th 105ms
+   → expected [ …(2) ] to deeply equal [ …(2) ]
+ × src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent 22ms
+   → Unable to find an element with the text: Total a pagar al club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"signup-upfront__line"[39m
+  [36m>[39m
+    [36m<span>[39m
+      [0mEntrada (1 gos)[0m
+    [36m</span>[39m
+    [36m<strong>[39m
+      [0m100,00 €[0m
+    [36m</strong>[39m
+  [36m</p>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 31-12-2026: the alternative starts on the 1st of January (full month) 18ms
+ × src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > Pack 6: the pack line and no start options; Teràpia: its 50 € entry fee only 13ms
+   → Unable to find an element with the text: Pack 6. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ × src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > a zero line of the quote is hidden (no «Entrada 0,00 €») 14ms
+   → Unable to find an element with the text: Total a pagar al club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ × src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only 15ms
+   → expected [ Array(1) ] to deeply equal [ Array(1) ]
+stderr | src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > add-dog: the PUT carries every header the storage signed
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent»
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=true: the same claim can be left pending
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=false: 17 continues without a file and shows the optional note
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ × src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > public signup: the PUT carries every header the storage signed 32ms
+   → expected [ { 'content-type': 'image/jpeg' } ] to deeply equal [ ObjectContaining{…} ]
+ × src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > add-dog: the PUT carries every header the storage signed 26ms
+   → expected [ { 'content-type': 'image/jpeg' } ] to deeply equal [ ObjectContaining{…} ]
+ × src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent» 22ms
+   → expected <button type="button"></button> to be null
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=true: the same claim can be left pending 22ms
+ × src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error 11ms
+   → expected <aside …(1)></aside> to be null
+stderr | src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 17: each plan card shows its name, its conditions and its price, never the long description; no zero entry line
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16 (R-04-02, T-04-03): «Població» is free with no town, fixed with one and a selector with several
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > the public footer reads «{legalName} · {taxId} · {city}» from /branding
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=false: 17 continues without a file and shows the optional note 17ms
+ × src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 17: each plan card shows its name, its conditions and its price, never the long description; no zero entry line 13ms
+   → [2mexpect([22m[31melement[39m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana.[39m
+Received:
+[31m  Abonat60,00 €/mesEntrada 100,00 €Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana.Ofertes si es porta més d'un gos per famíliaACTIVAR[39m
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16 (R-04-02, T-04-03): «Població» is free with no town, fixed with one and a selector with several 40ms
+ × src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe 10ms
+   → expected null not to be null
+ × src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > the public footer reads «{legalName} · {taxId} · {city}» from /branding 10ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Club Agility Cànic · G00000000 · Cabrera de Mar[39m
+Received:
+[31m  Club Agility Cànic · Cabrera de Mar[39m
+ × src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > A32: the club's primary buttons have dark text, AA against the primary, and BrandingProvider does not warn 1ms
+   → expected '#FFFFFF' to be '#0B0B0B' // Object.is equality
+ × src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #1 a slow full page load: the departing page never renders nor consumes the destination's error 182ms
+   → expected <input id="signup-id" …(4)></input> to be null
+ × src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key 100ms
+   → expected 'cc63435e-7aab-4aff-986f-d671b63c110b' to be 'bd998c3e-2307-4b18-8bd2-99983967bb26' // Object.is equality
+ × src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #3 a passport-only applicant's INVALID_ID_DOCUMENT lands on the passport field 10025ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<input
+  class="ah-input"
+  id="signup-passport"
+  value="PA1234567"
+/>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <main … />
+  </div>
+</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"signup-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"signup-header"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"signup-header__logo"[39m
+            [33msrc[39m=[32m"data:image/png;base64,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...
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions
+TestingLibraryElementError: Unable to find an element with the text: pendent de validació. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card dog-card"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"dog-card__identity"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"dog-photo"[39m
+      [33mfor[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mCanvia la foto de Neret[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33maccept[39m=[32m"image/*"[39m
+        [33mid[39m=[32m"_r_3_"[39m
+        [33mtype[39m=[32m"file"[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<div>[39m
+      [36m<h2>[39m
+        [0mNeret[0m
+      [36m</h2>[39m
+      [36m<p>[39m
+        [0mMestís[0m
+        [0m ·[0m
+        [0m [0m
+        [0mmascle[0m
+        [0m ·[0m
+        [0m [0m
+        [0m1 any[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<section[39m
+    [33mclass[39m=[32m"dog-card__section dog-note"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mfor[39m=[32m"dog-note-dog-pending-3"[39m
+    [36m>[39m
+      [0mNotes als instructors[0m
+      [0m [0m
+      [36m<span>[39m
+        [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+      [36m</span>[39m
+    [36m</label>[39m
+    [36m<textarea[39m
+      [33mclass[39m=[32m"ah-input ah-textarea"[39m
+      [33mid[39m=[32m"dog-note-dog-pending-3"[39m
+      [33mmaxlength[39m=[32m"2000"[39m
+    [36m/>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+      [33mdisabled[39m=[32m""[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mDESA[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</section>[39m
+  [36m<section[39m
+    [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [36m<div>[39m
+      [36m<small>[39m
+        [0mCap document[0m
+      [36m</small>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0m＋ DOC.[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</section>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:728:25
+    726|     const card = (await screen.findByRole("heading", { name: "Neret" }…
+    727|     if (card === null) throw new TypeError("Missing the pending dog ca…
+    728|     expect(within(card).getByText("pendent de validació")).toBeVisible…
+       |                         ^
+    729|     expect(within(card).getByText(/Mestís · mascle · 1 any/u)).toBeVis…
+    730|     expect(within(card).queryByRole("button")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 05-08-2026 (before the split day): a full month today, half a month from the 16th
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Alta avui, 5 d’agost (mes complet)60,00 €",
+-   "Alta el dia 16 d’agost (mig mes)30,00 €",
++   "Alta avui, 5 d’agost (mig mes)60,00 €",
++   "Alta l’16 d’agost (mes complet)30,00 €",
+  ]
+
+ ❯ src/SignupPage.test.tsx:1492:28
+    1490|       /100,00\s€/u,
+    1491|     );
+    1492|     expect(startOptions()).toEqual([
+       |                            ^
+    1493|       "Alta avui, 5 d’agost (mes complet)60,00 €",
+    1494|       "Alta el dia 16 d’agost (mig mes)30,00 €",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent
+TestingLibraryElementError: Unable to find an element with the text: Total a pagar al club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"signup-upfront__line"[39m
+  [36m>[39m
+    [36m<span>[39m
+      [0mEntrada (1 gos)[0m
+    [36m</span>[39m
+    [36m<strong>[39m
+      [0m100,00 €[0m
+    [36m</strong>[39m
+  [36m</p>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ upfrontTotal src/SignupPage.test.tsx:1474:39
+    1472| /** The «Total a pagar al club» amount of the card. */
+    1473| function upfrontTotal(): string {
+    1474|   const total = within(upfrontCard()).getByText("Total a pagar al club…
+       |                                       ^
+    1475|   return total?.querySelector("b")?.textContent ?? "";
+    1476| }
+ ❯ src/SignupPage.test.tsx:1509:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > Pack 6: the pack line and no start options; Teràpia: its 50 € entry fee only
+TestingLibraryElementError: Unable to find an element with the text: Pack 6. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/SignupPage.test.tsx:1535:34
+    1533|     seedDraft({ planId: PACK_6_PLAN });
+    1534|     await renderSignup({ path: "/apuntat-hi/pagament" });
+    1535|     expect(within(upfrontCard()).getByText("Pack 6").closest("p")).toH…
+       |                                  ^
+    1536|     expect(within(upfrontCard()).queryByText("Entrada (1 gos)")).toBeN…
+    1537|     expect(startOptions()).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > a zero line of the quote is hidden (no «Entrada 0,00 €»)
+TestingLibraryElementError: Unable to find an element with the text: Total a pagar al club. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card signup-upfront"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mPagament inicial[0m
+  [36m</h2>[39m
+  [36m<fieldset[39m
+    [33mclass[39m=[32m"signup-upfront__options"[39m
+  [36m>[39m
+    [36m<legend>[39m
+      [0mQuota mensual — tria quan vols començar:[0m
+    [36m</legend>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mchecked[39m=[32m""[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta avui, 17 d’agost (mig mes)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m30,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+    [36m<label>[39m
+      [36m<input[39m
+        [33mname[39m=[32m"signup-start"[39m
+        [33mtype[39m=[32m"radio"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0mAlta l’1 de setembre (mes complet)[0m
+      [36m</span>[39m
+      [36m<strong>[39m
+        [0m60,00 €[0m
+      [36m</strong>[39m
+    [36m</label>[39m
+  [36m</fieldset>[39m
+  [36m<p>[39m
+    [0mEl pagament de l'entrada i el mes en curs es farà directament al club després d'enviar la sol·licitud.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ upfrontTotal src/SignupPage.test.tsx:1474:39
+    1472| /** The «Total a pagar al club» amount of the card. */
+    1473| function upfrontTotal(): string {
+    1474|   const total = within(upfrontCard()).getByText("Total a pagar al club…
+       |                                       ^
+    1475|   return total?.querySelector("b")?.textContent ?? "";
+    1476| }
+ ❯ src/SignupPage.test.tsx:1559:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "Alta avui, 26 d’agost (quota addicional d'aquest mes)30,00 €",
++   "Alta avui, 26 d’agost (mig mes)30,00 €",
+  ]
+
+ ❯ src/SignupPage.test.tsx:1567:28
+    1565|     setSignupMockToday("2026-08-26");
+    1566|     await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pa…
+    1567|     expect(startOptions()).toEqual(["Alta avui, 26 d’agost (quota addi…
+       |                            ^
+    1568|     expect(upfrontTotal()).toBe("130,00 €");
+    1569|     acceptPrivacy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > public signup: the PUT carries every header the storage signed
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > add-dog: the PUT carries every header the storage signed
+AssertionError: expected [ { 'content-type': 'image/jpeg' } ] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+  [
+    {
+      "content-type": "image/jpeg",
+-     "if-none-match": "*",
+    },
+  ]
+
+ ❯ src/SignupPage.test.tsx:1607:24
+    1605|     });
+    1606|     expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBe…
+    1607|     expect(putHeaders).toEqual([
+       |                        ^
+    1608|       expect.objectContaining({ "content-type": "image/jpeg", "if-none…
+    1609|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent»
+AssertionError: expected <button type="button"></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  type="button"
+>
+  Deixa-ho pendent i continua ›
+</button>
+
+ ❯ src/SignupPage.test.tsx:1625:85
+    1623|     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    1624|     expect(await screen.findByText(/No podem trobar la persona que ind…
+    1625|     expect(screen.queryByRole("button", { name: "Deixa-ho pendent i co…
+       |                                                                                     ^
+    1626|     expect(navigate).not.toHaveBeenCalled();
+    1627|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error
+AssertionError: expected <aside …(1)></aside> to be null
+
+- Expected:
+null
+
++ Received:
+<aside
+  class="signup-note signup-note--neutral"
+>
+  És imprescindible per començar les classes: si ara no la tens a mà, te la demanarem més endavant.
+</aside>
+
+ ❯ src/SignupPage.test.tsx:1649:59
+    1647|     seedDraft();
+    1648|     await renderSignup({ navigate, path: "/apuntat-hi/gos" });
+    1649|     expect(screen.queryByText(/si ara no la tens a mà/u)).toBeNull();
+       |                                                           ^
+    1650|     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    1651|     const file = screen.getByLabelText("Cartilla de vacunes");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 17: each plan card shows its name, its conditions and its price, never the long description; no zero entry line
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana.[39m
+Received:
+[31m  Abonat60,00 €/mesEntrada 100,00 €Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana.Ofertes si es porta més d'un gos per famíliaACTIVAR[39m
+ ❯ src/SignupPage.test.tsx:1699:24
+    1697|     expect(member).toHaveTextContent(/60,00\s€\/mes/u);
+    1698|     expect(member).toHaveTextContent(/Entrada 100,00\s€/u);
+    1699|     expect(member).not.toHaveTextContent(longDescription);
+       |                        ^
+    1700|     const pack = screen.getByRole("button", { name: "Selecciona Pack 6…
+    1701|     expect(pack).toHaveTextContent(/135,00\s€ · 3 mesos/u);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe
+AssertionError: expected null not to be null
+ ❯ src/SignupPage.test.tsx:1745:52
+    1743|     await renderSignup({ path: "/apuntat-hi" });
+    1744|     const note = screen.getByText(/Ja ets soci i vols afegir un altre …
+    1745|     expect(note?.querySelector("svg.ah-icon")).not.toBeNull();
+       |                                                    ^
+    1746|     const language = screen.getByLabelText("Idioma").closest("label");
+    1747|     expect(language?.querySelector("svg.ah-icon")).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > the public footer reads «{legalName} · {taxId} · {city}» from /branding
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Club Agility Cànic · G00000000 · Cabrera de Mar[39m
+Received:
+[31m  Club Agility Cànic · Cabrera de Mar[39m
+ ❯ src/SignupPage.test.tsx:1752:45
+    1750|   it("the public footer reads «{legalName} · {taxId} · {city}» from /b…
+    1751|     await renderSignup({ path: "/apuntat-hi" });
+    1752|     expect(screen.getByRole("contentinfo")).toHaveTextContent(
+       |                                             ^
+    1753|       `${brandingCanicFixture.club.legalName ?? ""} · ${brandingCanicF…
+    1754|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > A32: the club's primary buttons have dark text, AA against the primary, and BrandingProvider does not warn
+AssertionError: expected '#FFFFFF' to be '#0B0B0B' // Object.is equality
+
+Expected: "#0B0B0B"
+Received: "#FFFFFF"
+
+ ❯ src/SignupPage.test.tsx:1784:23
+    1782|     const warn = vi.spyOn(console, "warn").mockImplementation(() => un…
+    1783|     const { primary, onPrimary } = brandingCanicFixture.theme.colors;
+    1784|     expect(onPrimary).toBe("#0B0B0B");
+       |                       ^
+    1785|     expect(contrastRatio(onPrimary, primary)).toBeGreaterThanOrEqual(4…
+    1786|     await renderSignup({ path: "/apuntat-hi" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #1 a slow full page load: the departing page never renders nor consumes the destination's error
+AssertionError: expected <input id="signup-id" …(4)></input> to be null
+
+- Expected:
+null
+
++ Received:
+<input
+  aria-describedby="signup-id-error"
+  aria-invalid="true"
+  class="ah-input"
+  id="signup-id"
+  value="12345678Z"
+/>
+
+ ❯ src/SignupPage.test.tsx:1806:50
+    1804|     // The navigation is on its way: the old document shows no step 16…
+    1805|     await new Promise((resolve) => setTimeout(resolve, 150));
+    1806|     expect(screen.queryByLabelText("DNI / NIE")).toBeNull();
+       |                                                  ^
+    1807|     expect(savedDraft().pendingError).toMatchObject({ code: "INVALID_I…
+    1808|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key
+AssertionError: expected 'cc63435e-7aab-4aff-986f-d671b63c110b' to be 'bd998c3e-2307-4b18-8bd2-99983967bb26' // Object.is equality
+
+Expected: "bd998c3e-2307-4b18-8bd2-99983967bb26"
+Received: "cc63435e-7aab-4aff-986f-d671b63c110b"
+
+ ❯ src/SignupPage.test.tsx:1853:31
+    1851|     expect(checkouts).toHaveLength(3);
+    1852|     expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+    1853|     expect(checkouts[2]?.key).toBe(checkouts[1]?.key);
+       |                               ^
+    1854|     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+    1855|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/17]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #3 a passport-only applicant's INVALID_ID_DOCUMENT lands on the passport field
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<input
+  class="ah-input"
+  id="signup-passport"
+  value="PA1234567"
+/>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <main … />
+  </div>
+</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"signup-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"signup-header"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"signup-header__logo"[39m
+            [33msrc[39m=[32m"data:image/png;base64,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...
+ ❯ src/SignupPage.test.tsx:1866:24
+    1864|     const passport = await screen.findByLabelText("Passaport — si no t…
+    1865|     await waitFor(() => {
+    1866|       expect(passport).toHaveFocus();
+       |                        ^
+    1867|     });
+    1868|     expect(navigate).toHaveBeenLastCalledWith("/apuntat-hi");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/17]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  17 failed | 4 passed | 83 skipped (104)
+   Start at  18:43:24
+   Duration  11.82s (tests 84%, environment 7%, transform 5%, import 3%, setup 1%)
+

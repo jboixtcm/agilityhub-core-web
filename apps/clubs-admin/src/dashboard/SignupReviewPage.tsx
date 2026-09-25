@@ -15,7 +15,7 @@ import {
   Toast,
   useBranding,
 } from "@agilityhub/ui";
-import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useRefreshCounters } from "./counters";
@@ -30,6 +30,20 @@ type Upfront = NonNullable<SignupView["upfront"]>;
 type ValidationRequest = components["schemas"]["ValidationRequest"];
 type ValidationDryRun = components["schemas"]["ValidationDryRun"];
 type Warning = components["schemas"]["SignupWarning"];
+type ReadmissionValues = components["schemas"]["ReadmissionValues"];
+// R-04-06 (E38): the fields a readmission can change, in the order D2 lists them.
+const READMISSION_FIELDS = [
+  "firstName",
+  "lastName1",
+  "lastName2",
+  "gender",
+  "birthDate",
+  "contactEmails",
+  "phones",
+  "address",
+  "paymentMethod",
+] as const;
+type ReadmissionField = (typeof READMISSION_FIELDS)[number];
 interface FamilyCandidate {
   dogs: readonly string[];
   familyGroup: components["schemas"]["NamedReference"] | undefined;
@@ -468,6 +482,40 @@ export function SignupReviewPage({
   ].join(" · ");
   const whatsapp = member.phones[0];
   const holderGroupName = familyDecision?.kind === "group" ? familyDecision.holderName : undefined;
+  // R-04-06 (E38): each changed field with the LEFT record's value and the submitted one.
+  const readmissionBlock = signup.readmission;
+  const readmissionChanges = READMISSION_FIELDS.filter((field) => readmissionBlock?.changedFields.includes(field) === true);
+  const readmissionValue = (values: ReadmissionValues, field: ReadmissionField): string => {
+    const text = (() => {
+      switch (field) {
+        case "firstName":
+        case "lastName1":
+          return values[field];
+        case "lastName2":
+          return values.lastName2 ?? "";
+        case "gender":
+          return values.gender === undefined ? "" : t(`admin-census:signupReview.gender.${values.gender}`);
+        case "birthDate":
+          return values.birthDate === undefined ? "" : formatPlainDate(values.birthDate, "short");
+        case "contactEmails":
+          return values.contactEmails.map((entry) => entry.email).join(" · ");
+        case "phones":
+          return values.phones.map((phone) => `${phone.prefix} ${phone.number}`).join(" · ");
+        case "address":
+          return values.address === undefined
+            ? ""
+            : [values.address.street, `${values.address.postalCode} ${values.address.city}`].join(", ");
+        case "paymentMethod": {
+          const method = values.paymentMethod;
+          if (method === undefined) return "";
+          const label = t(`admin-census:signupReview.paymentMethod.${method.type}`);
+          const account = method.type === "SEPA_DD" ? fmtMaskedIban(method.maskedAccount) : undefined;
+          return account == null ? label : `${label} · ${account}`;
+        }
+      }
+    })();
+    return text.trim() === "" ? t("admin-census:values.empty") : text;
+  };
 
   return (
     <section className="signup-review-page">
@@ -568,6 +616,26 @@ export function SignupReviewPage({
               </>
             ) : null}
           </dl>
+          {readmissionBlock === undefined || readmissionChanges.length === 0 ? null : (
+            <section aria-labelledby="signup-readmission-title" className="signup-review-readmission">
+              <h3 id="signup-readmission-title">{t("admin-census:signupReview.readmission.title")}</h3>
+              <dl className="signup-review-data">
+                {readmissionChanges.map((field) => (
+                  <Fragment key={field}>
+                    <dt>{t(`admin-census:signupReview.fields.${field}`)}</dt>
+                    <dd>
+                      <span className="signup-review-readmission__previous">
+                        {t("admin-census:signupReview.readmission.previous", { value: readmissionValue(readmissionBlock.current, field) })}
+                      </span>
+                      <strong className="signup-review-readmission__submitted">
+                        {t("admin-census:signupReview.readmission.submitted", { value: readmissionValue(readmissionBlock.submitted, field) })}
+                      </strong>
+                    </dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </section>
+          )}
           {signup.warnings.includes("NO_IMAGE_CONSENT") ? <p className="signup-review-warning signup-review-warning--image"><Icon aria-hidden="true" name="warn" /> {t("admin-census:signupReview.warning.NO_IMAGE_CONSENT", { gender: member.gender })}</p> : null}
           {billing && member.accountMissing === true ? <p className="signup-review-warning signup-review-warning--danger">{t("admin-census:signupReview.warning.ACCOUNT_NOT_PROVIDED")}</p> : null}
         </Card>

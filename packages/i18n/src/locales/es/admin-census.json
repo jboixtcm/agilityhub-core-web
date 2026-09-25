@@ -279,7 +279,10 @@
       "holderTaxId": "NIF del titular",
       "requestedPlan": "Modalidad solicitada",
       "planName": "Modalidad",
-      "paymentMethod": "Método de pago"
+      "paymentMethod": "Método de pago",
+      "contactEmails": "Correos electrónicos",
+      "phones": "Teléfonos",
+      "address": "Dirección"
     },
     "sameHolder": "titular: la misma",
     "paymentSummary": "{method} · {account} · {holder}",
@@ -358,7 +361,13 @@
       "FEMALE": "Hembra",
       "MALE": "Macho"
     },
-    "familyCandidate": "{name} + {dogs}"
+    "familyCandidate": "{name} + {dogs}",
+    "readmission": {
+      "title": "Cambios respecto a la ficha de baja",
+      "previous": "Antes: {value}",
+      "submitted": "Ahora: {value}",
+      "documentLocked": "El DNI/NIE no se puede cambiar durante una readmisión: para corregirlo, rechaza la readmisión."
+    }
   },
   "values": {
     "empty": "—",

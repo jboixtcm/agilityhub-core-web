@@ -14,9 +14,9 @@ type Warning = components["schemas"]["SignupWarning"];
  * The D2 variants of the Marta Roca signup (S04 §2 D2): the default is the mockup (a FOUND family
  * claim and a Stripe payment); `manual` has nothing paid yet; `addDog` is an ACTIVE member whose
  * new dog waits (R-04-25); `familyPending` is a family claim the applicant could not match
- * (`NOT_FOUND_PENDING`, R-04-13).
+ * (`NOT_FOUND_PENDING`, R-04-13); `readmission` is a LEFT member who applies again (R-04-06, E38).
  */
-export type SignupReviewVariant = "addDog" | "familyPending" | "manual";
+export type SignupReviewVariant = "addDog" | "familyPending" | "manual" | "readmission";
 
 export const signupReviewBaseline = memberSignupReviewFixture as MemberSignupView;
 
@@ -61,7 +61,62 @@ export function signupReviewVariant(
     delete view.proposals.familyGroupId;
     view.warnings = [...view.warnings, "FAMILY_HOLDER_NOT_FOUND"];
   }
+  if (variant === "readmission") {
+    // Marta left in 2025 and applies again with the same DNI, a new e-mail, phone and address.
+    view.signup = { ...view.signup, readmission: true };
+    view.warnings = [...view.warnings, "READMISSION"];
+    view.readmission = {
+      changedFields: [],
+      current: {
+        address: { city: "Cabrera de Mar", postalCode: "08349", street: "Carrer del Mar, 7" },
+        birthDate: "1988-04-12",
+        contactEmails: [{ bounced: false, email: "marta.antic@example.test" }],
+        firstName: "Marta",
+        gender: "FEMALE",
+        lastName1: "Roca",
+        lastName2: "Pujol",
+        paymentMethod: { channel: "Efectiu", type: "MANUAL" },
+        phones: [{ label: "Mòbil", number: "655000111", prefix: "+34" }],
+      },
+      previousLeftAt: "2025-06-30T10:00:00Z",
+      submitted: readmissionValues(view.member),
+    };
+    view.readmission.changedFields = readmissionChanges(view.readmission.current, view.readmission.submitted);
+  }
   return view;
+}
+
+type ReadmissionValues = components["schemas"]["ReadmissionValues"];
+
+/** The submitted values of a pending readmission, as the D2 view shows them (payment masked). */
+export function readmissionValues(member: MemberSignupView["member"]): ReadmissionValues {
+  return {
+    address: { city: member.address.city, postalCode: member.address.postalCode, street: member.address.street },
+    birthDate: member.birthDate,
+    contactEmails: member.contactEmails.map((entry) => ({ ...entry })),
+    firstName: member.firstName,
+    gender: member.gender,
+    lastName1: member.lastName1,
+    ...(member.lastName2 === undefined ? {} : { lastName2: member.lastName2 }),
+    ...(member.paymentMethod === undefined ? {} : { paymentMethod: { ...member.paymentMethod } }),
+    phones: member.phones.map((phone) => ({ ...phone })),
+  };
+}
+
+/** `SignupReadmission.changedFields`: the fields whose submitted value differs from the record. */
+export function readmissionChanges(current: ReadmissionValues, submitted: ReadmissionValues): string[] {
+  const fields = [
+    "firstName",
+    "lastName1",
+    "lastName2",
+    "gender",
+    "birthDate",
+    "contactEmails",
+    "phones",
+    "address",
+    "paymentMethod",
+  ] as const;
+  return fields.filter((field) => JSON.stringify(current[field]) !== JSON.stringify(submitted[field]));
 }
 
 /**

@@ -1,0 +1,32 @@
+{
+  "clubPaymentProviders": {
+    "SEPA_XML": {
+      "configured": false,
+      "enabled": false
+    },
+    "MANUAL": {
+      "configured": false,
+      "enabled": false
+    }
+  },
+  "signup": {
+    "admin": {
+      "paymentMethods": "{\"code\":\"FORBIDDEN\",\"message\":\"No tens permís per fer aquesta acció.\",\"details\":{},\"traceId\":\"489af881-cb86-44a1-bc18-417be49aa82d\"}",
+      "status": 403
+    },
+    "anonymous": {
+      "paymentMethods": [
+        {
+          "type": "SEPA_DD",
+          "label": "Domiciliació",
+          "mandateText": "Autoritzo Club Agility Cànic a presentar els rebuts al compte indicat, d’acord amb la Llei 16/2009 de serveis de pagament."
+        },
+        {
+          "type": "MANUAL",
+          "label": "Efectiu"
+        }
+      ],
+      "status": 200
+    }
+  }
+}

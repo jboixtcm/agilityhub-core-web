@@ -718,6 +718,17 @@ describe("E3-W07 step 8 · the D2 minors", () => {
     expect(screen.queryByText(/mitja quota/u)).toBeNull();
   });
 
+  it("E3-W08 step 0: a first month frozen without its portion (null, api E3-T12) names the month, never «(mitja quota)»", async () => {
+    await renderReview({
+      fetchOverride: recordingFetch((body) => {
+        if (body.upfront == null) return;
+        body.upfront.firstMonth = { amountDue: { amountMinor: 3000, currency: "EUR" }, option: "TODAY", portion: null, startDate: "2026-08-17" };
+      }).fetch,
+    });
+    expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € · es registra/u)).toBeVisible();
+    expect(screen.queryByText(/mitja quota/u)).toBeNull();
+  });
+
   it("en: gender OTHER → «them»", async () => {
     const branding: Branding = { ...canic, locales: ["ca", "es", "en"] };
     window.history.pushState(null, "", `/preinscripcions/${memberId}`);
@@ -931,5 +942,85 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     const drawer = openDrawer();
     expect(within(drawer).queryByLabelText("Mètode de pagament")).toBeNull();
     expect(sent(requests, "GET", "/club")).toEqual([]);
+  });
+});
+
+describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
+  it("shows the «Readmissió» badge and, for each changed field only, the LEFT record's value and the submitted one", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    await renderReview();
+    expect(screen.getByText("Readmissió", { selector: ".ah-badge" })).toBeVisible();
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    const rows = within(block).getAllByRole("term").map((term) => term.textContent);
+    expect(rows).toEqual(["Correus electrònics", "Telèfons", "Adreça", "Mètode de pagament"]);
+    expect(within(block).getByText("Abans: marta.antic@example.test")).toBeVisible();
+    expect(within(block).getByText("Ara: marta.roca@example.test")).toBeVisible();
+    expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
+    expect(within(block).getByText("Ara: +34 655123123")).toBeVisible();
+    expect(within(block).getByText("Abans: Carrer del Mar, 7, 08349 Cabrera de Mar")).toBeVisible();
+    expect(within(block).getByText("Ara: Carrer de la Riera, 12, 08349 Cabrera de Mar")).toBeVisible();
+    expect(within(block).getByText("Abans: Efectiu")).toBeVisible();
+    expect(within(block).getByText("Ara: Domiciliació · ···· ···· ···· ···· 7719")).toBeVisible();
+    // Unchanged fields (the name, the birth date) are not repeated.
+    expect(within(block).queryByText(/Marta/u)).toBeNull();
+  });
+
+  it("an edit of the submitted phone updates the «Ara» value; the LEFT record's value stays", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    await renderReview();
+    const drawer = openDrawer();
+    fireEvent.change(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" }), {
+      target: { value: "655999888" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    const block = await screen.findByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    expect(await within(block).findByText("Ara: +34 655999888")).toBeVisible();
+    expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
+  });
+
+  it("the DNI/NIE is read-only while the readmission waits, and says how to correct it", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const document = within(drawer).getByLabelText("DNI/NIE");
+    expect(document).toHaveAttribute("readonly");
+    expect(document).toHaveValue("47123456K");
+    const help = window.document.getElementById(document.getAttribute("aria-describedby") ?? "");
+    expect(help).toHaveTextContent(
+      "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+    );
+    fireEvent.change(document, { target: { value: "47123457P" } });
+    fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-firstName" }), {
+      target: { value: "Marta Isabel" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/members/${memberId}`)).toHaveLength(1);
+    });
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty("idDocument");
+  });
+
+  it("a 409 INVALID_STATE READMISSION_PENDING shows «rebutja la readmissió» inside the drawer", async () => {
+    server.use(
+      http.patch(`*/api/v1/members/${memberId}`, () =>
+        apiErrorResponse("INVALID_STATE", 409, { reason: "READMISSION_PENDING" }),
+      ),
+    );
+    await renderReview();
+    const drawer = openDrawer();
+    fireEvent.change(within(drawer).getByLabelText("DNI/NIE"), { target: { value: "47123457P" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    expect(
+      await within(drawer).findByText(
+        "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+      ),
+    ).toBeVisible();
+  });
+
+  it("a signup that is not a readmission has no readmission block and an editable DNI/NIE", async () => {
+    await renderReview();
+    expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
+    expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
   });
 });

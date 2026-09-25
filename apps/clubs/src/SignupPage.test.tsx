@@ -2,12 +2,13 @@ import { createApiClient } from "@agilityhub/api-client";
 import {
   mockScenario,
   resetSignupMockState,
+  setSignupMockToday,
   type MockScenario,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
-import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { type Branding, BrandingProvider, contrastRatio } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
@@ -17,6 +18,8 @@ import { SignupPage } from "./SignupPage";
 
 const DRAFT_KEY = "signup.draft.v1";
 const MEMBER_PLAN = "10000000-0000-4000-8000-000000000001";
+const PACK_6_PLAN = "10000000-0000-4000-8000-000000000002";
+const THERAPY_PLAN = "10000000-0000-4000-8000-000000000004";
 const VALID_IBAN = "ES9121000418450200051332";
 const SIGNUP_RESULT = {
   checkout: { required: false },
@@ -89,6 +92,15 @@ async function renderSignup({
   window.history.pushState(null, "", path);
   mockScenario(scenario);
   const branding = brandingOverride ?? brandingFor(scenario);
+  // A same-document navigator (a client-side router): the address moves before the page renders
+  // the next step. The production navigator is a full page load (`stubFullPageLoads`).
+  const onNavigate = (next: string) => {
+    navigate(next);
+    const target = new URL(next, window.location.href);
+    if (target.origin === window.location.origin) {
+      window.history.pushState(null, "", `${target.pathname}${target.search}`);
+    }
+  };
   const i18n = await createI18n({
     branding,
     browserLanguages: [locale],
@@ -105,7 +117,7 @@ async function renderSignup({
             getAccessToken: () => (addDog ? "mock-access-token" : undefined),
             getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
           })}
-          {...(productionNavigator ? {} : { onNavigate: navigate })}
+          {...(productionNavigator ? {} : { onNavigate })}
         />
       </BrandingProvider>
     </I18nextProvider>,
@@ -1179,18 +1191,21 @@ describe("M19 the consent version sent is the accepted one (R-04-17)", () => {
  * The production navigator is `window.location.assign`: a full page load. The stub keeps only what
  * a browser keeps (the session storage): the old page is unmounted and a fresh page mounts.
  */
-function stubFullPageLoads(initialPath: string): string[] {
+function stubFullPageLoads(initialPath: string, { delayMs }: { delayMs?: number } = {}): string[] {
   const url = new URL(initialPath, window.location.origin);
   const loads: string[] = [];
   const assign = (next: string) => {
     const target = new URL(next, url);
-    url.href = target.href;
     const path = `${target.pathname}${target.search}`;
     loads.push(path);
-    queueMicrotask(() => {
+    // The address changes when the next document loads; until then the old one keeps running.
+    const load = () => {
+      url.href = target.href;
       cleanup();
       void renderSignup({ path, productionNavigator: true }).catch(() => undefined);
-    });
+    };
+    if (delayMs === undefined) queueMicrotask(load);
+    else setTimeout(load, delayMs);
   };
   vi.stubGlobal("location", {
     assign,
@@ -1445,5 +1460,417 @@ describe("E3-W06 round 2", () => {
     fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "082026" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+  });
+});
+
+function upfrontCard(): HTMLElement {
+  const card = document.querySelector<HTMLElement>(".signup-upfront");
+  if (card === null) throw new TypeError("Missing «Pagament inicial» card");
+  return card;
+}
+
+/** The «Total a pagar al club» amount of the card. */
+function upfrontTotal(): string {
+  const total = within(upfrontCard()).getByText("Total a pagar al club").closest("p");
+  return total?.querySelector("b")?.textContent ?? "";
+}
+
+function startOptions(): string[] {
+  return within(upfrontCard())
+    .queryAllByRole("radio")
+    .map((radio) => (radio.closest("label")?.textContent ?? "").replaceAll(/\s+/gu, " ").trim());
+}
+
+describe("E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32)", () => {
+  it("05-08-2026 (before the split day): a full month today, half a month from the 16th", async () => {
+    setSignupMockToday("2026-08-05");
+    seedDraft();
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(within(upfrontCard()).getByText("Entrada (1 gos)").closest("p")).toHaveTextContent(
+      /100,00\s€/u,
+    );
+    expect(startOptions()).toEqual([
+      "Alta avui, 5 d’agost (mes complet)60,00 €",
+      "Alta el dia 16 d’agost (mig mes)30,00 €",
+    ]);
+    expect(within(upfrontCard()).getAllByRole("radio")[0]).toBeChecked();
+    expect(upfrontTotal()).toBe("160,00 €");
+  });
+
+  it("17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+    expect(startOptions()).toEqual([
+      "Alta avui, 17 d’agost (mig mes)30,00 €",
+      "Alta l’1 de setembre (mes complet)60,00 €",
+    ]);
+    expect(upfrontTotal()).toBe("130,00 €");
+    fireEvent.click(within(upfrontCard()).getAllByRole("radio")[1] ?? document.body);
+    expect(upfrontTotal()).toBe("160,00 €");
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
+    });
+    const body = await lastBody(recorded, "/signup");
+    expect(body.payment).toMatchObject({ firstMonthOption: "ALTERNATIVE" });
+    expect(JSON.stringify(body)).not.toMatch(/total|16000|160,00/iu);
+  });
+
+  it("31-12-2026: the alternative starts on the 1st of January (full month)", async () => {
+    setSignupMockToday("2026-12-31");
+    seedDraft();
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(startOptions()).toEqual([
+      "Alta avui, 31 de desembre (mig mes)30,00 €",
+      "Alta l’1 de gener (mes complet)60,00 €",
+    ]);
+  });
+
+  it("Pack 6: the pack line and no start options; Teràpia: its 50 € entry fee only", async () => {
+    seedDraft({ planId: PACK_6_PLAN });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(within(upfrontCard()).getByText("Pack 6").closest("p")).toHaveTextContent(/135,00\s€/u);
+    expect(within(upfrontCard()).queryByText("Entrada (1 gos)")).toBeNull();
+    expect(startOptions()).toEqual([]);
+    expect(upfrontTotal()).toBe("135,00 €");
+
+    cleanup();
+    seedDraft({ planId: THERAPY_PLAN });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(within(upfrontCard()).getByText("Entrada (1 gos)").closest("p")).toHaveTextContent(
+      /50,00\s€/u,
+    );
+    expect(startOptions()).toEqual([]);
+    expect(upfrontTotal()).toBe("50,00 €");
+  });
+
+  it("a zero line of the quote is hidden (no «Entrada 0,00 €»)", async () => {
+    const config = await signupConfigJson();
+    const upfront = config.upfront as { planQuotes: { lines: unknown[]; planId: string }[] };
+    const pack = upfront.planQuotes.find((quote) => quote.planId === PACK_6_PLAN);
+    pack?.lines.push({ amount: { amountMinor: 0, currency: "EUR" }, concept: "ENTRY_FEE" });
+    server.use(http.get("*/api/v1/signup", () => HttpResponse.json(config)));
+    seedDraft({ planId: PACK_6_PLAN });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(upfrontCard()).not.toHaveTextContent(/Entrada/u);
+    expect(upfrontTotal()).toBe("135,00 €");
+  });
+
+  it("add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    setSignupMockToday("2026-08-26");
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament" });
+    expect(startOptions()).toEqual(["Alta avui, 26 d’agost (quota addicional d'aquest mes)30,00 €"]);
+    expect(upfrontTotal()).toBe("130,00 €");
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
+    });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({ additionalDogOption: "TODAY" });
+
+    cleanup();
+    sessionStorage.clear();
+    setSignupMockToday("2026-08-17");
+    await renderSignup({ addDog: true, path: "/gossos/nou/pagament" });
+    expect(startOptions()).toEqual([
+      "Alta avui, 17 d’agost (quota addicional d'aquest mes)30,00 €",
+      "Alta l’1 de setembre (ara només l'entrada)0,00 €",
+    ]);
+    fireEvent.click(within(upfrontCard()).getAllByRole("radio")[1] ?? document.body);
+    expect(upfrontTotal()).toBe("100,00 €");
+  });
+});
+
+describe("E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16)", () => {
+  it.each([
+    ["public signup", false, "/apuntat-hi/gos"],
+    ["add-dog", true, "/gossos/nou"],
+  ] as const)("%s: the PUT carries every header the storage signed", async (_mode, addDog, path) => {
+    const putHeaders: Record<string, string>[] = [];
+    server.use(
+      http.put("https://uploads.example.test/*", ({ request }) => {
+        putHeaders.push(Object.fromEntries(request.headers.entries()));
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    await renderSignup({ addDog, path });
+    fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
+    fireEvent.change(screen.getByLabelText("Cartilla de vacunes"), {
+      target: { files: [new File(["page-1"], "scan.jpg", { type: "image/jpeg" })] },
+    });
+    expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
+    expect(putHeaders).toEqual([
+      expect.objectContaining({ "content-type": "image/jpeg", "if-none-match": "*" }),
+    ]);
+  });
+});
+
+describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
+  it("T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent»", async () => {
+    const config = await signupConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, allowFamilyGroupPending: false })),
+    );
+    const navigate = vi.fn();
+    await renderSignup({ navigate, path: "/apuntat-hi/familia" });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Persona desconeguda" } });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Bruc" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(await screen.findByText(/No podem trobar la persona que indiques/u)).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Deixa-ho pendent i continua ›" })).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("T-04-31 allowFamilyGroupPending=true: the same claim can be left pending", async () => {
+    const config = await signupConfigJson();
+    expect(config.allowFamilyGroupPending).toBe(true);
+    const navigate = vi.fn();
+    await renderSignup({ navigate, path: "/apuntat-hi/familia" });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Persona desconeguda" } });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Bruc" } });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Deixa-ho pendent i continua ›" }));
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
+  });
+
+  it("T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error", async () => {
+    const config = await signupConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, requireDogDocumentAtSignup: true })),
+    );
+    const navigate = vi.fn();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/gos" });
+    expect(screen.queryByText(/si ara no la tens a mà/u)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    const file = screen.getByLabelText("Cartilla de vacunes");
+    await waitFor(() => {
+      expect(file).toHaveFocus();
+    });
+    expect(file).toHaveAttribute("aria-invalid", "true");
+    expect(document.getElementById(file.getAttribute("aria-describedby") ?? "")).toHaveTextContent(
+      "Cal adjuntar la cartilla de vacunes per continuar: toca «Cartilla de vacunes» i puja'n una foto o un PDF.",
+    );
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.change(file, {
+      target: { files: [new File(["page-1"], "scan.jpg", { type: "image/jpeg" })] },
+    });
+    expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
+    expect(file).not.toHaveAttribute("aria-invalid");
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+  });
+
+  it("T-04-30 requireDogDocumentAtSignup=false: 17 continues without a file and shows the optional note", async () => {
+    const config = await signupConfigJson();
+    expect(config.requireDogDocumentAtSignup).toBe(false);
+    const navigate = vi.fn();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/gos" });
+    expect(screen.getByText(/si ara no la tens a mà, te la demanarem més endavant/u)).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+  });
+});
+
+describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
+  it("17: each plan card shows its name, its conditions and its price, never the long description; no zero entry line", async () => {
+    const config = await signupConfigJson();
+    const longDescription =
+      "Les classes són sempre amb instructor i se'n poden fer fins a dues per setmana.";
+    const plans = config.plans.map((plan, index) =>
+      index === 0
+        ? { ...plan, description: longDescription }
+        : index === 1
+          ? { ...plan, entryFee: { amountMinor: 0, currency: "EUR" } }
+          : plan,
+    );
+    server.use(http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, plans })));
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const member = screen.getByRole("button", { name: "Selecciona Abonat" });
+    expect(member).toHaveTextContent(/60,00\s€\/mes/u);
+    expect(member).toHaveTextContent(/Entrada 100,00\s€/u);
+    expect(member).not.toHaveTextContent(longDescription);
+    const pack = screen.getByRole("button", { name: "Selecciona Pack 6" });
+    expect(pack).toHaveTextContent(/135,00\s€ · 3 mesos/u);
+    expect(pack).toHaveTextContent("Només un cop");
+    expect(pack).not.toHaveTextContent(/Entrada/u);
+    expect(pack).not.toHaveTextContent("Sis sessions");
+    const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
+    expect(within(therapy).getByText("condicions i cost segons cada cas")).toHaveClass(
+      "signup-plan__conditions",
+    );
+    expect(therapy).not.toHaveTextContent("Classes de teràpia individual");
+    expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€/u);
+  });
+
+  it("16 (R-04-02, T-04-03): «Població» is free with no town, fixed with one and a selector with several", async () => {
+    await renderSignup({ path: "/apuntat-hi" });
+    const postalCode = screen.getByLabelText("CP", { exact: true });
+    fireEvent.change(postalCode, { target: { value: "08999" } });
+    fireEvent.blur(postalCode);
+    const town = screen.getByLabelText("Població (proposada pel CP)");
+    await waitFor(() => {
+      expect(town).not.toHaveAttribute("readonly");
+    });
+    expect(town.tagName).toBe("INPUT");
+
+    fireEvent.change(postalCode, { target: { value: "08349" } });
+    fireEvent.blur(postalCode);
+    await waitFor(() => {
+      expect(screen.getByLabelText("Població (proposada pel CP)")).toHaveValue("Cabrera de Mar");
+    });
+    expect(screen.getByLabelText("Població (proposada pel CP)")).toHaveAttribute("readonly");
+
+    fireEvent.change(postalCode, { target: { value: "08001" } });
+    fireEvent.blur(postalCode);
+    const select = await screen.findByRole("combobox", { name: "Població (proposada pel CP)" });
+    expect(within(select).getAllByRole("option").map((option) => option.textContent)).toEqual([
+      "Poble Antic",
+      "Poble Centre",
+      "Poble Nou",
+    ]);
+    expect(select).toHaveValue("Poble Antic");
+  });
+
+  it("16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe", async () => {
+    await renderSignup({ path: "/apuntat-hi" });
+    const note = screen.getByText(/Ja ets soci i vols afegir un altre gos/u).closest("aside");
+    expect(note?.querySelector("svg.ah-icon")).not.toBeNull();
+    const language = screen.getByLabelText("Idioma").closest("label");
+    expect(language?.querySelector("svg.ah-icon")).not.toBeNull();
+  });
+
+  it("the public footer reads «{legalName} · {taxId} · {city}» from /branding", async () => {
+    await renderSignup({ path: "/apuntat-hi" });
+    expect(screen.getByRole("contentinfo")).toHaveTextContent(
+      `${brandingCanicFixture.club.legalName} · ${brandingCanicFixture.club.taxId} · ${brandingCanicFixture.club.city}`,
+    );
+
+    cleanup();
+    const signupBranding = brandingFor("signup");
+    await renderSignup({
+      branding: {
+        ...signupBranding,
+        club: { ...signupBranding.club, legalName: "Associació Esportiva Fictícia", taxId: "G00000001" },
+      },
+      path: "/apuntat-hi",
+    });
+    expect(screen.getByRole("contentinfo")).toHaveTextContent(
+      `Associació Esportiva Fictícia · G00000001 · ${signupBranding.club.city ?? ""}`,
+    );
+
+    cleanup();
+    const branding = brandingFor("signup");
+    await renderSignup({
+      branding: { ...branding, club: { ...branding.club, taxId: null } },
+      path: "/apuntat-hi",
+    });
+    expect(screen.getByRole("contentinfo")).toHaveTextContent(
+      `${branding.club.name} · ${branding.club.city ?? ""}`,
+    );
+    expect(screen.getByRole("contentinfo").textContent).not.toMatch(/·.*·/u);
+  });
+
+  it("A32: the club's primary buttons have dark text, AA against the primary, and BrandingProvider does not warn", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const { background, onPrimary, primary } = brandingCanicFixture.theme.colors;
+    // Dark text: the club's own dark background colour, 5.9:1 on the primary (A32).
+    expect(onPrimary).toBe(background);
+    expect(contrastRatio(onPrimary, primary)).toBeGreaterThanOrEqual(4.5);
+    await renderSignup({ path: "/apuntat-hi" });
+    expect(document.documentElement.style.getPropertyValue("--ah-color-primary-fg")).toBe(onPrimary);
+    expect(warn.mock.calls.flat().join(" ")).not.toContain("[BrandingProvider]");
+    warn.mockRestore();
+  });
+});
+
+describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", () => {
+  it("#1 a slow full page load: the departing page never renders nor consumes the destination's error", async () => {
+    server.use(http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_ID_DOCUMENT", 400)));
+    seedDraft();
+    const loads = stubFullPageLoads("/apuntat-hi/pagament", { delayMs: 300 });
+    await renderSignup({ path: "/apuntat-hi/pagament", productionNavigator: true });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(loads).toEqual(["/apuntat-hi"]);
+    });
+    // The navigation is on its way: the old document shows no step 16 and keeps the error.
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect(screen.queryByLabelText("DNI / NIE")).toBeNull();
+    expect(savedDraft().pendingError).toMatchObject({ code: "INVALID_ID_DOCUMENT", step: "person" });
+
+    const document = await screen.findByLabelText("DNI / NIE", {}, { timeout: 2000 });
+    await waitFor(() => {
+      expect(document).toHaveFocus();
+    });
+    expect(window.document.getElementById("signup-id-error")).toHaveTextContent(
+      "El document d'identitat no és vàlid.",
+    );
+    await waitFor(() => {
+      expect(savedDraft()).not.toHaveProperty("pendingError");
+    });
+  });
+
+  it("#2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key", async () => {
+    const recorded = recordRequests();
+    const navigate = vi.fn();
+    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+
+    // Stripe's cancel URL: the attempt it cancelled is dropped.
+    cleanup();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    expect(screen.getByText(/El pagament no s'ha completat/u)).toBeVisible();
+    server.use(http.post("*/api/v1/checkout-sessions", () => HttpResponse.error()));
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    expect(await screen.findByText("No s'ha pogut completar l'acció.")).toBeVisible();
+
+    // The browser reloads whatever address it shows now.
+    const reloaded = `${window.location.pathname}${window.location.search}`;
+    cleanup();
+    server.resetHandlers();
+    navigate.mockClear();
+    await renderSignup({ navigate, path: reloaded, scenario: "signupStripe" });
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
+    expect(checkouts).toHaveLength(3);
+    expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+    expect(checkouts[2]?.key).toBe(checkouts[1]?.key);
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+  });
+
+  it("#3 a passport-only applicant's INVALID_ID_DOCUMENT lands on the passport field", async () => {
+    server.use(http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_ID_DOCUMENT", 400)));
+    seedDraft({ passport: "PA1234567" }, { idDocument: { type: "DNI", value: "" } });
+    const navigate = vi.fn();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+    acceptPrivacy();
+    submitSignup();
+    const passport = await screen.findByLabelText("Passaport — si no tens DNI/NIE");
+    await waitFor(() => {
+      expect(passport).toHaveFocus();
+    });
+    expect(navigate).toHaveBeenLastCalledWith("/apuntat-hi");
+    expect(passport).toHaveAttribute("aria-invalid", "true");
+    expect(document.getElementById(passport.getAttribute("aria-describedby") ?? "")).toHaveTextContent(
+      "El document d'identitat no és vàlid.",
+    );
+    expect(screen.getByLabelText("DNI / NIE")).not.toHaveAttribute("aria-invalid");
   });
 });

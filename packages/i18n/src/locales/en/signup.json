@@ -9,6 +9,8 @@
     "back": "Go back to the previous step",
     "footer": "{club}",
     "footerWithCity": "{club} · {city}",
+    "footerWithTaxId": "{club} · {taxId}",
+    "footerWithTaxIdAndCity": "{club} · {taxId} · {city}",
     "required": "This field is required.",
     "invalidEmail": "The email address is invalid.",
     "duplicateEmail": "The two email addresses must be different.",
@@ -79,6 +81,7 @@
     "uploading": "Uploading the document",
     "tooManyFiles": "You can attach up to 10 files.",
     "optionalDocument": "It is required before classes begin. If you do not have it now, we will ask you for it later.",
+    "documentRequired": "Attach the vaccination record to continue: tap «Vaccination record» and upload a photo or a PDF.",
     "planTitle": "Plan",
     "monthlyPrice": "{price}/month",
     "entryFee": "Joining fee {price}",
@@ -112,8 +115,6 @@
     "initialTitle": "Initial payment",
     "entryLine": "Joining fee (1 dog)",
     "chooseStart": "Monthly fee — choose when you want to start:",
-    "startToday": "Start today, {date} (half month)",
-    "startAlternative": "Start on {date} (full month)",
     "stripeSubmit": "Payment is made on submission",
     "privacy": "I accept the privacy policy",
     "privacyLink": "Read it here",
@@ -126,6 +127,19 @@
     "addDogReviewFooter": "The club will review the request and the payment for the new dog, and we will let you know in the app once it is approved.",
     "consentOutdated": "The policy has changed. Review it and accept it again.",
     "cancelled": "The payment was not completed. You can retry from the email we sent you."
+  },
+  "step4": {
+    "firstMonth": {
+      "todayFull": "Start today, {date} (full month)",
+      "todayHalf": "Start today, {date} (half month)",
+      "splitDayHalf": "Start on {date} (half month)",
+      "nextMonthFull": "Start on {date} (full month)"
+    },
+    "additionalDog": {
+      "today": "Start today, {date} (this month's additional fee)",
+      "nextMonth": "Start on {date} (joining fee only for now)"
+    },
+    "total": "Total to pay the club"
   },
   "success": {
     "title": "Request submitted",

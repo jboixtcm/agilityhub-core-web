@@ -404,6 +404,8 @@ export function SignupEditDrawer({
   const billing = branding.modules.includes("BILLING");
   const member = signup.member;
   const addDogMode = member.status === "ACTIVE";
+  // R-04-06 (E38): the readmission matched on the document, so it is read-only while it waits.
+  const readmissionPending = signup.signup.readmission || signup.readmission !== undefined;
   const [personEdits, setPersonEdits] = useState<Partial<PersonForm>>({});
   const [dogEdits, setDogEdits] = useState<Readonly<Record<string, Partial<DogForm>>>>({});
   const [working, setWorking] = useState(false);
@@ -473,13 +475,20 @@ export function SignupEditDrawer({
 
   const showError = (cause: unknown) => {
     const stale = isApiError(cause, "STALE_VERSION");
+    const documentLocked =
+      isApiError(cause, "INVALID_STATE") &&
+      typeof cause.details === "object" &&
+      cause.details !== null &&
+      (cause.details as Record<string, unknown>).reason === "READMISSION_PENDING";
     setError({
       stale,
       text: stale
         ? t("admin-census:signupReview.stale")
-        : isApiError(cause)
-          ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
-          : t("admin-census:signupReview.genericError"),
+        : documentLocked
+          ? t("admin-census:signupReview.readmission.documentLocked")
+          : isApiError(cause)
+            ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
+            : t("admin-census:signupReview.genericError"),
     });
   };
 
@@ -567,7 +576,21 @@ export function SignupEditDrawer({
               ))}
             </Select>
           </FormField>
-          {personInput("idDocument", t("admin-census:signupReview.fields.idDocument"))}
+          {readmissionPending ? (
+            <FormField id="signup-edit-idDocument" label={t("admin-census:signupReview.fields.idDocument")}>
+              <Input
+                aria-describedby="signup-edit-idDocument-help"
+                id="signup-edit-idDocument"
+                readOnly
+                value={member.idDocument?.number ?? ""}
+              />
+              <small className="ah-form-field__help" id="signup-edit-idDocument-help">
+                {t("admin-census:signupReview.readmission.documentLocked")}
+              </small>
+            </FormField>
+          ) : (
+            personInput("idDocument", t("admin-census:signupReview.fields.idDocument"))
+          )}
           {personInput("email1", t("admin-census:signupReview.fields.email"), "email", true)}
           {personInput("email2", t("admin-census:signupReview.fields.secondEmail"), "email")}
           <div className="signup-edit-form__row">

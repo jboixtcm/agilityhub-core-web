@@ -184,6 +184,7 @@
     "notesHelp": "(what you want to get from the club, anything to bear in mind…)",
     "notesTitle": "Notes for instructors",
     "pack": "Pack {count}",
+    "pendingValidation": "pending approval",
     "photoSaved": "Photo for {dog} saved",
     "tasksSummary": "{open} pending · {completed} completed",
     "tasksTitle": "Tasks",

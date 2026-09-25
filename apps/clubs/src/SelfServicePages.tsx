@@ -408,6 +408,32 @@ function DogDocuments({ dog, onAdd }: { dog: MeDog; onAdd: () => void }) {
   );
 }
 
+/**
+ * A dog added from the app that waits for the club (R-04-25, E36): its identity and the chip
+ * «pendent de validació», with no actions (no photo, notes, tasks or documents).
+ */
+function PendingDogCard({ dog }: { dog: MeDog }) {
+  const { t } = useTranslation("census");
+  return (
+    <Card className="dog-card dog-card--pending">
+      <div className="dog-card__identity">
+        <span aria-hidden="true" className="dog-photo dog-photo--static">
+          <Icon name="paw" />
+        </span>
+        <div>
+          <h2>{dog.name}</h2>
+          <p>
+            {dog.breed} ·{" "}
+            {dog.sex === "FEMALE" ? t("census:values.female") : t("census:values.male")} ·{" "}
+            {t("census:values.years", { count: dog.ageYears })}
+          </p>
+        </div>
+        <span className="dog-card__pending">{t("census:myDogs.pendingValidation")}</span>
+      </div>
+    </Card>
+  );
+}
+
 function DogCard({
   client,
   dog: initialDog,
@@ -721,19 +747,23 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
           />
         ) : (
           <>
-            {data.dogs.map((dog) => (
-              <DogCard
-                client={client}
-                dog={dog}
-                key={dog.id}
-                levelsEnabled={levelsEnabled}
-                modules={branding.modules}
-                onDocument={setDocumentUpload}
-                onMessage={(text, messageError) => {
-                  setMessage({ ...(messageError === true ? { error: true } : {}), text });
-                }}
-              />
-            ))}
+            {data.dogs.map((dog) =>
+              dog.status === "PENDING" ? (
+                <PendingDogCard dog={dog} key={dog.id} />
+              ) : (
+                <DogCard
+                  client={client}
+                  dog={dog}
+                  key={dog.id}
+                  levelsEnabled={levelsEnabled}
+                  modules={branding.modules}
+                  onDocument={setDocumentUpload}
+                  onMessage={(text, messageError) => {
+                    setMessage({ ...(messageError === true ? { error: true } : {}), text });
+                  }}
+                />
+              ),
+            )}
             {data.canAddDog ? (
               <a className="self-button-link self-button-link--secondary" href="/gossos/nou">
                 {t("census:myDogs.addDog")}
