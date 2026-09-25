@@ -199,11 +199,24 @@
 }
 
 .ah-universal-list__export .ah-universal-list__menu-panel {
-  width: 9rem;
+  width: max-content;
+  min-width: 9rem;
+  max-width: 16rem;
   padding: var(--ah-space-2);
 }
 
-.ah-universal-list__export a,
+.ah-universal-list__export button:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.ah-universal-list__export-error {
+  margin: 0;
+  padding: var(--ah-space-2);
+  color: var(--ah-color-danger);
+  font-size: 0.75rem;
+}
+
 .ah-universal-list__export button {
   width: 100%;
   padding: var(--ah-space-2);
@@ -215,12 +228,10 @@
   cursor: pointer;
   background: transparent;
   border: 0;
-  text-decoration: none;
   border-radius: var(--ah-radius-sm);
 }
 
-.ah-universal-list__export a:hover,
-.ah-universal-list__export button:hover {
+.ah-universal-list__export button:hover:not(:disabled) {
   color: var(--ah-color-primary);
   background: var(--ah-color-surface-2);
 }

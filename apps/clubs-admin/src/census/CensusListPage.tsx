@@ -19,7 +19,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useOptionalExportsDrawer } from "../audit/ExportsDrawer";
+import { useListExport } from "../audit/useListExport";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
 type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
@@ -32,7 +32,6 @@ type DogListResponse = components["schemas"]["ListPageDogListItem"];
 type SavedView = components["schemas"]["SavedView"];
 type SavedViewCreate = components["schemas"]["SavedViewCreate"];
 type SavedViewUpdate = components["schemas"]["SavedViewUpdate"];
-type ExportAccepted = components["schemas"]["ExportAccepted"];
 
 type CensusKind = "dogs" | "members";
 
@@ -109,16 +108,6 @@ function queryFor(state: UniversalListState) {
     size: state.size,
     sort: state.sort,
   };
-}
-
-function exportHref(kind: CensusKind, format: "pdf" | "xlsx", state: UniversalListState): string {
-  const parameters = universalListSearchParams(state);
-  parameters.delete("page");
-  parameters.delete("size");
-  parameters.delete("fields");
-  parameters.set("format", format);
-  parameters.set("columns", state.columns.join(","));
-  return `/api/v1/${kind}/export?${parameters.toString()}`;
 }
 
 function formatDate(value: string, locale: string): string {
@@ -391,8 +380,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   const savedViews = useSavedViews(client, kind, applySavedView);
   const loadFilterValues = useFilterValues(client, kind, state);
   const activeCount = useActiveCount(client, kind);
-  const exportsDrawer = useOptionalExportsDrawer();
-  const [exportError, setExportError] = useState<string>();
+  const listExport = useListExport(client);
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
 
   const operatorLabels: Record<UniversalFilterOperator, string> = {
@@ -885,60 +873,39 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   };
 
   const errorMessage =
-    exportError ??
-    (error === undefined
+    error === undefined
       ? undefined
       : isApiError(error, "INVALID_FILTER")
         ? t("errors:INVALID_FILTER")
-        : t("census:list.genericError"));
+        : t("census:list.genericError");
 
-  const runExport = async (format: "pdf" | "xlsx", current: UniversalListState) => {
-    setExportError(undefined);
-    const query = {
-      columns: current.columns.join(","),
-      filter: apiFilters(current.filters),
-      format,
-      ...(current.q === "" ? {} : { q: current.q }),
-      sort: current.sort,
-    };
-    try {
-      const result =
-        kind === "members"
-          ? await client.GET("/members/export", { params: { query } })
-          : await client.GET("/dogs/export", { params: { query } });
-      if (result.response.status === 202) {
-        const accepted = result.data as ExportAccepted | undefined;
-        if (accepted === undefined || typeof accepted !== "object" || !("jobId" in accepted)) {
-          throw new TypeError("Queued export response did not contain a job id");
-        }
-        exportsDrawer?.openExports({ jobId: accepted.jobId });
-        return;
-      }
-      const contents = typeof result.data === "string" ? result.data : "";
-      const url = URL.createObjectURL(
-        new Blob([contents], {
-          type: result.response.headers.get("Content-Type") ?? "application/octet-stream",
-        }),
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.download =
-        result.response.headers.get("Content-Disposition")?.match(/filename="?([^";]+)"?/u)?.[1] ??
-        `${kind}.${format}`;
-      link.hidden = true;
-      document.body.append(link);
-      link.click();
-      link.remove();
-      window.setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 0);
-    } catch (reason) {
-      if (isApiError(reason, "EXPORT_LIMIT")) {
-        exportsDrawer?.openExports({ errorCode: "EXPORT_LIMIT" });
-      } else {
-        setExportError(t("census:list.genericError"));
-      }
-    }
+  // The list's `q`, filters, sort and visible columns (CONVENCIONS_API §4). «Exportar selecció» is
+  // `filter=id:in:{ids}` alone (R-03-24): the selection outlives a new search or filter, and ANDing
+  // them would drop selected rows.
+  const runExport = (
+    format: "pdf" | "xlsx",
+    current: UniversalListState,
+    selected?: readonly string[],
+  ) => {
+    void listExport.run(
+      kind === "members" ? "/members/export" : "/dogs/export",
+      {
+        columns: current.columns.join(","),
+        format,
+        sort: current.sort,
+        ...(selected === undefined
+          ? { filter: apiFilters(current.filters), ...(current.q === "" ? {} : { q: current.q }) }
+          : { filter: [`id:in:${selected.join(",")}`] }),
+      },
+      selected === undefined ? "list" : "selection",
+    );
+  };
+  const exportProps = {
+    exportBusy: listExport.busy,
+    ...(listExport.error?.source === "list" ? { exportError: listExport.error.message } : {}),
+    onExport: (format: "pdf" | "xlsx", current: UniversalListState) => {
+      runExport(format, current);
+    },
   };
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const definitions = kind === "members" ? memberFilterColumns : dogFilterColumns;
@@ -991,16 +958,22 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 <Icon aria-hidden="true" name="send" />
                 {t("census:members.bulk.sendAnnouncement")}
               </Button>
-              <a
-                className="ah-button ah-button--ghost"
-                download
-                href={`${exportHref("members", "xlsx", state)}&filter=id%3Ain%3A${ids.join("%2C")}`}
+              <Button
+                aria-busy={listExport.busy || undefined}
+                disabled={listExport.busy}
+                onClick={() => {
+                  runExport("xlsx", state, ids);
+                }}
+                variant="ghost"
               >
-                <span className="ah-button__content">
-                  <Icon aria-hidden="true" name="export" />
-                  {t("census:members.bulk.exportSelection")}
+                <Icon aria-hidden="true" name="export" />
+                {t("census:members.bulk.exportSelection")}
+              </Button>
+              {listExport.error?.source === "selection" ? (
+                <span className="ah-universal-list__export-error" role="alert">
+                  {listExport.error.message}
                 </span>
-              </a>
+              ) : null}
               <Button variant="ghost">
                 <Icon aria-hidden="true" name="up" />
                 {t("census:members.bulk.changeLevel")}
@@ -1011,16 +984,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           columns={memberColumns}
           {...(errorMessage === undefined ? {} : { error: errorMessage })}
           filterColumns={memberFilterColumns}
-          getExportHref={(format, current) => exportHref("members", format, current)}
           labels={memberLabels}
           listKey="members"
           loadFilterValues={loadFilterValues}
           loading={loading}
           onCreateView={savedViews.create}
           onDeleteView={savedViews.remove}
-          {...(exportsDrawer === undefined
-            ? {}
-            : { onExport: (format, current) => void runExport(format, current) })}
+          {...exportProps}
           onRenameView={savedViews.rename}
           onRetry={retry}
           onStateChange={setState}
@@ -1048,16 +1018,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           columns={dogColumns}
           {...(errorMessage === undefined ? {} : { error: errorMessage })}
           filterColumns={dogFilterColumns}
-          getExportHref={(format, current) => exportHref("dogs", format, current)}
           labels={dogLabels}
           listKey="dogs"
           loadFilterValues={loadFilterValues}
           loading={loading}
           onCreateView={savedViews.create}
           onDeleteView={savedViews.remove}
-          {...(exportsDrawer === undefined
-            ? {}
-            : { onExport: (format, current) => void runExport(format, current) })}
+          {...exportProps}
           onRenameView={savedViews.rename}
           onRetry={retry}
           onStateChange={setState}

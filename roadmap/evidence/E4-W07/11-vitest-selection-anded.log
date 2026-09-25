@@ -1,0 +1,70 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/audit/list-exports.test.tsx > T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» > 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+stderr | src/audit/list-exports.test.tsx > T-14-26 R-14-12 E4-W07 one export at a time > R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them
+[BrandingProvider] Club Agility Cànic: primary and onPrimary contrast (3.32:1) is below WCAG AA.
+
+ ❯ src/audit/list-exports.test.tsx (27 tests | 2 failed | 22 skipped) 1772ms
+   ❯ T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» (4)
+     × 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters 370ms
+   ❯ T-14-26 R-14-12 E4-W07 one export at a time (3)
+     × R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them 583ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/list-exports.test.tsx > T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» > 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters
+AssertionError: expected [ 'status:eq:ACTIVE', …(2) ] to deeply equal [ 'id:in:member-laura' ]
+
+- Expected
++ Received
+
+  [
++   "status:eq:ACTIVE",
++   "planId:eq:plan-member",
+    "id:in:member-laura",
+  ]
+
+ ❯ src/audit/list-exports.test.tsx:260:54
+    258|     } else {
+    259|       // R-03-24: the selected rows alone, whatever the search or filt…
+    260|       expect(request?.searchParams.getAll("filter")).toEqual([button.s…
+       |                                                      ^
+    261|       expect(request?.searchParams.get("q")).toBeNull();
+    262|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/audit/list-exports.test.tsx > T-14-26 R-14-12 E4-W07 one export at a time > R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them
+AssertionError: expected [ 'status:eq:ACTIVE', …(2) ] to deeply equal [ 'id:in:member-laura' ]
+
+- Expected
++ Received
+
+  [
++   "status:eq:ACTIVE",
++   "planId:eq:plan-member",
+    "id:in:member-laura",
+  ]
+
+ ❯ src/audit/list-exports.test.tsx:357:62
+    355|       expect(clickedLinks).toHaveLength(1);
+    356|     });
+    357|     expect(exportRequests[0]?.searchParams.getAll("filter")).toEqual([…
+       |                                                              ^
+    358|     expect(exportRequests[0]?.searchParams.get("q")).toBeNull();
+    359|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed | 22 skipped (27)
+   Start at  09:48:08
+   Duration  2.91s (tests 63%, transform 15%, environment 11%, import 8%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/audit/list-exports.test.tsx -t Exportar selecció

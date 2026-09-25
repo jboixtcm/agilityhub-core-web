@@ -16,7 +16,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useOptionalExportsDrawer } from "../audit/ExportsDrawer";
+import { useListExport } from "../audit/useListExport";
 
 import "./activities.css";
 import { type Activity, type ActivityRegistrationListItem, useSavedViews } from "./shared";
@@ -63,7 +63,7 @@ export function ActivityRegistrantsPage({
 }) {
   const { t } = useTranslation(["admin-activities", "census", "enums", "errors"]);
   const formats = useClubFormats();
-  const exportsDrawer = useOptionalExportsDrawer();
+  const listExport = useListExport(client);
   const [activity, setActivity] = useState<Activity>();
   const [state, setState] = useState(() =>
     readUniversalListState(window.location.search, {
@@ -76,7 +76,6 @@ export function ActivityRegistrantsPage({
   const [data, setData] = useState<ListData>();
   const [result, setResult] = useState<{ error?: unknown; key: string }>({ key: "" });
   const [reload, setReload] = useState(0);
-  const [exportError, setExportError] = useState<string>();
   const key = JSON.stringify({ reload, state });
   const applyView = useCallback((view: UniversalListSavedView) => {
     setState((current) => ({
@@ -264,40 +263,25 @@ export function ActivityRegistrantsPage({
     { label: t("enums:activityRegistrationState.CANCELLED"), value: "CANCELLED" },
   ];
 
-  const runExport = async (format: "pdf" | "xlsx", current: UniversalListState) => {
-    setExportError(undefined);
-    try {
-      const response = await client.GET("/activity-registrations/export", {
-        params: {
-          query: {
-            columns: current.columns.filter((column) => column !== "contact").join(","),
-            filter: [`activityId:eq:${activityId}`, ...apiFilters(current.filters)],
-            format,
-            sort: current.sort,
-          },
-        },
-      });
-      const accepted = response.data as { jobId?: string } | undefined;
-      exportsDrawer?.openExports(
-        accepted?.jobId === undefined ? undefined : { jobId: accepted.jobId },
-      );
-    } catch (cause) {
-      if (isApiError(cause, "EXPORT_LIMIT")) {
-        exportsDrawer?.openExports({ errorCode: "EXPORT_LIMIT" });
-      } else {
-        setExportError(t("admin-activities:registrants.error"));
-      }
-    }
+  // The list's `q`, filters and sort (CONVENCIONS_API §4) within this activity; `contact` is not an
+  // export column of `activity-registrations`.
+  const runExport = (format: "pdf" | "xlsx", current: UniversalListState) => {
+    void listExport.run("/activity-registrations/export", {
+      columns: current.columns.filter((column) => column !== "contact").join(","),
+      filter: [`activityId:eq:${activityId}`, ...apiFilters(current.filters)],
+      format,
+      ...(current.q === "" ? {} : { q: current.q }),
+      sort: current.sort,
+    });
   };
 
   const error = result.key === key ? result.error : undefined;
   const errorMessage =
-    exportError ??
-    (error === undefined
+    error === undefined
       ? undefined
       : isApiError(error)
         ? t(`errors:${error.code}`, { defaultValue: t("admin-activities:registrants.error") })
-        : t("admin-activities:registrants.error"));
+        : t("admin-activities:registrants.error");
   const title = activity?.title ?? "";
 
   return (
@@ -332,6 +316,8 @@ export function ActivityRegistrantsPage({
         columns={columns}
         {...(errorMessage === undefined ? {} : { error: errorMessage })}
         exportable={!readOnly}
+        exportBusy={listExport.busy}
+        {...(listExport.error === undefined ? {} : { exportError: listExport.error.message })}
         filterColumns={[
           { key: "state", label: t("admin-activities:registrants.filters.state"), type: "enum" },
           { key: "origin", label: t("admin-activities:registrants.filters.origin"), type: "enum" },
@@ -341,9 +327,6 @@ export function ActivityRegistrantsPage({
             type: "date",
           },
         ]}
-        getExportHref={(format) =>
-          `/api/v1/activity-registrations/export?format=${format}&filter=${encodeURIComponent(`activityId:eq:${activityId}`)}`
-        }
         labels={labels}
         listKey="activity-registrations"
         loadFilterValues={(field) =>
@@ -364,12 +347,9 @@ export function ActivityRegistrantsPage({
         loading={result.key !== key}
         onCreateView={savedViews.create}
         onDeleteView={savedViews.remove}
-        {...(exportsDrawer === undefined || readOnly
-          ? {}
-          : { onExport: (format, current) => void runExport(format, current) })}
+        onExport={runExport}
         onRenameView={savedViews.rename}
         onRetry={() => {
-          setExportError(undefined);
           setReload((value) => value + 1);
         }}
         // The member record is ADMIN-only: an INSTRUCTOR reads the rows as plain text.

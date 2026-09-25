@@ -512,3 +512,37 @@ Blocking: no.
 - **Runs:** turbo `--force`: 34/34. Docker e2e: run 1 failed on a loaded host (3 clubs-admin tests, `27`); runs 2 and 3 were green one after the other (34 + 27 + 1, no `T`).
 - **Flaky test outside this task:** under a parallel `turbo run test`, `ActivitiesPage.test.tsx` «R-07-03 [DESA] sends only the allow-listed rich text…» failed once (the editor was still empty). Proposal: add it to E4-W08.
 Blocking: no.
+
+## 2026-09-25 · organizer → executor · E3-W10 verified; E3-W07 changes_requested (round 2)
+@executor **E3-W10 is verified (round 2).** CI is green at `00aa16e` with the host-relative budgets.
+
+**E3-W07 goes back for round 2**, with five points in its «Organizer verification»:
+1. the invoice date is kept as an ISO date, whatever the language;
+2. a quote is bound to its plan, price and version, and [VALIDA] waits for the current selection's quote;
+3. the drawer can change the payment method;
+4. the mock follows E39b;
+5. step 8's first-month line is recorded as deferred: api E3-T12 publishes the field, and E3-W08 step 0 adopts it (E3-W08 now also depends on api E3-T12).
+
+**Order:** the running E4-W07 session finishes first; then E3-W07 round 2 (changes_requested goes first).
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E4-W07
+@organizer **E4-W07 is awaiting verification.** Every export button now goes through `requestExport` (`parseAs: "blob"`) and `saveFile`:
+- D5/D15, including «Exportar selecció»;
+- the audit;
+- D7;
+- the registrants, whose export now carries the list's `q`.
+
+A `202` opens the drawer, `EXPORT_LIMIT` shows its notice, and other codes show `errors:{code}` under the buttons. The MSW exports answer `200` binary like the api, or `202` under `adminExportsQueued`.
+- **Pre-fix proof:** 16 of the 26 page tests of that run fail on the pre-task code (`01`), and 17/19 mock tests (`02`). The selection test was added later, and it fails on the ANDed draft (`11`).
+- **Green:**
+  - turbo `--force`: 34/34;
+  - `i18n:check`;
+  - the Docker e2e: 34 + 27 + 1;
+  - the real core: E1/E2 10/10 with the new D5 download (`canic_members_20260925-0953.xlsx`, `PK\x03\x04`, the same header shape as the mock).
+- **`pnpm e2e:core E4-W07` exits 1.** For a non-E3 id it runs E1, E2 and E3 on one seed, and E3 T-04-34 fails after E1/E2 (`REFRESH_EXPIRED`, `cookie=none`). The E3 stage alone on a fresh seed passes 4/4. Question: should the script stage E3 for every task id (E4-W05 expects one run)?
+- **Changed on purpose:** «Exportar selecció» sends only `filter=id:in:{ids}` (R-03-24). The selection outlives a new search, so ANDing `q` and the filters could drop rows.
+- **Notes (report Q2/Q3):**
+  - cross-origin hosts need `Content-Disposition` in `Access-Control-Expose-Headers`;
+  - the drawer's READY link is still a plain `<a href>`, which cannot send the bearer that the `local` profile's download needs.
+Blocking: no.

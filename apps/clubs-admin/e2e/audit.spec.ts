@@ -19,7 +19,8 @@ const allLocalesBranding = { ...branding, locales: ["ca", "es", "en"] };
 async function prepareAdmin(page: Page) {
   await page.addInitScript((cachedBranding) => {
     localStorage.setItem("agilityhub.locale", "ca");
-    localStorage.setItem("agilityhub.mockScenario", "adminAllLocales");
+    // The exports take the queued path (`202`), as above `ExportPolicy.syncMaxRows` (R-14-12).
+    localStorage.setItem("agilityhub.mockScenario", "adminExportsQueued");
     localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
   }, allLocalesBranding);
   await page.goto(`${baseUrl}/entrar`);
@@ -79,7 +80,9 @@ test("T-14-26 shows member/global audit, masked diffs, LastChange and queued exp
   const exportsDrawer = page.getByRole("dialog", { name: "Exportacions" });
   await expect(exportsDrawer).toContainText("Preparant l'exportació…");
   await expect(
-    exportsDrawer.getByRole("link", { name: "Descarrega auditoria_20260803-1025.xlsx" }),
+    exportsDrawer.getByRole("link", {
+      name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
+    }),
   ).toBeVisible();
   await page.screenshot({
     fullPage: true,

@@ -8,6 +8,7 @@
     "defaultView": "Vista per defecte",
     "deleteView": "Elimina la vista",
     "export": "Excel · PDF",
+    "exportError": "No s'ha pogut completar l'acció. Torna-ho a provar.",
     "filter": "Filtre",
     "filterField": "Columna",
     "filterOperator": "Operador",

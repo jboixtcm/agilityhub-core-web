@@ -31,7 +31,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useOptionalExportsDrawer } from "../audit/ExportsDrawer";
+import { useListExport } from "../audit/useListExport";
 import { LocaleTabs } from "../catalogs/shared";
 
 import "./activities.css";
@@ -270,7 +270,7 @@ export function ActivitiesPage({
 }) {
   const { t } = useTranslation(["admin-activities", "census", "enums", "errors"]);
   const formats = useClubFormats();
-  const exportsDrawer = useOptionalExportsDrawer();
+  const listExport = useListExport(client);
   const [state, setState, replaceState] = useListState();
   const [reload, setReload] = useState(0);
   const { data, error, loading } = useActivities(client, state, reload);
@@ -288,7 +288,6 @@ export function ActivitiesPage({
   );
   const savedViews = useSavedViews(client, LIST_KEY, applyView);
   const [creating, setCreating] = useState(false);
-  const [exportError, setExportError] = useState<string>();
   const today = new Date();
 
   const columns = useMemo<UniversalListColumn<ActivityListItem>[]>(
@@ -500,40 +499,22 @@ export function ActivitiesPage({
     [client, state.filters, t],
   );
 
-  const runExport = async (format: "pdf" | "xlsx", current: UniversalListState) => {
-    setExportError(undefined);
-    try {
-      const result = await client.GET("/activities/export", {
-        params: {
-          query: {
-            columns: current.columns.join(","),
-            filter: apiFilters(current.filters),
-            format,
-            ...(current.q === "" ? {} : { q: current.q }),
-            sort: current.sort,
-          },
-        },
-      });
-      const accepted = result.data as { jobId?: string } | undefined;
-      exportsDrawer?.openExports(
-        accepted?.jobId === undefined ? undefined : { jobId: accepted.jobId },
-      );
-    } catch (cause) {
-      if (isApiError(cause, "EXPORT_LIMIT")) {
-        exportsDrawer?.openExports({ errorCode: "EXPORT_LIMIT" });
-      } else {
-        setExportError(t("admin-activities:list.error"));
-      }
-    }
+  const runExport = (format: "pdf" | "xlsx", current: UniversalListState) => {
+    void listExport.run("/activities/export", {
+      columns: current.columns.join(","),
+      filter: apiFilters(current.filters),
+      format,
+      ...(current.q === "" ? {} : { q: current.q }),
+      sort: current.sort,
+    });
   };
 
   const errorMessage =
-    exportError ??
-    (error === undefined
+    error === undefined
       ? undefined
       : isApiError(error)
         ? t(`errors:${error.code}`, { defaultValue: t("admin-activities:list.error") })
-        : t("admin-activities:list.error"));
+        : t("admin-activities:list.error");
 
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const value = filterValue(filter.value);
@@ -580,26 +561,18 @@ export function ActivitiesPage({
         {...(newButton === null || filtered ? {} : { emptyAction: newButton })}
         {...(errorMessage === undefined ? {} : { error: errorMessage })}
         exportable={!readOnly}
+        exportBusy={listExport.busy}
+        {...(listExport.error === undefined ? {} : { exportError: listExport.error.message })}
         filterColumns={filterColumns}
-        getExportHref={(format, current) => {
-          const parameters = universalListSearchParams(current);
-          parameters.delete("page");
-          parameters.delete("size");
-          parameters.set("format", format);
-          return `/api/v1/activities/export?${parameters.toString()}`;
-        }}
         labels={labels}
         listKey={LIST_KEY}
         loadFilterValues={loadFilterValues}
         loading={loading}
         onCreateView={savedViews.create}
         onDeleteView={savedViews.remove}
-        {...(exportsDrawer === undefined || readOnly
-          ? {}
-          : { onExport: (format, current) => void runExport(format, current) })}
+        onExport={runExport}
         onRenameView={savedViews.rename}
         onRetry={() => {
-          setExportError(undefined);
           setReload((value) => value + 1);
         }}
         onRowActivate={(item) => {

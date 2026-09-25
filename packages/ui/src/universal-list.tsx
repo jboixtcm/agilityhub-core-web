@@ -148,7 +148,6 @@ export interface UniversalListProps<Row> {
   caption: string;
   columns: UniversalListColumn<Row>[];
   filterColumns: UniversalListFilterColumn[];
-  getExportHref: (format: "pdf" | "xlsx", state: UniversalListState) => string;
   labels: UniversalListLabels<Row>;
   listKey: string;
   loadFilterValues: (field: string) => Promise<UniversalFilterValue[]>;
@@ -158,7 +157,8 @@ export interface UniversalListProps<Row> {
     state: UniversalListState,
   ) => Promise<UniversalListSavedView>;
   onDeleteView: (id: string) => Promise<void>;
-  onExport?: (format: "pdf" | "xlsx", state: UniversalListState) => void;
+  /** «Excel · PDF»: the export runs through the api client (bearer, binary file or queued job). */
+  onExport: (format: "pdf" | "xlsx", state: UniversalListState) => void;
   onRenameView: (view: UniversalListSavedView, name: string) => Promise<UniversalListSavedView>;
   onRetry: () => void;
   onRowActivate?: (row: Row) => void;
@@ -181,6 +181,10 @@ export interface UniversalListProps<Row> {
   error?: string;
   /** `false` hides the «Excel · PDF» menu (a role without export rights). */
   exportable?: boolean;
+  /** An export is running: both formats are disabled until it answers. */
+  exportBusy?: boolean;
+  /** The failed export's message, shown under the format buttons. */
+  exportError?: string;
   loading?: boolean;
   selectable?: boolean;
 }
@@ -279,8 +283,9 @@ export function UniversalList<Row>({
   emptyAction,
   error,
   exportable = true,
+  exportBusy = false,
+  exportError,
   filterColumns,
-  getExportHref,
   labels,
   listKey,
   loadFilterValues,
@@ -793,35 +798,29 @@ export function UniversalList<Row>({
               <Icon aria-hidden="true" name="export" />
               {labels.export}
             </summary>
-            <div className="ah-universal-list__menu-panel">
-              {onExport === undefined ? (
-                <>
-                  <a download href={getExportHref("xlsx", state)}>
-                    {labels.formatXlsx}
-                  </a>
-                  <a download href={getExportHref("pdf", state)}>
-                    {labels.formatPdf}
-                  </a>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => {
-                      onExport("xlsx", state);
-                    }}
-                    type="button"
-                  >
-                    {labels.formatXlsx}
-                  </button>
-                  <button
-                    onClick={() => {
-                      onExport("pdf", state);
-                    }}
-                    type="button"
-                  >
-                    {labels.formatPdf}
-                  </button>
-                </>
+            <div aria-busy={exportBusy || undefined} className="ah-universal-list__menu-panel">
+              <button
+                disabled={exportBusy}
+                onClick={() => {
+                  onExport("xlsx", state);
+                }}
+                type="button"
+              >
+                {labels.formatXlsx}
+              </button>
+              <button
+                disabled={exportBusy}
+                onClick={() => {
+                  onExport("pdf", state);
+                }}
+                type="button"
+              >
+                {labels.formatPdf}
+              </button>
+              {exportError === undefined ? null : (
+                <p className="ah-universal-list__export-error" role="alert">
+                  {exportError}
+                </p>
               )}
             </div>
           </details>

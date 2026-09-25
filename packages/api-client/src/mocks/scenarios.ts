@@ -19,6 +19,8 @@ type OnboardingState = components["schemas"]["OnboardingState"];
 export interface MockScenarioDefinition {
   branding: Branding;
   dashboardNulls?: boolean;
+  /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
+  exportsQueued?: boolean;
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
@@ -53,6 +55,13 @@ const scenarios = {
   },
   adminAllLocales: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** The list exports take the queued path (`202`) instead of the inline file. */
+  adminExportsQueued: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    exportsQueued: true,
     me: meAdmin as Me,
     sessions: accountSessions,
   },

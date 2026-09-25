@@ -121,6 +121,7 @@ test.describe("E2-W01 census universal lists", () => {
     const responsePromise = page.waitForResponse((response) =>
       new URL(response.url()).pathname.endsWith("/api/v1/members/export"),
     );
+    const downloadPromise = page.waitForEvent("download");
     await page.getByRole("button", { name: "Excel" }).click();
 
     const response = await responsePromise;
@@ -130,6 +131,19 @@ test.describe("E2-W01 census universal lists", () => {
     expect(exportUrl.searchParams.get("columns")).toBe(
       "fullName,dogs,plan,displayStatus",
     );
-    expect(response.headers()["content-disposition"]).toContain('filename="members.mock"');
+    // E4-W07: the inline `200` is saved as the api's file, byte for byte (R-14-12).
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/^canic_members_\d{8}-\d{4}\.xlsx$/u);
+    expect(response.headers()["content-disposition"]).toBe(
+      `attachment; filename="${download.suggestedFilename()}"`,
+    );
+    // The mock's XLSX body (`packages/api-client/src/mocks/list-exports.ts`): `PK\x03\x04`, then
+    // bytes that are not valid UTF-8, which a text read would corrupt.
+    expect(readFileSync(await download.path())).toEqual(
+      Buffer.from([
+        0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x00, 0x00, 0x08, 0x00, 0xff, 0xfe, 0x80, 0x00, 0x50,
+        0x4b, 0x05, 0x06, 0x00, 0x00,
+      ]),
+    );
   });
 });

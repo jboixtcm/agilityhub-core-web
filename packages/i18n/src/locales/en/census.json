@@ -8,6 +8,7 @@
     "defaultView": "Default view",
     "deleteView": "Delete view",
     "export": "Excel · PDF",
+    "exportError": "The action could not be completed. Try again.",
     "filter": "Filter",
     "filterField": "Column",
     "filterOperator": "Operator",

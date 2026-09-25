@@ -121,5 +121,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - D2 reads `warnDays` from its view; VALIDA/REBUTJA go to `/tauler` and refresh the menu counters; `409 INVALID_STATE NOT_PENDING` shows «Aquesta preinscripció ja s'ha resolt» with a link to D10; the rejection modal warns about a collected payment and D1 keeps the refund notice (R-04-23); `STALE_VERSION` offers a reload and errors stay inside the modal/drawer; the first-month line from `firstMonth`; prices with their periodicity; DNI and phone in full; en OTHER → «them»; `BILLING`/`FAMILY_GROUP` gating.
   - D1: «(nou gos)», the overdue date in red, «+3/−2/0 aquest mes», «1 avís», «7:30», risk rows (at most 6, then «+{n} més») open D4 on their class (`?classe=`), one chart column per progression level with the level name as tooltip and the legend from `activeDogWeeks`, sentence-case titles with ⚠, no comma after the weekday, distinct VALIDA names; the menu counters are ADMIN-only and read on load, on focus and after a decision; the sidebar counters are filled with the primary colour. D5 hides «Nou abonat» until the back-office signup form exists (S03 §2 D5).
   - The D2 MSW world answers like the api: bare codes with empty `details`, `409 INVALID_STATE` with `details.reason`, per-dog versions, a plan-aware `dryRun` (E39), `paidPaymentRequiresRefund`, signup-dog documents, and `adminSignupReviewAddDog` / `adminSignupReviewFamilyPending` scenarios. The real-core e2e checks D1 right after VALIDA with no wait, both contacts, a dog edit after an add-dog, a plan change with `dryRun`, a bare `LEVEL_REQUIRED` on its field and a `NOT_FOUND_PENDING` claim resolved against the core.
+- List exports download the file the api returns (E4-W07, S14 R-14-12, CONVENCIONS_API §4):
+  - `requestExport` and `saveFile` in `@agilityhub/api-client`:
+    - the export is read as a Blob, never as JSON or text;
+    - `200` gives the file with its `Content-Type` and the `Content-Disposition` name (`filename*` first, fallback `{list}.{format}`);
+    - `202` gives the queued `jobId`;
+    - errors stay `ApiError`.
+  - D5/D15 (menu and «Exportar selecció»), the audit, D7 and the registrants use it through `useListExport`:
+    - a queued job opens the exports drawer, and `EXPORT_LIMIT` shows its notice;
+    - any other code shows `errors:{code}` under the export buttons (new `census:list.exportError` fallback in ca/es/en);
+    - both formats are disabled while an export runs.
+  - The registrants export sends the list's `q`. «Exportar selecció» sends only `filter=id:in:{ids}` (R-03-24).
+  - `UniversalList` takes a required `onExport` with `exportBusy`/`exportError`; `getExportHref` and its unauthenticated `<a download>` links are removed.
+  - The MSW list exports answer like the api:
+    - `200` with a small binary body (`%PDF-` / `PK\x03\x04`), the api's `Content-Type` and `attachment; filename="{slug}_{listKey}_{yyyyMMdd-HHmm}.{ext}"` up to 5000 rows;
+    - `202` above that, or always under the new `adminExportsQueued` scenario;
+    - the rows follow the list's `q` and filters (members and dogs accept `id`, the registrants list and export apply `q`), and queued jobs turn READY with the api's file name and a binary download.
+  - The real-core e2e downloads a D5 members export and checks the file name and the magic bytes.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

@@ -4,7 +4,6 @@ import {
   Badge,
   Drawer,
   Icon,
-  Toast,
   UniversalList,
   type UniversalFilter,
   type UniversalFilterOperator,
@@ -20,12 +19,11 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useExportsDrawer } from "./ExportsDrawer";
+import { useListExport } from "./useListExport";
 
 type AuditEntry = components["schemas"]["AuditEntry"];
 type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
 type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
-type ExportAccepted = components["schemas"]["ExportAccepted"];
 type ListFilter = components["schemas"]["Filter"];
 type SavedView = components["schemas"]["SavedView"];
 type SavedViewCreate = components["schemas"]["SavedViewCreate"];
@@ -428,14 +426,13 @@ function DetailDrawer({
 export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?: string }) {
   const branding = useBranding();
   const { i18n, t } = useTranslation(["admin-audit", "admin-census", "census", "errors"]);
-  const { openExports } = useExportsDrawer();
+  const listExport = useListExport(client);
   const [state, setState, applySavedView] = useAuditState(memberId);
   const { data, error, loading, retry } = useAuditData(client, memberId, state);
   const savedViews = useSavedViews(client, applySavedView);
   const [selectedId, setSelectedId] = useState<string | undefined>(
     () => new URLSearchParams(window.location.search).get("entry") ?? undefined,
   );
-  const [exportError, setExportError] = useState<string>();
   const locale = normalizeLocale(
     i18n.resolvedLanguage ?? i18n.language,
     normalizeLocale(branding.defaultLocale),
@@ -584,58 +581,18 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
     };
   });
 
-  const exportAudit = async (format: "pdf" | "xlsx", current: UniversalListState) => {
-    setExportError(undefined);
+  const exportAudit = (format: "pdf" | "xlsx", current: UniversalListState) => {
     const filter = apiFilters(current.filters);
     if (memberId !== undefined) filter.push(`memberId:eq:${memberId}`);
-    try {
-      const result = await client.GET("/audit-entries/export", {
-        params: {
-          query: {
-            columns: current.columns.join(","),
-            filter,
-            format,
-            ...(current.q === "" ? {} : { q: current.q }),
-            sort: current.sort,
-          },
-        },
-      });
-      if (result.response.status === 202) {
-        const accepted = result.data as ExportAccepted | undefined;
-        if (accepted === undefined || typeof accepted !== "object" || !("jobId" in accepted))
-          throw new TypeError("Queued export response did not contain a job id");
-        openExports({ jobId: accepted.jobId });
-        return;
-      }
-      const contents = typeof result.data === "string" ? result.data : "";
-      const url = URL.createObjectURL(
-        new Blob([contents], {
-          type: result.response.headers.get("Content-Type") ?? "application/octet-stream",
-        }),
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.download =
-        result.response.headers.get("Content-Disposition")?.match(/filename="?([^";]+)"?/u)?.[1] ??
-        `audit.${format}`;
-      link.click();
-      URL.revokeObjectURL(url);
-    } catch (reason) {
-      if (isApiError(reason, "EXPORT_LIMIT")) openExports({ errorCode: "EXPORT_LIMIT" });
-      else setExportError(t("admin-audit:genericError"));
-    }
+    void listExport.run("/audit-entries/export", {
+      columns: current.columns.join(","),
+      filter,
+      format,
+      ...(current.q === "" ? {} : { q: current.q }),
+      sort: current.sort,
+    });
   };
 
-  const exportHref = (format: "pdf" | "xlsx", current: UniversalListState) => {
-    const parameters = universalListSearchParams(current);
-    parameters.delete("page");
-    parameters.delete("size");
-    parameters.delete("fields");
-    parameters.set("format", format);
-    parameters.set("columns", current.columns.join(","));
-    if (memberId !== undefined) parameters.append("filter", `memberId:eq:${memberId}`);
-    return `/api/v1/audit-entries/export?${parameters.toString()}`;
-  };
   const detailHref = (entry: AuditEntryListItem) => {
     const path = memberId === undefined ? "/auditoria" : `/abonats/${memberId}/auditoria`;
     const parameters = universalListSearchParams(state);
@@ -651,7 +608,6 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
 
   return (
     <>
-      {exportError === undefined ? null : <Toast tone="danger">{exportError}</Toast>}
       <UniversalList<AuditEntryListItem>
         appliedFilters={applied}
         caption={memberId === undefined ? t("admin-audit:caption") : t("admin-audit:memberCaption")}
@@ -663,15 +619,16 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
                 ? t("errors:INVALID_FILTER")
                 : t("admin-audit:genericError"),
             })}
+        exportBusy={listExport.busy}
+        {...(listExport.error === undefined ? {} : { exportError: listExport.error.message })}
         filterColumns={filterColumns}
-        getExportHref={exportHref}
         labels={labels}
         listKey="audit-entries"
         loadFilterValues={loadFilterValues}
         loading={loading}
         onCreateView={savedViews.create}
         onDeleteView={savedViews.remove}
-        onExport={(format, current) => void exportAudit(format, current)}
+        onExport={exportAudit}
         onRenameView={savedViews.rename}
         onRetry={retry}
         onRowActivate={(entry) => {

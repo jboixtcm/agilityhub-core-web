@@ -124,6 +124,7 @@ describe("T-14-26 member audit and exports", () => {
   });
 
   it("opens the exports drawer for a queued job and exposes its READY download", async () => {
+    mockScenario("adminExportsQueued");
     window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
     await renderAudit();
     await screen.findByRole("link", { name: "Mètode de pagament modificat" });
@@ -136,7 +137,9 @@ describe("T-14-26 member audit and exports", () => {
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
     expect(drawer).toHaveTextContent("Preparant l'exportació…");
     expect(
-      await screen.findByRole("link", { name: "Descarrega auditoria_20260803-1025.xlsx" }),
+      await screen.findByRole("link", {
+        name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
+      }),
     ).toHaveAttribute("href", "/api/v1/exports/00000000-0000-4000-8000-000000000402/download");
   });
 

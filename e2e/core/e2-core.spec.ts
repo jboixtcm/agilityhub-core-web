@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { type Browser, type BrowserContext, type Page } from "@playwright/test";
@@ -458,6 +458,7 @@ test("T-02-13/T-14-26 real parameter history, export and audit", async () => {
   const exportResponse = page.waitForResponse((response) =>
     new URL(response.url()).pathname.endsWith("/api/v1/members/export"),
   );
+  const exportDownload = page.waitForEvent("download");
   await page.getByRole("button", { name: "Excel" }).click();
   const exported = await exportResponse;
   expect(exported.status()).toBe(200);
@@ -465,6 +466,29 @@ test("T-02-13/T-14-26 real parameter history, export and audit", async () => {
   expect(exportUrl.searchParams.get("format")).toBe("xlsx");
   expect(exportUrl.searchParams.get("columns")).toBe("fullName,dogs,plan,displayStatus");
   expect(exported.headers()["content-disposition"]).toMatch(/filename="?[^"]+\.xlsx/iu);
+  // E4-W07: the inline `200` file is downloaded as the api names it ({slug}_{listKey}_{stamp}),
+  // byte for byte (an XLSX is a ZIP: `PK\x03\x04`).
+  const download = await exportDownload;
+  const file = readFileSync(await download.path());
+  expect(download.suggestedFilename()).toMatch(/^canic_members_\d{8}-\d{4}\.xlsx$/u);
+  expect(file.subarray(0, 4)).toEqual(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+  expect(file.length).toBe(Number(exported.headers()["content-length"] ?? file.length));
+  writeFileSync(
+    join(evidenceDirectory, "members-export-download.json"),
+    `${JSON.stringify(
+      {
+        bytes: file.length,
+        contentDisposition: exported.headers()["content-disposition"],
+        contentType: exported.headers()["content-type"],
+        magic: file.subarray(0, 4).toString("hex"),
+        request: `${exportUrl.pathname}${exportUrl.search}`,
+        status: exported.status(),
+        suggestedFilename: download.suggestedFilename(),
+      },
+      null,
+      2,
+    )}\n`,
+  );
 
   await navigateSpa(page, "/auditoria");
   await expect(page.getByRole("heading", { name: "Auditoria" })).toBeVisible();

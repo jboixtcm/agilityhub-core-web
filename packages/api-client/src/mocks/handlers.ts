@@ -2,7 +2,7 @@ import { delay, http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
-import { activityHandlers } from "./activity-handlers";
+import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
@@ -68,6 +68,13 @@ import {
   signupReviewVariant,
   storeSignupDogDocuments,
 } from "./fixtures/signup-review";
+import {
+  exportFileName,
+  exportFileResponse,
+  exportFormat,
+  exportQueued,
+  mockExportBody,
+} from "./list-exports";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -226,6 +233,8 @@ const auditEntries = structuredClone(auditEntriesFixture) as AuditEntryListItem[
 const initialExportJobs = structuredClone(exportJobsFixture) as ExportJob[];
 let exportJobsState = structuredClone(initialExportJobs);
 let exportPolls = 0;
+// Rows of each queued list export, reported once the worker marks it READY.
+const queuedExportRows = new Map<string, number>();
 
 let memberDogsState: MeDogs = structuredClone(meDogsFixture);
 let memberProfileState: MeProfile = structuredClone(meProfileFixture);
@@ -315,6 +324,7 @@ function resetMemberSelfServiceState(): void {
 function resetAuditMockState(): void {
   exportJobsState = structuredClone(initialExportJobs);
   exportPolls = 0;
+  queuedExportRows.clear();
 }
 
 function changedParameter(current: Parameter, value: unknown, reason?: string): Parameter {
@@ -364,6 +374,7 @@ const memberFilterLabels: Readonly<Record<string, string>> = {
   fullName: "Abonat",
   gender: "Gènere",
   hasPendingDocuments: "Documents pendents",
+  id: "Abonat",
   imageRightsGranted: "Drets d'imatge",
   joinedAt: "Data d'alta",
   lastName: "Cognoms",
@@ -386,6 +397,7 @@ const dogFilterLabels: Readonly<Record<string, string>> = {
   handlerName: "Guia",
   hasLicense: "Llicència",
   hasPendingDocuments: "Documents pendents",
+  id: "Gos",
   levelAssignedAt: "Al nivell des de",
   levelId: "Nivell",
   licenseOrganisation: "Organisme de llicència",
@@ -522,6 +534,8 @@ function memberValues(item: MemberListItem, field: string): string[] | undefined
       return item.gender === undefined ? [] : [item.gender];
     case "hasPendingDocuments":
       return [String((item.pendingDocuments?.length ?? 0) > 0)];
+    case "id":
+      return [item.id];
     case "imageRightsGranted":
       return [String(item.imageRights?.granted ?? false)];
     case "joinedAt":
@@ -567,6 +581,8 @@ function dogValues(item: DogListItem, field: string): string[] | undefined {
       return [String(item.licenses.length > 0)];
     case "hasPendingDocuments":
       return [String(item.pendingDocuments.length > 0)];
+    case "id":
+      return [item.id];
     case "levelAssignedAt":
       return item.levelAssignedAt === undefined ? [] : [item.levelAssignedAt];
     case "levelId":
@@ -802,6 +818,37 @@ function apiError(code: string, message: string, status: number, headers?: Heade
   return HttpResponse.json<ApiErrorResponse>(
     { code, details: {}, message, traceId: "mock-trace-id" },
     { status, ...(headers === undefined ? {} : { headers }) },
+  );
+}
+
+/**
+ * `GET /{resource}/export` like the api (R-14-12, CONVENCIONS_API §4): `200` with the file up to
+ * `SYNC_MAX_ROWS`; above it, or under the `exportsQueued` scenario switch, a queued job and
+ * `202 {jobId, statusUrl}` followed in the exports drawer.
+ */
+function listExport(request: Request, listKey: string, rows: number, jobId: string) {
+  const format = exportFormat(request);
+  if (!exportQueued(rows)) return exportFileResponse(listKey, format, new Date());
+  const job: ExportJob = {
+    createdAt: "2026-08-03T10:25:00Z",
+    format: format === "pdf" ? "PDF" : "XLSX",
+    id: jobId,
+    kind: "LIST",
+    listKey,
+    progressPct: 0,
+    status: "QUEUED",
+  };
+  exportPolls = 0;
+  queuedExportRows.set(jobId, rows);
+  exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
+  return HttpResponse.json({ jobId, statusUrl: `/api/v1/exports/${jobId}` }, { status: 202 });
+}
+
+function exportJobFileName(job: ExportJob): string {
+  return exportFileName(
+    job.listKey ?? "export",
+    job.format === "PDF" ? "pdf" : "xlsx",
+    new Date(job.createdAt),
   );
 }
 
@@ -1751,61 +1798,24 @@ export const handlers = [
       : HttpResponse.json({ field, values: facetValues(filtered, field, auditValues) });
   }),
   http.get("*/api/v1/audit-entries/export", ({ request }) => {
-    const requestedFormat = new URL(request.url).searchParams.get("format");
-    const format = requestedFormat === "pdf" ? "PDF" : "XLSX";
-    const job: ExportJob = {
-      createdAt: "2026-08-03T10:25:00Z",
-      format,
-      id: "00000000-0000-4000-8000-000000000402",
-      kind: "LIST",
-      listKey: "audit-entries",
-      progressPct: 0,
-      status: "QUEUED",
-    };
-    exportPolls = 0;
-    exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
-    return HttpResponse.json(
-      { jobId: job.id, statusUrl: `/api/v1/exports/${job.id}` },
-      { status: 202 },
-    );
+    const page = auditPage(request, auditEntries);
+    return page === undefined
+      ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
+      : listExport(request, "audit-entries", page.totalItems, "00000000-0000-4000-8000-000000000402");
   }),
-  // S07 D7 and registrants exports (ADMIN): queued jobs followed in the exports drawer.
-  ...(
-    [
-      ["activities", "*/api/v1/activities/export", "00000000-0000-4000-8000-000000000407"],
-      [
-        "activity-registrations",
-        "*/api/v1/activity-registrations/export",
-        "00000000-0000-4000-8000-000000000408",
-      ],
-    ] as const
-  ).map(([listKey, path, id]) =>
-    http.get(path, ({ request }) => {
-      const scenario = currentMockScenario();
-      if (!scenario.branding.modules.includes("ACTIVITIES")) {
-        return apiError("MODULE_DISABLED", "Module disabled", 404);
-      }
-      if (!(scenario.me.membership?.roles ?? []).includes("ADMIN")) {
-        return apiError("FORBIDDEN", "Forbidden", 403);
-      }
-      const requestedFormat = new URL(request.url).searchParams.get("format");
-      const job: ExportJob = {
-        createdAt: "2026-08-03T10:25:00Z",
-        format: requestedFormat === "pdf" ? "PDF" : "XLSX",
-        id,
-        kind: "LIST",
-        listKey,
-        progressPct: 0,
-        status: "QUEUED",
-      };
-      exportPolls = 0;
-      exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
-      return HttpResponse.json(
-        { jobId: job.id, statusUrl: `/api/v1/exports/${job.id}` },
-        { status: 202 },
-      );
-    }),
-  ),
+  // S07 D7 and registrants exports (ADMIN), with the rows of the same `q` and filters as the list.
+  http.get("*/api/v1/activities/export", ({ request }) => {
+    const rows = activityExportRows(request);
+    return typeof rows === "number"
+      ? listExport(request, "activities", rows, "00000000-0000-4000-8000-000000000407")
+      : rows;
+  }),
+  http.get("*/api/v1/activity-registrations/export", ({ request }) => {
+    const rows = registrationExportRows(request);
+    return typeof rows === "number"
+      ? listExport(request, "activity-registrations", rows, "00000000-0000-4000-8000-000000000408")
+      : rows;
+  }),
   http.get("*/api/v1/audit-entries/:id", ({ params }) => {
     const item = auditEntries.find((entry) => entry.id === String(params.id));
     if (item === undefined) return apiError("NOT_FOUND", "Audit entry not found", 404);
@@ -1837,9 +1847,9 @@ export const handlers = [
               ...job,
               downloadUrl: `/api/v1/exports/${job.id}/download`,
               expiresAt: "2026-08-10T10:25:00Z",
-              fileName: `auditoria_20260803-1025.${job.format === "PDF" ? "pdf" : "xlsx"}`,
+              fileName: exportJobFileName(job),
               progressPct: 100,
-              rows: auditEntries.length,
+              rows: queuedExportRows.get(job.id) ?? 0,
               status: "READY",
             }
           : job,
@@ -1849,11 +1859,11 @@ export const handlers = [
   }),
   http.get("*/api/v1/exports/:id/download", ({ params }) => {
     const job = exportJobsState.find((item) => item.id === String(params.id));
-    const pdf = job?.format === "PDF";
-    const fileName = `auditoria_20260803-1025.${pdf ? "pdf" : "xlsx"}`;
-    return new HttpResponse("mock audit export", {
+    if (job?.status !== "READY") return apiError("NOT_FOUND", "Export not found", 404);
+    const pdf = job.format === "PDF";
+    return new HttpResponse(mockExportBody(pdf ? "pdf" : "xlsx"), {
       headers: {
-        "Content-Disposition": `attachment; filename="${fileName}"`,
+        "Content-Disposition": `attachment; filename="${job.fileName ?? exportJobFileName(job)}"`,
         "Content-Type": pdf
           ? "application/pdf"
           : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1915,14 +1925,22 @@ export const handlers = [
       ? apiError("INVALID_FILTER", "Invalid member filter", 400)
       : HttpResponse.json({ field, values: facetValues(filtered, field, memberValues) });
   }),
-  http.get(
-    "*/api/v1/members/export",
-    () =>
-      new HttpResponse("mock member export", {
-        headers: { "Content-Disposition": 'attachment; filename="members.mock"' },
-        status: 200,
-      }),
-  ),
+  http.get("*/api/v1/members/export", ({ request }) => {
+    const url = new URL(request.url);
+    const filters = parseFilters(url);
+    const filtered =
+      filters === undefined ||
+      filters.some((filter) => memberFilterLabels[filter.field] === undefined)
+        ? undefined
+        : filterItems(
+            filterMembersBySearch(censusMembers, url.searchParams.get("q") ?? ""),
+            filters,
+            memberValues,
+          );
+    return filtered === undefined
+      ? apiError("INVALID_FILTER", "Invalid member filter", 400)
+      : listExport(request, "members", filtered.length, "00000000-0000-4000-8000-000000000403");
+  }),
   http.get("*/api/v1/members/:id/overview", ({ params }) =>
     String(params.id) === censusRecordState.memberOverview.member.id
       ? HttpResponse.json(censusRecordState.memberOverview)
@@ -2196,14 +2214,21 @@ export const handlers = [
       ? apiError("INVALID_FILTER", "Invalid dog filter", 400)
       : HttpResponse.json({ field, values: facetValues(filtered, field, dogValues) });
   }),
-  http.get(
-    "*/api/v1/dogs/export",
-    () =>
-      new HttpResponse("mock dog export", {
-        headers: { "Content-Disposition": 'attachment; filename="dogs.mock"' },
-        status: 200,
-      }),
-  ),
+  http.get("*/api/v1/dogs/export", ({ request }) => {
+    const url = new URL(request.url);
+    const filters = parseFilters(url);
+    const filtered =
+      filters === undefined || filters.some((filter) => dogFilterLabels[filter.field] === undefined)
+        ? undefined
+        : filterItems(
+            filterDogsBySearch(censusDogs, url.searchParams.get("q") ?? ""),
+            filters,
+            dogValues,
+          );
+    return filtered === undefined
+      ? apiError("INVALID_FILTER", "Invalid dog filter", 400)
+      : listExport(request, "dogs", filtered.length, "00000000-0000-4000-8000-000000000404");
+  }),
   http.get("*/api/v1/dogs/:id", ({ params }) => {
     const dog = currentDog(String(params.id));
     return dog === undefined ? apiError("NOT_FOUND", "Dog not found", 404) : HttpResponse.json(dog);
@@ -3108,6 +3133,7 @@ export const handlers = [
 export {
   activityState,
   catalogState,
+  mockExportBody,
   mockScenario,
   planningState,
   resetActivityState,

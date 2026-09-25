@@ -1,0 +1,271 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+stderr | src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activities: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+TypeError: Cannot read properties of undefined (reading 'branding')
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/handlers.ts:1785:21
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+[MSW] Encountered an unhandled exception during the handler lookup for "GET https://core.example.test/api/v1/activities/export?columns=&format=pdf". Please see the original error above.
+
+stderr | src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activity-registrations: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+TypeError: Cannot read properties of undefined (reading 'branding')
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/handlers.ts:1785:21
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+[MSW] Encountered an unhandled exception during the handler lookup for "GET https://core.example.test/api/v1/activity-registrations/export?columns=&format=pdf". Please see the original error above.
+
+ ❯ src/mocks/list-exports.test.ts (19 tests | 17 failed) 57ms
+   ❯ E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) (19)
+     × members /members/export: 200 with the file, its Content-Type and the api's file name 11ms
+     × members /members/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × dogs /dogs/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × dogs /dogs/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × audit-entries /audit-entries/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × audit-entries /audit-entries/export: 200 with the file, its Content-Type and the api's file name 3ms
+     × activities /activities/export: 200 with the file, its Content-Type and the api's file name 1ms
+     × activities /activities/export: 200 with the file, its Content-Type and the api's file name 1ms
+     × activity-registrations /activity-registrations/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × activity-registrations /activity-registrations/export: 200 with the file, its Content-Type and the api's file name 2ms
+     × members: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name 5ms
+     × dogs: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name 3ms
+     × audit-entries: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name 5ms
+     × activities: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name 3ms
+     × activity-registrations: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name 1ms
+     × the registrants export applies q and activityId like the list, and refuses an unknown filter 7ms
+     × the selection export filters members and dogs by id (x-filterable `id`) 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > members /members/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > dogs /dogs/export: 200 with the file, its Content-Type and the api's file name
+AssertionError: expected 'text/plain;charset=UTF-8' to be 'application/vnd.openxmlformats-office…' // Object.is equality
+
+Expected: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+Received: "text/plain;charset=UTF-8"
+
+ ❯ src/mocks/list-exports.test.ts:53:52
+     51|
+     52|       expect(response.status).toBe(200);
+     53|       expect(response.headers.get("Content-Type")).toBe(format === "pd…
+       |                                                    ^
+     54|       expect(response.headers.get("Content-Disposition")).toBe(
+     55|         `attachment; filename="canic_${listKey}_20260804-1025.${format…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > members /members/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > dogs /dogs/export: 200 with the file, its Content-Type and the api's file name
+AssertionError: expected 'text/plain;charset=UTF-8' to be 'application/pdf' // Object.is equality
+
+Expected: "application/pdf"
+Received: "text/plain;charset=UTF-8"
+
+ ❯ src/mocks/list-exports.test.ts:53:52
+     51|
+     52|       expect(response.status).toBe(200);
+     53|       expect(response.headers.get("Content-Type")).toBe(format === "pd…
+       |                                                    ^
+     54|       expect(response.headers.get("Content-Disposition")).toBe(
+     55|         `attachment; filename="canic_${listKey}_20260804-1025.${format…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > audit-entries /audit-entries/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > audit-entries /audit-entries/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activities /activities/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activities /activities/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activity-registrations /activity-registrations/export: 200 with the file, its Content-Type and the api's file name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activity-registrations /activity-registrations/export: 200 with the file, its Content-Type and the api's file name
+AssertionError: expected 202 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 202
+
+ ❯ src/mocks/list-exports.test.ts:52:31
+     50|       const response = await fetch(`https://core.example.test/api/v1${…
+     51|
+     52|       expect(response.status).toBe(200);
+       |                               ^
+     53|       expect(response.headers.get("Content-Type")).toBe(format === "pd…
+     54|       expect(response.headers.get("Content-Disposition")).toBe(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > members: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+AssertionError: expected { …(3) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "jobId": "00000000-0000-4000-8000-000000000403",
+-   "kind": "queued",
++   "blob": Blob {
++     Symbol(kHandle): Blob {},
++     Symbol(kLength): 18,
++     Symbol(kType): "text/plain;charset=utf-8",
++   },
++   "fileName": "members.mock",
++   "kind": "file",
+  }
+
+ ❯ src/mocks/list-exports.test.ts:68:77
+     66|       mockScenario("adminExportsQueued");
+     67|
+     68|       await expect(requestExport(client, path, { ...query, format: "pd…
+       |                                                                             ^
+     69|         jobId,
+     70|         kind: "queued",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > dogs: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+AssertionError: expected { …(3) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "jobId": "00000000-0000-4000-8000-000000000404",
+-   "kind": "queued",
++   "blob": Blob {
++     Symbol(kHandle): Blob {},
++     Symbol(kLength): 15,
++     Symbol(kType): "text/plain;charset=utf-8",
++   },
++   "fileName": "dogs.mock",
++   "kind": "file",
+  }
+
+ ❯ src/mocks/list-exports.test.ts:68:77
+     66|       mockScenario("adminExportsQueued");
+     67|
+     68|       await expect(requestExport(client, path, { ...query, format: "pd…
+       |                                                                             ^
+     69|         jobId,
+     70|         kind: "queued",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > audit-entries: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+AssertionError: expected { …(11) } to match object { …(2) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "fileName": "canic_audit-entries_20260803-1225.pdf",
++   "fileName": "auditoria_20260803-1025.pdf",
+    "status": "READY",
+  }
+
+ ❯ src/mocks/list-exports.test.ts:81:21
+     79|       const ready = jobs.find((job) => job.id === jobId);
+     80|       // `createdAt` 2026-08-03T10:25:00Z is 12:25 in Madrid.
+     81|       expect(ready).toMatchObject({
+       |                     ^
+     82|         fileName: `canic_${listKey}_20260803-1225.pdf`,
+     83|         status: "READY",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activities: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > activity-registrations: the exportsQueued switch answers 202 {jobId, statusUrl} and the drawer's job turns READY with the api's name
+AssertionError: promise rejected "ApiError: Cannot read properties of undef… { …(5) }" instead of resolving
+ ❯ src/mocks/list-exports.test.ts:68:77
+     66|       mockScenario("adminExportsQueued");
+     67|
+     68|       await expect(requestExport(client, path, { ...query, format: "pd…
+       |                                                                             ^
+     69|         jobId,
+     70|         kind: "queued",
+
+Caused by: ApiError: Cannot read properties of undefined (reading 'branding')
+ ❯ Function.fromResponse src/api-error.ts:52:12
+ ❯ Object.onResponse src/client.ts:83:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:161:28
+ ❯ requestExport src/exports.ts:84:30
+ ❯ src/mocks/list-exports.test.ts:68:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: undefined, status: 500, traceId: undefined, retryAfter: undefined }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > the registrants export applies q and activityId like the list, and refuses an unknown filter
+AssertionError: expected [ 'Laura Puig', 'Marc Riera', …(10) ] to deeply equal [ 'Laura Puig' ]
+
+- Expected
++ Received
+
+  [
+    "Laura Puig",
++   "Marc Riera",
++   "Montse Prat",
++   "Pau Grau",
++   "Aina Ferrer",
++   "Jordi Roig",
++   "Núria Codina",
++   "Oriol Serra",
++   "Clara Camps",
++   "Arnau Sala",
++   "Berta Pons",
++   "Guillem Costa",
+  ]
+
+ ❯ src/mocks/list-exports.test.ts:110:70
+    108|     });
+    109|     expect(first).not.toBe("");
+    110|     expect(searched.data?.items.map((item) => item.member.fullName)).t…
+       |                                                                      ^
+    111|
+    112|     mockScenario("adminExportsQueued");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  src/mocks/list-exports.test.ts > E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API §4) > the selection export filters members and dogs by id (x-filterable `id`)
+AssertionError: expected undefined to be 1 // Object.is equality
+
+- Expected:
+1
+
++ Received:
+undefined
+
+ ❯ src/mocks/list-exports.test.ts:143:89
+    141|       await fetch("https://core.example.test/api/v1/exports?kind=LIST")
+    142|     ).json()) as { id: string; rows?: number }[];
+    143|     expect(jobs.find((job) => job.id === "00000000-0000-4000-8000-0000…
+       |                                                                                         ^
+    144|   });
+    145|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  17 failed | 2 passed (19)
+   Start at  09:32:19
+   Duration  516ms (import 45%, transform 41%, tests 14%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/list-exports.test.ts

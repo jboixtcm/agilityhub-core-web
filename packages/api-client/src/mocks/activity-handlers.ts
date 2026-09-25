@@ -179,6 +179,8 @@ function activityValues(activity: StoredActivity, field: string): string[] | und
 
 function registrationValues(registration: StoredRegistration, field: string): string[] | undefined {
   switch (field) {
+    case "activityId":
+      return [registration.activityId];
     case "state":
       return [registration.state];
     case "origin":
@@ -263,6 +265,65 @@ const ACTIVITY_FIELDS = [
   "registrationOpen",
 ];
 const REGISTRATION_FIELDS = ["state", "origin", "registeredAt", "memberId"];
+// `GET /activity-registrations/export` also takes `activityId` (the activity's registrants).
+const REGISTRATION_EXPORT_FIELDS = ["activityId", ...REGISTRATION_FIELDS];
+
+/** The list's `q` over the activity titles in the reader's locale. */
+function searchActivities(
+  activities: readonly StoredActivity[],
+  url: URL,
+  locale: string,
+): StoredActivity[] {
+  const query = normalized(url.searchParams.get("q") ?? "");
+  return activities.filter(
+    (activity) =>
+      query === "" || normalized(localized(activity.titleI18n, locale) ?? "").includes(query),
+  );
+}
+
+/** The list's `q` over the registrants' names. */
+function searchRegistrations(
+  registrations: readonly StoredRegistration[],
+  url: URL,
+): StoredRegistration[] {
+  const query = normalized(url.searchParams.get("q") ?? "");
+  return registrations.filter(
+    (registration) => query === "" || normalized(registration.member.fullName).includes(query),
+  );
+}
+
+/** Rows of `GET /activities/export` (ADMIN): the list's `q` and filters, or the api's error. */
+export function activityExportRows(request: Request): number | Response {
+  const disabled = moduleDisabled();
+  if (disabled !== undefined) return disabled;
+  if (!isAdmin()) return forbidden();
+  const url = new URL(request.url);
+  const filters = parseFilters(url);
+  if (filters === undefined || !knownFields(filters, ACTIVITY_FIELDS)) {
+    return apiError("INVALID_FILTER", "Invalid activity filter", 400);
+  }
+  return searchActivities(
+    filterBy(activityState.activities, filters, activityValues) ?? [],
+    url,
+    readerLocale(request),
+  ).length;
+}
+
+/** Rows of `GET /activity-registrations/export` (ADMIN): `q` and filters, or the api's error. */
+export function registrationExportRows(request: Request): number | Response {
+  const disabled = moduleDisabled();
+  if (disabled !== undefined) return disabled;
+  if (!isAdmin()) return forbidden();
+  const url = new URL(request.url);
+  const filters = parseFilters(url);
+  if (filters === undefined || !knownFields(filters, REGISTRATION_EXPORT_FIELDS)) {
+    return apiError("INVALID_FILTER", "Invalid registration filter", 400);
+  }
+  return searchRegistrations(
+    filterBy(activityState.registrations, filters, registrationValues) ?? [],
+    url,
+  ).length;
+}
 
 const stateLabels: Readonly<Record<string, Readonly<Record<string, string>>>> = {
   ca: {
@@ -418,10 +479,10 @@ export const activityHandlers = [
       return apiError("INVALID_FILTER", "Invalid activity filter", 400);
     }
     const locale = readerLocale(request);
-    const query = normalized(url.searchParams.get("q") ?? "");
-    const matching = (filterBy(activityState.activities, filters, activityValues) ?? []).filter(
-      (activity) =>
-        query === "" || normalized(localized(activity.titleI18n, locale) ?? "").includes(query),
+    const matching = searchActivities(
+      filterBy(activityState.activities, filters, activityValues) ?? [],
+      url,
+      locale,
     );
     const sort = url.searchParams.getAll("sort");
     const ordered = sorted(matching, sort.length === 0 ? ["date,desc"] : sort, (activity, field) =>
@@ -764,7 +825,7 @@ export const activityHandlers = [
     const rows = activityState.registrations.filter(
       (registration) => registration.activityId === activity.id,
     );
-    const matching = filterBy(rows, filters, registrationValues) ?? [];
+    const matching = searchRegistrations(filterBy(rows, filters, registrationValues) ?? [], url);
     const sort = url.searchParams.getAll("sort");
     const ordered = sorted(
       matching,
