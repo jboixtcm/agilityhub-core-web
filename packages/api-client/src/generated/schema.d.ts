@@ -2682,7 +2682,7 @@ export interface paths {
         head?: never;
         /**
          * Update member
-         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required.
+         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission.
          */
         patch: operations["updateMember"];
         trace?: never;
@@ -2950,7 +2950,7 @@ export interface paths {
         put?: never;
         /**
          * Validate member signup
-         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change while a checkout of the submission is in progress, S04 §5 E39; dryRun warns CHECKOUT_PENDING). nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted.
+         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change while a checkout of the submission is in progress, S04 §5 E39; dryRun warns CHECKOUT_PENDING). nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted. A member who has an account (a readmission, R-04-06/R-04-22) keeps it: no second Account, and the account's login email never changes; only a member without one is matched, or given a new one, by its primary email.
          */
         post: operations["validate"];
         delete?: never;
@@ -3738,7 +3738,7 @@ export interface paths {
         put?: never;
         /**
          * Check signup identity
-         * @description R-04-05. ANON; 10/hour (signup.rateLimit). Reveals only result and maskedEmail («m•••a@e•••.cat», the account's access address, where N-39 goes); recognition queues a verification link through the outbox, at most 3 per recipient and hour. idDocument.value ≤ 30 and emails ≤ 254 characters → 400 VALIDATION_ERROR. signup.enabled = false or a club not ACTIVE → 422 SIGNUP_CLOSED. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforced by E3-T03.
+         * @description R-04-05. ANON; 10/hour (signup.rateLimit). Reveals only result and maskedEmail («m•••a@e•••.cat», the account's access address, where N-39 goes); recognition queues a verification link through the outbox, at most signup.rateLimit.notificationsPerRecipientPerHour (3) per recipient and hour. A pending readmission is also matched on the primary address it submitted (R-04-06): SIGNUP_ALREADY_PENDING. idDocument.value ≤ 30 and emails ≤ 254 characters → 400 VALIDATION_ERROR. signup.enabled = false or a club not ACTIVE → 422 SIGNUP_CLOSED. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforced by E3-T03.
          */
         post: operations["identityCheck"];
         delete?: never;
@@ -9081,6 +9081,19 @@ export interface components {
             fileKey: string;
             name: string;
         };
+        /** @description The first month of a public signup (R-04-15): its option, full or half month, start date and amount */
+        SignupFirstMonth: {
+            amountDue: components["schemas"]["Money"];
+            /** @enum {string} */
+            option: "TODAY" | "ALTERNATIVE";
+            /**
+             * @description Frozen at submission. null only for a first month frozen before the portion was stored whose amount does not tell it against the plan's monthly price on the submission day
+             * @enum {string|null}
+             */
+            portion: "FULL" | "HALF" | null;
+            /** Format: date */
+            startDate: string;
+        };
         SignupFirstMonthChoice: {
             amountDue: components["schemas"]["Money"];
             /** @enum {string} */
@@ -9314,21 +9327,13 @@ export interface components {
             today: string;
         };
         SignupUpfrontReview: {
+            /** @description R-04-15: the month the FIRST_MONTH line pays; absent without that line. The D2 view gives the values frozen at submission (signup.upfront.firstMonth); the dryRun the ones the validation will charge (recalculated after a plan change) */
+            firstMonth?: components["schemas"]["SignupFirstMonth"];
             lines: components["schemas"]["UpfrontLine"][];
             /** @description dryRun only (S04 §5, E39b): what was paid beyond the new plan's quote; warning PAID_EXCEEDS_QUOTE */
             paidExceedsQuote?: components["schemas"]["Money"];
             totalDue: components["schemas"]["Money"];
             totalPaid: components["schemas"]["Money"];
-            /** @description S04 §3 Member.signup.upfront.firstMonth (R-04-15), frozen at submission and recalculated by dryRun: the option, portion and start of the FIRST_MONTH line, so D2 names its month and «(mitja quota)» without reimplementing the rule. Absent without a FIRST_MONTH line. Mocks-first (web E3-W07), proposed to the api. */
-            firstMonth?: {
-                /** @enum {string} */
-                option: "TODAY" | "ALTERNATIVE";
-                /** @enum {string} */
-                portion: "FULL" | "HALF";
-                /** Format: date */
-                startDate: string;
-                amountDue: components["schemas"]["Money"];
-            };
         };
         /** @enum {string} */
         SignupWarning: "NO_IMAGE_CONSENT" | "ACCOUNT_NOT_PROVIDED" | "DOCUMENT_PENDING" | "FAMILY_HOLDER_NOT_FOUND" | "UPFRONT_UNPAID" | "READMISSION" | "CHECKOUT_PENDING" | "PAID_EXCEEDS_QUOTE";
@@ -20359,7 +20364,7 @@ export interface operations {
                     "application/json": components["schemas"]["Dog"];
                 };
             };
-            /** @description Bad Request */
+            /** @description VALIDATION_ERROR, FILE_NOT_FOUND, FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -20404,7 +20409,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description DOCUMENT_TYPE_UNKNOWN, DOG_DOCUMENT_REQUIRED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -30619,7 +30624,7 @@ export interface operations {
                     "application/json": components["schemas"]["Member"];
                 };
             };
-            /** @description VALIDATION_ERROR */
+            /** @description VALIDATION_ERROR, INVALID_ID_DOCUMENT, INVALID_PHONE, INVALID_IBAN */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -30655,7 +30660,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED */
+            /** @description ID_DOCUMENT_ALREADY_EXISTS, STALE_VERSION, INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -30664,7 +30669,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description PAYMENT_METHOD_NOT_AVAILABLE, PLAN_NOT_AVAILABLE */
             422: {
                 headers: {
                     [name: string]: unknown;

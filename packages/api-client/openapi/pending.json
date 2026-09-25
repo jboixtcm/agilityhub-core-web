@@ -34,21 +34,6 @@
           "description": "S07 §2 D7 «Inscripcions»: «{active}/{max} · fins el {registrationTo}»; null = no maximum («obertes · socis»)."
         }
       }
-    },
-    "SignupUpfrontReview": {
-      "properties": {
-        "firstMonth": {
-          "type": "object",
-          "description": "S04 §3 Member.signup.upfront.firstMonth (R-04-15), frozen at submission and recalculated by dryRun: the option, portion and start of the FIRST_MONTH line, so D2 names its month and «(mitja quota)» without reimplementing the rule. Absent without a FIRST_MONTH line. Mocks-first (web E3-W07), proposed to the api.",
-          "required": ["option", "portion", "startDate", "amountDue"],
-          "properties": {
-            "option": { "type": "string", "enum": ["TODAY", "ALTERNATIVE"] },
-            "portion": { "type": "string", "enum": ["FULL", "HALF"] },
-            "startDate": { "type": "string", "format": "date" },
-            "amountDue": { "$ref": "#/components/schemas/Money" }
-          }
-        }
-      }
     }
   },
   "paths": {
