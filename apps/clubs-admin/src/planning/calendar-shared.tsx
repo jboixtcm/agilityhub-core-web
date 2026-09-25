@@ -269,20 +269,16 @@ const weekdayKeys = [
 ] as const;
 
 /**
- * The product default of `club.openingHours` (CATALEG_PARAMETRES: dl–dg 07:00–22:00), used only
- * when the club's value cannot be read; the api still checks every time against the real one.
+ * `club.openingHours` of the club. A read that fails rejects: the page shows the error with a
+ * retry and offers no times meanwhile, instead of assuming dl–dg 07:00–22:00 (which re-opens the
+ * closed days the api refuses).
  */
-export const defaultOpeningHours: OpeningHours = Object.fromEntries(
-  weekdayKeys.map((day) => [day, { close: "22:00", open: "07:00" }]),
-);
-
 export async function loadOpeningHours(client: ApiClient): Promise<OpeningHours> {
-  try {
-    const value = (await client.GET("/club/opening-hours")).data?.value;
-    return typeof value === "object" && value !== null ? value : defaultOpeningHours;
-  } catch {
-    return defaultOpeningHours;
+  const value = (await client.GET("/club/opening-hours")).data?.value;
+  if (typeof value !== "object" || value === null) {
+    throw new TypeError("Missing club.openingHours");
   }
+  return value;
 }
 
 /** Opening window of a date (`club.openingHours`); `null` when the club is closed that weekday. */

@@ -68,7 +68,7 @@ export function HomeActivityReservations({
   const live = activities.data.mine.filter(
     (registration) =>
       (registration.state === "ACTIVE" || registration.state === "WAITLISTED") &&
-      registration.activity.endsAtLocal > now,
+      endOf(registration.activity) > now,
   );
   return live.length === 0 ? fallback : <ReservationsSection registrations={live} />;
 }
@@ -89,6 +89,14 @@ function ReservationsSection({
       ))}
     </section>
   );
+}
+
+/**
+ * Club-local end of an activity, comparable with `clubNow`: `endsAtLocal`, or the end of its day
+ * when it has no end (`null`; «T24:00» sorts after every time of that day and before the next).
+ */
+function endOf(activity: ActivityRegistrationSummary["activity"]): string {
+  return activity.endsAtLocal ?? `${activity.startsAtLocal.slice(0, 10)}T24:00`;
 }
 
 /** Club-local «YYYY-MM-DDTHH:mm» of now, comparable with `endsAtLocal`. */

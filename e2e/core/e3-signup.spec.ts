@@ -544,6 +544,23 @@ async function completeValidation(
 
 test.describe.configure({ mode: "serial" });
 
+// First: the signup chain below closes signup at its end, and screen 16 is captured open, on step 1.
+test("T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)", async ({
+  browser,
+}) => {
+  const publicContext = await localizedContext(browser, { height: 844, width: 375 });
+  const page = await publicContext.newPage();
+  await page.goto(`${clubsUrl}/apuntat-hi`);
+  // Step 1 of 16 with its form (signup open), not the closed-signup text.
+  await expect(page.getByRole("button", { name: "CONTINUA" })).toBeVisible();
+  await expect(page.getByText(/Les inscripcions estan tancades/u)).toHaveCount(0);
+  const footer = page.locator(".signup-footer");
+  await expect(footer).toBeVisible();
+  await expectPublicFooter(footer, await brandingClub(page));
+  await screenshot(page, "16-footer-core-375.png");
+  await publicContext.close();
+});
+
 test("T-04-34 public signup is validated and enters through the N-02 welcome link", async ({
   browser,
 }) => {
@@ -906,7 +923,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   // What the core answers to the method of an add-dog (the mock answers the same, E3-W11).
   const addDogMethodPatch = await patchPaymentMethod(admin, addDogView, "MANUAL", addDogMember.version);
   writeFileSync(join(evidenceDirectory, "d2-add-dog-method-patch-core.json"), `${JSON.stringify(addDogMethodPatch, null, 2)}\n`);
-  expect(addDogMethodPatch.status).toBe(400);
+  expect(addDogMethodPatch).toMatchObject({
+    body: {
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [{ code: "READ_ONLY", field: "paymentMethod" }] },
+    },
+    status: 400,
+  });
   await expect(addDogEdit.locator("#signup-edit-dog-0-breed")).toBeEnabled();
   await addDogEdit.locator("#signup-edit-dog-0-breed").fill("Gos d'atura");
   const dogPatch = admin.waitForResponse(
@@ -1264,19 +1287,5 @@ test("T-04-34 signup.enabled=false shows only the configured closed text", async
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "CONTINUA" })).toHaveCount(0);
   await screenshot(page, "16-signup-closed-core-375.png");
-  await publicContext.close();
-});
-
-// Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
-test("E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)", async ({
-  browser,
-}) => {
-  const publicContext = await localizedContext(browser, { height: 844, width: 375 });
-  const page = await publicContext.newPage();
-  await page.goto(`${clubsUrl}/apuntat-hi`);
-  const footer = page.locator(".signup-footer");
-  await expect(footer).toBeVisible();
-  await expectPublicFooter(footer, await brandingClub(page));
-  await screenshot(page, "16-footer-core-375.png");
   await publicContext.close();
 });

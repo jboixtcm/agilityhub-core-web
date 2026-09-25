@@ -28,7 +28,8 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 run_core_suite() {
-  docker compose -f "$compose_file" up -d --wait mongo seed core
+  # `run_core_suite || status=$?` turns `set -e` off in here: a core that does not start stops the stage.
+  docker compose -f "$compose_file" up -d --wait mongo seed core || return $?
   docker compose -f "$compose_file" --profile e2e run --rm playwright
 }
 

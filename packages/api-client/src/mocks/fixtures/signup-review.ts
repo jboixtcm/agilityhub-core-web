@@ -131,8 +131,9 @@ export function readmissionValues(member: MemberSignupView["member"]): Readmissi
     firstName: member.firstName,
     gender: member.gender,
     lastName1: member.lastName1,
-    ...(member.lastName2 === undefined ? {} : { lastName2: member.lastName2 }),
-    ...(member.paymentMethod === undefined ? {} : { paymentMethod: { ...member.paymentMethod } }),
+    // The core sends `null` for an optional value it does not have (E3-T16 round 2).
+    ...(member.lastName2 == null ? {} : { lastName2: member.lastName2 }),
+    ...(member.paymentMethod == null ? {} : { paymentMethod: { ...member.paymentMethod } }),
     phones: member.phones.map((phone) => ({ ...phone })),
   };
 }

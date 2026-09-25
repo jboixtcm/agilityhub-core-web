@@ -45,6 +45,7 @@ import {
 import {
   bandLabel,
   clubToday,
+  type DayOfWeek,
   errorCode,
   errorProp,
   fieldOfValidationError,
@@ -299,19 +300,40 @@ function minutesOf(time: string): number {
   return (hours ?? 0) * 60 + (mins ?? 0);
 }
 
-/** Opening window shared by every day of the template (`club.openingHours`, R-06-01). */
+interface TemplateOpening {
+  /** Days of the kind absent from `club.openingHours` (closed, R-02-09). */
+  closedDays: DayOfWeek[];
+  /** The window shared by every day; `undefined` while the opening hours are not known. */
+  window: { close: string; open: string } | undefined;
+}
+
+/**
+ * Opening window shared by every day of the template (`club.openingHours`, R-06-01). The api
+ * refuses a band unless every day of the kind is open and contains it (`WeekTemplateRules`): one
+ * closed day leaves the template without bands.
+ */
 function templateOpening(
-  hours: OpeningHours,
-  days: readonly string[],
-): { close: string; open: string } {
-  const windows = days.map((day) => hours[day] ?? { close: "22:00", open: "07:00" });
-  const latestOpen =
-    windows
-      .map((window) => window.open)
-      .sort()
-      .at(-1) ?? "07:00";
-  const earliestClose = windows.map((window) => window.close).sort()[0] ?? "22:00";
-  return { close: earliestClose, open: latestOpen };
+  hours: OpeningHours | undefined,
+  days: readonly DayOfWeek[],
+): TemplateOpening {
+  if (hours === undefined) return { closedDays: [], window: undefined };
+  const closedDays = days.filter((day) => hours[day] === undefined);
+  const windows = days.flatMap((day) => {
+    const window = hours[day];
+    return window === undefined ? [] : [window];
+  });
+  const latestOpen = windows
+    .map((window) => window.open)
+    .sort()
+    .at(-1);
+  const earliestClose = windows.map((window) => window.close).sort()[0];
+  return {
+    closedDays,
+    window:
+      closedDays.length > 0 || latestOpen === undefined || earliestClose === undefined
+        ? undefined
+        : { close: earliestClose, open: latestOpen },
+  };
 }
 
 /**
@@ -323,7 +345,7 @@ function bandErrorField(
   values: { endTime: string; startTime: string },
   context: {
     bands: readonly TimeBand[];
-    opening: { close: string; open: string };
+    opening: { close: string; open: string } | undefined;
     slotMinutes: number;
   },
 ): BandField {
@@ -335,6 +357,8 @@ function bandErrorField(
     case "INVALID_SLOT_GRANULARITY":
       return start % context.slotMinutes === 0 ? "end" : "start";
     case "OUTSIDE_OPENING_HOURS":
+      // Without a known window (hours not read, or a closed day) no field can be blamed.
+      if (context.opening === undefined) return "general";
       return start < minutesOf(context.opening.open) ? "start" : "end";
     case "BAND_OVERLAP":
       return context.bands.some(
@@ -349,7 +373,10 @@ function bandErrorField(
   }
 }
 
-/** [＋ Franja] / click on a row label; mounted only while open. */
+/**
+ * [＋ Franja] / click on a row label; mounted only while open. A template whose kind has a closed
+ * day takes no band (R-06-01): the drawer names the closed days and [Desa] stays disabled.
+ */
 function BandDrawer({
   band,
   bands,
@@ -365,25 +392,32 @@ function BandDrawer({
   onClose: () => void;
   onRemove: (band: TimeBand) => Promise<void>;
   onSave: (startTime: string, endTime: string) => Promise<void>;
-  opening: { close: string; open: string };
+  opening: TemplateOpening;
   slotMinutes: number;
 }) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
+  const { formatPlainDate } = useClubFormats();
   const errorMessage = useErrorMessage();
   const [startTime, setStartTime] = useState(band?.startTime ?? "");
   const [endTime, setEndTime] = useState(band?.endTime ?? "");
   const [error, setError] = useState<{ field: BandField; message: string }>();
   const [pending, setPending] = useState(false);
+  const closed = opening.closedDays.length > 0;
 
   const fail = (cause: unknown) => {
     setError({
-      field: bandErrorField(cause, { endTime, startTime }, { bands, opening, slotMinutes }),
+      field: bandErrorField(
+        cause,
+        { endTime, startTime },
+        { bands, opening: opening.window, slotMinutes },
+      ),
       message: errorMessage(cause),
     });
   };
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (closed) return;
     setPending(true);
     setError(undefined);
     try {
@@ -424,6 +458,15 @@ function BandDrawer({
       }
     >
       <form className="planning-form" onSubmit={(event) => void submit(event)}>
+        {closed ? (
+          <p className="planning-note planning-note--warning" role="note">
+            {t("admin-scheduling:templates.bandForm.closedDays", {
+              days: opening.closedDays
+                .map((day) => weekdayLabel(day, formatPlainDate, "weekdayLong"))
+                .join(", "),
+            })}
+          </p>
+        ) : null}
         <FormField
           {...errorProp(error?.field === "start" ? error.message : undefined)}
           id="planning-band-start"
@@ -468,6 +511,7 @@ function BandDrawer({
             </Button>
           )}
           <Button
+            disabled={closed}
             loading={pending}
             loadingLabel={t("admin-scheduling:common.saving")}
             type="submit"
@@ -1015,14 +1059,17 @@ export function TemplatesPage({
     ),
   );
 
+  // Read-only: no band is edited, so the opening hours are never read (`undefined`, never `{}`,
+  // which would mean «closed every day»).
   const openingHours = useResource(
-    useCallback(async () => (readOnly ? {} : loadOpeningHours(client)), [client, readOnly]),
+    useMemo(() => (readOnly ? undefined : () => loadOpeningHours(client)), [client, readOnly]),
   );
 
   const loadFailure = lists.error ?? template.error ?? catalogs.error;
-  // Secondary cards: a failed load shows the toast with [Torna-ho a provar] instead of a
-  // table that stays loading (S06 §2 «toast + reintent»).
-  const secondaryFailure = coverage.error ?? weeks.error ?? candidates.error;
+  // Secondary cards (and the opening hours the bands need): a failed load shows the toast with
+  // [Torna-ho a provar] instead of a table that stays loading or assumed hours (S06 §2 «toast +
+  // reintent»).
+  const secondaryFailure = coverage.error ?? weeks.error ?? candidates.error ?? openingHours.error;
 
   /** Latest known template version: every PATCH of the queue reads it when it is sent. */
   const versionRef = useRef<{ id: string; version: number } | undefined>(undefined);
@@ -1329,7 +1376,7 @@ export function TemplatesPage({
           }}
           onRemove={removeBand}
           onSave={saveBand}
-          opening={templateOpening(openingHours.data ?? {}, current?.days ?? [])}
+          opening={templateOpening(openingHours.data, current?.days ?? [])}
           slotMinutes={config.slotMinutes}
         />
       )}
@@ -1377,6 +1424,7 @@ export function TemplatesPage({
             if (coverage.error !== undefined) coverage.reload();
             if (weeks.error !== undefined) weeks.reload();
             if (candidates.error !== undefined) candidates.reload();
+            if (openingHours.error !== undefined) openingHours.reload();
           }}
           variant="secondary"
         >

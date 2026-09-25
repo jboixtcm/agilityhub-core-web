@@ -1,0 +1,78 @@
+$ pnpm --filter @agilityhub/api-client exec vitest run src/mocks/activity-handlers.test.ts src/mocks/calendar-handlers.test.ts -t "E4-W10"
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (15 tests | 1 failed | 14 skipped) 24ms
+   ❯ E4-W08 activity mocks answer like the api (impersonation, parameters) (3)
+     × R-07-09/10 E4-W10 an impersonated cancellation without a reason is 400 VALIDATION_ERROR with details.field = reason, as the core's CancellationDeadline answers; with it, ADMIN 22ms
+ ❯ src/mocks/calendar-handlers.test.ts (9 tests | 1 failed | 8 skipped) 51ms
+   ❯ E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) (1)
+     × R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W08 activity mocks answer like the api (impersonation, parameters) > R-07-09/10 E4-W10 an impersonated cancellation without a reason is 400 VALIDATION_ERROR with details.field = reason, as the core's CancellationDeadline answers; with it, ADMIN
+AssertionError: expected { code: 'VALIDATION_ERROR', …(2) } to deeply equal { code: 'VALIDATION_ERROR', …(2) }
+
+- Expected
++ Received
+
+  {
+    "code": "VALIDATION_ERROR",
+    "details": {
++     "fieldErrors": [
++       {
++         "code": "REQUIRED",
+          "field": "reason",
+        },
+-   "status": 400,
++     ],
++   },
++   "status": 422,
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:501:8
+    499|           }),
+    500|         ),
+    501|       ).resolves.toEqual({
+       |        ^
+    502|         code: "VALIDATION_ERROR",
+    503|         details: { field: "reason" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) > R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them
+AssertionError: expected ApiError: Band overlaps another band { …(5) } to match object { code: 'OUTSIDE_OPENING_HOURS', …(1) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "OUTSIDE_OPENING_HOURS",
+-   "status": 422,
++ ApiError {
++   "code": "BAND_OVERLAP",
++   "status": 409,
+  }
+
+ ❯ src/mocks/calendar-handlers.test.ts:333:6
+    331|         params: { path: { id: "template-setmana-a" } },
+    332|       }),
+    333|     ).rejects.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 4…
+       |      ^
+    334|     const weekdays = await client.GET("/week-templates/{id}", {
+    335|       params: { path: { id: "template-setmana-a" } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 22 skipped (24)
+   Start at  22:51:21
+   Duration  591ms (import 49%, transform 43%, tests 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/activity-handlers.test.ts src/mocks/calendar-handlers.test.ts -t E4-W10
+exit 1

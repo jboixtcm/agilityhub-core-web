@@ -559,7 +559,7 @@ test("T-05-CP-07 real club page edit renders styled Markdown on screen 30", asyn
 });
 
 // Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
-test("E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)", async ({
+test("T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)", async ({
   browser,
 }) => {
   const memberContext = await localizedContext(browser, { height: 844, width: 375 });

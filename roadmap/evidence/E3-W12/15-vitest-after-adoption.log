@@ -1,0 +1,69 @@
+Scope: 7 of 11 workspace projects
+packages/api-client test$ vitest run
+packages/ui test$ vitest run
+packages/api-client test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+packages/ui test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+packages/ui test:  Test Files  10 passed (10)
+packages/ui test:       Tests  65 passed (65)
+packages/ui test:    Start at  23:10:37
+packages/ui test:    Duration  1.47s (environment 73%, setup 14%, transform 7%, tests 5%, import 1%)
+packages/ui test: Done
+packages/api-client test:  Test Files  10 passed (10)
+packages/api-client test:       Tests  173 passed (173)
+packages/api-client test:    Start at  23:10:37
+packages/api-client test:    Duration  1.66s (import 36%, tests 34%, transform 29%)
+packages/api-client test:   Transform  transforming modules took 3.04s · 29% of tracked time, re-done on every run
+packages/api-client test:              persist transforms across runs with fsModuleCache: true
+packages/api-client test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+packages/api-client test: Done
+packages/i18n test$ vitest run
+packages/i18n test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+packages/i18n test:  Test Files  5 passed (5)
+packages/i18n test:       Tests  51 passed (51)
+packages/i18n test:    Start at  23:10:39
+packages/i18n test:    Duration  220ms (transform 60%, import 22%, tests 16%, worker 2%)
+packages/i18n test: Done
+packages/auth test$ vitest run
+packages/auth test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+packages/auth test:  Test Files  2 passed (2)
+packages/auth test:       Tests  17 passed (17)
+packages/auth test:    Start at  23:10:39
+packages/auth test:    Duration  633ms (environment 52%, tests 17%, import 16%, transform 14%, worker 1%)
+packages/auth test: Done
+apps/clubs test$ vitest run
+apps/clubs-admin test$ vitest run
+apps/id test$ vitest run
+apps/clubs-admin test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+apps/id test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+apps/clubs test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+apps/id test:  Test Files  1 passed (1)
+apps/id test:       Tests  9 passed (9)
+apps/id test:    Start at  23:10:40
+apps/id test:    Duration  2.58s (environment 51%, tests 18%, transform 16%, setup 13%, import 3%)
+apps/id test: Done
+apps/clubs test:  ❯ src/activities/activities.test.tsx (24 tests | 1 failed) 1365ms
+apps/clubs test:    ❯ T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 (18)
+apps/clubs test:      × 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight 6ms
+apps/clubs test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+apps/clubs test:  FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight
+apps/clubs test: AssertionError: expected null to be '2026-09-20T00:00' // Object.is equality
+apps/clubs test: - Expected:
+apps/clubs test: "2026-09-20T00:00"
+apps/clubs test: + Received:
+apps/clubs test: null
+apps/clubs test:  ❯ src/activities/activities.test.tsx:236:51
+apps/clubs test:     234|       params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+apps/clubs test:     235|     });
+apps/clubs test:     236|     expect(registered.data?.activity.endsAtLocal).toBe("2026-09-20T00:…
+apps/clubs test:        |                                                   ^
+apps/clubs test:     237|     // Saturday 19 September at 12:00 in the club (10:00Z): three hour…
+apps/clubs test:     238|     vi.setSystemTime(new Date("2026-09-19T10:00:00Z"));
+apps/clubs test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+apps/clubs test:  Test Files  1 failed | 6 passed (7)
+apps/clubs test:       Tests  1 failed | 165 passed (166)
+apps/clubs test:    Start at  23:10:40
+apps/clubs test:    Duration  7.65s (tests 41%, environment 31%, transform 12%, setup 8%, import 8%)
+apps/clubs test: Failed
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run`
+Exit status 1

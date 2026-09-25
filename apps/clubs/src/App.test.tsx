@@ -232,8 +232,11 @@ describe("T-01-18 access screen", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
     // E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the public footer and the registered office below it.
-    expect(screen.getByText("Club Agility Cànic · G00000000 · Cabrera de Mar")).toBeVisible();
-    expect(screen.getByText("Carrer de la Riera, 1 · 08392 Sant Andreu de Llavaneres")).toBeVisible();
+    // The Cànic fixture carries the club's real legal identity, as the seed does (S02 R-02-10).
+    expect(screen.getByText("Club Agility Cànic · G63189617 · Cabrera de Mar")).toBeVisible();
+    expect(
+      screen.getByText("Carrer Sant Pere, 10 · 08392 Sant Andreu de Llavaneres"),
+    ).toBeVisible();
 
     const magicLinkButton = screen.getByRole("button", {
       name: "Envia'm un enllaç per entrar sense contrasenya",
@@ -739,7 +742,7 @@ describe("T-03-40 mobile own dogs", () => {
   });
 });
 
-describe("E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32)", () => {
+describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32)", () => {
   interface RecordedApiRequest {
     body?: unknown;
     method: string;

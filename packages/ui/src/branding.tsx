@@ -41,7 +41,8 @@ export interface Branding {
     city?: string | null;
     /**
      * The registered office (`ClubSummary.legalAddress`, S02 R-02-02), the public footer's second
-     * line; `null` when the club has no street or postal code.
+     * line; `null` when the club has no street or postal code. The same shape as the snapshot's
+     * `LegalAddress | null`: the apps pass the api's branding to `BrandingProvider` as is.
      */
     legalAddress?: { city: string | null; postalCode: string; street: string } | null;
     /** The club's legal name and tax id (`ClubSummary`), for the public footer. */

@@ -1,0 +1,224 @@
+$ pnpm --filter clubs exec vitest run src/activities/activities.test.tsx -t "T-07-30 E4-W08"
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/activities/activities.test.tsx (24 tests | 1 failed | 18 skipped) 10456ms
+   ❯ T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review (6)
+     × R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.field, the core's shape) stays on the field 10120ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.field, the core's shape) stays on the field
+TestingLibraryElementError: Unable to find an element with the text: Escriu el motiu de l'anul·lació (fins a 500 caràcters).. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"activity-cancel-reason"[39m
+      [36m>[39m
+        [0mMotiu[0m
+      [36m</label>[39m
+      [36m<textarea[39m
+        [33mclass[39m=[32m"ah-input ah-textarea"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mid[39m=[32m"activity-cancel-reason"[39m
+        [33mmaxlength[39m=[32m"500"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mrows[39m=[32m"3"[39m
+      [36m>[39m
+        [0mHo demana per telèfon[0m
+      [36m</textarea>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field__help"[39m
+      [36m>[39m
+        [0mAnul·les en nom de l'abonat: el motiu queda registrat.[0m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-detail__dialog"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna enrere[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mANUL·LA LA INSCRIPCIÓ[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mEnviant[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mVols anul·lar la inscripció a Torneig d'Estiu 2026?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"activity-cancel-reason"[39m
+      [36m>[39m
+        [0mMotiu[0m
+      [36m</label>[39m
+      [36m<textarea[39m
+        [33mclass[39m=[32m"ah-input ah-textarea"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mid[39m=[32m"activity-cancel-reason"[39m
+        [33mmaxlength[39m=[32m"500"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mrows[39m=[32m"3"[39m
+      [36m>[39m
+        [0mHo demana per telèfon[0m
+      [36m</textarea>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field__help"[39m
+      [36m>[39m
+        [0mAnul·les en nom de l'abonat: el motiu queda registrat.[0m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activity-detail__dialog"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna enrere[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mANUL·LA LA INSCRIPCIÓ[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mEnviant[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:537:30
+    535|       fireEvent.click(confirm);
+    536|       expect(
+    537|         await within(dialog).findByText("Escriu el motiu de l'anul·lac…
+       |                              ^
+    538|       ).toBeVisible();
+    539|       expect(reason).toHaveAttribute("aria-invalid", "true");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed | 18 skipped (24)
+   Start at  22:51:01
+   Duration  11.43s (tests 92%, environment 3%, transform 2%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/activities.test.tsx -t T-07-30 E4-W08
+exit 1

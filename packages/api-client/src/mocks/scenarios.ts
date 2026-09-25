@@ -12,13 +12,6 @@ import sessions from "./fixtures/sessions.json";
 import type { SignupReviewVariant } from "./fixtures/signup-review";
 
 type Branding = components["schemas"]["BrandingResponse"];
-/**
- * `ClubSummary.legalAddress` is `LegalAddress | null` in the snapshot (null without a street or
- * postal code); the generator drops the `null` of a `$ref`, as for the dashboard blocks.
- */
-type NullableBranding = Omit<Branding, "club"> & {
-  club: Omit<Branding["club"], "legalAddress"> & { legalAddress: Branding["club"]["legalAddress"] | null };
-};
 type Me = components["schemas"]["Me"];
 type SessionList = components["schemas"]["Session"][];
 type OnboardingState = components["schemas"]["OnboardingState"];
@@ -50,7 +43,7 @@ export interface MockScenarioDefinition {
 }
 
 const canic = brandingCanic as Branding;
-const minimal = (brandingMinim as NullableBranding) as Branding;
+const minimal = brandingMinim as Branding;
 const member = meMember as Me;
 const multiProfile = meMultiProfile as Me;
 const accountSessions = sessions;

@@ -172,7 +172,8 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
 /**
  * D4 «Classe seleccionada» (R-06-09): chip editors for ADMIN on DRAFT/ACTIVE classes, [ACCEPTA]
  * sends the diff with `version`; [ANUL·LA LA CLASSE] / [ELIMINA] go through D4c (parent).
- * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c).
+ * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c). On a day the
+ * club is closed (R-02-09) the card says so and offers «Notes»: [ACCEPTA] saves only them.
  * The parent remounts it (`key`) on every new class or version, so the values always start from
  * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
  * the message on the page while the refetch brings the new version. After a save and after those
@@ -204,7 +205,7 @@ export function SelectedClassCard({
   onConflict: (message: string) => Promise<void>;
   /** Refetches the calendar; resolves once the refetch settles. */
   onSaved: (session: ClassSession) => Promise<void>;
-  /** `undefined` while `club.openingHours` is loading. */
+  /** `undefined` while `club.openingHours` is unknown (loading, failed, or a read-only page). */
   openingHours: OpeningHours | undefined;
   readOnly: boolean;
   session: ClassSession;
@@ -270,6 +271,11 @@ export function SelectedClassCard({
   const hours =
     opening === undefined ? [] : rangeOptions(opening, settings.slotMinutes, duration).starts;
   const hourOptions = hours.includes(session.startTime) ? hours : [session.startTime, ...hours];
+  // On a closed day the api re-validates the whole class (OUTSIDE_OPENING_HOURS) on any patch that
+  // is not only `notes`, even with its times unchanged: only the notes can be saved there.
+  const closedDayLocked =
+    editable && closedDay && Object.keys(patch).some((key) => key !== "notes" && key !== "version");
+  const notesEditable = notesOnly || (editable && closedDay);
 
   const set = (next: Partial<DraftValues>) => {
     setValues((current) => ({ ...current, ...next }));
@@ -277,7 +283,7 @@ export function SelectedClassCard({
   };
 
   const save = async (cancelBookings = false) => {
-    if (busy) return;
+    if (busy || closedDayLocked) return;
     setPending(true);
     setError(undefined);
     try {
@@ -546,7 +552,7 @@ export function SelectedClassCard({
         </p>
       ) : null}
 
-      {notesOnly ? (
+      {notesEditable ? (
         <label className="calendar-notes">
           <span>{t("admin-scheduling:calendar.selected.notes")}</span>
           <Textarea
@@ -579,7 +585,7 @@ export function SelectedClassCard({
         ) : (
           <>
             <Button
-              disabled={!changed || awaitingVersion}
+              disabled={!changed || awaitingVersion || closedDayLocked}
               loading={pending}
               loadingLabel={t("admin-scheduling:common.saving")}
               onClick={() => void save()}

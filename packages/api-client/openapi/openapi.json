@@ -478,6 +478,10 @@
       },
       "ActivityListItem" : {
         "properties" : {
+          "allRings" : {
+            "description" : "The rings are every active ring of the catalog (R-07-11: «totes — bloquejades»)",
+            "type" : "boolean"
+          },
           "createdAt" : {
             "format" : "date-time",
             "type" : "string"
@@ -486,8 +490,21 @@
             "format" : "date",
             "type" : [ "string", "null" ]
           },
+          "endTime" : {
+            "description" : "Club-local HH:mm (R-07-13); null when the activity has no end (never the model's next-day 00:00)",
+            "type" : [ "string", "null" ]
+          },
           "id" : {
             "type" : "string"
+          },
+          "location" : {
+            "description" : "The free text of an activity away from the club («— (fora del club)»); null at the club",
+            "type" : [ "string", "null" ]
+          },
+          "maxPlaces" : {
+            "description" : "null = no maximum («obertes · socis»)",
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
           },
           "registrationTo" : {
             "format" : "date",
@@ -505,6 +522,10 @@
           "slug" : {
             "type" : "string"
           },
+          "startTime" : {
+            "description" : "Club-local HH:mm (R-07-13); null without hours",
+            "type" : [ "string", "null" ]
+          },
           "state" : {
             "enum" : [ "DRAFT", "PUBLISHED", "FINISHED", "CANCELLED" ],
             "type" : "string"
@@ -515,9 +536,13 @@
           "type" : {
             "enum" : [ "SEMINAR", "SOCIAL_LEAGUE", "COMPETITION", "DEMONSTRATION", "COURSE", "OTHER" ],
             "type" : "string"
+          },
+          "typeDisplay" : {
+            "description" : "The label of `type` in the reader's locale, or the club's free label (R-07-01): «{title} · {typeDisplay}»",
+            "type" : "string"
           }
         },
-        "required" : [ "createdAt", "id", "registrations", "rings", "slug", "state", "title", "type" ],
+        "required" : [ "allRings", "createdAt", "endTime", "id", "location", "maxPlaces", "registrations", "rings", "slug", "startTime", "state", "title", "type", "typeDisplay" ],
         "type" : "object"
       },
       "ActivityLocation" : {
@@ -787,10 +812,12 @@
       "ActivityRegistrationListItem" : {
         "properties" : {
           "cancelReason" : {
+            "description" : "null until the registration is cancelled",
             "enum" : [ "MEMBER", "ACTIVITY_CANCELLED", "INACTIVITY", "MEMBER_LEFT", "ADMIN", null ],
             "type" : [ "string", "null" ]
           },
           "cancelledAt" : {
+            "description" : "null until the registration is cancelled",
             "format" : "date-time",
             "type" : [ "string", "null" ]
           },
@@ -802,6 +829,7 @@
             "type" : "string"
           },
           "position" : {
+            "description" : "WAITLISTED only; null otherwise",
             "format" : "int32",
             "type" : [ "integer", "null" ]
           },
@@ -817,7 +845,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "member", "origin", "registeredAt", "registrationId", "state" ],
+        "required" : [ "cancelReason", "cancelledAt", "member", "origin", "position", "registeredAt", "registrationId", "state" ],
         "type" : "object"
       },
       "ActivityRegistrationMember" : {
@@ -964,7 +992,8 @@
       "ActivityRow" : {
         "properties" : {
           "endsAtLocal" : {
-            "type" : "string"
+            "description" : "Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09)",
+            "type" : [ "string", "null" ]
           },
           "freeSeats" : {
             "format" : "int32",
@@ -984,6 +1013,7 @@
             "type" : "string"
           },
           "startsAtLocal" : {
+            "description" : "Club-local date-time YYYY-MM-DDTHH:mm (R-07-13)",
             "type" : "string"
           },
           "title" : {
@@ -1115,13 +1145,13 @@
             "type" : "string"
           },
           "country" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "postalCode" : {
             "type" : "string"
           },
           "province" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "street" : {
             "type" : "string"
@@ -1984,14 +2014,14 @@
           },
           "byAccountId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "reason" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "since" : {
             "format" : "date-time",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           }
         },
         "required" : [ "active" ],
@@ -3416,8 +3446,8 @@
             "type" : "string"
           },
           "displayCity" : {
-            "description" : "The town shown with the club's name (S02 §3); /branding falls back to address.city without it.",
-            "type" : "string"
+            "description" : "The town shown with the club's name (S02 §3); null without one, and /branding falls back to address.city.",
+            "type" : [ "string", "null" ]
           },
           "domains" : {
             "items" : {
@@ -3495,9 +3525,12 @@
             "type" : [ "string", "null" ]
           },
           "legalAddress" : {
-            "$ref" : "#/components/schemas/LegalAddress",
-            "description" : "The registered office (LSSI art. 10), or null when the club has no street or postal code.",
-            "type" : [ "object", "null" ]
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/LegalAddress"
+            }, {
+              "type" : "null"
+            } ],
+            "description" : "The registered office (LSSI art. 10), or null when the club has no street or postal code."
           },
           "legalName" : {
             "type" : [ "string", "null" ]
@@ -3530,7 +3563,7 @@
           },
           "displayCity" : {
             "description" : "The town shown with the club's name (S02 §3); null clears it, and /branding shows address.city.",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "legalName" : {
             "type" : "string"
@@ -3539,7 +3572,7 @@
             "type" : "string"
           },
           "taxId" : {
-            "description" : "Checked by the club's country profile (ES: CIF, NIF or NIE with its check character).",
+            "description" : "Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId.",
             "type" : "string"
           },
           "theme" : {
@@ -4149,7 +4182,7 @@
         "properties" : {
           "date" : {
             "format" : "date",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "kind" : {
             "type" : "string"
@@ -4820,7 +4853,7 @@
             "type" : "string"
           },
           "levelCode" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "name" : {
             "type" : "string"
@@ -4945,7 +4978,7 @@
           },
           "memberNumber" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : [ "integer", "null" ]
           }
         },
         "required" : [ "dogs", "fullName", "id" ],
@@ -5770,17 +5803,17 @@
         "properties" : {
           "at" : {
             "format" : "date-time",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "byAccountId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "granted" : {
             "type" : "boolean"
           },
           "version" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           }
         },
         "required" : [ "granted" ],
@@ -6899,7 +6932,7 @@
             "type" : "string"
           },
           "color" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "id" : {
             "format" : "uuid",
@@ -7941,11 +7974,11 @@
         "type" : "object"
       },
       "Member" : {
-        "description" : "ADMIN projection. Payment details are masked. accountMissing means SEPA_DD without an IBAN.",
+        "description" : "ADMIN projection. Payment details are masked. accountMissing means SEPA_DD without an IBAN. An optional property without a value is sent as null.",
         "properties" : {
           "accountId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "accountMissing" : {
             "type" : "boolean"
@@ -7955,7 +7988,7 @@
           },
           "billedViaMemberId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "birthDate" : {
             "format" : "date",
@@ -7965,7 +7998,11 @@
             "$ref" : "#/components/schemas/BookingBlock"
           },
           "consents" : {
-            "$ref" : "#/components/schemas/MemberConsents"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/MemberConsents"
+            }, {
+              "type" : "null"
+            } ]
           },
           "contactEmails" : {
             "items" : {
@@ -7978,15 +8015,15 @@
           },
           "erasedAt" : {
             "format" : "date-time",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "erasureRequestId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "familyGroupId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "firstName" : {
             "type" : "string"
@@ -8003,38 +8040,46 @@
             "type" : "string"
           },
           "idDocument" : {
-            "$ref" : "#/components/schemas/IdDocument"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/IdDocument"
+            }, {
+              "type" : "null"
+            } ]
           },
           "internalNotes" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "joinedAt" : {
             "format" : "date-time",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "lastName1" : {
             "type" : "string"
           },
           "lastName2" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "leaveDate" : {
             "format" : "date",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "maskedAccount" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "memberNumber" : {
             "format" : "int32",
-            "type" : "integer"
+            "type" : [ "integer", "null" ]
           },
           "nextInvoiceDate" : {
             "format" : "date",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "paymentMethod" : {
-            "$ref" : "#/components/schemas/PaymentMethodView"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/PaymentMethodView"
+            }, {
+              "type" : "null"
+            } ]
           },
           "phones" : {
             "items" : {
@@ -8043,18 +8088,22 @@
             "type" : "array"
           },
           "plan" : {
-            "$ref" : "#/components/schemas/PlanReference"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/PlanReference"
+            }, {
+              "type" : "null"
+            } ]
           },
           "planId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "priceId" : {
             "format" : "uuid",
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "remarks" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "roles" : {
             "items" : {
@@ -9414,13 +9463,13 @@
         "description" : "No full IBAN, card credentials or setup intent IDs.",
         "properties" : {
           "channel" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "holderName" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "maskedAccount" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "type" : {
             "enum" : [ "SEPA_DD", "CARD", "MANUAL" ],
@@ -9536,7 +9585,7 @@
       "Phone" : {
         "properties" : {
           "label" : {
-            "type" : "string"
+            "type" : [ "string", "null" ]
           },
           "number" : {
             "type" : "string"
@@ -9875,8 +9924,8 @@
       "PlanReference" : {
         "properties" : {
           "billingMode" : {
-            "enum" : [ "MONTHLY_FEE", "MAINTENANCE" ],
-            "type" : "string"
+            "enum" : [ "MONTHLY_FEE", "MAINTENANCE", null ],
+            "type" : [ "string", "null" ]
           },
           "id" : {
             "format" : "uuid",
@@ -10677,7 +10726,8 @@
       "RegisteredActivity" : {
         "properties" : {
           "endsAtLocal" : {
-            "type" : "string"
+            "description" : "Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09)",
+            "type" : [ "string", "null" ]
           },
           "id" : {
             "type" : "string"
@@ -10686,6 +10736,7 @@
             "type" : "string"
           },
           "startsAtLocal" : {
+            "description" : "Club-local date-time YYYY-MM-DDTHH:mm (R-07-13)",
             "type" : "string"
           },
           "title" : {

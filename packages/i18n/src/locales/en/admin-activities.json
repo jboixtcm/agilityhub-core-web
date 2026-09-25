@@ -111,6 +111,7 @@
     "endTime": "End time",
     "noTime": "—",
     "holiday": "public holiday",
+    "closedDay": "The club is closed on this day",
     "registrationFrom": "Registration: from",
     "registrationTo": "Registration: until",
     "places": "Places",

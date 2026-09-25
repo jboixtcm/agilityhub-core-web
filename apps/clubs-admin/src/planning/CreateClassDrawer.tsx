@@ -291,7 +291,8 @@ export function CreateClassDrawer({
             {t("admin-scheduling:calendar.createForm.holiday")}
           </p>
         ) : null}
-        {isoDate === undefined ? null : (
+        {/* A closed day creates nothing: no «Els alumnes la veuran de seguida» under its message. */}
+        {isoDate === undefined || closedDay ? null : (
           <VisibleNowNote client={client} monday={mondayOf(isoDate)} />
         )}
         <div className="calendar-form__pair">

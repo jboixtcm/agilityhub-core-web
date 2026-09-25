@@ -87,8 +87,8 @@ test.describe("T-01-18 access screen", () => {
     await expect(page.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
     // E3-W12 step 5 (S02 R-02-02): the public footer and, below it, the registered office.
     await expect(page.locator(".auth-footer .public-footer__line")).toHaveText([
-      "Club Agility Cànic · G00000000 · Cabrera de Mar",
-      "Carrer de la Riera, 1 · 08392 Sant Andreu de Llavaneres",
+      "Club Agility Cànic · G63189617 · Cabrera de Mar",
+      "Carrer Sant Pere, 10 · 08392 Sant Andreu de Llavaneres",
     ]);
     await page.screenshot({
       fullPage: true,

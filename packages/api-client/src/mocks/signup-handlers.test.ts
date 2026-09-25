@@ -279,7 +279,7 @@ describe("T-04-01 / T-04-02 the signup mocks follow R-04-01 by country profile",
   });
 });
 
-describe("E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19)", () => {
+describe("T-04-14 T-04-20 E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers them (R-04-10, R-04-19)", () => {
   const marta = "42000000-0000-4000-8000-000000000001";
   type Option = MemberSignupView["paymentMethods"][number];
 
@@ -350,7 +350,7 @@ describe("E3-W11 step 2: the D2 view's paymentMethods, as api E3-T14 answers the
   });
 });
 
-describe("E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16)", () => {
+describe("T-03-40 E3-W12 step 3: GET /me/dogs as the api answers it (S03 §6, api E3-T16)", () => {
   async function meDogs(language: string) {
     const response = await fetch(`${origin}/api/v1/me/dogs`, {
       headers: { "Accept-Language": language, Authorization: "Bearer mock-access-token" },

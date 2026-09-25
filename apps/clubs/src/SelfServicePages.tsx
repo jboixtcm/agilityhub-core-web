@@ -1077,7 +1077,7 @@ export function MyDataPage({ client }: { client: ApiClient }) {
                   onChange={(event) => {
                     updatePhone(index, "label", event.currentTarget.value);
                   }}
-                  value={phone(index).label}
+                  value={phone(index).label ?? ""}
                 />
               </FormField>
             </div>

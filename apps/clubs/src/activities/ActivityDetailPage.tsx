@@ -94,10 +94,14 @@ function waitlistAvailable(error: unknown): boolean {
   return details?.waitlistAvailable === true;
 }
 
-/** A 400/422 `VALIDATION_ERROR` whose `details.fieldErrors[]` names `field` (mapped by code). */
+/**
+ * A `VALIDATION_ERROR` about `field` (mapped by code): the core names it in `details.field` (e.g.
+ * `CancellationDeadline.check` on `reason`) or in `details.fieldErrors[]`; both are accepted.
+ */
 function isFieldError(error: unknown, field: string): boolean {
   if (!isApiError(error, "VALIDATION_ERROR")) return false;
-  const details = error.details as { fieldErrors?: unknown } | undefined;
+  const details = error.details as { field?: unknown; fieldErrors?: unknown } | undefined;
+  if (details?.field === field) return true;
   return (
     Array.isArray(details?.fieldErrors) &&
     details.fieldErrors.some(

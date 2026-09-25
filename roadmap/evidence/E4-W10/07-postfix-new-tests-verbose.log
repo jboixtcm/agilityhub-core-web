@@ -1,0 +1,99 @@
+$ pnpm --filter clubs-admin exec vitest run src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx src/planning/TemplatesPage.test.tsx src/planning/calendar-shared.test.ts --reporter=verbose -t "E4-W10|opening at 07:05 with 10-minute slots|S06 §3"
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > uses the offset in force on each side of the DST changes
+ ↓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > resolves an ambiguous local time (autumn overlap) to its first occurrence
+ ↓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > moves a local time inside the spring gap forward by the gap length (ZonedDateTime.of)
+ ↓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > works for other club zones (Canary Islands, one west of UTC)
+ ↓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > finds both sides of a transition that is more than 12 h away from wall-time-as-UTC
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > S06 §3 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time 1ms
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > S06 §3 R-06-11 T-06-32 a range keeps at least its minimum length on slot boundaries (classes, and ring blocks of training.slotMinutes) 1ms
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > R-02-09 a weekday absent from club.openingHours is closed: no window, no options 0ms
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > queues two quick changes of a full cell and sends each PATCH with the latest version
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > reloads the template and remounts the card on STALE_VERSION
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > puts the form back to the saved class when a PATCH fails
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows each band error on the field that caused it
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c)
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description
+ ↓ src/planning/CalendarPage.test.tsx > E3-W07 step 9 a D1 risk row opens D4 on its class > selects the class of `?classe=` in the week of `?setmana=`
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > «Nova activitat» creates a draft with title and type and opens its maintenance
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > disables the ring chips of an activity outside the club («— (fora del club)»)
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > INSTRUCTOR reads D7 without actions, export or internal notes
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > lists the registrants with the FIFO waitlist positions
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > [ELIMINA] cancels the draft with reason DELETED and returns to the list
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > D7 list: a finished activity without maximum reads «—»; a filtered empty list keeps «Neteja»
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-14 an INSTRUCTOR (403 on /parameters) of a club without levels sees no «Nivells» on an activity without levels
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-14 an INSTRUCTOR sees «Nivells» when the activity itself has levels (the D4 rule)
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text
+ ↓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review > S07 §6 the registrants filter by member (memberId): values from the registrants, the name in the chip, saved views and the URL
+ ✓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries 405ms
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit
+ ↓ src/planning/CalendarPage.test.tsx > E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit
+ ✓ src/planning/TemplatesPage.test.tsx > E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one 506ms
+ ✓ src/planning/TemplatesPage.test.tsx > E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00 211ms
+ ✓ src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 R-02-09 R-06-09 on a closed Sunday the card allows only notes: a capacity change keeps [ACCEPTA] disabled, a notes change saves 205ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews > S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected 706ms
+ ✓ src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida» 176ms
+ ✓ src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads 178ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews > R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them 220ms
+ ✓ src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews > R-07-05 S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar]; at the club with rings no times are offered until it loads 110ms
+
+ Test Files  4 passed (4)
+      Tests  12 passed | 76 skipped (88)
+   Start at  22:56:53
+   Duration  1.97s (tests 46%, environment 23%, transform 16%, import 9%, setup 6%)
+
+exit 0

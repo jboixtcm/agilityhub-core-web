@@ -855,7 +855,7 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
   });
 });
 
-describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15)", () => {
+describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15)", () => {
   /** A gate a handler waits on, so a test can look at the page while the request is pending. */
   function gate() {
     let open: () => void = () => undefined;
@@ -913,10 +913,13 @@ describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
   });
 
-  it("a failed reload shows its error with a retry, never the old quote, and the retry brings a fresh one", async () => {
+  it("a failed reload shows its error with a retry, never the old quote (its «Data del proper rebut» included), and the retry brings a fresh one", async () => {
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     expect(upfrontBlock()).toBeVisible();
+    const proposed = screen.getByLabelText("Data del proper rebut");
+    const proposedText = (proposed as HTMLInputElement).value;
+    expect(proposedText).not.toBe("");
     server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)));
     validate();
     const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
@@ -928,6 +931,8 @@ describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 
     if (failure === null) throw new TypeError("No reload error");
     expect(upfrontBlock()).toBeNull();
     expect(screen.queryByText("cobrat")).toBeNull();
+    // The proposed date is part of the quote (R-04-15): no stale `proposals.nextInvoiceDate`.
+    expect(screen.getByLabelText("Data del proper rebut")).toHaveValue("");
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
 
     server.resetHandlers();
@@ -936,6 +941,7 @@ describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 
     expect(await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" })).toBeVisible();
     expect(sent(requests, "GET", `/members/${memberId}/signup`)).toHaveLength(loads + 1);
     expect(screen.queryByText("No s'ha pogut carregar la preinscripció.")).toBeNull();
+    expect(screen.getByLabelText("Data del proper rebut")).toHaveValue(proposedText);
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
   });
 
@@ -960,7 +966,7 @@ describe("E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 
   });
 });
 
-describe("E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19)", () => {
+describe("T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19)", () => {
   interface Option {
     assignable: boolean;
     current: boolean;

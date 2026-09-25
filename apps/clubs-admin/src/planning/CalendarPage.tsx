@@ -300,8 +300,10 @@ export function CalendarPage({
       [client, readOnly],
     ),
   );
+  // A read-only calendar edits nothing: it never reads the opening hours (`undefined`, not `{}`,
+  // which would mean «closed every day»).
   const openingHours = useResource(
-    useCallback(async () => (readOnly ? {} : loadOpeningHours(client)), [client, readOnly]),
+    useMemo(() => (readOnly ? undefined : () => loadOpeningHours(client)), [client, readOnly]),
   );
 
   const cat: PlanningCatalogs | undefined = catalogs.data;
@@ -682,7 +684,10 @@ export function CalendarPage({
     </header>
   );
 
-  const failure = weeks.error ?? week.error ?? calendar.error ?? catalogs.error;
+  // Without the opening hours nothing offers times ([Crear classe], [Bloqueja pista] and the card's
+  // «Hora» wait for them): the error shows here with [Torna-ho a provar].
+  const failure =
+    weeks.error ?? week.error ?? calendar.error ?? catalogs.error ?? openingHours.error;
   const loading =
     monday === undefined ||
     cat === undefined ||
@@ -730,6 +735,7 @@ export function CalendarPage({
               week.reload();
               calendar.reload();
               catalogs.reload();
+              if (openingHours.error !== undefined) openingHours.reload();
             }}
             variant="ghost"
           >

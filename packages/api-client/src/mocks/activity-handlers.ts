@@ -940,13 +940,11 @@ export const activityHandlers = [
     if (registration.state === "CANCELLED")
       return apiError("INVALID_STATE", "Already cancelled", 409);
     // R-07-09/10: under impersonation the admin cancels «as the member» with a required reason
-    // (the api's `CancellationDeadline.check`: 422 VALIDATION_ERROR on `reason`).
+    // (the api's `CancellationDeadline.check`: 400 VALIDATION_ERROR with `details.field`).
     const impersonated = currentMockScenario().me.impersonation !== undefined;
     const body = (await request.json().catch(() => ({}))) as RegistrationCancellationRequest;
     if (impersonated && (body.reason ?? "").trim() === "") {
-      return apiError("VALIDATION_ERROR", "Reason required", 422, {
-        fieldErrors: [{ code: "REQUIRED", field: "reason" }],
-      });
+      return apiError("VALIDATION_ERROR", "Reason required", 400, { field: "reason" });
     }
     if (Date.now() >= Date.parse(startsAt(activity))) {
       return apiError("REGISTRATION_NOT_CANCELLABLE", "Registration not cancellable", 422, {

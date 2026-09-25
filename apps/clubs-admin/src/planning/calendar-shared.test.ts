@@ -44,14 +44,14 @@ describe("R-06-14 clubInstant (club-local date + time → UTC instant)", () => {
 });
 
 describe("S06 §3 time options on slot boundaries (E4-W09)", () => {
-  it("R-06-09 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time", () => {
+  it("S06 §3 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time", () => {
     const options = timeOptions("07:05", "21:55", 10);
     expect(options[0]).toBe("07:10");
     expect(options.at(-1)).toBe("21:50");
     expect(options.every((time) => Number(time.slice(3)) % 10 === 0)).toBe(true);
   });
 
-  it("R-06-09 R-06-11 a range keeps at least its minimum length on slot boundaries", () => {
+  it("S06 §3 R-06-11 T-06-32 a range keeps at least its minimum length on slot boundaries (classes, and ring blocks of training.slotMinutes)", () => {
     // Classes: one slot at least.
     const classes = rangeOptions({ close: "21:55", open: "07:05" }, 10, 10);
     expect([classes.starts[0], classes.starts.at(-1)]).toEqual(["07:10", "21:40"]);

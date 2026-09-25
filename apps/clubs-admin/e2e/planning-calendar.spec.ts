@@ -319,3 +319,82 @@ test.describe("E4-W09 D4 time pickers and opening hours", () => {
     await expect(page.getByText("Bloqueig desat")).toBeVisible();
   });
 });
+
+test.describe("E4-W10 D4 on a day the club is closed", () => {
+  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+
+  test.beforeAll(() => {
+    mkdirSync(closedDayEvidence, { recursive: true });
+  });
+
+  test("R-02-09 R-06-09 a class on a closed Sunday offers only «Notes»: another change keeps [ACCEPTA] disabled, the notes are saved", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { name: "Calendari de classes" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    const week = grid(page, "10 al 16 d’agost");
+    await expect(week).toBeVisible();
+    // A class on Sunday 16 while the club opens on Sundays, then Sunday closed (absent), through
+    // the mock api of this document.
+    const statuses = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const created = await fetch("/api/v1/class-sessions", {
+        body: JSON.stringify({
+          date: "2026-08-16",
+          endTime: "11:00",
+          instructorIds: ["instructor-marc"],
+          levelIds: ["level-b"],
+          ringId: "ring-central",
+          startTime: "10:00",
+        }),
+        headers,
+        method: "POST",
+      });
+      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+        version: number;
+      };
+      const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+      const value = Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }]));
+      const closed = await fetch("/api/v1/club/opening-hours", {
+        body: JSON.stringify({ value, version: current.version }),
+        headers,
+        method: "PUT",
+      });
+      return [created.status, closed.status];
+    });
+    expect(statuses).toEqual([201, 200]);
+    // The day view and back remount D4, which reads the new class and opening hours.
+    await week.getByRole("button", { name: "dc 12", exact: true }).click();
+    await page.waitForURL("**/calendari/dia/2026-08-12?estat=actives");
+    await page.getByRole("button", { name: "Tornar a la visió setmanal" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    await week.getByRole("button", { name: /^dg 16 10:00/u }).click();
+
+    const card = page.getByRole("region", { name: /^Classe seleccionada/u });
+    await expect(card.getByText("El club està tancat aquest dia")).toBeVisible();
+    const accept = card.getByRole("button", { name: "ACCEPTA" });
+    await card.getByRole("spinbutton").fill("6");
+    await expect(accept).toBeDisabled();
+    await card.getByRole("spinbutton").fill("");
+    await card.getByLabel("Notes").fill("Porteu aigua");
+    await expect(accept).toBeEnabled();
+    await card.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(closedDayEvidence, "D4-classe-diumenge-tancat-notes-1280.png"),
+    });
+    const saved = page.waitForRequest(
+      (request) => request.method() === "PATCH" && request.url().includes("/class-sessions/"),
+    );
+    await accept.click();
+    // Only the notes (and the version) travel: nothing the api would re-validate.
+    const body = (await saved).postDataJSON() as Record<string, unknown>;
+    expect(Object.keys(body).sort()).toEqual(["notes", "version"]);
+    expect(body.notes).toBe("Porteu aigua");
+    await expect(page.getByText("Canvis desats")).toBeVisible();
+  });
+});

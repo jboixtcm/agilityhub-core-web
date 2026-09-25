@@ -585,7 +585,7 @@ export function activityResource(
   };
 }
 
-/** D7 list row (plus the `ActivityListItem` overlay fields proposed in pending.json). */
+/** D7 list row, as the api's `ActivityListItem`. */
 export function activityListItem(activity: StoredActivity, locale: string): ActivityListItem {
   return {
     allRings: isAllRings(activity),
@@ -593,7 +593,10 @@ export function activityListItem(activity: StoredActivity, locale: string): Acti
     date: activity.date,
     endTime: activity.endTime,
     id: activity.id,
-    location: activity.location,
+    // The free text of an activity away from the club; `null` at the club.
+    location: activity.location.atClub
+      ? null
+      : (activity.location.name ?? activity.location.address ?? ""),
     maxPlaces: activity.maxPlaces,
     registrationTo: activity.registrationTo,
     registrations: counters(activity.id),
@@ -612,12 +615,9 @@ export function registeredActivity(
   locale: string,
 ): components["schemas"]["RegisteredActivity"] {
   return {
-    // As the api (`ActivityTimes`): without hours the start is `T00:00`; without an end, the
-    // end is the next day at `T00:00` (S07 §3).
-    endsAtLocal:
-      activity.endTime === null
-        ? `${nextDay(activity.date)}T00:00`
-        : `${activity.date}T${activity.endTime}`,
+    // As the api: without hours the start is `T00:00`; without an end, `endsAtLocal` is `null`
+    // (S07 «Canvis» 24-09).
+    endsAtLocal: activity.endTime === null ? null : `${activity.date}T${activity.endTime}`,
     id: activity.id,
     placeLabel: placeLabel(activity, locale),
     startsAtLocal: `${activity.date}T${activity.startTime ?? "00:00"}`,
@@ -665,10 +665,9 @@ export function registrationListItem(
   registration: StoredRegistration,
 ): ActivityRegistrationListItem {
   return {
-    // The snapshot's `cancelReason` enum has no `null`: the api omits both fields until then.
-    ...(registration.cancelReason === null
-      ? {}
-      : { cancelReason: registration.cancelReason, cancelledAt: registration.cancelledAt }),
+    // `null` until the registration is cancelled, as the api sends them.
+    cancelReason: registration.cancelReason,
+    cancelledAt: registration.cancelledAt,
     member: registration.member,
     origin: registration.origin,
     position: registration.position,

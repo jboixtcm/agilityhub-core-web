@@ -1,0 +1,46 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (15 tests | 1 failed) 173ms
+   ❯ E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) (12)
+     × S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) > S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api
+AssertionError: expected { endsAtLocal: null, …(10) } to match object { …(2) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "endsAtLocal": "2026-09-20T00:00",
++   "endsAtLocal": null,
+    "startsAtLocal": "2026-09-19T09:00",
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:476:20
+    474|     expectValid("MeActivities", data);
+    475|     const league = data?.bookable.find((row) => row.id === ACTIVITY_ID…
+    476|     expect(league).toMatchObject({
+       |                    ^
+    477|       endsAtLocal: "2026-09-20T00:00",
+    478|       startsAtLocal: "2026-09-19T09:00",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  1 failed | 172 passed (173)
+   Start at  23:10:21
+   Duration  1.44s (import 38%, tests 32%, transform 29%)
+
+  Transform  transforming modules took 2.49s · 29% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run
+exit 1

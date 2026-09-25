@@ -349,7 +349,10 @@ export function ActivityPage({
     maxSizeMb: 25,
     slotMinutes: 10,
   });
-  const [opening, setOpening] = useState<OpeningHours>({});
+  // `club.openingHours`: `undefined` until read; a failed read shows its error with a retry.
+  const [opening, setOpening] = useState<OpeningHours>();
+  const [openingError, setOpeningError] = useState<unknown>();
+  const [openingReload, setOpeningReload] = useState(0);
   const [locale, setLocale] = useState(branding.defaultLocale);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const [feedback, setFeedback] = useState<Feedback>();
@@ -391,9 +394,6 @@ export function ActivityPage({
     void loadActivitySettings(client).then((value) => {
       if (current) setSettings(value);
     });
-    void loadOpeningHours(client).then((value) => {
-      if (current) setOpening(value);
-    });
     void client.GET("/rings").then(
       (result) => {
         if (current) setRings((result.data?.items ?? []).filter((ring) => ring.active));
@@ -410,6 +410,21 @@ export function ActivityPage({
       current = false;
     };
   }, [client]);
+
+  useEffect(() => {
+    let current = true;
+    void loadOpeningHours(client).then(
+      (value) => {
+        if (current) setOpening(value);
+      },
+      (error: unknown) => {
+        if (current) setOpeningError(error);
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, openingReload]);
 
   const ringName = useCallback(
     (ringId: string) =>
@@ -849,14 +864,26 @@ export function ActivityPage({
   // R-07-05: only a ring block must fit the opening hours; away from the club or without linked
   // rings the activity may be at any time of the day.
   const blocksRings = form.atClub && form.ringIds.length > 0;
-  // A day absent from `club.openingHours` (closed, R-02-09) keeps the product default here, as
-  // before E4-W09 (D4 only); the api refuses the ring block there (OUTSIDE_OPENING_HOURS).
+  // At the club with rings, a day absent from `club.openingHours` (closed, R-02-09) gets D4's
+  // treatment: a message and no times (the api refuses its ring block, OUTSIDE_OPENING_HOURS).
+  // Nothing is offered either while the hours are unknown (loading, or a failed read); before a
+  // date is typed, the product default (dl–dg 07:00–22:00).
+  const closedDay =
+    blocksRings &&
+    isoDate !== undefined &&
+    opening !== undefined &&
+    openingOf(opening, isoDate) === null;
   const openingWindow = !blocksRings
     ? WHOLE_DAY
-    : isoDate === undefined
-      ? { close: "22:00", open: "07:00" }
-      : (openingOf(opening, isoDate) ?? { close: "22:00", open: "07:00" });
-  const options = timeOptions(openingWindow.open, openingWindow.close, settings.slotMinutes);
+    : opening === undefined
+      ? null
+      : isoDate === undefined
+        ? { close: "22:00", open: "07:00" }
+        : openingOf(opening, isoDate);
+  const options =
+    openingWindow === null
+      ? []
+      : timeOptions(openingWindow.open, openingWindow.close, settings.slotMinutes);
   const withValue = (value: string) =>
     value === "" || options.includes(value) ? options : [...options, value].sort();
   const holiday = isoDate !== undefined && settings.holidays.includes(isoDate);
@@ -1208,6 +1235,26 @@ export function ActivityPage({
                 <Icon aria-hidden="true" name="warn" />
                 {t("admin-activities:form.holiday")}
               </p>
+            ) : null}
+            {editable && closedDay ? (
+              <p className="activity-note activity-note--warning" role="note">
+                <Icon aria-hidden="true" name="warn" />
+                {t("admin-activities:form.closedDay")}
+              </p>
+            ) : null}
+            {editable && blocksRings && openingError !== undefined ? (
+              <div className="activity-note" role="alert">
+                <span className="ah-form-field__error">{errorMessage(openingError)}</span>
+                <Button
+                  onClick={() => {
+                    setOpeningError(undefined);
+                    setOpeningReload((value) => value + 1);
+                  }}
+                  variant="secondary"
+                >
+                  {t("admin-activities:common.retry")}
+                </Button>
+              </div>
             ) : null}
             <div className="activity-row">
               <FormField

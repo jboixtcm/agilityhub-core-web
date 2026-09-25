@@ -1,5 +1,10 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetCatalogState, resetPlanningState } from "@agilityhub/api-client/mocks";
+import {
+  mockScenario,
+  resetCatalogState,
+  resetPlanningState,
+  resetSettingsState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -27,8 +32,10 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   server.resetHandlers();
+  server.events.removeAllListeners();
   resetPlanningState();
   resetCatalogState();
+  resetSettingsState();
   mockScenario("admin");
 });
 afterAll(() => {
@@ -441,5 +448,109 @@ describe("T-06-26 D3 weekly templates", () => {
       screen.queryByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("alert")).toHaveTextContent("Introduïu una descripció.");
+  });
+});
+
+/** `club.openingHours` of the mock club through the api (R-02-09: an absent weekday is closed). */
+async function putOpeningHours(days: readonly string[]) {
+  const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const current = await api.GET("/club/opening-hours");
+  await api.PUT("/club/opening-hours", {
+    body: {
+      value: Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }])),
+      version: current.data?.version ?? 1,
+    },
+  });
+}
+
+/** The JSON bodies of the band requests (`POST …/bands`, `PATCH …/bands/{id}`) sent. */
+function captureBandBodies(): { body: unknown; method: string }[] {
+  const seen: { body: unknown; method: string }[] = [];
+  server.events.on("request:start", ({ request }) => {
+    if (!/\/bands(\/[^/]+)?$/u.test(new URL(request.url).pathname)) return;
+    if (request.method !== "POST" && request.method !== "PATCH") return;
+    void request
+      .clone()
+      .json()
+      .then((body: unknown) => seen.push({ body, method: request.method }));
+  });
+  return seen;
+}
+
+function settle(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 50);
+  });
+}
+
+describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
+  it("R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one", async () => {
+    // Monday is absent from club.openingHours: every WEEKDAYS band would be refused by the api.
+    await putOpeningHours(["TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]);
+    const bands = captureBandBodies();
+    await renderTemplates();
+
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const drawer = await screen.findByRole("dialog", { name: "Nova franja" });
+    expect(
+      await within(drawer).findByText(
+        "El club està tancat dilluns: aquesta plantilla no admet franges.",
+      ),
+    ).toBeVisible();
+    fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "10:00" } });
+    fireEvent.change(within(drawer).getByLabelText("Final"), { target: { value: "11:00" } });
+    const save = within(drawer).getByRole("button", { name: "Desa" });
+    expect(save).toBeDisabled();
+    const form = save.closest("form");
+    if (form === null) throw new TypeError("Missing the band form");
+    fireEvent.submit(form);
+    await settle();
+    expect(bands).toEqual([]);
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca" }));
+
+    // An existing band is refused the same way.
+    fireEvent.click(screen.getByRole("button", { name: "Franja 08:30–09:30" }));
+    const edit = await screen.findByRole("dialog", { name: "Franja 08:30–09:30" });
+    expect(
+      within(edit).getByText("El club està tancat dilluns: aquesta plantilla no admet franges."),
+    ).toBeVisible();
+    expect(within(edit).getByRole("button", { name: "Desa" })).toBeDisabled();
+    fireEvent.click(within(edit).getByRole("button", { name: "Tanca" }));
+
+    // The Saturday template has no closed day: its band is sent and saved.
+    fireEvent.click(screen.getByRole("button", { name: "Dissabtes" }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: "Dissabtes" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Dissabtes»" });
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const saturday = await screen.findByRole("dialog", { name: "Nova franja" });
+    expect(within(saturday).queryByText(/El club està tancat/u)).not.toBeInTheDocument();
+    fireEvent.change(within(saturday).getByLabelText("Inici"), { target: { value: "13:00" } });
+    fireEvent.change(within(saturday).getByLabelText("Final"), { target: { value: "14:00" } });
+    fireEvent.click(within(saturday).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Nova franja" })).not.toBeInTheDocument();
+    });
+    expect(bands).toEqual([{ body: { endTime: "14:00", startTime: "13:00" }, method: "POST" }]);
+  });
+
+  it("S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00", async () => {
+    let failOpeningHours = true;
+    server.use(
+      http.get("*/api/v1/club/opening-hours", () =>
+        failOpeningHours
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w10" },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    await renderTemplates();
+    const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
+    failOpeningHours = false;
+    fireEvent.click(retry);
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
+    });
   });
 });

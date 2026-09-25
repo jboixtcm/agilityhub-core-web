@@ -1,0 +1,2022 @@
+$ pnpm --filter clubs-admin exec vitest run src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx src/planning/TemplatesPage.test.tsx -t "E4-W10|opening at 07:05 with 10-minute slots"
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/CalendarPage.test.tsx (35 tests | 3 failed | 31 skipped) 10749ms
+   ❯ E4-W10 D4 follow-ups of the E4-W09 review (3)
+     × S06 §3 R-02-09 R-06-09 on a closed Sunday the card allows only notes: a capacity change keeps [ACCEPTA] disabled, a notes change saves 104ms
+     × R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida» 175ms
+     × S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads 10066ms
+ ❯ src/planning/TemplatesPage.test.tsx (15 tests | 2 failed | 13 skipped) 20352ms
+   ❯ E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) (2)
+     × R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one 10259ms
+     × S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00 10091ms
+ ❯ src/activities/ActivitiesPage.test.tsx (29 tests | 2 failed | 27 skipped) 20612ms
+   ❯ T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews (2)
+     × S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected 10513ms
+     × R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them 10098ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews > S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected
+TestingLibraryElementError: Unable to find role="option" and name "Soci Prova0994 · 5993 (1)"
+
+Ignored nodes: comments, script, style
+[36m<select>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-09"[39m
+  [36m>[39m
+    [0mClara Camps · 224 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-07"[39m
+  [36m>[39m
+    [0mNúria Codina · 218 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-12"[39m
+  [36m>[39m
+    [0mGuillem Costa · 233 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-05"[39m
+  [36m>[39m
+    [0mAina Ferrer · 212 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-04"[39m
+  [36m>[39m
+    [0mPau Grau · 209 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-11"[39m
+  [36m>[39m
+    [0mBerta Pons · 230 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-taller-03"[39m
+  [36m>[39m
+    [0mMontse Prat · 206 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0001"[39m
+  [36m>[39m
+    [0mSoci Prova0001 · 5000 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0002"[39m
+  [36m>[39m
+    [0mSoci Prova0002 · 5001 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0003"[39m
+  [36m>[39m
+    [0mSoci Prova0003 · 5002 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0004"[39m
+  [36m>[39m
+    [0mSoci Prova0004 · 5003 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0005"[39m
+  [36m>[39m
+    [0mSoci Prova0005 · 5004 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0006"[39m
+  [36m>[39m
+    [0mSoci Prova0006 · 5005 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0007"[39m
+  [36m>[39m
+    [0mSoci Prova0007 · 5006 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0008"[39m
+  [36m>[39m
+    [0mSoci Prova0008 · 5007 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0009"[39m
+  [36m>[39m
+    [0mSoci Prova0009 · 5008 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0010"[39m
+  [36m>[39m
+    [0mSoci Prova0010 · 5009 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0011"[39m
+  [36m>[39m
+    [0mSoci Prova0011 · 5010 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0012"[39m
+  [36m>[39m
+    [0mSoci Prova0012 · 5011 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0013"[39m
+  [36m>[39m
+    [0mSoci Prova0013 · 5012 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0014"[39m
+  [36m>[39m
+    [0mSoci Prova0014 · 5013 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0015"[39m
+  [36m>[39m
+    [0mSoci Prova0015 · 5014 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0016"[39m
+  [36m>[39m
+    [0mSoci Prova0016 · 5015 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0017"[39m
+  [36m>[39m
+    [0mSoci Prova0017 · 5016 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0018"[39m
+  [36m>[39m
+    [0mSoci Prova0018 · 5017 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0019"[39m
+  [36m>[39m
+    [0mSoci Prova0019 · 5018 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0020"[39m
+  [36m>[39m
+    [0mSoci Prova0020 · 5019 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0021"[39m
+  [36m>[39m
+    [0mSoci Prova0021 · 5020 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0022"[39m
+  [36m>[39m
+    [0mSoci Prova0022 · 5021 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0023"[39m
+  [36m>[39m
+    [0mSoci Prova0023 · 5022 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0024"[39m
+  [36m>[39m
+    [0mSoci Prova0024 · 5023 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0025"[39m
+  [36m>[39m
+    [0mSoci Prova0025 · 5024 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0026"[39m
+  [36m>[39m
+    [0mSoci Prova0026 · 5025 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0027"[39m
+  [36m>[39m
+    [0mSoci Prova0027 · 5026 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0028"[39m
+  [36m>[39m
+    [0mSoci Prova0028 · 5027 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0029"[39m
+  [36m>[39m
+    [0mSoci Prova0029 · 5028 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0030"[39m
+  [36m>[39m
+    [0mSoci Prova0030 · 5029 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0031"[39m
+  [36m>[39m
+    [0mSoci Prova0031 · 5030 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0032"[39m
+  [36m>[39m
+    [0mSoci Prova0032 · 5031 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0033"[39m
+  [36m>[39m
+    [0mSoci Prova0033 · 5032 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0034"[39m
+  [36m>[39m
+    [0mSoci Prova0034 · 5033 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0035"[39m
+  [36m>[39m
+    [0mSoci Prova0035 · 5034 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0036"[39m
+  [36m>[39m
+    [0mSoci Prova0036 · 5035 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0037"[39m
+  [36m>[39m
+    [0mSoci Prova0037 · 5036 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0038"[39m
+  [36m>[39m
+    [0mSoci Prova0038 · 5037 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0039"[39m
+  [36m>[39m
+    [0mSoci Prova0039 · 5038 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0040"[39m
+  [36m>[39m
+    [0mSoci Prova0040 · 5039 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0041"[39m
+  [36m>[39m
+    [0mSoci Prova0041 · 5040 (1)[0m
+  [36m</option>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"member-e4w10-0042"[39m
+  [36m>[39m
+    [0mSoci Prova004...
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"activity-back"[39m
+          [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mTorna a l'activitat[0m
+        [36m</a>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mInscrits — Taller de contactes[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Inscrits de l'activitat"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca un abonat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca un abonat"[39m
+                [33mplaceholder[39m=[32m"Cerca un abonat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Estat"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ACTIVE"[39m
+              [36m>[39m
+                [0minscrita[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"WAITLISTED"[39m
+              [36m>[39m
+                [0men llista d'espera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"CANCELLED"[39m
+              [36m>[39m
+                [0manul·lada[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [33mopen[39m=[32m""[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"origin"[39m
+                    [36m>[39m
+                      [0mOrigen[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registeredAt"[39m
+                    [36m>[39m
+                      [0mData d'inscripció[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mValor[0m
+                  [36m</span>[39m
+                  [36...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/activities/ActivitiesPage.test.tsx:1145:11
+    1143|     });
+    1144|     const value = within(filters).getByLabelText("Valor");
+    1145|     await waitFor(() => {
+       |           ^
+    1146|       expect(within(value).getByRole("option", { name: `${label} (1)` …
+    1147|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews > R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them
+TestingLibraryElementError: Unable to find an element with the text: El club està tancat aquest dia. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Manteniment de l'activitat — Torneig d'Estiu 2026"[39m
+  [33mclass[39m=[32m"activity-maintenance"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"activity-grid"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card activity-card"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"activity-card__title"[39m
+      [36m>[39m
+        [0mManteniment de l'activitat — Torneig d'Estiu 2026[0m
+      [36m</h2>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Idiomes"[39m
+        [33mclass[39m=[32m"catalog-locale-tabs"[39m
+        [33mrole[39m=[32m"tablist"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"true"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCA[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mES[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"activity-fieldset"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"activity-title"[39m
+            [36m>[39m
+              [0mTítol[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"activity-title"[39m
+              [33mmaxlength[39m=[32m"80"[39m
+              [33mvalue[39m=[32m"Torneig d'Estiu 2026"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"activity-chip-select"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mTipus[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Tipus"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"SEMINAR"[39m
+              [36m>[39m
+                [0mSeminari[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"SOCIAL_LEAGUE"[39m
+              [36m>[39m
+                [0mLliga social[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"COMPETITION"[39m
+              [36m>[39m
+                [0mCompetició[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DEMONSTRATION"[39m
+              [36m>[39m
+                [0mDemostració[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"COURSE"[39m
+              [36m>[39m
+                [0mCurset[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"OTHER"[39m
+              [36m>[39m
+                [0mAltres[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"activity-type-label"[39m
+          [36m>[39m
+            [0mEtiqueta pròpia[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"activity-type-label"[39m
+            [33mmaxlength[39m=[32m"30"[39m
+            [33mplaceholder[39m=[32m"competició"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"activity-short"[39m
+          [36m>[39m
+            [0mDescripció curta[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"activity-short"[39m
+            [33mmaxlength[39m=[32m"160"[39m
+            [33mvalue[39m=[32m"Jornada social de tancament de l'estiu"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mid[39m=[32m"activity-long-label"[39m
+          [36m>[39m
+            [0mDescripció llarga (text ric)[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-rich-text-editor"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-controls[39m=[32m"activity-long-ca"[39m
+              [33maria-label[39m=[32m"Format del text"[39m
+              [33mclass[39m=[32m"ah-rich-text-editor__toolbar"[39m
+              [33mrole[39m=[32m"toolbar"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Negreta"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--bold"[39m
+                [33mtitle[39m=[32m"Negreta"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Cursiva"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--italic"[39m
+                [33mtitle[39m=[32m"Cursiva"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0mI[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Subratllat"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--underline"[39m
+                [33mtitle[39m=[32m"Subratllat"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [3...
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Manteniment de l'activitat — Torneig d'Estiu 2026"[39m
+  [33mclass[39m=[32m"activity-maintenance"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"activity-grid"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card activity-card"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"activity-card__title"[39m
+      [36m>[39m
+        [0mManteniment de l'activitat — Torneig d'Estiu 2026[0m
+      [36m</h2>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Idiomes"[39m
+        [33mclass[39m=[32m"catalog-locale-tabs"[39m
+        [33mrole[39m=[32m"tablist"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"true"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCA[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mES[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"activity-fieldset"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"activity-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"activity-title"[39m
+            [36m>[39m
+              [0mTítol[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"activity-title"[39m
+              [33mmaxlength[39m=[32m"80"[39m
+              [33mvalue[39m=[32m"Torneig d'Estiu 2026"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"activity-chip-select"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mTipus[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Tipus"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"SEMINAR"[39m
+              [36m>[39m
+                [0mSeminari[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"SOCIAL_LEAGUE"[39m
+              [36m>[39m
+                [0mLliga social[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"COMPETITION"[39m
+              [36m>[39m
+                [0mCompetició[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DEMONSTRATION"[39m
+              [36m>[39m
+                [0mDemostració[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"COURSE"[39m
+              [36m>[39m
+                [0mCurset[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"OTHER"[39m
+              [36m>[39m
+                [0mAltres[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"activity-type-label"[39m
+          [36m>[39m
+            [0mEtiqueta pròpia[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"activity-type-label"[39m
+            [33mmaxlength[39m=[32m"30"[39m
+            [33mplaceholder[39m=[32m"competició"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"activity-short"[39m
+          [36m>[39m
+            [0mDescripció curta[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"activity-short"[39m
+            [33mmaxlength[39m=[32m"160"[39m
+            [33mvalue[39m=[32m"Jornada social de tancament de l'estiu"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mid[39m=[32m"activity-long-label"[39m
+          [36m>[39m
+            [0mDescripció llarga (text ric)[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-rich-text-editor"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-controls[39m=[32m"activity-long-ca"[39m
+              [33maria-label[39m=[32m"Format del text"[39m
+              [33mclass[39m=[32m"ah-rich-text-editor__toolbar"[39m
+              [33mrole[39m=[32m"toolbar"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Negreta"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--bold"[39m
+                [33mtitle[39m=[32m"Negreta"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Cursiva"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--italic"[39m
+                [33mtitle[39m=[32m"Cursiva"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0mI[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Subratllat"[39m
+                [33mclass[39m=[32m"ah-rich-text-editor__tool ah-rich-text-editor__tool--underline"[39m
+                [33mtitle[39m=[32m"Subratllat"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [3...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:1177:31
+    1175|     const start = within(card).getByLabelText("Hora d'inici");
+    1176|     const end = within(card).getByLabelText("Hora de final");
+    1177|     expect(await within(card).findByText(CLOSED_DAY)).toBeVisible();
+       |                               ^
+    1178|     // Only «—» and the activity's own times: nothing to choose on a c…
+    1179|     expect(optionValues(start)).toEqual(["", "18:30"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 R-02-09 R-06-09 on a closed Sunday the card allows only notes: a capacity change keeps [ACCEPTA] disabled, a notes change saves
+TestingLibraryElementError: Unable to find a label with the text of: Notes
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"calendar-selected-title"[39m
+  [33mclass[39m=[32m"ah-card calendar-selected-card"[39m
+  [33mid[39m=[32m"calendar-selected-card"[39m
+  [33mrole[39m=[32m"region"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"planning-card-title"[39m
+      [33mid[39m=[32m"calendar-selected-title"[39m
+    [36m>[39m
+      [0mClasse seleccionada — dg 16 · 10:00 · B · Central · Marc[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success calendar-state"[39m
+    [36m>[39m
+      [0mactiva[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__counts"[39m
+    [36m>[39m
+      [0m0/5[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-chips"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mPista[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-muntanya"[39m
+        [36m>[39m
+          [0mMuntanya[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-central"[39m
+        [36m>[39m
+          [0mCentral[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-carretera"[39m
+        [36m>[39m
+          [0mCarretera[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-cadells"[39m
+        [36m>[39m
+          [0mCadells[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-petita"[39m
+        [36m>[39m
+          [0mPetita[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m""[39m
+        [36m>[39m
+          [0mSense pista[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--multi"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-expanded[39m=[32m"false"[39m
+        [33mclass[39m=[32m"calendar-chip__toggle"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"calendar-chip__label"[39m
+        [36m>[39m
+          [0mNivells[0m
+        [36m</span>[39m
+        [0m [0m
+        [0mB[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mInstructor[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-laura"[39m
+        [36m>[39m
+          [0mLaura[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-marc"[39m
+        [36m>[39m
+          [0mMarc[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-anna"[39m
+        [36m>[39m
+          [0mAnna[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-sergio"[39m
+        [36m>[39m
+          [0mSergio[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mLímit[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input calendar-chip__number"[39m
+        [33mmin[39m=[32m"1"[39m
+        [33mplaceholder[39m=[32m"5"[39m
+        [33mtype[39m=[32m"number"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mHora[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"10:00"[39m
+        [36m>[39m
+          [0m10:00[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--wide"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mDescripció[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input"[39m
+        [33mmaxlength[39m=[32m"40"[39m
+        [33mplaceholder[39m=[32m"B"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<button[39m
+      [33maria-pressed[39m=[32m"false"[39m
+      [33mclass[39m=[32m"planning-chip"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mExempta de la revisió de les 7:30[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"planning-note planning-note--warning"[39m
+    [33mrole[39m=[32m"note"[39m
+  [36m>[39m
+    [0mEl club està tancat aquest dia[0m
+  [36m</p>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+      [33mdisabled[39m=[32m""[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mACCEPTA[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__spacer"[39m
+    [36m/>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost calendar-button--danger-outline"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mANUL·LA LA CLASSE[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mELIMINA[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/planning/CalendarPage.test.tsx:1355:32
+    1353|     const accept = within(card).getByRole("button", { name: "ACCEPTA" …
+    1354|     const capacity = within(card).getByRole("spinbutton");
+    1355|     const notes = within(card).getByLabelText("Notes");
+       |                                ^
+    1356|     fireEvent.change(capacity, { target: { value: "6" } });
+    1357|     // The api re-validates the whole class on any patch but notes (OU…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida»
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <p
+  class="planning-note planning-note--warning"
+  role="note"
+>
+  Els alumnes la veuran de seguida
+</p> instead[39m
+ ❯ src/planning/CalendarPage.test.tsx:1397:57
+    1395|     expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED…
+    1396|     await settle();
+    1397|     expect(within(drawer).queryByText(VISIBLE_NOW)).not.toBeInTheDocum…
+       |                                                         ^
+    1398|   });
+    1399|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads
+TestingLibraryElementError: Unable to find role="button" and name "Torna-ho a provar"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"planning-page calendar-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"planning-header calendar-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mCalendari de classes[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Estat de les classes"[39m
+          [33mclass[39m=[32m"calendar-filter"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mActives[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mEsborrany[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAnul·lades[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"calendar-week"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button calendar-week__previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"Setmana"[39m
+            [33mclass[39m=[32m"calendar-week__toggle"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mSetmana en curs[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m · [0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0mdel 10 al 16 d’agost[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-header__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mCrear classe[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mBloqueja pista[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid calendar-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+              [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCalendari de classes · del 10 al 16 d’agost[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                  [36m/>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+                      [36m>[39m
+                        [0mdl 10[0m
+                      [36m</span>[39m
+                      [36...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"planning-page calendar-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"planning-header calendar-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mCalendari de classes[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Estat de les classes"[39m
+          [33mclass[39m=[32m"calendar-filter"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mActives[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mEsborrany[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAnul·lades[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"calendar-week"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button calendar-week__previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"Setmana"[39m
+            [33mclass[39m=[32m"calendar-week__toggle"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mSetmana en curs[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m · [0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0mdel 10 al 16 d’agost[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-header__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mCrear classe[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mBloqueja pista[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid calendar-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+              [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCalendari de classes · del 10 al 16 d’agost[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                  [36m/>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+                      [36m>[39m
+                        [0mdl 10[0m
+                      [36m</span>[39m
+                      [36...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/CalendarPage.test.tsx:1414:32
+    1412|     await renderCalendar();
+    1413|     const week = await grid(/del 10 al 16 d.agost$/u);
+    1414|     const retry = await screen.findByRole("button", { name: "Torna-ho …
+       |                                ^
+    1415|     expect(
+    1416|       screen.getByText(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one
+TestingLibraryElementError: Unable to find an element with the text: El club està tancat dilluns: aquesta plantilla no admet franges.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_3_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [0mNova franja[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"planning-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"planning-band-start"[39m
+        [36m>[39m
+          [0mInici[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"planning-band-start"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mstep[39m=[32m"600"[39m
+          [33mtype[39m=[32m"time"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"planning-band-end"[39m
+        [36m>[39m
+          [0mFinal[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"planning-band-end"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mstep[39m=[32m"600"[39m
+          [33mtype[39m=[32m"time"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"planning-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDesa[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_3_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [0mNova franja[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"planning-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"planning-band-start"[39m
+        [36m>[39m
+          [0mInici[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"planning-band-start"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mstep[39m=[32m"600"[39m
+          [33mtype[39m=[32m"time"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"planning-band-end"[39m
+        [36m>[39m
+          [0mFinal[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"planning-band-end"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mstep[39m=[32m"600"[39m
+          [33mtype[39m=[32m"time"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"planning-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDesa[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/TemplatesPage.test.tsx:496:28
+    494|     const drawer = await screen.findByRole("dialog", { name: "Nova fra…
+    495|     expect(
+    496|       await within(drawer).findByText(
+       |                            ^
+    497|         "El club està tancat dilluns: aquesta plantilla no admet frang…
+    498|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00
+TestingLibraryElementError: Unable to find role="button" and name "Torna-ho a provar"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"planning-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"planning-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mPlantilles[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tab"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdl–dv: «Setmana A»[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tab"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33mclass[39m=[32m"planning-tab__toggle"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDissabtes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-header__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFranja[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mCrear classe[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+              [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mQuadre setmanal de la plantilla «Setmana A»[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                  [36m/>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+                      [36m>[39m
+                        [0mdilluns[0m
+                      [36m</span>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"planning-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"planning-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mPlantilles[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tab"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdl–dv: «Setmana A»[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tab"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33mclass[39m=[32m"planning-tab__toggle"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDissabtes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-header__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFranja[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mCrear classe[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+              [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mQuadre setmanal de la plantilla «Setmana A»[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                  [36m/>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+                      [36m>[39m
+                        [0mdilluns[0m
+                      [36m</span>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/TemplatesPage.test.tsx:549:32
+    547|     );
+    548|     await renderTemplates();
+    549|     const retry = await screen.findByRole("button", { name: "Torna-ho …
+       |                                ^
+    550|     failOpeningHours = false;
+    551|     fireEvent.click(retry);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 1 passed | 71 skipped (79)
+   Start at  22:51:26
+   Duration  21.71s (tests 94%, environment 2%, transform 2%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx src/planning/TemplatesPage.test.tsx -t E4-W10|opening at 07:05 with 10-minute slots
+exit 1

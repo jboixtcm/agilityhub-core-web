@@ -227,15 +227,15 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     expect(row).not.toHaveTextContent(/ amb /u);
   });
 
-  it("03: a start-only activity (api end = next day T00:00) reads «9:00» and stays until midnight", async () => {
+  it("03: a start-only activity (api endsAtLocal null) reads «9:00» and stays until midnight", async () => {
     vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
     const registered = await client().POST("/activity-registrations", {
       body: { activityId: LEAGUE },
       params: { header: { "Idempotency-Key": crypto.randomUUID() } },
     });
-    expect(registered.data?.activity.endsAtLocal).toBe("2026-09-20T00:00");
-    // Saturday 19 September at 12:00 in the club (10:00Z): three hours after the start.
-    vi.setSystemTime(new Date("2026-09-19T10:00:00Z"));
+    expect(registered.data?.activity.endsAtLocal).toBeNull();
+    // Saturday 19 September at 23:50 in the club (21:50Z): hours after the start, still that day.
+    vi.setSystemTime(new Date("2026-09-19T21:50:00Z"));
     await renderWith(<HomeActivityReservations client={client()} fallback={<p>buit</p>} />);
     const section = await screen.findByRole("region", { name: "Les meves reserves" });
     expect(within(section).getByRole("link").textContent.replace(/\s+/gu, " ").trim()).toBe(
@@ -489,10 +489,17 @@ function recordCancellationBodies() {
 
 const CONTACT_CLUB = "Per anul·lar la inscripció, posa't en contacte amb el club";
 
-describe("E4-W08 app detail follow-ups of the E4-W04 round-2 review", () => {
-  it.each([422, 400])(
-    "R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; VALIDATION_ERROR on reason (%i) stays on the field",
-    async (status) => {
+describe("T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review", () => {
+  it.each([
+    // The core's `CancellationDeadline.check` (E4-W10 step 1): 400 with `details.field`.
+    { details: { field: "reason" }, shape: "details.field, the core's shape" },
+    {
+      details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }] },
+      shape: "details.fieldErrors[]",
+    },
+  ])(
+    "R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason ($shape) stays on the field",
+    async ({ details }) => {
       mockScenario("impersonated");
       await client().POST("/activity-registrations", {
         body: { activityId: TOURNAMENT },
@@ -505,13 +512,8 @@ describe("E4-W08 app detail follow-ups of the E4-W04 round-2 review", () => {
           answered += 1;
           return answered === 1
             ? HttpResponse.json(
-                {
-                  code: "VALIDATION_ERROR",
-                  details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }] },
-                  message: "Validation failed",
-                  traceId: "t",
-                },
-                { status },
+                { code: "VALIDATION_ERROR", details, message: "Validation failed", traceId: "t" },
+                { status: 400 },
               )
             : undefined;
         }),

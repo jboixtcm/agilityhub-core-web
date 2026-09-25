@@ -44,7 +44,8 @@
       "editTitle": "Franja {range}",
       "start": "Inici",
       "end": "Final",
-      "remove": "Esborra la franja"
+      "remove": "Esborra la franja",
+      "closedDays": "El club està tancat {days}: aquesta plantilla no admet franges."
     },
     "generation": {
       "title": "Generar classes — per setmanes",

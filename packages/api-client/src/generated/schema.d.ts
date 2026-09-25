@@ -4670,36 +4670,36 @@ export interface components {
             memberId: string;
         };
         ActivityListItem: {
+            /** @description The rings are every active ring of the catalog (R-07-11: «totes — bloquejades») */
+            allRings: boolean;
             /** Format: date-time */
             createdAt: string;
             /** Format: date */
             date?: string | null;
+            /** @description Club-local HH:mm (R-07-13); null when the activity has no end (never the model's next-day 00:00) */
+            endTime: string | null;
             id: string;
+            /** @description The free text of an activity away from the club («— (fora del club)»); null at the club */
+            location: string | null;
+            /**
+             * Format: int32
+             * @description null = no maximum («obertes · socis»)
+             */
+            maxPlaces: number | null;
             /** Format: date */
             registrationTo?: string | null;
             registrations: components["schemas"]["ActivityCounters"];
             rings: components["schemas"]["ActivityRing"][];
             slug: string;
+            /** @description Club-local HH:mm (R-07-13); null without hours */
+            startTime: string | null;
             /** @enum {string} */
             state: "DRAFT" | "PUBLISHED" | "FINISHED" | "CANCELLED";
             title: string;
             /** @enum {string} */
             type: "SEMINAR" | "SOCIAL_LEAGUE" | "COMPETITION" | "DEMONSTRATION" | "COURSE" | "OTHER";
-            /** @description S07 R-07-01 / §13-1: the D7 list shows «{title} · {typeDisplay}» (the typeLabel of the reader's locale, else the enum label), as Activity.typeDisplay. */
-            typeDisplay?: string;
-            /** @description S07 R-07-13: club-local HH:mm of the D7 «Data» column («ds 7 · 18:30–20:30»); null without hours. */
-            startTime?: string | null;
-            /** @description S07 R-07-13: club-local HH:mm; null without an end time. */
-            endTime?: string | null;
-            /** @description S07 §2 D7 «Pistes»: true when ringIds are all the active rings («totes — bloquejades»), as Activity.allRings. */
-            allRings?: boolean;
-            /** @description S07 §2 D7 «Pistes»: «— (fora del club)» when atClub is false. */
-            location?: components["schemas"]["ActivityLocation"];
-            /**
-             * Format: int32
-             * @description S07 §2 D7 «Inscripcions»: «{active}/{max} · fins el {registrationTo}»; null = no maximum («obertes · socis»).
-             */
-            maxPlaces?: number | null;
+            /** @description The label of `type` in the reader's locale, or the club's free label (R-07-01): «{title} · {typeDisplay}» */
+            typeDisplay: string;
         };
         ActivityLocation: {
             address?: string | null;
@@ -4794,15 +4794,24 @@ export interface components {
             reason: "MEMBER" | "ACTIVITY_CANCELLED" | "INACTIVITY" | "MEMBER_LEFT" | "ADMIN";
         };
         ActivityRegistrationListItem: {
-            /** @enum {string|null} */
-            cancelReason?: "MEMBER" | "ACTIVITY_CANCELLED" | "INACTIVITY" | "MEMBER_LEFT" | "ADMIN" | null;
-            /** Format: date-time */
-            cancelledAt?: string | null;
+            /**
+             * @description null until the registration is cancelled
+             * @enum {string|null}
+             */
+            cancelReason: "MEMBER" | "ACTIVITY_CANCELLED" | "INACTIVITY" | "MEMBER_LEFT" | "ADMIN" | null;
+            /**
+             * Format: date-time
+             * @description null until the registration is cancelled
+             */
+            cancelledAt: string | null;
             member: components["schemas"]["ActivityRegistrationMember"];
             /** @enum {string} */
             origin: "APP" | "BACKOFFICE";
-            /** Format: int32 */
-            position?: number | null;
+            /**
+             * Format: int32
+             * @description WAITLISTED only; null otherwise
+             */
+            position: number | null;
             /** Format: date-time */
             registeredAt: string;
             registrationId: string;
@@ -4860,7 +4869,8 @@ export interface components {
             type: "CLASS" | "RING_BLOCK";
         };
         ActivityRow: {
-            endsAtLocal: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09) */
+            endsAtLocal: string | null;
             /** Format: int32 */
             freeSeats?: number | null;
             id: string;
@@ -4868,6 +4878,7 @@ export interface components {
             placeLabel: string;
             /** @enum {string} */
             rowState: "OPEN" | "FULL_WAITLIST" | "FULL" | "NOT_BOOKABLE";
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13) */
             startsAtLocal: string;
             title: string;
             typeLabel: string;
@@ -4922,9 +4933,9 @@ export interface components {
         };
         Address: {
             city: string;
-            country?: string;
+            country?: string | null;
             postalCode: string;
-            province?: string;
+            province?: string | null;
             street: string;
         };
         /** @description Membership adminProfile projection; no separate administrator entity. */
@@ -5282,10 +5293,10 @@ export interface components {
         BookingBlock: {
             active: boolean;
             /** Format: uuid */
-            byAccountId?: string;
-            reason?: string;
+            byAccountId?: string | null;
+            reason?: string | null;
             /** Format: date-time */
-            since?: string;
+            since?: string | null;
         };
         BookingBlockNotice: {
             reason: string;
@@ -5824,8 +5835,8 @@ export interface components {
             countryProfile: string;
             currency: string;
             defaultLocale: string;
-            /** @description The town shown with the club's name (S02 §3); /branding falls back to address.city without it. */
-            displayCity?: string;
+            /** @description The town shown with the club's name (S02 §3); null without one, and /branding falls back to address.city. */
+            displayCity?: string | null;
             domains: components["schemas"]["ClubDomain"][];
             /** Format: uuid */
             id: string;
@@ -5852,7 +5863,7 @@ export interface components {
             /** @description The town shown with the club's name: displayCity, else the registered office's town. */
             city: string | null;
             /** @description The registered office (LSSI art. 10), or null when the club has no street or postal code. */
-            legalAddress: components["schemas"]["LegalAddress"];
+            legalAddress: components["schemas"]["LegalAddress"] | null;
             legalName: string | null;
             name: string;
             slug: string;
@@ -5865,10 +5876,10 @@ export interface components {
             contactEmail?: string;
             contactPhone?: string;
             /** @description The town shown with the club's name (S02 §3); null clears it, and /branding shows address.city. */
-            displayCity?: string;
+            displayCity?: string | null;
             legalName?: string;
             name?: string;
-            /** @description Checked by the club's country profile (ES: CIF, NIF or NIE with its check character). */
+            /** @description Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId. */
             taxId?: string;
             theme?: components["schemas"]["Theme"];
             /** @description Console-only field; cannot be changed here. */
@@ -6096,7 +6107,7 @@ export interface components {
         /** @description Derived presentation status; includes ERASED under S14. */
         DisplayStatus: {
             /** Format: date */
-            date?: string;
+            date?: string | null;
             kind: string;
             label: string;
         };
@@ -6341,7 +6352,7 @@ export interface components {
         FamilyDog: {
             /** Format: uuid */
             id: string;
-            levelCode?: string;
+            levelCode?: string | null;
             name: string;
         };
         FamilyGroup: {
@@ -6381,7 +6392,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** Format: int32 */
-            memberNumber?: number;
+            memberNumber?: number | null;
         };
         FaqCreate: {
             active?: boolean;
@@ -6707,11 +6718,11 @@ export interface components {
         };
         ImageRights: {
             /** Format: date-time */
-            at?: string;
+            at?: string | null;
             /** Format: uuid */
-            byAccountId?: string;
+            byAccountId?: string | null;
             granted: boolean;
-            version?: string;
+            version?: string | null;
         };
         ImageRightsPatch: {
             granted: boolean;
@@ -7146,7 +7157,7 @@ export interface components {
         };
         LevelSummary: {
             code: string;
-            color?: string;
+            color?: string | null;
             /** Format: uuid */
             id: string;
             name: string;
@@ -7477,53 +7488,53 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
-        /** @description ADMIN projection. Payment details are masked. accountMissing means SEPA_DD without an IBAN. */
+        /** @description ADMIN projection. Payment details are masked. accountMissing means SEPA_DD without an IBAN. An optional property without a value is sent as null. */
         Member: {
             /** Format: uuid */
-            accountId?: string;
+            accountId?: string | null;
             accountMissing?: boolean;
             address: components["schemas"]["Address"];
             /** Format: uuid */
-            billedViaMemberId?: string;
+            billedViaMemberId?: string | null;
             /** Format: date */
             birthDate: string;
             bookingBlock: components["schemas"]["BookingBlock"];
-            consents?: components["schemas"]["MemberConsents"];
+            consents?: components["schemas"]["MemberConsents"] | null;
             contactEmails: components["schemas"]["ContactEmail"][];
             displayStatus: components["schemas"]["DisplayStatus"];
             /** Format: date-time */
-            erasedAt?: string;
+            erasedAt?: string | null;
             /** Format: uuid */
-            erasureRequestId?: string;
+            erasureRequestId?: string | null;
             /** Format: uuid */
-            familyGroupId?: string;
+            familyGroupId?: string | null;
             firstName: string;
             fullName: string;
             /** @enum {string} */
             gender: "MALE" | "FEMALE" | "OTHER";
             /** Format: uuid */
             id: string;
-            idDocument?: components["schemas"]["IdDocument"];
-            internalNotes?: string;
+            idDocument?: components["schemas"]["IdDocument"] | null;
+            internalNotes?: string | null;
             /** Format: date-time */
-            joinedAt?: string;
+            joinedAt?: string | null;
             lastName1: string;
-            lastName2?: string;
+            lastName2?: string | null;
             /** Format: date */
-            leaveDate?: string;
-            maskedAccount?: string;
+            leaveDate?: string | null;
+            maskedAccount?: string | null;
             /** Format: int32 */
-            memberNumber?: number;
+            memberNumber?: number | null;
             /** Format: date */
-            nextInvoiceDate?: string;
-            paymentMethod?: components["schemas"]["PaymentMethodView"];
+            nextInvoiceDate?: string | null;
+            paymentMethod?: components["schemas"]["PaymentMethodView"] | null;
             phones: components["schemas"]["Phone"][];
-            plan?: components["schemas"]["PlanReference"];
+            plan?: components["schemas"]["PlanReference"] | null;
             /** Format: uuid */
-            planId?: string;
+            planId?: string | null;
             /** Format: uuid */
-            priceId?: string;
-            remarks?: string;
+            priceId?: string | null;
+            remarks?: string | null;
             roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
             /** @enum {string} */
             status: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
@@ -8020,9 +8031,9 @@ export interface components {
         };
         /** @description No full IBAN, card credentials or setup intent IDs. */
         PaymentMethodView: {
-            channel?: string;
-            holderName?: string;
-            maskedAccount?: string;
+            channel?: string | null;
+            holderName?: string | null;
+            maskedAccount?: string | null;
             /** @enum {string} */
             type: "SEPA_DD" | "CARD" | "MANUAL";
         };
@@ -8065,7 +8076,7 @@ export interface components {
             warnDays: number;
         };
         Phone: {
-            label?: string;
+            label?: string | null;
             number: string;
             prefix: string;
         };
@@ -8198,8 +8209,8 @@ export interface components {
             version: number;
         };
         PlanReference: {
-            /** @enum {string} */
-            billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
+            /** @enum {string|null} */
+            billingMode?: "MONTHLY_FEE" | "MAINTENANCE" | null;
             /** Format: uuid */
             id: string;
             name: string;
@@ -8496,9 +8507,11 @@ export interface components {
             reason?: string;
         };
         RegisteredActivity: {
-            endsAtLocal: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13); null when the activity has no end (S07 «Canvis» 24-09) */
+            endsAtLocal: string | null;
             id: string;
             placeLabel: string;
+            /** @description Club-local date-time YYYY-MM-DDTHH:mm (R-07-13) */
             startsAtLocal: string;
             title: string;
         };

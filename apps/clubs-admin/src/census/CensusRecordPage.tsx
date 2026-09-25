@@ -176,7 +176,8 @@ function MemberEditDrawer({
           const body: MemberPatchRequest = {
             address: draft.address,
             birthDate: draft.birthDate,
-            ...(draft.consents === undefined
+            // The core sends `null` for an optional value it does not have: read as absent.
+            ...(draft.consents == null
               ? {}
               : {
                   consents: {
@@ -186,12 +187,12 @@ function MemberEditDrawer({
             contactEmails: draft.contactEmails.filter((item) => item.email.trim() !== ""),
             firstName: draft.firstName,
             gender: draft.gender,
-            ...(draft.idDocument === undefined ? {} : { idDocument: draft.idDocument }),
-            ...(draft.internalNotes === undefined ? {} : { internalNotes: draft.internalNotes }),
+            ...(draft.idDocument == null ? {} : { idDocument: draft.idDocument }),
+            ...(draft.internalNotes == null ? {} : { internalNotes: draft.internalNotes }),
             lastName1: draft.lastName1,
-            ...(draft.lastName2 === undefined ? {} : { lastName2: draft.lastName2 }),
+            ...(draft.lastName2 == null ? {} : { lastName2: draft.lastName2 }),
             phones: draft.phones.filter((item) => item.number.trim() !== ""),
-            ...(draft.remarks === undefined ? {} : { remarks: draft.remarks }),
+            ...(draft.remarks == null ? {} : { remarks: draft.remarks }),
             version: member.version,
           };
           void client
@@ -364,7 +365,7 @@ function MemberEditDrawer({
                       phones[index] = { ...phone, label: event.currentTarget.value };
                       setDraft({ ...draft, phones });
                     }}
-                    value={phone.label}
+                    value={phone.label ?? ""}
                   />
                 </FormField>
               </div>
@@ -433,9 +434,9 @@ function MemberEditDrawer({
         <label className="census-record__check-row">
           <Checkbox
             checked={draft.consents?.imageRights.granted ?? false}
-            disabled={draft.consents === undefined}
+            disabled={draft.consents == null}
             onChange={(event) => {
-              if (draft.consents === undefined) return;
+              if (draft.consents == null) return;
               setDraft({
                 ...draft,
                 consents: {
@@ -563,7 +564,7 @@ function MemberSummary({
     ...member.contactEmails.map((item) => item.email),
     ...member.phones.map(
       (phone) =>
-        `${phone.prefix} ${phone.number}${phone.label === undefined ? "" : ` (${phone.label})`}`,
+        `${phone.prefix} ${phone.number}${phone.label == null ? "" : ` (${phone.label})`}`,
     ),
   ].join(" · ");
   const memberPlan = plan?.id === member.planId ? plan : undefined;
@@ -1183,7 +1184,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
   }
   const member = overview.member;
   const joinedYear =
-    member.joinedAt === undefined ? undefined : new Date(member.joinedAt).getUTCFullYear();
+    member.joinedAt == null ? undefined : new Date(member.joinedAt).getUTCFullYear();
   const holder = overview.familyGroup?.holderMemberId === member.id;
   const primaryPhone = member.phones[0];
 

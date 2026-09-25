@@ -217,3 +217,51 @@ test.describe("E4-W08 D7 follow-ups", () => {
     });
   });
 });
+
+test.describe("E4-W10 D7 on a day the club is closed", () => {
+  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+
+  test.beforeAll(() => {
+    mkdirSync(closedDayEvidence, { recursive: true });
+  });
+
+  test("R-07-05 R-02-09 at the club with linked rings, a closed Friday shows «El club està tancat aquest dia» and offers no times", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+    await page.waitForURL("**/activitats**");
+    const table = page.getByRole("table");
+    const tournament = table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" });
+    // The list is drawn from the mock api, so the mock worker serves this document by now. The mock
+    // state lives in this document: from here on the test only navigates inside the app.
+    await expect(tournament).toBeVisible();
+    const status = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+        version: number;
+      };
+      const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "SATURDAY", "SUNDAY"];
+      const value = Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }]));
+      const result = await fetch("/api/v1/club/opening-hours", {
+        body: JSON.stringify({ value, version: current.version }),
+        headers,
+        method: "PUT",
+      });
+      return result.status;
+    });
+    expect(status).toBe(200);
+    await tournament.getByRole("link").first().click();
+    await page.waitForURL("**/activitats/activity-torneig-estiu-2026");
+    const card = maintenance(page, "Torneig d'Estiu 2026");
+    const message = card.getByText("El club està tancat aquest dia");
+    await expect(message).toBeVisible();
+    // Only «—» and the Torneig's own 18:30.
+    await expect(card.getByLabel("Hora d'inici").locator("option")).toHaveCount(2);
+    await message.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: resolve(closedDayEvidence, "D7-divendres-tancat-1280.png") });
+  });
+});

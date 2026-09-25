@@ -301,7 +301,7 @@ export function ActivitiesPage({
             <strong>{item.title}</strong>
             <span className="activity-title-cell__type">
               {t("admin-activities:list.typeSuffix", {
-                type: item.typeDisplay ?? t(`enums:activityType.${item.type}`),
+                type: item.typeDisplay,
               })}
             </span>
           </span>
@@ -321,8 +321,9 @@ export function ActivitiesPage({
         key: "rings",
         label: t("admin-activities:list.columns.rings"),
         render: (item) => {
-          if (item.location?.atClub === false) return t("admin-activities:list.offSite");
-          if (item.allRings === true) return t("admin-activities:list.allRings");
+          // `location` is the free text of an activity away from the club; `null` at the club.
+          if (item.location !== null) return t("admin-activities:list.offSite");
+          if (item.allRings) return t("admin-activities:list.allRings");
           const [first] = item.rings;
           if (item.rings.length === 1 && first !== undefined) {
             return (
@@ -348,7 +349,7 @@ export function ActivitiesPage({
           if (item.state === "DRAFT" || item.state === "CANCELLED") {
             return t("admin-activities:list.none");
           }
-          if (item.maxPlaces === null || item.maxPlaces === undefined) {
+          if (item.maxPlaces === null) {
             // «obertes · socis» only while it is published (step 2); finished → «—».
             return item.state === "PUBLISHED"
               ? t("admin-activities:list.registrationsOpen")

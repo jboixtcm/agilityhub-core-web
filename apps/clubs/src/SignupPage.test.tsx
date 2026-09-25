@@ -1896,13 +1896,13 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
       branding: { ...branding, club: { ...branding.club, taxId: null } },
       path: "/apuntat-hi",
     });
-    expect(screen.getByRole("contentinfo")).toHaveTextContent(
+    // Without a tax id the first line is exactly «{name} · {city}» (no empty «·» segment).
+    expect(screen.getByRole("contentinfo").children[0]?.textContent).toBe(
       `${branding.club.name} · ${branding.club.city ?? ""}`,
     );
-    expect(screen.getByText(`${branding.club.name} · ${branding.club.city ?? ""}`).textContent).not.toMatch(/·.*·/u);
   });
 
-  it("E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the registered office from /branding legalAddress, below the first line", async () => {
+  it("T-02-07 E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the registered office from /branding legalAddress, below the first line", async () => {
     const office = brandingCanicFixture.club.legalAddress;
     await renderSignup({ path: "/apuntat-hi" });
     const footer = screen.getByRole("contentinfo");

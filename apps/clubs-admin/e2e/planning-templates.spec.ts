@@ -197,3 +197,63 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
     ).toBeVisible();
   });
 });
+
+test.describe("E4-W10 D3 when a day of the kind is closed", () => {
+  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+
+  test.beforeAll(() => {
+    mkdirSync(closedDayEvidence, { recursive: true });
+  });
+
+  test("R-06-01 R-02-09 a closed Monday: the WEEKDAYS band drawer names it and [Desa] stays disabled", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { name: "Plantilla setmanal" }).click();
+    await page.waitForURL("**/plantilles?template=template-setmana-a");
+    await expect(
+      page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana A»" }),
+    ).toBeVisible();
+    // Monday absent from club.openingHours, through the mock api of this document.
+    const status = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+        version: number;
+      };
+      const days = ["TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+      const value = Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }]));
+      const result = await fetch("/api/v1/club/opening-hours", {
+        body: JSON.stringify({ value, version: current.version }),
+        headers,
+        method: "PUT",
+      });
+      return result.status;
+    });
+    expect(status).toBe(200);
+    // The day view and back remount D3, which reads the new opening hours (the sidebar links load
+    // a new document, whose mock api starts again from its fixtures).
+    await page.getByRole("button", { name: /^dimecres/iu }).click();
+    await page.waitForURL("**/plantilles/template-setmana-a/dia/wednesday");
+    await page.getByRole("button", { name: "Tornar a la visió setmanal" }).click();
+    await page.waitForURL("**/plantilles?template=template-setmana-a");
+    await expect(
+      page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana A»" }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Franja", exact: true }).click();
+    const drawer = page.getByRole("dialog", { name: "Nova franja" });
+    await expect(
+      drawer.getByText("El club està tancat dilluns: aquesta plantilla no admet franges."),
+    ).toBeVisible();
+    await drawer.getByLabel("Inici").fill("10:00");
+    await drawer.getByLabel("Final").fill("11:00");
+    await expect(drawer.getByRole("button", { name: "Desa" })).toBeDisabled();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(closedDayEvidence, "D3-franja-dilluns-tancat-1280.png"),
+    });
+  });
+});

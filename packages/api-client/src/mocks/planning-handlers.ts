@@ -176,10 +176,21 @@ export function minutes(time: string): number {
   return (hours ?? 0) * 60 + (mins ?? 0);
 }
 
-function openingWindow(template: WeekTemplate): { close: number; open: number } {
-  const value = findParameter("club.openingHours")?.value as
+/**
+ * The window every day of the template shares (`WeekTemplateRules`, R-06-01): `undefined` when a
+ * day of its kind is absent from `club.openingHours` (closed, R-02-09), so no band fits. The
+ * product default (dl–dg 07:00–22:00) applies only to a club without the parameter.
+ */
+function openingWindow(template: WeekTemplate): { close: number; open: number } | undefined {
+  const parameter = findParameter("club.openingHours");
+  const value = parameter?.value as
     Record<string, { close: string; open: string } | undefined> | undefined;
-  const windows = template.days.map((day) => value?.[day] ?? { close: "22:00", open: "07:00" });
+  const windows: { close: string; open: string }[] = [];
+  for (const day of template.days) {
+    const window = parameter === undefined ? { close: "22:00", open: "07:00" } : value?.[day];
+    if (window === undefined) return undefined;
+    windows.push(window);
+  }
   return {
     close: Math.min(...windows.map((window) => minutes(window.close))),
     open: Math.max(...windows.map((window) => minutes(window.open))),
@@ -204,7 +215,7 @@ function bandProblem(
     return apiError("INVALID_TIME_RANGE", "Band start must precede its end", 400);
   }
   const window = openingWindow(template);
-  if (start < window.open || end > window.close) {
+  if (window === undefined || start < window.open || end > window.close) {
     return apiError("OUTSIDE_OPENING_HOURS", "Band outside opening hours", 422);
   }
   const overlapping = template.bands.some(

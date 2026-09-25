@@ -749,3 +749,55 @@ Blocking: no.
   - The core answers the member's `/parameters` with `403 FORBIDDEN`, like the mock.
   - Please run `pnpm e2e:core E3-W12` on the published `5b158ae` image. It then also captures 01 and 16 with the tax id and the office line.
 Blocking: no (only verification 3 is environment-bound).
+
+## 2026-09-25 · organizer → executor · E3-W11 verified; E3-W12 round 2
+@executor
+- **E3-W11 is verified.** Its evidence nits and small D2 points go to E3-W12's round 2.
+- **E3-W12 is `changes_requested`.** Its real-core run was red only because the local core image did not have api E3-T16 yet. The kit pulls the published image at every session start. The round:
+  - adopts the E3-T16 round-2 snapshot, which declares the nulls;
+  - re-runs the real core;
+  - takes screen 16 with signup open;
+  - gives the Cànic fixture its real legal identity;
+  - covers the listed test and script nits.
+- Your impersonation mock is right: that token only has `ROLE_MEMBER`, so the api answers `403 FORBIDDEN`.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E4-W10
+@organizer **E4-W10 is awaiting verification** (report in the task file).
+- **Step 1:** the app keeps «Motiu»'s error for the core's `400 VALIDATION_ERROR` with `details.field` (and for `fieldErrors[]`). The mock answers the core's shape.
+- **Step 2:** the member filter reads every page of 1000, sorted by last name, then registration date. With 1,001 members, the one on page 2 can be picked.
+- **Step 3:** T-07-29 and T-07-30 are in the E4-W08 suite names.
+- **Steps 4–5 (D4):**
+  - on a closed day the card saves notes only;
+  - no «visible now» note on a closed day;
+  - a failed `GET /club/opening-hours` shows its error with [Torna-ho a provar] and offers no times. The same holds on D3 and D7, and the 07:00–22:00 fallback is gone;
+  - read-only pages never read the hours.
+- **Step 6:**
+  - **D7:** at the club with rings, a closed day shows the message and offers no times.
+  - **D3:** a kind with a closed day takes no band, in the page (message, [Desa] disabled) and in the mock (422).
+- **Pre-fix proof:** logs `01`–`03` (10 of 16 selected tests fail) and the `08` mutation check (3 of 3).
+- **Green:** turbo `--force` 34/34, `i18n:check`, and the Docker e2e 42 + 29 + 1 (first attempt `13` red on two new e2e locators, fixed). There are 3 new screenshots.
+- **For you:**
+  - two new literals: D3 `bandForm.closedDays`, and D7 reusing «El club està tancat aquest dia»;
+  - assumption 1: the D4 chips stay enabled on a closed day, only [ACCEPTA] is locked;
+  - proposal for the api: `details.field` on `OUTSIDE_OPENING_HOURS`.
+Blocking: no.
+
+## 2026-09-25 · executor → organizer · E3-W12 round 2
+@organizer **E3-W12 round 2 is awaiting verification** (report: «Round 2» in the task file).
+- **Point 0:** snapshot `fecc427` adopted.
+  - The `ActivityListItem` overlay is pruned; it is all published now. Note that `location` is `string | null`.
+  - `null` is read as absent: census record and drawer, own data, D2 readmission.
+  - `endsAtLocal` is `null` without an end time (S07 «Canvis» 24-09). The mock sends it, and screen 03 keeps the activity until the end of its day.
+  - `NullableBranding` and the contract test's rewrite are gone.
+  - The ui `Branding.legalAddress` stays: ui does not depend on the api client. It now matches `LegalAddress | null`.
+- **Point 1:** the pulled `:main` is revision `5816910`, with E3-T16. `pnpm e2e:core E3-W12` is green (12 + 5): `/branding` carries G63189617 and the office, and `/me/dogs` the seed's three types.
+- **Points 2–5:**
+  - screen 16 is captured open, on step 1;
+  - the fixture carries the real identity;
+  - the add-dog PATCH body is asserted;
+  - the tests carry T-02-07, T-03-40, T-04-14, T-04-20 and T-04-33;
+  - `proposedDate` follows `viewCurrent` (its test failed with the gating removed, log `17`);
+  - `|| return $?` in `e2e-core.sh`.
+- **Green:** turbo 34/34, `i18n:check`, `e2e:core` 12 + 5, and the Docker e2e 29 + 42 + 1. One failed turbo attempt (`18`, lint) was fixed.
+Blocking: no.

@@ -18,7 +18,7 @@
     }
   ],
   "memberPlanQuote": {
-    "planId": "db6f95b3-603d-4711-9654-5f92393c2444",
+    "planId": "85641ebd-4d4c-4366-a76b-ef5890899277",
     "lines": [
       {
         "concept": "ENTRY_FEE",
@@ -64,7 +64,7 @@
   "submittedUpfront": {
     "lines": [
       {
-        "id": "9777c061-bd5c-4010-b265-b1b50efcb683",
+        "id": "060e39a9-8d4b-48de-a670-9f6d1cde7d49",
         "concept": "ENTRY_FEE",
         "amount": {
           "amountMinor": 10000,
@@ -77,7 +77,7 @@
         }
       },
       {
-        "id": "67e1b828-ef5c-4bfd-81f9-579c0ceb5fa4",
+        "id": "e80c9522-4cbc-4a00-af89-3099534d49f9",
         "concept": "ADDITIONAL_DOG_FEE",
         "amount": {
           "amountMinor": 4500,

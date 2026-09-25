@@ -1,0 +1,61 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running typecheck in 10 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:typecheck: cache hit, replaying logs 671f426b6643ad21
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/api-client:typecheck: cache hit, replaying logs 3773c4ee28fdf271
+@agilityhub/ui:typecheck: cache hit, replaying logs 3f16d459236d9c90
+@agilityhub/course-core:typecheck: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4a7a4d38f585971
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/i18n:typecheck: cache hit, replaying logs 4e29b94adc03e137
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/auth:typecheck: cache hit, replaying logs 693bf4cdc8fe70cb
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs:typecheck: cache miss, executing 879c5f20847b655d
+clubs-admin:typecheck: cache miss, executing 7682228b5443b119
+id:typecheck: cache hit, replaying logs 2aa1715ae810ec6d
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+
+ Tasks:    10 successful, 10 total
+Cached:    8 cached, 10 total
+  Time:    4.42s 
+

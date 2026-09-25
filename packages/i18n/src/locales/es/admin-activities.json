@@ -111,6 +111,7 @@
     "endTime": "Hora de final",
     "noTime": "—",
     "holiday": "día festivo",
+    "closedDay": "El club está cerrado este día",
     "registrationFrom": "Inscripción: del",
     "registrationTo": "Inscripción: al",
     "places": "Plazas",

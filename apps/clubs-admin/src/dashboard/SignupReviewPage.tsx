@@ -320,7 +320,12 @@ export function SignupReviewPage({
   const quoteError = currentQuote?.error;
   const quotePending = loadState === "loading" || (quoteKey !== undefined && currentQuote === undefined);
   const quoteReady = viewCurrent && (quoteKey === undefined || quoteResult !== undefined);
-  const proposedDate = quoteKey === undefined ? signup.proposals.nextInvoiceDate : quoteResult?.nextInvoiceDate;
+  // Part of the quote (R-04-15): dropped with it while the view is not current.
+  const proposedDate = !viewCurrent
+    ? undefined
+    : quoteKey === undefined
+      ? signup.proposals.nextInvoiceDate
+      : quoteResult?.nextInvoiceDate;
   const nextInvoiceDate = typedDate === undefined ? (proposedDate ?? "") : (typedDate.iso ?? "");
   const nextInvoiceText =
     typedDate === undefined

@@ -215,6 +215,24 @@ const STALE_MESSAGE =
   "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.";
 const INVALID_STATE_MESSAGE = "Aquest element no està en un estat vàlid per a aquesta operació.";
 const CLOSED_DAY = "El club està tancat aquest dia";
+const VISIBLE_NOW = "Els alumnes la veuran de seguida";
+
+/** A class on Sunday 16, created while the club still opened on Sundays. */
+async function createSundayClass() {
+  const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const created = await api.POST("/class-sessions", {
+    body: {
+      date: "2026-08-16",
+      endTime: "11:00",
+      instructorIds: ["instructor-marc"],
+      levelIds: ["level-b"],
+      ringId: "ring-central",
+      startTime: "10:00",
+    },
+  });
+  if (created.data === undefined) throw new TypeError("Missing the Sunday class");
+  return created.data;
+}
 
 describe("E3-W07 step 9 a D1 risk row opens D4 on its class", () => {
   it("selects the class of `?classe=` in the week of `?setmana=`", async () => {
@@ -1063,6 +1081,14 @@ describe("E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     expect(optionValues(hour).at(-1)).toBe("20:50");
     expect(optionValues(hour).every((time) => minutesOfDay(time) % 10 === 0)).toBe(true);
     expect(hour).toHaveValue("18:50");
+    // [ACCEPTA] sends the aligned start and the end that keeps the 60 minutes (E4-W10 step 5).
+    const patches = captureBodies("PATCH", `/class-sessions/${WEDNESDAY_1850}`);
+    fireEvent.change(hour, { target: { value: "07:10" } });
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    await waitFor(() => {
+      expect(patches).toEqual([{ endTime: "08:10", startTime: "07:10", version: 1 }]);
+    });
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
     const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
@@ -1306,5 +1332,104 @@ describe("E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     expect(within(drawer).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
     expect(optionValues(within(drawer).getByLabelText("De"))[0]).toBe("07:00");
     expect(submit).toBeEnabled();
+  });
+});
+
+describe("E4-W10 D4 follow-ups of the E4-W09 review", () => {
+  it("S06 §3 R-02-09 R-06-09 on a closed Sunday the card allows only notes: a capacity change keeps [ACCEPTA] disabled, a notes change saves", async () => {
+    const sunday = await createSundayClass();
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("PATCH", `/class-sessions/${sunday.id}`);
+
+    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
+    const card = selectedCard();
+    expect(within(card).getByText(CLOSED_DAY)).toBeVisible();
+    const accept = within(card).getByRole("button", { name: "ACCEPTA" });
+    const capacity = within(card).getByRole("spinbutton");
+    const notes = within(card).getByLabelText("Notes");
+    fireEvent.change(capacity, { target: { value: "6" } });
+    // The api re-validates the whole class on any patch but notes (OUTSIDE_OPENING_HOURS).
+    expect(accept).toBeDisabled();
+    fireEvent.change(notes, { target: { value: "Porteu aigua" } });
+    expect(accept).toBeDisabled();
+    fireEvent.click(accept);
+    await settle();
+    expect(bodies).toEqual([]);
+
+    // Back to the class's own limit: only the notes change, and they are saved.
+    fireEvent.change(capacity, { target: { value: "" } });
+    expect(accept).toBeEnabled();
+    fireEvent.click(accept);
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toEqual([{ notes: "Porteu aigua", version: sunday.version }]);
+    });
+    await waitFor(() => {
+      expect(within(selectedCard()).getByLabelText("Notes")).toHaveValue("Porteu aigua");
+    });
+  });
+
+  it("R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida»", async () => {
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    const date = within(drawer).getByLabelText("Data");
+
+    // Saturday 15, in the validated week: the class would be born active, and the drawer says so.
+    fireEvent.change(date, { target: { value: "15082026" } });
+    expect(await within(drawer).findByText(VISIBLE_NOW)).toBeVisible();
+    // Sunday 16, same week, closed: only the closed-day message.
+    fireEvent.change(date, { target: { value: "16082026" } });
+    expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
+    await settle();
+    expect(within(drawer).queryByText(VISIBLE_NOW)).not.toBeInTheDocument();
+  });
+
+  it("S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads", async () => {
+    let failOpeningHours = true;
+    server.use(
+      http.get("*/api/v1/club/opening-hours", () =>
+        failOpeningHours
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w10" },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
+    expect(
+      screen.getByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
+    // No default hours are assumed: nothing that picks a time can open.
+    expect(screen.getByRole("button", { name: "Crear classe" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Bloqueja pista" })).toBeDisabled();
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))).toEqual(["18:50"]);
+
+    failOpeningHours = false;
+    fireEvent.click(retry);
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Crear classe" })).toBeEnabled();
+    });
+    expect(screen.getByRole("button", { name: "Bloqueja pista" })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
+    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
   });
 });

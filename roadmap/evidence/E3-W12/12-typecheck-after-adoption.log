@@ -1,0 +1,15 @@
+Scope: 6 of 11 workspace projects
+packages/api-client typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/api-client typecheck: src/mocks/fixtures/activities.ts(596,5): error TS2322: Type '{ address?: string | null; atClub: boolean; name?: string | null; url?: string | null; }' is not assignable to type 'string'.
+packages/api-client typecheck: src/mocks/fixtures/activities.ts(667,3): error TS2322: Type '{ member: { emails: string[]; fullName: string; id: string; memberNumber: string; phones: components["schemas"]["ActivityPhone"][]; }; origin: "APP" | "BACKOFFICE"; position: number | null; ... 4 more ...; cancelledAt?: string | null; }' is not assignable to type '{ cancelReason: "INACTIVITY" | "MEMBER" | "ACTIVITY_CANCELLED" | "MEMBER_LEFT" | "ADMIN" | null; cancelledAt: string | null; member: { emails: string[]; fullName: string; id: string; memberNumber: string; phones: { ...; }[]; }; ... 4 more ...; state: "ACTIVE" | ... 1 more ... | "WAITLISTED"; }'.
+packages/api-client typecheck:   Property 'cancelReason' is optional in type '{ member: { emails: string[]; fullName: string; id: string; memberNumber: string; phones: { label?: string | null; number: string; prefix: string; }[]; }; origin: "APP" | "BACKOFFICE"; position: number | null; ... 4 more ...; cancelledAt?: string | null; }' but required in type '{ cancelReason: "INACTIVITY" | "MEMBER" | "ACTIVITY_CANCELLED" | "MEMBER_LEFT" | "ADMIN" | null; cancelledAt: string | null; member: { emails: string[]; fullName: string; id: string; memberNumber: string; phones: { ...; }[]; }; ... 4 more ...; state: "ACTIVE" | ... 1 more ... | "WAITLISTED"; }'.
+packages/api-client typecheck: src/mocks/fixtures/signup-review.ts(127,3): error TS2375: Type '{ phones: { label?: string | null; number: string; prefix: string; }[]; paymentMethod?: { channel?: string | null; holderName?: string | null; maskedAccount?: string | null; type?: "SEPA_DD" | "CARD" | "MANUAL"; }; ... 6 more ...; lastName1: string; }' is not assignable to type '{ address?: { city: string; country?: string | null; postalCode: string; province?: string | null; street: string; }; birthDate?: string; contactEmails: { bounced: boolean; email: string; }[]; firstName: string; ... 4 more ...; phones: { ...; }[]; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+packages/api-client typecheck:   Types of property 'lastName2' are incompatible.
+packages/api-client typecheck:     Type 'string | null' is not assignable to type 'string'.
+packages/api-client typecheck:       Type 'null' is not assignable to type 'string'.
+packages/api-client typecheck: Failed
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2

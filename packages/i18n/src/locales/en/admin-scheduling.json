@@ -44,7 +44,8 @@
       "editTitle": "Time band {range}",
       "start": "Start",
       "end": "End",
-      "remove": "Delete the time band"
+      "remove": "Delete the time band",
+      "closedDays": "The club is closed on {days}: this template cannot have time bands."
     },
     "generation": {
       "title": "Generate classes — by week",

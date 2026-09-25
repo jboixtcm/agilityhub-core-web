@@ -5,37 +5,6 @@
     "version": "0.0.0-pending",
     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
   },
-  "x-schema-overlays": {
-    "ActivityListItem": {
-      "properties": {
-        "typeDisplay": {
-          "type": "string",
-          "description": "S07 R-07-01 / §13-1: the D7 list shows «{title} · {typeDisplay}» (the typeLabel of the reader's locale, else the enum label), as Activity.typeDisplay."
-        },
-        "startTime": {
-          "type": ["string", "null"],
-          "description": "S07 R-07-13: club-local HH:mm of the D7 «Data» column («ds 7 · 18:30–20:30»); null without hours."
-        },
-        "endTime": {
-          "type": ["string", "null"],
-          "description": "S07 R-07-13: club-local HH:mm; null without an end time."
-        },
-        "allRings": {
-          "type": "boolean",
-          "description": "S07 §2 D7 «Pistes»: true when ringIds are all the active rings («totes — bloquejades»), as Activity.allRings."
-        },
-        "location": {
-          "$ref": "#/components/schemas/ActivityLocation",
-          "description": "S07 §2 D7 «Pistes»: «— (fora del club)» when atClub is false."
-        },
-        "maxPlaces": {
-          "type": ["integer", "null"],
-          "format": "int32",
-          "description": "S07 §2 D7 «Inscripcions»: «{active}/{max} · fins el {registrationTo}»; null = no maximum («obertes · socis»)."
-        }
-      }
-    }
-  },
   "paths": {
     "/members/{id}/notification-preferences": {
       "put": {

@@ -30,13 +30,15 @@ interface ListData {
 type RegistrantMember = ActivityRegistrationListItem["member"];
 
 const DEFAULT_COLUMNS = ["member", "state", "registeredAt", "origin", "contact"];
-// The api's largest page: an activity's registrants fit in one (≤ 1000 rows).
+// The api's largest page (CONVENCIONS_API §4); an activity may have more registrations (no
+// capacity limit, cancelled rows kept), so every page is read.
 const MEMBER_VALUES_SIZE = 1000;
 
 /**
  * Values of the `memberId` filter (S07 §6): the members registered to this activity, with their
- * number of registrations, read once from the list itself (there is no filter-values endpoint
- * for registrants). Loaded when the filter is offered or already applied (URL, saved view).
+ * number of registrations, read once from the list itself, page by page up to `totalPages` (there
+ * is no filter-values endpoint for registrants). Loaded when the filter is offered or already
+ * applied (URL, saved view).
  */
 function useRegistrantMembers(client: ApiClient, activityId: string, needed: boolean) {
   type Values = { count: number; member: RegistrantMember }[];
@@ -44,32 +46,41 @@ function useRegistrantMembers(client: ApiClient, activityId: string, needed: boo
   const request = useRef<{ activityId: string; promise: Promise<Values> } | undefined>(undefined);
   const load = useCallback(() => {
     if (request.current?.activityId === activityId) return request.current.promise;
-    const promise = client
-      .GET("/activities/{id}/registrations", {
-        params: {
-          path: { id: activityId },
-          query: { size: MEMBER_VALUES_SIZE, sort: ["memberLastName,asc"] },
-        },
-      })
-      .then(
-        (response) => {
-          const counted = new Map<string, { count: number; member: RegistrantMember }>();
-          for (const item of response.data?.items ?? []) {
-            const known = counted.get(item.member.id);
-            counted.set(item.member.id, {
-              count: (known?.count ?? 0) + 1,
-              member: item.member,
-            });
-          }
-          const values = [...counted.values()];
-          setMembers({ activityId, values });
-          return values;
-        },
-        (error: unknown) => {
-          if (request.current?.promise === promise) request.current = undefined;
-          throw error;
-        },
-      );
+    const readPages = async () => {
+      const counted = new Map<string, { count: number; member: RegistrantMember }>();
+      for (let page = 0, totalPages = 1; page < totalPages; page += 1) {
+        const response = await client.GET("/activities/{id}/registrations", {
+          params: {
+            path: { id: activityId },
+            // The registration date breaks ties, so the pages never overlap or skip a row.
+            query: {
+              page,
+              size: MEMBER_VALUES_SIZE,
+              sort: ["memberLastName,asc", "registeredAt,asc"],
+            },
+          },
+        });
+        for (const item of response.data?.items ?? []) {
+          const known = counted.get(item.member.id);
+          counted.set(item.member.id, {
+            count: (known?.count ?? 0) + 1,
+            member: item.member,
+          });
+        }
+        totalPages = response.data?.totalPages ?? 0;
+      }
+      return [...counted.values()];
+    };
+    const promise = readPages().then(
+      (values) => {
+        setMembers({ activityId, values });
+        return values;
+      },
+      (error: unknown) => {
+        if (request.current?.promise === promise) request.current = undefined;
+        throw error;
+      },
+    );
     request.current = { activityId, promise };
     return promise;
   }, [activityId, client]);
@@ -200,7 +211,7 @@ export function ActivityRegistrantsPage({
   const stateLabel = useCallback(
     (item: ActivityRegistrationListItem) => {
       if (item.state === "WAITLISTED") {
-        return item.position === null || item.position === undefined
+        return item.position === null
           ? t("enums:activityRegistrationState.WAITLISTED")
           : t("admin-activities:registrants.waitlisted", { position: item.position });
       }

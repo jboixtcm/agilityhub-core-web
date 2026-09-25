@@ -467,21 +467,21 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     expect(published.data?.state).toBe("PUBLISHED");
   });
 
-  it("S07 §3 writes the end of an activity without an end time as the next day at T00:00, as the api", async () => {
+  it("S07 §3 an activity without an end time has endsAtLocal null, as the api (S07 «Canvis» 24-09, E3-T16 round-2 snapshot)", async () => {
     mockScenario("member");
     vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
     const { data } = await client.GET("/me/activities");
     expectValid("MeActivities", data);
     const league = data?.bookable.find((row) => row.id === ACTIVITY_IDS.league);
     expect(league).toMatchObject({
-      endsAtLocal: "2026-09-20T00:00",
+      endsAtLocal: null,
       startsAtLocal: "2026-09-19T09:00",
     });
   });
 });
 
 describe("E4-W08 activity mocks answer like the api (impersonation, parameters)", () => {
-  it("R-07-09/10 an impersonated cancellation without a reason is 422 VALIDATION_ERROR on reason; with it, ADMIN", async () => {
+  it("R-07-09/10 E4-W10 an impersonated cancellation without a reason is 400 VALIDATION_ERROR with details.field = reason, as the core's CancellationDeadline answers; with it, ADMIN", async () => {
     mockScenario("impersonated");
     const registered = await client.POST("/activity-registrations", {
       body: { activityId: ACTIVITY_IDS.tournament },
@@ -500,8 +500,8 @@ describe("E4-W08 activity mocks answer like the api (impersonation, parameters)"
         ),
       ).resolves.toEqual({
         code: "VALIDATION_ERROR",
-        details: { fieldErrors: [{ code: "REQUIRED", field: "reason" }] },
-        status: 422,
+        details: { field: "reason" },
+        status: 400,
       });
     }
     const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {

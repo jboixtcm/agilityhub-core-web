@@ -1,0 +1,665 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+clubs:lint: cache bypass, force executing 34296405e0965e91
+@agilityhub/i18n:lint: cache bypass, force executing 1e7a7b6fd9ee8627
+@agilityhub/api-client:test: cache bypass, force executing 77f0cd588358083c
+@agilityhub/config:typecheck: cache bypass, force executing 6860c83ceac65ae7
+@agilityhub/course-core:test: cache bypass, force executing 1c26edab867f42c5
+@agilityhub/ui:lint: cache bypass, force executing c48f31daccc3f708
+@agilityhub/course-core:typecheck: cache bypass, force executing 671f426b6643ad21
+@agilityhub/shared-types:lint: cache bypass, force executing d383151fe730994b
+@agilityhub/auth:lint: cache bypass, force executing f4053950041e0287
+@agilityhub/ui:typecheck: cache bypass, force executing 3f16d459236d9c90
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/api-client:lint: cache bypass, force executing 5853c6d988c63667
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m18 passed[39m[22m[90m (18)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m342 passed[39m[22m[90m (342)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 22:59:51
+@agilityhub/course-core:test: [2m   Duration [22m 566ms[2m (transform 79%, import 14%, tests 4%, worker 2%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 2.85s[39m[2m · 79% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+clubs-admin:lint: cache bypass, force executing b0c6136ed912e041
+@agilityhub/api-client:test:  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 17[2mms[22m[39m
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 95[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 279[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 434[2mms[22m[39m
+@agilityhub/ui:test: cache bypass, force executing b0ee176727e35bfb
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 655[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m53 tests[22m[2m)[22m[33m 543[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 666[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/config:lint: cache bypass, force executing 42ac5d636417f38d
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 1098[2mms[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[32m173 passed[39m[22m[90m (173)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 22:59:51
+@agilityhub/api-client:test: [2m   Duration [22m 1.96s[2m (transform 37%, tests 34%, import 29%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 4.32s[39m[2m · 37% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+id:lint: cache bypass, force executing f7faf03e54849b61
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/api-client:typecheck: cache bypass, force executing a81ddca213128742
+@agilityhub/course-core:build: cache bypass, force executing 431d96cbc72fd83b
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/ui:test:  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 90[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 135[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 173[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[32m 225[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m65 passed[39m[22m[90m (65)[39m
+@agilityhub/ui:test: [2m   Start at [22m 22:59:53
+@agilityhub/ui:test: [2m   Duration [22m 1.69s[2m (environment 73%, setup 15%, tests 6%, transform 5%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/course-core:lint: cache bypass, force executing ef70bf6c19ae37ee
+@agilityhub/shared-types:typecheck: cache bypass, force executing c4a7a4d38f585971
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:test: cache bypass, force executing 30c0e8b7888e66b3
+@agilityhub/i18n:test: cache bypass, force executing 66bbcca8112ebf12
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:typecheck: cache bypass, force executing 4e29b94adc03e137
+@agilityhub/i18n:test:  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:test:  [32m✓[39m src/format.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+@agilityhub/i18n:test: [2m      Tests [22m [1m[32m51 passed[39m[22m[90m (51)[39m
+@agilityhub/i18n:test: [2m   Start at [22m 22:59:56
+@agilityhub/i18n:test: [2m   Duration [22m 370ms[2m (transform 73%, import 16%, tests 10%, worker 1%)[22m
+@agilityhub/i18n:test: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 22:59:56
+@agilityhub/shared-types:test: [2m   Duration [22m 413ms[2m (transform 79%, import 15%, tests 6%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:build: cache bypass, force executing d3d69457da5c20b5
+id:build: cache bypass, force executing 7d569e6ea6253a7f
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+clubs-admin:build: cache bypass, force executing bcc52ce43b3dca0a
+clubs:build: cache bypass, force executing eb036b09e44fc8c3
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+@agilityhub/auth:test: cache bypass, force executing 935e14b008f41ed9
+@agilityhub/auth:typecheck: cache bypass, force executing 5a4261f2900aa34a
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  [32m✓[39m src/auth-client.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/session.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/auth:test: [2m      Tests [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+@agilityhub/auth:test: [2m   Start at [22m 22:59:59
+@agilityhub/auth:test: [2m   Duration [22m 1.00s[2m (environment 50%, transform 19%, import 15%, tests 14%, worker 1%)[22m
+@agilityhub/auth:test: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 454 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-P6ag7oH1.css                           40.78 kB │ gzip:   7.89 kB
+id:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+id:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+id:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+id:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+id:build: dist/assets/shell-5wrIZEiU.js                             1.34 kB │ gzip:   0.71 kB
+id:build: dist/assets/shell-BPq7tYY0.js                             1.38 kB │ gzip:   0.79 kB
+id:build: dist/assets/shell-Cc61Igy-.js                             1.41 kB │ gzip:   0.79 kB
+id:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+id:build: dist/assets/common-C99tgaRt.js                            1.80 kB │ gzip:   0.91 kB
+id:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+id:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+id:build: dist/assets/common-Ca_j3n-G.js                            1.88 kB │ gzip:   0.98 kB
+id:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+id:build: dist/assets/common-DbCj4tGz.js                            1.92 kB │ gzip:   1.00 kB
+id:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+id:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+id:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+id:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+id:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+id:build: dist/assets/auth-CPk47kNm.js                              4.25 kB │ gzip:   1.86 kB
+id:build: dist/assets/auth-UGh5pJ7A.js                              4.69 kB │ gzip:   2.06 kB
+id:build: dist/assets/auth-JamjDQZz.js                              4.75 kB │ gzip:   2.07 kB
+id:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+id:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+id:build: dist/assets/signup-CkDtM1yA.js                            5.51 kB │ gzip:   2.49 kB
+id:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+id:build: dist/assets/signup-B72R2kHz.js                            5.75 kB │ gzip:   2.74 kB
+id:build: dist/assets/signup-LgYzI0rS.js                            5.85 kB │ gzip:   2.76 kB
+id:build: dist/assets/census-Bwnvx8Ki.js                            6.00 kB │ gzip:   2.39 kB
+id:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+id:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+id:build: dist/assets/census-DnEV9q-4.js                            6.35 kB │ gzip:   2.64 kB
+id:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+id:build: dist/assets/census-CnDkuqii.js                            6.53 kB │ gzip:   2.67 kB
+id:build: dist/assets/admin-scheduling-B2xSHsJM.js                  7.65 kB │ gzip:   2.86 kB
+id:build: dist/assets/admin-scheduling-BpEj3akN.js                  8.01 kB │ gzip:   3.10 kB
+id:build: dist/assets/admin-scheduling-Dn7Zkait.js                  8.02 kB │ gzip:   3.12 kB
+id:build: dist/assets/admin-census-izMI-EZG.js                     10.25 kB │ gzip:   4.05 kB
+id:build: dist/assets/admin-census-BCYBTiRN.js                     10.80 kB │ gzip:   4.35 kB
+id:build: dist/assets/admin-census-B8uDNgU7.js                     11.13 kB │ gzip:   4.43 kB
+id:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+id:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+id:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+id:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+id:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+id:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+id:build: dist/assets/index-BazV_BM2.js                           321.28 kB │ gzip:  99.59 kB
+id:build: dist/assets/browser-ChxJ1AEx.js                         825.46 kB │ gzip: 361.33 kB
+id:build: 
+id:build: [plugin builtin:vite-reporter] 
+id:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+id:build: - Using dynamic import() to code-split the application
+id:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+id:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+id:build: ✓ built in 220ms
+clubs:typecheck: cache bypass, force executing 2e23f6b7b1715438
+clubs:test: cache bypass, force executing e3e52ad4fb8a53cc
+clubs-admin:test: cache bypass, force executing b670706162110166
+clubs-admin:typecheck: cache bypass, force executing c8645ed921d713a8
+id:typecheck: cache bypass, force executing b4b8d2d78112d5bf
+id:test: cache bypass, force executing 7b21f6f54e7dc799
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+id:test: 
+id:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id[39m
+id:test: 
+clubs-admin:test: 
+clubs-admin:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin[39m
+clubs-admin:test: 
+clubs:test: 
+clubs:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs[39m
+clubs:test: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 470 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/registerSW.js                                        0.13 kB
+clubs:build: dist/index.html                                           2.78 kB │ gzip:   0.97 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-Cj_Pzza7.css                           75.32 kB │ gzip:  12.74 kB
+clubs:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+clubs:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+clubs:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+clubs:build: dist/assets/auth-CPk47kNm.js                              4.25 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/auth-UGh5pJ7A.js                              4.69 kB │ gzip:   2.06 kB
+clubs:build: dist/assets/auth-JamjDQZz.js                              4.75 kB │ gzip:   2.07 kB
+clubs:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/signup-CkDtM1yA.js                            5.51 kB │ gzip:   2.49 kB
+clubs:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs:build: dist/assets/signup-B72R2kHz.js                            5.75 kB │ gzip:   2.74 kB
+clubs:build: dist/assets/signup-LgYzI0rS.js                            5.85 kB │ gzip:   2.76 kB
+clubs:build: dist/assets/census-Bwnvx8Ki.js                            6.00 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+clubs:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+clubs:build: dist/assets/census-DnEV9q-4.js                            6.35 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+clubs:build: dist/assets/census-CnDkuqii.js                            6.53 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/admin-scheduling-B2xSHsJM.js                  7.65 kB │ gzip:   2.86 kB
+clubs:build: dist/assets/admin-scheduling-BpEj3akN.js                  8.01 kB │ gzip:   3.10 kB
+clubs:build: dist/assets/admin-scheduling-Dn7Zkait.js                  8.02 kB │ gzip:   3.12 kB
+clubs:build: dist/assets/admin-census-izMI-EZG.js                     10.25 kB │ gzip:   4.05 kB
+clubs:build: dist/assets/admin-census-BCYBTiRN.js                     10.80 kB │ gzip:   4.35 kB
+clubs:build: dist/assets/admin-census-B8uDNgU7.js                     11.13 kB │ gzip:   4.43 kB
+clubs:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs:build: dist/assets/index-CXNluYbW.js                           466.72 kB │ gzip: 138.92 kB
+clubs:build: dist/assets/browser-ChxJ1AEx.js                         825.46 kB │ gzip: 361.33 kB
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: ✓ built in 461ms
+clubs-admin:test:  [32m✓[39m src/planning/calendar-literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/plain-dates.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/description.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 209[2mms[22m[39m
+id:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 542[2mms[22m[39m
+id:test: 
+id:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+id:test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+id:test: [2m   Start at [22m 23:00:01
+id:test: [2m   Duration [22m 3.72s[2m (environment 53%, transform 20%, tests 16%, setup 9%, import 2%)[22m
+id:test: 
+clubs:test:  [32m✓[39m src/InfoPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 298[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/CalendarDayPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 512[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/ParameterSettings.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 424[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 D11 parameter rows [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m keeps module-less parameters that the core sends with module null[33m 421[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/ClubPagesCard.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 584[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-05-CP-07 club page editor [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m warns about provisional text and confirms the next consent version before publishing[33m 420[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/derived-settings.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/calendar-shared.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/TemplateDayPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1151[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-27 D3b day view per ring / per instructor [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows only the rings used that day in catalog order, plus «Sense» when a class has no ring[33m 396[2mms[22m[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      generateSW
+clubs:build: precache  54 entries (1642.48 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build:   dist/workbox-9c191d2f.js
+clubs:test:  [32m✓[39m src/today/OverviewPage.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1195[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 screen 23 «Visió global» [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m shows n/n +e with the planned instructor, training names, the block and the cancelled class[33m 384[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/dashboard/DashboardPage.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 1447[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-25 D1 dashboard [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the server aggregate, all risk rows, pending signups, and accessible chart[33m 408[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/CensusRecordPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1475[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 D10 member record [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL[33m 465[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m blocks and unblocks new bookings with the required reason[33m 316[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 956[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 9 menu counters (S14 R-14-08) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m reads the counters once for an ADMIN, again on focus, and not on every navigation[33m 319[2mms[22m[39m
+clubs:test:  [32m✓[39m src/activities/activities.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 1747[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/TodayPage.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 1918[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 screen 10 «Classes del dia» [2m(17)[22m
+clubs:test:      [33m[2m✓[22m[39m draws the mockup grid with identical ring columns, the date header and the week chips[33m 389[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/CensusListPage.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2515[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-38 D5 universal member list [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders applied filters and preserves selection when page size changes[33m 943[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m toggles visible columns and synchronizes the ordered fields to the URL[33m 476[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-42 D15 translated dog list [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved columns and dog record links[33m 1094[2mms[22m[39m
+clubs:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 2282[2mms[22m[39m
+clubs:test:    [32m✓[39m E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m an instructor-only session gets the usual no-access path: no detail, no /me/activities call[33m 431[2mms[22m[39m
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:test:  [32m✓[39m src/audit/AuditPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2656[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 member audit and exports [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m filters by action and opens the masked before/after change drawer[33m 675[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m opens the exports drawer for a queued job and exposes its READY download[33m 1418[2mms[22m[39m
+clubs-admin:build: ✓ 498 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                           2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs-admin:build: dist/assets/index-ETONhQDN.css                           91.54 kB │ gzip:  14.74 kB
+clubs-admin:build: dist/assets/home-BJG5H_Az.js                              0.49 kB │ gzip:   0.32 kB
+clubs-admin:build: dist/assets/home-CzYjkoJZ.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/home-0ruFF7Cs.js                              0.53 kB │ gzip:   0.34 kB
+clubs-admin:build: dist/assets/instructor-Dhedv5sg.js                        0.62 kB │ gzip:   0.35 kB
+clubs-admin:build: dist/assets/instructor-CjYt75g5.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/instructor-DliXCRMK.js                        0.65 kB │ gzip:   0.38 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/enums-Dkdwi_pB.js                             1.89 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/enums-Cw_Eu72h.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/enums-2Phj8-Df.js                             1.94 kB │ gzip:   1.01 kB
+clubs-admin:build: dist/assets/admin-dashboard-DvDgkujA.js                   1.96 kB │ gzip:   0.98 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dt6_rxsx.js                   2.04 kB │ gzip:   1.08 kB
+clubs-admin:build: dist/assets/admin-dashboard-BNSiJ2pS.js                   2.09 kB │ gzip:   1.09 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+clubs-admin:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+clubs-admin:build: dist/assets/auth-CPk47kNm.js                              4.25 kB │ gzip:   1.86 kB
+clubs-admin:build: dist/assets/auth-UGh5pJ7A.js                              4.69 kB │ gzip:   2.06 kB
+clubs-admin:build: dist/assets/auth-JamjDQZz.js                              4.75 kB │ gzip:   2.07 kB
+clubs-admin:build: dist/assets/admin-catalogs-DAQTDns9.js                    5.22 kB │ gzip:   1.95 kB
+clubs-admin:build: dist/assets/admin-catalogs-Coe9B6Bf.js                    5.48 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/signup-CkDtM1yA.js                            5.51 kB │ gzip:   2.49 kB
+clubs-admin:build: dist/assets/admin-catalogs-CvR4YWAF.js                    5.68 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/signup-B72R2kHz.js                            5.75 kB │ gzip:   2.74 kB
+clubs-admin:build: dist/assets/signup-LgYzI0rS.js                            5.85 kB │ gzip:   2.76 kB
+clubs-admin:build: dist/assets/census-Bwnvx8Ki.js                            6.00 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+clubs-admin:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+clubs-admin:build: dist/assets/census-DnEV9q-4.js                            6.35 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+clubs-admin:build: dist/assets/census-CnDkuqii.js                            6.53 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-scheduling-B2xSHsJM.js                  7.65 kB │ gzip:   2.86 kB
+clubs-admin:build: dist/assets/admin-scheduling-BpEj3akN.js                  8.01 kB │ gzip:   3.10 kB
+clubs-admin:build: dist/assets/admin-scheduling-Dn7Zkait.js                  8.02 kB │ gzip:   3.12 kB
+clubs-admin:build: dist/assets/admin-census-izMI-EZG.js                     10.25 kB │ gzip:   4.05 kB
+clubs-admin:build: dist/assets/admin-census-BCYBTiRN.js                     10.80 kB │ gzip:   4.35 kB
+clubs-admin:build: dist/assets/admin-census-B8uDNgU7.js                     11.13 kB │ gzip:   4.43 kB
+clubs-admin:build: dist/assets/admin-settings-ed4raEOS.js                   17.01 kB │ gzip:   6.05 kB
+clubs-admin:build: dist/assets/admin-settings-DWM9_lDb.js                   18.15 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/admin-settings-D3Fbd__C.js                   18.51 kB │ gzip:   6.62 kB
+clubs-admin:build: dist/assets/errors-DTtOT7jL.js                           21.82 kB │ gzip:   7.10 kB
+clubs-admin:build: dist/assets/errors-DqWbzYut.js                           23.16 kB │ gzip:   7.51 kB
+clubs-admin:build: dist/assets/errors-DTSzpTgR.js                           23.16 kB │ gzip:   7.47 kB
+clubs-admin:build: dist/assets/browser-Bt5-rm7j.js                         637.08 kB │ gzip: 217.90 kB
+clubs-admin:build: dist/assets/index-DrUBrITP.js                           921.40 kB │ gzip: 338.72 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 301ms
+clubs-admin:test:  [32m✓[39m src/planning/TemplatesPage.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 4969[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 D3 weekly templates [2m(13)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band[33m 1325[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m saves every change of a full cell at once with the template version[33m 666[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m queues two quick changes of a full cell and sends each PATCH with the latest version[33m 394[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m reloads the template and remounts the card on STALE_VERSION[33m 395[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one[33m 418[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/audit/list-exports.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 5317[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 D5 members «Excel · PDF» → Excel [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters[33m 583[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 202: opens the exports drawer with the queued job and saves nothing[33m 374[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters[33m 304[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 one export at a time [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them[33m 550[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/dashboard/SignupReviewPage.test.tsx [2m([22m[2m72 tests[22m[2m)[22m[33m 5748[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-04-33 D2 signup validation [2m(12)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment[33m 320[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group[33m 540[2mms[22m[39m
+clubs:test:  [32m✓[39m src/SignupPage.test.tsx [2m([22m[2m90 tests[22m[2m)[22m[33m 6020[2mms[22m[39m
+clubs:test:    [32m✓[39m T-04-29 signup person and draft [2m(7)[22m
+clubs:test:      [33m[2m✓[22m[39m persists a current draft, expires it after 24 hours and maps identity states[33m 810[2mms[22m[39m
+clubs:test:    [32m✓[39m E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review [2m(5)[22m
+clubs:test:      [33m[2m✓[22m[39m #1 a slow full page load: the departing page never renders nor consumes the destination's error[33m 398[2mms[22m[39m
+clubs:test: 
+clubs:test: [2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+clubs:test: [2m      Tests [22m [1m[32m166 passed[39m[22m[90m (166)[39m
+clubs:test: [2m   Start at [22m 23:00:01
+clubs:test: [2m   Duration [22m 9.76s[2m (tests 37%, environment 35%, transform 17%, setup 6%, import 5%)[22m
+clubs:test: 
+clubs-admin:test:  [32m✓[39m src/activities/ActivitiesPage.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 6514[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 D7 activities (list, maintenance, publication, cancellation) [2m(21)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips[33m 511[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «Nova activitat» creates a draft with title and type and opens its maintenance[33m 524[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review [2m(6)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00[33m 397[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected[33m 636[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/CalendarPage.test.tsx [2m([22m[2m35 tests[22m[2m)[22m[33m 7748[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 9 a D1 risk row opens D4 on its class [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m selects the class of `?classe=` in the week of `?setmana=`[33m 452[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-28 D4 / D4b / D4c class calendar (front half, MSW) [2m(24)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m opens «Esborrany» on the first week with drafts, with the validation card and its count[33m 634[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [VALIDAR LA SETMANA] turns every draft of the week active at once[33m 364[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»[33m 380[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [ELIMINA] of an active class goes through the same D4c modal[33m 357[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card[33m 428[2mms[22m[39m
+clubs-admin:test: 
+clubs-admin:test: [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+clubs-admin:test: [2m      Tests [22m [1m[32m266 passed[39m[22m[90m (266)[39m
+clubs-admin:test: [2m   Start at [22m 23:00:01
+clubs-admin:test: [2m   Duration [22m 11.68s[2m (tests 42%, environment 32%, transform 15%, setup 6%, import 5%)[22m
+clubs-admin:test: 
+
+ Tasks:    34 successful, 34 total
+Cached:    0 cached, 34 total
+  Time:    22.05s 
+
+exit 0

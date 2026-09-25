@@ -331,7 +331,7 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
 });
 
 // Last, so that a core older than api E3-T16 fails only this test (the file runs in series).
-test("E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)", async ({
+test("T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)", async ({
   browser,
 }) => {
   const context = await mobileContext(browser);

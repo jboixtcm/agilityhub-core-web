@@ -319,3 +319,34 @@ describe("E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §
     expect((await at("07:10", "08:10")).response.status).toBe(201);
   });
 });
+
+describe("E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules)", () => {
+  it("R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them", async () => {
+    await putOpeningHours((value) =>
+      Object.fromEntries(Object.entries(value).filter(([day]) => day !== "MONDAY")),
+    );
+    await expect(
+      client.POST("/week-templates/{id}/bands", {
+        body: { endTime: "11:00", startTime: "10:00" },
+        params: { path: { id: "template-setmana-a" } },
+      }),
+    ).rejects.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 422 });
+    const weekdays = await client.GET("/week-templates/{id}", {
+      params: { path: { id: "template-setmana-a" } },
+    });
+    const band = weekdays.data?.bands[0];
+    if (band === undefined || weekdays.data === undefined) throw new TypeError("Missing a band");
+    await expect(
+      client.PATCH("/week-templates/{id}/bands/{bandId}", {
+        body: { endTime: band.endTime, startTime: band.startTime, version: weekdays.data.version },
+        params: { path: { bandId: band.id, id: "template-setmana-a" } },
+      }),
+    ).rejects.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 422 });
+
+    const saturday = await client.POST("/week-templates/{id}/bands", {
+      body: { endTime: "14:00", startTime: "13:00" },
+      params: { path: { id: "template-dissabtes" } },
+    });
+    expect(saturday.response.status).toBe(201);
+  });
+});

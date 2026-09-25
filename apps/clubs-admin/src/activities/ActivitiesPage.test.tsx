@@ -1,5 +1,10 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetActivityState } from "@agilityhub/api-client/mocks";
+import {
+  activityState,
+  mockScenario,
+  resetActivityState,
+  resetSettingsState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -49,6 +54,7 @@ afterEach(() => {
   server.resetHandlers();
   vi.useRealTimers();
   resetActivityState();
+  resetSettingsState();
   mockScenario("admin");
   window.history.replaceState(null, "", "/");
 });
@@ -852,7 +858,7 @@ function menu(name: string) {
   return details;
 }
 
-describe("E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
+describe("T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
   it("R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost", async () => {
     let release: () => void = () => undefined;
     const gate = new Promise<void>((resolve) => {
@@ -1069,5 +1075,153 @@ describe("E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
     });
     lists.stop();
     views.stop();
+  });
+});
+
+const CLOSED_DAY = "El club està tancat aquest dia";
+
+function optionValues(select: HTMLElement): string[] {
+  return [...(select as HTMLSelectElement).options].map((option) => option.value);
+}
+
+/** `club.openingHours` of the mock club through the api (R-02-09: an absent weekday is closed). */
+async function putOpeningHours(days: readonly string[]) {
+  const current = await client().GET("/club/opening-hours");
+  await client().PUT("/club/opening-hours", {
+    body: {
+      value: Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }])),
+      version: current.data?.version ?? 1,
+    },
+  });
+}
+
+describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => {
+  it("S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected", async () => {
+    const firstAt = Date.parse("2026-07-01T08:00:00Z");
+    activityState.registrations.push(
+      ...Array.from({ length: 1001 }, (_, index) => {
+        const number = String(index + 1).padStart(4, "0");
+        return {
+          activityId: WORKSHOP,
+          cancelReason: null,
+          cancelledAt: null,
+          cancelledBy: null,
+          id: `registration-e4w10-${number}`,
+          member: {
+            emails: [`soci.${number}@example.test`],
+            fullName: `Soci Prova${number}`,
+            id: `member-e4w10-${number}`,
+            memberNumber: String(5000 + index),
+            phones: [],
+          },
+          origin: "APP" as const,
+          position: null,
+          promotedAt: null,
+          registeredAt: new Date(firstAt + index * 60_000).toISOString(),
+          state: "ACTIVE" as const,
+        };
+      }),
+    );
+    // The api's largest page is 1,000 rows: the last members by name are on the second one.
+    const secondPage = await client().GET("/activities/{id}/registrations", {
+      params: {
+        path: { id: WORKSHOP },
+        query: { page: 1, size: 1000, sort: ["memberLastName,asc", "registeredAt,asc"] },
+      },
+    });
+    expect(secondPage.data?.totalPages).toBe(2);
+    const member = secondPage.data?.items[0]?.member;
+    if (member === undefined) throw new TypeError("Missing the second page");
+    const label = `${member.fullName} · ${member.memberNumber}`;
+    const lists = recordRequests(`/activities/${WORKSHOP}/registrations`);
+    await renderRegistrantsPage(WORKSHOP);
+    const table = await screen.findByRole("table");
+
+    const filters = menu("Filtre");
+    fireEvent.change(within(filters).getByLabelText("Columna"), {
+      target: { value: "memberId" },
+    });
+    const value = within(filters).getByLabelText("Valor");
+    await waitFor(() => {
+      expect(within(value).getByRole("option", { name: `${label} (1)` })).toBeInTheDocument();
+    });
+    // The member choices come from both pages of 1,000, read in order.
+    expect(
+      lists.seen
+        .filter((request) => request.url.searchParams.get("size") === "1000")
+        .map((request) => request.url.searchParams.get("page")),
+    ).toEqual(["0", "1"]);
+    fireEvent.change(value, { target: { value: member.id } });
+    fireEvent.click(within(filters).getByRole("button", { name: "Afegeix el filtre" }));
+
+    await waitFor(() => {
+      expect(lists.seen.map((request) => request.url.searchParams.getAll("filter"))).toContainEqual(
+        [`memberId:eq:${member.id}`],
+      );
+    });
+    await waitFor(() => {
+      expect(within(table).getAllByRole("row")).toHaveLength(2);
+    });
+    expect(within(table).getByText(label)).toBeVisible();
+    expect(within(filters).getByText(`Abonat = «${label}»`)).toBeVisible();
+    lists.stop();
+  });
+
+  it("R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them", async () => {
+    // Friday (the Torneig, 7/08) and Sunday (the Demostració, 4/10) are closed.
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "SATURDAY"]);
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    const start = within(card).getByLabelText("Hora d'inici");
+    const end = within(card).getByLabelText("Hora de final");
+    expect(await within(card).findByText(CLOSED_DAY)).toBeVisible();
+    // Only «—» and the activity's own times: nothing to choose on a closed day.
+    expect(optionValues(start)).toEqual(["", "18:30"]);
+    expect(optionValues(end)).toEqual(["", "20:30"]);
+
+    // Saturday 8 is open: the message goes and the opening hours come back.
+    fireEvent.change(within(card).getByLabelText("Data"), { target: { value: "08082026" } });
+    expect(within(card).queryByText(CLOSED_DAY)).toBeNull();
+    expect(optionValues(start)[1]).toBe("07:00");
+    expect(optionValues(end).at(-1)).toBe("22:00");
+    cleanup();
+
+    // Away from the club nothing is blocked: a closed Sunday keeps the whole day, without message.
+    await renderPage({ selectedId: DEMONSTRATION });
+    const away = await maintenance("Demostració Festa Major");
+    const awayStart = within(away).getByLabelText("Hora d'inici");
+    await waitFor(() => {
+      expect(within(awayStart).getByRole("option", { name: "0:00" })).toBeInTheDocument();
+    });
+    expect(within(away).queryByText(CLOSED_DAY)).toBeNull();
+  });
+
+  it("R-07-05 S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar]; at the club with rings no times are offered until it loads", async () => {
+    let failOpeningHours = true;
+    server.use(
+      http.get("*/api/v1/club/opening-hours", () =>
+        failOpeningHours
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w10" },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    const retry = await within(card).findByRole("button", { name: "Torna-ho a provar" });
+    expect(within(card).getByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+    );
+    // No 07:00–22:00 is assumed: only «—» and the activity's own time.
+    expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toEqual(["", "18:30"]);
+
+    failOpeningHours = false;
+    fireEvent.click(retry);
+    await waitFor(() => {
+      expect(optionValues(within(card).getByLabelText("Hora d'inici"))[1]).toBe("07:00");
+    });
+    expect(within(card).queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
   });
 });
