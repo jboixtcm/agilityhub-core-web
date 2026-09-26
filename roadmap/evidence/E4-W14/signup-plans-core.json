@@ -2,7 +2,7 @@
   {
     "conditions": "fins a dues classes per setmana",
     "hasPrice": true,
-    "id": "36b7923b-721b-4aa2-8ec2-8f6b835e0b57",
+    "id": "362f0427-760b-4de5-b779-6597ab94296d",
     "name": "Abonat",
     "priceLabel": null,
     "type": "MONTHLY"
@@ -10,7 +10,7 @@
   {
     "conditions": "Només un cop",
     "hasPrice": true,
-    "id": "83c1f566-0884-4bc5-a7a7-8f99c59dde53",
+    "id": "6813c50e-6153-442b-9d17-393733fc8076",
     "name": "Pack 6",
     "priceLabel": null,
     "type": "PACK"
@@ -18,7 +18,7 @@
   {
     "conditions": "Només un cop · després 40% dte. en matrícula",
     "hasPrice": true,
-    "id": "4c64158b-1f78-4dd6-ad79-3da358a272a4",
+    "id": "9b5a8710-feaf-4580-84d4-5b2836f4fa66",
     "name": "Pack 10",
     "priceLabel": null,
     "type": "PACK"
@@ -26,7 +26,7 @@
   {
     "conditions": "pagament inicial a compte del 50% de l'entrada i quota manteniment en tant no es faci classe en grup",
     "hasPrice": false,
-    "id": "5a882bfb-3b27-47a5-9399-1aac6e38a213",
+    "id": "893b7aa3-6216-41c5-bc97-04acde3b7ec5",
     "name": "Teràpia",
     "priceLabel": null,
     "type": "MONTHLY"

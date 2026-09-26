@@ -358,12 +358,16 @@ function writeEvidence(): void {
   );
 }
 
+/**
+ * A registrants row as D7 asks for it (sparse `fields`, api E5-T20): the state column reads the
+ * live `waitlistRank`, never the stored `position`, which the list no longer sends.
+ */
 interface RegistrationItem {
   cancelReason?: string | null;
   member: { emails?: string[]; fullName: string; id: string };
-  position?: number | null;
   registrationId: string;
   state: string;
+  waitlistRank?: number | null;
 }
 
 async function registrantsOf(page: Page, activityId: string, open: () => Promise<void>) {
@@ -979,20 +983,23 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
     id: string;
     position: number | null;
     state: string;
+    waitlistRank: number | null;
   };
-  expect(joinedRegistration).toMatchObject({ position: 3, state: "WAITLISTED" });
+  // E4-W13 step 0 (api E5-T20): the app shows the live rank (`waitlistRank`), here equal to the
+  // stored position (no gap before it yet).
+  expect(joinedRegistration).toMatchObject({ position: 3, state: "WAITLISTED", waitlistRank: 3 });
   await expect(member.getByText("Ets a la llista d'espera")).toBeVisible();
   await expect(member.getByText("en llista d'espera (3)")).toBeVisible();
   await context.close();
 
   // Admin: the registrants list shows the member third in the queue; one more place promotes the
-  // position-1 registrant (R-07-08 FIFO), never the member who joined last.
+  // head of the queue (R-07-08 FIFO), never the member who joined last.
   const page = admin();
   const before = await registrantsOf(page, handlingId, async () => {
     await openFresh(page, `/activitats/${handlingId}/inscrits`);
   });
   const mine = before.find((item) => item.registrationId === joinedRegistration.id);
-  const first = before.find((item) => item.state === "WAITLISTED" && item.position === 1);
+  const first = before.find((item) => item.state === "WAITLISTED" && item.waitlistRank === 1);
   if (mine === undefined || first === undefined) {
     throw new Error("The waitlist of «Seminari de handling» is not the seeded one");
   }
@@ -1025,9 +1032,15 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   await expect(
     registrants.getByRole("row").filter({ hasText: mine.member.fullName }),
   ).toContainText("en llista d'espera");
+  // After the promotion the member moves up to the second place of the queue (a live rank).
+  const mineAfter = after.find((item) => item.registrationId === mine.registrationId);
+  expect(mineAfter?.waitlistRank).toBe(2);
+  await expect(
+    registrants.getByRole("row").filter({ hasText: mine.member.fullName }),
+  ).toContainText("en llista d'espera (2)");
   evidence.waitlistCa = {
-    member: { after: "WAITLISTED", before: mine.position },
-    promoted: { after: "ACTIVE", before: first.position },
+    member: { after: "WAITLISTED", rankAfter: mineAfter?.waitlistRank ?? null, rankBefore: mine.waitlistRank ?? null },
+    promoted: { after: "ACTIVE", rankBefore: first.waitlistRank ?? null },
   };
   await page
     .getByRole("heading", { name: "Inscrits — Seminari de handling" })
@@ -1128,10 +1141,16 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
     .click();
   const joinedResponse = await joined;
   expect(joinedResponse.status()).toBe(201);
-  const joinedRegistration = (await joinedResponse.json()) as { id: string; position: number };
+  const joinedRegistration = (await joinedResponse.json()) as {
+    id: string;
+    position: number;
+    waitlistRank: number;
+  };
+  // The live rank, not the stored position: the promotion above left a gap in the positions.
+  expect(joinedRegistration.waitlistRank).toBeLessThan(joinedRegistration.position);
   await expect(member.getByText("Estás en la lista de espera")).toBeVisible();
   await expect(
-    member.getByText(`en lista de espera (${String(joinedRegistration.position)})`),
+    member.getByText(`en lista de espera (${String(joinedRegistration.waitlistRank)})`),
   ).toBeVisible();
   await screenshot(member, "activitat-llista-espera-core-es-375.png");
 
@@ -1148,14 +1167,13 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
   if (joinedListed === undefined) throw new Error("The es member is not on the waitlist");
   await expect(
     page.getByRole("table").getByRole("row").filter({ hasText: joinedListed.member.fullName }),
-  ).toContainText(`en lista de espera (${String(joinedListed.position)})`);
+  ).toContainText(`en lista de espera (${String(joinedListed.waitlistRank)})`);
+  expect(joinedListed.waitlistRank).toBe(joinedRegistration.waitlistRank);
   await screenshot(page, "D7-inscrits-llista-espera-core-es-1280.png");
-  evidence.waitlistChipEs = `en lista de espera (${String(joinedListed.position)})`;
+  evidence.waitlistChipEs = `en lista de espera (${String(joinedListed.waitlistRank)})`;
   await language.selectOption("ca");
   await expect(language).toHaveValue("ca");
-  const head = before
-    .filter((item) => item.state === "WAITLISTED")
-    .sort((left, right) => (left.position ?? 0) - (right.position ?? 0))[0];
+  const head = before.find((item) => item.state === "WAITLISTED" && item.waitlistRank === 1);
   if (head === undefined) throw new Error("The waitlist is empty");
   expect(head.registrationId).not.toBe(joinedRegistration.id);
   await openFresh(page, `/activitats/${handlingId}`);
@@ -1176,7 +1194,11 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
   expect(after.find((item) => item.registrationId === joinedRegistration.id)?.state).toBe(
     "WAITLISTED",
   );
-  evidence.waitlistEs = { joinedPosition: joinedRegistration.position, promoted: head.position };
+  evidence.waitlistEs = {
+    joinedPosition: joinedRegistration.position,
+    joinedRank: joinedRegistration.waitlistRank,
+    promotedRank: head.waitlistRank ?? null,
+  };
 
   // The admin cancels the seminar through the modal: 200, and the registrant reads «cancel·lada
   // pel club» (the N-32c feed row belongs to screen 11, E7).

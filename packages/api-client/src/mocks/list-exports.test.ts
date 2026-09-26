@@ -113,12 +113,12 @@ describe("E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API 
     const all = await client.GET("/activities/{id}/registrations", {
       params: { path: { id: "activity-taller-contactes" }, query: { size: 50 } },
     });
-    const first = all.data?.items[0]?.member.fullName ?? "";
+    const first = all.data?.items[0]?.member?.fullName ?? "";
     const searched = await client.GET("/activities/{id}/registrations", {
       params: { path: { id: "activity-taller-contactes" }, query: { q: first, size: 50 } },
     });
     expect(first).not.toBe("");
-    expect(searched.data?.items.map((item) => item.member.fullName)).toEqual([first]);
+    expect(searched.data?.items.map((item) => item.member?.fullName)).toEqual([first]);
 
     mockScenario("adminExportsQueued");
     await requestExport(client, "/activity-registrations/export", {

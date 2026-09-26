@@ -85,12 +85,67 @@ export function signupReviewVariant(
     };
     // As the api (`MemberSignupView.readmission`): the LEFT record keeps its values until validation.
     view.member = withReadmissionValues(view.member, left);
+    // R-04-06, R-04-07 (E38): Kiwi is Marta's own INACTIVE dog (same chip), reused. Its record keeps
+    // the name, the breed and the 2025 card; the readmission sent a new name, breed, card and the
+    // insurance, which wait on the view until the validation applies them.
+    const kiwi = view.dogs[0];
+    if (kiwi !== undefined) {
+      const current: SignupDogValues = {
+        birthMonth: kiwi.birthMonth,
+        breed: "Llebrer",
+        documents: [
+          {
+            files: [
+              {
+                downloadUrl: "https://files.example.test/cartilla_Kivi_2025.pdf",
+                fileKey: "dogs/44000000/cartilla_Kivi_2025.pdf",
+                name: "cartilla_Kivi_2025.pdf",
+              },
+            ],
+            state: "RECEIVED",
+            type: "VACCINATION_CARD",
+          },
+        ],
+        name: "Kivi",
+        sex: kiwi.sex,
+        ...(kiwi.notesToInstructors === undefined ? {} : { notesToInstructors: kiwi.notesToInstructors }),
+      };
+      kiwi.readmission = {
+        changedFields: dogReadmissionChanges(current, kiwi),
+        current,
+        previousDeactivatedAt: "2025-06-30T10:00:00Z",
+        previousDeactivationReason: "MEMBER_LEFT",
+      };
+    }
   }
   view.paymentMethods = fixturePaymentMethods(view);
   return view;
 }
 
 type ReadmissionValues = components["schemas"]["ReadmissionValues"];
+type SignupDogValues = components["schemas"]["SignupDogValues"];
+type SignupDocumentView = components["schemas"]["SignupDocumentView"];
+
+/** A document list compared by what the validation writes: each type with its files' keys. */
+function documentKeys(documents: readonly SignupDocumentView[]): string {
+  return JSON.stringify(
+    documents
+      .map((document) => [document.type, document.files.map((file) => file.fileKey)] as const)
+      .sort(([left], [right]) => left.localeCompare(right)),
+  );
+}
+
+/**
+ * `SignupDogReadmission.changedFields` (R-04-06, E38): the fields whose submitted value (the dog
+ * view) differs from the reused dog's record (`current`).
+ */
+export function dogReadmissionChanges(current: SignupDogValues, submitted: SignupDog): string[] {
+  const fields = ["name", "sex", "breed", "birthMonth", "notesToInstructors"] as const;
+  return [
+    ...fields.filter((field) => (current[field] ?? "") !== (submitted[field] ?? "")),
+    ...(documentKeys(current.documents) === documentKeys(submitted.documents) ? [] : ["documents"]),
+  ];
+}
 
 /** The member with the person values of a readmission block (E38): the LEFT record, or the submitted person. */
 export function withReadmissionValues(
@@ -216,7 +271,13 @@ export function addDogSignupReview(base: MemberSignupView): MemberSignupView {
       chip: "941000031415926",
       documents: [
         {
-          files: [{ downloadUrl: "https://files.example.test/cartilla_Nit.pdf", name: "cartilla_Nit.pdf" }],
+          files: [
+            {
+              downloadUrl: "https://files.example.test/cartilla_Nit.pdf",
+              fileKey: "signup-uploads/44000000/cartilla_Nit.pdf",
+              name: "cartilla_Nit.pdf",
+            },
+          ],
           state: "RECEIVED",
           type: "VACCINATION_CARD",
         },
@@ -438,9 +499,13 @@ const documentTypeLabels: Readonly<Record<string, string>> = {
   VACCINATION_CARD: "Cartilla de vacunes",
 };
 
-/** `GET /dogs/{id}/documents` of a pending signup dog, built from the D2 view (R-04-19). */
+/**
+ * `GET /dogs/{id}/documents` of a pending signup dog, built from the D2 view (R-04-19). A reused
+ * dog of a pending readmission reads its record's own documents (`readmission.current`, E38).
+ */
 export function signupDogDocuments(dog: SignupDog): DogDocument[] {
-  return dog.documents.map((document, documentIndex) => ({
+  const documents = dog.readmission == null ? dog.documents : dog.readmission.current.documents;
+  return documents.map((document, documentIndex) => ({
     files: document.files.map((file, fileIndex) => ({
       id: `48000000-0000-4000-8000-${dog.id.slice(-6)}${String(documentIndex)}${String(fileIndex).padStart(5, "0")}`,
       name: file.name,
@@ -454,13 +519,61 @@ export function signupDogDocuments(dog: SignupDog): DogDocument[] {
   }));
 }
 
-/** Writes the documents back to the D2 view, so the next `GET /members/{id}/signup` shows them. */
+/**
+ * Writes the documents back to the D2 view, so the next `GET /members/{id}/signup` shows them; a
+ * file keeps its key (a new one is the key its upload URL carries).
+ */
 export function storeSignupDogDocuments(dog: SignupDog, documents: readonly DogDocument[]): void {
+  const keys = new Map(dog.documents.flatMap((document) => document.files).map((file) => [file.downloadUrl, file.fileKey]));
   dog.documents = documents.map((document) => ({
-    files: document.files.map((file) => ({ downloadUrl: file.url, name: file.name })),
+    files: document.files.map((file) => ({
+      downloadUrl: file.url,
+      fileKey: keys.get(file.url) ?? file.url.replace(/^https:\/\/files\.example\.test\//u, ""),
+      name: file.name,
+    })),
     state: document.state,
     type: document.type,
   }));
+}
+
+type SignupDocument = components["schemas"]["SignupDocument"];
+
+/**
+ * `PATCH /dogs/{id}` `documents` on a pending signup dog (R-04-19, api E5-T19): each type sent gets
+ * exactly the files sent. A key the view shows for that type keeps its file with its stored name
+ * (the name sent is not applied); any other key is a new signup upload. A type sent without files
+ * leaves an ordinary dog's row pending, and withdraws the submitted type of the reused dog of a
+ * pending readmission (E38: the validation then keeps the dog's own document). The types not sent
+ * stay. A key removed from the dog through `DELETE …/files/{fileId}` answers `FILE_NOT_FOUND`.
+ */
+export function patchSignupDogDocuments(
+  dog: SignupDog,
+  sent: readonly SignupDocument[],
+  removedKeys: ReadonlySet<string>,
+): SignupDocumentView[] | "FILE_NOT_FOUND" {
+  let documents = dog.documents.map((document) => ({ ...document, files: [...document.files] }));
+  for (const document of sent) {
+    if (document.files.some((file) => removedKeys.has(file.fileKey))) return "FILE_NOT_FOUND";
+    const existing = documents.find((candidate) => candidate.type === document.type);
+    const files = document.files.map(
+      (file) =>
+        existing?.files.find((kept) => kept.fileKey === file.fileKey) ?? {
+          downloadUrl: `https://files.example.test/${file.fileKey}`,
+          fileKey: file.fileKey,
+          name: file.name,
+        },
+    );
+    if (files.length === 0 && dog.readmission != null) {
+      documents = documents.filter((candidate) => candidate.type !== document.type);
+      continue;
+    }
+    const row: SignupDocumentView = { files, state: files.length === 0 ? "PENDING" : "RECEIVED", type: document.type };
+    documents =
+      existing === undefined
+        ? [...documents, row]
+        : documents.map((candidate) => (candidate.type === document.type ? row : candidate));
+  }
+  return documents;
 }
 
 /** R-04-23: a rejection with a collected payment tells the admin to refund it through billing. */

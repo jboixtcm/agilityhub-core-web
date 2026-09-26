@@ -9,7 +9,7 @@
 + paymentProviders added
   null -> {"SEPA_XML":{"enabled":true},"MANUAL":{"enabled":true}}
 + legal added
-  null -> {"privacyPolicyUrl":"https://agilitycanic.cat/ca/politica-de-privacidad/","imageConsentText":{"ca":"Autoritzo la publicació de fotos meves i del meu gos dins l'àmbit de les activitats del club","es":"Autorizo la publicación de fotos mías y de mi perro en el ámbito de las actividades del club","en":"I authorize publication of photos of me and my dog within club activities"},"legalTextsVersion":"1"}
+  null -> {"privacyPolicyUrl":"https://agilitycanic.cat/ca/politica-de-privacidad/","imageConsentText":{"es":"Autorizo la publicación de fotos mías y de mi perro en el ámbito de las actividades del club","en":"I authorize publication of photos of me and my dog within club activities","ca":"Autoritzo la publicació de fotos meves i del meu gos dins l'àmbit de les activitats del club"},"legalTextsVersion":"1"}
 + pwa added
   null -> {"name":"Club Agility Cànic","shortName":"Club Agility Cànic","icons":[]}
 + parameters.signup.enabled added
@@ -92,14 +92,14 @@
 + messageTemplates: schema accepted; application deferred to E7
 = pages: 0 page changes
 13 changes (applied)
-2026-09-26T02:22:22.260Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-26T02:22:22.304Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-26T02:22:22.314Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-26T02:22:22.322Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-26T02:22:22.330Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-26T02:22:22.339Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.611Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.649Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.662Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.673Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.684Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:07.694Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
 {activeMembers=184, pendingMembers=3, inactiveMembers=4, leftMembers=3, members=194, dogs=245, familyGroups=12, activeDogs=242, pendingDogs=3, instructors=3, administrators=2, receivedDocuments=6, pendingDocuments=239}
 451 changes (demo seed)
-2026-09-26T02:22:24.070Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-26T07:12:09.851Z  WARN 116 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
 {templateClasses=39, templates=3, weeks=3, generatedClasses=82, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=0, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=0, scenarioClassBookings=0, scenarioCancellations=0, scenarioWaitlist=0, scenarioOffers=0, scenarioRiskExempt=0, scenarioBookingBlocks=0, scenarioTrainingOverrides=0, scenarioTrainingBookings=0}
 213 changes (demo planning, week start 2026-09-21)

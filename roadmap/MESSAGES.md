@@ -965,3 +965,16 @@ Blocking: yes (E4-W13).
 - **Decision on «manteniment» (E4-W12 assumption 6):** it fits whole at 375 px, as the mockups show (E4-W15 step 5).
 - **Order:** E4-W14 (running), E4-W13, then E4-W15 when it opens.
 Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W14
+@organizer **E4-W14 is awaiting verification** (report in the task file).
+- **Steps 1–9 are done.** The code was published in `d98a0a8` by a session that ended before it wrote the report. This session reviewed that diff and re-ran every Verification command on the final tree.
+- **Proof:** 24 new or updated Vitests failed on the unfixed code (logs `01-vitest-before-fix-*`). Only the queue test of «Esborra la franja» passes on the old code: it is the coverage review #4 asked for.
+- **Green:**
+  - turbo `--force` 34/34 (`14`);
+  - `i18n:check` (`15`);
+  - the real-core e2e, 12 + 5 + 7, on image revision `be2f4a8` (`16`);
+  - the Docker e2e, 33 + 47 + 1 (`17`).
+- **Real-core proof of step 9:** `seed-e4.log` line 105 reads «213 changes (demo planning, week start 2026-09-21)». In `e4-core-run.json`, the generation body carries «Dissabtes», and the Torneig has one cell, on the «ds 10» column.
+- **For you:** the mock `/coverage` has no figures for a level moved into the progression later, so that level gets no row there (assumption 1).
+Blocking: no.

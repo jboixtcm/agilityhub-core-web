@@ -378,7 +378,8 @@
       "title": "Canvis respecte de la fitxa de baixa",
       "previous": "Abans: {value}",
       "submitted": "Ara: {value}",
-      "documentLocked": "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió."
+      "documentLocked": "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+      "dogLocked": "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi."
     }
   },
   "values": {

@@ -435,7 +435,7 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     expect(workshop.data?.counters).toEqual({ active: 10, waiting: 1 });
   });
 
-  it("CONVENCIONS_API §4 registrants `fields` as the published core: a column key is 400 INVALID_FILTER, keys not asked for come back null", async () => {
+  it("CONVENCIONS_API §4 registrants `fields` as the core: a column key is 400 INVALID_FILTER, keys not asked for are omitted (api E5-T20)", async () => {
     await expect(
       client.GET("/activities/{id}/registrations", {
         params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "member,contact" } },
@@ -444,9 +444,9 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     const projected = await client.GET("/activities/{id}/registrations", {
       params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "state" } },
     });
-    expect(projected.data?.items[0]).toMatchObject({
-      member: null,
-      registrationId: null,
+    // The row id always travels; `member` was not asked for, so it is absent (never `null`).
+    expect(projected.data?.items[0]).toEqual({
+      registrationId: "registration-taller-01",
       state: "ACTIVE",
     });
     const whole = await client.GET("/activities/{id}/registrations", {
@@ -454,15 +454,10 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
     });
     expect(whole.data?.items[0]?.registrationId).toEqual(expect.any(String));
 
-    // The activities list: `id` always travels; a flag not asked for reads `false`.
+    // The activities list: `id` always travels; a flag not asked for is absent (never `false`).
     const activities = await client.GET("/activities", { params: { query: { fields: "title" } } });
     const tournament = activities.data?.items.find((item) => item.title === "Torneig d'Estiu 2026");
-    expect(tournament).toMatchObject({
-      allRings: false,
-      id: ACTIVITY_IDS.tournament,
-      startTime: null,
-      typeDisplay: null,
-    });
+    expect(tournament).toEqual({ id: ACTIVITY_IDS.tournament, title: "Torneig d'Estiu 2026" });
     await expect(
       client.GET("/activities", { params: { query: { fields: "title,contact" } } }),
     ).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
@@ -806,5 +801,148 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
     await patchDemonstration({ location: { atClub: false, name: "Plaça Major" }, ringIds: [] });
     await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
     expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
+  });
+});
+
+describe("E4-W13 step 0 S07 §6 CONVENCIONS_API §4 sparse fields and waitlistRank (api E5-T20)", () => {
+  it("`fields` answers sparse items: only the keys asked for plus the row id, never a null/false placeholder; a key outside x-fields is 400 INVALID_FILTER", async () => {
+    const activities = await client.GET("/activities", {
+      params: { query: { fields: "id,title" } },
+    });
+    expectValid("ListPageActivityListItem", activities.data);
+    expect(activities.data?.items).toHaveLength(5);
+    for (const item of activities.data?.items ?? []) {
+      expect(Object.keys(item).sort()).toEqual(["id", "title"]);
+    }
+    // `id` travels even when it was not asked for.
+    const dates = await client.GET("/activities", { params: { query: { fields: "date" } } });
+    for (const item of dates.data?.items ?? []) {
+      expect(Object.keys(item).sort()).toEqual(["date", "id"]);
+    }
+    await expect(
+      failure(client.GET("/activities", { params: { query: { fields: "bogus" } } })),
+    ).resolves.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+
+    const registrants = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "state,waitlistRank" } },
+    });
+    expectValid("ListPageActivityRegistrationListItem", registrants.data);
+    for (const item of registrants.data?.items ?? []) {
+      expect(Object.keys(item).sort()).toEqual(["registrationId", "state", "waitlistRank"]);
+    }
+    // 10 active places, then the two waiting in queue order.
+    expect(registrants.data?.items.map((item) => item.waitlistRank)).toEqual([
+      ...Array.from({ length: 10 }, () => null),
+      1,
+      2,
+    ]);
+    const members = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "member" } },
+    });
+    expect(Object.keys(members.data?.items[0] ?? {}).sort()).toEqual(["member", "registrationId"]);
+    await expect(
+      failure(
+        client.GET("/activities/{id}/registrations", {
+          params: { path: { id: ACTIVITY_IDS.workshop }, query: { fields: "bogus" } },
+        }),
+      ),
+    ).resolves.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+  });
+
+  it("R-07-08 after a promotion the head of the queue reads waitlistRank 1 while its stored position keeps 2; ACTIVE and CANCELLED rows read null", async () => {
+    // The member joins the full «Taller de contactes» behind registration-taller-11 and -12.
+    mockScenario("member");
+    const joined = await client.POST("/activity-registrations", {
+      body: { activityId: ACTIVITY_IDS.workshop, joinWaitlist: true },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    });
+    expectValid("ActivityRegistration", joined.data);
+    expect(joined.data).toMatchObject({ position: 3, state: "WAITLISTED", waitlistRank: 3 });
+    const mine = joined.data?.id ?? "";
+
+    // One more place (admin PATCH) promotes registration-taller-11 (position 1).
+    mockScenario("admin");
+    const workshop = await client.GET("/activities/{id}", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    await client.PATCH("/activities/{id}", {
+      body: { maxPlaces: 11, version: workshop.data?.version ?? 0 },
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    const queue = async () => {
+      const registrants = await client.GET("/activities/{id}/registrations", {
+        params: { path: { id: ACTIVITY_IDS.workshop } },
+      });
+      expectValid("ListPageActivityRegistrationListItem", registrants.data);
+      const items = registrants.data?.items ?? [];
+      expect(
+        items
+          .filter((item) => item.state !== "WAITLISTED")
+          .every((item) => item.waitlistRank === null),
+      ).toBe(true);
+      return items
+        .filter((item) =>
+          ["registration-taller-11", "registration-taller-12", mine].includes(item.registrationId),
+        )
+        .map((item) => [
+          item.registrationId,
+          item.state,
+          item.position ?? null,
+          item.waitlistRank ?? null,
+        ]);
+    };
+    expect(await queue()).toEqual([
+      ["registration-taller-11", "ACTIVE", null, null],
+      ["registration-taller-12", "WAITLISTED", 2, 1],
+      [mine, "WAITLISTED", 3, 2],
+    ]);
+
+    // The member's views compute the same rank when they are read.
+    mockScenario("member");
+    const summaries = await client.GET("/me/activities");
+    expectValid("MeActivities", summaries.data);
+    expect(
+      summaries.data?.mine.find((item) => item.activityId === ACTIVITY_IDS.workshop),
+    ).toMatchObject({ position: 3, state: "WAITLISTED", waitlistRank: 2 });
+    const detail = await client.GET("/me/activities/{activityId}", {
+      params: { path: { activityId: ACTIVITY_IDS.workshop } },
+    });
+    expectValid("MemberActivityDetail", detail.data);
+    expect(detail.data?.myRegistration).toMatchObject({ position: 3, waitlistRank: 2 });
+    const read = await client.GET("/activity-registrations/{id}", {
+      params: { path: { id: mine } },
+    });
+    expect(read.data).toMatchObject({ position: 3, waitlistRank: 2 });
+
+    // Leaving the queue: the cancelled row keeps its position (E5-T15) and has no rank.
+    const cancelled = await client.POST("/activity-registrations/{id}/cancellation", {
+      body: {},
+      params: { path: { id: mine } },
+    });
+    expectValid("ActivityRegistration", cancelled.data);
+    expect(cancelled.data).toMatchObject({ position: 3, state: "CANCELLED", waitlistRank: null });
+    mockScenario("admin");
+    expect(await queue()).toEqual([
+      ["registration-taller-11", "ACTIVE", null, null],
+      ["registration-taller-12", "WAITLISTED", 2, 1],
+      [mine, "CANCELLED", 3, null],
+    ]);
+  });
+
+  it("S07 «Canvis» 26-09 the registrants' appliedFilters carries only the query's filters, never the path's activityId", async () => {
+    const plain = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop } },
+    });
+    expect(plain.data?.appliedFilters).toEqual([]);
+    const waiting = await client.GET("/activities/{id}/registrations", {
+      params: { path: { id: ACTIVITY_IDS.workshop }, query: { filter: ["state:eq:WAITLISTED"] } },
+    });
+    expect(waiting.data?.appliedFilters).toEqual([
+      { field: "state", op: "eq", value: "WAITLISTED" },
+    ]);
+    expect(waiting.data?.items.map((item) => [item.position, item.waitlistRank])).toEqual([
+      [1, 1],
+      [2, 2],
+    ]);
   });
 });

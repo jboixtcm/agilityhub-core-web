@@ -70,10 +70,11 @@ const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
 };
 
 /**
- * `fields` of the list request: response keys only. The core answers `400 INVALID_FILTER` to a key
- * it does not send, and an empty value (`null`, `false`) in every key it was not asked for; it
- * always sends `id` (E4-W05, published core). `title` is always asked for too: every row's label
- * reads «Obre {title}», whatever columns are visible (AGENTS rule 6).
+ * `fields` of the list request: response keys only (the operation's `x-fields`). The core answers
+ * `400 INVALID_FILTER` to any other key and omits every key it was not asked for; it always sends
+ * `id` (CONVENCIONS_API §4, api E5-T20). So a column reads only the keys it asked for, and an
+ * absent key means «not asked for», never a value. `title` is always asked for too: every row's
+ * label reads «Obre {title}», whatever columns are visible (AGENTS rule 6).
  */
 export function activityFields(columns: readonly string[]): string {
   const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
@@ -321,11 +322,13 @@ export function ActivitiesPage({
           <span className="activity-title-cell">
             <Icon aria-hidden="true" name="flag" />
             <strong>{item.title}</strong>
-            <span className="activity-title-cell__type">
-              {t("admin-activities:list.typeSuffix", {
-                type: item.typeDisplay,
-              })}
-            </span>
+            {item.typeDisplay === undefined ? null : (
+              <span className="activity-title-cell__type">
+                {t("admin-activities:list.typeSuffix", {
+                  type: item.typeDisplay,
+                })}
+              </span>
+            )}
           </span>
         ),
         sortKey: "title",
@@ -343,11 +346,13 @@ export function ActivitiesPage({
         key: "rings",
         label: t("admin-activities:list.columns.rings"),
         render: (item) => {
-          // `location` is the free text of an activity away from the club; `null` at the club.
-          if (item.location !== null) return t("admin-activities:list.offSite");
-          if (item.allRings) return t("admin-activities:list.allRings");
-          const [first] = item.rings;
-          if (item.rings.length === 1 && first !== undefined) {
+          // `location` is the free text of an activity away from the club; `null` at the club, and
+          // absent when it was not asked for (never «off site»).
+          if (typeof item.location === "string") return t("admin-activities:list.offSite");
+          if (item.allRings === true) return t("admin-activities:list.allRings");
+          const rings = item.rings ?? [];
+          const [first] = rings;
+          if (rings.length === 1 && first !== undefined) {
             return (
               <span className="activity-ring">
                 <span
@@ -359,16 +364,16 @@ export function ActivitiesPage({
               </span>
             );
           }
-          return item.rings.length === 0
+          return rings.length === 0
             ? t("admin-activities:list.none")
-            : item.rings.map((ring) => ring.name).join(t("admin-activities:list.ringSeparator"));
+            : rings.map((ring) => ring.name).join(t("admin-activities:list.ringSeparator"));
         },
       },
       {
         key: "registrations",
         label: t("admin-activities:list.columns.registrations"),
         render: (item) => {
-          if (item.state === "DRAFT" || item.state === "CANCELLED") {
+          if (item.state === undefined || item.state === "DRAFT" || item.state === "CANCELLED") {
             return t("admin-activities:list.none");
           }
           if (item.maxPlaces === null) {
@@ -376,6 +381,10 @@ export function ActivitiesPage({
             return item.state === "PUBLISHED"
               ? t("admin-activities:list.registrationsOpen")
               : t("admin-activities:list.none");
+          }
+          // Keys the column did not ask for are absent: nothing to count, never «0».
+          if (item.maxPlaces === undefined || item.registrations === undefined) {
+            return t("admin-activities:list.none");
           }
           const to = item.registrationTo;
           return item.state !== "PUBLISHED" || to === null || to === undefined
@@ -393,15 +402,19 @@ export function ActivitiesPage({
       {
         key: "state",
         label: t("admin-activities:list.columns.state"),
-        render: (item) => (
-          <Badge tone={stateTone[item.state]}>{t(`enums:activityState.${item.state}`)}</Badge>
-        ),
+        render: (item) =>
+          item.state === undefined ? null : (
+            <Badge tone={stateTone[item.state]}>{t(`enums:activityState.${item.state}`)}</Badge>
+          ),
         sortKey: "state",
       },
       {
         key: "type",
         label: t("admin-activities:list.columns.type"),
-        render: (item) => t(`enums:activityType.${item.type}`),
+        render: (item) =>
+          item.type === undefined
+            ? t("admin-activities:list.none")
+            : t(`enums:activityType.${item.type}`),
       },
       {
         key: "slug",
@@ -488,7 +501,8 @@ export function ActivitiesPage({
     saveViewName: t("census:list.saveViewName"),
     search: t("admin-activities:list.search"),
     selectAll: t("census:list.selectAll"),
-    selectRow: (item) => t("admin-activities:list.open", { title: item.title }),
+    // `title` is always asked for (`activityFields`), so no row is named «Obre » alone.
+    selectRow: (item) => t("admin-activities:list.open", { title: item.title ?? "" }),
     selected: (count) => t("census:list.selected", { count }),
     sharedView: t("census:list.sharedView"),
     sortAscending: (column) => t("census:list.sortAscending", { column }),

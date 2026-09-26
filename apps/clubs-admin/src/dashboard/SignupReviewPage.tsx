@@ -45,6 +45,18 @@ const READMISSION_FIELDS = [
   "paymentMethod",
 ] as const;
 type ReadmissionField = (typeof READMISSION_FIELDS)[number];
+type SignupDogValues = components["schemas"]["SignupDogValues"];
+// R-04-06 (E38): the fields of the reused dog a readmission can change, in the order D2 lists them,
+// with their D2 labels.
+const DOG_READMISSION_FIELDS = {
+  name: "name",
+  sex: "sex",
+  breed: "breed",
+  birthMonth: "birthMonth",
+  notesToInstructors: "notes",
+  documents: "documents",
+} as const;
+type DogReadmissionField = keyof typeof DOG_READMISSION_FIELDS;
 interface FamilyCandidate {
   dogs: readonly string[];
   familyGroup: components["schemas"]["NamedReference"] | undefined;
@@ -537,6 +549,34 @@ export function SignupReviewPage({
     })();
     return text.trim() === "" ? t("admin-census:values.empty") : text;
   };
+  // R-04-06 (E38): the reused dog's changed fields, its record (`readmission.current`) beside the
+  // view (the submitted values and documents the validation writes). `null` is how the core writes
+  // an ordinary dog.
+  const dogChanges = (dog: Dog): DogReadmissionField[] =>
+    dog.readmission == null
+      ? []
+      : (Object.keys(DOG_READMISSION_FIELDS) as DogReadmissionField[]).filter((field) =>
+          dog.readmission?.changedFields.includes(field),
+        );
+  const dogValue = (values: Dog | SignupDogValues, field: DogReadmissionField): string => {
+    const text = (() => {
+      switch (field) {
+        case "name":
+          return values.name;
+        case "sex":
+          return values.sex === undefined ? "" : t(`admin-census:signupReview.sex.${values.sex}`);
+        case "breed":
+          return values.breed ?? "";
+        case "birthMonth":
+          return values.birthMonth === undefined ? "" : formatPlainDate(`${values.birthMonth}-01`, "monthYear");
+        case "notesToInstructors":
+          return values.notesToInstructors ?? "";
+        case "documents":
+          return values.documents.flatMap((document) => document.files.map((file) => file.name)).join(" · ");
+      }
+    })();
+    return text.trim() === "" ? t("admin-census:values.empty") : text;
+  };
 
   return (
     <section className="signup-review-page">
@@ -663,17 +703,40 @@ export function SignupReviewPage({
         {signup.dogs.map((dog, index) => {
           const files = dog.documents.flatMap((document) => document.files);
           const error = levelError(dog);
+          const changes = dogChanges(dog);
+          const dogRecord = dog.readmission?.current;
           return (
             <Card key={dog.id}>
               <h2>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })} {signup.signup.source === "APP_ADD_DOG" && dog.status === "PENDING" ? <Badge>{t("admin-census:signupReview.newDog")}</Badge> : null}</h2>
               <dl className="signup-review-data">
-                <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {formatPlainDate(`${dog.birthMonth}-01`, "monthYear")}</dd>
+                <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong id={`signup-dog-name-${dog.id}`}>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {formatPlainDate(`${dog.birthMonth}-01`, "monthYear")}</dd>
                 <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
                 <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{files.map((file) => <a href={file.downloadUrl} key={file.downloadUrl} rel="noreferrer" target="_blank"><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
                 {/* S04 §3 and §13 #1: the signup notes carry no attachments (those come from 13). */}
                 <dt>{t("admin-census:signupReview.fields.notes")}</dt>
                 <dd>{dog.notesToInstructors == null || dog.notesToInstructors.trim() === "" ? t("admin-census:values.empty") : dog.notesToInstructors}</dd>
               </dl>
+              {/* R-04-06 (E38): the reused dog's own record beside what the readmission submitted; named after the dog, apart from the person's block. */}
+              {dogRecord === undefined || changes.length === 0 ? null : (
+                <section aria-labelledby={`signup-dog-readmission-${dog.id} signup-dog-name-${dog.id}`} className="signup-review-readmission">
+                  <h3 id={`signup-dog-readmission-${dog.id}`}>{t("admin-census:signupReview.readmission.title")}</h3>
+                  <dl className="signup-review-data">
+                    {changes.map((field) => (
+                      <Fragment key={field}>
+                        <dt>{t(`admin-census:signupReview.fields.${DOG_READMISSION_FIELDS[field]}`)}</dt>
+                        <dd>
+                          <span className="signup-review-readmission__previous">
+                            {t("admin-census:signupReview.readmission.previous", { value: dogValue(dogRecord, field) })}
+                          </span>
+                          <strong className="signup-review-readmission__submitted">
+                            {t("admin-census:signupReview.readmission.submitted", { value: dogValue(dog, field) })}
+                          </strong>
+                        </dd>
+                      </Fragment>
+                    ))}
+                  </dl>
+                </section>
+              )}
               <div className="signup-review-dog-decision">
                 {signup.proposals.levels.length === 0 ? null : (
                   <FormField {...(error === undefined ? {} : { error })} id={`signup-level-${dog.id}`} label={t("admin-census:signupReview.fields.level")}>

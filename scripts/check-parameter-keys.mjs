@@ -51,6 +51,11 @@ const systemOnly = new Set([
   "jobs.retention.jobRunsDays",
   "jobs.retention.orphanUploadsHours",
   "jobs.retention.stripeEventsDays",
+  // Api E5-T20: D11 shows none of the learn keys (the catalog still lists `learn.linkText` under
+  // «Club i pistes»: reported in E4-W13).
+  "learn.baseUrl",
+  "learn.linkText",
+  "learn.recommendationsTtlMinutes",
   "messaging.push.ttlMinutes",
   "migration.exportRetentionDays",
   "migration.leftMaxYears",

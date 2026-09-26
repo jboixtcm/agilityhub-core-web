@@ -1,0 +1,38 @@
+schemas added: []
+schemas removed: []
+schemas changed (structurally): ['ActivityListItem', 'ActivityRegistration', 'ActivityRegistrationListItem', 'ActivityRegistrationSummary', 'ClubUpdate', 'SignupDocumentFile']
+schemas changed (descriptions only): ['ClubSettings', 'ClubSummary', 'DogPatch']
+paths added: []
+paths removed: []
+operations changed (structurally): ['GET /api/v1/activities', 'GET /api/v1/activities/{id}/registrations', 'GET /api/v1/attendances', 'GET /api/v1/audit-entries', 'GET /api/v1/bookings', 'GET /api/v1/class-sessions', 'GET /api/v1/dogs', 'GET /api/v1/followup', 'GET /api/v1/jobs/{name}/runs', 'GET /api/v1/members', 'GET /api/v1/members/{id}/audit-entries', 'GET /api/v1/ring-blocks', 'GET /api/v1/training-bookings', 'GET /api/v1/weeks']
+operations changed (descriptions only): ['GET /api/v1/activities/export', 'GET /api/v1/activities/filter-values', 'GET /api/v1/activities/{id}/ring-conflicts', 'GET /api/v1/activity-registrations/export', 'POST /api/v1/attachments', 'GET /api/v1/audit-entries/export', 'POST /api/v1/audit-entries/export', 'GET /api/v1/dogs/export', 'POST /api/v1/dogs/export', 'PATCH /api/v1/dogs/{id}', 'POST /api/v1/dogs/{id}/documents', 'POST /api/v1/dogs/{id}/documents/reminder', 'DELETE /api/v1/dogs/{id}/documents/{docId}/files/{fileId}', 'PATCH /api/v1/dogs/{id}/free-training', 'PATCH /api/v1/dogs/{id}/level', 'PUT /api/v1/dogs/{id}/photo', 'POST /api/v1/dogs/{id}/transfer', 'GET /api/v1/invoices/export', 'POST /api/v1/me/dogs/{id}/documents', 'PUT /api/v1/me/dogs/{id}/instructor-note', 'PUT /api/v1/me/dogs/{id}/photo', 'GET /api/v1/members/export', 'POST /api/v1/members/export', 'GET /api/v1/notifications/export', 'GET /api/v1/platform/audit-entries', 'GET /api/v1/platform/erasure-requests', 'GET /api/v1/platform/security-events', 'GET /api/v1/training-bookings/export']
+
+== ActivityListItem
+  props added: []  removed: []
+  props changed: []
+  required: ['allRings', 'createdAt', 'endTime', 'id', 'location', 'maxPlaces', 'registrations', 'rings', 'slug', 'startTime', 'state', 'title', 'type', 'typeDisplay'] -> ['id']
+
+== ActivityRegistration
+  props added: ['waitlistRank']  removed: []
+  props changed: []
+  required: ['activity', 'activityId', 'cancellableUntil', 'id', 'memberId', 'origin', 'registeredAt', 'registeredBy', 'state'] -> ['activity', 'activityId', 'cancellableUntil', 'id', 'memberId', 'origin', 'registeredAt', 'registeredBy', 'state', 'waitlistRank']
+
+== ActivityRegistrationListItem
+  props added: ['waitlistRank']  removed: []
+  props changed: []
+  required: ['cancelReason', 'cancelledAt', 'member', 'origin', 'position', 'registeredAt', 'registrationId', 'state'] -> ['registrationId']
+
+== ActivityRegistrationSummary
+  props added: ['waitlistRank']  removed: []
+  props changed: []
+  required: ['activity', 'activityId', 'cancellableUntil', 'id', 'origin', 'registeredAt', 'state'] -> ['activity', 'activityId', 'cancellableUntil', 'id', 'origin', 'registeredAt', 'state', 'waitlistRank']
+
+== ClubUpdate
+  props added: []  removed: []
+  props changed: ['taxId']
+     taxId {"type": "string"} -> {"type": ["string", "null"]}
+
+== SignupDocumentFile
+  props added: ['fileKey']  removed: []
+  props changed: []
+  required: ['downloadUrl', 'name'] -> ['downloadUrl', 'fileKey', 'name']

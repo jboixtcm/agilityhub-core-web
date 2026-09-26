@@ -44,14 +44,28 @@
           "type": "VACCINATION_CARD",
           "state": "RECEIVED",
           "files": [
-            { "name": "cartilla_Kiwi_1.jpg", "downloadUrl": "https://files.example.test/cartilla_Kiwi_1.jpg" },
-            { "name": "cartilla_Kiwi_2.jpg", "downloadUrl": "https://files.example.test/cartilla_Kiwi_2.jpg" }
+            {
+              "name": "cartilla_Kiwi_1.jpg",
+              "downloadUrl": "https://files.example.test/cartilla_Kiwi_1.jpg",
+              "fileKey": "signup-uploads/42000000/cartilla_Kiwi_1.jpg"
+            },
+            {
+              "name": "cartilla_Kiwi_2.jpg",
+              "downloadUrl": "https://files.example.test/cartilla_Kiwi_2.jpg",
+              "fileKey": "signup-uploads/42000000/cartilla_Kiwi_2.jpg"
+            }
           ]
         },
         {
           "type": "INSURANCE",
           "state": "RECEIVED",
-          "files": [{ "name": "Assegurança.pdf", "downloadUrl": "https://files.example.test/asseguranca.pdf" }]
+          "files": [
+            {
+              "name": "Assegurança.pdf",
+              "downloadUrl": "https://files.example.test/asseguranca.pdf",
+              "fileKey": "signup-uploads/42000000/asseguranca.pdf"
+            }
+          ]
         }
       ],
       "id": "44000000-0000-4000-8000-000000000001",

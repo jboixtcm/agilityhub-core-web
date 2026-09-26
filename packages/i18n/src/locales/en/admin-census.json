@@ -367,7 +367,8 @@
       "title": "Changes from the former record",
       "previous": "Before: {value}",
       "submitted": "Now: {value}",
-      "documentLocked": "The ID document cannot change during a readmission: to correct it, reject the readmission."
+      "documentLocked": "The ID document cannot change during a readmission: to correct it, reject the readmission.",
+      "dogLocked": "The readmission is pending: the dog's record can't change until it is validated or rejected."
     }
   },
   "values": {

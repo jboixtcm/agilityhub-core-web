@@ -63,6 +63,8 @@ import {
   addDogPendingSignup,
   addDogSignupReview,
   derivedSignupReview,
+  dogReadmissionChanges,
+  patchSignupDogDocuments,
   readmissionChanges,
   readmissionValues,
   type SignupReviewVariant,
@@ -178,6 +180,9 @@ let dashboardState = structuredClone(initialDashboard);
 let signupReviewWorld: { variant: SignupReviewVariant | undefined; view: MemberSignupView } | undefined;
 // Members whose signup was validated or rejected: `GET /members/{id}/signup` answers NOT_PENDING.
 const resolvedSignups = new Set<string>();
+// Signup file keys removed through `DELETE /dogs/{id}/documents/{docId}/files/{fileId}`: a D2
+// `PATCH /dogs/{id}` that sends one back answers 400 FILE_NOT_FOUND (api E5-T19/E5-T21).
+const removedSignupFileKeys = new Set<string>();
 
 /** The D2 view of the Marta Roca signup for the current scenario's variant, with its edits. */
 function currentSignupReview(): MemberSignupView {
@@ -196,6 +201,26 @@ function resetDashboardMockState(): void {
   dashboardState = structuredClone(initialDashboard);
   signupReviewWorld = undefined;
   resolvedSignups.clear();
+  removedSignupFileKeys.clear();
+}
+
+/**
+ * The reused dog of a pending readmission (R-04-06, E38): its record is frozen until the
+ * validation or the rejection, so the routes that would write it answer 409 INVALID_STATE with
+ * `details.reason = READMISSION_PENDING`. `undefined` for any other dog.
+ */
+function frozenReadmissionDog(dogId: string): Response | undefined {
+  const dog = currentSignupReview().dogs.find((candidate) => candidate.id === dogId);
+  if (dog?.readmission == null) return undefined;
+  return HttpResponse.json<ApiErrorResponse>(
+    {
+      code: "INVALID_STATE",
+      details: { reason: "READMISSION_PENDING" },
+      message: "Invalid state",
+      traceId: "mock-trace-id",
+    },
+    { status: 409 },
+  );
 }
 
 /** A decided signup leaves D1 and the menu count at once (R-14-01; api E3-T08). */
@@ -2470,6 +2495,34 @@ export const handlers = [
       if (body.version !== signupDog.version) {
         return apiError("STALE_VERSION", "Stale version", 409);
       }
+      // R-04-06 (E38): the reused dog's chip (the readmission matched on it), handler name and
+      // licenses are frozen while the readmission waits.
+      const reused = signupDog.readmission;
+      if (
+        reused != null &&
+        ((body.chip !== undefined && body.chip !== signupDog.chip) ||
+          body.handlerName !== undefined ||
+          body.licenses !== undefined)
+      ) {
+        return frozenReadmissionDog(signupDog.id);
+      }
+      const documents =
+        body.documents === undefined
+          ? undefined
+          : patchSignupDogDocuments(signupDog, body.documents, removedSignupFileKeys);
+      if (documents === "FILE_NOT_FOUND") return apiError("FILE_NOT_FOUND", "File not found", 400);
+      // With signup.requireDogDocumentAtSignup a card sent without files is refused, unless the
+      // reused dog has its own card with a file (api E5-T19).
+      const cardRequired = findParameter("signup.requireDogDocumentAtSignup")?.value === true;
+      const cardEmptied = body.documents?.some(
+        (document) => document.type === "VACCINATION_CARD" && document.files.length === 0,
+      );
+      const ownCard = reused?.current.documents.some(
+        (document) => document.type === "VACCINATION_CARD" && document.files.length > 0,
+      );
+      if (cardRequired && cardEmptied === true && ownCard !== true) {
+        return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
+      }
       signupDog.name = body.name ?? signupDog.name;
       signupDog.breed = body.breed ?? signupDog.breed;
       signupDog.chip = body.chip ?? signupDog.chip;
@@ -2477,7 +2530,26 @@ export const handlers = [
       if (body.notesToInstructors !== undefined) signupDog.notesToInstructors = body.notesToInstructors;
       if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
       else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
+      if (documents !== undefined) signupDog.documents = documents;
       signupDog.version += 1;
+      if (reused != null) {
+        // The submitted values changed, not the record: the response is the record, which keeps
+        // its own values until the validation (D2 re-reads the view for the submitted ones).
+        reused.changedFields = dogReadmissionChanges(reused.current, signupDog);
+        return HttpResponse.json({
+          birthDate: `${reused.current.birthMonth ?? signupDog.birthMonth}-01`,
+          breed: reused.current.breed ?? signupDog.breed,
+          chip: signupDog.chip,
+          id: signupDog.id,
+          licenses: [],
+          memberId: signupView.member.id,
+          name: reused.current.name,
+          registeredAt: signupView.signup.submittedAt,
+          sex: reused.current.sex ?? signupDog.sex,
+          status: signupDog.status,
+          version: signupDog.version,
+        });
+      }
       return HttpResponse.json({
         birthDate: `${signupDog.birthMonth}-01`,
         breed: signupDog.breed,
@@ -2511,6 +2583,8 @@ export const handlers = [
     return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.patch("*/api/v1/dogs/:id/level", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2553,6 +2627,8 @@ export const handlers = [
     });
   }),
   http.patch("*/api/v1/dogs/:id/free-training", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2569,6 +2645,8 @@ export const handlers = [
     return HttpResponse.json(dog.freeTraining);
   }),
   http.post("*/api/v1/dogs/:id/transfer", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2619,6 +2697,8 @@ export const handlers = [
     return HttpResponse.json(replaceDog(dog).dog);
   }),
   http.put("*/api/v1/dogs/:id/photo", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);
@@ -2636,6 +2716,8 @@ export const handlers = [
       : HttpResponse.json(dog.documents);
   }),
   http.post("*/api/v1/dogs/:id/documents", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
     if (signupDog !== undefined) {
       const body = (await request.json()) as DogDocumentUploadRequest;
@@ -2671,11 +2753,19 @@ export const handlers = [
     return HttpResponse.json(document, { status: 201 });
   }),
   http.delete("*/api/v1/dogs/:id/documents/:docId/files/:fileId", ({ params }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
     if (signupDog !== undefined) {
       const documents = signupDogDocuments(signupDog);
       const document = documents.find((candidate) => candidate.id === String(params.docId));
       if (document === undefined) return apiError("NOT_FOUND", "Document not found", 404);
+      // The removed file's key answers FILE_NOT_FOUND if a stale D2 view sends it back.
+      const removedUrl = document.files.find((file) => file.id === String(params.fileId))?.url;
+      const removedKey = signupDog.documents
+        .flatMap((item) => item.files)
+        .find((file) => file.downloadUrl === removedUrl)?.fileKey;
+      if (removedKey !== undefined) removedSignupFileKeys.add(removedKey);
       document.files = document.files.filter((file) => file.id !== String(params.fileId));
       document.state = document.files.length === 0 ? "PENDING" : "RECEIVED";
       storeSignupDogDocuments(signupDog, documents);
@@ -2694,6 +2784,8 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/dogs/:id/documents/reminder", async ({ params, request }) => {
+    const frozen = frozenReadmissionDog(String(params.id));
+    if (frozen !== undefined) return frozen;
     const dog = currentDog(String(params.id));
     if (dog === undefined) {
       return apiError("NOT_FOUND", "Dog not found", 404);

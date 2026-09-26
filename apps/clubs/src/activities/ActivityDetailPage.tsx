@@ -349,11 +349,12 @@ export function ActivityDetailPage({
         <Badge>{activity.typeDisplay}</Badge>
         {live === undefined ? null : (
           <Badge tone={live.state === "WAITLISTED" ? "warning" : "success"}>
+            {/* The live rank in the queue (R-07-08, api E5-T20), not the stored `position`. */}
             {live.state !== "WAITLISTED"
               ? t("enums:activityRegistrationState.ACTIVE")
-              : live.position === null || live.position === undefined
+              : live.waitlistRank === null
                 ? t("enums:activityRegistrationState.WAITLISTED")
-                : t("activities:detail.waitlistPosition", { position: live.position })}
+                : t("activities:detail.waitlistPosition", { position: live.waitlistRank })}
           </Badge>
         )}
       </header>

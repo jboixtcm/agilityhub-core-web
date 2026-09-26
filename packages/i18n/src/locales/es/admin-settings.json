@@ -506,20 +506,6 @@
         }
       }
     },
-    "learn": {
-      "baseUrl": {
-        "help": "Dirección de la aplicación AgilityHub Learn.",
-        "label": "Dirección de Learn"
-      },
-      "linkText": {
-        "help": "Texto del enlace a Learn mostrado en la app.",
-        "label": "Texto del enlace a Learn"
-      },
-      "recommendationsTtlMinutes": {
-        "help": "Minutos que se guardan las recomendaciones de Learn antes de volver a pedirlas.",
-        "label": "Validez de las recomendaciones de Learn"
-      }
-    },
     "leave": {
       "fullMonthIfLater": {
         "help": "Cobra el mes completo cuando la baja está fuera de plazo.",

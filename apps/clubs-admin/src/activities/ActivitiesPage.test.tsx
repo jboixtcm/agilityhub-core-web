@@ -1251,14 +1251,14 @@ describe("T-07-29 E4-W05 the registrants list against the published core", () =>
         .filter((entry) => entry.url.searchParams.has("fields"))
         .at(-1)
         ?.url.searchParams.get("fields"),
-    ).toBe("registrationId,member,state,position,cancelReason,registeredAt,origin");
-    // The core echoes the path's `activityId` among the applied filters: no chip for it.
+    ).toBe("registrationId,member,state,waitlistRank,cancelReason,registeredAt,origin");
+    // Only the admin's own filters are applied (never the path's `activityId`): no chip at all.
     expect(screen.queryByText(/activityId/u)).toBeNull();
     expect(screen.queryByText(/^Filtre \(\d+\)/u)).toBeNull();
     lists.stop();
   });
 
-  it("S07 §6 with only the «Contacte» column the rows keep their key and member (the core answers null to keys not asked for)", async () => {
+  it("S07 §6 with only the «Contacte» column the rows keep their key and member (the core omits the keys not asked for)", async () => {
     const lists = recordRequests(`/activities/${WORKSHOP}/registrations`);
     await renderRegistrantsPage(WORKSHOP, "?fields=contact");
     const table = await screen.findByRole("table");
@@ -1575,5 +1575,86 @@ describe("T-07-29 E4-W14 D7 follow-ups of the E4-W11 review", () => {
     expect(screen.getAllByText("L'interval horari no és vàlid.")).toHaveLength(1);
     expect(document.querySelector(".ah-toast")).toBeNull();
     expect(draft.state).toBe("DRAFT");
+  });
+});
+
+describe("T-07-29 E4-W13 step 0 S07 §6 D7 reads the sparse lists and the live waitlist rank (api E5-T20)", () => {
+  const TITLES = [
+    "Demostració Festa Major",
+    "Lliga social — 3a jornada",
+    "Seminari de handling",
+    "Taller de contactes",
+    "Torneig d'Estiu 2026",
+  ];
+
+  it("R-07-08 after a promotion the registrants table shows «en llista d'espera (1)» for the new head, whose stored position is 2", async () => {
+    // One more place in the full «Taller de contactes» promotes registration-taller-11.
+    const api = client();
+    const workshop = await api.GET("/activities/{id}", { params: { path: { id: WORKSHOP } } });
+    await api.PATCH("/activities/{id}", {
+      body: { maxPlaces: 11, version: workshop.data?.version ?? 0 },
+      params: { path: { id: WORKSHOP } },
+    });
+    const head = activityState.registrations.find((item) => item.id === "registration-taller-12");
+    if (head === undefined) throw new TypeError("Missing registration-taller-12");
+    expect([head.state, head.position]).toEqual(["WAITLISTED", 2]);
+
+    await renderRegistrantsPage(WORKSHOP);
+    const table = await screen.findByRole("table");
+    await waitFor(() => {
+      expect(within(table).getAllByText("inscrita")).toHaveLength(11);
+    });
+    expect(
+      within(table)
+        .getAllByText(/^en llista d'espera/u)
+        .map((cell) => cell.textContent),
+    ).toEqual(["en llista d'espera (1)"]);
+    const row = within(table)
+      .getAllByRole("row")
+      .find((item) => item.textContent.includes(head.member.fullName));
+    expect(row?.textContent).toContain("en llista d'espera (1)");
+    expect(within(table).queryByText("en llista d'espera (2)")).toBeNull();
+  });
+
+  it("a view with only the date column reads sparse rows: the date cells, «Obre {title}» on every row, nothing from the keys it did not ask for", async () => {
+    const lists = recordRequests("/activities");
+    await renderPage({ search: "?fields=date" });
+    const table = await screen.findByRole("table");
+    expect((await listRow("dv 7 · 18:30–20:30"))[0]).toBe("dv 7 · 18:30–20:30");
+    expect((await listRow("dg 4/10"))[0]).toBe("dg 4/10");
+    expect(
+      lists.seen
+        .filter((entry) => entry.url.searchParams.has("fields"))
+        .at(-1)
+        ?.url.searchParams.get("fields"),
+    ).toBe("id,title,date,startTime,endTime");
+    for (const title of TITLES) {
+      expect(within(table).getByRole("link", { name: `Obre ${title}` })).toBeVisible();
+    }
+    expect(within(table).queryByRole("link", { name: /^Obre\s*(undefined)?$/u })).toBeNull();
+    expect(within(table).queryByText("— (fora del club)")).toBeNull();
+    expect(within(table).queryByText(/publicada|esborrany|undefined/u)).toBeNull();
+    lists.stop();
+  });
+
+  it("a row without `location` (a key the core omits) is never read as «— (fora del club)»", async () => {
+    // The rings column as the core could answer it without `location`: absent, never `null`.
+    const withoutLocation: typeof fetch = async (input, init) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      const response = await fetch(request);
+      if (request.method !== "GET" || !response.ok) return response;
+      if (new URL(request.url).pathname !== "/api/v1/activities") return response;
+      const body = (await response.json()) as { items: Record<string, unknown>[] };
+      for (const item of body.items) delete item.location;
+      return Response.json(body, { status: response.status });
+    };
+    await renderPage({ fetchOverride: withoutLocation, search: "?fields=title,rings" });
+    expect(await listRow("Torneig d'Estiu 2026")).toEqual(
+      expect.arrayContaining(["Torneig d'Estiu 2026 · competició", "totes — bloquejades"]),
+    );
+    expect((await listRow("Seminari de handling"))[1]).toBe("Central");
+    // The Demostració has no rings: «—», not the off-site text of a missing `location`.
+    expect((await listRow("Demostració Festa Major"))[1]).toBe("—");
+    expect(screen.queryByText("— (fora del club)")).toBeNull();
   });
 });

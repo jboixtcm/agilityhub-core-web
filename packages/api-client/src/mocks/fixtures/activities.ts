@@ -58,18 +58,22 @@ export interface StoredActivity {
   createdAt: string;
 }
 
+/**
+ * Stored registration: every value, whole (the list item's keys are optional only because a
+ * sparse `fields` omits them); `waitlistRank` is derived at read time.
+ */
 export interface StoredRegistration {
   activityId: string;
   cancelReason: NonNullable<ActivityRegistrationListItem["cancelReason"]> | null;
   cancelledAt: string | null;
   cancelledBy: "ADMIN" | "MEMBER" | "SYSTEM" | null;
   id: string;
-  member: ActivityRegistrationListItem["member"];
-  origin: ActivityRegistrationListItem["origin"];
+  member: components["schemas"]["ActivityRegistrationMember"];
+  origin: ActivityRegistration["origin"];
   position: number | null;
   promotedAt: string | null;
   registeredAt: string;
-  state: ActivityRegistrationListItem["state"];
+  state: ActivityRegistration["state"];
 }
 
 const firstNames = [
@@ -497,6 +501,19 @@ export function liveRegistrations(activityId: string): StoredRegistration[] {
   );
 }
 
+/**
+ * R-07-08 (E5-T20): the 1-based rank of a WAITLISTED registration among its activity's live
+ * waiting entries in `position` order, computed when it is read (after a promotion the next entry
+ * reads 1); `null` for any other state. `position` keeps the stored order, gaps included.
+ */
+export function waitlistRank(registration: StoredRegistration): number | null {
+  if (registration.state !== "WAITLISTED") return null;
+  const queue = liveRegistrations(registration.activityId)
+    .filter((entry) => entry.state === "WAITLISTED")
+    .sort((left, right) => (left.position ?? 0) - (right.position ?? 0));
+  return queue.findIndex((entry) => entry.id === registration.id) + 1;
+}
+
 export function counters(activityId: string): Activity["counters"] {
   const live = liveRegistrations(activityId);
   return {
@@ -585,7 +602,7 @@ export function activityResource(
   };
 }
 
-/** D7 list row, as the api's `ActivityListItem`. */
+/** D7 list row: the api's whole `ActivityListItem` (a sparse `fields` drops the keys not asked for). */
 export function activityListItem(activity: StoredActivity, locale: string): ActivityListItem {
   return {
     allRings: isAllRings(activity),
@@ -661,9 +678,11 @@ export function registrationResource(
       viaClub: registration.origin === "BACKOFFICE",
     },
     state: registration.state,
+    waitlistRank: waitlistRank(registration),
   };
 }
 
+/** The whole registrants row; a sparse `fields` drops the keys not asked for (E5-T20). */
 export function registrationListItem(
   registration: StoredRegistration,
 ): ActivityRegistrationListItem {
@@ -677,6 +696,7 @@ export function registrationListItem(
     registeredAt: registration.registeredAt,
     registrationId: registration.id,
     state: registration.state,
+    waitlistRank: waitlistRank(registration),
   };
 }
 

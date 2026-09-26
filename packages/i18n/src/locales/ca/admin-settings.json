@@ -506,20 +506,6 @@
         }
       }
     },
-    "learn": {
-      "baseUrl": {
-        "help": "Adreça de l'aplicació AgilityHub Learn.",
-        "label": "Adreça de Learn"
-      },
-      "linkText": {
-        "help": "Text de l'enllaç a Learn que es mostra a l'app.",
-        "label": "Text de l'enllaç a Learn"
-      },
-      "recommendationsTtlMinutes": {
-        "help": "Minuts que es guarden les recomanacions de Learn abans de tornar-les a demanar.",
-        "label": "Validesa de les recomanacions de Learn"
-      }
-    },
     "leave": {
       "fullMonthIfLater": {
         "help": "Cobra el mes sencer quan la baixa és posterior al límit.",

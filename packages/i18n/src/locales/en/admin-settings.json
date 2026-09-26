@@ -506,20 +506,6 @@
         }
       }
     },
-    "learn": {
-      "baseUrl": {
-        "help": "Address of the AgilityHub Learn application.",
-        "label": "Learn address"
-      },
-      "linkText": {
-        "help": "Text of the Learn link shown in the app.",
-        "label": "Learn link text"
-      },
-      "recommendationsTtlMinutes": {
-        "help": "Minutes the Learn recommendations are kept before they are requested again.",
-        "label": "Learn recommendations lifetime"
-      }
-    },
     "leave": {
       "fullMonthIfLater": {
         "help": "Charges the full month when leaving after the deadline.",

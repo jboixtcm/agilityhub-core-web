@@ -271,7 +271,10 @@ const ACTIVITY_FIELDS = [
 const REGISTRATION_FIELDS = ["state", "origin", "registeredAt", "memberId"];
 // `GET /activity-registrations/export` also takes `activityId` (the activity's registrants).
 const REGISTRATION_EXPORT_FIELDS = ["activityId", ...REGISTRATION_FIELDS];
-/** The response keys of `ActivityRegistrationListItem`: the only values `fields` accepts. */
+/**
+ * The response keys of `ActivityRegistrationListItem` (the operation's `x-fields`): the only values
+ * `fields` accepts; the core always sends `registrationId`.
+ */
 const REGISTRATION_ITEM_KEYS = [
   "cancelReason",
   "cancelledAt",
@@ -281,8 +284,9 @@ const REGISTRATION_ITEM_KEYS = [
   "registeredAt",
   "registrationId",
   "state",
+  "waitlistRank",
 ];
-/** The response keys of `ActivityListItem`; the core always sends `id`. */
+/** The response keys of `ActivityListItem` (`x-fields`); the core always sends `id`. */
 const ACTIVITY_ITEM_KEYS = [
   "allRings",
   "createdAt",
@@ -303,10 +307,10 @@ const ACTIVITY_ITEM_KEYS = [
 ];
 
 /**
- * A list's `fields` as the core applies it (seen on the published core, E4-W05): a key that is not
- * a response key is `400 INVALID_FILTER`, and every key that was not asked for comes back empty —
- * `null`, or `false` for a flag — except the ones the core always sends (`always`). `null` = no
- * `fields`: whole items.
+ * A list's `fields` as the core applies it (CONVENCIONS_API §4, api E5-T20): a key outside the
+ * operation's `x-fields` is `400 INVALID_FILTER`, and every key that was not asked for is omitted
+ * from each item (never `null` nor `false` in its place), except the row id the core always sends
+ * (`always`). `null` = no `fields`: whole items.
  */
 function fieldsProjection<Item extends object>(
   url: URL,
@@ -322,12 +326,7 @@ function fieldsProjection<Item extends object>(
   if (!keys.every((key) => itemKeys.includes(key))) return undefined;
   const kept = new Set([...always, ...keys]);
   return (item) =>
-    Object.fromEntries(
-      Object.entries(item).map(([key, value]) => [
-        key,
-        kept.has(key) ? value : typeof value === "boolean" ? false : null,
-      ]),
-    ) as Item;
+    Object.fromEntries(Object.entries(item).filter(([key]) => kept.has(key))) as Item;
 }
 
 /** The list's `q` over the activity titles in the reader's locale. */
@@ -939,11 +938,9 @@ export const activityHandlers = [
     if (activity === undefined) return notFound();
     const url = new URL(request.url);
     const filters = parseFilters(url);
-    const projection = fieldsProjection<ActivityRegistrationListItem>(
-      url,
-      REGISTRATION_ITEM_KEYS,
-      [],
-    );
+    const projection = fieldsProjection<ActivityRegistrationListItem>(url, REGISTRATION_ITEM_KEYS, [
+      "registrationId",
+    ]);
     if (
       filters === undefined ||
       !knownFields(filters, REGISTRATION_FIELDS) ||
@@ -967,10 +964,10 @@ export const activityHandlers = [
             : registration.registeredAt,
     );
     const items = ordered.map(registrationListItem);
-    // As the core: the path's activity comes back last among the applied filters.
-    const applied = [...filters, { field: "activityId", op: "eq", value: activity.id }];
+    // As the core (S07 «Canvis» 26-09, E5-T20): only the query's filters come back applied, never
+    // the path's `activityId`.
     return HttpResponse.json(
-      page(url, projection === null ? items : items.map(projection), applied),
+      page(url, projection === null ? items : items.map(projection), filters),
     );
   }),
   http.post("*/api/v1/activity-registrations", async ({ request }) => {
@@ -1129,6 +1126,7 @@ export const activityHandlers = [
             position: resource.position ?? null,
             registeredAt: resource.registeredAt,
             state: resource.state,
+            waitlistRank: resource.waitlistRank,
           },
         ];
       }),

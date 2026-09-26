@@ -1,0 +1,139 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (27 tests | 4 failed | 23 skipped) 24ms
+   ❯ T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) (4)
+     × the view carries each file's fileKey and, for the reused dog only, its record's values and changedFields 10ms
+     × the routes that would write the reused dog's record answer 409 INVALID_STATE READMISSION_PENDING 6ms
+     × PATCH /dogs/{id} merges the reused dog's documents by type: add one file, remove one, withdraw a type; the response is the record 4ms
+     × an ordinary pending dog: a type sent without files stays pending; a key removed through DELETE answers 400 FILE_NOT_FOUND 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > the view carries each file's fileKey and, for the reused dog only, its record's values and changedFields
+AssertionError: expected [ 'VACCINATION_CARD: , ', …(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "VACCINATION_CARD: signup-uploads/42000000/cartilla_Kiwi_1.jpg, signup-uploads/42000000/cartilla_Kiwi_2.jpg",
+-   "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
++   "VACCINATION_CARD: , ",
++   "INSURANCE: ",
+  ]
+
+ ❯ src/mocks/signup-handlers.test.ts:455:30
+    453|     const ordinary = await view("admin");
+    454|     expect(ordinary.readmission).toBeUndefined();
+    455|     expect(keysOf(ordinary)).toEqual([
+       |                              ^
+    456|       "VACCINATION_CARD: signup-uploads/42000000/cartilla_Kiwi_1.jpg, …
+    457|       "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > the routes that would write the reused dog's record answer 409 INVALID_STATE READMISSION_PENDING
+AssertionError: POST /dogs/44000000-0000-4000-8000-000000000001/documents: expected { …(2) } to match object { body: { …(2) }, status: 409 }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "INVALID_STATE",
+-     "details": {
+-       "reason": "READMISSION_PENDING",
++     "files": [
++       {
++         "id": "48000000-0000-4000-8000-000001100000",
++         "name": "Assegurança.pdf",
++         "uploadedAt": "2026-08-08T10:02:00Z",
++         "url": "https://files.example.test/asseguranca.pdf",
++       },
++       {
++         "id": "48000000-0000-4000-8000-000001100001",
++         "name": "a.pdf",
++         "uploadedAt": "2026-08-08T10:02:00Z",
++         "url": "https://files.example.test/mock-dog_document-a.pdf",
+        },
++     ],
++     "id": "49000000-0000-4000-8000-000001000001",
++     "state": "RECEIVED",
++     "type": "INSURANCE",
++     "typeLabel": "Assegurança",
+    },
+-   "status": 409,
++   "status": 201,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:493:78
+    491|       });
+    492|       const answer = (await response.json()) as unknown;
+    493|       expect({ body: answer, status: response.status }, `${method} ${p…
+       |                                                                              ^
+    494|     }
+    495|     for (const body of [{ chip: "941000099999999" }, { handlerName: "P…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > PATCH /dogs/{id} merges the reused dog's documents by type: add one file, remove one, withdraw a type; the response is the record
+AssertionError: expected { body: { …(11) }, status: 200 } to match object { …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "breed": "Llebrer",
+-     "name": "Kivi",
++     "breed": "Whippet",
++     "name": "Kiwi Blanca",
+      "version": 2,
+    },
+    "status": 200,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:518:19
+    516|     });
+    517|     // The record keeps its own values until the validation (the view …
+    518|     expect(added).toMatchObject({ body: { breed: "Llebrer", name: "Kiv…
+       |                   ^
+    519|     let dog = await view("adminSignupReviewReadmission");
+    520|     expect(dog.name).toBe("Kiwi Blanca");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > an ordinary pending dog: a type sent without files stays pending; a key removed through DELETE answers 400 FILE_NOT_FOUND
+AssertionError: expected [ 'VACCINATION_CARD RECEIVED 2', …(1) ] to deeply equal [ 'VACCINATION_CARD RECEIVED 2', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "VACCINATION_CARD RECEIVED 2",
+-   "INSURANCE PENDING 0",
++   "INSURANCE RECEIVED 1",
+  ]
+
+ ❯ src/mocks/signup-handlers.test.ts:545:116
+    543|     expect((await patchDog({ documents: [{ files: [], type: "INSURANCE…
+    544|     let dog = await view("admin");
+    545|     expect(dog.documents.map((document) => `${document.type} ${documen…
+       |                                                                                                                    ^
+    546|       "VACCINATION_CARD RECEIVED 2",
+    547|       "INSURANCE PENDING 0",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 23 skipped (27)
+   Start at  09:49:00
+   Duration  402ms (transform 48%, import 43%, tests 8%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts -t E4-W13 step 5

@@ -1,14 +1,14 @@
 {
-  "runId": "hrlxo1",
+  "runId": "i1yjpz",
   "weekStart": "2026-09-21",
   "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
   "generation": {
     "body": {
-      "saturdayTemplateId": "998c13af-cea2-4382-a5dd-2d9603e978dc",
-      "weekdayTemplateId": "43032dc7-c976-4ba0-9ee5-4e9d7c415d2a"
+      "saturdayTemplateId": "1b3d05c0-05bb-4aae-b120-b542b4b172e4",
+      "weekdayTemplateId": "e8a058ae-cbd9-4ae6-be06-f58a9edb9f01"
     },
     "status": 200,
-    "weekId": "bc265d8b-da23-4cbd-9419-8f9e9b409296",
+    "weekId": "95e3d502-06be-46ac-a5bd-3d5fa99a5a94",
     "classCount": 38,
     "skipped": [],
     "week": "2026-10-12"
@@ -26,9 +26,9 @@
   "classCancellation": {
     "status": 200,
     "reason": "DELETED",
-    "adminText": "Integració E4 hrlxo1: la classe s'elimina del calendari. Disculpeu les molèsties!",
-    "byAccountId": "662dcb64-7d7e-45b4-9253-29384815e43a",
-    "at": "2026-09-26T02:23:02.139Z",
+    "adminText": "Integració E4 i1yjpz: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "1c7378b3-67c3-41fe-b977-8c6be58d6217",
+    "at": "2026-09-26T07:12:46.451Z",
     "affectedBookings": 4,
     "affectedWaitlist": 2
   },
@@ -39,9 +39,9 @@
     "details": {
       "conflicts": [
         {
-          "ringId": "df23cd96-4a9b-4a0a-af18-c266c3aab950",
+          "ringId": "05cbf919-be14-4d2c-8289-7e29d9ad37b8",
           "type": "CLASS",
-          "id": "6d959c49-649c-4c8b-88e2-81cf2d44c414",
+          "id": "561b9d55-85ae-4508-9020-686f2a75d6ae",
           "from": "2026-10-07T18:00:00Z",
           "to": "2026-10-07T19:00:00Z",
           "label": "Obed. urbana",
@@ -49,20 +49,20 @@
         }
       ]
     },
-    "traceId": "0ee6406a-90a0-4d44-ac8b-e01753dff826"
+    "traceId": "f53c39ba-4038-4194-8632-d452742c5d73"
   },
   "ringBlock": {
-    "id": "05838527-45d7-4ab8-a530-4ffa4b8fadc2",
+    "id": "86f2c60d-8b74-4fd2-b126-04833503cffe",
     "status": 201
   },
   "activitiesExport": {
-    "bytes": 4062,
-    "contentDisposition": "attachment; filename=\"canic_activities_20260926-0423.xlsx\"",
+    "bytes": 4065,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-0912.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
     "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
     "status": 200,
-    "suggestedFilename": "canic_activities_20260926-0423.xlsx"
+    "suggestedFilename": "canic_activities_20260926-0912.xlsx"
   },
   "tournamentSaturday": {
     "cellsByColumn": {
@@ -74,9 +74,9 @@
   "seminarConflicts": {
     "conflicts": [
       {
-        "ringId": "df23cd96-4a9b-4a0a-af18-c266c3aab950",
+        "ringId": "05cbf919-be14-4d2c-8289-7e29d9ad37b8",
         "type": "CLASS",
-        "id": "2d336041-a838-4aec-b0ab-55c9754cc41a",
+        "id": "4af74981-94e6-478e-ad4d-27477e5533a3",
         "from": "2026-10-17T16:30:00Z",
         "to": "2026-10-17T17:30:00Z",
         "label": "A+B",
@@ -85,7 +85,7 @@
     ],
     "trainingBookings": []
   },
-  "row03Ca": "Seminari E4 hrlxo1inscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "row03Ca": "Seminari E4 i1yjpzinscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
   "waitlistCa": {
     "member": {
       "after": "WAITLISTED",
@@ -97,15 +97,15 @@
     }
   },
   "registrantsExport": {
-    "bytes": 4661,
-    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-0423.xlsx\"",
+    "bytes": 4656,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-0912.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
-    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A505ce14b-883b-442b-a687-c3ea40d4b77e&format=xlsx&sort=registeredAt%2Casc",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Adeba4356-8be2-412e-bc5f-82e0ea82717f&format=xlsx&sort=registeredAt%2Casc",
     "status": 200,
-    "suggestedFilename": "canic_activity-registrations_20260926-0423.xlsx"
+    "suggestedFilename": "canic_activity-registrations_20260926-0912.xlsx"
   },
-  "row03Es": "Seminari E4 hrlxo1inscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "row03Es": "Seminari E4 i1yjpzinscritaSábado 17 de octubre · 18:30–20:30 · Central",
   "waitlistChipEs": "en lista de espera (4)",
   "waitlistEs": {
     "joinedPosition": 4,

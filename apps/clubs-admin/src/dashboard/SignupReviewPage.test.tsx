@@ -1330,3 +1330,178 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
   });
 });
+
+describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19)", () => {
+  const DOG_LOCKED = "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.";
+  const card2 = { fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" };
+  const insurance = { fileKey: "signup-uploads/42000000/asseguranca.pdf", name: "Assegurança.pdf" };
+
+  /** The drawer row of one of the reused dog's files. */
+  function fileRow(drawer: HTMLElement, name: string): HTMLElement {
+    const row = within(drawer).getByText(name).closest("li");
+    if (row === null) throw new TypeError(`Missing the ${name} row`);
+    return row;
+  }
+
+  /** Requests to the routes the pending readmission freezes for the reused dog (any method). */
+  function frozenCalls(requests: readonly Recorded[]): string[] {
+    return requests
+      .filter(
+        (request) =>
+          (request.path.startsWith(`/api/v1/dogs/${kiwiId}/`) && request.method !== "GET") ||
+          request.path.startsWith(`/api/v1/dogs/${kiwiId}/documents`),
+      )
+      .map((request) => `${request.method} ${request.path}`);
+  }
+
+  it("step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    await renderReview();
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
+    expect(within(block).getAllByRole("term").map((term) => term.textContent)).toEqual(["Nom", "Raça", "Documents"]);
+    expect(within(block).getByText("Abans: Kivi")).toBeVisible();
+    expect(within(block).getByText("Ara: Kiwi")).toBeVisible();
+    expect(within(block).getByText("Abans: Llebrer")).toBeVisible();
+    expect(within(block).getByText("Ara: Whippet")).toBeVisible();
+    expect(within(block).getByText("Abans: cartilla_Kivi_2025.pdf")).toBeVisible();
+    expect(within(block).getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf")).toBeVisible();
+    // Unchanged fields (sex, birth month, notes) are not repeated; the member keeps its own block.
+    expect(within(block).queryByText(/Femella|Whippet · /u)).toBeNull();
+    expect(screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).not.toBe(block);
+  });
+
+  it("step 1: an ordinary signup's dog, or a dog with `readmission: null` (as the core writes it), has no block", async () => {
+    const { fetch: over } = recordingFetch((body) => {
+      for (const dog of body.dogs) dog.readmission = null;
+    });
+    await renderReview({ fetchOverride: over });
+    expect(screen.queryByRole("region", { name: /Canvis respecte de la fitxa de baixa/u })).toBeNull();
+  });
+
+  it("step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const reads = sent(requests, "GET", `/members/${memberId}/signup`).length;
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
+      documents: [{ files: [card2], type: "VACCINATION_CARD" }],
+      version: 1,
+    });
+    // The PATCH answers the dog record: D2 reads the view again for the submitted documents.
+    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads); });
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
+    expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg · Assegurança.pdf")).toBeVisible();
+    expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull();
+    expect(frozenCalls(requests)).toEqual([]);
+  });
+
+  it("step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    expect(within(drawer).queryByLabelText("Nom del document")).toBeNull();
+    fireEvent.change(await within(drawer).findByLabelText("Tipus de document"), { target: { value: "INSURANCE" } });
+    fireEvent.change(within(drawer).getByLabelText("Fitxer"), {
+      target: { files: [new File(["pdf"], "polissa_2026.pdf", { type: "application/pdf" })] },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Puja el document" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
+    expect(sent(requests, "POST", "/attachments/upload-url")[0]?.body).toMatchObject({ fileName: "polissa_2026.pdf", purpose: "DOG_DOCUMENT" });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
+      documents: [{ files: [insurance, { fileKey: "mock-dog_document-polissa_2026.pdf", name: "polissa_2026.pdf" }], type: "INSURANCE" }],
+      version: 1,
+    });
+    // The sent file shows at once, then as a link once the view read again lands (re-queried).
+    await waitFor(() => { expect(within(drawer).getByText("polissa_2026.pdf")).toBeVisible(); });
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
+    expect(await within(block).findByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf · polissa_2026.pdf")).toBeVisible();
+    expect(frozenCalls(requests)).toEqual([]);
+  });
+
+  it("step 2: the last file of a submitted type withdraws it (files: []); a second change before the view reload lands carries the version the PATCH answered", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    let holdReads = false;
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    server.use(
+      http.get(`*/api/v1/members/${memberId}/signup`, async () => {
+        if (holdReads) await held;
+        return undefined;
+      }),
+    );
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    holdReads = true;
+    fireEvent.click(within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(within(drawer).queryByText("Assegurança.pdf")).toBeNull(); });
+    // The view reload is still on its way: the next removal builds on the first one's answer.
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
+      { documents: [{ files: [], type: "INSURANCE" }], version: 1 },
+      { documents: [{ files: [card2], type: "VACCINATION_CARD" }], version: 2 },
+    ]);
+    release();
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
+    expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg")).toBeVisible();
+  });
+
+  it("step 2: a 409 READMISSION_PENDING that still arrives shows the new literal inside the drawer, for a field save and for a file", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    server.use(http.patch(`*/api/v1/dogs/${kiwiId}`, () => apiErrorResponse("INVALID_STATE", 409, { reason: "READMISSION_PENDING" })));
+    await renderReview();
+    const drawer = openDrawer();
+    fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }), { target: { value: "Kiwi Blanca" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    expect(await within(drawer).findByText(DOG_LOCKED, { selector: "[role=alert] *" })).toBeVisible();
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(within(drawer).getAllByText(DOG_LOCKED, { selector: "[role=alert], [role=alert] *" })).toHaveLength(2); });
+    // The file stays: nothing changed.
+    expect(within(drawer).getByText("cartilla_Kiwi_2.jpg")).toBeVisible();
+  });
+
+  it("step 2: a removed file's key (400 FILE_NOT_FOUND, api E5-T21) shows the error in the drawer and re-reads the view", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    let refuse = true;
+    server.use(
+      http.patch(`*/api/v1/dogs/${kiwiId}`, () => (refuse ? apiErrorResponse("FILE_NOT_FOUND", 400) : undefined)),
+    );
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const reads = sent(requests, "GET", `/members/${memberId}/signup`).length;
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    expect(await within(drawer).findByText("No s'ha trobat el fitxer.")).toBeVisible();
+    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads); });
+    refuse = false;
+    expect(within(drawer).getByText("cartilla_Kiwi_1.jpg")).toBeVisible();
+  });
+
+  it("step 3: the reused dog's chip is read-only while the readmission waits, with the literal as its hint, and never sent", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const chip = within(drawer).getByLabelText("Xip");
+    expect(chip).toHaveAttribute("readonly");
+    expect(chip).toHaveValue("941000024681357");
+    expect(window.document.getElementById(chip.getAttribute("aria-describedby") ?? "")).toHaveTextContent(DOG_LOCKED);
+    fireEvent.change(chip, { target: { value: "941000099999999" } });
+    fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }), { target: { value: "Kiwi Blanca" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({ name: "Kiwi Blanca", version: 1 });
+  });
+
+  it("step 3: an ordinary signup's chip stays editable", async () => {
+    await renderReview();
+    const chip = within(openDrawer()).getByLabelText("Xip");
+    expect(chip).not.toHaveAttribute("readonly");
+    expect(chip).not.toHaveAttribute("aria-describedby");
+  });
+});

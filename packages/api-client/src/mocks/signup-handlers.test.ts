@@ -422,3 +422,149 @@ describe("E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MAT
     ]);
   });
 });
+
+describe("T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19)", () => {
+  const marta = "42000000-0000-4000-8000-000000000001";
+  const kiwi = "44000000-0000-4000-8000-000000000001";
+  const json = { "Content-Type": "application/json" };
+  type SignupDogView = MemberSignupView["dogs"][number];
+
+  async function view(scenario: MockScenario): Promise<SignupDogView> {
+    mockScenario(scenario);
+    const response = await fetch(`${origin}/api/v1/members/${marta}/signup`);
+    const dog = ((await response.json()) as MemberSignupView).dogs[0];
+    if (dog === undefined) throw new TypeError("The D2 view lists no dog");
+    return dog;
+  }
+
+  async function patchDog(body: Record<string, unknown>) {
+    const response = await fetch(`${origin}/api/v1/dogs/${kiwi}`, { body: JSON.stringify(body), headers: json, method: "PATCH" });
+    return { body: (await response.json()) as Record<string, unknown>, status: response.status };
+  }
+
+  const keysOf = (dog: SignupDogView) =>
+    dog.documents.map((document) => `${document.type}: ${document.files.map((file) => file.fileKey).join(", ")}`);
+
+  afterEach(() => {
+    resetDashboardMockState();
+  });
+
+  it("the view carries each file's fileKey and, for the reused dog only, its record's values and changedFields", async () => {
+    const ordinary = await view("admin");
+    expect(ordinary.readmission).toBeUndefined();
+    expect(keysOf(ordinary)).toEqual([
+      "VACCINATION_CARD: signup-uploads/42000000/cartilla_Kiwi_1.jpg, signup-uploads/42000000/cartilla_Kiwi_2.jpg",
+      "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
+    ]);
+    const reused = await view("adminSignupReviewReadmission");
+    expect(reused.readmission).toMatchObject({
+      changedFields: ["name", "breed", "documents"],
+      current: { breed: "Llebrer", name: "Kivi" },
+      previousDeactivationReason: "MEMBER_LEFT",
+    });
+    expect(reused.readmission?.current.documents.map((document) => document.files.map((file) => file.fileKey))).toEqual([
+      ["dogs/44000000/cartilla_Kivi_2025.pdf"],
+    ]);
+    // `GET /dogs/{id}/documents` (a read) is the record's own documents, not the submitted ones.
+    const record = (await (await fetch(`${origin}/api/v1/dogs/${kiwi}/documents`)).json()) as { files: { name: string }[]; type: string }[];
+    expect(record.map((document) => `${document.type}: ${document.files.map((file) => file.name).join(", ")}`)).toEqual([
+      "VACCINATION_CARD: cartilla_Kivi_2025.pdf",
+    ]);
+  });
+
+  it("the routes that would write the reused dog's record answer 409 INVALID_STATE READMISSION_PENDING", async () => {
+    await view("adminSignupReviewReadmission");
+    const frozen = { code: "INVALID_STATE", details: { reason: "READMISSION_PENDING" } };
+    const calls: [string, string, Record<string, unknown>?][] = [
+      ["POST", `/dogs/${kiwi}/documents`, { fileKey: "mock-dog_document-a.pdf", name: "a.pdf", type: "INSURANCE" }],
+      ["DELETE", `/dogs/${kiwi}/documents/49000000-0000-4000-8000-000001000000/files/48000000-0000-4000-8000-000001000000`],
+      ["PUT", `/dogs/${kiwi}/photo`, { fileKey: "mock-dog_photo-kiwi.jpg" }],
+      ["POST", `/dogs/${kiwi}/documents/reminder`, { type: "VACCINATION_CARD" }],
+      ["PATCH", `/dogs/${kiwi}/level`, { levelId: "43000000-0000-4000-8000-000000000001" }],
+      ["PATCH", `/dogs/${kiwi}/free-training`, { override: true }],
+      ["POST", `/dogs/${kiwi}/transfer`, { toMemberId: "42000000-0000-4000-8000-000000000009" }],
+    ];
+    for (const [method, path, body] of calls) {
+      const response = await fetch(`${origin}/api/v1${path}`, {
+        ...(body === undefined ? {} : { body: JSON.stringify(body), headers: json }),
+        method,
+      });
+      const answer = (await response.json()) as unknown;
+      expect({ body: answer, status: response.status }, `${method} ${path}`).toMatchObject({ body: frozen, status: 409 });
+    }
+    for (const body of [{ chip: "941000099999999" }, { handlerName: "Pau" }, { licenses: [] }]) {
+      expect(await patchDog({ ...body, version: 1 }), JSON.stringify(body)).toMatchObject({ body: frozen, status: 409 });
+    }
+  });
+
+  it("PATCH /dogs/{id} merges the reused dog's documents by type: add one file, remove one, withdraw a type; the response is the record", async () => {
+    await view("adminSignupReviewReadmission");
+    // Add one file to the card: the view's two keys (a kept file keeps its stored name) plus the upload.
+    const added = await patchDog({
+      documents: [
+        {
+          files: [
+            { fileKey: "signup-uploads/42000000/cartilla_Kiwi_1.jpg", name: "renamed.jpg" },
+            { fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" },
+            { fileKey: "mock-dog_document-cartilla_Kiwi_3.jpg", name: "cartilla_Kiwi_3.jpg" },
+          ],
+          type: "VACCINATION_CARD",
+        },
+      ],
+      name: "Kiwi Blanca",
+      version: 1,
+    });
+    // The record keeps its own values until the validation (the view shows the submitted ones).
+    expect(added).toMatchObject({ body: { breed: "Llebrer", name: "Kivi", version: 2 }, status: 200 });
+    let dog = await view("adminSignupReviewReadmission");
+    expect(dog.name).toBe("Kiwi Blanca");
+    expect(dog.documents[0]?.files.map((file) => file.name)).toEqual(["cartilla_Kiwi_1.jpg", "cartilla_Kiwi_2.jpg", "cartilla_Kiwi_3.jpg"]);
+    expect(keysOf(dog)[1]).toBe("INSURANCE: signup-uploads/42000000/asseguranca.pdf");
+
+    // Remove one file: send the kept ones.
+    const removed = await patchDog({
+      documents: [{ files: [{ fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" }], type: "VACCINATION_CARD" }],
+      version: 2,
+    });
+    expect(removed.status).toBe(200);
+    // Withdraw the submitted insurance: the type sent without files.
+    expect((await patchDog({ documents: [{ files: [], type: "INSURANCE" }], version: 3 })).status).toBe(200);
+    dog = await view("adminSignupReviewReadmission");
+    expect(keysOf(dog)).toEqual(["VACCINATION_CARD: signup-uploads/42000000/cartilla_Kiwi_2.jpg"]);
+    expect(dog.readmission?.changedFields).toEqual(["name", "breed", "documents"]);
+    expect(dog.readmission?.current.documents[0]?.files[0]?.name).toBe("cartilla_Kivi_2025.pdf");
+    expect(dog.version).toBe(4);
+    // A stale version is refused as for any dog.
+    expect(await patchDog({ name: "Kiwi", version: 1 })).toMatchObject({ body: { code: "STALE_VERSION" }, status: 409 });
+  });
+
+  it("an ordinary pending dog: a type sent without files stays pending; a key removed through DELETE answers 400 FILE_NOT_FOUND", async () => {
+    await view("admin");
+    expect((await patchDog({ documents: [{ files: [], type: "INSURANCE" }], version: 1 })).status).toBe(200);
+    let dog = await view("admin");
+    expect(dog.documents.map((document) => `${document.type} ${document.state} ${String(document.files.length)}`)).toEqual([
+      "VACCINATION_CARD RECEIVED 2",
+      "INSURANCE PENDING 0",
+    ]);
+    const deleted = await fetch(
+      `${origin}/api/v1/dogs/${kiwi}/documents/49000000-0000-4000-8000-000001000000/files/48000000-0000-4000-8000-000001000000`,
+      { method: "DELETE" },
+    );
+    expect(deleted.status).toBe(204);
+    dog = await view("admin");
+    expect(keysOf(dog)[0]).toBe("VACCINATION_CARD: signup-uploads/42000000/cartilla_Kiwi_2.jpg");
+    const stale = await patchDog({
+      documents: [
+        {
+          files: [
+            { fileKey: "signup-uploads/42000000/cartilla_Kiwi_1.jpg", name: "cartilla_Kiwi_1.jpg" },
+            { fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" },
+          ],
+          type: "VACCINATION_CARD",
+        },
+      ],
+      version: 2,
+    });
+    expect(stale).toMatchObject({ body: { code: "FILE_NOT_FOUND", details: {} }, status: 400 });
+  });
+});

@@ -367,7 +367,8 @@
       "title": "Cambios respecto a la ficha de baja",
       "previous": "Antes: {value}",
       "submitted": "Ahora: {value}",
-      "documentLocked": "El DNI/NIE no se puede cambiar durante una readmisión: para corregirlo, rechaza la readmisión."
+      "documentLocked": "El DNI/NIE no se puede cambiar durante una readmisión: para corregirlo, rechaza la readmisión.",
+      "dogLocked": "La readmisión está pendiente: la ficha del perro no se puede cambiar hasta que se valide o se rechace."
     }
   },
   "values": {

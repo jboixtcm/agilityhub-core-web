@@ -262,6 +262,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       origin: "APP",
       registeredAt: "2026-08-04T08:00:00Z",
       state: "ACTIVE",
+      waitlistRank: null,
     };
     await renderWith(<ActivityReservationRow registration={october} />);
     expect(await screen.findByText("Dissabte 17 d’octubre · 18:30–20:30 · Central")).toBeVisible();
@@ -285,6 +286,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       origin: "APP",
       registeredAt: "2026-07-02T08:00:00Z",
       state: "ACTIVE",
+      waitlistRank: null,
     } satisfies ActivityRegistrationSummary & { dog: { id: string; name: string } };
     await renderWith(<ActivityReservationRow registration={withDog} />);
     const row = await screen.findByRole("link");
@@ -402,7 +404,10 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     }
     server.use(
       http.get("*/api/v1/me/activities/:activityId", () =>
-        HttpResponse.json({ ...real, myRegistration: { ...mine, position: null } }),
+        HttpResponse.json({
+          ...real,
+          myRegistration: { ...mine, position: null, waitlistRank: null },
+        }),
       ),
     );
     await renderWith(<ActivityDetailPage activityId={WORKSHOP} client={client()} />);
@@ -433,6 +438,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       position: 3,
       registeredAt: "2026-08-04T08:00:00Z",
       state: "WAITLISTED",
+      waitlistRank: 3,
     };
     await renderWith(<ActivityReservationRow registration={registration} />);
     expect(await screen.findByText("en llista d'espera")).toBeVisible();
@@ -456,6 +462,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       origin: "APP",
       registeredAt: "2025-07-01T08:00:00Z",
       state: "ACTIVE",
+      waitlistRank: null,
     };
     const byClub: ActivityRegistrationSummary = {
       ...done,
@@ -467,6 +474,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       ...done,
       id: "registration-wait",
       state: "WAITLISTED",
+      waitlistRank: 1,
     };
     await renderWith(
       <>
@@ -684,6 +692,7 @@ function registrationWith(
     origin: "APP",
     registeredAt: "2026-07-02T08:00:00Z",
     state: "ACTIVE",
+    waitlistRank: null,
   };
 }
 
@@ -788,5 +797,39 @@ describe("T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours", () => 
     expect(startOnly?.textContent.replace(/\s+/gu, " ").trim()).toBe(
       "Lliga de matí · ds 22 · 9:00Obertes",
     );
+  });
+});
+
+describe("T-07-30 E4-W13 step 0 R-07-08 the app shows the live waitlist rank (api E5-T20)", () => {
+  it("the member's detail shows «en llista d'espera (1)» from waitlistRank once the entries ahead are promoted, although its position is 3", async () => {
+    // The member joins the full «Taller de contactes» behind the two waiting entries.
+    const api = client();
+    const joined = await api.POST("/activity-registrations", {
+      body: { activityId: WORKSHOP, joinWaitlist: true },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+    });
+    expect(joined.data).toMatchObject({ position: 3, waitlistRank: 3 });
+
+    // Two more places (admin PATCH) promote both entries ahead of the member.
+    mockScenario("admin");
+    const workshop = await api.GET("/activities/{id}", { params: { path: { id: WORKSHOP } } });
+    await api.PATCH("/activities/{id}", {
+      body: { maxPlaces: 12, version: workshop.data?.version ?? 0 },
+      params: { path: { id: WORKSHOP } },
+    });
+    mockScenario("member");
+    const detail = await api.GET("/me/activities/{activityId}", {
+      params: { path: { activityId: WORKSHOP } },
+    });
+    expect(detail.data?.myRegistration).toMatchObject({
+      position: 3,
+      state: "WAITLISTED",
+      waitlistRank: 1,
+    });
+
+    await renderWith(<ActivityDetailPage activityId={WORKSHOP} client={client()} />);
+    expect(await screen.findByText("en llista d'espera (1)")).toBeVisible();
+    expect(screen.queryByText("en llista d'espera (3)")).toBeNull();
+    expect(screen.getByRole("button", { name: "SURT DE LA LLISTA D'ESPERA" })).toBeVisible();
   });
 });

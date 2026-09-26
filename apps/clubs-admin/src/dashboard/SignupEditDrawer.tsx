@@ -20,8 +20,24 @@ type Dog = SignupView["dogs"][number];
 type MemberPatch = components["schemas"]["MemberPatch"];
 type DogPatch = components["schemas"]["DogPatch"];
 type DogDocument = components["schemas"]["DogDocument"];
+type SignupFile = components["schemas"]["SignupFile"];
 type Gender = Member["gender"];
 type PaymentType = components["schemas"]["PaymentMethodPatch"]["type"];
+
+/**
+ * A reused dog's submitted documents as the drawer last sent them (E38): a new upload has no
+ * download link until the view is read again.
+ */
+interface SubmittedDocument {
+  files: (SignupFile & { downloadUrl?: string })[];
+  type: string;
+}
+
+/** What a reused dog's `PATCH /dogs/{id}` sent, and the version it answered. */
+interface SentDocuments {
+  documents: readonly SubmittedDocument[];
+  version: number;
+}
 
 interface PersonForm {
   accountHolder: string;
@@ -380,6 +396,241 @@ function SignupDogDocuments({
   );
 }
 
+/** The drawer's message for a failed request: `READMISSION_PENDING` names the frozen dog record. */
+function dogErrorText(cause: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
+  if (isApiError(cause, "STALE_VERSION")) return t("admin-census:signupReview.stale");
+  if (
+    isApiError(cause, "INVALID_STATE") &&
+    typeof cause.details === "object" &&
+    cause.details !== null &&
+    (cause.details as Record<string, unknown>).reason === "READMISSION_PENDING"
+  ) {
+    return t("admin-census:signupReview.readmission.dogLocked");
+  }
+  return isApiError(cause)
+    ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
+    : t("admin-census:signupReview.genericError");
+}
+
+/**
+ * The submitted documents of the reused dog of a pending readmission (R-04-06, R-04-19; api
+ * E3-T17, E5-T19). Its record is frozen, so they change only through `PATCH /dogs/{id}`, one type
+ * at a time: a file is added by sending the type's kept `fileKey`s plus the new upload, removed by
+ * sending the kept ones; the last file of a type withdraws it (`files: []`), and the validation
+ * then keeps the dog's own document. A kept file keeps its stored name, so there is no rename. The
+ * PATCH answers the dog record: the parent keeps what was sent (and the version answered) until
+ * the view, read again, catches up. The club's document types (`census.dogDocumentTypes`) label
+ * the choice, since the frozen record's own rows are not the list.
+ */
+function ReadmissionDogDocuments({
+  busy,
+  client,
+  documents,
+  dogId,
+  idPrefix,
+  onBusy,
+  onReload,
+  onSent,
+  version,
+}: {
+  busy: boolean;
+  client: ApiClient;
+  documents: readonly SubmittedDocument[];
+  dogId: string;
+  idPrefix: string;
+  onBusy: (busy: boolean) => void;
+  onReload: () => void;
+  onSent: (sent: SentDocuments) => void;
+  version: number;
+}) {
+  const { i18n, t } = useTranslation(["admin-census", "errors"]);
+  const [types, setTypes] = useState<readonly { key: string; label: string }[]>();
+  const [type, setType] = useState<string>();
+  const [file, setFile] = useState<File>();
+  const [fileInput, setFileInput] = useState(0);
+  const [pending, setPending] = useState<string>();
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    let active = true;
+    client.GET("/parameters/{key}", { params: { path: { key: "census.dogDocumentTypes" } } }).then(
+      (result) => {
+        if (!active) return;
+        const value = Array.isArray(result.data?.value) ? (result.data.value as unknown[]) : [];
+        setTypes(
+          value.flatMap((item) => {
+            if (typeof item !== "object" || item === null) return [];
+            const entry = item as { key?: unknown; label?: unknown };
+            if (typeof entry.key !== "string") return [];
+            const labels =
+              typeof entry.label === "object" && entry.label !== null ? (entry.label as Record<string, unknown>) : {};
+            const label = labels[i18n.resolvedLanguage ?? i18n.language] ?? Object.values(labels)[0];
+            return [{ key: entry.key, label: typeof label === "string" ? label : entry.key }];
+          }),
+        );
+      },
+      (cause: unknown) => {
+        if (!active) return;
+        setTypes([]);
+        setError(dogErrorText(cause, t));
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [client, i18n.language, i18n.resolvedLanguage, t]);
+
+  const selectedType = type ?? types?.[0]?.key ?? "";
+  const kept = (documentType: string): SignupFile[] =>
+    (documents.find((document) => document.type === documentType)?.files ?? []).map((item) => ({
+      fileKey: item.fileKey,
+      name: item.name,
+    }));
+
+  /** One type's files as they must be after the change, sent with the dog's version. */
+  const send = async (documentType: string, files: SubmittedDocument["files"], action: string) => {
+    setPending(action);
+    onBusy(true);
+    setError(undefined);
+    try {
+      const result = await client.PATCH("/dogs/{id}", {
+        body: { documents: [{ files: files.map(({ fileKey, name }) => ({ fileKey, name })), type: documentType }], version },
+        params: { path: { id: dogId } },
+      });
+      const next =
+        files.length === 0
+          ? documents.filter((document) => document.type !== documentType)
+          : documents.some((document) => document.type === documentType)
+            ? documents.map((document) => (document.type === documentType ? { files, type: documentType } : document))
+            : [...documents, { files, type: documentType }];
+      onSent({ documents: next, version: result.data?.version ?? version + 1 });
+      onReload();
+      return true;
+    } catch (cause) {
+      setError(dogErrorText(cause, t));
+      // A key another admin removed (400 FILE_NOT_FOUND) or a newer version: read the view again.
+      if (isApiError(cause, "FILE_NOT_FOUND") || isApiError(cause, "STALE_VERSION")) onReload();
+      return false;
+    } finally {
+      setPending(undefined);
+      onBusy(false);
+    }
+  };
+
+  const remove = (documentType: string, fileKey: string) =>
+    send(
+      documentType,
+      (documents.find((document) => document.type === documentType)?.files ?? []).filter((item) => item.fileKey !== fileKey),
+      fileKey,
+    );
+
+  const upload = async () => {
+    if (file === undefined || selectedType === "") return;
+    setPending("upload");
+    onBusy(true);
+    setError(undefined);
+    let fileKey: string;
+    try {
+      const signed = await client.POST("/attachments/upload-url", {
+        body: {
+          fileName: file.name,
+          mimeType: file.type === "" ? "application/octet-stream" : file.type,
+          purpose: "DOG_DOCUMENT",
+          sizeBytes: file.size,
+        },
+      });
+      if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
+      // R-04-08: the storage signed these headers (Content-Type, If-None-Match); S3 answers 403 without them.
+      const stored = await fetch(signed.data.uploadUrl, { body: file, headers: signed.data.headers, method: "PUT" });
+      if (!stored.ok) throw new TypeError("File upload failed");
+      fileKey = signed.data.fileKey;
+    } catch (cause) {
+      setError(dogErrorText(cause, t));
+      setPending(undefined);
+      onBusy(false);
+      return;
+    }
+    if (await send(selectedType, [...kept(selectedType), { fileKey, name: file.name }], "upload")) {
+      setFile(undefined);
+      setFileInput((value) => value + 1);
+    }
+  };
+
+  const disabled = busy || pending !== undefined;
+  return (
+    <div className="signup-edit-documents">
+      <span className="ah-form-field__label">{t("admin-census:signupReview.fields.documents")}</span>
+      <ul>
+        {documents.flatMap((document) =>
+          document.files.map((documentFile) => (
+            <li key={documentFile.fileKey}>
+              {documentFile.downloadUrl === undefined ? (
+                <span>
+                  <Icon aria-hidden="true" name="doc" /> {documentFile.name}
+                </span>
+              ) : (
+                <a href={documentFile.downloadUrl} rel="noreferrer" target="_blank">
+                  <Icon aria-hidden="true" name="doc" /> {documentFile.name}
+                </a>
+              )}
+              <Button
+                disabled={disabled && pending !== documentFile.fileKey}
+                loading={pending === documentFile.fileKey}
+                onClick={() => void remove(document.type, documentFile.fileKey)}
+                variant="ghost"
+              >
+                {t("admin-census:dog.documents.remove")}
+              </Button>
+            </li>
+          )),
+        )}
+      </ul>
+      {types === undefined || types.length === 0 ? null : (
+        <div className="signup-edit-documents__add">
+          <FormField id={`${idPrefix}-document-type`} label={t("admin-census:dog.documents.type")}>
+            <Select
+              disabled={disabled}
+              id={`${idPrefix}-document-type`}
+              onChange={(event) => {
+                setType(event.currentTarget.value);
+              }}
+              value={selectedType}
+            >
+              {types.map((option) => (
+                <option key={option.key} value={option.key}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+          <FormField id={`${idPrefix}-document-file`} label={t("admin-census:dog.documents.file")}>
+            <Input
+              accept="image/*,application/pdf"
+              disabled={disabled}
+              id={`${idPrefix}-document-file`}
+              key={fileInput}
+              onChange={(event) => {
+                setFile(event.currentTarget.files?.[0]);
+              }}
+              type="file"
+            />
+          </FormField>
+          <Button
+            disabled={file === undefined || (disabled && pending !== "upload")}
+            loading={pending === "upload"}
+            onClick={() => void upload()}
+            variant="ghost"
+          >
+            <Icon aria-hidden="true" name="up" />
+            {t("admin-census:dog.documents.upload")}
+          </Button>
+        </div>
+      )}
+      {error === undefined ? null : <p role="alert">{error}</p>}
+    </div>
+  );
+}
+
 /**
  * [EDITA LES DADES] of D2 (R-04-19): the fields of 16/17/19. Only the fields the admin changed are
  * sent, each entity with its own `version` (the member's for the person, each dog's for its dog).
@@ -415,6 +666,10 @@ export function SignupEditDrawer({
   const [dogEdits, setDogEdits] = useState<Readonly<Record<string, Partial<DogForm>>>>({});
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<{ stale: boolean; text: string }>();
+  // E38: what each reused dog's document PATCH sent and the version it answered, kept until the
+  // view read again carries that version, so a change made meanwhile builds on it.
+  const [sentDocuments, setSentDocuments] = useState<Readonly<Record<string, SentDocuments>>>({});
+  const [documentsBusy, setDocumentsBusy] = useState(false);
   // R-04-10, R-04-19 (api E3-T14): the view lists the methods D2 offers and marks the applicant's
   // (`current`); only the `assignable` ones can be chosen. None assignable (an add-dog, whose
   // method is changed on D10) shows the current one read-only; an empty list shows no row.
@@ -446,22 +701,23 @@ export function SignupEditDrawer({
     onClose();
   };
 
-  const showError = (cause: unknown) => {
+  /** A dog's version: the one its last document PATCH answered while the view is still older. */
+  const dogVersion = (dog: Dog): number => Math.max(dog.version, sentDocuments[dog.id]?.version ?? 0);
+
+  /** `READMISSION_PENDING` names what is frozen: the person's document, or the reused dog's record. */
+  const showError = (cause: unknown, entity: "dog" | "member") => {
     const stale = isApiError(cause, "STALE_VERSION");
-    const documentLocked =
+    const readmissionLocked =
       isApiError(cause, "INVALID_STATE") &&
       typeof cause.details === "object" &&
       cause.details !== null &&
       (cause.details as Record<string, unknown>).reason === "READMISSION_PENDING";
     setError({
       stale,
-      text: stale
-        ? t("admin-census:signupReview.stale")
-        : documentLocked
+      text:
+        readmissionLocked && entity === "member"
           ? t("admin-census:signupReview.readmission.documentLocked")
-          : isApiError(cause)
-            ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
-            : t("admin-census:signupReview.genericError"),
+          : dogErrorText(cause, t),
     });
   };
 
@@ -470,6 +726,7 @@ export function SignupEditDrawer({
     setWorking(true);
     setError(undefined);
     let saved = false;
+    let entity: "dog" | "member" = "member";
     try {
       const body = addDogMode ? undefined : memberPatch(member, currentMethod, personEdits, billing);
       if (body !== undefined) {
@@ -477,9 +734,15 @@ export function SignupEditDrawer({
         setPersonEdits({});
         saved = true;
       }
+      entity = "dog";
       for (const dog of signup.dogs) {
         const edits = dogEdits[dog.id];
-        const dogBody = dog.status === "PENDING" && edits !== undefined ? dogPatch(dog, edits) : undefined;
+        // R-04-06 (b): the reused dog's chip is read-only while the readmission waits (never sent).
+        const editable = dog.readmission == null ? edits : { ...edits, chip: dog.chip };
+        const dogBody =
+          dog.status === "PENDING" && edits !== undefined
+            ? dogPatch({ ...dog, version: dogVersion(dog) }, editable ?? {})
+            : undefined;
         if (dogBody === undefined) continue;
         await client.PATCH("/dogs/{id}", { body: dogBody, params: { path: { id: dog.id } } });
         setDogEdits((current) => Object.fromEntries(Object.entries(current).filter(([id]) => id !== dog.id)));
@@ -488,7 +751,7 @@ export function SignupEditDrawer({
       reset();
       onSaved();
     } catch (cause) {
-      showError(cause);
+      showError(cause, entity);
       // A partial save (the member saved, a dog failed) moved some versions: reload the view so the
       // next attempt sends the fresh versions with the edits still pending.
       if (saved) onReload();
@@ -641,13 +904,27 @@ export function SignupEditDrawer({
               />
             </FormField>
           );
+          // R-04-06, E38: the reused dog of a pending readmission (`null` for any other dog).
+          const reused = dog.readmission != null;
+          const sent = sentDocuments[dog.id];
+          const submittedDocuments = sent !== undefined && sent.version > dog.version ? sent.documents : dog.documents;
           return (
-            <fieldset disabled={dog.status !== "PENDING" || working} key={dog.id}>
+            <fieldset disabled={dog.status !== "PENDING" || working || documentsBusy} key={dog.id}>
               <legend>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })}</legend>
               {dogInput("name")}
               {dogInput("breed")}
               {dogInput("birthMonth")}
-              {dogInput("chip")}
+              {reused ? (
+                // R-04-06 (b): the readmission matched on the chip, so it cannot change while it waits.
+                <FormField id={`${idPrefix}-chip`} label={t("admin-census:signupReview.fields.chip")}>
+                  <Input aria-describedby={`${idPrefix}-chip-help`} id={`${idPrefix}-chip`} readOnly value={dog.chip} />
+                  <small className="ah-form-field__help" id={`${idPrefix}-chip-help`}>
+                    {t("admin-census:signupReview.readmission.dogLocked")}
+                  </small>
+                </FormField>
+              ) : (
+                dogInput("chip")
+              )}
               <FormField id={`${idPrefix}-sex`} label={t("admin-census:signupReview.fields.sex")}>
                 <Select
                   id={`${idPrefix}-sex`}
@@ -673,9 +950,24 @@ export function SignupEditDrawer({
                   value={value.notesToInstructors}
                 />
               </FormField>
-              {open && dog.status === "PENDING" ? (
+              {!open || dog.status !== "PENDING" ? null : reused ? (
+                // The frozen record's routes are never called for this dog: only PATCH /dogs/{id}.
+                <ReadmissionDogDocuments
+                  busy={working}
+                  client={client}
+                  documents={submittedDocuments}
+                  dogId={dog.id}
+                  idPrefix={idPrefix}
+                  onBusy={setDocumentsBusy}
+                  onReload={onReload}
+                  onSent={(next) => {
+                    setSentDocuments((current) => ({ ...current, [dog.id]: next }));
+                  }}
+                  version={dogVersion(dog)}
+                />
+              ) : (
                 <SignupDogDocuments client={client} dog={dog} idPrefix={idPrefix} onChanged={onReload} />
-              ) : null}
+              )}
             </fieldset>
           );
         })}
@@ -695,7 +987,8 @@ export function SignupEditDrawer({
             ) : null}
           </div>
         )}
-        <Button loading={working} type="submit">
+        {/* A document change moves the dog's version: the save waits for its answer. */}
+        <Button disabled={documentsBusy} loading={working} type="submit">
           {t("admin-census:signupReview.actions.save")}
         </Button>
       </form>

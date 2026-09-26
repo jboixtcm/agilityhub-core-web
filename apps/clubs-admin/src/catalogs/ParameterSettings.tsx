@@ -167,6 +167,18 @@ function valueSummary(
       });
     }
   }
+  if (parameter.key === "signup.onboardingFields" && Array.isArray(value)) {
+    // «Nom (obligatori) · Idioma (obligatori) · Telèfon»: the fields of «Completa el teu perfil»
+    // (S01 §14) with their own labels, never the stored JSON.
+    return value
+      .map((item) => {
+        const field = objectValue(item);
+        const key = typeof field.key === "string" ? field.key : "";
+        const label = t(`auth:onboarding.fields.${key}`, { defaultValue: key });
+        return field.required === true ? t("auth:onboarding.requiredField", { label }) : label;
+      })
+      .join(" · ");
+  }
   if (parameter.key === "training.bookingWindowDays" && typeof value === "number") {
     return t("admin-settings:value.todayPlusDays", { count: value });
   }
@@ -914,7 +926,8 @@ export function ParameterSettings({
   plans: readonly Plan[];
 }) {
   const formats = useClubFormats();
-  const { i18n, t } = useTranslation("admin-settings");
+  // `auth`: the field labels of «Completa el teu perfil» that `signup.onboardingFields` lists.
+  const { i18n, t } = useTranslation(["admin-settings", "auth"]);
   const messageForError = useCatalogError();
   const [data, setData] = useState<Parameters>();
   const [error, setError] = useState<unknown>();

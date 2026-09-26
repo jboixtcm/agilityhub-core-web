@@ -27,22 +27,27 @@ interface ListData {
   totalPages: number;
 }
 
-type RegistrantMember = ActivityRegistrationListItem["member"];
+type RegistrantMember = NonNullable<ActivityRegistrationListItem["member"]>;
+type RegistrationState = NonNullable<ActivityRegistrationListItem["state"]>;
 
 const DEFAULT_COLUMNS = ["member", "state", "registeredAt", "origin", "contact"];
-/** The response keys each column reads (`contact` is drawn from `member`). */
+/**
+ * The response keys each column reads (`contact` is drawn from `member`); the state chip shows the
+ * live `waitlistRank`, never the stored `position` (it keeps gaps, R-07-08, api E5-T20).
+ */
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   contact: ["member"],
   member: ["member"],
   origin: ["origin"],
   registeredAt: ["registeredAt"],
-  state: ["state", "position", "cancelReason"],
+  state: ["state", "waitlistRank", "cancelReason"],
 };
 
 /**
- * `fields` of the list request: response keys only. The core answers `400 INVALID_FILTER` to a
- * column key such as `contact`, and `null` in every key it was not asked for, so the row key
- * (`registrationId`) and the row link (`member`) are always requested (E4-W05, published core).
+ * `fields` of the list request: response keys only (the operation's `x-fields`). The core answers
+ * `400 INVALID_FILTER` to a column key such as `contact` and omits every key it was not asked for
+ * (CONVENCIONS_API §4, api E5-T20), so an absent key means «not asked for»; the row key
+ * (`registrationId`) and the member (row link and label) are always requested.
  */
 export function registrantFields(columns: readonly string[]): string {
   const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
@@ -78,12 +83,10 @@ function useRegistrantMembers(client: ApiClient, activityId: string, needed: boo
             },
           },
         });
-        for (const item of response.data?.items ?? []) {
-          const known = counted.get(item.member.id);
-          counted.set(item.member.id, {
-            count: (known?.count ?? 0) + 1,
-            member: item.member,
-          });
+        for (const { member } of response.data?.items ?? []) {
+          if (member === undefined) continue;
+          const known = counted.get(member.id);
+          counted.set(member.id, { count: (known?.count ?? 0) + 1, member });
         }
         totalPages = response.data?.totalPages ?? 0;
       }
@@ -127,7 +130,7 @@ function stateTone(item: ActivityRegistrationListItem): Tone {
 
 /**
  * Registrants of an activity (`/activitats/:id/inscrits`, S07 §2, no mockup): universal list of
- * `GET /activities/{id}/registrations` with the FIFO waitlist positions; «Excel · PDF» = the
+ * `GET /activities/{id}/registrations` with the FIFO waitlist ranks; «Excel · PDF» = the
  * published `GET /activity-registrations/export?filter=activityId:eq:{id}` (ADMIN).
  */
 export function ActivityRegistrantsPage({
@@ -227,16 +230,17 @@ export function ActivityRegistrantsPage({
   }, []);
 
   const stateLabel = useCallback(
-    (item: ActivityRegistrationListItem) => {
-      if (item.state === "WAITLISTED") {
-        return item.position === null
+    (item: ActivityRegistrationListItem, state: RegistrationState) => {
+      if (state === "WAITLISTED") {
+        // The live rank in the queue (1 = next to be promoted), not the stored `position`.
+        return item.waitlistRank === null || item.waitlistRank === undefined
           ? t("enums:activityRegistrationState.WAITLISTED")
-          : t("admin-activities:registrants.waitlisted", { position: item.position });
+          : t("admin-activities:registrants.waitlisted", { position: item.waitlistRank });
       }
-      if (item.state === "CANCELLED" && item.cancelReason === "ACTIVITY_CANCELLED") {
+      if (state === "CANCELLED" && item.cancelReason === "ACTIVITY_CANCELLED") {
         return t("enums:activityRegistrationState.CANCELLED_BY_CLUB");
       }
-      return t(`enums:activityRegistrationState.${item.state}`);
+      return t(`enums:activityRegistrationState.${state}`);
     },
     [t],
   );
@@ -246,31 +250,37 @@ export function ActivityRegistrantsPage({
       {
         key: "member",
         label: t("admin-activities:registrants.columns.member"),
+        // A key absent from the row was not asked for (sparse `fields`): its cell stays empty.
         render: (item: ActivityRegistrationListItem) =>
-          t("admin-activities:registrants.member", {
-            name: item.member.fullName,
-            number: item.member.memberNumber,
-          }),
+          item.member === undefined
+            ? null
+            : t("admin-activities:registrants.member", {
+                name: item.member.fullName,
+                number: item.member.memberNumber,
+              }),
         sortKey: "memberLastName",
       },
       {
         key: "state",
         label: t("admin-activities:registrants.columns.state"),
-        render: (item: ActivityRegistrationListItem) => (
-          <Badge tone={stateTone(item)}>{stateLabel(item)}</Badge>
-        ),
+        render: (item: ActivityRegistrationListItem) =>
+          item.state === undefined ? null : (
+            <Badge tone={stateTone(item)}>{stateLabel(item, item.state)}</Badge>
+          ),
         sortKey: "position",
       },
       {
         key: "registeredAt",
         label: t("admin-activities:registrants.columns.registeredAt"),
-        render: (item: ActivityRegistrationListItem) => formats.formatDateTime(item.registeredAt),
+        render: (item: ActivityRegistrationListItem) =>
+          item.registeredAt === undefined ? null : formats.formatDateTime(item.registeredAt),
         sortKey: "registeredAt",
       },
       {
         key: "origin",
         label: t("admin-activities:registrants.columns.origin"),
-        render: (item: ActivityRegistrationListItem) => t(`enums:activityOrigin.${item.origin}`),
+        render: (item: ActivityRegistrationListItem) =>
+          item.origin === undefined ? null : t(`enums:activityOrigin.${item.origin}`),
       },
       {
         key: "contact",
@@ -278,6 +288,7 @@ export function ActivityRegistrantsPage({
         // AGENTS rule 6: a long e-mail is clipped with an ellipsis so the table fits 1280 px; the
         // full value stays in the text (screen readers) and in the tooltip.
         render: (item: ActivityRegistrationListItem) => {
+          if (item.member === undefined) return null;
           const contact = [
             ...item.member.phones.map((phone) => `${phone.prefix} ${phone.number}`),
             ...item.member.emails,
@@ -340,7 +351,9 @@ export function ActivityRegistrantsPage({
     saveViewName: t("census:list.saveViewName"),
     search: t("admin-activities:registrants.search"),
     selectAll: t("census:list.selectAll"),
-    selectRow: (item) => t("admin-activities:registrants.open", { name: item.member.fullName }),
+    // `member` is always asked for (`registrantFields`), so every row keeps its name.
+    selectRow: (item) =>
+      t("admin-activities:registrants.open", { name: item.member?.fullName ?? "" }),
     selected: (count) => t("census:list.selected", { count }),
     sharedView: t("census:list.sharedView"),
     sortAscending: (column) => t("census:list.sortAscending", { column }),
@@ -404,7 +417,7 @@ export function ActivityRegistrantsPage({
         .map((id) => {
           const member =
             members?.find((entry) => entry.member.id === id)?.member ??
-            data?.items.find((item) => item.member.id === id)?.member;
+            data?.items.find((item) => item.member?.id === id)?.member;
           return member === undefined ? id : memberLabel(member);
         })
         .join(t("admin-activities:registrants.memberSeparator"));
@@ -450,18 +463,17 @@ export function ActivityRegistrantsPage({
         <h1>{t("admin-activities:registrants.title", { title })}</h1>
       </header>
       <UniversalList<ActivityRegistrationListItem>
-        // The core echoes the path's own `activityId` among the applied filters: not the admin's.
-        appliedFilters={(data?.appliedFilters ?? [])
-          .filter((filter) => filter.field !== "activityId")
-          .map((filter) => ({
-            field: filter.field,
-            fieldLabel: t(`admin-activities:registrants.filters.${filter.field}`, {
-              defaultValue: filter.field,
-            }),
-            operator: filter.op,
-            value: filterValue(filter.value),
-            valueLabel: valueLabel(filter.field, filterValue(filter.value)),
-          }))}
+        // Only the admin's own filters: the core never echoes the path's `activityId` (S07 «Canvis»
+        // 26-09, api E5-T20).
+        appliedFilters={(data?.appliedFilters ?? []).map((filter) => ({
+          field: filter.field,
+          fieldLabel: t(`admin-activities:registrants.filters.${filter.field}`, {
+            defaultValue: filter.field,
+          }),
+          operator: filter.op,
+          value: filterValue(filter.value),
+          valueLabel: valueLabel(filter.field, filterValue(filter.value)),
+        }))}
         caption={t("admin-activities:registrants.caption")}
         columns={columns}
         {...(errorMessage === undefined ? {} : { error: errorMessage })}
@@ -499,9 +511,9 @@ export function ActivityRegistrantsPage({
           ? {}
           : {
               onRowActivate: (item: ActivityRegistrationListItem) => {
-                onNavigate(`/abonats/${item.member.id}`);
+                if (item.member !== undefined) onNavigate(`/abonats/${item.member.id}`);
               },
-              rowHref: (item: ActivityRegistrationListItem) => `/abonats/${item.member.id}`,
+              rowHref: (item: ActivityRegistrationListItem) => `/abonats/${item.member?.id ?? ""}`,
             })}
         onStateChange={update}
         rowKey={(item) => item.registrationId}

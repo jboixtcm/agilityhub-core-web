@@ -88,7 +88,7 @@ export interface paths {
         };
         /**
          * activities
-         * @description Roles: ADMIN, INSTRUCTOR. Default sort date desc; default filter deleted:eq:false. q searches title. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR. Default sort date desc; default filter deleted:eq:false. q searches title. Without fields every item property is sent (null where it does not apply); with fields an item has id and the requested keys only. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["activities"];
         put?: never;
@@ -304,7 +304,7 @@ export interface paths {
         };
         /**
          * registrations
-         * @description Roles: ADMIN, INSTRUCTOR. Export through /activity-registrations/export with filter=activityId:eq:id. Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN, INSTRUCTOR. The activity comes from the path only: appliedFilters lists the query's filters, and filter=activityId is INVALID_FILTER. Without fields every item property is sent (null where it does not apply); with fields an item has registrationId and the requested keys only. Export through /activity-registrations/export with filter=activityId:eq:id. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["registrations"];
         put?: never;
@@ -324,7 +324,7 @@ export interface paths {
         };
         /**
          * ringConflicts
-         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN. The preview of R-07-05's dialog: a window the publication would refuse answers the same error (400 INVALID_TIME_RANGE without a date or hours, 422 OUTSIDE_OPENING_HOURS). Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["ringConflicts"];
         put?: never;
@@ -478,7 +478,7 @@ export interface paths {
         put?: never;
         /**
          * Register an uploaded attachment
-         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token; staff → 403); TASK and DOG_OBSERVATIONS → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: at most files.maxAttachmentsPerEntity per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey of another purpose → ATTACHMENT_ENTITY_MISMATCH. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. TASK and DOG_OBSERVATIONS: contract only, 501 NOT_IMPLEMENTED after the tenant, role, module and entity guards until E6-T03.
+         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token; staff → 403); TASK and DOG_OBSERVATIONS → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: at most files.maxAttachmentsPerEntity per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey of another purpose → ATTACHMENT_ENTITY_MISMATCH. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen: 409 INVALID_STATE with details.reason = READMISSION_PENDING. TASK and DOG_OBSERVATIONS: contract only, 501 NOT_IMPLEMENTED after the tenant, role, module and entity guards until E6-T03.
          */
         post: operations["add"];
         delete?: never;
@@ -1306,7 +1306,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record; the chip cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new signup upload (R-04-19). With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED, unless the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.
          */
         patch: operations["updateDog"];
         trace?: never;
@@ -1346,7 +1346,7 @@ export interface paths {
         put?: never;
         /**
          * Upload dog document
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["uploadDogDocument"];
         delete?: never;
@@ -1366,7 +1366,7 @@ export interface paths {
         put?: never;
         /**
          * Remind dog document
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["remindDogDocument"];
         delete?: never;
@@ -1387,7 +1387,7 @@ export interface paths {
         post?: never;
         /**
          * Remove dog document file
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         delete: operations["removeDogDocumentFile"];
         options?: never;
@@ -1410,7 +1410,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog free training
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         patch: operations["updateDogFreeTraining"];
         trace?: never;
@@ -1450,7 +1450,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog level
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         patch: operations["updateDogLevel"];
         trace?: never;
@@ -1485,7 +1485,7 @@ export interface paths {
         get?: never;
         /**
          * Update dog photo
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         put: operations["updateDogPhoto"];
         post?: never;
@@ -1526,7 +1526,7 @@ export interface paths {
         put?: never;
         /**
          * Transfer dog
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["transferDog"];
         delete?: never;
@@ -2318,7 +2318,7 @@ export interface paths {
         put?: never;
         /**
          * Upload my dog document
-         * @description Tenant-scoped S03 response with role and ownership checks.
+         * @description Tenant-scoped S03 response with role and ownership checks. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["uploadMyDogDocument"];
         delete?: never;
@@ -2337,7 +2337,7 @@ export interface paths {
         get?: never;
         /**
          * Update instructor note
-         * @description Tenant-scoped S03 response with role and ownership checks.
+         * @description Tenant-scoped S03 response with role and ownership checks. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         put: operations["updateInstructorNote"];
         post?: never;
@@ -2357,7 +2357,7 @@ export interface paths {
         get?: never;
         /**
          * Update my dog photo
-         * @description Tenant-scoped S03 response with role and ownership checks.
+         * @description Tenant-scoped S03 response with role and ownership checks. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         put: operations["updateMyDogPhoto"];
         post?: never;
@@ -4674,35 +4674,35 @@ export interface components {
         };
         ActivityListItem: {
             /** @description The rings are every active ring of the catalog (R-07-11: «totes — bloquejades») */
-            allRings: boolean;
+            allRings?: boolean;
             /** Format: date-time */
-            createdAt: string;
+            createdAt?: string;
             /** Format: date */
             date?: string | null;
             /** @description Club-local HH:mm (R-07-13); null when the activity has no end (never the model's next-day 00:00) */
-            endTime: string | null;
+            endTime?: string | null;
             id: string;
             /** @description The free text of an activity away from the club («— (fora del club)»); null at the club */
-            location: string | null;
+            location?: string | null;
             /**
              * Format: int32
              * @description null = no maximum («obertes · socis»)
              */
-            maxPlaces: number | null;
+            maxPlaces?: number | null;
             /** Format: date */
             registrationTo?: string | null;
-            registrations: components["schemas"]["ActivityCounters"];
-            rings: components["schemas"]["ActivityRing"][];
-            slug: string;
+            registrations?: components["schemas"]["ActivityCounters"];
+            rings?: components["schemas"]["ActivityRing"][];
+            slug?: string;
             /** @description Club-local HH:mm (R-07-13); null without hours */
-            startTime: string | null;
+            startTime?: string | null;
             /** @enum {string} */
-            state: "DRAFT" | "PUBLISHED" | "FINISHED" | "CANCELLED";
-            title: string;
+            state?: "DRAFT" | "PUBLISHED" | "FINISHED" | "CANCELLED";
+            title?: string;
             /** @enum {string} */
-            type: "SEMINAR" | "SOCIAL_LEAGUE" | "COMPETITION" | "DEMONSTRATION" | "COURSE" | "OTHER";
+            type?: "SEMINAR" | "SOCIAL_LEAGUE" | "COMPETITION" | "DEMONSTRATION" | "COURSE" | "OTHER";
             /** @description The label of `type` in the reader's locale, or the club's free label (R-07-01): «{title} · {typeDisplay}» */
-            typeDisplay: string;
+            typeDisplay?: string;
         };
         ActivityLocation: {
             address?: string | null;
@@ -4787,6 +4787,11 @@ export interface components {
             registeredBy: components["schemas"]["ActivityRegisteredBy"];
             /** @enum {string} */
             state: "ACTIVE" | "WAITLISTED" | "CANCELLED";
+            /**
+             * Format: int32
+             * @description R-07-08 (E5-T20): the 1-based rank of a WAITLISTED registration among the activity's active waiting entries, in position order, computed when it is read (after a promotion the next entry reads 1); null for any other state
+             */
+            waitlistRank: number | null;
         };
         ActivityRegistrationCancellation: {
             /** Format: date-time */
@@ -4801,25 +4806,30 @@ export interface components {
              * @description null until the registration is cancelled
              * @enum {string|null}
              */
-            cancelReason: "MEMBER" | "ACTIVITY_CANCELLED" | "INACTIVITY" | "MEMBER_LEFT" | "ADMIN" | null;
+            cancelReason?: "MEMBER" | "ACTIVITY_CANCELLED" | "INACTIVITY" | "MEMBER_LEFT" | "ADMIN" | null;
             /**
              * Format: date-time
              * @description null until the registration is cancelled
              */
-            cancelledAt: string | null;
-            member: components["schemas"]["ActivityRegistrationMember"];
+            cancelledAt?: string | null;
+            member?: components["schemas"]["ActivityRegistrationMember"];
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE";
+            origin?: "APP" | "BACKOFFICE";
             /**
              * Format: int32
-             * @description The waitlist position: set while WAITLISTED and kept after a waitlisted registration is cancelled; null once promoted, or if it was never waitlisted (E5-T15)
+             * @description The stored waitlist position (the promotion order): set while WAITLISTED and kept after a waitlisted registration is cancelled; null once promoted, or if it was never waitlisted (E5-T15). It keeps the gaps left by cancellations and promotions: show waitlistRank
              */
-            position: number | null;
+            position?: number | null;
             /** Format: date-time */
-            registeredAt: string;
+            registeredAt?: string;
             registrationId: string;
             /** @enum {string} */
-            state: "ACTIVE" | "WAITLISTED" | "CANCELLED";
+            state?: "ACTIVE" | "WAITLISTED" | "CANCELLED";
+            /**
+             * Format: int32
+             * @description R-07-08 (E5-T20): the 1-based rank of a WAITLISTED registration among the activity's active waiting entries, in position order, computed when it is read (after a promotion the next entry reads 1); null for any other state
+             */
+            waitlistRank?: number | null;
         };
         ActivityRegistrationMember: {
             emails: string[];
@@ -4848,6 +4858,11 @@ export interface components {
             registeredAt: string;
             /** @enum {string} */
             state: "ACTIVE" | "WAITLISTED" | "CANCELLED";
+            /**
+             * Format: int32
+             * @description R-07-08 (E5-T20): the 1-based rank of a WAITLISTED registration among the activity's active waiting entries, in position order, computed when it is read (after a promotion the next entry reads 1); null for any other state
+             */
+            waitlistRank: number | null;
         };
         ActivityRing: {
             color: string;
@@ -5870,7 +5885,7 @@ export interface components {
             pwa?: components["schemas"]["ClubPwa"] | null;
             slug: string;
             status: string;
-            /** @description Normalized: upper case, without spaces or separators (S02 §3). */
+            /** @description Normalized: upper case, without spaces or separators (S02 §3). ES: a 7-digit DNI is stored padded to 8 digits. */
             taxId?: string | null;
             theme: components["schemas"]["Theme"];
             timeZone: string;
@@ -5886,7 +5901,7 @@ export interface components {
             legalName: string | null;
             name: string;
             slug: string;
-            /** @description Normalized: upper case, without spaces or separators (S02 §3). */
+            /** @description Normalized: upper case, without spaces or separators (S02 §3). ES: a 7-digit DNI is stored padded to 8 digits. */
             taxId: string | null;
         };
         /** @description Versioned edit of club identity, contact and theme. Omitted fields are preserved. Console fields are rejected with PLATFORM_ONLY; a timeZone change with existing classes returns TIMEZONE_CHANGE_BLOCKED. */
@@ -5899,8 +5914,8 @@ export interface components {
             displayCity?: string | null;
             legalName?: string;
             name?: string;
-            /** @description Stored normalized: upper case, without spaces or separators; the same id written otherwise is no change. Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId. */
-            taxId?: string;
+            /** @description Stored normalized: upper case, without spaces or separators (ES: a 7-digit DNI is stored padded to 8 digits); the same id written otherwise is no change. Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId. Blank (empty or spaces only) or null clears it. */
+            taxId?: string | null;
             theme?: components["schemas"]["Theme"];
             /** @description Console-only field; cannot be changed here. */
             timeZone?: string;
@@ -6246,7 +6261,7 @@ export interface components {
             birthMonth?: string;
             breed?: string;
             chip?: string;
-            /** @description PENDING dogs only; replaces files for the supplied document types. */
+            /** @description PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new signup upload. The key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId} answers 400 FILE_NOT_FOUND. At most 10 new uploads per request (kept files do not count). Sending back the view's keys is no change. */
             documents?: components["schemas"]["SignupDocument"][];
             handlerName?: string;
             licenses?: components["schemas"]["License"][];
@@ -9089,6 +9104,8 @@ export interface components {
         SignupDocumentFile: {
             /** Format: uri */
             downloadUrl: string;
+            /** @description R-04-19 (E5-T19): the file's key. A D2 PATCH /dogs/{id} that sends it back in documents[].files[] keeps this file with its stored name (the name sent with it is not applied); the type's files it does not send are removed */
+            fileKey: string;
             name: string;
         };
         SignupDocumentView: {
@@ -10763,7 +10780,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -10781,7 +10798,7 @@ export interface operations {
                     "application/json": components["schemas"]["ListPageActivityListItem"];
                 };
             };
-            /** @description VALIDATION_ERROR */
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -11024,7 +11041,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -11169,7 +11186,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -12554,7 +12571,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -12574,7 +12591,7 @@ export interface operations {
                     "application/json": components["schemas"]["ListPageActivityRegistrationListItem"];
                 };
             };
-            /** @description VALIDATION_ERROR */
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -12697,7 +12714,7 @@ export interface operations {
                     "application/json": components["schemas"]["RingConflicts"];
                 };
             };
-            /** @description VALIDATION_ERROR */
+            /** @description VALIDATION_ERROR, INVALID_TIME_RANGE */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -12742,7 +12759,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description OUTSIDE_OPENING_HOURS */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -12942,7 +12959,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14013,7 +14030,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -14341,7 +14358,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14475,7 +14492,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14611,7 +14628,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14758,7 +14775,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -15399,7 +15416,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -16290,7 +16307,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -19774,7 +19791,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -19910,7 +19927,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -20057,7 +20074,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -20874,7 +20891,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -20999,7 +21016,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -21122,7 +21139,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -21249,7 +21266,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -21499,7 +21516,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -21755,7 +21772,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -22009,7 +22026,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -23703,7 +23720,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -25205,7 +25222,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -25462,7 +25479,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -27973,7 +27990,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -28100,7 +28117,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED: census mutations are unavailable after erasure */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -28227,7 +28244,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -30034,7 +30051,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30170,7 +30187,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30317,7 +30334,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30960,7 +30977,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -32850,7 +32867,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -34739,7 +34756,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -34993,7 +35010,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -35372,7 +35389,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -36644,7 +36661,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -40641,7 +40658,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -40904,7 +40921,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -43179,7 +43196,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated response column keys. */
+                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;

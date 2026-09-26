@@ -25,6 +25,7 @@ export function HistoryRowsPreview() {
     origin: "APP",
     registeredAt: "2025-07-01T08:00:00Z",
     state: "ACTIVE",
+    waitlistRank: null,
   };
 
   const cancelledByClub: ActivityRegistrationSummary = {
@@ -44,6 +45,7 @@ export function HistoryRowsPreview() {
     origin: "APP",
     registeredAt: "2025-07-02T08:00:00Z",
     state: "CANCELLED",
+    waitlistRank: null,
   };
 
   const cancelled: ActivityRegistrationSummary = {

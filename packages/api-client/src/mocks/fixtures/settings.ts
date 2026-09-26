@@ -235,6 +235,13 @@ const initialParameters: Parameters = {
           en: "I authorize images to be published as part of club activities.",
           es: "Autorizo la publicación de imágenes en las actividades del club.",
         }),
+        // Api E5-T20: the core sends both here, in «Alta i consentiments» (CATALEG_PARAMETRES).
+        parameter("signup.onboardingFields", "signup", "json", [
+          { key: "name", required: true },
+          { key: "locale", required: true },
+          { key: "phone", required: false },
+        ]),
+        parameter("legal.maxPostpones", "signup", "int", 3),
       ],
       title: "admin-settings:block.signup.title",
     },

@@ -5,11 +5,6 @@
     "module": null
   },
   {
-    "block": "system",
-    "key": "signup.onboardingFields",
-    "module": null
-  },
-  {
     "block": "signup",
     "key": "signup.enabled",
     "module": null
@@ -72,6 +67,11 @@
   {
     "block": "signup",
     "key": "signup.text.familyGroupIntro",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.onboardingFields",
     "module": null
   },
   {
