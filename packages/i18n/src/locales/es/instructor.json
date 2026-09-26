@@ -25,5 +25,62 @@
       "loading": "Cargando el bloqueo",
       "loadError": "No se ha podido cargar el bloqueo."
     }
+  },
+  "ringBlock": {
+    "title": "Reservar o bloquear pista",
+    "close": "Cerrar",
+    "kindLabel": "Tipo",
+    "kind": {
+      "RESERVATION": "Reserva de pista",
+      "BLOCK": "Bloqueo"
+    },
+    "reasonTitle": "Motivo",
+    "reason": {
+      "PRIVATE_CLASS": "Clase particular",
+      "THERAPY": "Terapia",
+      "PREPARATION": "Preparación",
+      "MAINTENANCE": "Mantenimiento",
+      "OTHER": "Otros"
+    },
+    "day": "Día",
+    "band": {
+      "label": "Franja",
+      "morning": "mañana",
+      "afternoon": "tarde"
+    },
+    "ring": "Pista",
+    "grid": "Horas de la franja",
+    "noSlots": "No hay horas en esta franja.",
+    "note": {
+      "label": "Nota",
+      "placeholder": "Nota (opcional)"
+    },
+    "summary": "Ocupa la pista {ring} de {from} a {to}, aparece en el cuadro global y en el registro de uso de pistas. No se vincula a ningún alumno.",
+    "submit": {
+      "RESERVATION": "Reserva la pista",
+      "BLOCK": "Bloquea la pista"
+    },
+    "sending": "Enviando",
+    "saved": {
+      "RESERVATION": "Pista reservada",
+      "BLOCK": "Pista bloqueada"
+    },
+    "askAdmin": "Pide a la administración que libere la pista.",
+    "conflicts": "Coincide con:",
+    "conflictRow": "{label} {from}–{to}",
+    "loading": "Cargando las horas de la pista",
+    "error": "No se han podido cargar las horas de la pista.",
+    "retry": "Vuelve a intentarlo",
+    "card": {
+      "title": "Reservar o bloquear pista (sin alumno)",
+      "reason": "motivo: {reason}",
+      "when": "Día y horas",
+      "from": "De",
+      "to": "A",
+      "submit": {
+        "RESERVATION": "Reserva",
+        "BLOCK": "Bloquea"
+      }
+    }
   }
 }

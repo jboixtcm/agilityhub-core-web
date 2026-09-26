@@ -1,0 +1,53 @@
+{
+  "title": "Entrenamientos",
+  "days": {
+    "label": "Día",
+    "today": "Hoy {day}"
+  },
+  "rings": {
+    "label": "Pista",
+    "any": "Cualquiera",
+    "setup": "{ring}: recorrido montado"
+  },
+  "grid": {
+    "morning": "Mañana",
+    "afternoon": "Tarde",
+    "classLabel": "{time} clase",
+    "own": "{time} · mía",
+    "free": "libre",
+    "taken": "ocupada",
+    "cell": "{time}, {state}",
+    "stale": "puede no estar al día"
+  },
+  "anyRing": {
+    "choose": "A las {time} hay más de una pista libre; elige cuál quieres:"
+  },
+  "counter": {
+    "title": "Llevas {used}/{limit} entrenamientos esta semana",
+    "reset": "reinicio {weekOpensAt}",
+    "weekOpensAt": "{weekday} {time}"
+  },
+  "confirm": {
+    "button": "Confirma {day} · {from}–{to} · {ring}",
+    "sending": "Enviando",
+    "done": "Entrenamiento reservado"
+  },
+  "limit": {
+    "withCancellable": "Has llegado al límite de {limit} reservas para esta semana: anula alguna de las próximas para reservar otra.",
+    "none": "Has llegado al límite de {limit} reservas para esta semana.",
+    "booking": "{day} · {time} · {ring}"
+  },
+  "day": {
+    "closed": "El club está cerrado este día"
+  },
+  "loading": "Cargando los entrenamientos",
+  "error": "No se han podido cargar los entrenamientos.",
+  "retry": "Vuelve a intentarlo",
+  "detail": {
+    "withDog": "Entrenamiento · con {dogArticle}{dogName}",
+    "cancelDialog": "¿Quieres anular la reserva de este entrenamiento?",
+    "cancelled": "Entrenamiento anulado",
+    "tooLate": "Ya no se puede anular desde la app: ponte en contacto con el club.",
+    "tooLateDetails": "Solo se puede anular hasta {threshold} antes de empezar, y faltan {remaining}."
+  }
+}

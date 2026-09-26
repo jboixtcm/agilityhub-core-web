@@ -204,7 +204,7 @@
   "SIMULATION_STALE": "La simulació no està actualitzada. Torneu-la a executar.",
   "SLOT_NOT_ON_GRID": "La franja horària no segueix la graella configurada.",
   "SLOT_OUT_OF_WINDOW": "La franja horària és fora del període permès.",
-  "SLOT_TAKEN": "Aquesta franja horària s'acaba d'ocupar.",
+  "SLOT_TAKEN": "Aquesta pista ja no està lliure.",
   "SLUG_LOCKED": "L'identificador d'adreça està bloquejat.",
   "SLUG_TAKEN": "Aquest identificador d'adreça ja està en ús.",
   "SMS_BODY_REQUIRED": "Introduïu el contingut del missatge de text.",

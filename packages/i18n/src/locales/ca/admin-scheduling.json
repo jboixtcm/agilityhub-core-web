@@ -140,6 +140,7 @@
       "blockDetail": "{reason} {from}–{to}",
       "activity": "Activitat · {title}",
       "allRings": "totes les pistes",
+      "activityAllRings": "Activitat · {title} · totes les pistes",
       "label": "{when} · {description} · {details}"
     },
     "footer": {

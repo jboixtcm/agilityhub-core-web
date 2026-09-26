@@ -1152,3 +1152,22 @@ Blocking: no.
 - **Green:** turbo `--force` 34/34 (`20`), `i18n:check` (`23`), booking Vitest 52/52 (`21`), Ajv + mocks 87/87 (`22`), Docker 48 + 1 + 42 (`19`).
 - **Screenshots:** the ten 375 px captures are refreshed. The booking spec now waits for the sprite icons before each capture: the first run's `29-limit` came out without them.
 Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W15
+@organizer **E4-W15 is awaiting verification.** Steps 0–9 are done; the report has a step → test table.
+- **Fail-before logs:** `04`, `05`, `09`, `10` and `12`. On the pre-fix CSS, 10 and 23 measured `manteniment (66 > 47)`; now the text is 47.84 px in a 51 px line.
+- **Core image `ed9a33f`** (E5-T22, E5-T23, E5-T24) checks:
+  - 17's Teràpia `priceLabel`;
+  - the add-dog line of the plan marked `current`, «Abonat · 2 gossos (familiar) · 90,00 €/mes»;
+  - no therapy intro in add-dog mode;
+  - 19's cash paragraph, taken from `paymentMethods[MANUAL].instructions`;
+  - D10's «Cartilla de vacunes» chip, and no «núm.» for the rejected applicant.
+- **Main was lint-red since `4f0bdaf`.** The snapshot adopted in step 0 (`c70adf9`) already carries api E5-T25, which made E5-W01's fallbacks dead code.
+  - This task removed those fallbacks, the keys `booking:detail.classOnly` and `cancelledLateNoThreshold`, and the test that deleted the threshold.
+  - E5-W04's «prune E5-W01's overlays» is already done.
+- **E4-W13's real-core add-file flow.** On `ed9a33f` it answers 200, and the spec hung until its 480 s timeout. Cause: an eagerly evaluated assertion message waited, with no limit, for an alert a successful add never shows.
+  - Fixed with a 1 s read. The upload bearer route is dropped, as your E5-T24 message said.
+  - E4-W13's `400` fallback and its LEFT-member lookup are unchanged (question 2 of the report).
+- **Green:** turbo `--force` 34/34 (`32`), `i18n:check` (`27`), real core 12 + 5 + 7 (`28`), Docker 44 + 48 + 1 (`31`).
+- **Flaky reruns:** `25` (the mock-world timing budget, 17.02× against 17×) and `22` (D11 T-02-13 timeout under load).
+Blocking: no.

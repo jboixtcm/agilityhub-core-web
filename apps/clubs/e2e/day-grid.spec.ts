@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { expect, type Locator, test, type Page } from "@playwright/test";
@@ -57,6 +57,36 @@ async function brokenWords(grid: Locator): Promise<string[]> {
         return broken;
       }),
     );
+}
+
+/** The cell lines whose text is wider than the line (clipped, whole or with an ellipsis). */
+async function clippedLines(grid: Locator): Promise<string[]> {
+  await grid.evaluate(async () => document.fonts.ready);
+  return grid
+    .locator(".ah-schedule-cell__title, .ah-schedule-cell__subtitle")
+    .evaluateAll((lines) =>
+      lines
+        .filter((line) => line.scrollWidth > line.clientWidth)
+        .map((line) => `${line.textContent} (${String(line.scrollWidth)} > ${String(line.clientWidth)})`),
+    );
+}
+
+/**
+ * The width of «manteniment» (its text, sub-pixel) against its line's box, for the evidence; the
+ * text keeps at least 1 px of slack, so another rendering of the font does not clip it.
+ */
+async function reasonWidth(grid: Locator) {
+  const width = await grid.getByText("manteniment").evaluate((line) => {
+    const range = document.createRange();
+    range.selectNodeContents(line);
+    return {
+      lineWidth: line.clientWidth,
+      scrollWidth: line.scrollWidth,
+      textWidth: Math.round(range.getBoundingClientRect().width * 100) / 100,
+    };
+  });
+  expect(width.textWidth).toBeLessThanOrEqual(width.lineWidth - 1);
+  return width;
 }
 
 async function expectIdenticalColumns(grid: Locator) {
@@ -233,6 +263,51 @@ test.describe("E4-W12 step 7 the 375 px cells of 10 and 23", () => {
     const grid = page.getByRole("table", { name: "Quadre del dia" });
     await expect(grid.getByText("Bloq.")).toBeVisible();
     expect(await brokenWords(grid)).toEqual([]);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(stepEvidence, "23-visio-global-cells-375.png"),
+    });
+  });
+});
+
+test.describe("T-06-29 E4-W15 step 5 «manteniment» whole in the 375 px cells of 10 and 23 (E4-W12 review #3)", () => {
+  const stepEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W15");
+
+  test.beforeAll(() => {
+    mkdirSync(stepEvidence, { recursive: true });
+  });
+
+  test("member: «Ocupada · manteniment» and every other cell line fit whole, with no ellipsis", async ({
+    page,
+  }) => {
+    await login(page, "member", "/inici");
+    await page.goto(`${baseUrl}/avui?date=2026-08-04`);
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await expect(grid.getByText("manteniment")).toBeVisible();
+    expect(await clippedLines(grid)).toEqual([]);
+    expect(await brokenWords(grid)).toEqual([]);
+    await expectIdenticalColumns(grid);
+    writeFileSync(
+      resolve(stepEvidence, "10-manteniment-width-375.json"),
+      `${JSON.stringify(await reasonWidth(grid), null, 2)}\n`,
+    );
+    await page.screenshot({ fullPage: true, path: resolve(stepEvidence, "10-avui-cells-375.png") });
+  });
+
+  test("instructor: «Bloq. · manteniment» and every other cell line fit whole, with no ellipsis", async ({
+    page,
+  }) => {
+    await login(page, "instructor", "/instructor/avui");
+    await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await expect(grid.getByText("manteniment")).toBeVisible();
+    expect(await clippedLines(grid)).toEqual([]);
+    expect(await brokenWords(grid)).toEqual([]);
+    await expectIdenticalColumns(grid);
+    writeFileSync(
+      resolve(stepEvidence, "23-manteniment-width-375.json"),
+      `${JSON.stringify(await reasonWidth(grid), null, 2)}\n`,
+    );
     await page.screenshot({
       fullPage: true,
       path: resolve(stepEvidence, "23-visio-global-cells-375.png"),

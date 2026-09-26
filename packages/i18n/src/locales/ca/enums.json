@@ -44,6 +44,18 @@
     "BLOCK": "Bloqueig",
     "RESERVATION": "Reserva de pista"
   },
+  "trainingBookingState": {
+    "CONFIRMED": "confirmada",
+    "DONE": "fet",
+    "CANCELLED": "anul·lada",
+    "CANCELLED_BY_CLUB": "cancel·lada pel club"
+  },
+  "slotReason": {
+    "CLASS": "classe",
+    "RING_BLOCK": "bloqueig",
+    "TRAINING": "entrenament",
+    "OWN_TRAINING": "el teu entrenament"
+  },
   "ringBlockReason": {
     "MAINTENANCE": "manteniment",
     "PRIVATE_CLASS": "classe particular",

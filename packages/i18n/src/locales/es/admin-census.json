@@ -192,6 +192,7 @@
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",
+    "documentPending": "Documento pendiente",
     "pack": "Pack {total}: {used}/{remaining} · caduca {date}",
     "payment": {
       "adminOnly": "cambio solo admin",

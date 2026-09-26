@@ -1,0 +1,485 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member
+ ↓ src/planning/CalendarPage.test.tsx > E3-W07 step 9 a D1 risk row opens D4 on its class > selects the class of `?classe=` in the week of `?setmana=`
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 R-02-09 R-06-09 on a closed Sunday only «Notes» is editable: every chip editor is disabled, and [ACCEPTA] saves the notes alone
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 an open day keeps the chip editors enabled
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity on some rings keeps one cell per ring
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > filters by action and opens the masked before/after change drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > E3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC)
+ × src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole 178ms
+   → expected [ 'at', 'action', 'entityLabel', …(4) ] to deeply equal ArrayContaining{…}
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > opens the exports drawer for a queued job and exposes its READY download
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > shows the catalogued EXPORT_LIMIT explanation in the exports drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued members list export into the global drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued dogs list export into the global drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > links LastChange to the entity-scoped audit trail
+ × src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > AGENTS rule 1: the accessible name follows calendar.cell.activityAllRings, whatever its word order 183ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveAccessibleName()[22m
+
+Expected element to have accessible name:
+[32m  Totes les pistes: Torneig d'Estiu 2026 (activitat)[39m
+Received:
+[31m  Activitat · Torneig d'Estiu 2026 · totes les pistes[39m
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in es the all-rings cell reads «Actividad · Torneig d'Estiu 2026 · todas las pistas» 78ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in en the all-rings cell reads «Activity · Torneig d'Estiu 2026 · all rings» 73ms
+ × src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent» 10142ms
+   → Unable to find an element with the text: Cartilla de vacunes. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-rock"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mRock[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mmestís[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0mPot entrenar sol[0m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mPack 10: 6/4 · caduca 12-11[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mRETIRED_TYPE[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-rock"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mRock[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mmestís[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0mPot entrenar sol[0m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mPack 10: 6/4 · caduca 12-11[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mRETIRED_TYPE[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+ × src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > never shows the raw key while the labels load or when they cannot be read 70ms
+   → Unable to find an element with the text: Document pendent. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-duna"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mDuna[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mborder collie[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mC[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+ × src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > shows no «núm.» badge for a member without a number 28ms
+   → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <span
+  class="ah-badge ah-tone--neutral"
+>
+  núm. 
+</span> instead[39m
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole
+AssertionError: expected [ 'at', 'action', 'entityLabel', …(4) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
++   "at",
++   "action",
+    "entityLabel",
+-   "entityType",
+    "actorName",
+-   "actorRole",
++   "impersonatedName",
++   "changes",
++   "origin",
+  ]
+
+ ❯ src/audit/AuditPage.test.tsx:180:48
+    178|     const unlabelled = screen.getByRole("link", { name: "Dades de l'ab…
+    179|     if (system === null || unlabelled === null) throw new TypeError("T…
+    180|     expect(requestedFields.at(-1)?.split(",")).toEqual(
+       |                                                ^
+    181|       expect.arrayContaining(["entityLabel", "entityType", "actorName"…
+    182|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent»
+TestingLibraryElementError: Unable to find an element with the text: Cartilla de vacunes. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-rock"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mRock[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mmestís[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0mPot entrenar sol[0m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mPack 10: 6/4 · caduca 12-11[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mRETIRED_TYPE[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-rock"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mRock[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mmestís[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0mPot entrenar sol[0m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mPack 10: 6/4 · caduca 12-11[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mRETIRED_TYPE[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusRecordPage.test.tsx:155:31
+    153|
+    154|     const rock = screen.getByRole("link", { name: /Rock/u });
+    155|     expect(await within(rock).findByText("Cartilla de vacunes")).toHav…
+       |                               ^
+    156|     expect(within(rock).getByText("Document pendent")).toHaveClass("ah…
+    157|     expect(screen.queryByText("VACCINATION_CARD")).not.toBeInTheDocume…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > never shows the raw key while the labels load or when they cannot be read
+TestingLibraryElementError: Unable to find an element with the text: Document pendent. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mclass[39m=[32m"census-record__dog-link"[39m
+  [33mhref[39m=[32m"/gossos/dog-duna"[39m
+[36m>[39m
+  [36m<span>[39m
+    [36m<strong>[39m
+      [0mDuna[0m
+    [36m</strong>[39m
+    [0m · [0m
+    [0mborder collie[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"census-record__dog-details"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"census-level-chip"[39m
+    [36m>[39m
+      [0mC[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+    [36m>[39m
+      [0mVACCINATION_CARD[0m
+    [36m</span>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</span>[39m
+[36m</a>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:175:25
+    173|
+    174|     const duna = screen.getByRole("link", { name: /Duna/u });
+    175|     expect(within(duna).getByText("Document pendent")).toHaveClass("ah…
+       |                         ^
+    176|     expect(screen.queryByText("VACCINATION_CARD")).not.toBeInTheDocume…
+    177|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > shows no «núm.» badge for a member without a number
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <span
+  class="ah-badge ah-tone--neutral"
+>
+  núm. 
+</span> instead[39m
+ ❯ src/census/CensusRecordPage.test.tsx:186:57
+    184|     const identity = heading.parentElement;
+    185|     if (identity === null) throw new TypeError("The heading has no ide…
+    186|     expect(within(identity).queryByText(/^núm\./u)).not.toBeInTheDocum…
+       |                                                         ^
+    187|     expect(within(identity).getByText("alta des de 2023")).toBeVisible…
+    188|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > AGENTS rule 1: the accessible name follows calendar.cell.activityAllRings, whatever its word order
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleName()[22m
+
+Expected element to have accessible name:
+[32m  Totes les pistes: Torneig d'Estiu 2026 (activitat)[39m
+Received:
+[31m  Activitat · Torneig d'Estiu 2026 · totes les pistes[39m
+ ❯ src/planning/CalendarPage.test.tsx:1724:24
+    1722|     const week = await grid(/del 10 al 16 d.agost$/u);
+    1723|     const [tournament] = within(week).getAllByRole("link", { name: /To…
+    1724|     expect(tournament).toHaveAccessibleName("Totes les pistes: Torneig…
+       |                        ^
+    1725|   });
+    1726|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 2 passed | 53 skipped (60)
+   Start at  19:25:12
+   Duration  11.19s (tests 80%, transform 8%, environment 6%, import 4%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/audit/AuditPage.test.tsx src/census/CensusRecordPage.test.tsx src/planning/CalendarPage.test.tsx -t E4-W15 --reporter=verbose

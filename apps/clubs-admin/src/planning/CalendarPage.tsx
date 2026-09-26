@@ -584,7 +584,13 @@ export function CalendarPage({
           <ScheduleCell
             href={`/activitats/${block.activityId}`}
             icon="flag"
-            label={cell.allRings === true ? `${title} · ${place}` : title}
+            label={
+              cell.allRings === true
+                ? t("admin-scheduling:calendar.cell.activityAllRings", {
+                    title: block.activityTitle ?? "",
+                  })
+                : title
+            }
             subtitle={`${place} · ${block.fromLocal}–${block.toLocal}`}
             title={title}
           />

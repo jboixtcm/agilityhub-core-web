@@ -2203,7 +2203,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   });
 });
 
-describe("E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22)", () => {
+describe("T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22)", () => {
   const THERAPY_INTRO = /^Es poden fer també classes de teràpia individual/u;
   const SINGLE_CLASS_PLAN = "10000000-0000-4000-8000-000000000005";
   const singleClass = (config: SignupConfigJson, current?: boolean) => ({

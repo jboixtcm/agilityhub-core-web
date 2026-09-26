@@ -201,6 +201,7 @@
     },
     "language": "idioma: {locale}",
     "number": "núm. {number}",
+    "documentPending": "Document pendent",
     "pack": "Pack {total}: {used}/{remaining} · caduca {date}",
     "payment": {
       "adminOnly": "canvi només admin",

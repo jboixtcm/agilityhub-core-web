@@ -22,3 +22,16 @@ export {
 export type { components, operations, paths } from "./generated/schema";
 export { itemsWith, type ListItemWith, listFields } from "./list-fields";
 export { createQueryClient, queryKeys, useBranding, useMe } from "./query";
+export {
+  createRingBlock,
+  RING_BLOCK_REASONS_BY_KIND,
+  type RingBlockConflict,
+  ringBlockCreateBody,
+  type RingBlockCreateRequest,
+  type RingBlockFailure,
+  ringBlockFailure,
+  type RingBlockFields,
+  type RingBlockKind,
+  ringBlockKinds,
+  type RingBlockReason,
+} from "./ring-blocks";

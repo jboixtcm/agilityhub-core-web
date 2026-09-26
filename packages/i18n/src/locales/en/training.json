@@ -1,0 +1,53 @@
+{
+  "title": "Training",
+  "days": {
+    "label": "Day",
+    "today": "Today {day}"
+  },
+  "rings": {
+    "label": "Ring",
+    "any": "Any",
+    "setup": "{ring}: course set up"
+  },
+  "grid": {
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "classLabel": "{time} class",
+    "own": "{time} · mine",
+    "free": "free",
+    "taken": "taken",
+    "cell": "{time}, {state}",
+    "stale": "may be out of date"
+  },
+  "anyRing": {
+    "choose": "At {time} more than one ring is free — choose one:"
+  },
+  "counter": {
+    "title": "You have {used}/{limit} training sessions this week",
+    "reset": "resets {weekOpensAt}",
+    "weekOpensAt": "{weekday} {time}"
+  },
+  "confirm": {
+    "button": "Confirm {day} · {from}–{to} · {ring}",
+    "sending": "Sending",
+    "done": "Training booked"
+  },
+  "limit": {
+    "withCancellable": "You have reached the limit of {limit} bookings for this week: cancel one of the upcoming ones to book another.",
+    "none": "You have reached the limit of {limit} bookings for this week.",
+    "booking": "{day} · {time} · {ring}"
+  },
+  "day": {
+    "closed": "The club is closed on this day"
+  },
+  "loading": "Loading the training sessions",
+  "error": "The training sessions could not be loaded.",
+  "retry": "Try again",
+  "detail": {
+    "withDog": "Training · with {dogArticle}{dogName}",
+    "cancelDialog": "Do you want to cancel this training booking?",
+    "cancelled": "Training cancelled",
+    "tooLate": "It can no longer be cancelled from the app: please contact the club.",
+    "tooLateDetails": "It can only be cancelled up to {threshold} before it starts, and {remaining} are left."
+  }
+}

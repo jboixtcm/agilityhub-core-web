@@ -25,5 +25,62 @@
       "loading": "Carregant el bloqueig",
       "loadError": "No s'ha pogut carregar el bloqueig."
     }
+  },
+  "ringBlock": {
+    "title": "Reservar o bloquejar pista",
+    "close": "Tanca",
+    "kindLabel": "Tipus",
+    "kind": {
+      "RESERVATION": "Reserva de pista",
+      "BLOCK": "Bloqueig"
+    },
+    "reasonTitle": "Motiu",
+    "reason": {
+      "PRIVATE_CLASS": "Classe particular",
+      "THERAPY": "Teràpia",
+      "PREPARATION": "Preparació",
+      "MAINTENANCE": "Manteniment",
+      "OTHER": "Altres"
+    },
+    "day": "Dia",
+    "band": {
+      "label": "Franja",
+      "morning": "matí",
+      "afternoon": "tarda"
+    },
+    "ring": "Pista",
+    "grid": "Hores de la franja",
+    "noSlots": "No hi ha hores en aquesta franja.",
+    "note": {
+      "label": "Nota",
+      "placeholder": "Nota (opcional)"
+    },
+    "summary": "Ocupa la pista {ring} de {from} a {to}, surt al quadre global i al registre d'ús de pistes. No es vincula a cap alumne.",
+    "submit": {
+      "RESERVATION": "Reserva la pista",
+      "BLOCK": "Bloqueja la pista"
+    },
+    "sending": "Enviant",
+    "saved": {
+      "RESERVATION": "Pista reservada",
+      "BLOCK": "Pista bloquejada"
+    },
+    "askAdmin": "Demana a l'administració que alliberi la pista.",
+    "conflicts": "Coincideix amb:",
+    "conflictRow": "{label} {from}–{to}",
+    "loading": "Carregant les hores de la pista",
+    "error": "No s'han pogut carregar les hores de la pista.",
+    "retry": "Torna-ho a provar",
+    "card": {
+      "title": "Reservar o bloquejar pista (sense alumne)",
+      "reason": "motiu: {reason}",
+      "when": "Dia i hores",
+      "from": "De",
+      "to": "A",
+      "submit": {
+        "RESERVATION": "Reserva",
+        "BLOCK": "Bloqueja"
+      }
+    }
   }
 }

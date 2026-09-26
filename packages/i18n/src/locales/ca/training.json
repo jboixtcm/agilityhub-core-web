@@ -1,0 +1,53 @@
+{
+  "title": "Entrenaments",
+  "days": {
+    "label": "Dia",
+    "today": "Avui {day}"
+  },
+  "rings": {
+    "label": "Pista",
+    "any": "Qualsevol",
+    "setup": "{ring}: recorregut muntat"
+  },
+  "grid": {
+    "morning": "Matí",
+    "afternoon": "Tarda",
+    "classLabel": "{time} classe",
+    "own": "{time} · meva",
+    "free": "lliure",
+    "taken": "ocupada",
+    "cell": "{time}, {state}",
+    "stale": "pot no estar al dia"
+  },
+  "anyRing": {
+    "choose": "A les {time} hi ha més d'una pista lliure — tria quina vols:"
+  },
+  "counter": {
+    "title": "Portes {used}/{limit} entrenaments aquesta setmana",
+    "reset": "reinici {weekOpensAt}",
+    "weekOpensAt": "{weekday} {time}"
+  },
+  "confirm": {
+    "button": "Confirma {day} · {from}–{to} · {ring}",
+    "sending": "Enviant",
+    "done": "Entrenament reservat"
+  },
+  "limit": {
+    "withCancellable": "Has arribat al límit de {limit} reserves per aquesta setmana: anul·la alguna de les properes per reservar-ne una altra.",
+    "none": "Has arribat al límit de {limit} reserves per aquesta setmana.",
+    "booking": "{day} · {time} · {ring}"
+  },
+  "day": {
+    "closed": "El club està tancat aquest dia"
+  },
+  "loading": "Carregant els entrenaments",
+  "error": "No s'han pogut carregar els entrenaments.",
+  "retry": "Torna-ho a provar",
+  "detail": {
+    "withDog": "Entrenament · amb {dogArticle}{dogName}",
+    "cancelDialog": "Vols anul·lar la reserva d'aquest entrenament?",
+    "cancelled": "Entrenament anul·lat",
+    "tooLate": "Ja no es pot anul·lar des de l'app: posa't en contacte amb el club.",
+    "tooLateDetails": "Només es pot anul·lar fins a {threshold} abans de començar, i en falten {remaining}."
+  }
+}

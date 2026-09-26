@@ -3,6 +3,7 @@
 .ah-day-grid {
   display: grid;
   gap: 0.2rem;
+  column-gap: calc(var(--ah-space-1) / 2);
   width: 100%;
   font-size: 0.625rem;
 }
@@ -69,4 +70,17 @@
   word-break: normal;
   hyphens: manual;
   white-space: pre-line;
+}
+
+/* Cells without a ring colour («Ocupada», «Bloq.», «Entren.») name a reason: «manteniment» is
+   about 7.2 em long in Montserrat and fits whole in a 375 px column (E4-W15), with room to spare,
+   through a narrower inline padding (no fill to frame) and a smaller, tighter line: 7.2 px, still
+   larger than the mockups' 6.8 px. */
+.ah-day-grid .ah-schedule-cell--plain {
+  padding-inline: calc(var(--ah-space-1) / 2);
+}
+
+.ah-day-grid .ah-schedule-cell--plain .ah-schedule-cell__subtitle {
+  font-size: 0.45rem;
+  letter-spacing: -0.04em;
 }

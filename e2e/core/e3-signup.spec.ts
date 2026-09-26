@@ -52,14 +52,20 @@ interface Money {
 /** The part of `GET /signup` the «Pagament inicial» card reads (api E3-T08 `planQuotes`). */
 interface SignupQuoteConfig {
   member?: { planId?: string };
+  /** `paymentMethods[].instructions` (api E5-T23): the club's cash paragraph under 19's total. */
+  paymentMethods?: { instructions?: string; label: string; type: string }[];
   plans?: {
     conditions?: string;
+    /** Add-dog mode (api E5-T22, R-04-09): `true` on the member's own plan. */
+    current?: boolean;
     id: string;
     name: string;
-    price?: unknown;
+    pack?: { validityMonths?: number };
+    price?: { amount: Money } | null;
     priceLabel?: string;
     type?: string;
   }[];
+  texts?: { therapyIntro?: string };
   upfront?: {
     planQuotes: {
       lines: { amount: Money; concept: string }[];
@@ -120,15 +126,32 @@ function euros(amount: Money): string {
   return `${(amount.amountMinor / 100).toFixed(2).replace(".", ",")} €`;
 }
 
+/** The member's own plan in add-dog mode: the one plan `GET /signup` marks `current` (R-04-09). */
+function currentPlan(config: SignupQuoteConfig) {
+  const current = (config.plans ?? []).filter((item) => item.current === true);
+  return current.length === 1 ? current[0] : undefined;
+}
+
+/**
+ * The price slot of a plan on 17 in ca (S05 R-05-19): «{price}/mes», «{price}/classe», the pack's
+ * «{price} · {months} mesos», else the plan's `priceLabel`.
+ */
+function planPriceText(plan: NonNullable<SignupQuoteConfig["plans"]>[number]): string {
+  if (plan.price === undefined || plan.price === null) return plan.priceLabel ?? "";
+  const price = euros(plan.price.amount);
+  if (plan.type === "PACK") return `${price} · ${String(plan.pack?.validityMonths ?? 1)} mesos`;
+  return plan.type === "SINGLE_CLASS" ? `${price}/classe` : `${price}/mes`;
+}
+
 /**
  * R-04-14/15 on the real core: 19 renders the selected plan's quote from `GET /signup`, with the
  * labels of each option's `option`/`portion` and the total of the default (first) option.
  */
 async function expectQuoteCard(page: Page, config: SignupQuoteConfig, planName: string | undefined) {
-  // Add-dog mode quotes the member's own plan (preselected on 17).
+  // Add-dog mode quotes the member's own plan, the one `GET /signup` marks `current` (api E5-T22).
   const addDog = config.member !== undefined;
   const planId = addDog
-    ? config.member?.planId
+    ? currentPlan(config)?.id
     : (planName === undefined ? config.plans?.[0] : config.plans?.find((item) => item.name === planName))?.id;
   const quote = config.upfront?.planQuotes.find((item) => item.planId === planId);
   if (quote === undefined) throw new Error(`No quote for ${planName ?? "the first plan"}: ${JSON.stringify(config.upfront)}`);
@@ -396,7 +419,11 @@ async function completePublicSignup({
   /** Attach the vaccination card on 17 although it is optional (`cartilla_{dog}_1.jpg`). */
   attachCard?: boolean;
 }): Promise<string> {
+  const formConfigResponse = page.waitForResponse(
+    (response) => response.url().endsWith("/api/v1/signup") && response.request().method() === "GET",
+  );
   await page.goto(`${clubsUrl}/apuntat-hi`);
+  const formConfig = (await (await formConfigResponse).json()) as SignupQuoteConfig;
   await expect(page.getByText(/Pas 1 de 4/u)).toBeVisible();
   await fillPerson(page, {
     document,
@@ -412,6 +439,23 @@ async function completePublicSignup({
   await page.waitForURL("**/apuntat-hi/gos");
   await fillDog(page, dog, chip, breed);
   if (plan !== undefined) await page.getByRole("button", { name: `Selecciona ${plan}` }).click();
+  // E4-W15 step 1 (api E5-T22, R-05-19): a plan without a current price (the Teràpia of the seed)
+  // shows the core's `priceLabel` in its card's price slot; the others their price.
+  const labelledPlans = (formConfig.plans ?? []).filter(
+    (item) => (item.price === undefined || item.price === null) && (item.priceLabel ?? "") !== "",
+  );
+  expect(labelledPlans.length, JSON.stringify(formConfig.plans)).toBeGreaterThan(0);
+  for (const item of formConfig.plans ?? []) {
+    const card = page.getByRole("button", { exact: true, name: `Selecciona ${item.name}` });
+    if (labelledPlans.includes(item)) {
+      await expect(card.locator(".signup-plan__price-label")).toHaveText(item.priceLabel ?? "");
+    } else if (item.type !== "PACK") {
+      await expect(card.locator(".signup-plan__head b")).toHaveText(planPriceText(item));
+    }
+  }
+  // The public form, where the plan is chosen, keeps the therapy intro (E4-W15 step 4).
+  expect(formConfig.texts?.therapyIntro ?? "").not.toBe("");
+  await expect(page.getByText(formConfig.texts?.therapyIntro ?? "", { exact: true })).toBeVisible();
   if (screenshots) await screenshot(page, "17-dog-core-375.png");
   if (documentRequired) {
     // R-04-08: without the card, 17 stays with an actionable error on the file control.
@@ -474,6 +518,26 @@ async function completePublicSignup({
   const config = (await (await paymentConfig).json()) as SignupQuoteConfig;
   await expect(page.locator(".signup-upfront__total")).toBeVisible();
   await expectQuoteCard(page, config, plan);
+  // E4-W15 step 9 (api E5-T23, S04 §2 row 19): without a card method, the paragraph under the total
+  // is the club's cash text, `paymentMethods[MANUAL].instructions` of this same answer.
+  const cashText = config.paymentMethods?.find((method) => method.type === "MANUAL")?.instructions ?? "";
+  expect(cashText.trim(), JSON.stringify(config.paymentMethods?.map((method) => method.type))).not.toBe("");
+  expect(config.paymentMethods?.some((method) => method.type === "CARD")).toBe(false);
+  await expect(page.locator(".signup-upfront__total + p")).toHaveText(cashText);
+  if (screenshots) {
+    writeFileSync(
+      join(evidenceDirectory, "signup-payment-methods-core.json"),
+      `${JSON.stringify(
+        (config.paymentMethods ?? []).map((method) => ({
+          instructionsLength: method.instructions?.length ?? null,
+          label: method.label,
+          type: method.type,
+        })),
+        null,
+        2,
+      )}\n`,
+    );
+  }
   if (screenshots) {
     // E4-W12 step 3 (R-05-19): what the core's `GET /signup` sends for each plan card of 17.
     writeFileSync(
@@ -862,6 +926,21 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
         `${message.subject ?? ""} ${message.text ?? ""} ${message.html ?? ""}`,
       ),
   );
+  // E4-W15 step 8 (E4-W13 report, question 4): the rejected applicant never got a member number,
+  // and its D10 shows no empty «núm.» badge.
+  const rejectedOverviewResponse = admin.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/api/v1/members/${rejectedMemberId}/overview`) &&
+      response.request().method() === "GET",
+  );
+  await navigateSpa(admin, `/abonats/${rejectedMemberId}`);
+  const rejectedOverview = (await (await rejectedOverviewResponse).json()) as {
+    member: { memberNumber?: number | null };
+  };
+  expect(rejectedOverview.member.memberNumber ?? null).toBeNull();
+  await expect(admin.getByRole("heading", { name: rejectedName })).toBeVisible();
+  await expect(admin.locator(".census-record__identity").getByText(/^núm\./u)).toHaveCount(0);
+  await screenshot(admin, "D10-rejected-applicant-core-1280.png");
 
   await navigateSpa(member, "/gossos");
   await expect(member.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
@@ -877,25 +956,35 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await member.waitForURL("**/gossos/nou");
   const addDogForm = (await (await addDogFormConfig).json()) as SignupQuoteConfig;
   await fillDog(member, additionalDog, "941000000009903");
-  // E4-W12 step 4 (T-04-32): no plan cards and no selection; the member's plan is one read-only
-  // line when the form offers it (a plan off the form has no name in `GET /signup`).
+  // E4-W12 step 4 and E4-W15 step 1 (T-04-32, R-04-09, api E5-T22): no plan cards and no
+  // selection; the member's plan, the one `GET /signup` marks `current`, is one read-only line with
+  // its price. Nora was validated on a plan, so the core marks exactly one.
   await expect(member.getByRole("button", { name: /^Selecciona /u })).toHaveCount(0);
-  const memberPlan = addDogForm.plans?.find((item) => item.id === addDogForm.member?.planId);
-  if (memberPlan === undefined) {
-    await expect(member.getByRole("region", { name: "Modalitat" })).toHaveCount(0);
-  } else {
-    await expect(member.locator(".signup-plan-current")).toContainText(memberPlan.name);
-  }
+  const memberPlan = currentPlan(addDogForm);
+  expect(memberPlan, JSON.stringify(addDogForm.plans)).toBeDefined();
+  if (memberPlan === undefined) throw new TypeError("No plan of GET /signup is current");
+  const memberPlanPrice = planPriceText(memberPlan);
+  await expect(member.locator(".signup-plan-current")).toHaveText(
+    memberPlanPrice === "" ? memberPlan.name : `${memberPlan.name} · ${memberPlanPrice}`,
+  );
+  // E4-W15 step 4: the therapy intro helps to choose a plan, so it is not above a line the member
+  // cannot change (the public 17 above showed it).
+  const therapyIntro = addDogForm.texts?.therapyIntro ?? "";
+  expect(therapyIntro).not.toBe("");
+  await expect(member.getByText(therapyIntro, { exact: true })).toHaveCount(0);
   writeFileSync(
     join(evidenceDirectory, "signup-add-dog-plans-core.json"),
     `${JSON.stringify(
       {
         memberPlanId: addDogForm.member?.planId ?? null,
-        memberPlanOffered: memberPlan !== undefined,
         memberPlanQuoted:
-          addDogForm.upfront?.planQuotes.some((quote) => quote.planId === addDogForm.member?.planId) ??
-          false,
-        plans: (addDogForm.plans ?? []).map((item) => ({ id: item.id, name: item.name })),
+          addDogForm.upfront?.planQuotes.some((quote) => quote.planId === memberPlan.id) ?? false,
+        plans: (addDogForm.plans ?? []).map((item) => ({
+          current: item.current ?? null,
+          id: item.id,
+          name: item.name,
+          priceLabel: item.priceLabel ?? null,
+        })),
       },
       null,
       2,
@@ -935,7 +1024,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await member.unroute("**/api/v1/me/dogs/signup");
   // E3-W08 round 2 #7: the add-dog quote the card showed, and the amounts the api froze on submission.
   expect(addDogSubmission.result).toBeDefined();
-  const memberQuote = addDogQuoteConfig.upfront?.planQuotes.find((item) => item.planId === addDogQuoteConfig.member?.planId);
+  const memberQuote = addDogQuoteConfig.upfront?.planQuotes.find((item) => item.planId === currentPlan(addDogQuoteConfig)?.id);
   expect(addDogSubmission.result?.upfront?.totalDue).toEqual(memberQuote?.options[0]?.totalDue ?? memberQuote?.totalDue);
   writeFileSync(
     join(evidenceDirectory, "signup-quote-add-dog-core.json"),
@@ -1322,24 +1411,32 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       documents: { files: { fileKey: string; name: string }[]; type: string }[];
       version: number;
     }
-    // The local core is its own storage: the admin's signed URL is `/api/v1/attachments/uploads/{id}`,
-    // which answers 401 to the PUT with the signed headers alone (log 13 of E4-W13), unlike a
-    // presigned S3 URL. The web keeps the contract (`Upload.headers` only, never a bearer to the
-    // storage), so the stack's route adds the admin's bearer; reported to the api in E4-W13.
-    const uploadRoute = "**/api/v1/attachments/uploads/**";
-    await admin.route(uploadRoute, async (route) => {
-      await route.continue({ headers: { ...route.request().headers(), authorization: readmissionApi.authorization } });
-    });
+    // The local core is its own storage: since api E5-T24 (image `dd3c246` or later) its signed URL
+    // `/api/v1/attachments/uploads/{id}` takes the PUT with the signed headers alone, like a presigned
+    // S3 URL, so the stack no longer adds the admin's bearer (organizer, 26-09).
     await readmissionDrawer.getByLabel("Tipus de document").selectOption("VACCINATION_CARD");
     await readmissionDrawer
       .getByLabel("Fitxer")
       .setInputFiles({ buffer: Buffer.from("fictional-card-page-2"), mimeType: "image/jpeg", name: "cartilla_retorn_2.jpg" });
     // The signed upload (the admin's `POST /attachments/upload-url`, then the PUT), then the PATCH.
+    // Each answer is awaited two minutes at most, and their timings go to the evidence.
+    const addTimeout = { timeout: 120_000 };
     const signedUpload = admin.waitForResponse(
       (response) => response.url().endsWith("/api/v1/attachments/upload-url") && response.request().method() === "POST",
+      addTimeout,
     );
-    const storagePut = admin.waitForResponse((response) => response.request().method() === "PUT");
-    const addPatch = admin.waitForResponse(isDogPatch);
+    const storagePut = admin.waitForResponse((response) => response.request().method() === "PUT", addTimeout);
+    const addPatch = admin.waitForResponse(isDogPatch, addTimeout);
+    const clickedAt = Date.now();
+    const requestTiming = (response: PlaywrightResponse | undefined) => {
+      if (response === undefined) return null;
+      const timing = response.request().timing();
+      return {
+        responseEndMs: Math.round(timing.responseEnd),
+        sentAfterClickMs: Math.round(timing.startTime - clickedAt),
+        status: response.status(),
+      };
+    };
     const viewAfterAdd = nextSignupView(admin);
     const drawerAlert = readmissionDrawer.locator(".signup-edit-documents [role=alert]");
     // Settles `true` when the drawer shows an error; never rejects (it may outlive the test).
@@ -1347,7 +1444,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       () => true,
       () => false,
     );
-    const drawerText = async () => (await drawerAlert.textContent().catch(() => null)) ?? "";
+    // The alert's text for a failure message, or "" at once when there is none: an unbounded
+    // `textContent()` waited for an alert that a successful add never shows, until the test timed
+    // out (E4-W15, image `ed9a33f`, where the add answers 200; logs 14–19).
+    const drawerText = async () =>
+      (await drawerAlert.textContent({ timeout: 1_000 }).catch(() => null)) ?? "";
     await readmissionDrawer.getByRole("button", { name: "Puja el document" }).click();
     const signed = await signedUpload;
     expect(signed.status(), await signed.text()).toBe(201);
@@ -1360,7 +1461,6 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     const added =
       addedOrAlert === "alert" ? await Promise.race([addPatch, admin.waitForTimeout(5000).then(() => undefined)]) : addedOrAlert;
     if (added === undefined) throw new Error(`The drawer refused the upload before its PATCH: ${await drawerText()}`);
-    await admin.unroute(uploadRoute);
     const addBody = added.request().postDataJSON() as DocumentsPatch;
     // The type's kept file (its view key, stored name) plus the new upload's key.
     expect(addBody.documents.map((document) => [document.type, document.files.map((file) => file.name)])).toEqual([
@@ -1377,6 +1477,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
             type: document.type,
           })),
           status: added.status(),
+          timings: { patch: requestTiming(added), put: requestTiming(stored), signed: requestTiming(signed) },
         },
         null,
         2,

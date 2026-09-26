@@ -309,6 +309,60 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
     expect(title?.declarations.get("text-overflow")).toBe("ellipsis");
   });
 
+  it("T-06-29 E4-W15 step 5 (E4-W12 review #3): the reason cells fit «manteniment» whole through their class, with the space tokens, never an ellipsis", () => {
+    render(
+      <DayGrid
+        columns={columns}
+        labels={labels}
+        rows={[
+          {
+            cells: [
+              classCell({}),
+              { dashed: true, id: "b1", kind: "BLOCK", reasonLabel: "manteniment", ringId: "ring-car" },
+            ],
+            time: "08:30",
+          },
+        ]}
+        view="member"
+      />,
+    );
+    // The reason cell is a plain one; a class cell (tinted, with its instructor) is not.
+    expect(screen.getByText("manteniment").closest(".ah-schedule-cell")).toHaveClass(
+      "ah-schedule-cell--plain",
+    );
+    expect(screen.getByText("Marc").closest(".ah-schedule-cell")).not.toHaveClass(
+      "ah-schedule-cell--plain",
+    );
+
+    const css = readFileSync(resolve(import.meta.dirname, "day-grid.css"), "utf8").replaceAll(
+      /\/\*[\s\S]*?\*\//gu,
+      "",
+    );
+    const rule = (selector: string) => {
+      const match = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/gu)].find(
+        ([, candidate = ""]) => candidate.trim() === selector,
+      );
+      return new Map(
+        (match?.[2] ?? "")
+          .split(";")
+          .map((declaration) => declaration.split(":").map((part) => part.trim()))
+          .filter((parts): parts is [string, string] => parts.length === 2 && parts[0] !== ""),
+      );
+    };
+    const rem = (value: string | undefined) => Number(/^([\d.]+)rem$/u.exec(value ?? "")?.[1]);
+    // Narrower spacing from the design tokens: the columns' gap and the plain cells' padding.
+    expect(rule(".ah-day-grid").get("column-gap")).toBe("calc(var(--ah-space-1) / 2)");
+    expect(rule(".ah-day-grid .ah-schedule-cell--plain").get("padding-inline")).toBe(
+      "calc(var(--ah-space-1) / 2)",
+    );
+    // A smaller, tighter reason line than the other cells' second line; no ellipsis of its own.
+    const reason = rule(".ah-day-grid .ah-schedule-cell--plain .ah-schedule-cell__subtitle");
+    const subtitle = rule(".ah-day-grid .ah-schedule-cell__subtitle");
+    expect(rem(reason.get("font-size"))).toBeLessThan(rem(subtitle.get("font-size")));
+    expect(reason.get("letter-spacing")).toMatch(/^-0\.0\d+em$/u);
+    expect(reason.has("text-overflow")).toBe(false);
+  });
+
   it("hides cancelled classes from the member view", () => {
     render(
       <DayGrid

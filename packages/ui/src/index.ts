@@ -3,6 +3,7 @@ import "./day-grid.css";
 import "./limited-markdown.css";
 import "./rich-text.css";
 import "./schedule-grid.css";
+import "./slot-grid.css";
 import "./universal-list.css";
 
 export * from "./branding";
@@ -16,6 +17,7 @@ export * from "./rich-text";
 export * from "./rich-text-editor";
 export * from "./safe-html";
 export * from "./schedule-grid";
+export * from "./slot-grid";
 export * from "./universal-list";
 
 export const UI_PACKAGE_NAME = "@agilityhub/ui" as const;

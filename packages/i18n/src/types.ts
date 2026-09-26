@@ -21,6 +21,7 @@ export const namespaces = [
   "instructor",
   "shell",
   "signup",
+  "training",
   "errors",
 ] as const;
 

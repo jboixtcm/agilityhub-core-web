@@ -4,7 +4,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -121,6 +121,73 @@ describe("T-14-26 member audit and exports", () => {
 
     expect(await screen.findByRole("link", { name: "Sol·licitud d'alta enviada" })).toBeVisible();
     expect(screen.getByText("Formulari públic")).toHaveClass("ah-badge");
+  });
+
+  it("E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole", async () => {
+    // Two entries as the api stores them: a system change (no actor name) and an entity without a
+    // label. With `fields`, the api sends the row id and the keys asked for, nothing else.
+    const stored = [
+      {
+        action: "DOG_LEVEL_CHANGED",
+        actorRole: "SYSTEM",
+        at: "2026-08-08T10:02:00Z",
+        changes: [],
+        entityId: "00000000-0000-4000-8000-000000000301",
+        entityLabel: "Duna",
+        entityType: "Dog",
+        id: "00000000-0000-4000-8000-000000000201",
+        memberId: "00000000-0000-4000-8000-000000000087",
+        origin: "SYSTEM",
+      },
+      {
+        action: "MEMBER_UPDATED",
+        actorAccountId: "00000000-0000-4000-8000-000000000501",
+        actorName: "Jordi Soler",
+        actorRole: "ADMIN",
+        at: "2026-08-07T09:00:00Z",
+        changes: [],
+        entityId: "00000000-0000-4000-8000-000000000087",
+        entityType: "Member",
+        id: "00000000-0000-4000-8000-000000000202",
+        memberId: "00000000-0000-4000-8000-000000000087",
+        origin: "BACKOFFICE",
+      },
+    ];
+    const requestedFields: string[] = [];
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", ({ request }) => {
+        const fields = new URL(request.url).searchParams.get("fields") ?? "";
+        requestedFields.push(fields);
+        const kept = new Set(["id", ...fields.split(",")]);
+        return HttpResponse.json({
+          appliedFilters: [],
+          items: stored.map((entry) =>
+            Object.fromEntries(Object.entries(entry).filter(([key]) => kept.has(key))),
+          ),
+          page: 0,
+          size: 50,
+          totalItems: stored.length,
+          totalPages: 1,
+        });
+      }),
+    );
+    window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
+    await renderAudit();
+
+    const system = (await screen.findByRole("link", { name: "Nivell del gos modificat" })).closest("tr");
+    const unlabelled = screen.getByRole("link", { name: "Dades de l'abonat modificades" }).closest("tr");
+    if (system === null || unlabelled === null) throw new TypeError("The audit rows are missing");
+    expect(requestedFields.at(-1)?.split(",")).toEqual(
+      expect.arrayContaining(["entityLabel", "entityType", "actorName", "actorRole"]),
+    );
+    // «Actor» falls back to the role, «Entitat» to the entity's type.
+    const headers = screen.getAllByRole("columnheader").map((header) => header.textContent);
+    const cell = (row: HTMLElement, column: string) =>
+      within(row).getAllByRole("cell")[headers.indexOf(column)]?.textContent;
+    expect(cell(system, "Actor")).toBe("Sistema");
+    expect(cell(system, "Entitat")).toBe("Duna");
+    expect(cell(unlabelled, "Actor")).toBe("Jordi Soler");
+    expect(cell(unlabelled, "Entitat")).toBe("Member");
   });
 
   it("opens the exports drawer for a queued job and exposes its READY download", async () => {

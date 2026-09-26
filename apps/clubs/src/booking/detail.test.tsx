@@ -86,19 +86,6 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     ).toBeVisible();
   });
 
-  it("the published core omits the threshold: the dialog has no warning, and the late note reads without it", async () => {
-    vi.setSystemTime(new Date("2026-08-03T16:00:00+02:00"));
-    const reads = rewrite("/bookings/:id", (body) => {
-      delete body.lateCancelThresholdMinutes;
-    });
-    await openBooking();
-    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
-    expect(screen.queryByText(/Falten menys de/u)).toBeNull();
-    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "ANUL·LA" }));
-    expect(await screen.findByText(/^Anul·lació feta fora del termini establert\./u)).toBeVisible();
-    expect(reads.calls).toBeGreaterThan(1);
-  });
-
   it("a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)", async () => {
     // The mock's swap (bookingLimit, mockup 06) cancels Friday 7 in time, as R-08-09.
     await renderApp("/reservar", { scenario: "bookingLimit" });

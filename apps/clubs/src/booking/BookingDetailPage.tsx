@@ -126,14 +126,12 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
     session.ringName === null || session.ringName === undefined || session.ringName === ""
       ? when
       : `${when}${t("booking:separator")}${session.ringName}`;
-  const title =
-    data.dog === undefined
-      ? t("booking:detail.classOnly", { description: session.description })
-      : t("booking:detail.classWithDog", {
-          description: session.description,
-          dogArticle: dogArticle(data.dog.name, data.dog.sex, formats.locale),
-          dogName: data.dog.name,
-        });
+  // The booking always names its dog (api E5-T25, adopted by E4-W15 step 0).
+  const title = t("booking:detail.classWithDog", {
+    description: session.description,
+    dogArticle: dogArticle(data.dog.name, data.dog.sex, formats.locale),
+    dogName: data.dog.name,
+  });
   const bookedAt = {
     date: t("booking:detail.weekdayDate", {
       date: formats.formatDate(data.bookedAt, "dayMonthNumeric"),
@@ -149,6 +147,7 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
       : t("booking:detail.bookedAt", bookedAt);
   const displayState: DisplayState =
     data.displayState ?? (data.state === "ACTIVE" ? "CONFIRMED" : data.state);
+  // Always sent with the booking (api E5-T25): a MEMBER cannot read `/parameters`.
   const threshold = data.lateCancelThresholdMinutes;
   const cancellable = data.state === "ACTIVE" && displayState === "CONFIRMED";
   // The note waits for the booking read again, so it lands together with the new state chip.
@@ -161,7 +160,7 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
     setError(undefined);
     // Inside the threshold the session counts as done (R-08-10): the dialog says so first.
     const startsAt = clubLocalInstant(session.startsAtLocal, branding.timeZone);
-    setDialog({ late: threshold !== undefined && Date.now() > startsAt - threshold * 60_000 });
+    setDialog({ late: Date.now() > startsAt - threshold * 60_000 });
   };
 
   const cancel = async () => {
@@ -204,9 +203,7 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
       {note !== undefined ? (
         note.late ? (
           <p className="booking-note booking-note--warning" role="status">
-            {threshold === undefined
-              ? t("booking:detail.cancelledLateNoThreshold")
-              : t("booking:detail.cancelledLate", { threshold: thresholdText(t, threshold) })}
+            {t("booking:detail.cancelledLate", { threshold: thresholdText(t, threshold) })}
           </p>
         ) : (
           <p className="booking-note booking-note--success" role="status">
@@ -223,7 +220,7 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
           open
           title={t("booking:detail.cancelDialog", { description: session.description })}
         >
-          {dialog.late && threshold !== undefined ? (
+          {dialog.late ? (
             <p className="booking-note booking-note--warning">
               <Icon aria-hidden="true" name="warn" />
               {t("booking:detail.lateWarning", { threshold: thresholdText(t, threshold) })}

@@ -278,10 +278,48 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
       response.request().method() === "GET" &&
       response.url().endsWith(`/api/v1/members/${blockedMemberId}/overview`),
   );
+  const documentTypesResponse = admin.waitForResponse(
+    (response) =>
+      response.request().method() === "GET" &&
+      response.url().endsWith("/api/v1/parameters/census.dogDocumentTypes"),
+  );
   await navigateSpa(admin, memberHref);
-  expect((await overviewResponse).status()).toBe(200);
+  const overviewAnswer = await overviewResponse;
+  expect(overviewAnswer.status()).toBe(200);
   expect(pageErrors).toEqual([]);
   await expect(admin.getByRole("heading", { name: "Laia Fictici006" })).toBeVisible();
+  // E4-W15 step 8 (E4-W13 report, question 4): each pending document of a dog row is named by its
+  // type's label in `census.dogDocumentTypes`, never by the key the overview sends. The seed's
+  // Laia Fictici006 has a dog with a pending card (`D10-abonat-core-1280.png` of E4-W12).
+  const overview = (await overviewAnswer.json()) as {
+    dogs: { name: string; pendingDocuments: string[] }[];
+  };
+  const pendingDogs = overview.dogs.filter((dog) => dog.pendingDocuments.length > 0);
+  expect(pendingDogs.length).toBeGreaterThan(0);
+  const documentTypes = (await (await documentTypesResponse).json()) as {
+    value: { key: string; label: Record<string, string> }[];
+  };
+  const typeLabel = (key: string) => documentTypes.value.find((type) => type.key === key)?.label.ca;
+  for (const dog of pendingDogs) {
+    const row = admin.locator(".census-record__dog-list li").filter({ hasText: dog.name });
+    for (const key of dog.pendingDocuments) {
+      const label = typeLabel(key);
+      expect(label, key).toBeDefined();
+      await expect(row.locator(".ah-badge").filter({ hasText: label ?? key })).toBeVisible();
+      await expect(row.getByText(key, { exact: true })).toHaveCount(0);
+    }
+  }
+  writeFileSync(
+    join(evidenceDirectory, "d10-pending-documents-core.json"),
+    `${JSON.stringify(
+      pendingDogs.map((dog) => ({
+        dog: dog.name,
+        pendingDocuments: dog.pendingDocuments.map((key) => ({ key, label: typeLabel(key) ?? null })),
+      })),
+      null,
+      2,
+    )}\n`,
+  );
   await screenshot(admin, "D10-abonat-core-1280.png");
 
   await admin.getByRole("button", { name: "Bloqueja les reserves" }).click();

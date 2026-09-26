@@ -123,6 +123,71 @@ describe("T-03-39 D10 member record", () => {
   });
 });
 
+/**
+ * The D10 overview the api sends for a member without a number whose dogs have pending documents
+ * (E4-W13 report, question 4): the mock's own overview, with `memberNumber: null` and the
+ * documents' type keys in `pendingDocuments`.
+ */
+async function overviewWithoutNumber(pendingDocuments: readonly (readonly string[])[]) {
+  const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const { data } = await client.GET("/members/{id}/overview", {
+    params: { path: { id: "member-laura" } },
+  });
+  if (data === undefined) throw new TypeError("The mock overview did not answer");
+  const overview = {
+    ...data,
+    dogs: data.dogs.map((dog, index) => ({
+      ...dog,
+      pendingDocuments: [...(pendingDocuments[index] ?? [])],
+    })),
+    member: { ...data.member, memberNumber: null },
+  };
+  server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+}
+
+describe("T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4)", () => {
+  it("names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent»", async () => {
+    await overviewWithoutNumber([[], ["VACCINATION_CARD", "RETIRED_TYPE"]]);
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    const rock = screen.getByRole("link", { name: /Rock/u });
+    expect(await within(rock).findByText("Cartilla de vacunes")).toHaveClass("ah-badge");
+    expect(within(rock).getByText("Document pendent")).toHaveClass("ah-badge");
+    expect(screen.queryByText("VACCINATION_CARD")).not.toBeInTheDocument();
+    expect(screen.queryByText("RETIRED_TYPE")).not.toBeInTheDocument();
+  });
+
+  it("never shows the raw key while the labels load or when they cannot be read", async () => {
+    await overviewWithoutNumber([["VACCINATION_CARD"]]);
+    server.use(
+      http.get("*/api/v1/parameters/:key", () =>
+        HttpResponse.json(
+          { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "test" },
+          { status: 403 },
+        ),
+      ),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    const duna = screen.getByRole("link", { name: /Duna/u });
+    expect(within(duna).getByText("Document pendent")).toHaveClass("ah-badge");
+    expect(screen.queryByText("VACCINATION_CARD")).not.toBeInTheDocument();
+  });
+
+  it("shows no «núm.» badge for a member without a number", async () => {
+    await overviewWithoutNumber([]);
+    await renderRecord("member");
+    const heading = await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    const identity = heading.parentElement;
+    if (identity === null) throw new TypeError("The heading has no identity block");
+    expect(within(identity).queryByText(/^núm\./u)).not.toBeInTheDocument();
+    expect(within(identity).getByText("alta des de 2023")).toBeVisible();
+  });
+});
+
 describe("T-03-38 dog record", () => {
   it("shows the complete dog record and changes level without a booking warning", async () => {
     await renderRecord("dog");

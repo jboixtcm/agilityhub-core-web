@@ -27,6 +27,7 @@ import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 import { AuditTrail } from "../audit/AuditPage";
+import { loadDogDocumentTypes } from "../dashboard/readmission";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -41,7 +42,6 @@ type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
     dog: Dog;
     licenses: License[];
   };
-type DogListItem = components["schemas"]["DogListItem"];
 /** The transfer's new owner: the member list asked for the name only (`fields`). */
 const TRANSFER_MEMBER_FIELDS = ["fullName"] as const;
 type TransferMember = ListItemWith<components["schemas"]["MemberListItem"], "fullName">;
@@ -502,7 +502,31 @@ function MemberSummary({
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
   const [plan, setPlan] = useState<Plan>();
+  const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>(
+    () => new Map(),
+  );
   const preferences = overview.notificationPreferences as Partial<NotificationPreferences>;
+  const pendingDocuments = overview.dogs.some((dog) => dog.pendingDocuments.length > 0);
+  const labelLanguage = i18n.resolvedLanguage ?? i18n.language;
+
+  // A pending document is named by its type's label (`census.dogDocumentTypes`), as D2 does, never
+  // by its key (E4-W13 report, question 4). While the labels load, or for a type the club no longer
+  // lists, the chip reads «Document pendent».
+  useEffect(() => {
+    if (!pendingDocuments) return;
+    let current = true;
+    loadDogDocumentTypes(client, labelLanguage).then(
+      (types) => {
+        if (current) setDocumentTypeLabels(new Map(types.map((type) => [type.key, type.label])));
+      },
+      () => {
+        if (current) setDocumentTypeLabels(new Map());
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, labelLanguage, pendingDocuments]);
 
   useEffect(() => {
     let current = true;
@@ -663,8 +687,10 @@ function MemberSummary({
                 <span className="census-record__links">
                   {overview.familyGroup.members.map((familyMember) => (
                     <a href={`/abonats/${familyMember.id}`} key={familyMember.id}>
-                      {familyMember.fullName} ·{" "}
-                      {t("admin-census:member.number", { number: familyMember.memberNumber })}
+                      {familyMember.fullName}
+                      {familyMember.memberNumber == null
+                        ? null
+                        : ` · ${t("admin-census:member.number", { number: familyMember.memberNumber })}`}
                     </a>
                   ))}
                 </span>
@@ -707,7 +733,8 @@ function MemberSummary({
                     ) : null}
                     {dog.pendingDocuments.map((document) => (
                       <Badge key={document} tone="warning">
-                        {document}
+                        {documentTypeLabels.get(document) ??
+                          t("admin-census:member.documentPending")}
                       </Badge>
                     ))}
                     <Icon aria-hidden="true" name="chev" />
@@ -1204,7 +1231,10 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
       <header className="census-record__header">
         <div className="census-record__identity">
           <h1>{member.fullName}</h1>
-          <Badge>{t("admin-census:member.number", { number: member.memberNumber })}</Badge>
+          {/* A member without a number (a pending or imported record) shows no «núm.» badge. */}
+          {member.memberNumber == null ? null : (
+            <Badge>{t("admin-census:member.number", { number: member.memberNumber })}</Badge>
+          )}
           {joinedYear === undefined ? null : (
             <Badge tone="success">
               {t("admin-census:member.activeSince", { year: joinedYear })}
@@ -1850,8 +1880,10 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
           <dl className="census-record__data-list">
             <DataRow label={t("admin-census:dog.fields.owner")}>
               <a href={`/abonats/${dog.owner.id}`}>
-                {dog.owner.fullName} ·{" "}
-                {t("admin-census:member.number", { number: dog.owner.memberNumber })}
+                {dog.owner.fullName}
+                {dog.owner.memberNumber === undefined
+                  ? null
+                  : ` · ${t("admin-census:member.number", { number: dog.owner.memberNumber })}`}
               </a>
             </DataRow>
             <DataRow label={t("admin-census:dog.fields.handler")}>

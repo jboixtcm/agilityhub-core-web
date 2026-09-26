@@ -1,4 +1,12 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  createRingBlock,
+  RING_BLOCK_REASONS_BY_KIND,
+  type RingBlockConflict,
+  ringBlockCreateBody,
+  ringBlockFailure,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Drawer, FormField, Input, Select, Textarea } from "@agilityhub/ui";
 import { type SyntheticEvent, useEffect, useRef, useState } from "react";
@@ -8,7 +16,6 @@ import {
   type CalendarSettings,
   clampTime,
   clubInstant,
-  errorCode,
   formatMaskedDate,
   maskDate,
   minutesOf,
@@ -29,17 +36,8 @@ type RingBlockPatch = components["schemas"]["RingBlockPatchRequest"];
 type Kind = RingBlock["kind"];
 type Reason = RingBlock["reason"];
 
-/** S06 §3 combinations (`ACTIVITY` only through S07). */
-const reasonsByKind: Readonly<Record<Kind, readonly Reason[]>> = {
-  BLOCK: ["MAINTENANCE", "OTHER"],
-  RESERVATION: ["PRIVATE_CLASS", "THERAPY", "PREPARATION", "OTHER"],
-};
-
-interface Conflict {
-  from?: string;
-  label?: string;
-  to?: string;
-}
+/** S06 §3 combinations (`ACTIVITY` only through S07), shared with screen 24 and D12. */
+const reasonsByKind = RING_BLOCK_REASONS_BY_KIND;
 
 type FieldKey = "date" | "general" | "time";
 
@@ -105,7 +103,7 @@ export function RingBlockDrawer({
   const [note, setNote] = useState(block?.note ?? "");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<{ field: FieldKey; message: string }>();
-  const [conflicts, setConflicts] = useState<Conflict[]>([]);
+  const [conflicts, setConflicts] = useState<RingBlockConflict[]>([]);
   /** The `RING_HAS_BOOKINGS` list with the ring, date and times it was answered for. */
   const [ringBookings, setRingBookings] = useState<{ bookings: unknown[]; placement: string }>();
   const placement = placementKey(ringId, isoDate, from, to);
@@ -156,34 +154,20 @@ export function RingBlockDrawer({
       : undefined;
 
   const fail = (cause: unknown, sent?: string) => {
-    const code = errorCode(cause);
-    const details = isApiError(cause)
-      ? (cause.details as Record<string, unknown> | undefined)
-      : undefined;
-    if (code === "RING_BLOCK_CONFLICT") {
-      setConflicts(Array.isArray(details?.conflicts) ? (details.conflicts as Conflict[]) : []);
+    const failure = ringBlockFailure(cause);
+    if (failure.kind === "conflict") {
+      setConflicts(failure.conflicts);
       setError({ field: "general", message: errorMessage(cause) });
       return;
     }
-    if (code === "RING_HAS_BOOKINGS") {
+    if (failure.kind === "bookings") {
       // Dropped when the ring, date or times changed while the request was pending.
       if (sent !== undefined && latestPlacement.current === sent) {
-        setRingBookings({
-          bookings: Array.isArray(details?.bookings) ? details.bookings : [],
-          placement: sent,
-        });
+        setRingBookings({ bookings: failure.bookings, placement: sent });
       }
       return;
     }
-    setError({
-      field:
-        code === "INVALID_TIME_RANGE" ||
-        code === "INVALID_SLOT_GRANULARITY" ||
-        code === "OUTSIDE_OPENING_HOURS"
-          ? "time"
-          : "general",
-      message: errorMessage(cause),
-    });
+    setError({ field: failure.kind, message: errorMessage(cause) });
   };
 
   const save = async (cancelBookings = false) => {
@@ -196,22 +180,22 @@ export function RingBlockDrawer({
     setPending(true);
     setError(undefined);
     setConflicts([]);
-    const fields = {
-      from: clubInstant(isoDate, from, timeZone),
-      kind,
-      note: note.trim() === "" ? null : note.trim(),
-      reason,
-      ringId,
-      to: clubInstant(isoDate, to, timeZone),
-    };
+    const fields = ringBlockCreateBody(
+      {
+        from: clubInstant(isoDate, from, timeZone),
+        kind,
+        note,
+        reason,
+        ringId,
+        to: clubInstant(isoDate, to, timeZone),
+      },
+      cancelBookings,
+    );
     try {
       if (block === undefined) {
         // A key per attempt (the form is disabled while pending): a retry after fixing a field
         // must not replay the first answer.
-        await client.POST("/ring-blocks", {
-          body: { ...fields, ...(cancelBookings ? { cancelBookings: true } : {}) },
-          params: { header: { "Idempotency-Key": crypto.randomUUID() } },
-        });
+        await createRingBlock(client, fields, crypto.randomUUID());
       } else {
         const patch: RingBlockPatch = { version: block.version };
         if (fields.ringId !== block.ringId) patch.ringId = fields.ringId;

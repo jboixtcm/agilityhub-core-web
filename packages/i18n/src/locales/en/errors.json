@@ -204,7 +204,7 @@
   "SIMULATION_STALE": "The simulation is out of date. Run it again.",
   "SLOT_NOT_ON_GRID": "The time slot is not on the configured grid.",
   "SLOT_OUT_OF_WINDOW": "The time slot is outside the allowed window.",
-  "SLOT_TAKEN": "This time slot has just been taken.",
+  "SLOT_TAKEN": "This ring is no longer free.",
   "SLUG_LOCKED": "The address identifier is locked.",
   "SLUG_TAKEN": "This address identifier is already in use.",
   "SMS_BODY_REQUIRED": "Enter the text message content.",

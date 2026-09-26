@@ -53,18 +53,45 @@ afterAll(() => {
 });
 
 async function renderCalendar({
+  language = "ca",
+  messages = {},
   modules = branding.modules,
   readOnly = false,
   search = "",
-}: { modules?: readonly string[]; readOnly?: boolean; search?: string } = {}) {
+}: {
+  language?: "ca" | "en" | "es";
+  /** `admin-scheduling` messages replaced for this render (key → ICU message). */
+  messages?: Readonly<Record<string, string>>;
+  modules?: readonly string[];
+  readOnly?: boolean;
+  search?: string;
+} = {}) {
   window.history.replaceState(null, "", `/calendari${search}`);
-  const clubBranding: Branding = { ...branding, modules: [...modules] };
+  const clubBranding: Branding = {
+    ...branding,
+    locales: language === "ca" ? branding.locales : ["ca", "es", "en"],
+    modules: [...modules],
+  };
   const i18n = await createI18n({
     branding: clubBranding,
-    browserLanguages: ["ca"],
+    browserLanguages: [language],
     initialNamespaces: ["admin-scheduling", "enums", "errors"],
     storage: undefined,
   });
+  if (Object.keys(messages).length > 0) {
+    // A copy of the bundle: the loaded one is the locale file itself, shared by every test.
+    const bundle = structuredClone(
+      i18n.getResourceBundle(language, "admin-scheduling") as Record<string, unknown>,
+    );
+    for (const [key, message] of Object.entries(messages)) {
+      const path = key.split(".");
+      const leaf = path.pop() ?? key;
+      let node = bundle;
+      for (const part of path) node = node[part] as Record<string, unknown>;
+      node[leaf] = message;
+    }
+    i18n.addResourceBundle(language, "admin-scheduling", bundle, false, true);
+  }
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
   const onNavigate = vi.fn();
   render(
@@ -1675,5 +1702,43 @@ describe("T-06-28 E4-W12 D4 real-core follow-ups of E4-W05", () => {
       "Activitat · Torneig d'Estiu 2026Cadells · 18:30–20:30",
     ]);
     expect(within(week).queryByText(/totes les pistes/u)).toBeNull();
+  });
+});
+
+describe("T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key", () => {
+  it("AGENTS rule 1: the accessible name follows calendar.cell.activityAllRings, whatever its word order", async () => {
+    activityBlocks(
+      "activity-torneig",
+      "Torneig d'Estiu 2026",
+      "2026-08-15",
+      "18:30",
+      "20:30",
+      EVERY_RING,
+    );
+    // A locale may put the title anywhere: the name is the key's, never «{activity} · {allRings}».
+    await renderCalendar({
+      messages: { "calendar.cell.activityAllRings": "Totes les pistes: {title} (activitat)" },
+    });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const [tournament] = within(week).getAllByRole("link", { name: /Torneig d'Estiu 2026/u });
+    expect(tournament).toHaveAccessibleName("Totes les pistes: Torneig d'Estiu 2026 (activitat)");
+  });
+
+  it.each([
+    ["es", "Actividad · Torneig d'Estiu 2026 · todas las pistas"],
+    ["en", "Activity · Torneig d'Estiu 2026 · all rings"],
+  ] as const)("in %s the all-rings cell reads «%s»", async (language, name) => {
+    activityBlocks(
+      "activity-torneig",
+      "Torneig d'Estiu 2026",
+      "2026-08-15",
+      "18:30",
+      "20:30",
+      EVERY_RING,
+    );
+    await renderCalendar({ language });
+    const cells = await screen.findAllByRole("link", { name: /Torneig d'Estiu 2026/u });
+    expect(cells).toHaveLength(1);
+    expect(cells[0]).toHaveAccessibleName(name);
   });
 });

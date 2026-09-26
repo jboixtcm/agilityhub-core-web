@@ -204,7 +204,7 @@
   "SIMULATION_STALE": "La simulación no está actualizada. Vuelva a ejecutarla.",
   "SLOT_NOT_ON_GRID": "La franja horaria no sigue la cuadrícula configurada.",
   "SLOT_OUT_OF_WINDOW": "La franja horaria está fuera del periodo permitido.",
-  "SLOT_TAKEN": "Esta franja horaria acaba de ocuparse.",
+  "SLOT_TAKEN": "Esta pista ya no está libre.",
   "SLUG_LOCKED": "El identificador de dirección está bloqueado.",
   "SLUG_TAKEN": "Este identificador de dirección ya está en uso.",
   "SMS_BODY_REQUIRED": "Introduzca el contenido del mensaje de texto.",

@@ -25,5 +25,62 @@
       "loading": "Loading the block",
       "loadError": "The block could not be loaded."
     }
+  },
+  "ringBlock": {
+    "title": "Book or block a ring",
+    "close": "Close",
+    "kindLabel": "Type",
+    "kind": {
+      "RESERVATION": "Ring booking",
+      "BLOCK": "Block"
+    },
+    "reasonTitle": "Reason",
+    "reason": {
+      "PRIVATE_CLASS": "Private class",
+      "THERAPY": "Therapy",
+      "PREPARATION": "Preparation",
+      "MAINTENANCE": "Maintenance",
+      "OTHER": "Other"
+    },
+    "day": "Day",
+    "band": {
+      "label": "Time of day",
+      "morning": "morning",
+      "afternoon": "afternoon"
+    },
+    "ring": "Ring",
+    "grid": "Times of the day part",
+    "noSlots": "There are no times in this part of the day.",
+    "note": {
+      "label": "Note",
+      "placeholder": "Note (optional)"
+    },
+    "summary": "Takes ring {ring} from {from} to {to}, shows on the overview and in the ring usage log. It is not linked to any student.",
+    "submit": {
+      "RESERVATION": "Book the ring",
+      "BLOCK": "Block the ring"
+    },
+    "sending": "Sending",
+    "saved": {
+      "RESERVATION": "Ring booked",
+      "BLOCK": "Ring blocked"
+    },
+    "askAdmin": "Ask the club administration to free the ring.",
+    "conflicts": "Overlaps with:",
+    "conflictRow": "{label} {from}–{to}",
+    "loading": "Loading the ring's times",
+    "error": "The ring's times could not be loaded.",
+    "retry": "Try again",
+    "card": {
+      "title": "Book or block a ring (no student)",
+      "reason": "reason: {reason}",
+      "when": "Day and times",
+      "from": "From",
+      "to": "To",
+      "submit": {
+        "RESERVATION": "Book",
+        "BLOCK": "Block"
+      }
+    }
   }
 }

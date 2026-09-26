@@ -192,6 +192,7 @@
     },
     "language": "language: {locale}",
     "number": "no. {number}",
+    "documentPending": "Document pending",
     "pack": "Pack {total}: {used}/{remaining} · expires {date}",
     "payment": {
       "adminOnly": "admin only",

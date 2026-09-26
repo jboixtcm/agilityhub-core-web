@@ -26,6 +26,7 @@ const loaders = {
     instructor: () => import("./locales/ca/instructor.json"),
     shell: () => import("./locales/ca/shell.json"),
     signup: () => import("./locales/ca/signup.json"),
+    training: () => import("./locales/ca/training.json"),
   },
   en: {
     activities: () => import("./locales/en/activities.json"),
@@ -47,6 +48,7 @@ const loaders = {
     instructor: () => import("./locales/en/instructor.json"),
     shell: () => import("./locales/en/shell.json"),
     signup: () => import("./locales/en/signup.json"),
+    training: () => import("./locales/en/training.json"),
   },
   es: {
     activities: () => import("./locales/es/activities.json"),
@@ -68,6 +70,7 @@ const loaders = {
     instructor: () => import("./locales/es/instructor.json"),
     shell: () => import("./locales/es/shell.json"),
     signup: () => import("./locales/es/signup.json"),
+    training: () => import("./locales/es/training.json"),
   },
 } as const satisfies Record<Locale, Record<Namespace, ResourceLoader>>;
 

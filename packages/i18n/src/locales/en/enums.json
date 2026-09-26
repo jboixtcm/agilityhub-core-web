@@ -44,6 +44,18 @@
     "BLOCK": "Block",
     "RESERVATION": "Ring booking"
   },
+  "trainingBookingState": {
+    "CONFIRMED": "confirmed",
+    "DONE": "done",
+    "CANCELLED": "cancelled",
+    "CANCELLED_BY_CLUB": "cancelled by the club"
+  },
+  "slotReason": {
+    "CLASS": "class",
+    "RING_BLOCK": "block",
+    "TRAINING": "training",
+    "OWN_TRAINING": "your training"
+  },
   "ringBlockReason": {
     "MAINTENANCE": "maintenance",
     "PRIVATE_CLASS": "private class",

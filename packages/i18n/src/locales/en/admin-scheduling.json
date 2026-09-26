@@ -140,6 +140,7 @@
       "blockDetail": "{reason} {from}–{to}",
       "activity": "Activity · {title}",
       "allRings": "all rings",
+      "activityAllRings": "Activity · {title} · all rings",
       "label": "{when} · {description} · {details}"
     },
     "footer": {

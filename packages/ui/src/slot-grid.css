@@ -1,0 +1,137 @@
+/* S09 screens 08 and 24: half-hour slots (mockups V8, 375 px): three to a row for one ring,
+   a time × ring table for several. Colours come from the theme tokens. */
+.ah-slot-grid {
+  display: grid;
+  gap: var(--ah-space-2);
+  width: 100%;
+}
+
+.ah-slot-grid--flow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ah-slot-grid__row {
+  display: contents;
+}
+
+.ah-slot-grid__column,
+.ah-slot-grid__time {
+  color: var(--ah-color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.ah-slot-grid__column {
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ah-slot-grid__column[data-disabled] {
+  opacity: 0.55;
+}
+
+.ah-slot-grid__time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--ah-space-1);
+}
+
+.ah-slot-grid__slot {
+  display: grid;
+  min-width: 0;
+}
+
+.ah-slot {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  min-height: 2.5rem;
+  padding: var(--ah-space-2) var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  background: transparent;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  place-content: center;
+}
+
+.ah-slot__time,
+.ah-slot__detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ah-slot__detail {
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.ah-slot--free {
+  color: var(--ah-color-primary);
+  cursor: pointer;
+  border-color: var(--ah-color-primary);
+}
+
+.ah-slot--free:hover {
+  background: color-mix(in srgb, var(--ah-color-primary) 10%, transparent);
+}
+
+.ah-slot--selected {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.ah-slot--selected:hover {
+  background: var(--ah-color-primary);
+}
+
+/* «ocupat»: struck and inert on the darker surface (mockup `.slot.ocupat`). */
+.ah-slot--taken {
+  color: color-mix(in srgb, var(--ah-color-text-muted) 55%, transparent);
+  background: var(--ah-color-background);
+  border-color: var(--ah-color-border);
+}
+
+.ah-slot--taken .ah-slot__time {
+  text-decoration: line-through;
+}
+
+/* «18:50 classe»: dimmed, not struck (mockup opacity .35). */
+.ah-slot--class {
+  opacity: 0.4;
+}
+
+/* The viewer's own training: hatched in the primary tone, inert. */
+.ah-slot--own {
+  color: var(--ah-color-primary);
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ah-color-primary) 14%, transparent) 0 0.3rem,
+    transparent 0.3rem 0.6rem
+  );
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--ah-color-primary) 60%, transparent);
+}
+
+.ah-slot--conflict {
+  border-color: var(--ah-color-danger);
+  box-shadow: 0 0 0 1px var(--ah-color-danger);
+}
+
+.ah-slot:disabled {
+  cursor: default;
+}
+
+.ah-slot:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}

@@ -67,15 +67,12 @@ export function WaitlistDetailPage({ client, entryId }: { client: ApiClient; ent
     session.ringName === null || session.ringName === undefined || session.ringName === ""
       ? when
       : `${when}${t("booking:separator")}${session.ringName}`;
-  const dogName = data.dog?.name ?? data.dogName ?? undefined;
-  const title =
-    dogName === undefined
-      ? t("booking:detail.classOnly", { description: session.description })
-      : t("booking:detail.classWithDog", {
-          description: session.description,
-          dogArticle: dogArticle(dogName, data.dog?.sex, formats.locale),
-          dogName,
-        });
+  // The entry always names its dog, with its sex for the Catalan article (api E5-T25).
+  const title = t("booking:detail.classWithDog", {
+    description: session.description,
+    dogArticle: dogArticle(data.dog.name, data.dog.sex, formats.locale),
+    dogName: data.dog.name,
+  });
   const className = t("booking:waitlist.classLabel", {
     description: session.description,
     when: formats.formatActivityDate(start.date, start.time, null, "list"),
