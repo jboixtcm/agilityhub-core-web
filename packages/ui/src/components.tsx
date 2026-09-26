@@ -218,6 +218,13 @@ interface OverlayProps {
 
 function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  // The latest `onClose`, read on Escape: a parent that passes a new closure on every render must
+  // not re-run the focus effect, which moved the focus to the close button (and scrolled a drawer
+  // back to its top) after each keystroke or change inside it.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) {
@@ -228,7 +235,7 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
       document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const onKeyDown = (event: KeyboardEvent) => {
       if (dismissible && event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
       }
     };
     document.addEventListener("keydown", onKeyDown);
@@ -239,7 +246,7 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
       document.removeEventListener("keydown", onKeyDown);
       previousFocus?.focus();
     };
-  }, [dismissible, onClose, open]);
+  }, [dismissible, open]);
 
   return closeRef;
 }

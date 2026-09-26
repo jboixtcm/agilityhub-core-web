@@ -1,0 +1,152 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/config:lint: cache bypass, force executing 42ac5d636417f38d
+@agilityhub/i18n:lint: cache bypass, force executing 002e182e6a29a388
+@agilityhub/shared-types:lint: cache bypass, force executing d383151fe730994b
+@agilityhub/api-client:lint: cache bypass, force executing 2d9b9734492f83c3
+@agilityhub/ui:test: cache bypass, force executing 8d6b966df39b4422
+@agilityhub/auth:lint: cache bypass, force executing f4053950041e0287
+@agilityhub/api-client:test: cache bypass, force executing 106c565c10463a9f
+clubs-admin:lint: cache bypass, force executing 034693e064dc4d16
+@agilityhub/ui:lint: cache bypass, force executing 7a2cccf60f82cccb
+id:lint: cache bypass, force executing f7faf03e54849b61
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/api-client:test:  [32m✓[39m src/api-error.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 42[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 178[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 213[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/club-settings-handlers.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 45[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/booking-handlers.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 294[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 469[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 597[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 818[2mms[22m[39m
+@agilityhub/ui:test:  [31m❯[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 34[2mms[22m[39m
+@agilityhub/ui:test:    [31m❯[39m A32 (Jordi 24-09): text on the primary colour reads the club's onPrimary [2m(3)[22m
+@agilityhub/ui:test: [31m     [31m×[31m every CSS rule that paints the primary colour (solid, shorthand or a ≥ 50 % mix) behind text uses --ah-color-primary-fg[39m[32m 18[2mms[22m[39m
+@agilityhub/ui:test:      [32m✓[39m the guard reads shorthands, fallbacks and mixes[32m 0[2mms[22m[39m
+@agilityhub/ui:test:      [32m✓[39m no component paints the primary colour in an inline style (TSX): the colour lives in the CSS rules above[32m 15[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m63 tests[22m[2m)[22m[33m 729[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 106[2mms[22m[39m
+@agilityhub/ui:test: [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1145[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+@agilityhub/course-core:build: cache bypass, force executing 431d96cbc72fd83b
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[32m 225[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [41m[1m FAIL [22m[49m src/on-primary.test.ts[2m > [22mA32 (Jordi 24-09): text on the primary colour reads the club's onPrimary[2m > [22mevery CSS rule that paints the primary colour (solid, shorthand or a ≥ 50 % mix) behind text uses --ah-color-primary-fg
+@agilityhub/ui:test: [31m[1mAssertionError[22m: expected [ …(2) ] to deeply equal [][39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [32m- Expected[39m
+@agilityhub/ui:test: [31m+ Received[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [32m- [][39m
+@agilityhub/ui:test: [31m+ [[39m
+@agilityhub/ui:test: [31m+   "apps/clubs/src/booking/booking.css: .home-header__dot (color: unset)",[39m
+@agilityhub/ui:test: [31m+   "apps/clubs/src/booking/booking.css: .pack-card__used (color: unset)",[39m
+@agilityhub/ui:test: [31m+ ][39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [36m [2m❯[22m src/on-primary.test.ts:[2m109:23[22m[39m
+@agilityhub/ui:test:     [90m107|[39m     // The primary button and its hover, the signup segments and chips…
+@agilityhub/ui:test:     [90m108|[39m     expect(checked).toBeGreaterThan(15);
+@agilityhub/ui:test:     [90m109|[39m     expect(offending).toEqual([]);
+@agilityhub/ui:test:     [90m   |[39m                       [31m^[39m
+@agilityhub/ui:test:     [90m110|[39m   });
+@agilityhub/ui:test:     [90m111|[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m68 passed[39m[22m[90m (69)[39m
+@agilityhub/ui:test: [2m   Start at [22m 15:40:55
+@agilityhub/ui:test: [2m   Duration [22m 2.56s[2m (environment 76%, setup 12%, transform 7%, tests 4%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/config:typecheck: cache bypass, force executing 6860c83ceac65ae7
+clubs:lint: cache bypass, force executing 95365e35ad975b12
+@agilityhub/course-core:typecheck: cache bypass, force executing 671f426b6643ad21
+@agilityhub/api-client:typecheck: cache bypass, force executing b549a73c12a5c4f5
+@agilityhub/course-core:test: cache bypass, force executing 1c26edab867f42c5
+@agilityhub/ui:typecheck: cache bypass, force executing 8daa5d1fcefc4365
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1423[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E3-W10 build-time budget of the MSW mock worlds [2m(15)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m imports the mock modules afresh within the start-up budget[33m 471[2mms[22m[39m
+@agilityhub/course-core:lint: cache bypass, force executing ef70bf6c19ae37ee
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[32m218 passed[39m[22m[90m (218)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 15:40:55
+@agilityhub/api-client:test: [2m   Duration [22m 2.74s[2m (import 38%, transform 32%, tests 30%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 6.52s[39m[2m · 32% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/ui#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    1 successful, 18 total
+Cached:    0 cached, 18 total
+  Time:    3.729s 
+Failed:    @agilityhub/ui#test
+
+ ERROR  run failed: command  exited (1)

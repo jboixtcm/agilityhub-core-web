@@ -315,6 +315,98 @@ export function formatMonth(value: DateInput, locale: Locale, timeZone: string):
   }).format(toDate(value));
 }
 
+function zoneOffsetMinutes(instant: number, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
+    month: "2-digit",
+    second: "2-digit",
+    timeZone,
+    year: "numeric",
+  }).formatToParts(new Date(instant));
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((item) => item.type === type)?.value ?? 0);
+  const local = Date.UTC(
+    part("year"),
+    part("month") - 1,
+    part("day"),
+    part("hour"),
+    part("minute"),
+    part("second"),
+  );
+  return Math.round((local - instant) / 60_000);
+}
+
+/**
+ * The instant (epoch ms) of a club-local `YYYY-MM-DDTHH:mm` read in the club `timeZone`, with the
+ * api's `ZonedDateTime.of` rules (R-06-14): an ambiguous time (autumn overlap) takes its first
+ * occurrence, and a time inside the spring gap moves forward by the gap length. Never the
+ * device's zone.
+ */
+export function clubLocalInstant(localDateTime: string, timeZone: string): number {
+  const local = Date.parse(`${localDateTime.slice(0, 16)}:00Z`);
+  // Every offset the zone uses from wall − 26 h to wall + 26 h (hourly samples).
+  const samples = Array.from({ length: 53 }, (_, hour) => {
+    const instant = local + (hour - 26) * 3_600_000;
+    return { instant, offset: zoneOffsetMinutes(instant, timeZone) };
+  });
+  const valid = [...new Set(samples.map((sample) => sample.offset))]
+    .map((offset) => local - offset * 60_000)
+    .filter((instant) => local - zoneOffsetMinutes(instant, timeZone) * 60_000 === instant);
+  if (valid.length > 0) return Math.min(...valid);
+  // Gap: the offset in force before the transition moves the wall time forward.
+  const before =
+    samples.filter((sample) => sample.instant + sample.offset * 60_000 < local).at(-1) ??
+    samples[0];
+  return local - (before?.offset ?? 0) * 60_000;
+}
+
+/**
+ * S08 §10 opening instants: «diumenge 9 a les 20 h» — the club-local weekday and day of an
+ * instant, then its time, «20 h» on the hour and «20:30» otherwise (`opensAt`, `nextBookableAt`).
+ */
+export function formatDayAtTime(value: DateInput, locale: Locale, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    hour: "numeric",
+    hourCycle: "h23",
+    minute: "2-digit",
+    timeZone,
+  }).formatToParts(toDate(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((item) => item.type === type)?.value ?? "";
+  const minute = part("minute");
+  const hour = String(Number(part("hour")));
+  const time =
+    minute === "00"
+      ? translateStatic("common:format.dayAtTime.wholeHour", locale, { hour })
+      : `${hour}:${minute}`;
+  const date = translateStatic("common:format.dayAtTime.date", locale, {
+    day: part("day"),
+    weekday: formatDate(value, locale, timeZone, "weekdayLong"),
+  });
+  return translateStatic("common:format.dayAtTime.withTime", locale, { date, time });
+}
+
+/**
+ * The Catalan personal article before a dog's name (S08 §10): «l'» before a vowel or an «h»
+ * («l'Ona», «l'Hug»), otherwise «la » for a female and «en » for a male dog («la Duna», «en
+ * Rock»). Spanish and English take none («con Duna», «with Duna»), nor a dog of unknown sex.
+ */
+export function dogArticle(
+  name: string,
+  sex: "FEMALE" | "MALE" | null | undefined,
+  locale: Locale,
+): string {
+  if (locale !== "ca" || (sex !== "FEMALE" && sex !== "MALE")) return "";
+  const initial = name.trim().normalize("NFD").charAt(0).toLocaleLowerCase("ca");
+  if (initial === "") return "";
+  if ("aeiouh".includes(initial)) return "l'";
+  return sex === "FEMALE" ? "la " : "en ";
+}
+
 export interface ClubFormats {
   /** R-07-13 activity dates in the club zone (see `formatActivityDate`). */
   formatActivityDate: (
@@ -327,6 +419,8 @@ export interface ClubFormats {
   formatDate: (value: DateInput, presentation?: DatePresentation) => string;
   formatDateRange: (start: DateInput, end: DateInput, presentation?: DatePresentation) => string;
   formatDateTime: (value: DateInput) => string;
+  /** «diumenge 9 a les 20 h» in the club zone (S08 §10). */
+  formatDayAtTime: (value: DateInput) => string;
   formatDuration: (totalMinutes: number, options?: DurationOptions) => string;
   /** A conjunction list in the reader's language («dilluns i dimarts»). */
   formatList: (values: readonly string[]) => string;
@@ -347,6 +441,7 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatDateRange: (start, end, presentation) =>
       formatDateRange(start, end, locale, timeZone, presentation),
     formatDateTime: (value) => formatDateTime(value, locale, timeZone),
+    formatDayAtTime: (value) => formatDayAtTime(value, locale, timeZone),
     formatDuration: (totalMinutes, options) => formatDuration(totalMinutes, locale, options),
     formatList: (values) => formatList(values, locale),
     formatMoney: (amount) => formatMoney(amount, locale, currency),

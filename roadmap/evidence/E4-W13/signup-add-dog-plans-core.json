@@ -1,0 +1,23 @@
+{
+  "memberPlanId": "f4200276-5d90-4814-89b1-c630a26dada3",
+  "memberPlanOffered": false,
+  "memberPlanQuoted": true,
+  "plans": [
+    {
+      "id": "e6333507-8305-4b2f-8c9d-23bd450b1723",
+      "name": "Abonat"
+    },
+    {
+      "id": "3474d1d8-0075-43b0-94c8-83cb5dff80bb",
+      "name": "Pack 6"
+    },
+    {
+      "id": "a6acc536-2ae9-4947-b7c9-50bec03c27cc",
+      "name": "Pack 10"
+    },
+    {
+      "id": "045691ce-5a0c-46f5-8658-18ec6a144703",
+      "name": "Teràpia"
+    }
+  ]
+}

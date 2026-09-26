@@ -1,0 +1,24 @@
+{
+  "answer": {
+    "code": "FILE_NOT_FOUND",
+    "message": "No s'ha trobat el fitxer.",
+    "details": {},
+    "traceId": "cd8d171d-cee2-4453-acd6-e3b0067c2ccd"
+  },
+  "sent": [
+    {
+      "files": [
+        {
+          "fileKey": "signup/ac408421-0913-4e6b-b6d7-457abe741170/202609/ea26d935-c377-41e3-9431-efeec8cb703a/cartilla_Retorn_E3_1.jpg",
+          "name": "cartilla_Retorn_E3_1.jpg"
+        },
+        {
+          "fileKey": "bbc637e6-982d-40ee-bbc8-28da1cf2b032",
+          "name": "cartilla_retorn_2.jpg"
+        }
+      ],
+      "type": "VACCINATION_CARD"
+    }
+  ],
+  "status": 400
+}

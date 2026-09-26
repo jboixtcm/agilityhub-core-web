@@ -1044,7 +1044,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const viewAfterRemoval = nextSignupView(admin);
   await passportCardRow.getByRole("button", { name: "Retira" }).click();
   const removal = await fileRemoval;
-  expect(removal.status(), await removal.text()).toBe(204);
+  // A 204 has no body to read (Playwright refuses `text()` on it): the body only explains a failure.
+  expect(removal.status(), removal.status() === 204 ? "" : await removal.text()).toBe(204);
   const removedFileId = new URL(removal.url()).pathname.split("/").at(-1) ?? "";
   expect(removedFileId).not.toMatch(/%2F|\//u);
   expect((await viewAfterRemoval).status()).toBe(200);
@@ -1167,7 +1168,7 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const familyBody = (await familyValidation).postDataJSON() as { familyGroupId?: string };
   expect(familyBody.familyGroupId).toMatch(/^[0-9a-f-]{36}$/u);
 
-  // E3-W08 step 6 (R-04-06, E38): a LEFT member of the seed applies again with a new phone; D2
+  // E3-W08 step 6 (R-04-06, E38): a LEFT member applies again with a new phone; D2
   // shows the old and new values; the club rejects the readmission and the record stays as it was.
   const readmissionApi = await adminApi(admin);
   interface SeedMember {
@@ -1179,8 +1180,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     phones: { number: string; prefix: string }[];
     status: string;
   }
-  // E4-W13 step 6 (R-04-06, R-04-07, E38): the member is a LEFT member of the seed with one of its
-  // own INACTIVE dogs, whose chip the readmission sends again (with a new name and a new card).
+  // E4-W13 step 6 (R-04-06, R-04-07, E38): the member is a LEFT member with one of its own INACTIVE
+  // dogs, whose chip the readmission sends again (with a new name and a new card). The demo seed has
+  // no INACTIVE dog (`seed-*.log`: 242 active + 3 pending = 245 dogs) and no route turns a member
+  // LEFT, so on a fresh seed it is the applicant rejected above (Pau, LEFT) with Brisa E3, INACTIVE
+  // since that rejection (R-04-23).
   interface SeedDog {
     breed: string;
     chip: string;
@@ -1193,15 +1197,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const leftLookup = await admin.evaluate(
     async ({ authorization, base }) => {
       const headers = { Authorization: authorization };
-      // The D5 «baixa» chip (R-03-03): `status:eq:LEFT`, with a page size the list offers. The seed's
-      // members carry a number (the applicant rejected above never got one).
-      const list = await fetch(
-        `${base}/members?filter=${encodeURIComponent("status:eq:LEFT")}&fields=id,memberNumber&size=200`,
-        { headers },
-      );
+      // The D5 «baixa» chip (R-03-03): `status:eq:LEFT`, with a page size the list offers.
+      const list = await fetch(`${base}/members?filter=${encodeURIComponent("status:eq:LEFT")}&fields=id&size=200`, {
+        headers,
+      });
       if (!list.ok) return { dog: null, documents: null, listError: await list.text(), listStatus: list.status, member: null };
-      const items = ((await list.json()) as { items?: { id: string; memberNumber?: string | null }[] }).items ?? [];
-      for (const item of items.filter((candidate) => typeof candidate.memberNumber === "string")) {
+      const items = ((await list.json()) as { items?: { id: string }[] }).items ?? [];
+      for (const item of items) {
         const detail = await fetch(`${base}/members/${item.id}`, { headers });
         const member = (await detail.json()) as { idDocument?: { number?: string } | null };
         if (!detail.ok || typeof member.idDocument?.number !== "string") continue;
@@ -1210,9 +1212,10 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
         const candidates = dogs.ok ? (((await dogs.json()) as { items?: { chip?: string | null; id: string }[] }).items ?? []) : [];
         const reusable = candidates.find((candidate) => typeof candidate.chip === "string" && candidate.chip !== "");
         if (reusable === undefined) continue;
-        const dog = (await (await fetch(`${base}/dogs/${reusable.id}`, { headers })).json()) as unknown;
+        // `GET /dogs/{id}` answers the `DogDetail` wrapper: the record is its `dog`.
+        const detailDog = (await (await fetch(`${base}/dogs/${reusable.id}`, { headers })).json()) as { dog?: unknown };
         const documents = (await (await fetch(`${base}/dogs/${reusable.id}/documents`, { headers })).json()) as unknown;
-        return { dog, documents, listStatus: list.status, member };
+        return { dog: detailDog.dog ?? null, documents, listStatus: list.status, member };
       }
       return { dog: null, documents: null, listStatus: list.status, member: null };
     },
@@ -1279,8 +1282,9 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     await expect(readmissionDrawer.locator("#signup-edit-dog-0-chip-help")).toHaveText(
       "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.",
     );
-    // E4-W13 step 2 (R-04-19, api E5-T19): a file added to the submitted card and removed again,
-    // only through PATCH /dogs/{id} (the kept fileKey travels back); never a frozen route.
+    // E4-W13 steps 2 and 6 (R-04-19, api E5-T19): the submitted card changes only through
+    // PATCH /dogs/{id} (a file added: the kept fileKey plus the upload; one removed: the kept ones),
+    // and D2 re-reads the view after each; never a frozen route.
     const frozenDogCalls: string[] = [];
     const onDogRequest = (request: Request) => {
       const path = new URL(request.url()).pathname;
@@ -1295,42 +1299,104 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       documents: { files: { fileKey: string; name: string }[]; type: string }[];
       version: number;
     }
+    // The local core is its own storage: the admin's signed URL is `/api/v1/attachments/uploads/{id}`,
+    // which answers 401 to the PUT with the signed headers alone (log 13 of E4-W13), unlike a
+    // presigned S3 URL. The web keeps the contract (`Upload.headers` only, never a bearer to the
+    // storage), so the stack's route adds the admin's bearer; reported to the api in E4-W13.
+    const uploadRoute = "**/api/v1/attachments/uploads/**";
+    await admin.route(uploadRoute, async (route) => {
+      await route.continue({ headers: { ...route.request().headers(), authorization: readmissionApi.authorization } });
+    });
     await readmissionDrawer.getByLabel("Tipus de document").selectOption("VACCINATION_CARD");
     await readmissionDrawer
       .getByLabel("Fitxer")
       .setInputFiles({ buffer: Buffer.from("fictional-card-page-2"), mimeType: "image/jpeg", name: "cartilla_retorn_2.jpg" });
+    // The signed upload (the admin's `POST /attachments/upload-url`, then the PUT), then the PATCH.
+    const signedUpload = admin.waitForResponse(
+      (response) => response.url().endsWith("/api/v1/attachments/upload-url") && response.request().method() === "POST",
+    );
+    const storagePut = admin.waitForResponse((response) => response.request().method() === "PUT");
     const addPatch = admin.waitForResponse(isDogPatch);
     const viewAfterAdd = nextSignupView(admin);
+    const drawerAlert = readmissionDrawer.locator(".signup-edit-documents [role=alert]");
+    // Settles `true` when the drawer shows an error; never rejects (it may outlive the test).
+    const alertShown = drawerAlert.waitFor().then(
+      () => true,
+      () => false,
+    );
+    const drawerText = async () => (await drawerAlert.textContent().catch(() => null)) ?? "";
     await readmissionDrawer.getByRole("button", { name: "Puja el document" }).click();
-    const added = await addPatch;
-    expect(added.status(), await added.text()).toBe(200);
+    const signed = await signedUpload;
+    expect(signed.status(), await signed.text()).toBe(201);
+    const stored = await Promise.race([storagePut, alertShown.then(() => undefined)]);
+    // The signed URL's query (its signature) never reaches the log.
+    const storedAt = stored === undefined ? "not sent" : `${new URL(stored.url()).origin}${new URL(stored.url()).pathname}`;
+    expect(stored?.ok(), `PUT ${storedAt} → ${String(stored?.status())}; drawer: ${await drawerText()}`).toBe(true);
+    // An error shown before any PATCH fails the test; one the PATCH answered is checked below.
+    const addedOrAlert = await Promise.race([addPatch, alertShown.then(() => "alert" as const)]);
+    const added =
+      addedOrAlert === "alert" ? await Promise.race([addPatch, admin.waitForTimeout(5000).then(() => undefined)]) : addedOrAlert;
+    if (added === undefined) throw new Error(`The drawer refused the upload before its PATCH: ${await drawerText()}`);
+    await admin.unroute(uploadRoute);
     const addBody = added.request().postDataJSON() as DocumentsPatch;
+    // The type's kept file (its view key, stored name) plus the new upload's key.
     expect(addBody.documents.map((document) => [document.type, document.files.map((file) => file.name)])).toEqual([
       ["VACCINATION_CARD", [newCard, "cartilla_retorn_2.jpg"]],
     ]);
-    // The PATCH answers the dog record, which keeps its own name until the validation.
-    expect(((await added.json()) as { name: string }).name).toBe(leftDog.name);
-    expect((await viewAfterAdd).status()).toBe(200);
-    await expect(dogChanges.getByText(new RegExp(`^Ara: .*${newCard} · cartilla_retorn_2\\.jpg`, "u"))).toBeVisible();
-    await screenshot(admin, "D2-readmission-dog-documents-core-1280.png");
+    const addAnswer = added.status() === 200 ? null : ((await added.json()) as { code: string });
+    writeFileSync(
+      join(evidenceDirectory, "d2-readmission-add-file-core.json"),
+      `${JSON.stringify(
+        {
+          answer: addAnswer,
+          sent: addBody.documents.map((document) => ({
+            files: document.files.map((file) => ({ fileKey: file.fileKey, name: file.name })),
+            type: document.type,
+          })),
+          status: added.status(),
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    const drawerFiles = readmissionDrawer.locator(".signup-edit-documents li");
+    let removal: { expected: DocumentsPatch; file: string };
+    if (added.status() === 200) {
+      // The PATCH answers the dog record, which keeps its own name until the validation.
+      expect(((await added.json()) as { name: string }).name).toBe(leftDog.name);
+      expect((await viewAfterAdd).status()).toBe(200);
+      await expect(dogChanges.getByText(new RegExp(`^Ara: .*${newCard} · cartilla_retorn_2\\.jpg`, "u"))).toBeVisible();
+      removal = {
+        expected: { documents: [{ files: addBody.documents[0]?.files.slice(0, 1) ?? [], type: "VACCINATION_CARD" }], version: addBody.version + 1 },
+        file: "cartilla_retorn_2.jpg",
+      };
+    } else {
+      // The published core refuses a new key from the admin's upload route (E4-W13 report, question
+      // 1): `400 FILE_NOT_FOUND`, which the drawer shows where the admin is, re-reading the view;
+      // nothing changed, so the submitted card is withdrawn instead (the last file: `files: []`).
+      expect({ code: addAnswer?.code, status: added.status() }).toEqual({ code: "FILE_NOT_FOUND", status: 400 });
+      await expect(drawerAlert).toHaveText("No s'ha trobat el fitxer.");
+      expect((await viewAfterAdd).status()).toBe(200);
+      await expect(drawerFiles).toHaveCount(1);
+      removal = { expected: { documents: [{ files: [], type: "VACCINATION_CARD" }], version: addBody.version }, file: newCard };
+    }
+    await drawerAlert.or(drawerFiles.first()).first().scrollIntoViewIfNeeded();
+    await admin.screenshot({ path: join(evidenceDirectory, "D2-readmission-dog-documents-core-1280.png") });
     const removePatch = admin.waitForResponse(isDogPatch);
     const viewAfterRemove = nextSignupView(admin);
-    await readmissionDrawer
-      .locator(".signup-edit-documents li")
-      .filter({ hasText: "cartilla_retorn_2.jpg" })
-      .getByRole("button", { name: "Retira" })
-      .click();
+    await drawerFiles.filter({ hasText: removal.file }).getByRole("button", { name: "Retira" }).click();
     const removed = await removePatch;
-    expect(removed.status(), await removed.text()).toBe(200);
-    expect(removed.request().postDataJSON()).toEqual({
-      documents: [{ files: [addBody.documents[0]?.files[0]], type: "VACCINATION_CARD" }],
-      version: addBody.version + 1,
-    });
+    expect(removed.status(), removed.status() === 200 ? "" : await removed.text()).toBe(200);
+    expect(removed.request().postDataJSON()).toEqual(removal.expected);
+    // The PATCH answers the record: D2 reads the view again for the submitted documents.
     expect((await viewAfterRemove).status()).toBe(200);
-    await expect(dogChanges.getByText(/cartilla_retorn_2\.jpg/u)).toHaveCount(0);
+    await expect(drawerFiles.filter({ hasText: removal.file })).toHaveCount(0);
+    await expect(dogChanges.getByText(new RegExp(removal.file.replaceAll(".", "\\."), "u"))).toHaveCount(0);
+    await expect(drawerAlert).toHaveCount(0);
     admin.off("request", onDogRequest);
     expect(frozenDogCalls).toEqual([]);
-    await screenshot(admin, "D2-readmission-drawer-core-1280.png");
+    await readmissionDrawer.locator(".signup-edit-documents").scrollIntoViewIfNeeded();
+    await admin.screenshot({ path: join(evidenceDirectory, "D2-readmission-drawer-core-1280.png") });
     await readmissionDrawer.getByRole("button", { name: "Cancel·la" }).click();
     await expect(readmissionDrawer).toBeHidden();
     // The readmission block as the core sends it (its nulls included), next to the LEFT record's contact.
@@ -1384,9 +1450,9 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     const dogAfter = await admin.evaluate(
       async ({ authorization, base, id }) => {
         const headers = { Authorization: authorization };
-        const dog = (await (await fetch(`${base}/dogs/${id}`, { headers })).json()) as unknown;
+        const detail = (await (await fetch(`${base}/dogs/${id}`, { headers })).json()) as { dog?: unknown };
         const documents = (await (await fetch(`${base}/dogs/${id}/documents`, { headers })).json()) as unknown;
-        return { documents, dog };
+        return { documents, dog: detail.dog ?? null };
       },
       { ...readmissionApi, id: leftDog.id },
     );

@@ -18,6 +18,8 @@ type OnboardingState = components["schemas"]["OnboardingState"];
 
 export interface MockScenarioDefinition {
   branding: Branding;
+  /** S08 (mockup 06): Duna has two cancellable bookings this week, so a hold proposes the swap. */
+  bookingLimit?: boolean;
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
@@ -104,6 +106,25 @@ const scenarios = {
   },
   member: {
     branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S08 R-08-09 (mockup 06): the week's limit is reached with two cancellable bookings. */
+  bookingLimit: {
+    bookingLimit: true,
+    branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S08 §9 `WAITLIST` off: full classes read «Completa» (inert), no waiting rows on 03. */
+  bookingNoWaitlist: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "WAITLIST") },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S08 R-08-18 `SINGLE_CLASS`: Duna's plan pays to book, Rock's is charged on the receipt. */
+  bookingSingleClass: {
+    branding: { ...canic, locales: ["ca", "es", "en"], modules: [...canic.modules, "SINGLE_CLASS"] },
     me: member,
     sessions: accountSessions,
   },

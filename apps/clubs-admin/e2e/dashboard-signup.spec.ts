@@ -75,7 +75,8 @@ test("E3-W08 step 6 (R-04-06, E38): D2 shows a readmission's old and new values,
   await page.getByRole("button", { name: "VALIDA" }).first().click();
   await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
   await expect(page.locator(".ah-badge", { hasText: "Readmissió" })).toBeVisible();
-  const changes = page.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+  // `exact`: the reused dog has its own block, «Canvis respecte de la fitxa de baixa Kiwi» (E4-W13).
+  const changes = page.getByRole("region", { exact: true, name: "Canvis respecte de la fitxa de baixa" });
   await expect(changes.getByText("Abans: marta.antic@example.test")).toBeVisible();
   await expect(changes.getByText("Ara: marta.roca@example.test")).toBeVisible();
   await page.screenshot({
@@ -86,4 +87,45 @@ test("E3-W08 step 6 (R-04-06, E38): D2 shows a readmission's old and new values,
   const drawer = page.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
   await expect(drawer.getByLabel("DNI/NIE")).toHaveAttribute("readonly", "");
   await expect(drawer.getByText(/per corregir-lo, rebutja la readmissió/u)).toBeVisible();
+});
+
+test("T-04-12 E4-W13 (R-04-06, R-04-19, E38): D2 shows the reused dog's old and new values, and the drawer edits its documents only through PATCH /dogs/{id}", async ({
+  page,
+}) => {
+  const kiwiPath = "/api/v1/dogs/44000000-0000-4000-8000-000000000001";
+  const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W13");
+  // Every write to the reused dog's record routes (documents, files, photo, level…): none may happen.
+  const frozenCalls: string[] = [];
+  page.on("request", (request) => {
+    const path = new URL(request.url()).pathname;
+    if (path.startsWith(`${kiwiPath}/`) && request.method() !== "GET") frozenCalls.push(`${request.method()} ${path}`);
+  });
+  await login(page, "adminSignupReviewReadmission");
+  await page.getByRole("button", { name: "VALIDA" }).first().click();
+  await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
+  const dogChanges = page.getByRole("region", { exact: true, name: "Canvis respecte de la fitxa de baixa Kiwi" });
+  await expect(dogChanges.getByText("Abans: Kivi", { exact: true })).toBeVisible();
+  await expect(dogChanges.getByText("Ara: Kiwi", { exact: true })).toBeVisible();
+  await expect(dogChanges.getByText("Abans: cartilla_Kivi_2025.pdf", { exact: true })).toBeVisible();
+  await expect(
+    dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf", { exact: true }),
+  ).toBeVisible();
+  await page.screenshot({ fullPage: true, path: resolve(evidence, "D2-reused-dog-mock-1280.png") });
+
+  await page.getByRole("button", { name: "EDITA LES DADES" }).click();
+  const drawer = page.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
+  await expect(drawer.locator("#signup-edit-dog-0-chip")).toHaveAttribute("readonly", "");
+  await expect(drawer.locator("#signup-edit-dog-0-chip-help")).toHaveText(
+    "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.",
+  );
+  const patch = page.waitForRequest((request) => new URL(request.url()).pathname === kiwiPath && request.method() === "PATCH");
+  await drawer.locator(".signup-edit-documents li").filter({ hasText: "Assegurança.pdf" }).getByRole("button", { name: "Retira" }).click();
+  expect((await patch).postDataJSON()).toEqual({ documents: [{ files: [], type: "INSURANCE" }], version: 1 });
+  await expect(dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true })).toBeVisible();
+  await expect(drawer.getByText("Assegurança.pdf")).toHaveCount(0);
+  // The drawer stays where the admin is: no jump back to its top after the change (packages/ui overlay).
+  await expect(drawer.locator(".signup-edit-documents")).toBeInViewport();
+  await expect(drawer.getByRole("button", { name: "Cancel·la" })).not.toBeFocused();
+  await page.screenshot({ path: resolve(evidence, "D2-reused-dog-drawer-mock-1280.png") });
+  expect(frozenCalls).toEqual([]);
 });

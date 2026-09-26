@@ -80,5 +80,37 @@
   "activityOrigin": {
     "APP": "app",
     "BACKOFFICE": "club"
+  },
+  "reservationState": {
+    "CONFIRMED": "confirmada",
+    "PAYMENT_PENDING": "pendent de pagament",
+    "WAITLISTED": "en llista d'espera",
+    "REGISTERED": "inscrita"
+  },
+  "bookingState": {
+    "CONFIRMED": "confirmada",
+    "DONE": "feta",
+    "NO_SHOW": "no presentat",
+    "CANCELLED": "anul·lada",
+    "CANCELLED_LATE": "anul·lada tard",
+    "CANCELLED_BY_CLUB": "cancel·lada pel club",
+    "PAYMENT_PENDING": "pendent de pagament"
+  },
+  "bookableState": {
+    "BOOKABLE": "reservable",
+    "WAITLIST_OPEN": "completa, amb llista d'espera",
+    "WAITLIST_FULL": "completa, llista d'espera plena",
+    "FULL": "completa",
+    "WEEKLY_LIMIT_DONE": "límit setmanal",
+    "NOT_YET_OPEN": "properament",
+    "PACK_EMPTY": "sense sessions",
+    "NOT_BOOKABLE": "no reservable"
+  },
+  "waitlistState": {
+    "ACTIVE": "en llista d'espera",
+    "NOTIFIED": "plaça alliberada",
+    "CONSOLIDATED": "reserva confirmada",
+    "EXPIRED": "caducada",
+    "CANCELLED": "anul·lada"
   }
 }

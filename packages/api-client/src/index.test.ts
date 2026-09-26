@@ -223,6 +223,44 @@ describe("typed API client", () => {
       "ring-block-cancellation:",
     ]);
   });
+
+  it("E5-W01 step 0 (S08 §6) sends an Idempotency-Key on the seat hold, the booking, the waitlist entry and the claim", async () => {
+    const keys: string[] = [];
+    const record = (name: string) => ({ request }: { request: Request }) => {
+      keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+      return HttpResponse.json({}, { status: 201 });
+    };
+    server.use(
+      http.post("https://core.example.test/api/v1/seat-holds", record("seat-hold")),
+      http.post("https://core.example.test/api/v1/bookings", record("booking")),
+      http.post("https://core.example.test/api/v1/waitlist-entries", record("waitlist")),
+      http.post("https://core.example.test/api/v1/waitlist-entries/:id/claim", record("claim")),
+      http.post("https://core.example.test/api/v1/bookings/:id/cancellation", record("cancellation")),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174003",
+    });
+
+    await client.POST("/seat-holds", { body: { classSessionId: "class-1", dogId: "dog-1" } });
+    // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+    await client.POST("/bookings", { body: { seatHoldId: "hold-1" } });
+    await client.POST("/waitlist-entries", { body: { classSessionId: "class-1", dogId: "dog-1" } });
+    await client.POST("/waitlist-entries/{id}/claim", {
+      body: { seatHoldId: "hold-1" },
+      // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+      params: { path: { id: "entry-1" } },
+    });
+    await client.POST("/bookings/{id}/cancellation", { body: {}, params: { path: { id: "booking-1" } } });
+
+    expect(keys).toEqual([
+      "seat-hold:123e4567-e89b-42d3-a456-426614174003",
+      "booking:123e4567-e89b-42d3-a456-426614174003",
+      "waitlist:123e4567-e89b-42d3-a456-426614174003",
+      "claim:123e4567-e89b-42d3-a456-426614174003",
+      "cancellation:",
+    ]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -258,7 +296,7 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(181);
+    expect(handlers).toHaveLength(193);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

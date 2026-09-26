@@ -52,7 +52,8 @@ export const moduleUi = {
     tabs: [],
   },
   FAMILY_GROUP: { menuEntries: [], routes: [], tabs: [] },
-  WAITLIST: { menuEntries: [], routes: [], tabs: [] },
+  // S08 §9: without WAITLIST there is no waiting entry to open.
+  WAITLIST: { menuEntries: [], routes: ["/espera/:id"], tabs: [] },
   TASKS: {
     menuEntries: ["student-follow-up"],
     routes: ["/seguiment", "/instructor/tasques"],

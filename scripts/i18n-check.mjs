@@ -164,6 +164,11 @@ const dynamicKeyPrefixes = [
   "enums:activityRegistrationState.",
   "enums:activityState.",
   "enums:activityType.",
+  // S08 (E5-W01): rendered by the api's state, so a new value needs only its key.
+  "enums:bookableState.",
+  "enums:bookingState.",
+  "enums:reservationState.",
+  "enums:waitlistState.",
   "enums:cancellationReason.",
   "enums:classState.",
   "enums:coverageStatus.",

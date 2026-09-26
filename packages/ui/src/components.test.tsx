@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import {
@@ -165,6 +166,32 @@ describe("base components", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Tanca" }));
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("E4-W13 a Drawer keeps the focus where the user is when its parent re-renders with a new onClose (AGENTS rule 6)", () => {
+    const closed = vi.fn();
+    // As D2's edit drawer: every render passes a new `onClose` closure.
+    function Parent() {
+      const [value, setValue] = useState("");
+      return (
+        <Drawer closeLabel="Tanca" onClose={() => { closed(value); }} open title="Detall">
+          <label>
+            Nom
+            <input onChange={(event) => { setValue(event.currentTarget.value); }} value={value} />
+          </label>
+        </Drawer>
+      );
+    }
+    render(<Parent />);
+    expect(screen.getByRole("button", { name: "Tanca" })).toHaveFocus();
+    const input = screen.getByRole("textbox", { name: "Nom" });
+    input.focus();
+    fireEvent.change(input, { target: { value: "K" } });
+    fireEvent.change(input, { target: { value: "Ki" } });
+    expect(input).toHaveFocus();
+    // Escape still reaches the latest `onClose`.
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(closed).toHaveBeenCalledExactlyOnceWith("Ki");
   });
 
   it("Toast exposes status and dismissal", () => {

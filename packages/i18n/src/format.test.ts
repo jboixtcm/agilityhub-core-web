@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  clubLocalInstant,
   createClubFormats,
+  dogArticle,
   formatActivityDate,
   formatDate,
+  formatDayAtTime,
   formatDateRange,
   formatDuration,
   formatList,
@@ -14,6 +17,46 @@ import {
   isPlainDate,
   parsePlainDate,
 } from "./format";
+
+describe("E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle)", () => {
+  it.each([
+    ["Duna", "FEMALE", "ca", "la "],
+    ["Rock", "MALE", "ca", "en "],
+    ["Ona", "FEMALE", "ca", "l'"],
+    ["Àtila", "MALE", "ca", "l'"],
+    ["Hug", "MALE", "ca", "l'"],
+    ["Duna", "FEMALE", "es", ""],
+    ["Rock", "MALE", "en", ""],
+    ["Duna", null, "ca", ""],
+  ] as const)("%s (%s) in %s → «%s»", (name, sex, locale, article) => {
+    expect(dogArticle(name, sex, locale)).toBe(article);
+  });
+});
+
+describe("E5-W01 R-08-10 a club-local class time as an instant (clubLocalInstant, R-06-14)", () => {
+  it.each([
+    ["2026-08-03T18:50", "Europe/Madrid", "2026-08-03T16:50:00.000Z"],
+    // Autumn overlap: the first occurrence (CEST); spring gap: moved forward by the hour.
+    ["2026-10-25T02:30", "Europe/Madrid", "2026-10-25T00:30:00.000Z"],
+    ["2026-03-29T02:30", "Europe/Madrid", "2026-03-29T01:30:00.000Z"],
+    ["2026-08-03T18:50", "America/Argentina/Buenos_Aires", "2026-08-03T21:50:00.000Z"],
+  ] as const)("%s in %s → %s", (local, timeZone, expected) => {
+    expect(new Date(clubLocalInstant(local, timeZone)).toISOString()).toBe(expected);
+  });
+});
+
+describe("E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime)", () => {
+  it.each([
+    ["ca", "2026-08-09T18:00:00Z", "Europe/Madrid", "diumenge 9 a les 20 h"],
+    ["ca", "2026-10-11T18:30:00Z", "Europe/Madrid", "diumenge 11 a les 20:30"],
+    ["es", "2026-08-09T18:00:00Z", "Europe/Madrid", "domingo 9 a las 20 h"],
+    ["en", "2026-08-09T18:00:00Z", "Europe/Madrid", "Sunday 9 at 20:00"],
+    // Buenos Aires reads the same instant five hours earlier, on its own day (CONVENCIONS_I18N §5).
+    ["ca", "2026-08-09T18:00:00Z", "America/Argentina/Buenos_Aires", "diumenge 9 a les 15 h"],
+  ] as const)("%s %s in %s → «%s»", (locale, instant, timeZone, expected) => {
+    expect(formatDayAtTime(instant, locale, timeZone)).toBe(expected);
+  });
+});
 
 describe("club-aware formats", () => {
   it.each([

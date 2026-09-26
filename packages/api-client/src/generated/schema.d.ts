@@ -5311,6 +5311,13 @@ export interface components {
             /** @enum {string} */
             state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
             swapFromBookingId?: string | null;
+            /** @description S08 §2 07 (E5-W01): the booked dog, as SeatHoldResponse.dog, for «Classe {description} · amb la Duna» (name and the Catalan article by sex). Omitted by the published core, whose Booking carries only dogId. */
+            dog?: components["schemas"]["HoldDog"];
+            /**
+             * Format: int32
+             * @description S08 R-08-10 (E5-W01): bookings.lateCancelThresholdMinutes as the booking's club applies it (240 = «4 hores»). Screen 07 warns before a cancellation inside it and names it in the late note; a MEMBER cannot read /parameters (ADMIN only). Omitted by the published core.
+             */
+            lateCancelThresholdMinutes?: number;
         };
         BookingBlock: {
             active: boolean;
@@ -10026,6 +10033,8 @@ export interface components {
             position?: number | null;
             /** @enum {string} */
             state: "ACTIVE" | "NOTIFIED" | "CONSOLIDATED" | "EXPIRED" | "CANCELLED";
+            /** @description S08 §2 /espera/:id (E5-W01): the waiting dog, as SeatHoldResponse.dog, for the Catalan article by sex (dogName carries no sex). Omitted by the published core. */
+            dog?: components["schemas"]["HoldDog"];
         };
         WaitlistEntryRequest: {
             classSessionId: string;

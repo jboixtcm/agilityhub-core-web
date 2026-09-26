@@ -1,0 +1,122 @@
+[
+  {
+    "block": "system",
+    "key": "signup.rateLimit",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.enabled",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.pendingExpiryDays",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.requireDogDocumentAtSignup",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.firstMonthSplitDay",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.allowFamilyGroupPending",
+    "module": "FAMILY_GROUP"
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.paymentDay",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.cashConditions",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.freeTrainingConditions",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.imageConsent",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.closed",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.monthlyPaymentIntro",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.therapyIntro",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.text.familyGroupIntro",
+    "module": null
+  },
+  {
+    "block": "signup",
+    "key": "signup.onboardingFields",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.maxCurrentWeek",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.maxNextWeek",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.limitUnit",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.weekOpensAt",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.lateCancelThresholdMinutes",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.seatHoldSeconds",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.showInstructorHoursBefore",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.instructorLastMinuteNotice",
+    "module": null
+  },
+  {
+    "block": "classes",
+    "key": "bookings.paymentPendingMinutes",
+    "module": null
+  }
+]

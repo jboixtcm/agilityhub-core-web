@@ -1,0 +1,9 @@
+{
+  "body": {
+    "code": "PAYMENT_METHOD_NOT_AVAILABLE",
+    "message": "Aquest mètode de pagament no està disponible.",
+    "details": {},
+    "traceId": "c1fdf568-5338-44fd-a0de-c8cad0ea67e2"
+  },
+  "status": 422
+}

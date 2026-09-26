@@ -22,14 +22,18 @@ export type LoadState<Data> =
   | { data?: undefined; error: unknown; status: "error" }
   | { data?: undefined; error?: undefined; status: "loading" };
 
-/** `GET /me/activities` (S07 §6): the open activities (04) and the member's live ones (03). */
-export function useMeActivities(client: ApiClient, enabled: boolean) {
+/**
+ * `GET /me/activities` (S07 §6): the open activities (04) and the member's live ones (03). With a
+ * `dogId` (04's selected dog, S08 R-08-22) the open ones are those admitted for that dog.
+ */
+export function useMeActivities(client: ApiClient, enabled: boolean, dogId?: string | null) {
   const [state, setState] = useState<LoadState<MeActivities>>({ status: "loading" });
   const [reload, setReload] = useState(0);
   useEffect(() => {
     if (!enabled) return undefined;
     let current = true;
-    void client.GET("/me/activities").then(
+    const query = dogId === undefined || dogId === null ? {} : { dogId };
+    void client.GET("/me/activities", { params: { query } }).then(
       (result) => {
         if (!current) return;
         setState(
@@ -45,7 +49,7 @@ export function useMeActivities(client: ApiClient, enabled: boolean) {
     return () => {
       current = false;
     };
-  }, [client, enabled, reload]);
+  }, [client, dogId, enabled, reload]);
   const refetch = useCallback(() => {
     setState({ status: "loading" });
     setReload((value) => value + 1);

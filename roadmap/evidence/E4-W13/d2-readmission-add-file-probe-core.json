@@ -1,0 +1,16 @@
+{
+  "patchBody": "{\"code\":\"FILE_NOT_FOUND\",\"message\":\"No s'ha trobat el fitxer.\",\"details\":{},\"traceId\":\"716028f3-80b9-455d-b249-42202e1fc335\"}",
+  "patchStatus": 400,
+  "probe": {
+    "keptOnly": 200,
+    "keptOnlyBody": "{\"id\":\"b41de941-2d78-4235-8461-cb98f722ac42\",\"memberId\":\"ca46c21f-6be8-4510-bf66-1258f460de41\",\"name\":\"Brisa E3\",\"breed\":\"Mestís\",\"sex\":\"MALE\",\"birthDate\":\"2022-03-01\",\"chip\":\"941000000009902\",\"licenses\":[],\"status\":\"PENDING\",\"deactivatedAt\":\"2026-09-26T12:28:56.024Z\",\"deactivationReason\":\"SIGNUP_RE",
+    "signupUpload": 403,
+    "signupUploadBody": "{\"code\":\"FORBIDDEN\",\"message\":\"No tens permís per fer aquesta acció.\",\"details\":{},\"traceId\":\"7657b44f-1a5b-4462-ac07-78"
+  },
+  "sentKeys": [
+    [
+      "signup/07c50ed2-5b06-4065-ae49-fa46f3d49712/202609/1ea2ff2a-ae69-471e-8ef2-d8218cd40d02/cartilla_Retorn_E3_1.jpg",
+      "0f3ed52c-8f81-48f5-bee8-4508f5624dbd"
+    ]
+  ]
+}

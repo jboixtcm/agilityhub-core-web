@@ -1,0 +1,49 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/components.test.tsx (28 tests | 1 failed | 27 skipped) 85ms
+   ❯ base components (28)
+     × E4-W13 a Drawer keeps the focus where the user is when its parent re-renders with a new onClose (AGENTS rule 6) 84ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components.test.tsx > base components > E4-W13 a Drawer keeps the focus where the user is when its parent re-renders with a new onClose (AGENTS rule 6)
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<input
+  value="Ki"
+/>[39m
+Received element with focus:
+  [31m<button
+  aria-label="Tanca"
+  class="ah-overlay__close"
+>
+  <svg
+    aria-hidden="true"
+    class="ah-icon"
+  >
+    <use
+      href="http://localhost:3000/src/icons/sprite.svg#i-x"
+    />
+  </svg>
+</button>[39m
+ ❯ src/components.test.tsx:191:19
+    189|     fireEvent.change(input, { target: { value: "K" } });
+    190|     fireEvent.change(input, { target: { value: "Ki" } });
+    191|     expect(input).toHaveFocus();
+       |                   ^
+    192|     // Escape still reaches the latest `onClose`.
+    193|     fireEvent.keyDown(document, { key: "Escape" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  13:58:57
+   Duration  940ms (environment 69%, setup 13%, tests 10%, transform 6%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/components.test.tsx -t E4-W13

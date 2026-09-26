@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/booking/confirm.test.tsx (14 tests | 1 failed | 13 skipped) 176ms
+   ❯ R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) (3)
+     × a confirmation that fails on the way stays on the page, and its retry sends the same key 174ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > a confirmation that fails on the way stays on the page, and its retry sends the same key
+AssertionError: expected '60ec4321-38d3-4492-b934-73c34085e9b0' to be '0c757675-6cf6-4715-9a96-e184ad6ee6e5' // Object.is equality
+
+Expected: "0c757675-6cf6-4715-9a96-e184ad6ee6e5"
+Received: "60ec4321-38d3-4492-b934-73c34085e9b0"
+
+ ❯ src/booking/confirm.test.tsx:282:21
+    280|     const keys = writes.filter((write) => write.path === "/api/v1/book…
+    281|     expect(keys).toHaveLength(2);
+    282|     expect(keys[0]).toBe(keys[1]);
+       |                     ^
+    283|   });
+    284| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  15:39:09
+   Duration  1.03s (transform 38%, environment 24%, tests 18%, import 14%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/confirm.test.tsx -t same key

@@ -7,6 +7,11 @@
       "withTime": "{date} · {time}",
       "timeRange": "{start}–{end}"
     },
+    "dayAtTime": {
+      "date": "{weekday} {day}",
+      "withTime": "{date} at {time}",
+      "wholeHour": "{hour}:00"
+    },
     "duration": {
       "before": "{duration} before"
     },

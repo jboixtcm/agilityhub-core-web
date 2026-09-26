@@ -16,5 +16,35 @@
     "loading": "Loading the day grid",
     "loadError": "The day grid could not be loaded.",
     "retry": "Try again"
+  },
+  "greeting": "Hello, {firstName}!",
+  "notifications": "{count, plural, =0 {Notifications} one {Notifications: # unread} other {Notifications: # unread}}",
+  "dogs": {
+    "label": "Dogs",
+    "all": "All",
+    "ownDog": "{name} · {level}",
+    "groupDog": "{name} · {level} ({owner})",
+    "groupDogNoLevel": "{name} ({owner})"
+  },
+  "limits": {
+    "label": "Booked classes",
+    "currentWeek": "{count, plural, one {class} other {classes}}\nthis week",
+    "nextWeek": "{count, plural, one {class} other {classes}}\nnext week",
+    "nextWeekCount": "＋{count}"
+  },
+  "reservations": {
+    "title": "My bookings",
+    "withDog": "{title} · with {dogName}",
+    "join": "{first} · {second}",
+    "instructorHidden": "{hours, select, 24 {instructor: shown the day before} other {instructor: shown {hours, number} h before}}",
+    "waitlistNotice": "we will let you know if a place opens up",
+    "empty": "You have no bookings yet",
+    "bookClass": "BOOK A CLASS",
+    "loading": "Loading your bookings",
+    "error": "Your bookings could not be loaded.",
+    "retry": "Try again"
+  },
+  "history": {
+    "link": "See the history ({months, plural, one {# month} other {# months}}) ›"
   }
 }

@@ -3,11 +3,26 @@ import { fileURLToPath } from "node:url";
 
 import Ajv2020, { type AnySchema } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import openapiDocument from "../../openapi/openapi.json";
 import pendingDocument from "../../openapi/pending.json";
 
+import {
+  BOOKING_DOG_IDS,
+  BOOKING_MOCK_NOW,
+  bookableClasses,
+  bookingResource,
+  bookingState,
+  createHold,
+  limitReachedDetails,
+  meHome,
+  resetBookingState,
+  seatHoldResponse,
+  waitlistResource,
+  type BookingOptions,
+} from "./fixtures/bookings";
+import brandingCanicFixture from "./fixtures/branding-canic.json";
 import {
   cancellationPreviewFor,
   clubInstant,
@@ -626,5 +641,71 @@ describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignup
       expect(quote.upfront?.lines[0]?.status).toBe("PARTIAL");
       expect(quote.upfront?.lines.some((line) => line.status === "CANCELLED")).toBe(false);
     });
+  });
+});
+
+describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const canicModules = (brandingCanicFixture as { modules: string[] }).modules;
+  const bookingOptions = (modules: readonly string[], limit: boolean): BookingOptions => ({
+    limit,
+    locale: "ca",
+    modules,
+    now: Date.parse(BOOKING_MOCK_NOW),
+    thresholdMinutes: 240,
+  });
+  const variants: [string, BookingOptions][] = [
+    ["canic", bookingOptions(canicModules, false)],
+    ["limit", bookingOptions(canicModules, true)],
+    ["no waitlist", bookingOptions(canicModules.filter((module) => module !== "WAITLIST"), false)],
+    ["single class", bookingOptions([...canicModules, "SINGLE_CLASS"], false)],
+    ["no modules", bookingOptions([], false)],
+  ];
+
+  afterEach(() => {
+    resetBookingState();
+  });
+
+  it.each(variants)("validates the 03 and 04 aggregates of every dog (%s)", (_name, options) => {
+    resetBookingState(options.limit);
+    const home = schema("MeHome");
+    const bookable = schema("BookableClasses");
+    for (const dogId of [null, ...Object.values(BOOKING_DOG_IDS)]) {
+      const view = meHome(dogId, options, []);
+      if (view !== undefined) expect(home(view), JSON.stringify(home.errors, null, 2)).toBe(true);
+      const classes = bookableClasses(dogId, options);
+      if (classes !== undefined) {
+        expect(bookable(classes), JSON.stringify(bookable.errors, null, 2)).toBe(true);
+      }
+    }
+  });
+
+  it.each(variants)("validates the holds, bookings, waitlist entries and the limit details (%s)", (_name, options) => {
+    resetBookingState(options.limit);
+    const hold = schema("SeatHoldResponse");
+    const booking = schema("Booking");
+    const entry = schema("WaitlistEntry");
+    const limit = schema("BookingLimitReachedDetails");
+    for (const [classId, dogId] of [
+      ["class-2026-08-05-1850", BOOKING_DOG_IDS.duna],
+      ["class-2026-08-08-0900", BOOKING_DOG_IDS.duna],
+      ["class-2026-08-12-1900", BOOKING_DOG_IDS.rock],
+    ] as const) {
+      const response = seatHoldResponse(createHold(classId, dogId, null, options), options);
+      expect(hold(response), JSON.stringify(hold.errors, null, 2)).toBe(true);
+    }
+    for (const item of bookingState.bookings) {
+      expect(booking(bookingResource(item, options)), JSON.stringify(booking.errors, null, 2)).toBe(
+        true,
+      );
+    }
+    for (const item of bookingState.entries) {
+      expect(entry(waitlistResource(item, options)), JSON.stringify(entry.errors, null, 2)).toBe(true);
+    }
+    expect(limit(limitReachedDetails("CURRENT")), JSON.stringify(limit.errors, null, 2)).toBe(true);
   });
 });

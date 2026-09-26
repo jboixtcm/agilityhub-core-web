@@ -3,6 +3,7 @@ import { delay, http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
+import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
@@ -3441,6 +3442,7 @@ export const handlers = [
   ...dayGridHandlers,
   ...calendarHandlers,
   ...activityHandlers,
+  ...bookingHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
       status: "UP",
@@ -3452,12 +3454,14 @@ export const handlers = [
 
 export {
   activityState,
+  bookingState,
   catalogState,
   mockExportBody,
   mockScenario,
   planningState,
   resetActivityState,
   resetAuditMockState,
+  resetBookingMockState,
   resetCatalogState,
   resetCensusRecordState,
   resetDashboardMockState,

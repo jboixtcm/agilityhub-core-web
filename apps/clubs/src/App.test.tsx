@@ -129,7 +129,9 @@ describe("T-02-14 clubs shell", () => {
   it("uses the compact mark with the runtime club name", async () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");
-    window.history.pushState(null, "", "/inici");
+    // A page with the shell header: since E5-W01 03 draws the mockup's own header (mark,
+    // greeting and bell) instead.
+    window.history.pushState(null, "", "/entrenaments");
     await renderApplication(client);
 
     expect(document.querySelector(".clubs-shell__logo")).toHaveAttribute(

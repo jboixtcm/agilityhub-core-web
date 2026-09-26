@@ -1,0 +1,55 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04 137ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > shows the mockup card, and a cancellation in time asks first and leaves the green note 199ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 193ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Duna: the chips without «Tots», the pack, the intro, the activities and the six mockup rows 174ms
+ ✓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note 112ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > inside the 4 h threshold the dialog warns, and the late note names «4 hores» 71ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > the threshold comes from the booking: 90 minutes read «90 minuts»; without it no warning and the late note has no number 47ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge 103ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > modules gate the page: no ACTIVITIES block, no PACKS card, WAITLIST off reads «Completa» inert, SINGLE_CLASS adds the price 41ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …», its counters, and «Tots» brings them back 82ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations: «Encara no tens cap reserva» and a way to 04 63ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > single selection among the swappable bookings, the done one inert, the button names both days, then the swap is confirmed 108ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > the published core omits the threshold: the dialog has no warning, and the late note reads without it 60ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > who booked it: another member of the group 39ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST off: the full rows read «Completa» and do nothing 43ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > SINGLE_CLASS: every badge carries the price (R-08-18) 43ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected; nothing unread: the bell is still 51ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch 43ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > booked by the club reads «Reservada pel club el …» 42ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (422) shows its message inside the dialog and reads the booking again 62ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04 94ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > the back gesture leaves the page and releases the hold too 94ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera» 89ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT) 69ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma 46ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row 45ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking 79ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (409) shows its message inside the dialog and reads the booking again 54ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03 75ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a hold refused with any other code stays on 04 with its errors: message and the list read again 62ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > the app mounts 04 on /reservar with the «Reservar» tab active 50ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article 56ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English 54ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 63ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > a FIFO club's NOTIFIED entry: the position, the deadline and [AGAFA LA PLAÇA] 42ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > an entry no longer live is read-only with its state; leaving a dead one says so 37ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > the limit done: «Aquesta setmana ja has fet dues classes…» and when it opens again, without a countdown 62ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > «Properament»: «Disponible a partir de diumenge 9 a les 20 h.» 56ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE on leaving shows its message and reads the entry again 42ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > WAITLIST off: there is no waiting entry page 32ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown 81ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > PAY_TO_BOOK: «PAGAR I CONFIRMAR (12,00 €)» opens the api's Checkout URL 61ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > CHARGE_ON_ATTENDANCE: the note above the normal button 70ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > a confirmation that fails on the way stays on the page, and its retry sends the same key 69ms
+ ✓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > [AGAFA LA PLAÇA] holds with the entry, and the confirmation posts the claim with its key 62ms
+ ✓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message 60ms
+
+ Test Files  4 passed (4)
+      Tests  46 passed (46)
+   Start at  15:42:02
+   Duration  2.23s (tests 46%, transform 22%, environment 18%, import 10%, setup 4%)
+

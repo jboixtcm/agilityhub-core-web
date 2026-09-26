@@ -1,0 +1,11 @@
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check passed
+ca: 2495 keys
+es: 2495 keys
+en: 2495 keys
+1872 statically used keys, 0 unused
+250 codes, 0 missing
+151 catalog parameters (119 in D11, 32 system-only), 10 blocks, 0 missing

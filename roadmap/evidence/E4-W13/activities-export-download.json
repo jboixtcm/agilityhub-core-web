@@ -1,0 +1,9 @@
+{
+  "bytes": 4065,
+  "contentDisposition": "attachment; filename=\"canic_activities_20260926-1442.xlsx\"",
+  "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "magic": "504b0304",
+  "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+  "status": 200,
+  "suggestedFilename": "canic_activities_20260926-1442.xlsx"
+}

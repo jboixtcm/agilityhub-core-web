@@ -77,13 +77,14 @@ export function ActivityBlockRow({ row }: { row: ActivityRow }) {
 
 /**
  * Block «Activitats» of screen 04 (S07 §2, R-07-11): `GET /me/activities` → `bookable[]`.
- * Absent without `ACTIVITIES` or without an open activity. E5 adds the selected dog (§13-6).
+ * Absent without `ACTIVITIES` or without an open activity. 04 passes its selected dog (S08
+ * R-08-22, S07 §13-6): the open activities admitted for that dog.
  */
-export function ActivitiesBlock({ client }: { client: ApiClient }) {
+export function ActivitiesBlock({ client, dogId }: { client: ApiClient; dogId?: string | null }) {
   const branding = useBranding();
   const { t } = useTranslation("activities");
   const enabled = branding.modules.includes("ACTIVITIES");
-  const activities = useMeActivities(client, enabled);
+  const activities = useMeActivities(client, enabled, dogId);
   if (!enabled) return null;
   if (activities.status === "error") {
     // Only a disabled module hides the block quietly; any other failure offers a retry.
@@ -119,8 +120,9 @@ export function ActivitiesBlock({ client }: { client: ApiClient }) {
 }
 
 /**
- * Provisional `/reservar` (screen 04): the mockup's app bar and intro with the activities
- * block. E5 (S08) owns the page (dog chips, pack, classes) and keeps this block.
+ * The E4-W04 `/reservar` (screen 04): the mockup's app bar and intro with the activities block.
+ * Since E5-W01 the app mounts `booking/BookPage` (dog chips, pack, classes) with this block; this
+ * page stays as the harness of the S07 block tests.
  */
 export function ReserveActivitiesPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["activities", "shell"]);

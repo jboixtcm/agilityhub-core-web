@@ -16,5 +16,35 @@
     "loading": "Cargando el cuadro del día",
     "loadError": "No se ha podido cargar el cuadro del día.",
     "retry": "Reintentar"
+  },
+  "greeting": "¡Hola, {firstName}!",
+  "notifications": "{count, plural, =0 {Avisos} one {Avisos: # sin leer} other {Avisos: # sin leer}}",
+  "dogs": {
+    "label": "Perros",
+    "all": "Todos",
+    "ownDog": "{name} · {level}",
+    "groupDog": "{name} · {level} ({owner})",
+    "groupDogNoLevel": "{name} ({owner})"
+  },
+  "limits": {
+    "label": "Clases reservadas",
+    "currentWeek": "{count, plural, one {clase} other {clases}}\nesta sem.",
+    "nextWeek": "{count, plural, one {clase} other {clases}}\nla semana que viene",
+    "nextWeekCount": "＋{count}"
+  },
+  "reservations": {
+    "title": "Mis reservas",
+    "withDog": "{title} · con {dogName}",
+    "join": "{first} · {second}",
+    "instructorHidden": "{hours, select, 24 {instructor: se muestra el día antes} other {instructor: se muestra {hours, number} h antes}}",
+    "waitlistNotice": "te avisaremos si se libera una plaza",
+    "empty": "Todavía no tienes ninguna reserva",
+    "bookClass": "RESERVA UNA CLASE",
+    "loading": "Cargando tus reservas",
+    "error": "No se han podido cargar tus reservas.",
+    "retry": "Reintentar"
+  },
+  "history": {
+    "link": "Ver el historial ({months, plural, one {# mes} other {# meses}}) ›"
   }
 }

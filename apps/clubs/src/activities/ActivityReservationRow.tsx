@@ -56,9 +56,10 @@ export function ActivityReservationRow({
 }
 
 /**
- * Provisional `/inici` (screen 03): the «Les meves reserves» section with only the live
- * activity registrations (`mine[]` with `endsAtLocal` after now). E5 (S08) replaces the page
- * and keeps `ActivityReservationRow`; without rows the shell placeholder stays.
+ * The E4-W04 `/inici` (screen 03): the «Les meves reserves» section with only the live activity
+ * registrations (`mine[]` with `endsAtLocal` after now). Since E5-W01 the app mounts
+ * `booking/HomePage`, which keeps `ActivityReservationRow` for the ACTIVITY rows of `/me/home`;
+ * this section stays as the harness of the S07 row tests.
  */
 export function HomeActivityReservations({
   client,

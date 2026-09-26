@@ -1,0 +1,133 @@
+{
+  "runId": "idqxgd",
+  "weekStart": "2026-09-21",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "body": {
+      "saturdayTemplateId": "e8c67a0f-4822-48ff-a39a-ddbd860ef33d",
+      "weekdayTemplateId": "7ea0f833-fcbb-4ecb-83bd-f99e0c661e16"
+    },
+    "status": 200,
+    "weekId": "31dfc5cc-7eed-49b6-80d5-4c2eb7b9648d",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-12"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-09-28"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 idqxgd: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "68ee408a-6d97-4023-85ac-8ab8ae70de4e",
+    "at": "2026-09-26T12:42:46.644Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "4120e3c3-e34a-4992-a65f-d335f0b644a5",
+          "type": "CLASS",
+          "id": "b9cc22f3-46e9-45f7-9be3-a9017e22e6c4",
+          "from": "2026-10-07T18:00:00Z",
+          "to": "2026-10-07T19:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "79fc57b2-0de8-416e-9fd4-c4f66d1bf34b"
+  },
+  "ringBlock": {
+    "id": "9b7a00cf-7a4d-43b6-8566-7b92d3a14f68",
+    "status": 201
+  },
+  "activitiesExport": {
+    "bytes": 4065,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-1442.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+    "status": 200,
+    "suggestedFilename": "canic_activities_20260926-1442.xlsx"
+  },
+  "tournamentSaturday": {
+    "cellsByColumn": {
+      "ds 10": 1
+    },
+    "date": "2026-10-10"
+  },
+  "publicUrl": null,
+  "seminarConflicts": {
+    "conflicts": [
+      {
+        "ringId": "4120e3c3-e34a-4992-a65f-d335f0b644a5",
+        "type": "CLASS",
+        "id": "f06e96c4-1405-418b-86c2-e434f1b07f05",
+        "from": "2026-10-17T16:30:00Z",
+        "to": "2026-10-17T17:30:00Z",
+        "label": "A+B",
+        "bookedCount": 0
+      }
+    ],
+    "trainingBookings": []
+  },
+  "row03Ca": "Seminari E4 idqxgdinscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "waitlistCa": {
+    "member": {
+      "after": "WAITLISTED",
+      "rankAfter": 2,
+      "rankBefore": 3
+    },
+    "promoted": {
+      "after": "ACTIVE",
+      "rankBefore": 1
+    }
+  },
+  "registrantsExport": {
+    "bytes": 4656,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-1442.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Aab9e97b3-5a00-4867-89a9-8bc9e94fe30d&format=xlsx&sort=registeredAt%2Casc",
+    "status": 200,
+    "suggestedFilename": "canic_activity-registrations_20260926-1442.xlsx"
+  },
+  "row03Es": "Seminari E4 idqxgdinscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "waitlistChipEs": "en lista de espera (3)",
+  "waitlistEs": {
+    "joinedPosition": 4,
+    "joinedRank": 3,
+    "promotedRank": 1
+  },
+  "seminarCancellation": {
+    "status": 200
+  },
+  "seminarRegistrants": [
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "ACTIVITY_CANCELLED",
+      "state": "CANCELLED"
+    }
+  ]
+}

@@ -6,6 +6,8 @@ import type { paths } from "./generated/schema";
 const DEFAULT_API_URL = "https://core.agilitydoghub.com/api/v1";
 const DEFAULT_IDEMPOTENT_PATHS: readonly (string | RegExp)[] = [
   "/bookings",
+  "/seat-holds",
+  "/waitlist-entries",
   "/training-bookings",
   /^\/waitlist-entries\/[^/]+\/claim$/,
   /^\/weeks\/[^/]+\/generation$/,

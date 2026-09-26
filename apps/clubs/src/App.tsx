@@ -31,11 +31,14 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { ReserveActivitiesPage } from "./activities/ActivitiesBlock";
 import { ActivityDetailPage } from "./activities/ActivityDetailPage";
-import { HomeActivityReservations } from "./activities/ActivityReservationRow";
 import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
 import { safeDecode } from "./activities/shared";
+import { BookingDetailPage } from "./booking/BookingDetailPage";
+import { BookPage } from "./booking/BookPage";
+import { ConfirmPage } from "./booking/ConfirmPage";
+import { HomePage } from "./booking/HomePage";
+import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
 import { InfoPage } from "./InfoPage";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
@@ -62,6 +65,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/reservar" },
   { path: "/reservar/confirmar" },
   { path: "/reserves/:id" },
+  // S08 §2: the detail of a waiting entry (07's card, WAITLIST).
+  { path: "/espera/:id" },
   // Screen 08.
   { path: "/entrenaments" },
   // Screen 10.
@@ -261,7 +266,12 @@ export function MobileNavigation({
       active:
         item.id === "profile"
           ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
-          : matchesPath(pathname, item.href),
+          : item.id === "reserve"
+            ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
+              ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some((path) =>
+                matchesPath(pathname, path),
+              )
+            : matchesPath(pathname, item.href),
       href: item.href,
       icon: item.icon,
       label: item.label,
@@ -1261,9 +1271,32 @@ export function App({
         key={pathname}
       />
     ) : pathname === "/reservar" ? (
-      // Screen 04 placeholder with the S07 block; E5 (S08) owns the page.
+      // Screen 04 (S08 §2): dog chips, pack, the S07 activities block and the classes.
       <RequireAuth>
-        <ReserveActivitiesPage client={apiClient} />
+        <BookPage client={apiClient} />
+      </RequireAuth>
+    ) : pathname === "/reservar/confirmar" ? (
+      // Screens 06 and 29: painted from the seat hold in the history entry.
+      <RequireAuth>
+        <ConfirmPage client={apiClient} />
+      </RequireAuth>
+    ) : route.path === "/reserves/:id" ? (
+      <RequireAuth>
+        <BookingDetailPage
+          bookingId={safeDecode(pathname.split("/")[2] ?? "")}
+          client={apiClient}
+          key={pathname}
+        />
+      </RequireAuth>
+    ) : route.path === "/espera/:id" ? (
+      <RequireAuth>
+        <RequireModule module="WAITLIST">
+          <WaitlistDetailPage
+            client={apiClient}
+            entryId={safeDecode(pathname.split("/")[2] ?? "")}
+            key={pathname}
+          />
+        </RequireModule>
       </RequireAuth>
     ) : import.meta.env.DEV && pathname === "/_gallery/historic-activitats" ? (
       // Development-only evidence of the screen 25 activity rows (S10/E6 owns `/historic`).
@@ -1271,9 +1304,9 @@ export function App({
         <HistoryRowsPreview />
       </RequireAuth>
     ) : pathname === "/inici" ? (
-      // Screen 03 placeholder with the S07 rows of «Les meves reserves»; E5 replaces the page.
+      // Screen 03 (S08 §2): «Les meves reserves» of `/me/home`, with E4-W04's activity rows.
       <RequireAuth>
-        <HomeActivityReservations client={apiClient} fallback={<Placeholder />} />
+        <HomePage client={apiClient} />
       </RequireAuth>
     ) : (
       routePlaceholder(route)
@@ -1292,9 +1325,17 @@ export function App({
       <MobileShell
         authClient={authClient}
         detail={
-          ["/gossos", "/dades", "/info", "/avui", "/instructor/avui", "/reservar"].includes(
-            pathname,
-          ) || route.path === "/activitats/:id"
+          [
+            "/gossos",
+            "/dades",
+            "/info",
+            "/avui",
+            "/instructor/avui",
+            "/inici",
+            "/reservar",
+            "/reservar/confirmar",
+          ].includes(pathname) ||
+          ["/activitats/:id", "/reserves/:id", "/espera/:id"].includes(route.path)
         }
       >
         {content}

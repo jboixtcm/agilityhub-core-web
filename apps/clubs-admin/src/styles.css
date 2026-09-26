@@ -1794,6 +1794,16 @@ select {
   gap: var(--ah-space-2);
 }
 
+/* The document icon beside its name, on one line (a long name wraps, never the icon alone). */
+.signup-edit-documents li > a,
+.signup-edit-documents li > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .signup-edit-form,
 .signup-edit-form fieldset {
   display: grid;
