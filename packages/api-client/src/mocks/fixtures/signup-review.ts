@@ -127,7 +127,7 @@ type SignupDogValues = components["schemas"]["SignupDogValues"];
 type SignupDocumentView = components["schemas"]["SignupDocumentView"];
 
 /** A document list compared by what the validation writes: each type with its files' keys. */
-function documentKeys(documents: readonly SignupDocumentView[]): string {
+export function documentKeys(documents: readonly SignupDocumentView[]): string {
   return JSON.stringify(
     documents
       .map((document) => [document.type, document.files.map((file) => file.fileKey)] as const)
@@ -135,15 +135,26 @@ function documentKeys(documents: readonly SignupDocumentView[]): string {
   );
 }
 
+/** One document row's file keys, in order. */
+function rowKeys(document: SignupDocumentView | undefined): string {
+  return JSON.stringify(document?.files.map((file) => file.fileKey) ?? []);
+}
+
 /**
  * `SignupDogReadmission.changedFields` (R-04-06, E38): the fields whose submitted value (the dog
- * view) differs from the reused dog's record (`current`).
+ * view) differs from the reused dog's record (`current`). As the api (`withFiles`), `documents`
+ * compares only the types sent with files: the view shows the record's own row for any other type.
  */
 export function dogReadmissionChanges(current: SignupDogValues, submitted: SignupDog): string[] {
   const fields = ["name", "sex", "breed", "birthMonth", "notesToInstructors"] as const;
+  const documentsChanged = submitted.documents.some(
+    (document) =>
+      document.files.length > 0 &&
+      rowKeys(document) !== rowKeys(current.documents.find((own) => own.type === document.type)),
+  );
   return [
     ...fields.filter((field) => (current[field] ?? "") !== (submitted[field] ?? "")),
-    ...(documentKeys(current.documents) === documentKeys(submitted.documents) ? [] : ["documents"]),
+    ...(documentsChanged ? ["documents"] : []),
   ];
 }
 
@@ -542,9 +553,11 @@ type SignupDocument = components["schemas"]["SignupDocument"];
  * `PATCH /dogs/{id}` `documents` on a pending signup dog (R-04-19, api E5-T19): each type sent gets
  * exactly the files sent. A key the view shows for that type keeps its file with its stored name
  * (the name sent is not applied); any other key is a new signup upload. A type sent without files
- * leaves an ordinary dog's row pending, and withdraws the submitted type of the reused dog of a
- * pending readmission (E38: the validation then keeps the dog's own document). The types not sent
- * stay. A key removed from the dog through `DELETE …/files/{fileId}` answers `FILE_NOT_FOUND`.
+ * leaves an ordinary dog's row pending. For the reused dog of a pending readmission it withdraws
+ * the submitted type, and the view shows the record's own row for it again (E38, R-04-06: «un
+ * tipus … enviat sense fitxers conserva el del gos»), or no row when the record has none. The
+ * types not sent stay. A key removed from the dog through `DELETE …/files/{fileId}` answers
+ * `FILE_NOT_FOUND`.
  */
 export function patchSignupDogDocuments(
   dog: SignupDog,
@@ -564,7 +577,14 @@ export function patchSignupDogDocuments(
         },
     );
     if (files.length === 0 && dog.readmission != null) {
-      documents = documents.filter((candidate) => candidate.type !== document.type);
+      const own = dog.readmission.current.documents.find((candidate) => candidate.type === document.type);
+      const ownRow = own === undefined ? undefined : { ...own, files: own.files.map((file) => ({ ...file })) };
+      documents =
+        ownRow === undefined
+          ? documents.filter((candidate) => candidate.type !== document.type)
+          : existing === undefined
+            ? [...documents, ownRow]
+            : documents.map((candidate) => (candidate.type === document.type ? ownRow : candidate));
       continue;
     }
     const row: SignupDocumentView = { files, state: files.length === 0 ? "PENDING" : "RECEIVED", type: document.type };

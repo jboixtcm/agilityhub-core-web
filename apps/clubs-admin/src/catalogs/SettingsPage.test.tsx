@@ -270,7 +270,7 @@ describe("T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review
     }
   });
 
-  it("R-06-06 S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia)", async () => {
+  it("S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia)", async () => {
     await renderSettings();
     expect(screen.getByRole("switch", { name: "Progressió: Pendent" })).toHaveAttribute(
       "aria-checked",
@@ -353,10 +353,23 @@ describe("T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review
     expect(button.closest(".catalog-page")).not.toBeNull();
     const content = button.querySelector(".ah-button__content");
     expect(content?.querySelector("svg")).not.toBeNull();
-    // Tailwind's preflight makes the icon a block; the catalog pages lay the content out inline.
-    const css = readFileSync(resolve(import.meta.dirname, "../styles.css"), "utf8");
-    const rule = /\.catalog-page \.ah-button__content\s*\{([^}]*)\}/u.exec(css)?.[1] ?? "";
+    // Tailwind's preflight makes the icon a block; the design system lays every button's content
+    // out inline (E4-W14 round 2, review nit #7), and no page keeps its own copy of the rule.
+    const css = readFileSync(
+      resolve(import.meta.dirname, "../../../../packages/ui/src/components.css"),
+      "utf8",
+    );
+    const rule = /(?:^|\n)\.ah-button__content\s*\{([^}]*)\}/u.exec(css)?.[1] ?? "";
     expect(rule).toMatch(/display:\s*inline-flex;/u);
     expect(rule).toMatch(/align-items:\s*center;/u);
+    for (const file of [
+      "../styles.css",
+      "../planning/planning.css",
+      "../activities/activities.css",
+    ]) {
+      expect(readFileSync(resolve(import.meta.dirname, file), "utf8")).not.toMatch(
+        /\.ah-button__content\s*[,{]/u,
+      );
+    }
   });
 });

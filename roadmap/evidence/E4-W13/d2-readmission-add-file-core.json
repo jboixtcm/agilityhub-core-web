@@ -3,17 +3,17 @@
     "code": "FILE_NOT_FOUND",
     "message": "No s'ha trobat el fitxer.",
     "details": {},
-    "traceId": "cd8d171d-cee2-4453-acd6-e3b0067c2ccd"
+    "traceId": "7b10d889-8a82-4ea7-9568-dd338bee7807"
   },
   "sent": [
     {
       "files": [
         {
-          "fileKey": "signup/ac408421-0913-4e6b-b6d7-457abe741170/202609/ea26d935-c377-41e3-9431-efeec8cb703a/cartilla_Retorn_E3_1.jpg",
+          "fileKey": "signup/e6853d24-47a5-44a9-8ce7-e7e1501662fb/202609/02090dde-e795-4aef-9c7c-8eef6c699b24/cartilla_Retorn_E3_1.jpg",
           "name": "cartilla_Retorn_E3_1.jpg"
         },
         {
-          "fileKey": "bbc637e6-982d-40ee-bbc8-28da1cf2b032",
+          "fileKey": "9a7ab453-0d1c-4872-8226-b77550afdff4",
           "name": "cartilla_retorn_2.jpg"
         }
       ],

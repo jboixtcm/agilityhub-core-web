@@ -5,12 +5,12 @@
     "details": {
       "fieldErrors": [
         {
-          "code": "READ_ONLY",
-          "field": "paymentMethod"
+          "field": "paymentMethod",
+          "code": "READ_ONLY"
         }
       ]
     },
-    "traceId": "d4c28db9-033e-43bf-8cad-072f44a0bf09"
+    "traceId": "fcab4bda-417b-48a9-9c3c-590b96962621"
   },
   "status": 400
 }

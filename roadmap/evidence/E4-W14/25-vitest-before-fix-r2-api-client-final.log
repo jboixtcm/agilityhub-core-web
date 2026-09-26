@@ -1,0 +1,91 @@
+$ pnpm -C packages/api-client exec vitest run src/mocks/activity-handlers.test.ts -t "E4-W14"   # round 2, final tests on the mocks at HEAD 11c3035 (activity-handlers.ts, fixtures/activities.ts, planning-handlers.ts); exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (26 tests | 4 failed | 22 skipped) 59ms
+   ❯ E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers (6)
+     × E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field 43ms
+     × E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours: the preview is 400 INVALID_TIME_RANGE (RingBlockWindow.of), the publication 422 ACTIVITY_INCOMPLETE on every empty field 5ms
+     × E4-W14 round 2 R-07-01 R-07-04 a new draft has no date nor hours, as the core's create answers: with a ring, the preview is 400 and the publication names the date first 5ms
+     × E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:797:37
+    795|     // E4-W14 round 2 (T-07-04): a window that does not contain the 10…
+    796|     stored().ringBlockWindow = { fromTime: "10:00", toTime: "10:30" };
+    797|     await expect(failure(preview())).resolves.toEqual({
+       |                                     ^
+    798|       code: "INVALID_TIME_RANGE",
+    799|       details: {},
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:797:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours: the preview is 400 INVALID_TIME_RANGE (RingBlockWindow.of), the publication 422 ACTIVITY_INCOMPLETE on every empty field
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:826:37
+    824|     // The Demostració moved to the club on Cadells, without hours nor…
+    825|     await patchDemonstration({ location: { atClub: true }, ringIds: ["…
+    826|     await expect(failure(preview())).resolves.toEqual({
+       |                                     ^
+    827|       code: "INVALID_TIME_RANGE",
+    828|       details: {},
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:826:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 round 2 R-07-01 R-07-04 a new draft has no date nor hours, as the core's create answers: with a ring, the preview is 400 and the publication names the date first
+AssertionError: expected { allRings: false, …(43) } to match object { date: null, endTime: null, …(1) }
+(48 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "date": null,
++   "date": "2026-08-04",
+    "endTime": null,
+    "startTime": null,
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:868:26
+    866|       body: { title: { ca: "Seminari de prova" }, type: "SEMINAR" },
+    867|     });
+    868|     expect(created.data).toMatchObject({ date: null, endTime: null, st…
+       |                          ^
+    869|     expect(created.data?.startsAt ?? null).toBeNull();
+    870|     const id = created.data?.id ?? "";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:914:68
+    912|     const before = (await workshop()).data;
+    913|     if (before === undefined) throw new TypeError("Missing the Taller"…
+    914|     await expect(failure(patch({ endTime: null }, before.version))).re…
+       |                                                                    ^
+    915|       code: "ACTIVITY_INCOMPLETE",
+    916|       details: { fieldErrors: [{ code: "REQUIRED", field: "endTime" }]…
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:914:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 22 skipped (26)
+   Start at  16:33:50
+   Duration  597ms (transform 48%, import 41%, tests 11%)
+

@@ -1331,7 +1331,7 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
   });
 });
 
-describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19)", () => {
+describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19)", () => {
   const DOG_LOCKED = "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.";
   const card2 = { fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" };
   const insurance = { fileKey: "signup-uploads/42000000/asseguranca.pdf", name: "Assegurança.pdf" };
@@ -1341,6 +1341,23 @@ describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-0
     const row = within(drawer).getByText(name).closest("li");
     if (row === null) throw new TypeError(`Missing the ${name} row`);
     return row;
+  }
+
+  /** The reused dog's «Abans / Ara» block and its terms, once the document type labels are read. */
+  async function kiwiChanges(terms: readonly string[]): Promise<HTMLElement> {
+    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
+    await waitFor(() => {
+      expect(within(block).getAllByRole("term").map((term) => term.textContent)).toEqual(terms);
+    });
+    return block;
+  }
+
+  /** The «Abans» and «Ara» lines of one term of a readmission block. */
+  function linesOf(block: HTMLElement, term: string): string[] {
+    const dt = within(block).getAllByRole("term").find((candidate) => candidate.textContent === term);
+    const dd = dt?.nextElementSibling;
+    if (dd == null) throw new TypeError(`Missing the ${term} line`);
+    return [...dd.children].map((child) => child.textContent);
   }
 
   /** Requests to the routes the pending readmission freezes for the reused dog (any method). */
@@ -1357,14 +1374,17 @@ describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-0
   it("step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too", async () => {
     mockScenario("adminSignupReviewReadmission");
     await renderReview();
-    const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
-    expect(within(block).getAllByRole("term").map((term) => term.textContent)).toEqual(["Nom", "Raça", "Documents"]);
+    // Round 2 (review nit #5): one line per document type, named after `census.dogDocumentTypes`.
+    const block = await kiwiChanges(["Nom", "Raça", "Cartilla de vacunes", "Assegurança"]);
     expect(within(block).getByText("Abans: Kivi")).toBeVisible();
     expect(within(block).getByText("Ara: Kiwi")).toBeVisible();
     expect(within(block).getByText("Abans: Llebrer")).toBeVisible();
     expect(within(block).getByText("Ara: Whippet")).toBeVisible();
-    expect(within(block).getByText("Abans: cartilla_Kivi_2025.pdf")).toBeVisible();
-    expect(within(block).getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf")).toBeVisible();
+    expect(linesOf(block, "Cartilla de vacunes")).toEqual([
+      "Abans: cartilla_Kivi_2025.pdf",
+      "Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg",
+    ]);
+    expect(linesOf(block, "Assegurança")).toEqual(["Abans: —", "Ara: Assegurança.pdf"]);
     // Unchanged fields (sex, birth month, notes) are not repeated; the member keeps its own block.
     expect(within(block).queryByText(/Femella|Whippet · /u)).toBeNull();
     expect(screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).not.toBe(block);
@@ -1393,7 +1413,7 @@ describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-0
     // The PATCH answers the dog record: D2 reads the view again for the submitted documents.
     await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads); });
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
-    expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg · Assegurança.pdf")).toBeVisible();
+    expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg")).toBeVisible();
     expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull();
     expect(frozenCalls(requests)).toEqual([]);
   });
@@ -1418,7 +1438,7 @@ describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-0
     // The sent file shows at once, then as a link once the view read again lands (re-queried).
     await waitFor(() => { expect(within(drawer).getByText("polissa_2026.pdf")).toBeVisible(); });
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
-    expect(await within(block).findByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf · polissa_2026.pdf")).toBeVisible();
+    expect(await within(block).findByText("Ara: Assegurança.pdf · polissa_2026.pdf")).toBeVisible();
     expect(frozenCalls(requests)).toEqual([]);
   });
 
@@ -1503,5 +1523,61 @@ describe("T-04-12 T-04-19 E4-W13 D2 for the reused dog of a readmission (S04 R-0
     const chip = within(openDrawer()).getByLabelText("Xip");
     expect(chip).not.toHaveAttribute("readonly");
     expect(chip).not.toHaveAttribute("aria-describedby");
+  });
+
+  it("round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull(); });
+    // The last submitted file of the card withdraws the type (`files: []`).
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[1]?.body).toEqual({
+      documents: [{ files: [], type: "VACCINATION_CARD" }],
+      version: 2,
+    });
+    // The record's own 2025 card shows again (R-04-06: «un tipus … enviat sense fitxers conserva el
+    // del gos»), in the drawer and on the card, and it is no longer a change.
+    const recordCard = await within(drawer).findByText("cartilla_Kivi_2025.pdf");
+    expect(within(fileRow(drawer, "cartilla_Kivi_2025.pdf")).queryByRole("button", { name: "Retira" })).toBeNull();
+    expect(recordCard).toBeVisible();
+    await waitFor(() => {
+      const onCard = screen
+        .getAllByRole("link", { name: "cartilla_Kivi_2025.pdf" })
+        .filter((link) => !drawer.contains(link));
+      expect(onCard).toHaveLength(1);
+    });
+    const block = await kiwiChanges(["Nom", "Raça", "Assegurança"]);
+    expect(within(block).queryByText(/cartilla_/u)).toBeNull();
+
+    // The insurance (the record has none) withdrawn too: no documents change is left.
+    fireEvent.click(within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }));
+    await kiwiChanges(["Nom", "Raça"]);
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
+      { documents: [{ files: [card2], type: "VACCINATION_CARD" }], version: 1 },
+      { documents: [{ files: [], type: "VACCINATION_CARD" }], version: 2 },
+      { documents: [{ files: [], type: "INSURANCE" }], version: 3 },
+    ]);
+    expect(frozenCalls(requests)).toEqual([]);
+  });
+
+  it("round 2 (review nit #5): a document type without files reads as pending, not as absent", async () => {
+    mockScenario("adminSignupReviewReadmission");
+    // The record's card was never received (a PENDING row without files, as the core keeps it).
+    const { fetch: over } = recordingFetch((body) => {
+      const reused = body.dogs[0]?.readmission as { current?: Record<string, unknown> } | null | undefined;
+      if (reused?.current != null) {
+        reused.current.documents = [{ files: [], state: "PENDING", type: "VACCINATION_CARD" }];
+      }
+    });
+    await renderReview({ fetchOverride: over });
+    const block = await kiwiChanges(["Nom", "Raça", "Cartilla de vacunes", "Assegurança"]);
+    expect(linesOf(block, "Cartilla de vacunes")).toEqual([
+      "Abans: pendent",
+      "Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg",
+    ]);
   });
 });

@@ -634,6 +634,9 @@ function holdFirstClassPatch(answer?: () => Response) {
   };
 }
 
+const UNEXPECTED_ERROR =
+  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+
 /** An empty band 21:00–22:00 on «Setmana A» (the mock refuses to remove a band with classes). */
 async function addEmptyBand() {
   const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
@@ -669,6 +672,38 @@ describe("T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8
     await waitFor(() => {
       expect(levelsOf(without)).toEqual(["A", "B", "C", "D", "E", "F", "G"]);
     });
+  });
+
+  it("R-06-06 T-06-05 E4-W14 round 2 (review nit #8) a level put into the progression gets its row: no dogs yet, so «sense gossos» and no ratios", async () => {
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const therapy = (await api.GET("/levels")).data?.items.find((level) => level.code === "T");
+    if (therapy === undefined) throw new TypeError("Missing Teràpia");
+    await api.PATCH("/levels/{id}", {
+      body: { progression: true, version: therapy.version },
+      params: { path: { id: therapy.id } },
+    });
+    const answer = await api.GET("/coverage", {
+      params: { query: { templateId: "template-setmana-a" } },
+    });
+    expect(answer.data?.levels.find((level) => level.levelId === therapy.id)).toEqual({
+      booked: null,
+      dogsActive: 0,
+      dogsTotal: 0,
+      levelId: therapy.id,
+      maxRatioPct: null,
+      maxSeats: 0,
+      name: "Teràpia",
+      propRatioPct: null,
+      propSeats: 0,
+      status: "NO_DOGS",
+    });
+
+    await renderTemplates();
+    const coverage = await screen.findByRole("table", {
+      name: "Cobertura per nivell (places de la setmana)",
+    });
+    const row = await within(coverage).findByRole("row", { name: /^Teràpia /u });
+    expect(within(row).getByText("sense gossos")).toBeVisible();
   });
 });
 
@@ -763,6 +798,7 @@ describe("T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4)", () => 
     });
     expect(screen.getByRole("region", { name: "Classe seleccionada" })).toBeVisible();
     expect(await screen.findByRole("button", { name: "C+D · Laura · Central" })).toBeVisible();
+    expect(await within(classCard()).findByText(UNEXPECTED_ERROR)).toBeVisible();
   });
 
   it("R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays", async () => {
@@ -797,6 +833,104 @@ describe("T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4)", () => 
     expect(within(card).getByText("Seleccioneu un nivell.")).toBeVisible();
     await settle();
     expect(queue.events).toEqual(["PATCH sent", "PATCH answered"]);
+  });
+});
+
+describe("T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2)", () => {
+  const LEVEL_REQUIRED = "Seleccioneu un nivell.";
+  const NOT_FOUND = "No s'ha trobat l'element sol·licitat.";
+
+  function openClass(name: string) {
+    const [cell] = screen.getAllByRole("button", { name });
+    if (cell === undefined) throw new TypeError(`missing class ${name}`);
+    fireEvent.click(cell);
+    return screen.getByRole("region", { name: "Classe seleccionada" });
+  }
+
+  function toastText() {
+    return document.querySelector(".ah-toast")?.textContent ?? "";
+  }
+
+  it("R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version", async () => {
+    const queue = holdFirstClassPatch();
+    await renderTemplates();
+    const classA = openClass("C+D+E · Laura · Carretera");
+    fireEvent.click(within(classA).getByRole("button", { name: "E" }));
+    fireEvent.click(within(classA).getByRole("button", { name: "Treu de la plantilla" }));
+    // While A's removal waits behind its held PATCH, the admin opens class B and moves it.
+    const classB = openClass("A · Laura · Petita");
+    fireEvent.click(within(classB).getByRole("radio", { name: "Central" }));
+    await settle();
+    expect(queue.events).toEqual(["PATCH sent"]);
+
+    queue.release();
+    await waitFor(() => {
+      expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "DELETE sent", "PATCH sent"]);
+    });
+    // B's change was saved (a stale version would have answered 409 STALE_VERSION).
+    expect(
+      (await screen.findAllByRole("button", { name: /^A · Laura · Central/u })).length,
+    ).toBeGreaterThan(0);
+    expect(within(classCard()).getByRole("radio", { name: "Central" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.queryByRole("button", { name: "C+D · Laura · Carretera" })).toBeNull();
+    expect(toastText()).toBe("");
+  });
+
+  it("R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone", async () => {
+    const queue = holdFirstClassPatch(() =>
+      HttpResponse.json(
+        { code: "LEVEL_REQUIRED", message: "At least one level", traceId: "trace-level" },
+        { status: 422 },
+      ),
+    );
+    await renderTemplates();
+    const classCellsBefore = screen.getAllByRole("button", {
+      name: "C+D+E · Laura · Carretera",
+    }).length;
+    const classA = openClass("C+D+E · Laura · Carretera");
+    fireEvent.click(within(classA).getByRole("button", { name: "E" }));
+    const classB = openClass("A · Laura · Petita");
+    fireEvent.click(within(classB).getByRole("radio", { name: "Central" }));
+    await settle();
+
+    queue.release();
+    await waitFor(() => {
+      expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "PATCH sent"]);
+    });
+    expect(
+      (await screen.findAllByRole("button", { name: /^A · Laura · Central/u })).length,
+    ).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(toastText()).toContain(LEVEL_REQUIRED);
+    });
+    // B's card shows B's saved change and no error of A.
+    expect(within(classCard()).queryByText(LEVEL_REQUIRED)).toBeNull();
+    expect(screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" }).length).toBe(
+      classCellsBefore,
+    );
+  });
+
+  it("R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists", async () => {
+    const queue = holdFirstClassPatch();
+    await renderTemplates();
+    const classA = openClass("C+D+E · Laura · Carretera");
+    fireEvent.click(within(classA).getByRole("button", { name: "E" }));
+    fireEvent.click(within(classA).getByRole("button", { name: "Treu de la plantilla" }));
+    fireEvent.click(within(classA).getByRole("radio", { name: "Central" }));
+    await settle();
+
+    queue.release();
+    await waitFor(() => {
+      expect(screen.getByRole("region", { name: "Crear classe" })).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(toastText()).toContain(NOT_FOUND);
+    });
+    await settle();
+    expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "DELETE sent"]);
   });
 });
 

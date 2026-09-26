@@ -106,10 +106,12 @@ test("T-04-12 E4-W13 (R-04-06, R-04-19, E38): D2 shows the reused dog's old and 
   const dogChanges = page.getByRole("region", { exact: true, name: "Canvis respecte de la fitxa de baixa Kiwi" });
   await expect(dogChanges.getByText("Abans: Kivi", { exact: true })).toBeVisible();
   await expect(dogChanges.getByText("Ara: Kiwi", { exact: true })).toBeVisible();
+  // E4-W13 round 2 (review nit #5): one line per document type, named after the club's types.
+  await expect(dogChanges.getByText("Cartilla de vacunes", { exact: true })).toBeVisible();
   await expect(dogChanges.getByText("Abans: cartilla_Kivi_2025.pdf", { exact: true })).toBeVisible();
-  await expect(
-    dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf", { exact: true }),
-  ).toBeVisible();
+  await expect(dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true })).toBeVisible();
+  await expect(dogChanges.getByText("Assegurança", { exact: true })).toBeVisible();
+  await expect(dogChanges.getByText("Ara: Assegurança.pdf", { exact: true })).toBeVisible();
   await page.screenshot({ fullPage: true, path: resolve(evidence, "D2-reused-dog-mock-1280.png") });
 
   await page.getByRole("button", { name: "EDITA LES DADES" }).click();
@@ -122,10 +124,23 @@ test("T-04-12 E4-W13 (R-04-06, R-04-19, E38): D2 shows the reused dog's old and 
   await drawer.locator(".signup-edit-documents li").filter({ hasText: "Assegurança.pdf" }).getByRole("button", { name: "Retira" }).click();
   expect((await patch).postDataJSON()).toEqual({ documents: [{ files: [], type: "INSURANCE" }], version: 1 });
   await expect(dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true })).toBeVisible();
+  await expect(dogChanges.getByText("Assegurança", { exact: true })).toHaveCount(0);
   await expect(drawer.getByText("Assegurança.pdf")).toHaveCount(0);
   // The drawer stays where the admin is: no jump back to its top after the change (packages/ui overlay).
   await expect(drawer.locator(".signup-edit-documents")).toBeInViewport();
   await expect(drawer.getByRole("button", { name: "Cancel·la" })).not.toBeFocused();
+  // Round 2 (R-04-06): the submitted card withdrawn file by file brings the record's 2025 card back,
+  // which offers no [Retira], and the dog has no documents change left.
+  const files = drawer.locator(".signup-edit-documents li");
+  for (const name of ["cartilla_Kiwi_1.jpg", "cartilla_Kiwi_2.jpg"]) {
+    await files.filter({ hasText: name }).getByRole("button", { name: "Retira" }).click();
+    await expect(files.filter({ hasText: name })).toHaveCount(0);
+  }
+  const recordCard = files.filter({ hasText: "cartilla_Kivi_2025.pdf" });
+  await expect(recordCard).toHaveCount(1);
+  await expect(recordCard.getByRole("button", { name: "Retira" })).toHaveCount(0);
+  await expect(dogChanges.getByText("Cartilla de vacunes", { exact: true })).toHaveCount(0);
+  await expect(dogChanges.getByText(/cartilla_/u)).toHaveCount(0);
   await page.screenshot({ path: resolve(evidence, "D2-reused-dog-drawer-mock-1280.png") });
   expect(frozenCalls).toEqual([]);
 });

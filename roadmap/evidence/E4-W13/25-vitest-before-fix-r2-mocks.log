@@ -1,0 +1,37 @@
+$ pnpm -C packages/api-client exec vitest run src/mocks/signup-handlers.test.ts -t "round 2"   # E4-W13 round 2: the new mock test on the mocks at HEAD 11c3035 (fixtures/signup-review.ts, handlers.ts); exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (28 tests | 1 failed | 24 skipped) 28ms
+   ❯ T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) (5)
+     × E4-W13 round 2 R-04-06 a withdrawn type of the reused dog shows the record's own row again and is no change; a PATCH that changes no key writes nothing (api E5-T21) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > E4-W13 round 2 R-04-06 a withdrawn type of the reused dog shows the record's own row again and is no change; a PATCH that changes no key writes nothing (api E5-T21)
+AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "VACCINATION_CARD: dogs/44000000/cartilla_Kivi_2025.pdf",
+    "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
+  ]
+
+ ❯ src/mocks/signup-handlers.test.ts:547:25
+    545|     expect((await patchDog({ documents: [{ files: [], type: "VACCINATI…
+    546|     let dog = await view("adminSignupReviewReadmission");
+    547|     expect(keysOf(dog)).toEqual([
+       |                         ^
+    548|       "VACCINATION_CARD: dogs/44000000/cartilla_Kivi_2025.pdf",
+    549|       "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed | 24 skipped (28)
+   Start at  16:54:03
+   Duration  511ms (import 49%, transform 43%, tests 7%)
+

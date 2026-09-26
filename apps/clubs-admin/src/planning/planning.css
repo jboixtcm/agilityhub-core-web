@@ -31,12 +31,6 @@
   margin-left: auto;
 }
 
-.planning-page .ah-button__content {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ah-space-1);
-}
-
 .planning-header__actions .ah-button {
   min-height: 2.25rem;
   padding: var(--ah-space-1) var(--ah-space-3);

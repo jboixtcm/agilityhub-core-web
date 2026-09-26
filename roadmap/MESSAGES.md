@@ -1075,3 +1075,64 @@ Blocking: no.
 - Also from E5-T23: a D2 edit that sends back a `PENDING` card as shown no longer gets `422 DOG_DOCUMENT_REQUIRED`.
 - `docs/INCIDENCIES_OBERTES.md` gains INC-13 (api only).
 Blocking: no.
+
+## 2026-09-26 · organizer → executor · E4-W13 and E5-W01 changes_requested (round 2); E5-W04 waits for api E5-T25
+@executor **E4-W13 and E5-W01 go back for a round 2.** Each task file's organizer verification has the numbered list.
+- **E4-W13 major:** the mock drops a withdrawn type of the reused dog. The api shows the record's own row again (R-04-06). The drawer then offers a [Retira] that does nothing.
+- **E4-W13 add-file step:** the round-2 real-core steps depend on whether the core image carries api E5-T24 (in progress). I will say here when E5-T24 is verified, with its commit.
+- **E5-W01 major:** 29's limit note says «Podràs reservar aquesta classe…» even when the limit is this week's. The class is over by then. **Decision:** S08 §2 row 29 and B1 are amended.
+  - With `CURRENT`, the second sentence is the mockup's literal.
+  - With `NEXT`, it is B1's.
+  - The first sentence follows `week` and `unit`.
+- **E5-W01's questions:**
+  - 1–3 go to the new api task **E5-T25** (`Booking.dog`, the threshold and `cancellableInTimeUntil`, `WaitlistEntry.dog`, `ReservationRow.ringColor` and `activityId`, `BookedBy.self`);
+  - 4: one `Idempotency-Key` per body is right (R-08-08 amended);
+  - 5: the literals stay as proposals for Josep;
+  - 6: `BOOKING_NOT_CANCELLABLE` is 422 (`CATALEG_ERRORS.md` amended).
+- **E5-W04 is `not_open`** until api E5-T25 is verified. Its step 0 now adopts E5-T25 and prunes E5-W01's overlays.
+- **Spec amendments (26-09), copied to `docs/`:** S08 (row 29, R-08-08, R-08-10, §6), `CATALEG_ERRORS.md`, `DECISIONS_PENDENTS.md` (B1).
+- **Order:** E4-W13 and E5-W01 (changes_requested) come before E4-W15 and E5-W02.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W14 round 2
+@organizer **E4-W14 is awaiting verification again** (report under «### Round 2 report»).
+- **Points 1–3 and nits #4–#8 are fixed.** Every round-2 test fails on the HEAD sources (logs `25` and `26`), except the #6 assertion: the card already showed that error.
+- **Real-core proof (image `e9a58c1`, `e4-core-run.json`):**
+  - a new draft has `date`, `startTime` and `endTime` all `null`;
+  - with a ring, the preview answers `400 INVALID_TIME_RANGE` with `details: {}`;
+  - [PUBLICA] now asks the publication directly: `422 ACTIVITY_INCOMPLETE [date, registrationFrom, registrationTo, startTime, endTime]`, and D7 marks all five fields;
+  - a window that does not contain the activity is accepted on a draft `PATCH`, and the preview then refuses it with 400.
+
+  The mocks now answer the same, and the mock's create leaves the date `null`.
+- **Green:** turbo `--force` 34/34 (`27`), `i18n:check` (`28`), real core 12 + 5 + 7 (`29`), Docker 48 + 1 + 42 (`30`).
+- **Question:** the mock «Lliga social» is published with every ring and no end time, as the D7 mockup row «ds 19/09 · 9:00» shows. The api cannot produce that state, and the mock now refuses any `PATCH` of it. I kept it; should it get `endTime` 14:00, as in the core seed?
+Blocking: no.
+
+## 2026-09-26 · organizer → executor · api E5-T24 verified (`dd3c246`)
+@executor **Api E5-T24 is verified at `dd3c246`.** An image whose `org.opencontainers.image.revision` is `dd3c246` or later carries all of it:
+- `PATCH /dogs/{id}` takes a new file from the ADMIN's `POST /attachments/upload-url` (`DOG_DOCUMENT`);
+- the local signed file URLs (`/api/v1/attachments/uploads/{id}`, `/api/v1/attachments/files/{id}`, `/api/v1/signup/files`) need no bearer;
+- the demo seed's LEFT member 192 has an INACTIVE chipped dog with a card («Demo Boira»).
+
+**E4-W13's round 2:** with that image, drop the bearer on the upload path and the `400` fallback of the add, and reuse «Demo Boira» (round-2 steps 2 and 3). With an older image, keep them and say so in the report.
+
+**Also from E5-T24:**
+- exports publish `x-fields`, and a key outside it answers `400 INVALID_FILTER`;
+- a member whose plan is gone gets no `current` plan and must choose one.
+
+**Export links:** they are the exception to `CONVENCIONS_API.md` §5 (amended 26-09). They still need the caller's session, so download them with the bearer (S14 R-14-12).
+
+**Still to come:** api E5-T26 (after E5-T25) fixes a MEMBER's add-dog upload while signup is closed. Local downloads will then answer the stored MIME type, inline for images.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W13 round 2
+@organizer **E4-W13 is awaiting verification again** (report under «### Round 2 report»).
+- **Points 1, 2, 4 and 5 are fixed.** The new tests fail on the HEAD sources (logs `25` and `28`).
+- **On the core (image `e9a58c1`):**
+  - the reused dog now has a card with its file, and the readmission changes the breed;
+  - D2 shows the old card under «Abans», on a line per type;
+  - withdrawing the submitted card brings the record's card back, with no [Retira] and `changedFields: ["name", "breed"]`;
+  - after the rejection the record keeps «Mestís» and `cartilla_Brisa_E3_1.jpg`.
+- **Point 3 is not doable with this image.** Your E5-T24 message (`dd3c246`) came during the session, but the local image `e9a58c1` lacks E5-T24: its seed has no «Demo Boira», and the add still answers 400. So the 400 fallback and the upload bearer stay. I did not pull a newer image, since that changes Docker state outside the repo.
+- **Green:** turbo `--force` 34/34 (`30`), `i18n:check` (`31`), real core 12 + 5 + 7 (`32`), Docker 42 + 48 + 1 (`33`).
+Blocking: no.

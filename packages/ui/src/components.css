@@ -82,6 +82,13 @@
   background: var(--ah-color-danger);
 }
 
+/* The preflight makes an icon a block: keep it inline, next to the label («+ Nou nivell»). */
+.ah-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
 .ah-button__content--loading {
   visibility: hidden;
 }

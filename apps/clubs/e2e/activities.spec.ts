@@ -145,9 +145,9 @@ test.describe("T-07-30 E4-W14 R-07-13 the 04 rows print the activity's hours", (
     mkdirSync(hoursEvidence, { recursive: true });
   });
 
-  test("04: «{hh:mm}–{hh:mm}» for an activity with both, the start alone without an end", async ({
-    page,
-  }) => {
+  // The open-registration rows of the mock world all have an end: the start alone is covered by
+  // the Vitest «T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours».
+  test("04: «{hh:mm}–{hh:mm}» for the activities with both hours", async ({ page }) => {
     await login(page);
     await page.getByRole("link", { name: "Reservar" }).click();
     await page.waitForURL("**/reservar");

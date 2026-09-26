@@ -64,6 +64,7 @@ import {
   addDogPendingSignup,
   addDogSignupReview,
   derivedSignupReview,
+  documentKeys,
   dogReadmissionChanges,
   patchSignupDogDocuments,
   readmissionChanges,
@@ -2512,6 +2513,12 @@ export const handlers = [
           ? undefined
           : patchSignupDogDocuments(signupDog, body.documents, removedSignupFileKeys);
       if (documents === "FILE_NOT_FOUND") return apiError("FILE_NOT_FOUND", "File not found", 400);
+      // As the api (E5-T21, `saveDocuments`): documents alone that change no file key write nothing
+      // and keep the version, e.g. `files: []` for the record's own row of the reused dog.
+      const unchanged =
+        documents !== undefined &&
+        Object.keys(body).every((key) => key === "version" || key === "documents") &&
+        documentKeys(documents) === documentKeys(signupDog.documents);
       // With signup.requireDogDocumentAtSignup a card sent without files is refused, unless the
       // reused dog has its own card with a file (api E5-T19).
       const cardRequired = findParameter("signup.requireDogDocumentAtSignup")?.value === true;
@@ -2521,18 +2528,20 @@ export const handlers = [
       const ownCard = reused?.current.documents.some(
         (document) => document.type === "VACCINATION_CARD" && document.files.length > 0,
       );
-      if (cardRequired && cardEmptied === true && ownCard !== true) {
+      if (!unchanged && cardRequired && cardEmptied === true && ownCard !== true) {
         return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
       }
-      signupDog.name = body.name ?? signupDog.name;
-      signupDog.breed = body.breed ?? signupDog.breed;
-      signupDog.chip = body.chip ?? signupDog.chip;
-      signupDog.sex = body.sex ?? signupDog.sex;
-      if (body.notesToInstructors !== undefined) signupDog.notesToInstructors = body.notesToInstructors;
-      if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
-      else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
-      if (documents !== undefined) signupDog.documents = documents;
-      signupDog.version += 1;
+      if (!unchanged) {
+        signupDog.name = body.name ?? signupDog.name;
+        signupDog.breed = body.breed ?? signupDog.breed;
+        signupDog.chip = body.chip ?? signupDog.chip;
+        signupDog.sex = body.sex ?? signupDog.sex;
+        if (body.notesToInstructors !== undefined) signupDog.notesToInstructors = body.notesToInstructors;
+        if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
+        else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
+        if (documents !== undefined) signupDog.documents = documents;
+        signupDog.version += 1;
+      }
       if (reused != null) {
         // The submitted values changed, not the record: the response is the record, which keeps
         // its own values until the validation (D2 re-reads the view for the submitted ones).

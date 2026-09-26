@@ -792,7 +792,20 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
       code: "INVALID_TIME_RANGE",
       status: 400,
     });
+    // E4-W14 round 2 (T-07-04): a window that does not contain the 10:00–12:00 activity is 400 too.
     stored().ringBlockWindow = { fromTime: "10:00", toTime: "10:30" };
+    await expect(failure(preview())).resolves.toEqual({
+      code: "INVALID_TIME_RANGE",
+      details: {},
+      status: 400,
+    });
+    stored().ringBlockWindow = { fromTime: "10:30", toTime: "12:00" };
+    await expect(failure(preview())).resolves.toMatchObject({
+      code: "INVALID_TIME_RANGE",
+      status: 400,
+    });
+    // A set-up window around the activity is accepted.
+    stored().ringBlockWindow = { fromTime: "09:30", toTime: "12:30" };
     expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
     expect(stored().state).toBe("DRAFT");
 
@@ -801,6 +814,137 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
     await patchDemonstration({ location: { atClub: false, name: "Plaça Major" }, ringIds: [] });
     await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
     expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
+  });
+
+  it("E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours: the preview is 400 INVALID_TIME_RANGE (RingBlockWindow.of), the publication 422 ACTIVITY_INCOMPLETE on every empty field", async () => {
+    const preview = () =>
+      client.GET("/activities/{id}/ring-conflicts", {
+        params: { path: { id: ACTIVITY_IDS.demonstration } },
+      });
+    // The Demostració moved to the club on Cadells, without hours nor registration period.
+    await patchDemonstration({ location: { atClub: true }, ringIds: ["ring-cadells"] });
+    await expect(failure(preview())).resolves.toEqual({
+      code: "INVALID_TIME_RANGE",
+      details: {},
+      status: 400,
+    });
+    await expect(failure(publish())).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: {
+        fieldErrors: [
+          { code: "REQUIRED", field: "registrationFrom" },
+          { code: "REQUIRED", field: "registrationTo" },
+          { code: "REQUIRED", field: "startTime" },
+          { code: "REQUIRED", field: "endTime" },
+        ],
+      },
+      status: 422,
+    });
+
+    // Only the end missing: the preview is still 400, the publication names only the end.
+    await patchDemonstration({
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+      startTime: "10:00",
+    });
+    await expect(failure(preview())).resolves.toMatchObject({
+      code: "INVALID_TIME_RANGE",
+      status: 400,
+    });
+    await expect(failure(publish())).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: { fieldErrors: [{ code: "REQUIRED", field: "endTime" }] },
+      status: 422,
+    });
+    expect(
+      activityState.activities.find((item) => item.id === ACTIVITY_IDS.demonstration)?.state,
+    ).toBe("DRAFT");
+  });
+
+  it("E4-W14 round 2 R-07-01 R-07-04 a new draft has no date nor hours, as the core's create answers: with a ring, the preview is 400 and the publication names the date first", async () => {
+    const created = await client.POST("/activities", {
+      body: { title: { ca: "Seminari de prova" }, type: "SEMINAR" },
+    });
+    expect(created.data).toMatchObject({ date: null, endTime: null, startTime: null });
+    expect(created.data?.startsAt ?? null).toBeNull();
+    const id = created.data?.id ?? "";
+    await client.PATCH("/activities/{id}", {
+      body: { ringIds: ["ring-central"], version: created.data?.version ?? 0 },
+      params: { path: { id } },
+    });
+    await expect(
+      failure(client.GET("/activities/{id}/ring-conflicts", { params: { path: { id } } })),
+    ).resolves.toEqual({ code: "INVALID_TIME_RANGE", details: {}, status: 400 });
+    // The core's answer on the same draft (`e4-core-run.json` → `windowlessDraft`).
+    await expect(
+      failure(
+        client.POST("/activities/{id}/publication", {
+          body: { notifyEmail: false },
+          params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id } },
+        }),
+      ),
+    ).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: {
+        fieldErrors: [
+          { code: "REQUIRED", field: "date" },
+          { code: "REQUIRED", field: "registrationFrom" },
+          { code: "REQUIRED", field: "registrationTo" },
+          { code: "REQUIRED", field: "startTime" },
+          { code: "REQUIRED", field: "endTime" },
+        ],
+      },
+      status: 422,
+    });
+    // The D7 list shows the undated draft.
+    const listed = await client.GET("/activities", { params: { query: { size: 50 } } });
+    expect(listed.data?.items.find((item) => item.id === id)).toMatchObject({ date: null });
+  });
+
+  it("E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing", async () => {
+    const workshop = () =>
+      client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.workshop } } });
+    const patch = (body: Record<string, unknown>, version: number) =>
+      client.PATCH("/activities/{id}", {
+        body: { ...body, version },
+        params: { path: { id: ACTIVITY_IDS.workshop } },
+      });
+    const before = (await workshop()).data;
+    if (before === undefined) throw new TypeError("Missing the Taller");
+    await expect(failure(patch({ endTime: null }, before.version))).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: { fieldErrors: [{ code: "REQUIRED", field: "endTime" }] },
+      status: 422,
+    });
+    await expect(
+      failure(patch({ endTime: null, startTime: null }, before.version)),
+    ).resolves.toMatchObject({
+      code: "ACTIVITY_INCOMPLETE",
+      details: {
+        fieldErrors: [
+          { code: "REQUIRED", field: "startTime" },
+          { code: "REQUIRED", field: "endTime" },
+        ],
+      },
+    });
+    await expect(failure(patch({ registrationFrom: null }, before.version))).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: { fieldErrors: [{ code: "REQUIRED", field: "registrationFrom" }] },
+      status: 422,
+    });
+    expect((await workshop()).data).toMatchObject({
+      endTime: "12:00",
+      startTime: "10:00",
+      version: before.version,
+    });
+    // A draft keeps free edition: the same PATCH on the Demostració draft is saved.
+    await patchDemonstration({
+      endTime: "12:00",
+      location: { atClub: true },
+      ringIds: ["ring-cadells"],
+      startTime: "10:00",
+    });
+    expect((await patchDemonstration({ endTime: null })).data?.endTime).toBeNull();
   });
 });
 

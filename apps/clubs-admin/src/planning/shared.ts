@@ -108,13 +108,16 @@ export function errorCode(error: unknown): string | undefined {
 
 /**
  * The rejection of a D3 edit-mode change the PATCH queue dropped unsent: it was built on a change
- * that failed or on a class that was removed. The form puts its fields back and keeps the message
- * of the change that caused it.
+ * of the same class that failed (`refusal`, its error) or on a class that was removed (no
+ * `refusal`). The form puts its fields back and keeps the message of the change that caused it.
  */
 export class DroppedChangeError extends Error {
-  constructor() {
+  readonly refusal: unknown;
+
+  constructor(refusal?: unknown) {
     super("Change dropped: it was built on a failed change or a removed class");
     this.name = "DroppedChangeError";
+    this.refusal = refusal;
   }
 }
 

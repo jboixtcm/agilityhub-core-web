@@ -1,9 +1,9 @@
 {
-  "bytes": 15389,
-  "contentDisposition": "attachment; filename=\"canic_members_20260926-0910.xlsx\"",
+  "bytes": 15384,
+  "contentDisposition": "attachment; filename=\"canic_members_20260926-1636.xlsx\"",
   "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "magic": "504b0304",
   "request": "/api/v1/members/export?columns=fullName%2Cdogs%2Cplan%2CdisplayStatus&format=xlsx&sort=memberNumber%2Casc&filter=status%3Aeq%3AACTIVE",
   "status": 200,
-  "suggestedFilename": "canic_members_20260926-0910.xlsx"
+  "suggestedFilename": "canic_members_20260926-1636.xlsx"
 }

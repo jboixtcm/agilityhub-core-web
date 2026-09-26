@@ -1,7 +1,38 @@
-import type { components } from "@agilityhub/api-client";
+import type { ApiClient, components } from "@agilityhub/api-client";
 
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
+
+export interface DogDocumentType {
+  key: string;
+  label: string;
+}
+
+/**
+ * The club's dog document types (`census.dogDocumentTypes`, ADMIN), each labelled in `language`
+ * (else its first label, else its key). The reused dog's rows carry no label, and its frozen
+ * record's own rows are not the club's list.
+ */
+export async function loadDogDocumentTypes(
+  client: ApiClient,
+  language: string,
+): Promise<DogDocumentType[]> {
+  const result = await client.GET("/parameters/{key}", {
+    params: { path: { key: "census.dogDocumentTypes" } },
+  });
+  const value = Array.isArray(result.data?.value) ? (result.data.value as unknown[]) : [];
+  return value.flatMap((item) => {
+    if (typeof item !== "object" || item === null) return [];
+    const entry = item as { key?: unknown; label?: unknown };
+    if (typeof entry.key !== "string") return [];
+    const labels =
+      typeof entry.label === "object" && entry.label !== null
+        ? (entry.label as Record<string, unknown>)
+        : {};
+    const label = labels[language] ?? Object.values(labels)[0];
+    return [{ key: entry.key, label: typeof label === "string" ? label : entry.key }];
+  });
+}
 
 /**
  * R-04-06 (E38): during a pending readmission `member` is the LEFT record, which keeps its values

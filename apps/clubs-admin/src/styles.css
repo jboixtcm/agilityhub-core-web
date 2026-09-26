@@ -160,12 +160,6 @@ select {
   place-items: center;
 }
 
-.census-page .ah-button__content {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ah-space-1);
-}
-
 .audit-page {
   display: grid;
   width: 100%;
@@ -792,13 +786,6 @@ select {
   min-height: 2.25rem;
   padding: var(--ah-space-1) var(--ah-space-3);
   font-size: 0.75rem;
-}
-
-/* The preflight makes an icon a block: keep it inline, before the label («+ Nou nivell»). */
-.catalog-page .ah-button__content {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ah-space-1);
 }
 
 .catalog-table-card {

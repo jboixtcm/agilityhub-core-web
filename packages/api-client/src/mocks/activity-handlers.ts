@@ -167,7 +167,7 @@ function activityValues(activity: StoredActivity, field: string): string[] | und
     case "type":
       return [activity.type];
     case "date":
-      return [activity.date];
+      return activity.date === null ? [] : [activity.date];
     case "ringId":
       return activity.ringIds;
     case "levelId":
@@ -485,25 +485,32 @@ function trainingSlotMinutes(): number {
 }
 
 /**
- * R-07-05: the ring-block window (`ringBlockWindow`, else the activity's hours) must last at least
- * `training.slotMinutes` (400 `INVALID_TIME_RANGE`) and fit the day's `club.openingHours` (422
- * `OUTSIDE_OPENING_HOURS`); a day absent from it is closed (R-02-09), so nothing fits. Only an
- * activity at the club with rings blocks, and only with both limits (`ACTIVITY_INCOMPLETE` comes
- * first). The api names no field: the error is about the whole window. The product default
- * (dl–dg 07:00–22:00) applies only to a club without the parameter. The publication, a re-syncing
- * `PATCH` and the `ring-conflicts` preview check the same window (S07 §6, amended 26-09).
+ * R-07-05, like the api's `RingBlockWindow.of`: an activity at the club with rings needs a date and
+ * both hours, and a `ringBlockWindow` must contain `[startTime, endTime]` (T-07-04); else 400
+ * `INVALID_TIME_RANGE`. The window (`ringBlockWindow`, else the activity's hours) must also last at
+ * least `training.slotMinutes` (400 `INVALID_TIME_RANGE`) and fit the day's `club.openingHours` (422
+ * `OUTSIDE_OPENING_HOURS`); a day absent from it is closed (R-02-09), so nothing fits. The api
+ * names no field: the error is about the whole window. The product default (dl–dg 07:00–22:00)
+ * applies only to a club without the parameter. The publication (after `ACTIVITY_INCOMPLETE`), a
+ * re-syncing `PATCH` and the `ring-conflicts` preview check the same window (S07 §6, amended 26-09).
  */
 function ringBlockWindowProblem(activity: StoredActivity) {
   if (!activity.location.atClub || activity.ringIds.length === 0) return undefined;
-  const from = activity.ringBlockWindow?.fromTime ?? activity.startTime;
-  const to = activity.ringBlockWindow?.toTime ?? activity.endTime;
-  if (from === null || to === null) return undefined;
+  const { date, endTime, ringBlockWindow, startTime } = activity;
+  if (date === null || startTime === null || endTime === null) {
+    return apiError("INVALID_TIME_RANGE", "Invalid ring block window", 400);
+  }
+  const from = ringBlockWindow?.fromTime ?? startTime;
+  const to = ringBlockWindow?.toTime ?? endTime;
+  if (from > startTime || to < endTime) {
+    return apiError("INVALID_TIME_RANGE", "Invalid ring block window", 400);
+  }
   if (minutesOf(to) - minutesOf(from) < trainingSlotMinutes()) {
     return apiError("INVALID_TIME_RANGE", "Invalid ring block window", 400);
   }
   const parameter = findParameter("club.openingHours");
   // Weekday of a business date: UTC arithmetic at midday, never shifted by a zone (R-06-14).
-  const day = WEEKDAYS[new Date(`${activity.date}T12:00:00Z`).getUTCDay()] ?? "MONDAY";
+  const day = WEEKDAYS[new Date(`${date}T12:00:00Z`).getUTCDay()] ?? "MONDAY";
   const window =
     parameter === undefined
       ? { close: "22:00", open: "07:00" }
@@ -518,14 +525,20 @@ function incompleteFields(activity: StoredActivity): { code: string; field: stri
   const defaultLocale = currentMockScenario().branding.defaultLocale;
   if ((activity.titleI18n[defaultLocale] ?? "").trim() === "")
     fields.push({ code: "REQUIRED", field: "title" });
+  // The core's order (E4-W14 round 2): date, registration period, hours.
+  if (activity.date === null) fields.push({ code: "REQUIRED", field: "date" });
   if (activity.registrationFrom === null)
     fields.push({ code: "REQUIRED", field: "registrationFrom" });
   if (activity.registrationTo === null) fields.push({ code: "REQUIRED", field: "registrationTo" });
   if (!activity.location.atClub && (activity.location.name ?? "").trim() === "") {
     fields.push({ code: "REQUIRED", field: "location.name" });
   }
-  if (activity.ringIds.length > 0 && (activity.startTime === null || activity.endTime === null)) {
-    fields.push({ code: "REQUIRED", field: activity.startTime === null ? "startTime" : "endTime" });
+  // Hours if there are rings (R-07-04): each missing one is marked.
+  if (activity.ringIds.length > 0 && activity.startTime === null) {
+    fields.push({ code: "REQUIRED", field: "startTime" });
+  }
+  if (activity.ringIds.length > 0 && activity.endTime === null) {
+    fields.push({ code: "REQUIRED", field: "endTime" });
   }
   return fields;
 }
@@ -608,7 +621,9 @@ export const activityHandlers = [
           ? activity.state
           : field === "createdAt"
             ? activity.createdAt
-            : `${activity.date}T${activity.startTime ?? "00:00"}`,
+            : activity.date === null
+              ? ""
+              : `${activity.date}T${activity.startTime ?? "00:00"}`,
     );
     const items = ordered.map((activity) => activityListItem(activity, locale));
     return HttpResponse.json(
@@ -662,7 +677,8 @@ export const activityHandlers = [
     const activity: StoredActivity = {
       cancellation: null,
       createdAt: new Date().toISOString(),
-      date: clubLocalDate(),
+      // As the api: a new draft has no date nor hours yet (seen on the core, E4-W14 round 2).
+      date: null,
       documents: [],
       endTime: null,
       id: nextActivityId("activity"),
@@ -747,7 +763,8 @@ export const activityHandlers = [
     if (
       next.registrationFrom !== null &&
       next.registrationTo !== null &&
-      (next.registrationFrom > next.registrationTo || next.registrationTo > next.date)
+      (next.registrationFrom > next.registrationTo ||
+        (next.date !== null && next.registrationTo > next.date))
     ) {
       return apiError("INVALID_TIME_RANGE", "Invalid registration period", 400, {
         fieldErrors: [{ code: "INVALID_TIME_RANGE", field: "registrationTo" }],
@@ -757,6 +774,14 @@ export const activityHandlers = [
       return validationError("ringIds", "NOT_AT_CLUB");
     if (next.maxPlaces !== null && next.maxPlaces < counters(activity.id).active) {
       return apiError("CAPACITY_BELOW_REGISTRATIONS", "Capacity below registrations", 422);
+    }
+    // Like the api, a published activity stays valid as a publication (R-07-04): clearing its
+    // hours with rings, or its registration period, is refused.
+    if (activity.state === "PUBLISHED") {
+      const fieldErrors = incompleteFields(next);
+      if (fieldErrors.length > 0) {
+        return apiError("ACTIVITY_INCOMPLETE", "Activity incomplete", 422, { fieldErrors });
+      }
     }
     const resync =
       activity.state === "PUBLISHED" &&
@@ -855,7 +880,7 @@ export const activityHandlers = [
     if (fieldErrors.length > 0) {
       return apiError("ACTIVITY_INCOMPLETE", "Activity incomplete", 422, { fieldErrors });
     }
-    if (activity.date < clubLocalDate())
+    if (activity.date !== null && activity.date < clubLocalDate())
       return apiError("ACTIVITY_IN_PAST", "Activity in the past", 422);
     const body = (await request.json()) as PublicationRequest;
     const outside = ringBlockWindowProblem(activity);

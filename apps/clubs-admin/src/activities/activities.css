@@ -27,14 +27,6 @@
   font: 800 1.5rem/1.2 var(--ah-font-display);
 }
 
-.activities-page__header .ah-button__content,
-.activity-actions .ah-button__content,
-.activity-modal__actions .ah-button__content {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ah-space-1);
-}
-
 .activity-title-cell {
   display: inline-flex;
   flex-wrap: wrap;

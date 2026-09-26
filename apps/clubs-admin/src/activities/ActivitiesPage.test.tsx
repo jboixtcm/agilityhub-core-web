@@ -580,6 +580,11 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
   it("R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so", async () => {
     await renderPage({ selectedId: TOURNAMENT });
     const card = await maintenance("Torneig d'Estiu 2026");
+    // The times are offered once the opening hours are read (E4-W14 round 2: before that the
+    // change sent `endTime: null`, which a published activity with rings refuses).
+    await waitFor(() => {
+      expect(optionValues(within(card).getByLabelText("Hora de final"))).toContain("20:00");
+    });
     fireEvent.change(within(card).getByLabelText("Hora de final"), { target: { value: "20:00" } });
     fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
     const dialog = await screen.findByRole("dialog", { name: "Conflictes de pista" });
@@ -1575,6 +1580,74 @@ describe("T-07-29 E4-W14 D7 follow-ups of the E4-W11 review", () => {
     expect(screen.getAllByText("L'interval horari no és vàlid.")).toHaveLength(1);
     expect(document.querySelector(".ah-toast")).toBeNull();
     expect(draft.state).toBe("DRAFT");
+  });
+
+  const REQUIRED_TO_PUBLISH = "Cal per publicar";
+  const INCOMPLETE = "Falten dades per publicar l'activitat: revisa els camps marcats.";
+
+  it("E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours skips the preview (its 400 names no field): the publication's 422 ACTIVITY_INCOMPLETE marks every empty field", async () => {
+    const draft = activityState.activities.find((item) => item.id === DEMONSTRATION);
+    if (draft === undefined) throw new TypeError("Missing the Demostració");
+    // A new draft as the core creates it (no date nor hours), at the club on Cadells, without the
+    // registration period.
+    Object.assign(draft, {
+      date: null,
+      location: { address: null, atClub: true, name: null, url: null },
+      ringIds: ["ring-cadells"],
+    });
+    const previews = recordRequests(`/activities/${DEMONSTRATION}/ring-conflicts`);
+    const publications = recordRequests(`/activities/${DEMONSTRATION}/publication`);
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
+
+    expect(await screen.findByText(INCOMPLETE)).toBeVisible();
+    for (const id of [
+      "activity-date",
+      "activity-start",
+      "activity-end",
+      "activity-registration-from",
+      "activity-registration-to",
+    ]) {
+      expect(fieldErrorText(id)).toBe(REQUIRED_TO_PUBLISH);
+    }
+    expect(within(card).getAllByText(REQUIRED_TO_PUBLISH)).toHaveLength(5);
+    // No «L'interval horari no és vàlid.» of the preview, no confirmation, one publication.
+    expect(screen.queryByText("L'interval horari no és vàlid.")).toBeNull();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(previews.seen).toEqual([]);
+    expect(publications.seen.map((request) => request.method)).toEqual(["POST"]);
+    expect(publications.seen[0]?.key).not.toBeNull();
+    expect(draft.state).toBe("DRAFT");
+    previews.stop();
+    publications.stop();
+  });
+
+  it("E4-W14 round 2 R-07-04 the rings the admin just picked count: [PUBLICA] saves them, then asks the publication, not the preview", async () => {
+    const draft = activityState.activities.find((item) => item.id === DEMONSTRATION);
+    if (draft === undefined) throw new TypeError("Missing the Demostració");
+    // At the club without rings: the admin adds Cadells in the form and publishes at once.
+    Object.assign(draft, {
+      location: { address: null, atClub: true, name: null, url: null },
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+    });
+    const previews = recordRequests(`/activities/${DEMONSTRATION}/ring-conflicts`);
+    const publications = recordRequests(`/activities/${DEMONSTRATION}/publication`);
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    fireEvent.click(within(card).getByRole("button", { name: "Cadells" }));
+    fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
+
+    expect(await screen.findByText(INCOMPLETE)).toBeVisible();
+    expect(fieldErrorText("activity-start")).toBe(REQUIRED_TO_PUBLISH);
+    expect(fieldErrorText("activity-end")).toBe(REQUIRED_TO_PUBLISH);
+    expect(fieldErrorText("activity-registration-from")).toBeUndefined();
+    expect(draft.ringIds).toEqual(["ring-cadells"]);
+    expect(previews.seen).toEqual([]);
+    expect(publications.seen.map((request) => request.method)).toEqual(["POST"]);
+    previews.stop();
+    publications.stop();
   });
 });
 

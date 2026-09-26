@@ -1,0 +1,1371 @@
+$ pnpm -C apps/clubs-admin exec vitest run src/activities/ActivitiesPage.test.tsx src/planning/TemplatesPage.test.tsx src/catalogs/SettingsPage.test.tsx -t "round 2|keeps its icon inline|a failed «Treu de la plantilla»"   # round 2: this round's tests on the sources at HEAD 11c3035 (ActivityPage.tsx, TemplatesPage.tsx, ClassForm.tsx, shared.ts, both mocks, components.css and the three app CSS files); exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/SettingsPage.test.tsx (9 tests | 1 failed | 8 skipped) 249ms
+   ❯ T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review (5)
+     × S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline 247ms
+ ❯ src/activities/ActivitiesPage.test.tsx (46 tests | 2 failed | 44 skipped) 20292ms
+   ❯ T-07-29 E4-W14 D7 follow-ups of the E4-W11 review (4)
+     × E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours skips the preview (its 400 names no field): the publication's 422 ACTIVITY_INCOMPLETE marks every empty field 10184ms
+     × E4-W14 round 2 R-07-04 the rings the admin just picked count: [PUBLICA] saves them, then asks the publication, not the preview 10105ms
+ ❯ src/planning/TemplatesPage.test.tsx (29 tests | 4 failed | 24 skipped) 31236ms
+   ❯ T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) (2)
+     × R-06-06 T-06-05 E4-W14 round 2 (review nit #8) a level put into the progression gets its row: no dogs yet, so «sense gossos» and no ratios 42ms
+   ❯ T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) (3)
+     × R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version 10257ms
+     × R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone 10304ms
+     × R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists 10252ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W14 D7 follow-ups of the E4-W11 review > E4-W14 round 2 R-07-04 R-07-05 T-07-04 a draft with rings but no hours skips the preview (its 400 names no field): the publication's 422 ACTIVITY_INCOMPLETE marks every empty field
+TestingLibraryElementError: Unable to find an element with the text: Falten dades per publicar l'activitat: revisa els camps marcats.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="activities-page"
+    >
+      <header
+        class="activities-page__header"
+      >
+        <h1>
+          Activitats
+        </h1>
+        <button
+          class="ah-button ah-button--primary"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+              />
+            </svg>
+            Nova activitat
+          </span>
+        </button>
+      </header>
+      <section
+        aria-label="Llistat d'activitats"
+        class="ah-universal-list"
+      >
+        <div
+          class="ah-universal-list__toolbar"
+        >
+          <label
+            class="ah-universal-list__search"
+          >
+            <span
+              class="ah-sr-only"
+            >
+              Cerca una activitat
+            </span>
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <input
+              aria-label="Cerca una activitat"
+              placeholder="Cerca una activitat"
+              type="search"
+              value=""
+            />
+          </label>
+          <select
+            aria-label="Mostra"
+            class="ah-universal-list__status"
+          >
+            <option
+              value="false"
+            >
+              Sense les eliminades
+            </option>
+            <option
+              value=""
+            >
+              Totes
+            </option>
+          </select>
+          <details
+            class="ah-universal-list__menu ah-universal-list__filter-menu"
+          >
+            <summary
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"
+                />
+              </svg>
+              Filtre
+              <span
+                aria-hidden="true"
+              >
+                ▾
+              </span>
+            </summary>
+            <div
+              class="ah-universal-list__menu-panel"
+            >
+              <label>
+                <span>
+                  Columna
+                </span>
+                <select>
+                  <option
+                    value="state"
+                  >
+                    Estat
+                  </option>
+                  <option
+                    value="type"
+                  >
+                    Tipus
+                  </option>
+                  <option
+                    value="date"
+                  >
+                    Data
+                  </option>
+                  <option
+                    value="ringId"
+                  >
+                    Pista
+                  </option>
+                  <option
+                    value="levelId"
+                  >
+                    Nivell
+                  </option>
+                  <option
+                    value="registrationOpen"
+                  >
+                    Inscripció oberta
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Operador
+                </span>
+                <select>
+                  <option
+                    value="eq"
+                  >
+                    és igual a
+                  </option>
+                  <option
+                    value="ne"
+                  >
+                    no és igual a
+                  </option>
+                  <option
+                    value="in"
+                  >
+                    és un de
+                  </option>
+                  <option
+                    value="nin"
+                  >
+                    no és cap de
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Valor
+                </span>
+                <select>
+                  <option
+                    value="PUBLISHED"
+                  >
+                    publicada (4)
+                  </option>
+                  <option
+                    value="DRAFT"
+                  >
+                    esborrany (1)
+                  </option>
+                </select>
+              </label>
+              <div
+                ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="activities-page"
+    >
+      <header
+        class="activities-page__header"
+      >
+        <h1>
+          Activitats
+        </h1>
+        <button
+          class="ah-button ah-button--primary"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+              />
+            </svg>
+            Nova activitat
+          </span>
+        </button>
+      </header>
+      <section
+        aria-label="Llistat d'activitats"
+        class="ah-universal-list"
+      >
+        <div
+          class="ah-universal-list__toolbar"
+        >
+          <label
+            class="ah-universal-list__search"
+          >
+            <span
+              class="ah-sr-only"
+            >
+              Cerca una activitat
+            </span>
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <input
+              aria-label="Cerca una activitat"
+              placeholder="Cerca una activitat"
+              type="search"
+              value=""
+            />
+          </label>
+          <select
+            aria-label="Mostra"
+            class="ah-universal-list__status"
+          >
+            <option
+              value="false"
+            >
+              Sense les eliminades
+            </option>
+            <option
+              value=""
+            >
+              Totes
+            </option>
+          </select>
+          <details
+            class="ah-universal-list__menu ah-universal-list__filter-menu"
+          >
+            <summary
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"
+                />
+              </svg>
+              Filtre
+              <span
+                aria-hidden="true"
+              >
+                ▾
+              </span>
+            </summary>
+            <div
+              class="ah-universal-list__menu-panel"
+            >
+              <label>
+                <span>
+                  Columna
+                </span>
+                <select>
+                  <option
+                    value="state"
+                  >
+                    Estat
+                  </option>
+                  <option
+                    value="type"
+                  >
+                    Tipus
+                  </option>
+                  <option
+                    value="date"
+                  >
+                    Data
+                  </option>
+                  <option
+                    value="ringId"
+                  >
+                    Pista
+                  </option>
+                  <option
+                    value="levelId"
+                  >
+                    Nivell
+                  </option>
+                  <option
+                    value="registrationOpen"
+                  >
+                    Inscripció oberta
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Operador
+                </span>
+                <select>
+                  <option
+                    value="eq"
+                  >
+                    és igual a
+                  </option>
+                  <option
+                    value="ne"
+                  >
+                    no és igual a
+                  </option>
+                  <option
+                    value="in"
+                  >
+                    és un de
+                  </option>
+                  <option
+                    value="nin"
+                  >
+                    no és cap de
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Valor
+                </span>
+                <select>
+                  <option
+                    value="PUBLISHED"
+                  >
+                    publicada (4)
+                  </option>
+                  <option
+                    value="DRAFT"
+                  >
+                    esborrany (1)
+                  </option>
+                </select>
+              </label>
+              <div
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:1602:25
+    1600|     fireEvent.click(within(card).getByRole("button", { name: "PUBLICA"…
+    1601|
+    1602|     expect(await screen.findByText(INCOMPLETE)).toBeVisible();
+       |                         ^
+    1603|     for (const id of [
+    1604|       "activity-start",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W14 D7 follow-ups of the E4-W11 review > E4-W14 round 2 R-07-04 the rings the admin just picked count: [PUBLICA] saves them, then asks the publication, not the preview
+TestingLibraryElementError: Unable to find an element with the text: Falten dades per publicar l'activitat: revisa els camps marcats.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="activities-page"
+    >
+      <header
+        class="activities-page__header"
+      >
+        <h1>
+          Activitats
+        </h1>
+        <button
+          class="ah-button ah-button--primary"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+              />
+            </svg>
+            Nova activitat
+          </span>
+        </button>
+      </header>
+      <section
+        aria-label="Llistat d'activitats"
+        class="ah-universal-list"
+      >
+        <div
+          class="ah-universal-list__toolbar"
+        >
+          <label
+            class="ah-universal-list__search"
+          >
+            <span
+              class="ah-sr-only"
+            >
+              Cerca una activitat
+            </span>
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <input
+              aria-label="Cerca una activitat"
+              placeholder="Cerca una activitat"
+              type="search"
+              value=""
+            />
+          </label>
+          <select
+            aria-label="Mostra"
+            class="ah-universal-list__status"
+          >
+            <option
+              value="false"
+            >
+              Sense les eliminades
+            </option>
+            <option
+              value=""
+            >
+              Totes
+            </option>
+          </select>
+          <details
+            class="ah-universal-list__menu ah-universal-list__filter-menu"
+          >
+            <summary
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"
+                />
+              </svg>
+              Filtre
+              <span
+                aria-hidden="true"
+              >
+                ▾
+              </span>
+            </summary>
+            <div
+              class="ah-universal-list__menu-panel"
+            >
+              <label>
+                <span>
+                  Columna
+                </span>
+                <select>
+                  <option
+                    value="state"
+                  >
+                    Estat
+                  </option>
+                  <option
+                    value="type"
+                  >
+                    Tipus
+                  </option>
+                  <option
+                    value="date"
+                  >
+                    Data
+                  </option>
+                  <option
+                    value="ringId"
+                  >
+                    Pista
+                  </option>
+                  <option
+                    value="levelId"
+                  >
+                    Nivell
+                  </option>
+                  <option
+                    value="registrationOpen"
+                  >
+                    Inscripció oberta
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Operador
+                </span>
+                <select>
+                  <option
+                    value="eq"
+                  >
+                    és igual a
+                  </option>
+                  <option
+                    value="ne"
+                  >
+                    no és igual a
+                  </option>
+                  <option
+                    value="in"
+                  >
+                    és un de
+                  </option>
+                  <option
+                    value="nin"
+                  >
+                    no és cap de
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Valor
+                </span>
+                <select>
+                  <option
+                    value="PUBLISHED"
+                  >
+                    publicada (4)
+                  </option>
+                  <option
+                    value="DRAFT"
+                  >
+                    esborrany (1)
+                  </option>
+                </select>
+              </label>
+              <div
+                ...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="activities-page"
+    >
+      <header
+        class="activities-page__header"
+      >
+        <h1>
+          Activitats
+        </h1>
+        <button
+          class="ah-button ah-button--primary"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+              />
+            </svg>
+            Nova activitat
+          </span>
+        </button>
+      </header>
+      <section
+        aria-label="Llistat d'activitats"
+        class="ah-universal-list"
+      >
+        <div
+          class="ah-universal-list__toolbar"
+        >
+          <label
+            class="ah-universal-list__search"
+          >
+            <span
+              class="ah-sr-only"
+            >
+              Cerca una activitat
+            </span>
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <input
+              aria-label="Cerca una activitat"
+              placeholder="Cerca una activitat"
+              type="search"
+              value=""
+            />
+          </label>
+          <select
+            aria-label="Mostra"
+            class="ah-universal-list__status"
+          >
+            <option
+              value="false"
+            >
+              Sense les eliminades
+            </option>
+            <option
+              value=""
+            >
+              Totes
+            </option>
+          </select>
+          <details
+            class="ah-universal-list__menu ah-universal-list__filter-menu"
+          >
+            <summary
+              class=""
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"
+                />
+              </svg>
+              Filtre
+              <span
+                aria-hidden="true"
+              >
+                ▾
+              </span>
+            </summary>
+            <div
+              class="ah-universal-list__menu-panel"
+            >
+              <label>
+                <span>
+                  Columna
+                </span>
+                <select>
+                  <option
+                    value="state"
+                  >
+                    Estat
+                  </option>
+                  <option
+                    value="type"
+                  >
+                    Tipus
+                  </option>
+                  <option
+                    value="date"
+                  >
+                    Data
+                  </option>
+                  <option
+                    value="ringId"
+                  >
+                    Pista
+                  </option>
+                  <option
+                    value="levelId"
+                  >
+                    Nivell
+                  </option>
+                  <option
+                    value="registrationOpen"
+                  >
+                    Inscripció oberta
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Operador
+                </span>
+                <select>
+                  <option
+                    value="eq"
+                  >
+                    és igual a
+                  </option>
+                  <option
+                    value="ne"
+                  >
+                    no és igual a
+                  </option>
+                  <option
+                    value="in"
+                  >
+                    és un de
+                  </option>
+                  <option
+                    value="nin"
+                  >
+                    no és cap de
+                  </option>
+                </select>
+              </label>
+              <label>
+                <span>
+                  Valor
+                </span>
+                <select>
+                  <option
+                    value="PUBLISHED"
+                  >
+                    publicada (4)
+                  </option>
+                  <option
+                    value="DRAFT"
+                  >
+                    esborrany (1)
+                  </option>
+                </select>
+              </label>
+              <div
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:1639:25
+    1637|     fireEvent.click(within(card).getByRole("button", { name: "PUBLICA"…
+    1638|
+    1639|     expect(await screen.findByText(INCOMPLETE)).toBeVisible();
+       |                         ^
+    1640|     expect(fieldErrorText("activity-start")).toBe(REQUIRED_TO_PUBLISH);
+    1641|     expect(fieldErrorText("activity-end")).toBe(REQUIRED_TO_PUBLISH);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline
+AssertionError: expected '' to match /display:\s*inline-flex;/u
+
+- Expected:
+/display:\s*inline-flex;/u
+
++ Received:
+""
+
+ ❯ src/catalogs/SettingsPage.test.tsx:363:18
+    361|     );
+    362|     const rule = /(?:^|\n)\.ah-button__content\s*\{([^}]*)\}/u.exec(cs…
+    363|     expect(rule).toMatch(/display:\s*inline-flex;/u);
+       |                  ^
+    364|     expect(rule).toMatch(/align-items:\s*center;/u);
+    365|     for (const file of [
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 T-06-05 E4-W14 round 2 (review nit #8) a level put into the progression gets its row: no dogs yet, so «sense gossos» and no ratios
+AssertionError: expected undefined to deeply equal { booked: null, dogsActive: +0, …(8) }
+
+- Expected:
+{
+  "booked": null,
+  "dogsActive": 0,
+  "dogsTotal": 0,
+  "levelId": "level-t",
+  "maxRatioPct": null,
+  "maxSeats": 0,
+  "name": "Teràpia",
+  "propRatioPct": null,
+  "propSeats": 0,
+  "status": "NO_DOGS",
+}
+
++ Received:
+undefined
+
+ ❯ src/planning/TemplatesPage.test.tsx:688:79
+    686|       params: { query: { templateId: "template-setmana-a" } },
+    687|     });
+    688|     expect(answer.data?.levels.find((level) => level.levelId === thera…
+       |                                                                               ^
+    689|       booked: null,
+    690|       dogsActive: 0,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version
+AssertionError: expected [ Array(3) ] to deeply equal [ Array(4) ]
+
+Ignored nodes: comments, script, style
+<html
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head />
+  <body>
+    <div>
+      <section
+        class="planning-page"
+      >
+        <header
+          class="planning-header"
+        >
+          <h1>
+            Plantilles
+          </h1>
+          <div
+            class="planning-tabs"
+          >
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle planning-tab__toggle--active"
+                type="button"
+              >
+                dl–dv: «Setmana A»
+              </button>
+            </div>
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle"
+                type="button"
+              >
+                Dissabtes
+              </button>
+            </div>
+          </div>
+          <div
+            class="planning-header__actions"
+          >
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Nova
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"
+                  />
+                </svg>
+                Duplica
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--secondary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Franja
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Crear classe
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          class="ah-card planning-grid-card"
+        >
+          <div
+            class="ah-schedule-grid"
+          >
+            <div
+              class="ah-schedule-grid__scroll"
+            >
+              <table
+                class="ah-schedule-grid__table"
+                style="--schedule-columns: 5;"
+              >
+                <caption
+                  class="ah-sr-only"
+                >
+                  Quadre setmanal de la plantilla «Setmana A»
+                </caption>
+                <thead>
+                  <tr>
+                    <td
+                      class="ah-schedule-grid__corner"
+                    />
+                    <th
+                      class="ah-schedule-grid__column"
+                      scope="col"
+                    >
+                      <button
+                        class="ah-schedule-grid__column-button"
+                        type="button"[3...
+
+- Expected
++ Received
+
+  [
+    "PATCH sent",
+    "PATCH answered",
+    "DELETE sent",
+-   "PATCH sent",
+  ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:868:28
+    866|     queue.release();
+    867|     await waitFor(() => {
+    868|       expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "D…
+       |                            ^
+    869|     });
+    870|     // B's change was saved (a stale version would have answered 409 S…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone
+AssertionError: expected [ 'PATCH sent', 'PATCH answered' ] to deeply equal [ Array(3) ]
+
+Ignored nodes: comments, script, style
+<html
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head />
+  <body>
+    <div>
+      <section
+        class="planning-page"
+      >
+        <header
+          class="planning-header"
+        >
+          <h1>
+            Plantilles
+          </h1>
+          <div
+            class="planning-tabs"
+          >
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle planning-tab__toggle--active"
+                type="button"
+              >
+                dl–dv: «Setmana A»
+              </button>
+            </div>
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle"
+                type="button"
+              >
+                Dissabtes
+              </button>
+            </div>
+          </div>
+          <div
+            class="planning-header__actions"
+          >
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Nova
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"
+                  />
+                </svg>
+                Duplica
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--secondary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Franja
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Crear classe
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          class="ah-card planning-grid-card"
+        >
+          <div
+            class="ah-schedule-grid"
+          >
+            <div
+              class="ah-schedule-grid__scroll"
+            >
+              <table
+                class="ah-schedule-grid__table"
+                style="--schedule-columns: 5;"
+              >
+                <caption
+                  class="ah-sr-only"
+                >
+                  Quadre setmanal de la plantilla «Setmana A»
+                </caption>
+                <thead>
+                  <tr>
+                    <td
+                      class="ah-schedule-grid__corner"
+                    />
+                    <th
+                      class="ah-schedule-grid__column"
+                      scope="col"
+                    >
+                      <button
+                        class="ah-schedule-grid__column-button"
+                        type="button"[3...
+
+- Expected
++ Received
+
+  [
+    "PATCH sent",
+    "PATCH answered",
+-   "PATCH sent",
+  ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:901:28
+    899|     queue.release();
+    900|     await waitFor(() => {
+    901|       expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "P…
+       |                            ^
+    902|     });
+    903|     expect(
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists
+AssertionError: expected '' to contain 'No s\'ha trobat l\'element sol·licita…'
+
+Ignored nodes: comments, script, style
+<html
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head />
+  <body>
+    <div>
+      <section
+        class="planning-page"
+      >
+        <header
+          class="planning-header"
+        >
+          <h1>
+            Plantilles
+          </h1>
+          <div
+            class="planning-tabs"
+          >
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle planning-tab__toggle--active"
+                type="button"
+              >
+                dl–dv: «Setmana A»
+              </button>
+            </div>
+            <div
+              class="planning-tab"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="menu"
+                class="planning-tab__toggle"
+                type="button"
+              >
+                Dissabtes
+              </button>
+            </div>
+          </div>
+          <div
+            class="planning-header__actions"
+          >
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Nova
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--ghost"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"
+                  />
+                </svg>
+                Duplica
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--secondary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Franja
+              </span>
+            </button>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"
+                  />
+                </svg>
+                Crear classe
+              </span>
+            </button>
+          </div>
+        </header>
+        <div
+          class="ah-card planning-grid-card"
+        >
+          <div
+            class="ah-schedule-grid"
+          >
+            <div
+              class="ah-schedule-grid__scroll"
+            >
+              <table
+                class="ah-schedule-grid__table"
+                style="--schedule-columns: 5;"
+              >
+                <caption
+                  class="ah-sr-only"
+                >
+                  Quadre setmanal de la plantilla «Setmana A»
+                </caption>
+                <thead>
+                  <tr>
+                    <td
+                      class="ah-schedule-grid__corner"
+                    />
+                    <th
+                      class="ah-schedule-grid__column"
+                      scope="col"
+                    >
+                      <button
+                        class="ah-schedule-grid__column-button"
+                        type="button"[3...
+
+- Expected
++ Received
+
+- No s'ha trobat l'element sol·licitat.
+
+ ❯ src/planning/TemplatesPage.test.tsx:930:27
+    928|     });
+    929|     await waitFor(() => {
+    930|       expect(toastText()).toContain(NOT_FOUND);
+       |                           ^
+    931|     });
+    932|     await settle();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 1 passed | 76 skipped (84)
+   Start at  16:23:51
+   Duration  32.40s (tests 94%, environment 2%, transform 2%, import 1%, setup 1%)
+

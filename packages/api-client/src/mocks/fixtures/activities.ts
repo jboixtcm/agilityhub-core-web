@@ -30,7 +30,8 @@ export const ACTIVITY_IDS = {
 /** Stored activity: form A without the fields derived at read time. */
 export interface StoredActivity {
   cancellation: NonNullable<Activity["cancellation"]> | null;
-  date: string;
+  /** `null` on a new draft, as the api's create leaves it (E4-W14 round 2, real-core probe). */
+  date: string | null;
   documents: Activity["documents"];
   endTime: string | null;
   id: string;
@@ -461,15 +462,24 @@ function nextDay(date: string): string {
   return value.toISOString().slice(0, 10);
 }
 
+/**
+ * The date of an activity a member can see: every published one has it (R-07-04), so only a draft
+ * (the api's create leaves it `null`) can lack it.
+ */
+function dateOf(activity: StoredActivity): string {
+  if (activity.date === null) throw new TypeError(`Activity ${activity.id} has no date yet`);
+  return activity.date;
+}
+
 export function startsAt(activity: StoredActivity): string {
-  return clubInstant(activity.date, activity.startTime ?? "00:00", clubTimeZone);
+  return clubInstant(dateOf(activity), activity.startTime ?? "00:00", clubTimeZone);
 }
 
 /** `endTime`, or the end of the local day without one (S07 §3). */
 export function endsAt(activity: StoredActivity): string {
   return activity.endTime === null
-    ? clubInstant(nextDay(activity.date), "00:00", clubTimeZone)
-    : clubInstant(activity.date, activity.endTime, clubTimeZone);
+    ? clubInstant(nextDay(dateOf(activity)), "00:00", clubTimeZone)
+    : clubInstant(dateOf(activity), activity.endTime, clubTimeZone);
 }
 
 /** R-07-13: opens at 00:00 local of `from`, closes at 00:00 local of the day after `to`. */
@@ -559,7 +569,7 @@ export function activityResource(
     date: activity.date,
     documents: activity.documents,
     endTime: activity.endTime,
-    endsAt: endsAt(activity),
+    endsAt: activity.date === null ? null : endsAt(activity),
     freeSeats: freeSeats(activity),
     id: activity.id,
     image: activity.image,
@@ -589,7 +599,7 @@ export function activityResource(
     shortDescriptionI18n: activity.shortDescriptionI18n,
     slug: activity.slug,
     startTime: activity.startTime,
-    startsAt: startsAt(activity),
+    startsAt: activity.date === null ? null : startsAt(activity),
     state: activity.state,
     title: localized(activity.titleI18n, locale) ?? "",
     titleI18n: activity.titleI18n,
@@ -636,11 +646,11 @@ export function registeredActivity(
     // (S07 «Canvis» 24-09). `startTime`/`endTime` carry the hours themselves, `null` when absent
     // (E5-T15), so a date-only activity never reads 0:00.
     endTime: activity.endTime,
-    endsAtLocal: activity.endTime === null ? null : `${activity.date}T${activity.endTime}`,
+    endsAtLocal: activity.endTime === null ? null : `${dateOf(activity)}T${activity.endTime}`,
     id: activity.id,
     placeLabel: placeLabel(activity, locale),
     startTime: activity.startTime,
-    startsAtLocal: `${activity.date}T${activity.startTime ?? "00:00"}`,
+    startsAtLocal: `${dateOf(activity)}T${activity.startTime ?? "00:00"}`,
     title: localized(activity.titleI18n, locale) ?? "",
   };
 }
@@ -745,7 +755,7 @@ export function memberActivityDetail(
   return {
     allRings: isAllRings(activity),
     cancellableUntil: cancellableUntil(activity),
-    date: activity.date,
+    date: dateOf(activity),
     documents: activity.documents,
     endTime: activity.endTime,
     endsAt: endsAt(activity),
@@ -758,9 +768,9 @@ export function memberActivityDetail(
     maxPlaces: activity.maxPlaces,
     minPlaces: activity.minPlaces,
     myRegistration: mine === undefined ? null : registrationResource(mine, activity, locale),
-    registrationFrom: activity.registrationFrom ?? activity.date,
+    registrationFrom: activity.registrationFrom ?? dateOf(activity),
     registrationOpen: registrationOpen(activity),
-    registrationTo: activity.registrationTo ?? activity.date,
+    registrationTo: activity.registrationTo ?? dateOf(activity),
     rings: activityRings(activity),
     rowState: rowState(activity, waitlistModule),
     shortDescription: localized(activity.shortDescriptionI18n, locale),
@@ -784,7 +794,8 @@ function overlaps(fromA: string, toA: string, fromB: string, toB: string): boole
  * training booking on Muntanya 19:00–19:30 collide with any activity that uses those rings then.
  */
 export function ringConflicts(activity: StoredActivity): RingConflicts {
-  if (!activity.location.atClub || activity.startTime === null) {
+  const { date } = activity;
+  if (!activity.location.atClub || activity.startTime === null || date === null) {
     return { conflicts: [], trainingBookings: [] };
   }
   const start = activity.startTime;
@@ -794,37 +805,37 @@ export function ringConflicts(activity: StoredActivity): RingConflicts {
   if (activity.ringIds.includes("ring-central") && overlaps(start, end, "18:30", "19:30")) {
     conflicts.push({
       bookedCount: 3,
-      from: clubInstant(activity.date, "18:30", clubTimeZone),
-      id: `class-${activity.date}-1830-central`,
+      from: clubInstant(date, "18:30", clubTimeZone),
+      id: `class-${date}-1830-central`,
       label: "B+C",
       ringId: "ring-central",
-      to: clubInstant(activity.date, "19:30", clubTimeZone),
+      to: clubInstant(date, "19:30", clubTimeZone),
       type: "CLASS",
     });
   }
   // A manual ring block (S06/S09) on Petita, 4 October 17:00–21:00: never forceable (R-07-05).
   if (
-    activity.date === "2026-10-04" &&
+    date === "2026-10-04" &&
     activity.ringIds.includes("ring-petita") &&
     overlaps(start, end, "17:00", "21:00")
   ) {
     conflicts.push({
-      from: clubInstant(activity.date, "17:00", clubTimeZone),
+      from: clubInstant(date, "17:00", clubTimeZone),
       id: "ring-block-2026-10-04-petita",
       label: "Manteniment de la pista",
       ringId: "ring-petita",
-      to: clubInstant(activity.date, "21:00", clubTimeZone),
+      to: clubInstant(date, "21:00", clubTimeZone),
       type: "RING_BLOCK",
     });
   }
   if (activity.ringIds.includes("ring-muntanya") && overlaps(start, end, "19:00", "19:30")) {
     trainingBookings.push({
-      bookingId: `training-${activity.date}-1900-muntanya`,
+      bookingId: `training-${date}-1900-muntanya`,
       dogName: "Blat",
-      from: clubInstant(activity.date, "19:00", clubTimeZone),
+      from: clubInstant(date, "19:00", clubTimeZone),
       memberName: "Pau Soler",
       ringId: "ring-muntanya",
-      to: clubInstant(activity.date, "19:30", clubTimeZone),
+      to: clubInstant(date, "19:30", clubTimeZone),
     });
   }
   return { conflicts, trainingBookings };

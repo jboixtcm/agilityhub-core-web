@@ -423,7 +423,7 @@ describe("E3-W12 step 3: /parameters/* is for a non-impersonated ADMIN only (MAT
   });
 });
 
-describe("T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19)", () => {
+describe("T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19)", () => {
   const marta = "42000000-0000-4000-8000-000000000001";
   const kiwi = "44000000-0000-4000-8000-000000000001";
   const json = { "Content-Type": "application/json" };
@@ -536,6 +536,34 @@ describe("T-04-12 T-04-19 E4-W13 step 5: the reused dog of a readmission and the
     expect(dog.version).toBe(4);
     // A stale version is refused as for any dog.
     expect(await patchDog({ name: "Kiwi", version: 1 })).toMatchObject({ body: { code: "STALE_VERSION" }, status: 409 });
+  });
+
+  it("E4-W13 round 2 R-04-06 a withdrawn type of the reused dog shows the record's own row again and is no change; a PATCH that changes no key writes nothing (api E5-T21)", async () => {
+    await view("adminSignupReviewReadmission");
+    // Withdraw the submitted card: the view shows the record's 2025 card again (R-04-06: «un tipus …
+    // enviat sense fitxers conserva el del gos»).
+    expect((await patchDog({ documents: [{ files: [], type: "VACCINATION_CARD" }], version: 1 })).status).toBe(200);
+    let dog = await view("adminSignupReviewReadmission");
+    expect(keysOf(dog)).toEqual([
+      "VACCINATION_CARD: dogs/44000000/cartilla_Kivi_2025.pdf",
+      "INSURANCE: signup-uploads/42000000/asseguranca.pdf",
+    ]);
+    expect(dog.documents[0]).toMatchObject({ files: [{ name: "cartilla_Kivi_2025.pdf" }], state: "RECEIVED" });
+    // Only the types sent with files count: the insurance (the record has none) is still a change.
+    expect(dog.readmission?.changedFields).toEqual(["name", "breed", "documents"]);
+    expect(dog.version).toBe(2);
+
+    // `files: []` for the card again (the record's own row): nothing changes, the version stays.
+    expect(await patchDog({ documents: [{ files: [], type: "VACCINATION_CARD" }], version: 2 })).toMatchObject({
+      body: { version: 2 },
+      status: 200,
+    });
+    // Withdraw the insurance too: nothing is submitted with files, so no documents change is left.
+    expect((await patchDog({ documents: [{ files: [], type: "INSURANCE" }], version: 2 })).status).toBe(200);
+    dog = await view("adminSignupReviewReadmission");
+    expect(keysOf(dog)).toEqual(["VACCINATION_CARD: dogs/44000000/cartilla_Kivi_2025.pdf"]);
+    expect(dog.readmission?.changedFields).toEqual(["name", "breed"]);
+    expect(dog.version).toBe(3);
   });
 
   it("an ordinary pending dog: a type sent without files stays pending; a key removed through DELETE answers 400 FILE_NOT_FOUND", async () => {

@@ -3,6 +3,15 @@
     "contactEmails",
     "phones"
   ],
+  "dogAfterCardWithdrawn": {
+    "changedFields": [
+      "name",
+      "breed"
+    ],
+    "documents": [
+      "VACCINATION_CARD: cartilla_Brisa_E3_1.jpg"
+    ]
+  },
   "memberContact": {
     "emails": [
       "pau.e3@example.test"

@@ -25,6 +25,8 @@ const acceptedDog = "Flaix E3";
 const rejectedEmail = "pau.e3@example.test";
 const rejectedName = "Pau Rebuig E3";
 const rejectedDog = "Brisa E3";
+/** The breed the readmission of Brisa E3 sends (the record keeps «Mestís»). */
+const readmissionBreed = "Pastor belga";
 const additionalDog = "Neret E3";
 const passportEmail = "joana.e3@example.test";
 const passportDog = "Nit E3";
@@ -343,16 +345,17 @@ async function fillPerson(
   await expect(page.getByLabel("Població (proposada pel CP)")).not.toHaveValue("");
 }
 
-async function fillDog(page: Page, name: string, chip: string): Promise<void> {
+async function fillDog(page: Page, name: string, chip: string, breed = "Mestís"): Promise<void> {
   await page.getByLabel("Nom del gos").fill(name);
   await page.getByRole("button", { name: "Mascle" }).click();
-  await page.getByLabel("Raça").fill("Mestís");
+  await page.getByLabel("Raça").fill(breed);
   await page.getByLabel("Naix.").fill("03/2022");
   await page.getByLabel("Núm. de xip").fill(chip);
 }
 
 async function completePublicSignup({
   attachCard = false,
+  breed,
   chip,
   document,
   documentRequired = false,
@@ -369,6 +372,8 @@ async function completePublicSignup({
   plan,
   screenshots,
 }: {
+  /** The dog's breed on 17 («Mestís» otherwise). */
+  breed?: string;
   chip: string;
   document: string;
   /** `signup.requireDogDocumentAtSignup = true` (R-04-08): 17 asks for the card, then it is uploaded. */
@@ -405,7 +410,7 @@ async function completePublicSignup({
 
   await page.getByRole("button", { name: "CONTINUA" }).click();
   await page.waitForURL("**/apuntat-hi/gos");
-  await fillDog(page, dog, chip);
+  await fillDog(page, dog, chip, breed);
   if (plan !== undefined) await page.getByRole("button", { name: `Selecciona ${plan}` }).click();
   if (screenshots) await screenshot(page, "17-dog-core-375.png");
   if (documentRequired) {
@@ -792,6 +797,9 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const rejectedContext = await localizedContext(browser, { height: 844, width: 375 });
   const rejectedPage = await rejectedContext.newPage();
   const rejectedMemberId = await completePublicSignup({
+    // E4-W13 round 2 (review #3): Brisa E3 keeps this card (with its file) after the rejection, so
+    // the readmission below reuses a dog whose record has a card.
+    attachCard: true,
     // A NIE applicant (typed lower case with a hyphen) reaches «Sol·licitud enviada» (B1).
     chip: "941000000009902",
     document: "y7654321-g",
@@ -1230,6 +1238,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       (document) => `${document.type}: ${document.files.map((file) => file.name).join(", ")}`,
     );
   const leftDogDocuments = documentFiles(leftLookup.documents);
+  // E4-W13 round 2 (review #3, T-04-19): the reused dog's record has a card with a file (Pau's card,
+  // attached on 17), so «Abans» and the rejection check have something to prove.
+  const oldCardFiles =
+    ((leftLookup.documents ?? []) as { files: { name: string }[]; type: string }[])
+      .find((document) => document.type === "VACCINATION_CARD")
+      ?.files.map((file) => file.name) ?? [];
+  expect(oldCardFiles.length).toBeGreaterThan(0);
   expect(leftMember).not.toBeNull();
   expect(leftMember?.idDocument).toBeTruthy();
   expect(leftDog).toMatchObject({ status: "INACTIVE" });
@@ -1239,6 +1254,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     const readmissionContext = await localizedContext(browser, { height: 844, width: 375 });
     const readmittedId = await completePublicSignup({
       attachCard: true,
+      // Round 2 (review #3): the readmission changes the breed too.
+      breed: readmissionBreed,
       chip: leftDog.chip,
       document: passportOnly ? "" : leftDocument.number,
       dog: "Retorn E3",
@@ -1268,7 +1285,13 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     const newCard = "cartilla_Retorn_E3_1.jpg";
     await expect(dogChanges.getByText(`Abans: ${leftDog.name}`, { exact: true })).toBeVisible();
     await expect(dogChanges.getByText("Ara: Retorn E3", { exact: true })).toBeVisible();
-    await expect(dogChanges.getByText(new RegExp(`^Ara: .*${newCard}`, "u"))).toBeVisible();
+    await expect(dogChanges.getByText(`Abans: ${leftDog.breed}`, { exact: true })).toBeVisible();
+    await expect(dogChanges.getByText(`Ara: ${readmissionBreed}`, { exact: true })).toBeVisible();
+    // Round 2 (review #5): the card's own line, named after the club's type, with the old card's
+    // file under «Abans».
+    await expect(dogChanges.getByText("Cartilla de vacunes", { exact: true })).toBeVisible();
+    await expect(dogChanges.getByText(`Abans: ${oldCardFiles.join(" · ")}`, { exact: true })).toBeVisible();
+    await expect(dogChanges.getByText(`Ara: ${newCard}`, { exact: true })).toBeVisible();
     await screenshot(admin, "D2-readmission-core-1280.png");
     await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
     const readmissionDrawer = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
@@ -1360,39 +1383,54 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       )}\n`,
     );
     const drawerFiles = readmissionDrawer.locator(".signup-edit-documents li");
-    let removal: { expected: DocumentsPatch; file: string };
+    // The submitted card is then withdrawn file by file: each PATCH sends the kept keys, the last one
+    // `files: []`.
+    let removals: { expected: DocumentsPatch; file: string }[];
     if (added.status() === 200) {
       // The PATCH answers the dog record, which keeps its own name until the validation.
       expect(((await added.json()) as { name: string }).name).toBe(leftDog.name);
       expect((await viewAfterAdd).status()).toBe(200);
       await expect(dogChanges.getByText(new RegExp(`^Ara: .*${newCard} · cartilla_retorn_2\\.jpg`, "u"))).toBeVisible();
-      removal = {
-        expected: { documents: [{ files: addBody.documents[0]?.files.slice(0, 1) ?? [], type: "VACCINATION_CARD" }], version: addBody.version + 1 },
-        file: "cartilla_retorn_2.jpg",
-      };
+      removals = [
+        {
+          expected: { documents: [{ files: addBody.documents[0]?.files.slice(0, 1) ?? [], type: "VACCINATION_CARD" }], version: addBody.version + 1 },
+          file: "cartilla_retorn_2.jpg",
+        },
+        { expected: { documents: [{ files: [], type: "VACCINATION_CARD" }], version: addBody.version + 2 }, file: newCard },
+      ];
     } else {
-      // The published core refuses a new key from the admin's upload route (E4-W13 report, question
-      // 1): `400 FILE_NOT_FOUND`, which the drawer shows where the admin is, re-reading the view;
-      // nothing changed, so the submitted card is withdrawn instead (the last file: `files: []`).
+      // The core image does not carry api E5-T24 yet (E4-W13 round 2 #3): it refuses a new key from
+      // the admin's upload route with `400 FILE_NOT_FOUND`, which the drawer shows where the admin
+      // is, re-reading the view; nothing changed, so only the submitted card is left to withdraw.
       expect({ code: addAnswer?.code, status: added.status() }).toEqual({ code: "FILE_NOT_FOUND", status: 400 });
       await expect(drawerAlert).toHaveText("No s'ha trobat el fitxer.");
       expect((await viewAfterAdd).status()).toBe(200);
       await expect(drawerFiles).toHaveCount(1);
-      removal = { expected: { documents: [{ files: [], type: "VACCINATION_CARD" }], version: addBody.version }, file: newCard };
+      removals = [{ expected: { documents: [{ files: [], type: "VACCINATION_CARD" }], version: addBody.version }, file: newCard }];
     }
     await drawerAlert.or(drawerFiles.first()).first().scrollIntoViewIfNeeded();
     await admin.screenshot({ path: join(evidenceDirectory, "D2-readmission-dog-documents-core-1280.png") });
-    const removePatch = admin.waitForResponse(isDogPatch);
-    const viewAfterRemove = nextSignupView(admin);
-    await drawerFiles.filter({ hasText: removal.file }).getByRole("button", { name: "Retira" }).click();
-    const removed = await removePatch;
-    expect(removed.status(), removed.status() === 200 ? "" : await removed.text()).toBe(200);
-    expect(removed.request().postDataJSON()).toEqual(removal.expected);
-    // The PATCH answers the record: D2 reads the view again for the submitted documents.
-    expect((await viewAfterRemove).status()).toBe(200);
-    await expect(drawerFiles.filter({ hasText: removal.file })).toHaveCount(0);
-    await expect(dogChanges.getByText(new RegExp(removal.file.replaceAll(".", "\\."), "u"))).toHaveCount(0);
+    for (const removal of removals) {
+      const removePatch = admin.waitForResponse(isDogPatch);
+      const viewAfterRemove = nextSignupView(admin);
+      await drawerFiles.filter({ hasText: removal.file }).getByRole("button", { name: "Retira" }).click();
+      const removed = await removePatch;
+      expect(removed.status(), removed.status() === 200 ? "" : await removed.text()).toBe(200);
+      expect(removed.request().postDataJSON()).toEqual(removal.expected);
+      // The PATCH answers the record: D2 reads the view again for the submitted documents.
+      expect((await viewAfterRemove).status()).toBe(200);
+      await expect(drawerFiles.filter({ hasText: removal.file })).toHaveCount(0);
+      await expect(dogChanges.getByText(new RegExp(removal.file.replaceAll(".", "\\."), "u"))).toHaveCount(0);
+    }
     await expect(drawerAlert).toHaveCount(0);
+    // Round 2 (review #1 on the core, R-04-06): with the submitted card withdrawn the view shows the
+    // record's own card again. It offers no [Retira] (the api cannot withdraw it) and is no change.
+    for (const name of oldCardFiles) {
+      const recordRow = drawerFiles.filter({ hasText: name });
+      await expect(recordRow).toHaveCount(1);
+      await expect(recordRow.getByRole("button", { name: "Retira" })).toHaveCount(0);
+    }
+    await expect(dogChanges.getByText("Cartilla de vacunes", { exact: true })).toHaveCount(0);
     admin.off("request", onDogRequest);
     expect(frozenDogCalls).toEqual([]);
     await readmissionDrawer.locator(".signup-edit-documents").scrollIntoViewIfNeeded();
@@ -1405,16 +1443,31 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
         (await (await fetch(`${base}/members/${id}/signup`, { headers: { Authorization: authorization } })).json()) as unknown,
       { ...readmissionApi, id: readmittedId },
     )) as {
+      dogs: {
+        documents: { files: { name: string }[]; state: string; type: string }[];
+        readmission?: { changedFields: string[] } | null;
+      }[];
       member: { contactEmails: { email: string }[]; phones: { number: string }[] };
       readmission?: { changedFields: string[]; submitted: { contactEmails: { email: string }[]; paymentMethod?: unknown; phones: { number: string }[] } };
     };
     expect(readmissionView.member.phones.map((phone) => phone.number)).toEqual(leftMember.phones.map((phone) => phone.number));
     expect(readmissionView.readmission?.submitted.phones.map((phone) => phone.number)).toEqual(["699000905"]);
+    // Round 2 (review #1): the withdrawn card is the record's own again, and no documents change.
+    const reusedDogView = readmissionView.dogs[0];
+    expect(reusedDogView?.readmission?.changedFields).toEqual(expect.arrayContaining(["name", "breed"]));
+    expect(reusedDogView?.readmission?.changedFields).not.toContain("documents");
+    expect(
+      reusedDogView?.documents.find((document) => document.type === "VACCINATION_CARD")?.files.map((file) => file.name),
+    ).toEqual(oldCardFiles);
     writeFileSync(
       join(evidenceDirectory, "d2-readmission-view-core.json"),
       `${JSON.stringify(
         {
           changedFields: readmissionView.readmission?.changedFields ?? null,
+          dogAfterCardWithdrawn: {
+            changedFields: reusedDogView?.readmission?.changedFields ?? null,
+            documents: documentFiles(reusedDogView?.documents),
+          },
           memberContact: {
             emails: readmissionView.member.contactEmails.map((entry) => entry.email),
             phones: readmissionView.member.phones.map((phone) => phone.number),
@@ -1465,8 +1518,12 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       status: dog.status,
     });
     expect(pick(dogAfter.dog as SeedDog)).toEqual(pick(leftDog));
+    // Round 2 (review #3): the old breed and the old card with its file, not the submitted ones.
+    expect((dogAfter.dog as SeedDog).breed).not.toBe(readmissionBreed);
     expect(documentFiles(dogAfter.documents)).toEqual(leftDogDocuments);
+    expect(leftDogDocuments).toContain(`VACCINATION_CARD: ${oldCardFiles.join(", ")}`);
     await expect(admin.getByText("Retorn E3")).toHaveCount(0);
+    await expect(admin.getByText(readmissionBreed)).toHaveCount(0);
     await screenshot(admin, "D10-after-rejected-readmission-core-1280.png");
     writeFileSync(
       join(evidenceDirectory, "readmission-core.json"),

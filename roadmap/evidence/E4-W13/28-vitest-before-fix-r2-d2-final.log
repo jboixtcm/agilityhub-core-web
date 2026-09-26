@@ -1,0 +1,883 @@
+$ pnpm -C apps/clubs-admin exec vitest run src/dashboard/SignupReviewPage.test.tsx -t "E4-W13"   # E4-W13 round 2, final test text on the sources at HEAD 11c3035 (SignupReviewPage.tsx, SignupEditDrawer.tsx, readmission.ts, and the two mock files); exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (92 tests | 5 failed | 81 skipped) 50841ms
+   ❯ T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) (11)
+     × step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too 10124ms
+     × step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view 10084ms
+     × step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename 10161ms
+     × round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change 10077ms
+     × round 2 (review nit #5): a document type without files reads as pending, not as absent 10045ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 (review nit #5): a document type without files reads as pending, not as absent
+AssertionError: expected [ 'Nom', 'Raça', 'Documents' ] to deeply equal [ 'Nom', 'Raça', …(2) ]
+
+Ignored nodes: comments, script, style
+<html
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head />
+  <body>
+    <div>
+      <section
+        class="signup-review-page"
+      >
+        <header
+          class="signup-review-page__header"
+        >
+          <h1>
+            Preinscripció #1042 — Marta Roca Pujol + Kiwi
+          </h1>
+          <span
+            class="ah-badge ah-tone--neutral"
+          >
+            pendent des de fa 2 dies
+          </span>
+          <span
+            class="ah-badge ah-tone--neutral"
+          >
+            Readmissió
+          </span>
+        </header>
+        <div
+          class="signup-review-grid"
+        >
+          <div
+            class="ah-card"
+          >
+            <h2>
+              Persona
+            </h2>
+            <dl
+              class="signup-review-data"
+            >
+              <dt>
+                Nom
+              </dt>
+              <dd>
+                <strong>
+                  Marta Roca Pujol
+                </strong>
+              </dd>
+              <dt>
+                DNI/NIE
+              </dt>
+              <dd>
+                <strong>
+                  47123456K
+                </strong>
+              </dd>
+              <dt>
+                Contacte
+              </dt>
+              <dd>
+                <span>
+                  marta.roca@example.test · +34 655123123
+                </span>
+                <a
+                  class="ah-badge ah-tone--neutral signup-review-whatsapp"
+                  href="https://wa.me/34655123123"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="ah-icon"
+                  >
+                    <use
+                      href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"
+                    />
+                  </svg>
+                   
+                  WhatsApp
+                </a>
+              </dd>
+              <dt>
+                Grup familiar
+              </dt>
+              <dd
+                class="signup-review-family"
+              >
+                <span>
+                  Sí — titular: Marta Roca + gos Kiwi
+                </span>
+                <span
+                  class="ah-badge ah-tone--neutral"
+                >
+                  tarifa familiar en validar
+                </span>
+              </dd>
+              <dt>
+                Pagament
+              </dt>
+              <dd>
+                Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa
+              </dd>
+            </dl>
+            <section
+              aria-labelledby="signup-readmission-title"
+              class="signup-review-readmission"
+            >
+              <h3
+                id="signup-readmission-title"
+              >
+                Canvis respecte de la fitxa de baixa
+              </h3>
+              <dl
+                class="signup-review-data"
+              >
+                <dt>
+                  Correus electrònics
+                </dt>
+                <dd>
+                  <span
+                    class="signup-review-readmission__previous"
+                  >
+                    Abans: marta.antic@example.test
+                  </span>
+                  <strong
+                    class="signup-review-readmission__submitted"
+                  >
+                    Ara: marta.roca@example.test
+                  </strong>
+                </dd>
+                <dt>
+                  Telèfons
+                </dt>
+                <dd>
+                  <span
+                    class="signup-review-readmission__previous"
+                  >
+                    Abans: +34 655000111
+                  </span>
+                  <strong
+                    class="signup-review-readmission__submitted"
+                  >
+                    Ara: +34 655123123
+                  </strong>
+                </dd>
+                <dt>
+                  Adreça
+                </dt>
+                <dd>
+                  <span
+                    class="signup-review-readmission__previous"
+                  >
+                    Abans: Carrer del Mar, 7, 08349 Cabrera de Mar
+                  </span>
+                  <strong
+                    class="signup-review-readmission__submitted"
+                  >
+                    Ara: Carrer de la Riera, 12, 08349 Cabrera de Mar
+                  </strong>
+                </dd>
+                <dt>
+               ...
+
+- Expected
++ Received
+
+  [
+    "Nom",
+    "Raça",
+-   "Cartilla de vacunes",
+-   "Assegurança",
++   "Documents",
+  ]
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1350:82
+    1348|     const block = screen.getByRole("region", { name: "Canvis respecte …
+    1349|     await waitFor(() => {
+    1350|       expect(within(block).getAllByRole("term").map((term) => term.tex…
+       |                                                                                  ^
+    1351|     });
+    1352|     return block;
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view
+TestingLibraryElementError: Unable to find an element with the text: Ara: cartilla_Kiwi_2.jpg. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<section
+  aria-labelledby="signup-dog-readmission-44000000-0000-4000-8000-000000000001 signup-dog-name-44000000-0000-4000-8000-000000000001"
+  class="signup-review-readmission"
+>
+  <h3
+    id="signup-dog-readmission-44000000-0000-4000-8000-000000000001"
+  >
+    Canvis respecte de la fitxa de baixa
+  </h3>
+  <dl
+    class="signup-review-data"
+  >
+    <dt>
+      Nom
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Kivi
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Kiwi
+      </strong>
+    </dd>
+    <dt>
+      Raça
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Llebrer
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Whippet
+      </strong>
+    </dd>
+    <dt>
+      Documents
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: cartilla_Kivi_2025.pdf
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: cartilla_Kiwi_2.jpg · Assegurança.pdf
+      </strong>
+    </dd>
+  </dl>
+</section>
+
+Ignored nodes: comments, script, style
+<section
+  aria-labelledby="signup-dog-readmission-44000000-0000-4000-8000-000000000001 signup-dog-name-44000000-0000-4000-8000-000000000001"
+  class="signup-review-readmission"
+>
+  <h3
+    id="signup-dog-readmission-44000000-0000-4000-8000-000000000001"
+  >
+    Canvis respecte de la fitxa de baixa
+  </h3>
+  <dl
+    class="signup-review-data"
+  >
+    <dt>
+      Nom
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Kivi
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Kiwi
+      </strong>
+    </dd>
+    <dt>
+      Raça
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Llebrer
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Whippet
+      </strong>
+    </dd>
+    <dt>
+      Documents
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: cartilla_Kivi_2025.pdf
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: cartilla_Kiwi_2.jpg · Assegurança.pdf
+      </strong>
+    </dd>
+  </dl>
+</section>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1416:32
+    1414|     await waitFor(() => { expect(sent(requests, "GET", `/members/${mem…
+    1415|     const block = screen.getByRole("region", { name: "Canvis respecte …
+    1416|     expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg"))…
+       |                                ^
+    1417|     expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull…
+    1418|     expect(frozenCalls(requests)).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename
+TestingLibraryElementError: Unable to find an element with the text: Ara: Assegurança.pdf · polissa_2026.pdf. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<section
+  aria-labelledby="signup-dog-readmission-44000000-0000-4000-8000-000000000001 signup-dog-name-44000000-0000-4000-8000-000000000001"
+  class="signup-review-readmission"
+>
+  <h3
+    id="signup-dog-readmission-44000000-0000-4000-8000-000000000001"
+  >
+    Canvis respecte de la fitxa de baixa
+  </h3>
+  <dl
+    class="signup-review-data"
+  >
+    <dt>
+      Nom
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Kivi
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Kiwi
+      </strong>
+    </dd>
+    <dt>
+      Raça
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Llebrer
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Whippet
+      </strong>
+    </dd>
+    <dt>
+      Documents
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: cartilla_Kivi_2025.pdf
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf · polissa_2026.pdf
+      </strong>
+    </dd>
+  </dl>
+</section>
+
+Ignored nodes: comments, script, style
+<section
+  aria-labelledby="signup-dog-readmission-44000000-0000-4000-8000-000000000001 signup-dog-name-44000000-0000-4000-8000-000000000001"
+  class="signup-review-readmission"
+>
+  <h3
+    id="signup-dog-readmission-44000000-0000-4000-8000-000000000001"
+  >
+    Canvis respecte de la fitxa de baixa
+  </h3>
+  <dl
+    class="signup-review-data"
+  >
+    <dt>
+      Nom
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Kivi
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Kiwi
+      </strong>
+    </dd>
+    <dt>
+      Raça
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: Llebrer
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: Whippet
+      </strong>
+    </dd>
+    <dt>
+      Documents
+    </dt>
+    <dd>
+      <span
+        class="signup-review-readmission__previous"
+      >
+        Abans: cartilla_Kivi_2025.pdf
+      </span>
+      <strong
+        class="signup-review-readmission__submitted"
+      >
+        Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg · Assegurança.pdf · polissa_2026.pdf
+      </strong>
+    </dd>
+  </dl>
+</section>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1441:32
+    1439|     await waitFor(() => { expect(within(drawer).getByText("polissa_202…
+    1440|     const block = screen.getByRole("region", { name: "Canvis respecte …
+    1441|     expect(await within(block).findByText("Ara: Assegurança.pdf · poli…
+       |                                ^
+    1442|     expect(frozenCalls(requests)).toEqual([]);
+    1443|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change
+TestingLibraryElementError: Unable to find an element with the text: cartilla_Kivi_2025.pdf. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<aside
+  aria-labelledby="_r_i_"
+  aria-modal="true"
+  class="ah-drawer"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_i_"
+    >
+      Edita les dades de la preinscripció
+    </h2>
+    <button
+      aria-label="Cancel·la"
+      class="ah-overlay__close"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <form
+      class="signup-edit-form"
+    >
+      <fieldset>
+        <legend>
+          Persona
+        </legend>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-firstName"
+          >
+            Nom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-firstName"
+            type="text"
+            value="Marta"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-lastName1"
+          >
+            Primer cognom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-lastName1"
+            type="text"
+            value="Roca"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-lastName2"
+          >
+            Segon cognom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-lastName2"
+            type="text"
+            value="Pujol"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-birthDate"
+          >
+            Data de naixement
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-birthDate"
+            type="date"
+            value="1988-04-12"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-gender"
+          >
+            Gènere
+          </label>
+          <select
+            class="ah-input ah-select"
+            id="signup-edit-gender"
+          >
+            <option
+              value="FEMALE"
+            >
+              Femení
+            </option>
+            <option
+              value="MALE"
+            >
+              Masculí
+            </option>
+            <option
+              value="OTHER"
+            >
+              Altres / No binari
+            </option>
+          </select>
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-idDocument"
+          >
+            DNI/NIE
+          </label>
+          <input
+            aria-describedby="signup-edit-idDocument-help"
+            class="ah-input"
+            id="signup-edit-idDocument"
+            readonly=""
+            value="47123456K"
+          />
+          <small
+            class="ah-form-field__help"
+            id="signup-edit-idDocument-help"
+          >
+            El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.
+          </small>
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-email1"
+          >
+            Correu electrònic
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-email1"
+            required=""
+            type="email"
+            value="marta.roca@example.test"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-email2"
+          >
+            Segon correu electrònic
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-email2"
+            type="email"
+            value=""
+          />
+        </div>
+        <div
+          class="signup-edit-form__row"
+  ...
+
+Ignored nodes: comments, script, style
+<aside
+  aria-labelledby="_r_i_"
+  aria-modal="true"
+  class="ah-drawer"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_i_"
+    >
+      Edita les dades de la preinscripció
+    </h2>
+    <button
+      aria-label="Cancel·la"
+      class="ah-overlay__close"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <form
+      class="signup-edit-form"
+    >
+      <fieldset>
+        <legend>
+          Persona
+        </legend>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-firstName"
+          >
+            Nom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-firstName"
+            type="text"
+            value="Marta"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-lastName1"
+          >
+            Primer cognom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-lastName1"
+            type="text"
+            value="Roca"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-lastName2"
+          >
+            Segon cognom
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-lastName2"
+            type="text"
+            value="Pujol"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-birthDate"
+          >
+            Data de naixement
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-birthDate"
+            type="date"
+            value="1988-04-12"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-gender"
+          >
+            Gènere
+          </label>
+          <select
+            class="ah-input ah-select"
+            id="signup-edit-gender"
+          >
+            <option
+              value="FEMALE"
+            >
+              Femení
+            </option>
+            <option
+              value="MALE"
+            >
+              Masculí
+            </option>
+            <option
+              value="OTHER"
+            >
+              Altres / No binari
+            </option>
+          </select>
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-idDocument"
+          >
+            DNI/NIE
+          </label>
+          <input
+            aria-describedby="signup-edit-idDocument-help"
+            class="ah-input"
+            id="signup-edit-idDocument"
+            readonly=""
+            value="47123456K"
+          />
+          <small
+            class="ah-form-field__help"
+            id="signup-edit-idDocument-help"
+          >
+            El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.
+          </small>
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-email1"
+          >
+            Correu electrònic
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-email1"
+            required=""
+            type="email"
+            value="marta.roca@example.test"
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="signup-edit-email2"
+          >
+            Segon correu electrònic
+          </label>
+          <input
+            class="ah-input"
+            id="signup-edit-email2"
+            type="email"
+            value=""
+          />
+        </div>
+        <div
+          class="signup-edit-form__row"
+  ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1544:45
+    1542|     // The record's own 2025 card shows again (R-04-06: «un tipus … en…
+    1543|     // del gos»), in the drawer and on the card, and it is no longer a…
+    1544|     const recordCard = await within(drawer).findByText("cartilla_Kivi_…
+       |                                             ^
+    1545|     expect(within(fileRow(drawer, "cartilla_Kivi_2025.pdf")).queryByRo…
+    1546|     expect(recordCard).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 6 passed | 81 skipped (92)
+   Start at  16:56:06
+   Duration  51.91s (tests 98%, transform 1%, environment 1%)
+

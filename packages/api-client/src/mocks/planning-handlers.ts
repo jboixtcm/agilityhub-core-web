@@ -623,13 +623,27 @@ export const planningHandlers = [
     }
     // R-06-06 / S05 §3: one row per active level of the progression, in the catalog's order and
     // under its current name; a level outside it (Teràpia, Pendent) has no row. The figures are
-    // the D3 mockup's: a level put into the progression later has none here, so it gets no row.
+    // the D3 mockup's; a level put into the progression later has none, so its row is the api's
+    // zero row: no dogs, so no ratios and `NO_DOGS` (T-06-05).
     const levels = catalogState.levels
       .filter((level) => level.active && level.progression)
       .sort((left, right) => left.order - right.order)
-      .flatMap((level) => {
+      .map((level) => {
         const row = coverageFixture.levels.find((item) => item.levelId === level.id);
-        return row === undefined ? [] : [{ ...row, name: level.name }];
+        return row === undefined
+          ? {
+              booked: null,
+              dogsActive: 0,
+              dogsTotal: 0,
+              levelId: level.id,
+              maxRatioPct: null,
+              maxSeats: 0,
+              name: level.name,
+              propRatioPct: null,
+              propSeats: 0,
+              status: "NO_DOGS" as const,
+            }
+          : { ...row, name: level.name };
       });
     return HttpResponse.json(
       weekId === null

@@ -1,14 +1,14 @@
 {
-  "runId": "idqxgd",
+  "runId": "iivg8m",
   "weekStart": "2026-09-21",
   "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
   "generation": {
     "body": {
-      "saturdayTemplateId": "e8c67a0f-4822-48ff-a39a-ddbd860ef33d",
-      "weekdayTemplateId": "7ea0f833-fcbb-4ecb-83bd-f99e0c661e16"
+      "saturdayTemplateId": "5e775cbe-2891-4cb3-81c0-5ecc59864592",
+      "weekdayTemplateId": "01f2e357-a7dc-4086-ba86-35e9e55ca8ba"
     },
     "status": 200,
-    "weekId": "31dfc5cc-7eed-49b6-80d5-4c2eb7b9648d",
+    "weekId": "783d34f0-4d19-4b38-ac84-84de344858df",
     "classCount": 38,
     "skipped": [],
     "week": "2026-10-12"
@@ -26,9 +26,9 @@
   "classCancellation": {
     "status": 200,
     "reason": "DELETED",
-    "adminText": "Integració E4 idqxgd: la classe s'elimina del calendari. Disculpeu les molèsties!",
-    "byAccountId": "68ee408a-6d97-4023-85ac-8ab8ae70de4e",
-    "at": "2026-09-26T12:42:46.644Z",
+    "adminText": "Integració E4 iivg8m: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "91cbd846-5801-42fd-a246-b5304aa0de69",
+    "at": "2026-09-26T15:06:15.129Z",
     "affectedBookings": 4,
     "affectedWaitlist": 2
   },
@@ -39,9 +39,9 @@
     "details": {
       "conflicts": [
         {
-          "ringId": "4120e3c3-e34a-4992-a65f-d335f0b644a5",
+          "ringId": "59e0db57-49ff-4d6b-9eaa-4b0ca69b62ab",
           "type": "CLASS",
-          "id": "b9cc22f3-46e9-45f7-9be3-a9017e22e6c4",
+          "id": "af55ff93-d821-46ca-846a-97f015425c9a",
           "from": "2026-10-07T18:00:00Z",
           "to": "2026-10-07T19:00:00Z",
           "label": "Obed. urbana",
@@ -49,20 +49,20 @@
         }
       ]
     },
-    "traceId": "79fc57b2-0de8-416e-9fd4-c4f66d1bf34b"
+    "traceId": "f532be8e-9d73-47ac-8b92-565566dd6889"
   },
   "ringBlock": {
-    "id": "9b7a00cf-7a4d-43b6-8566-7b92d3a14f68",
+    "id": "d2ca2d24-f0c6-499b-b2cd-ac1e71bc68cf",
     "status": 201
   },
   "activitiesExport": {
-    "bytes": 4065,
-    "contentDisposition": "attachment; filename=\"canic_activities_20260926-1442.xlsx\"",
+    "bytes": 4063,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-1706.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
     "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
     "status": 200,
-    "suggestedFilename": "canic_activities_20260926-1442.xlsx"
+    "suggestedFilename": "canic_activities_20260926-1706.xlsx"
   },
   "tournamentSaturday": {
     "cellsByColumn": {
@@ -70,13 +70,76 @@
     },
     "date": "2026-10-10"
   },
+  "windowlessDraft": {
+    "created": {
+      "date": null,
+      "endTime": null,
+      "startTime": null
+    },
+    "preview": {
+      "body": {
+        "code": "INVALID_TIME_RANGE",
+        "message": "L'interval de temps no és vàlid.",
+        "details": {},
+        "traceId": "40b83f87-6507-421e-9ead-48e50b63097b"
+      },
+      "status": 400
+    },
+    "publication": {
+      "body": {
+        "code": "ACTIVITY_INCOMPLETE",
+        "message": "Cal completar les dades de l'activitat.",
+        "details": {
+          "fieldErrors": [
+            {
+              "code": "REQUIRED",
+              "field": "date"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "registrationFrom"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "registrationTo"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "startTime"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "endTime"
+            }
+          ]
+        },
+        "traceId": "09f1a0e1-64f3-472e-8519-fa1f641aa076"
+      },
+      "status": 422
+    }
+  },
   "publicUrl": null,
+  "narrowWindow": {
+    "patch": {
+      "code": null,
+      "status": 200
+    },
+    "preview": {
+      "body": {
+        "code": "INVALID_TIME_RANGE",
+        "message": "L'interval de temps no és vàlid.",
+        "details": {},
+        "traceId": "7afcada8-f74c-46be-8a83-82f2cbc0dd6a"
+      },
+      "status": 400
+    }
+  },
   "seminarConflicts": {
     "conflicts": [
       {
-        "ringId": "4120e3c3-e34a-4992-a65f-d335f0b644a5",
+        "ringId": "59e0db57-49ff-4d6b-9eaa-4b0ca69b62ab",
         "type": "CLASS",
-        "id": "f06e96c4-1405-418b-86c2-e434f1b07f05",
+        "id": "a9e6eec9-4212-444b-991b-44e3dfd8a855",
         "from": "2026-10-17T16:30:00Z",
         "to": "2026-10-17T17:30:00Z",
         "label": "A+B",
@@ -85,7 +148,8 @@
     ],
     "trainingBookings": []
   },
-  "row03Ca": "Seminari E4 idqxgdinscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "row03Ca": "Seminari E4 iivg8minscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "mine03AfterCancelCa": [],
   "waitlistCa": {
     "member": {
       "after": "WAITLISTED",
@@ -98,15 +162,16 @@
     }
   },
   "registrantsExport": {
-    "bytes": 4656,
-    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-1442.xlsx\"",
+    "bytes": 4659,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-1706.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
-    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Aab9e97b3-5a00-4867-89a9-8bc9e94fe30d&format=xlsx&sort=registeredAt%2Casc",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A8f15d55b-b74a-49a7-a85a-8ed1a84deab1&format=xlsx&sort=registeredAt%2Casc",
     "status": 200,
-    "suggestedFilename": "canic_activity-registrations_20260926-1442.xlsx"
+    "suggestedFilename": "canic_activity-registrations_20260926-1706.xlsx"
   },
-  "row03Es": "Seminari E4 idqxgdinscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "row03Es": "Seminari E4 iivg8minscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "mine03AfterCancelEs": [],
   "waitlistChipEs": "en lista de espera (3)",
   "waitlistEs": {
     "joinedPosition": 4,

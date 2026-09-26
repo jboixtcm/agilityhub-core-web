@@ -19,7 +19,7 @@ import { Fragment, useCallback, useEffect, useEffectEvent, useRef, useState } fr
 import { useTranslation } from "react-i18next";
 
 import { useRefreshCounters } from "./counters";
-import { signupPerson } from "./readmission";
+import { loadDogDocumentTypes, signupPerson } from "./readmission";
 import { classifySignupReviewError, type SignupReviewError } from "./signup-review-errors";
 import { idDocumentLabel, SignupEditDrawer } from "./SignupEditDrawer";
 
@@ -46,6 +46,7 @@ const READMISSION_FIELDS = [
 ] as const;
 type ReadmissionField = (typeof READMISSION_FIELDS)[number];
 type SignupDogValues = components["schemas"]["SignupDogValues"];
+type SignupDocumentView = components["schemas"]["SignupDocumentView"];
 // R-04-06 (E38): the fields of the reused dog a readmission can change, in the order D2 lists them,
 // with their D2 labels.
 const DOG_READMISSION_FIELDS = {
@@ -147,7 +148,7 @@ export function SignupReviewPage({
   const branding = useBranding();
   const refreshCounters = useRefreshCounters();
   const { formatMoney, formatMonth, formatPlainDate, locale } = useClubFormats();
-  const { t } = useTranslation(["admin-census", "errors"]);
+  const { i18n, t } = useTranslation(["admin-census", "errors"]);
   const memberId = currentMemberId();
   const [signup, setSignup] = useState<SignupView>();
   const [loadState, setLoadState] = useState<"error" | "loading" | "ready" | "resolved">("loading");
@@ -191,6 +192,27 @@ export function SignupReviewPage({
   }, [client, memberId]);
 
   useEffect(() => { load(); }, [load, reload]);
+
+  // R-04-06 (E38): the reused dog's «Abans / Ara» names each document type after the club's list
+  // (`undefined` while it loads; a type it lacks, or a failed read, shows the key).
+  const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>();
+  const documentsChanged = signup?.dogs.some((dog) => dog.readmission?.changedFields.includes("documents") === true) === true;
+  const labelLanguage = i18n.resolvedLanguage ?? i18n.language;
+  useEffect(() => {
+    if (!documentsChanged) return;
+    let active = true;
+    loadDogDocumentTypes(client, labelLanguage).then(
+      (types) => {
+        if (active) setDocumentTypeLabels(new Map(types.map((type) => [type.key, type.label])));
+      },
+      () => {
+        if (active) setDocumentTypeLabels(new Map());
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [client, documentsChanged, labelLanguage]);
 
   // S04 §2 D2, R-04-15: while a reload is pending or after it failed, the view on screen is known
   // stale, so no quote of it counts (none is shown or asked for) and VALIDA waits.
@@ -577,6 +599,30 @@ export function SignupReviewPage({
     })();
     return text.trim() === "" ? t("admin-census:values.empty") : text;
   };
+  // R-04-06 (E38): the documents change type by type. As the api compares them, only the types
+  // sent with files count (the view shows the record's own row for any other); a row without files
+  // reads as pending, a type absent from one side as «—».
+  const fileKeys = (document: SignupDocumentView | undefined) =>
+    (document?.files ?? []).map((file) => file.fileKey).join("\n");
+  const changedDocumentTypes = (dog: Dog, record: SignupDogValues): string[] =>
+    dog.documents
+      .filter(
+        (document) =>
+          document.files.length > 0 &&
+          fileKeys(document) !== fileKeys(record.documents.find((own) => own.type === document.type)),
+      )
+      .map((document) => document.type);
+  const documentRowText = (documents: readonly SignupDocumentView[], type: string): string => {
+    const row = documents.find((document) => document.type === type);
+    if (row === undefined) return t("admin-census:values.empty");
+    return row.files.length === 0
+      ? t("admin-census:dog.documents.pending")
+      : row.files.map((file) => file.name).join(" · ");
+  };
+  const documentTypeLabel = (type: string): string =>
+    documentTypeLabels === undefined
+      ? t("admin-census:signupReview.fields.documents")
+      : (documentTypeLabels.get(type) ?? type);
 
   return (
     <section className="signup-review-page">
@@ -721,19 +767,38 @@ export function SignupReviewPage({
                 <section aria-labelledby={`signup-dog-readmission-${dog.id} signup-dog-name-${dog.id}`} className="signup-review-readmission">
                   <h3 id={`signup-dog-readmission-${dog.id}`}>{t("admin-census:signupReview.readmission.title")}</h3>
                   <dl className="signup-review-data">
-                    {changes.map((field) => (
-                      <Fragment key={field}>
-                        <dt>{t(`admin-census:signupReview.fields.${DOG_READMISSION_FIELDS[field]}`)}</dt>
-                        <dd>
-                          <span className="signup-review-readmission__previous">
-                            {t("admin-census:signupReview.readmission.previous", { value: dogValue(dogRecord, field) })}
-                          </span>
-                          <strong className="signup-review-readmission__submitted">
-                            {t("admin-census:signupReview.readmission.submitted", { value: dogValue(dog, field) })}
-                          </strong>
-                        </dd>
-                      </Fragment>
-                    ))}
+                    {changes.flatMap((field) => {
+                      const documentTypes = field === "documents" ? changedDocumentTypes(dog, dogRecord) : [];
+                      // One line per changed document type, named after it («Cartilla de vacunes»).
+                      if (documentTypes.length > 0) {
+                        return documentTypes.map((type) => (
+                          <Fragment key={`documents-${type}`}>
+                            <dt>{documentTypeLabel(type)}</dt>
+                            <dd>
+                              <span className="signup-review-readmission__previous">
+                                {t("admin-census:signupReview.readmission.previous", { value: documentRowText(dogRecord.documents, type) })}
+                              </span>
+                              <strong className="signup-review-readmission__submitted">
+                                {t("admin-census:signupReview.readmission.submitted", { value: documentRowText(dog.documents, type) })}
+                              </strong>
+                            </dd>
+                          </Fragment>
+                        ));
+                      }
+                      return [
+                        <Fragment key={field}>
+                          <dt>{t(`admin-census:signupReview.fields.${DOG_READMISSION_FIELDS[field]}`)}</dt>
+                          <dd>
+                            <span className="signup-review-readmission__previous">
+                              {t("admin-census:signupReview.readmission.previous", { value: dogValue(dogRecord, field) })}
+                            </span>
+                            <strong className="signup-review-readmission__submitted">
+                              {t("admin-census:signupReview.readmission.submitted", { value: dogValue(dog, field) })}
+                            </strong>
+                          </dd>
+                        </Fragment>,
+                      ];
+                    })}
                   </dl>
                 </section>
               )}

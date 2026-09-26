@@ -117,6 +117,57 @@ function isCall(method: string, path: RegExp) {
     response.request().method() === method && path.test(apiPath(response));
 }
 
+/**
+ * A call to the core with the admin page's own bearer (read from one of its requests, never
+ * written): what the api answers where the UI does not ask.
+ */
+async function coreCall(
+  page: Page,
+  url: string,
+  authorization: string | undefined,
+  method = "GET",
+  body?: unknown,
+): Promise<{ body: { code?: string; details?: unknown; version?: number }; status: number }> {
+  return page.evaluate(
+    async ({ auth, callBody, callMethod, callUrl }) => {
+      const response = await fetch(callUrl, {
+        headers: {
+          ...(auth === undefined ? {} : { Authorization: auth }),
+          ...(callBody === undefined ? {} : { "Content-Type": "application/json" }),
+        },
+        method: callMethod,
+        ...(callBody === undefined ? {} : { body: JSON.stringify(callBody) }),
+      });
+      return {
+        body: (await response.json()) as { code?: string; details?: unknown; version?: number },
+        status: response.status,
+      };
+    },
+    { auth: authorization, callBody: body, callMethod: method, callUrl: url },
+  );
+}
+
+/**
+ * E4-W14 round 2 (review #3): 03 after the member's own cancellation. The check reads the answer
+ * 03 renders from, so it cannot pass before 03 has its list: no live entry (ACTIVE or WAITLISTED)
+ * for the activity in `mine[]`, then no row for it. Returns the states the core still lists.
+ */
+async function expectGoneFrom03(page: Page, activityId: string, title: string): Promise<string[]> {
+  const read = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/activities$/u));
+  await navigateClubRoute(page, "/inici");
+  const answer = await read;
+  expect(answer.status()).toBe(200);
+  const { mine } = (await answer.json()) as { mine: { activityId: string; state: string }[] };
+  const states = mine
+    .filter((entry) => entry.activityId === activityId)
+    .map((entry) => entry.state);
+  expect(states.filter((state) => state === "ACTIVE" || state === "WAITLISTED")).toEqual([]);
+  await expect(page.getByRole("link", { name: new RegExp(escapeRegExp(title), "u") })).toHaveCount(
+    0,
+  );
+  return states;
+}
+
 async function localizedContext(
   browser: Browser,
   viewport: { height: number; width: number },
@@ -833,15 +884,89 @@ test("T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every r
   await create.getByRole("button", { name: "Crea l'activitat" }).click();
   const createdActivity = await createdResponse;
   expect(createdActivity.status()).toBe(201);
-  seminarId = ((await createdActivity.json()) as { id: string }).id;
+  const created = (await createdActivity.json()) as {
+    date?: string | null;
+    endTime?: string | null;
+    id: string;
+    startTime?: string | null;
+  };
+  seminarId = created.id;
   await page.waitForURL(`**/activitats/${seminarId}`);
   const card = page.getByRole("region", { name: `Manteniment de l'activitat — ${seminarTitle}` });
+
+  // E4-W14 round 2 (review #1; R-07-04, R-07-05, T-07-04): the new draft with a ring but no
+  // hours. [PUBLICA] saves the ring and asks the publication, not the preview: its 422
+  // ACTIVITY_INCOMPLETE marks the empty fields. The preview itself (read with the admin's own
+  // bearer) refuses such a draft with 400 INVALID_TIME_RANGE, which names no field.
+  const central = card.getByRole("button", { exact: true, name: "Central" });
+  await central.click();
+  const previewsAsked: string[] = [];
+  const recordPreview = (request: { method: () => string; url: () => string }) => {
+    if (new URL(request.url()).pathname.endsWith("/ring-conflicts")) {
+      previewsAsked.push(request.method());
+    }
+  };
+  page.on("request", recordPreview);
+  const ringSaved = page.waitForResponse(
+    isCall("PATCH", new RegExp(`/api/v1/activities/${seminarId}$`, "u")),
+  );
+  const incompletePublication = page.waitForResponse(
+    isCall("POST", new RegExp(`/api/v1/activities/${seminarId}/publication$`, "u")),
+  );
+  await card.getByRole("button", { exact: true, name: "PUBLICA" }).click();
+  const ringSavedResponse = await ringSaved;
+  expect(ringSavedResponse.status()).toBe(200);
+  const incomplete = await incompletePublication;
+  const incompleteBody = (await incomplete.json()) as {
+    code: string;
+    details?: { fieldErrors?: { code: string; field: string }[] };
+  };
+  expect(incomplete.status()).toBe(422);
+  expect(incompleteBody.code).toBe("ACTIVITY_INCOMPLETE");
+  await expect(
+    page.getByText("Falten dades per publicar l'activitat: revisa els camps marcats."),
+  ).toBeVisible();
+  // The mocks copy this draft: no date nor hours on create, and the five fields named.
+  expect(created.date ?? null).toBeNull();
+  const incompleteFields = (incompleteBody.details?.fieldErrors ?? []).map((item) => item.field);
+  expect(incompleteFields).toEqual(
+    expect.arrayContaining(["date", "registrationFrom", "registrationTo", "startTime", "endTime"]),
+  );
+  for (const id of [
+    "activity-date",
+    "activity-start",
+    "activity-end",
+    "activity-registration-from",
+    "activity-registration-to",
+  ]) {
+    await expect(page.locator(`#${id}-error`)).toHaveText("Cal per publicar");
+  }
+  await expect(page.getByText("L'interval horari no és vàlid.")).toHaveCount(0);
+  page.off("request", recordPreview);
+  expect(previewsAsked).toEqual([]);
+  const authorization = (await ringSavedResponse.request().allHeaders()).authorization;
+  const activityUrl = ringSavedResponse.url();
+  const windowlessPreview = await coreCall(page, `${activityUrl}/ring-conflicts`, authorization);
+  expect(windowlessPreview.status).toBe(400);
+  expect(windowlessPreview.body.code).toBe("INVALID_TIME_RANGE");
+  await screenshot(page, "D7-publica-sense-hores-core-1280.png");
+  evidence.windowlessDraft = {
+    created: {
+      date: created.date ?? null,
+      endTime: created.endTime ?? null,
+      startTime: created.startTime ?? null,
+    },
+    preview: windowlessPreview,
+    publication: { body: incompleteBody, status: incomplete.status() },
+  };
+
   await card
     .getByLabel("Data", { exact: true })
     .fill(maskedDate(seminarSaturday).replaceAll("/", ""));
   await card.getByLabel("Hora d'inici").selectOption("18:30");
   await card.getByLabel("Hora de final").selectOption("20:30");
-  await card.getByRole("button", { exact: true, name: "Central" }).click();
+  // Central is already linked by the probe above.
+  await expect(central).toHaveAttribute("aria-pressed", "true");
   await card.getByLabel("Inscripció: de").fill(maskedDate(clubToday()).replaceAll("/", ""));
   await card
     .getByLabel("Inscripció: al")
@@ -868,6 +993,36 @@ test("T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every r
   }
   evidence.publicUrl = savedActivity.publicUrl ?? null;
   await screenshot(page, "D7-manteniment-core-1280.png");
+
+  // E4-W14 round 2 (review #1, T-07-04): a set-up window that does not contain the saved
+  // 18:30–20:30 (it ends at 19:30) is refused, by the draft's PATCH or else by the preview.
+  const savedAuthorization = (await savedResponse.request().allHeaders()).authorization;
+  const savedVersion = (savedActivity as { version?: number }).version;
+  const narrowed = await coreCall(page, activityUrl, savedAuthorization, "PATCH", {
+    ringBlockWindow: { fromTime: "18:30", toTime: "19:30" },
+    version: savedVersion,
+  });
+  let narrowPreview: Awaited<ReturnType<typeof coreCall>> | null = null;
+  if (narrowed.status === 200) {
+    narrowPreview = await coreCall(page, `${activityUrl}/ring-conflicts`, savedAuthorization);
+    expect(narrowPreview.status).toBe(400);
+    expect(narrowPreview.body.code).toBe("INVALID_TIME_RANGE");
+    const restored = await coreCall(page, activityUrl, savedAuthorization, "PATCH", {
+      ringBlockWindow: null,
+      version: narrowed.body.version,
+    });
+    expect(restored.status).toBe(200);
+  } else {
+    expect(narrowed.status).toBe(400);
+    expect(narrowed.body.code).toBe("INVALID_TIME_RANGE");
+  }
+  evidence.narrowWindow = {
+    patch: { code: narrowed.body.code ?? null, status: narrowed.status },
+    preview: narrowPreview,
+  };
+  // The maintenance reads the activity's new version.
+  await openFresh(page, `/activitats/${seminarId}`);
+  await expect(card.getByLabel("Hora de final")).toHaveValue("20:30");
 
   const conflictsResponse = page.waitForResponse(
     isCall("GET", new RegExp(`/api/v1/activities/${seminarId}/ring-conflicts$`, "u")),
@@ -964,10 +1119,7 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   await cancelDialog.getByRole("button", { name: "ANUL·LA LA INSCRIPCIÓ" }).click();
   expect((await memberCancellation).status()).toBe(200);
   await expect(member.getByText("Inscripció anul·lada")).toBeVisible();
-  await navigateClubRoute(member, "/inici");
-  await expect(
-    member.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") }),
-  ).toHaveCount(0);
+  evidence.mine03AfterCancelCa = await expectGoneFrom03(member, seminarId, seminarTitle);
 
   // The seeded full seminar (12/12 + 2 waiting): the member joins the waitlist at position 3.
   await navigateClubRoute(member, `/activitats/${handlingId}`);
@@ -1116,14 +1268,9 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
     .click();
   expect((await cancelled).status()).toBe(200);
   await expect(member.getByText("Inscripción anulada")).toBeVisible();
-  // E4-W14 (E4-W05 review #7): after her own cancellation the row leaves «Mis reservas» (checked
-  // once 03 has read her activities).
-  const activitiesRead = member.waitForResponse(isCall("GET", /\/api\/v1\/me\/activities$/u));
-  await navigateClubRoute(member, "/inici");
-  expect((await activitiesRead).status()).toBe(200);
-  await expect(
-    member.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") }),
-  ).toHaveCount(0);
+  // E4-W14 (E4-W05 review #7): after her own cancellation the row leaves «Mis reservas»; the
+  // core's answer carries no live entry for it (round 2, review #3).
+  evidence.mine03AfterCancelEs = await expectGoneFrom03(member, seminarId, seminarTitle);
   // Registered again, so that the club's cancellation below reaches a live registration.
   await navigateClubRoute(member, `/activitats/${seminarId}`);
   registration = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));

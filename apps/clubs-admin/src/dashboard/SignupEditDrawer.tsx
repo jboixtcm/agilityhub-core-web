@@ -12,7 +12,7 @@ import {
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { signupPerson } from "./readmission";
+import { loadDogDocumentTypes, signupPerson } from "./readmission";
 
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
@@ -416,11 +416,13 @@ function dogErrorText(cause: unknown, t: ReturnType<typeof useTranslation>["t"])
  * The submitted documents of the reused dog of a pending readmission (R-04-06, R-04-19; api
  * E3-T17, E5-T19). Its record is frozen, so they change only through `PATCH /dogs/{id}`, one type
  * at a time: a file is added by sending the type's kept `fileKey`s plus the new upload, removed by
- * sending the kept ones; the last file of a type withdraws it (`files: []`), and the validation
- * then keeps the dog's own document. A kept file keeps its stored name, so there is no rename. The
- * PATCH answers the dog record: the parent keeps what was sent (and the version answered) until
- * the view, read again, catches up. The club's document types (`census.dogDocumentTypes`) label
- * the choice, since the frozen record's own rows are not the list.
+ * sending the kept ones; the last file of a type withdraws it (`files: []`), and the view then shows
+ * the dog's own row for that type again (R-04-06), which the validation keeps. A row that is the
+ * record's own (`own`) offers no [Retira]: the api cannot withdraw it (a no-op). A kept file keeps
+ * its stored name, so there is no rename. The PATCH answers the dog record: the parent keeps what
+ * was sent (and the version answered) until the view, read again, catches up. The club's document
+ * types (`census.dogDocumentTypes`) label the choice, since the frozen record's own rows are not
+ * the list.
  */
 function ReadmissionDogDocuments({
   busy,
@@ -431,6 +433,7 @@ function ReadmissionDogDocuments({
   onBusy,
   onReload,
   onSent,
+  own,
   version,
 }: {
   busy: boolean;
@@ -441,6 +444,8 @@ function ReadmissionDogDocuments({
   onBusy: (busy: boolean) => void;
   onReload: () => void;
   onSent: (sent: SentDocuments) => void;
+  /** The record's own documents (`readmission.current.documents`). */
+  own: readonly SubmittedDocument[];
   version: number;
 }) {
   const { i18n, t } = useTranslation(["admin-census", "errors"]);
@@ -453,21 +458,9 @@ function ReadmissionDogDocuments({
 
   useEffect(() => {
     let active = true;
-    client.GET("/parameters/{key}", { params: { path: { key: "census.dogDocumentTypes" } } }).then(
-      (result) => {
-        if (!active) return;
-        const value = Array.isArray(result.data?.value) ? (result.data.value as unknown[]) : [];
-        setTypes(
-          value.flatMap((item) => {
-            if (typeof item !== "object" || item === null) return [];
-            const entry = item as { key?: unknown; label?: unknown };
-            if (typeof entry.key !== "string") return [];
-            const labels =
-              typeof entry.label === "object" && entry.label !== null ? (entry.label as Record<string, unknown>) : {};
-            const label = labels[i18n.resolvedLanguage ?? i18n.language] ?? Object.values(labels)[0];
-            return [{ key: entry.key, label: typeof label === "string" ? label : entry.key }];
-          }),
-        );
+    loadDogDocumentTypes(client, i18n.resolvedLanguage ?? i18n.language).then(
+      (loaded) => {
+        if (active) setTypes(loaded);
       },
       (cause: unknown) => {
         if (!active) return;
@@ -486,6 +479,14 @@ function ReadmissionDogDocuments({
       fileKey: item.fileKey,
       name: item.name,
     }));
+  const ownRow = (documentType: string) => own.find((document) => document.type === documentType);
+  const keysOf = (document: SubmittedDocument | undefined) =>
+    (document?.files ?? []).map((item) => item.fileKey).join("\n");
+  /** The row shown is the record's own, not a submitted one: nothing of it can be withdrawn. */
+  const isOwnRow = (document: SubmittedDocument) => {
+    const record = ownRow(document.type);
+    return record !== undefined && keysOf(record) === keysOf(document);
+  };
 
   /** One type's files as they must be after the change, sent with the dog's version. */
   const send = async (documentType: string, files: SubmittedDocument["files"], action: string) => {
@@ -497,12 +498,14 @@ function ReadmissionDogDocuments({
         body: { documents: [{ files: files.map(({ fileKey, name }) => ({ fileKey, name })), type: documentType }], version },
         params: { path: { id: dogId } },
       });
+      // A withdrawn type shows the record's own row again, or no row when the record has none.
+      const row = files.length === 0 ? ownRow(documentType) : { files, type: documentType };
       const next =
-        files.length === 0
+        row === undefined
           ? documents.filter((document) => document.type !== documentType)
           : documents.some((document) => document.type === documentType)
-            ? documents.map((document) => (document.type === documentType ? { files, type: documentType } : document))
-            : [...documents, { files, type: documentType }];
+            ? documents.map((document) => (document.type === documentType ? row : document))
+            : [...documents, row];
       onSent({ documents: next, version: result.data?.version ?? version + 1 });
       onReload();
       return true;
@@ -573,14 +576,16 @@ function ReadmissionDogDocuments({
                   <Icon aria-hidden="true" name="doc" /> {documentFile.name}
                 </a>
               )}
-              <Button
-                disabled={disabled && pending !== documentFile.fileKey}
-                loading={pending === documentFile.fileKey}
-                onClick={() => void remove(document.type, documentFile.fileKey)}
-                variant="ghost"
-              >
-                {t("admin-census:dog.documents.remove")}
-              </Button>
+              {isOwnRow(document) ? null : (
+                <Button
+                  disabled={disabled && pending !== documentFile.fileKey}
+                  loading={pending === documentFile.fileKey}
+                  onClick={() => void remove(document.type, documentFile.fileKey)}
+                  variant="ghost"
+                >
+                  {t("admin-census:dog.documents.remove")}
+                </Button>
+              )}
             </li>
           )),
         )}
@@ -963,6 +968,7 @@ export function SignupEditDrawer({
                   onSent={(next) => {
                     setSentDocuments((current) => ({ ...current, [dog.id]: next }));
                   }}
+                  own={dog.readmission?.current.documents ?? []}
                   version={dogVersion(dog)}
                 />
               ) : (

@@ -187,7 +187,7 @@ export function ClassForm({
         ? ""
         : String(autoCapacity);
 
-  const showError = (error: unknown) => {
+  const errorsOf = (error: unknown): Partial<Record<FieldKey, string>> => {
     const code = errorCode(error);
     const validationField = fieldOfValidationError(error);
     const field: FieldKey =
@@ -199,13 +199,18 @@ export function ClassForm({
       code === undefined
         ? t("admin-scheduling:common.error")
         : t(`errors:${code}`, { defaultValue: t("admin-scheduling:common.error") });
-    setErrors({ [field]: message });
+    return { [field]: message };
+  };
+
+  const showError = (error: unknown) => {
+    setErrors(errorsOf(error));
   };
 
   /** Edit mode: the change shows at once and is sent through the parent's PATCH queue; if it
    * fails or the queue drops it, only the fields of that PATCH go back to the last saved class
    * (the chips never show an unsaved value), and text still being typed in «Descripció» or
-   * «Límit» stays. A dropped change keeps the message of the change that caused the drop. */
+   * «Límit» stays. A dropped change keeps the message of the change that caused the drop, and
+   * shows that message when nothing is shown (a form that is gone leaves it to the page). */
   const change = async (patch: ClassFormPatch, next: Partial<ClassFormValues>) => {
     setValues((current) => ({ ...current, ...next }));
     setErrors({});
@@ -228,7 +233,12 @@ export function ClassForm({
           ...Object.fromEntries(fields.map((field) => [field, restored[field]])),
         }));
       }
-      if (!(error instanceof DroppedChangeError)) showError(error);
+      if (!(error instanceof DroppedChangeError)) {
+        showError(error);
+      } else if (error.refusal !== undefined) {
+        const refusal = errorsOf(error.refusal);
+        setErrors((shown) => (Object.keys(shown).length > 0 ? shown : refusal));
+      }
     }
   };
 

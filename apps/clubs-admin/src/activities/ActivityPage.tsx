@@ -571,11 +571,11 @@ export function ActivityPage({
    * rejects so the dialog shows it; a stale version or a field error closes the dialog and
    * lands on the form.
    */
-  const save = async (options?: ConflictOptions): Promise<boolean> => {
+  const save = async (options?: ConflictOptions): Promise<Activity | undefined> => {
     const body = diff();
     if (body === undefined) {
       setConflictDialog(undefined);
-      return false;
+      return undefined;
     }
     setPending("save");
     setErrors({});
@@ -587,7 +587,7 @@ export function ActivityPage({
       if (result.data === undefined) throw new TypeError("Missing saved activity");
       applySaved(result.data, t("admin-activities:form.saved"));
       setConflictDialog(undefined);
-      return true;
+      return result.data;
     } catch (cause) {
       if (options !== undefined) {
         if (isConflict(cause)) {
@@ -605,7 +605,7 @@ export function ActivityPage({
         setConflictDialog(undefined);
       }
       failSave(cause);
-      return false;
+      return undefined;
     } finally {
       setPending(undefined);
     }
@@ -692,12 +692,30 @@ export function ActivityPage({
   /**
    * [PUBLICA]: the conflicts preview first (R-07-05). It builds the same ring-block window as the
    * publication, so it answers `422 OUTSIDE_OPENING_HOURS` / `400 INVALID_TIME_RANGE` for a window
-   * the publication would refuse (S07 §6): those land on the date and times, as a save's.
+   * the publication would refuse (S07 §6): those land on the date and times, as a save's. Rings
+   * without a date or both hours have no window at all (the preview's 400 names no field), so the
+   * publication is asked directly: its `422 ACTIVITY_INCOMPLETE` marks every empty field (R-07-04).
    */
   const startPublish = async () => {
-    if (dirty && !(await save())) return;
+    const saved = dirty ? await save() : activity;
+    if (saved === undefined) return;
     setPending("publish");
     setErrors({});
+    const windowless =
+      saved.location.atClub &&
+      saved.ringIds.length > 0 &&
+      [saved.date, saved.startTime, saved.endTime].some((value) => value == null);
+    if (windowless) {
+      publicationKeys.reset();
+      try {
+        await publishWith({ notifyEmail: false }, "confirm");
+      } catch (cause) {
+        showOnFields(cause);
+      } finally {
+        setPending(undefined);
+      }
+      return;
+    }
     try {
       const result = await client.GET("/activities/{id}/ring-conflicts", {
         params: { path: { id: activity.id } },
