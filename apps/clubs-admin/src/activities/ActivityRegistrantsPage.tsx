@@ -275,11 +275,19 @@ export function ActivityRegistrantsPage({
       {
         key: "contact",
         label: t("admin-activities:registrants.columns.contact"),
-        render: (item: ActivityRegistrationListItem) =>
-          [
+        // AGENTS rule 6: a long e-mail is clipped with an ellipsis so the table fits 1280 px; the
+        // full value stays in the text (screen readers) and in the tooltip.
+        render: (item: ActivityRegistrationListItem) => {
+          const contact = [
             ...item.member.phones.map((phone) => `${phone.prefix} ${phone.number}`),
             ...item.member.emails,
-          ].join(t("admin-activities:registrants.contactSeparator")),
+          ].join(t("admin-activities:registrants.contactSeparator"));
+          return (
+            <span className="activity-registrants__contact" title={contact}>
+              {contact}
+            </span>
+          );
+        },
       },
     ],
     [formats, stateLabel, t],

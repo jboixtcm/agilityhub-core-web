@@ -249,6 +249,8 @@
     "fields": {
       "name": "Name",
       "idDocument": "ID document",
+      "passport": "Passport",
+      "otherDocument": "Other document",
       "contact": "Contact",
       "family": "Family group",
       "payment": "Payment",
@@ -294,7 +296,6 @@
     "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/month} other {}}",
     "upfront": "Initial payment (advance)",
     "actuallyPaid": "Amount actually collected:",
-    "attachments": "{count, plural, one {# attachment} other {# attachments}}",
     "upfrontBreakdown": "{lines} · the payment is recorded; invoicing is handled in accounting",
     "upfrontLines": {
       "ENTRY_FEE": "Joining fee {amount}",

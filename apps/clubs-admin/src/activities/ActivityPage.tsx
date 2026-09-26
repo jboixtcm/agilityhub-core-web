@@ -1477,8 +1477,12 @@ export function ActivityPage({
             <Badge tone={stateTone[activity.state]}>
               {t(`enums:activityState.${activity.state}`)}
             </Badge>
+            {/* The core sends `publicUrl: null` when the club has no public web: no URL line (the
+                empty slot keeps [DESA] at the end of the row). */}
             <span className="activity-status__url">
-              {t("admin-activities:form.publicUrl", { url: displayUrl(activity.publicUrl) })}
+              {activity.publicUrl == null || activity.publicUrl.trim() === ""
+                ? null
+                : t("admin-activities:form.publicUrl", { url: displayUrl(activity.publicUrl) })}
             </span>
             {admin ? (
               <Button

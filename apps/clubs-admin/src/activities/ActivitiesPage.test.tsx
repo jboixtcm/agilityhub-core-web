@@ -62,19 +62,31 @@ afterAll(() => {
   server.close();
 });
 
-function client() {
-  return createApiClient({ baseUrl: `${window.location.origin}/api/v1`, getLocale: () => "ca" });
+function client(fetchOverride?: typeof fetch) {
+  return createApiClient({
+    baseUrl: `${window.location.origin}/api/v1`,
+    getLocale: () => "ca",
+    ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }),
+  });
 }
 
 async function renderPage({
+  fetchOverride,
   modules = branding.modules,
   readOnly = false,
+  search = "",
   selectedId,
-}: { modules?: readonly string[]; readOnly?: boolean; selectedId?: string } = {}) {
+}: {
+  fetchOverride?: typeof fetch;
+  modules?: readonly string[];
+  readOnly?: boolean;
+  search?: string;
+  selectedId?: string;
+} = {}) {
   window.history.replaceState(
     null,
     "",
-    selectedId === undefined ? "/activitats" : `/activitats/${selectedId}`,
+    `${selectedId === undefined ? "/activitats" : `/activitats/${selectedId}`}${search}`,
   );
   const clubBranding: Branding = { ...branding, modules: [...modules] };
   const i18n = await createI18n({
@@ -88,7 +100,7 @@ async function renderPage({
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={clubBranding}>
         <ActivitiesPage
-          client={client()}
+          client={client(fetchOverride)}
           onNavigate={onNavigate}
           readOnly={readOnly}
           {...(selectedId === undefined ? {} : { selectedId })}
@@ -1379,5 +1391,93 @@ describe("T-07-29 E4-W11 D7 follow-ups of the E4-W10 review", () => {
       expect(openingHours.seen.map((request) => request.method)).toEqual(["GET"]);
     });
     openingHours.stop();
+  });
+});
+
+describe("T-07-29 E4-W12 D7 real-core follow-ups of E4-W05", () => {
+  it("AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}»", async () => {
+    const lists = recordRequests("/activities");
+    await renderPage({ search: "?fields=date,state" });
+    const table = await screen.findByRole("table");
+    await waitFor(() => {
+      expect(within(table).getAllByText("publicada").length).toBeGreaterThan(0);
+    });
+    expect(within(table).queryByRole("columnheader", { name: /Activitat/u })).toBeNull();
+    const fields = lists.seen
+      .filter((entry) => entry.url.searchParams.has("fields"))
+      .at(-1)
+      ?.url.searchParams.get("fields");
+    expect(fields?.split(",")).toEqual(expect.arrayContaining(["id", "title"]));
+    // The chevron link of each row is named by `labels.selectRow`.
+    expect(within(table).getByRole("link", { name: "Obre Torneig d'Estiu 2026" })).toBeVisible();
+    expect(within(table).getByRole("link", { name: "Obre Seminari de handling" })).toBeVisible();
+    expect(within(table).queryByRole("link", { name: /^Obre\s*(null)?$/u })).toBeNull();
+    lists.stop();
+  });
+
+  it("S07 §2 D7: the maintenance block hides its «URL» line when the core sends `publicUrl: null`", async () => {
+    // The real core sends `publicUrl: null` when the club has no public web.
+    const withoutPublicWeb: typeof fetch = async (input, init) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      const response = await fetch(request);
+      if (request.method !== "GET" || !response.ok) return response;
+      if (!new URL(request.url).pathname.endsWith(`/activities/${TOURNAMENT}`)) return response;
+      const body = (await response.json()) as Record<string, unknown>;
+      return Response.json({ ...body, publicUrl: null }, { status: response.status });
+    };
+    await renderPage({ fetchOverride: withoutPublicWeb, selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    expect(within(card).getByText("publicada")).toBeVisible();
+    expect(within(card).queryByText(/^URL:/u)).toBeNull();
+    expect(within(card).queryByText(/surt a l'API de la web/u)).toBeNull();
+    expect(within(card).getByRole("link", { name: "Inscrits (22) ›" })).toBeVisible();
+  });
+
+  it("AGENTS rule 6: a long registrant e-mail is truncated in its cell and keeps its full value in the title", async () => {
+    const long = "demo.42dad41d-f913-419f-93a6-1832477b4c12.21@example.test";
+    const longEmails: typeof fetch = async (input, init) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      const response = await fetch(request);
+      if (request.method !== "GET" || !response.ok) return response;
+      if (!new URL(request.url).pathname.endsWith(`/activities/${WORKSHOP}/registrations`)) {
+        return response;
+      }
+      const body = (await response.json()) as { items: { member: { emails: string[] } }[] };
+      body.items.forEach((item, index) => {
+        if (index === 0) item.member.emails = [long];
+      });
+      return Response.json(body, { status: response.status });
+    };
+    window.history.replaceState(null, "", `/activitats/${WORKSHOP}/inscrits`);
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-activities", "census", "enums", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ActivityRegistrantsPage
+            activityId={WORKSHOP}
+            client={client(longEmails)}
+            onNavigate={vi.fn()}
+            readOnly={false}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const table = await screen.findByRole("table");
+    const contact = await within(table).findByText(new RegExp(long.replaceAll(".", "\\."), "u"));
+    expect(contact).toHaveClass("activity-registrants__contact");
+    // The full value stays readable (tooltip and text); the cell only clips it visually.
+    expect(contact).toHaveAttribute("title", contact.textContent);
+    expect(contact.textContent).toContain(long);
+    for (const cell of within(table)
+      .getAllByRole("cell")
+      .filter((item) => item.textContent.includes("@"))) {
+      expect(cell.querySelector(".activity-registrants__contact")).not.toBeNull();
+    }
+    expect(screen.getByText("Excel · PDF")).toBeVisible();
   });
 });

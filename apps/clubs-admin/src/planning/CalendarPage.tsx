@@ -72,8 +72,41 @@ interface Feedback {
 }
 
 type CalendarCell =
-  | { block: RingBlock; columnId: string; id: string; kind: "block" }
+  | { allRings?: boolean; block: RingBlock; columnId: string; id: string; kind: "block" }
   | { columnId: string; id: string; kind: "class"; session: ClassSession };
+
+/**
+ * S06 §2 D4 (E4-W12): the blocks of an activity that covers every active ring in the same band
+ * are drawn as one cell «Activitat · {title} · totes les pistes» (the first block stands for them);
+ * any other block keeps its own cell.
+ */
+function mergeAllRingActivityBlocks(
+  blocks: readonly RingBlock[],
+  activeRingIds: readonly string[],
+): { allRings: boolean; block: RingBlock }[] {
+  const bandOf = (block: RingBlock) =>
+    `${block.activityId ?? ""}|${block.date}|${block.fromLocal}|${block.toLocal}`;
+  const ringsOfBand = new Map<string, Set<string>>();
+  for (const block of blocks) {
+    if (block.activityId === null || block.activityId === undefined) continue;
+    const rings = ringsOfBand.get(bandOf(block)) ?? new Set<string>();
+    rings.add(block.ringId);
+    ringsOfBand.set(bandOf(block), rings);
+  }
+  const everyRing = (band: string) =>
+    activeRingIds.length > 1 &&
+    activeRingIds.every((ringId) => ringsOfBand.get(band)?.has(ringId) === true);
+  const drawn = new Set<string>();
+  return blocks.flatMap((block): { allRings: boolean; block: RingBlock }[] => {
+    const band = bandOf(block);
+    if (block.activityId === null || block.activityId === undefined || !everyRing(band)) {
+      return [{ allRings: false, block }];
+    }
+    if (drawn.has(band)) return [];
+    drawn.add(band);
+    return [{ allRings: true, block }];
+  });
+}
 
 function readQuery(): {
   classId: string | undefined;
@@ -484,6 +517,10 @@ export function CalendarPage({
     });
   }, [current, filter, formatPlainDate, monday, onNavigate]);
 
+  const activeRingIds = useMemo(
+    () => (cat?.rings ?? []).filter((ring) => ring.active).map((ring) => ring.id),
+    [cat],
+  );
   const rows = useMemo(
     () =>
       (current?.rows ?? []).map((time) => ({
@@ -496,19 +533,21 @@ export function CalendarPage({
               kind: "class",
               session,
             })),
-          ...(current?.ringBlocks ?? [])
-            .filter((block) => block.fromLocal === time)
-            .map((block): CalendarCell => ({
-              block,
-              columnId: block.date,
-              id: block.id,
-              kind: "block",
-            })),
+          ...mergeAllRingActivityBlocks(
+            (current?.ringBlocks ?? []).filter((block) => block.fromLocal === time),
+            activeRingIds,
+          ).map(({ allRings, block }): CalendarCell => ({
+            allRings,
+            block,
+            columnId: block.date,
+            id: block.id,
+            kind: "block",
+          })),
         ],
         id: time,
         label: timeLabel(time),
       })),
-    [current],
+    [activeRingIds, current],
   );
 
   const countsOf = (session: ClassSession) =>
@@ -529,12 +568,14 @@ export function CalendarPage({
         const title = t("admin-scheduling:calendar.cell.activity", {
           title: block.activityTitle ?? "",
         });
+        const place =
+          cell.allRings === true ? t("admin-scheduling:calendar.cell.allRings") : ringName;
         return (
           <ScheduleCell
             href={`/activitats/${block.activityId}`}
             icon="flag"
-            label={title}
-            subtitle={`${ringName} · ${block.fromLocal}–${block.toLocal}`}
+            label={cell.allRings === true ? `${title} · ${place}` : title}
+            subtitle={`${place} · ${block.fromLocal}–${block.toLocal}`}
             title={title}
           />
         );

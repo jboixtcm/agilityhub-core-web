@@ -9276,6 +9276,8 @@ export interface components {
             price?: components["schemas"]["SignupPrice"];
             /** @enum {string} */
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
+            /** @description S05 R-05-19 / S04 R-04-09 (E4-W12 step 3): Plan.texts.priceLabel in the reader's locale, the text screen 17 shows in the price slot of a plan without a current price («condicions i cost segons cada cas»). Omitted when the plan has none. */
+            priceLabel?: string;
         };
         SignupPlanOption: {
             name: string;

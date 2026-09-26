@@ -167,12 +167,29 @@ describe("club-aware formats", () => {
           "2026-08-07T18:30",
           "2026-08-07T20:30",
           "day",
+          today,
         ),
       ).toBe("Divendres 7 · 18:30–20:30");
       expect(formats.formatActivityDate("2026-07-12T10:00", "10:00", null, "history")).toBe(
         "dg 12/07",
       );
     });
+
+    it.each([
+      ["ca", "2026-10-17", "2026-09-26", "Dissabte 17 d’octubre · 18:30–20:30"],
+      ["ca", "2026-10-17", "2026-10-01", "Dissabte 17 · 18:30–20:30"],
+      ["es", "2026-10-17", "2026-09-26", "Sábado 17 de octubre · 18:30–20:30"],
+      ["en", "2026-10-17", "2026-09-26", "Saturday, October 17 · 18:30–20:30"],
+      // «Today» is the club's date: 23:30 on 30 September in Madrid is already 1 October there.
+      ["ca", "2026-10-17", "2026-09-30T22:30:00Z", "Dissabte 17 · 18:30–20:30"],
+    ] as const)(
+      "E4-W12 step 7: 03 (`day`) in %s reads %s on %s as «%s»",
+      (locale, date, today, expected) => {
+        expect(
+          formatActivityDate(date, "18:30", "20:30", locale, "Europe/Madrid", today, "day"),
+        ).toBe(expected);
+      },
+    );
 
     it.each([
       ["es", "sáb 12/09 · 9:00–13:00"],

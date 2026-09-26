@@ -1,0 +1,212 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/SignupPage.test.tsx (94 tests | 4 failed | 90 skipped) 166ms
+   ❯ E3-W08 step 5: screens 16 and 17 and the public shell (11)
+     × E4-W12 step 3 (R-04-09, S05 R-05-19): the Cànic's Teràpia shows its priceLabel in the price slot and its conditions in the body 97ms
+     × E4-W12 step 3: the priceLabel comes in the reader's language and a plan without price or label leaves the slot empty 25ms
+     × E4-W12 step 4 (T-04-32): the add-dog keeps the member's plan: one read-only line with its name and price, no cards and no selection 20ms
+     × E4-W12 step 4: an add-dog member whose plan is not offered on the form sees no plan cards and keeps that plan 23ms
+ ❯ src/activities/activities.test.tsx (27 tests | 1 failed | 26 skipped) 10034ms
+   ❯ T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 (19)
+     × E4-W12 step 7 (R-07-13): 03 names the month of a date in another month: «Dissabte 17 d’octubre · 18:30–20:30 · Central» 10032ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 3 (R-04-09, S05 R-05-19): the Cànic's Teràpia shows its priceLabel in the price slot and its conditions in the body
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"signup-plan__price-label"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  signup-plan__price-label[39m
+Received:
+[31m  signup-plan__conditions[39m
+ ❯ src/SignupPage.test.tsx:1831:24
+    1829|     // The price slot: «Teràpia · condicions i cost segons cada cas», …
+    1830|     const priceLabel = within(therapy).getByText("condicions i cost se…
+    1831|     expect(priceLabel).toHaveClass("signup-plan__price-label");
+       |                        ^
+    1832|     expect(therapyHead).toContainElement(priceLabel);
+    1833|     // `conditions` stays in the body, as on the other cards.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 3: the priceLabel comes in the reader's language and a plan without price or label leaves the slot empty
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Teràpia$/u[39m
+Received:
+[31m  Teràpiacondicions i cost segons cada cas[39m
+ ❯ src/SignupPage.test.tsx:1854:57
+    1852|     await renderSignup({ path: "/apuntat-hi/gos" });
+    1853|     const therapy = screen.getByRole("button", { name: "Selecciona Ter…
+    1854|     expect(therapy.querySelector(".signup-plan__head")).toHaveTextCont…
+       |                                                         ^
+    1855|     expect(therapy.querySelector(".signup-plan__conditions")).toHaveTe…
+    1856|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 4 (T-04-32): the add-dog keeps the member's plan: one read-only line with its name and price, no cards and no selection
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^ModalitatAbonat · 60,00\s€\/mes$/u[39m
+Received:
+[31m  ModalitatAbonat60,00 €/mesEntrada 100,00 €Ofertes si es porta més d'un gos per famíliaPack 6135,00 € · 3 mesosNomés un copACTIVARPack 10180,00 € · 5 mesosNomés un cop · després 40% dte. en matrículaTeràpiacondicions i cost segons cada casEntrada a compte: 50,00 € · quota mínima durant el tractament: 10,00 €/mes[39m
+ ❯ src/SignupPage.test.tsx:1873:22
+    1871|
+    1872|     const modality = screen.getByRole("region", { name: "Modalitat" });
+    1873|     expect(modality).toHaveTextContent(/^ModalitatAbonat · 60,00\s€\/m…
+       |                      ^
+    1874|     expect(within(modality).queryAllByRole("button")).toHaveLength(0);
+    1875|     expect(screen.queryAllByRole("button", { name: /^Selecciona /u }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 4: an add-dog member whose plan is not offered on the form sees no plan cards and keeps that plan
+AssertionError: expected [ <button …(3)>…(3)</button>, …(3) ] to have a length of +0 but got 4
+
+- Expected
++ Received
+
+- 0
++ 4
+
+ ❯ src/SignupPage.test.tsx:1916:72
+    1914|     await renderSignup({ addDog: true, navigate, path: "/gossos/nou" }…
+    1915|     expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+    1916|     expect(screen.queryAllByRole("button", { name: /^Selecciona /u }))…
+       |                                                                        ^
+    1917|     expect(screen.queryByRole("region", { name: "Modalitat" })).not.to…
+    1918|     expect(screen.queryByText("Pack 6")).not.toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > E4-W12 step 7 (R-07-13): 03 names the month of a date in another month: «Dissabte 17 d’octubre · 18:30–20:30 · Central»
+TestingLibraryElementError: Unable to find an element with the text: Dissabte 17 d’octubre · 18:30–20:30 · Central. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card activity-row activity-row--reservation"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"activity-row__body activity-row__body--two-lines"[39m
+        [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"activity-row__line"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon activity-row__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"activity-row__title"[39m
+          [36m>[39m
+            [0mSeminari E4[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0minscrita[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"activity-row__line activity-row__line--muted"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDissabte 17 · 18:30–20:30 · Central[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon activity-row__chevron"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</span>[39m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card activity-row activity-row--reservation"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"activity-row__body activity-row__body--two-lines"[39m
+        [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"activity-row__line"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon activity-row__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"activity-row__title"[39m
+          [36m>[39m
+            [0mSeminari E4[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0minscrita[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"activity-row__line activity-row__line--muted"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mDissabte 17 · 18:30–20:30 · Central[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon activity-row__chevron"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</span>[39m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:266:25
+    264|     };
+    265|     await renderWith(<ActivityReservationRow registration={october} />…
+    266|     expect(await screen.findByText("Dissabte 17 d’octubre · 18:30–20:3…
+       |                         ^
+    267|   });
+    268|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 116 skipped (121)
+   Start at  02:47:22
+   Duration  10.86s (tests 87%, transform 5%, environment 5%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/SignupPage.test.tsx src/activities/activities.test.tsx -t E4-W12

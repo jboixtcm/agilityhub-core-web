@@ -169,9 +169,9 @@ export function formatWeekRange(
 
 /**
  * R-07-13 presentations of an activity date: `list` (D7 list, 04 block) «ds 7» in the current
- * month, otherwise «ds 12/09»; `long` (D7 maintenance) «ds 7 d’agost»; `day` (03) «Dissabte 7»;
- * `history` (25) always «ds 12/07». `list`, `long` and `day` append « · 18:30[–20:30]» (hours
- * without a leading zero) when there are hours.
+ * month, otherwise «ds 12/09»; `long` (D7 maintenance) «ds 7 d’agost»; `day` (03) «Dissabte 7» in
+ * the current month, otherwise «Dissabte 17 d’octubre»; `history` (25) always «ds 12/07». `list`,
+ * `long` and `day` append « · 18:30[–20:30]» (hours without a leading zero) when there are hours.
  */
 export type ActivityDatePresentation = "day" | "history" | "list" | "long";
 
@@ -227,10 +227,18 @@ export function formatActivityDate(
       weekday,
     });
   } else if (presentation === "day") {
-    label = translateStatic("common:format.activityDate.currentMonth", locale, {
-      day,
-      weekday: `${weekday.charAt(0).toLocaleUpperCase(locale)}${weekday.slice(1)}`,
-    });
+    // 03: «Dissabte 7» in the club's current month, «Dissabte 17 d’octubre» in another one.
+    const capitalized = `${weekday.charAt(0).toLocaleUpperCase(locale)}${weekday.slice(1)}`;
+    label =
+      clubLocalDate(today, timeZone).slice(0, 7) === localDate.slice(0, 7)
+        ? translateStatic("common:format.activityDate.currentMonth", locale, {
+            day,
+            weekday: capitalized,
+          })
+        : translateStatic("common:format.activityDate.long", locale, {
+            dayMonth: formatPlainDate(localDate, locale, "dayMonth"),
+            weekday: capitalized,
+          });
   } else {
     const sameMonth =
       presentation === "list" &&

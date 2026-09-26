@@ -53,7 +53,11 @@ async function renderPage(kind: "dogs" | "members") {
 
 describe("T-03-38 D5 universal member list", () => {
   it("renders applied filters and preserves selection when page size changes", async () => {
-    window.history.pushState(null, "", "/abonats?size=20");
+    window.history.pushState(
+      null,
+      "",
+      "/abonats?size=20&filter=status:eq:ACTIVE&filter=planId:eq:plan-member",
+    );
     await renderPage("members");
 
     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
@@ -68,6 +72,76 @@ describe("T-03-38 D5 universal member list", () => {
 
     expect(screen.getByText("1 seleccionat — accions massives:")).toBeVisible();
     expect(new URLSearchParams(window.location.search).get("size")).toBe("50");
+  });
+
+  it("E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members", async () => {
+    // The real core's plan ids are UUIDs: `plan-member` exists only in the MSW fixture.
+    const coreMembers = [
+      {
+        fullName: "Aina Fictícia Riera",
+        id: "7d0f4a9e-0000-4000-8000-000000000001",
+        memberNumber: 1,
+        planId: "5b0c1e2a-0000-4000-8000-000000000011",
+      },
+      {
+        fullName: "Pol Fictici Serra",
+        id: "7d0f4a9e-0000-4000-8000-000000000002",
+        memberNumber: 2,
+        planId: "5b0c1e2a-0000-4000-8000-000000000012",
+      },
+    ].map((member) => ({
+      contact: "",
+      displayStatus: { kind: "ACTIVE", label: "alta" },
+      dogs: [],
+      fullName: member.fullName,
+      id: member.id,
+      memberNumber: member.memberNumber,
+      plan: { id: member.planId, name: "Abonat", summary: "Abonat · 60 €" },
+      status: "ACTIVE",
+    }));
+    const requested: { fields: string | null; filters: string[] }[] = [];
+    server.use(
+      http.get("*/api/v1/members", ({ request }) => {
+        const url = new URL(request.url);
+        const filters = url.searchParams.getAll("filter");
+        requested.push({ fields: url.searchParams.get("fields"), filters });
+        // Like the core: an equality filter on an unknown plan id matches nobody.
+        const items = coreMembers.filter((member) =>
+          filters.every((filter) => {
+            const [field, , value] = filter.split(":");
+            if (field === "planId") return member.plan.id === value;
+            if (field === "status") return member.status === value;
+            return true;
+          }),
+        );
+        return HttpResponse.json({
+          appliedFilters: filters.map((filter) => {
+            const [field = "", op = "eq", value = ""] = filter.split(":");
+            return { field, label: field, op, value, valueLabel: value };
+          }),
+          items,
+          page: 0,
+          size: 50,
+          totalItems: items.length,
+          totalPages: items.length === 0 ? 0 : 1,
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/abonats");
+    await renderPage("members");
+
+    expect(await screen.findByText("Aina Fictícia Riera")).toBeVisible();
+    expect(screen.getByText("Pol Fictici Serra")).toBeVisible();
+    expect(screen.queryByText("Cap abonat amb aquests criteris")).not.toBeInTheDocument();
+    // The list request (its visible columns, not the «d'alta» count's `id`) carries the chip only.
+    const listRequests = requested.filter((request) => request.fields !== "id");
+    expect(listRequests.length).toBeGreaterThan(0);
+    for (const request of listRequests) expect(request.filters).toEqual(["status:eq:ACTIVE"]);
+    expect(screen.getByRole("combobox", { name: "Estat dels abonats" })).toHaveValue("ACTIVE");
+    expect(screen.queryByText(/Filtre \(\d+\)/u)).not.toBeInTheDocument();
+    expect(new URLSearchParams(window.location.search).getAll("filter")).not.toContainEqual(
+      expect.stringMatching(/^planId:/u),
+    );
   });
 
   it("toggles visible columns and synchronizes the ordered fields to the URL", async () => {

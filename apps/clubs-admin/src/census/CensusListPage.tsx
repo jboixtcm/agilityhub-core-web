@@ -54,9 +54,9 @@ const DOG_DEFAULT_COLUMNS = [
   "licenses",
   "displayStatus",
 ];
+// S03 §2 D5: only the status chip «Alta» applies by default; the universal filter starts inactive.
 const MEMBER_DEFAULT_FILTERS: UniversalFilter[] = [
   { field: "status", operator: "eq", value: "ACTIVE" },
-  { field: "planId", operator: "eq", value: "plan-member" },
 ];
 const DOG_DEFAULT_FILTERS: UniversalFilter[] = [
   { field: "status", operator: "eq", value: "ACTIVE" },
@@ -277,9 +277,7 @@ function useSyncedListState(kind: CensusKind, modules: readonly string[]) {
           columns: MEMBER_DEFAULT_COLUMNS.filter(
             (column) => column !== "plan" || modules.includes("BILLING"),
           ),
-          filters: MEMBER_DEFAULT_FILTERS.filter(
-            (filter) => filter.field !== "planId" || modules.includes("BILLING"),
-          ),
+          filters: MEMBER_DEFAULT_FILTERS,
           size: 50 as const,
           sort: ["memberNumber,asc"],
         }

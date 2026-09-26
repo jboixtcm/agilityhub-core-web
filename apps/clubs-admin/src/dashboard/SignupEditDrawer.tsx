@@ -59,6 +59,16 @@ interface DogForm {
 type PersonTextKey = Exclude<keyof PersonForm, "gender" | "paymentType">;
 type DogTextKey = Exclude<keyof DogForm, "notesToInstructors" | "sex">;
 
+/** The identity document's label names its type (R-04-01): DNI and NIE share «DNI/NIE». */
+export function idDocumentLabel(
+  type: string | null | undefined,
+  t: (key: string) => string,
+): string {
+  if (type === "PASSPORT") return t("admin-census:signupReview.fields.passport");
+  if (type === "OTHER") return t("admin-census:signupReview.fields.otherDocument");
+  return t("admin-census:signupReview.fields.idDocument");
+}
+
 /** `paymentType` is the view's current method (R-04-19), `""` without one. */
 function personForm(member: Member, paymentType: PaymentType | ""): PersonForm {
   const [email1, email2] = member.contactEmails;
@@ -540,7 +550,7 @@ export function SignupEditDrawer({
             </Select>
           </FormField>
           {readmissionPending ? (
-            <FormField id="signup-edit-idDocument" label={t("admin-census:signupReview.fields.idDocument")}>
+            <FormField id="signup-edit-idDocument" label={idDocumentLabel(member.idDocument?.type, t)}>
               <Input
                 aria-describedby="signup-edit-idDocument-help"
                 id="signup-edit-idDocument"
@@ -552,7 +562,7 @@ export function SignupEditDrawer({
               </small>
             </FormField>
           ) : (
-            personInput("idDocument", t("admin-census:signupReview.fields.idDocument"))
+            personInput("idDocument", idDocumentLabel(member.idDocument?.type, t))
           )}
           {personInput("email1", t("admin-census:signupReview.fields.email"), "email", true)}
           {personInput("email2", t("admin-census:signupReview.fields.secondEmail"), "email")}

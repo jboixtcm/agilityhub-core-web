@@ -1,0 +1,121 @@
+{
+  "runId": "hpatqj",
+  "weekStart": "2026-09-21",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "status": 200,
+    "weekId": "9a8b5282-b835-40e4-956c-a7fe6e7dbbde",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-12"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-09-28"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 hpatqj: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "7c197fb1-68ae-4ec4-ab60-df3b904c80b9",
+    "at": "2026-09-26T01:18:24.835Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "e7ce4d2b-cf82-4116-a92f-fbc4e7ee8f2f",
+          "type": "CLASS",
+          "id": "fc3cafff-713f-4170-9b7e-1a54fb35ec21",
+          "from": "2026-10-07T18:00:00Z",
+          "to": "2026-10-07T19:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "b650e058-00d2-487f-9171-646f560e2245"
+  },
+  "ringBlock": {
+    "id": "db8d2512-14b0-4f4c-894c-c552974d4638",
+    "status": 201
+  },
+  "activitiesExport": {
+    "bytes": 4063,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-0318.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+    "status": 200,
+    "suggestedFilename": "canic_activities_20260926-0318.xlsx"
+  },
+  "tournamentSaturday": "2026-10-10",
+  "publicUrl": null,
+  "seminarConflicts": {
+    "conflicts": [
+      {
+        "ringId": "e7ce4d2b-cf82-4116-a92f-fbc4e7ee8f2f",
+        "type": "CLASS",
+        "id": "e0bcf224-4db2-48ab-a2f1-56258b629e76",
+        "from": "2026-10-17T16:30:00Z",
+        "to": "2026-10-17T17:30:00Z",
+        "label": "A+B",
+        "bookedCount": 0
+      }
+    ],
+    "trainingBookings": []
+  },
+  "row03Ca": "Seminari E4 hpatqjinscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "waitlistCa": {
+    "member": {
+      "after": "WAITLISTED",
+      "before": 3
+    },
+    "promoted": {
+      "after": "ACTIVE",
+      "before": 1
+    }
+  },
+  "registrantsExport": {
+    "bytes": 4657,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-0318.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A1b247b5c-20b1-47b1-9e46-60fa26cf6814&format=xlsx&sort=registeredAt%2Casc",
+    "status": 200,
+    "suggestedFilename": "canic_activity-registrations_20260926-0318.xlsx"
+  },
+  "row03Es": "Seminari E4 hpatqjinscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "waitlistEs": {
+    "joinedPosition": 4,
+    "promoted": 2
+  },
+  "seminarCancellation": {
+    "status": 200
+  },
+  "seminarRegistrants": [
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "ACTIVITY_CANCELLED",
+      "state": "CANCELLED"
+    }
+  ]
+}

@@ -5,6 +5,16 @@
   gap: var(--ah-space-5);
 }
 
+/* AGENTS rule 6: the registrants table fits 1280 px; a long contact ends with an ellipsis (the
+   full value is in the text and the tooltip). */
+.activity-registrants__contact {
+  display: block;
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .activities-page__header {
   display: flex;
   align-items: center;

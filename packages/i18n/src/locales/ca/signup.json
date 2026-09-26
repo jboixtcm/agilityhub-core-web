@@ -79,6 +79,7 @@
     "optionalDocument": "És imprescindible per començar les classes: si ara no la tens a mà, te la demanarem més endavant.",
     "documentRequired": "Cal adjuntar la cartilla de vacunes per continuar: toca «Cartilla de vacunes» i puja'n una foto o un PDF.",
     "planTitle": "Modalitat",
+    "currentPlan": "{plan} · {price}",
     "monthlyPrice": "{price}/mes",
     "entryFee": "Entrada {price}",
     "packPrice": "{price} · {months} mesos",

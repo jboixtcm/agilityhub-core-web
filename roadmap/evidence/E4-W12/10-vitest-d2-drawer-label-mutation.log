@@ -1,0 +1,582 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (81 tests | 1 failed | 80 skipped) 123ms
+   ❯ T-04-33 D2 signup validation (21)
+     × E4-W12 step 2: the edit drawer labels a passport «Passaport» too 119ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: the edit drawer labels a passport «Passaport» too
+TestingLibraryElementError: Unable to find a label with the text of: Passaport
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mEdita les dades de la preinscripció[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"signup-edit-form"[39m
+    [36m>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mPersona[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-firstName"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-firstName"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName1"[39m
+          [36m>[39m
+            [0mPrimer cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName1"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Roca"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName2"[39m
+          [36m>[39m
+            [0mSegon cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName2"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-birthDate"[39m
+          [36m>[39m
+            [0mData de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-birthDate"[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"1988-04-12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [0mGènere[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemení[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMasculí[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres / No binari[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-idDocument"[39m
+          [36m>[39m
+            [0mDNI/NIE[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-idDocument"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"PA1234567"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email1"[39m
+          [36m>[39m
+            [0mCorreu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m"marta.roca@example.test"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email2"[39m
+          [36m>[39m
+            [0mSegon correu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email2"[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-edit-form__row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Prefix"[39m
+            [36m>[39m
+              [0mPrefix[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Prefix"[39m
+              [33mtype[39m=[32m"text"[39m
+              [33mvalue[39m=[32m"+34"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Number"[39m
+            [36m>[39m
+              [0mTelèfon[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Number"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"tel"[39m
+              [33mvalue[39m=[32m"655123123"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<fieldset>[39m
+          [36m<legend>[39m
+            [0mSegon telèfon[0m
+          [36m</legend>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"signup-edit-form__row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Prefix"[39m
+              [36m>[39m
+                [0mPrefix[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Prefix"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"+34"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Number"[39m
+              [36m>[39m
+                [0mTelèfon[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Number"[39m
+                [33mtype[39m=[32m"tel"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Label"[39m
+              [36m>[39m
+                [0mDescripció[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Label"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-street"[39m
+          [36m>[39m
+            [0mAdreça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-street"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Carrer de la Riera, 12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-postalCode"[39m
+          [36m>[39m
+            [0mCodi postal[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-postalCode"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"08349"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-city"[39m
+          [36m>[39m
+            [0mPoblació[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-city"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Cabrera de Mar"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [0mMètode de pagament[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"SEPA_DD"[39m
+            [36m>[39m
+              [0mDomiciliació[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MANUAL"[39m
+            [36m>[39m
+              [0mEfectiu[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-iban"[39m
+          [36m>[39m
+            [0mIBAN[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-iban"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-accountHolder"[39m
+          [36m>[39m
+            [0mTitular del compte[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-accountHolder"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta Roca Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-holderTaxId"[39m
+          [36m>[39m
+            [0mNIF del titular[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-holderTaxId"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-requested-plan"[39m
+          [36m>[39m
+            [0mModalitat sol·licitada[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-requested-plan"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mvalue[39m=[32m"Abonat"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mGos (1 de 1)[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-name"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-name"[39m
+            [33mvalue[39m=[32m"Kiwi"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-breed"[39m
+          [36m>[39m
+            [0mRaça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-breed"[39m
+            [33mvalue[39m=[32m"Whippet"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+          [36m>[39m
+            [0mMes de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+            [33mvalue[39m=[32m"2024-04"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-chip"[39m
+          [36m>[39m
+            [0mXip[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-chip"[39m
+            [33mvalue[39m=[32m"941000024681357"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [0mSexe[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemella[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMascle[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-notes"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-notes"[39m
+            [33mmaxlength[39m=[32m"1000"[39m
+          [36m>[39m
+            [0mIniciar-nos a l'agility i socialitzar[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"signup-edit-documents"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+          [36m>[39m
+            [0mDocuments[0m
+          [36m</span>[39m
+          [36m<ul />[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDESA ELS CANVIS[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/SignupReviewPage.test.tsx:226:27
+    224|     });
+    225|     const drawer = openDrawer();
+    226|     expect(within(drawer).getByLabelText("Passaport")).toHaveValue("PA…
+       |                           ^
+    227|     expect(within(drawer).queryByLabelText("DNI/NIE")).toBeNull();
+    228|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 80 skipped (81)
+   Start at  02:53:48
+   Duration  842ms (transform 33%, environment 29%, tests 16%, import 16%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx -t edit drawer labels a passport

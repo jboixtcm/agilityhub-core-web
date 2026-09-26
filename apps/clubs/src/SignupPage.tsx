@@ -43,6 +43,7 @@ type EnabledSignupConfig = SignupConfig & {
 };
 type SignupPerson = components["schemas"]["SignupPerson"];
 type SignupDog = components["schemas"]["SignupDog"];
+type SignupPlan = components["schemas"]["SignupPlan"];
 type SignupPhone = components["schemas"]["SignupPhone"];
 type SignupTown = components["schemas"]["Town"];
 type SignupFamilyLookup = components["schemas"]["FamilyGroupLookupResult"];
@@ -1293,6 +1294,22 @@ function DogStep({
   const familyOffers = branding.modules.includes("FAMILY_GROUP");
   // R-04-08: `signup.requireDogDocumentAtSignup` makes the vaccination card required on 17.
   const documentRequired = config.requireDogDocumentAtSignup === true;
+  // T-04-32: the add-dog keeps the member's own plan; the form names it when it offers it.
+  const memberPlan = addDog
+    ? config.plans.find((plan) => plan.id === config.member?.planId)
+    : undefined;
+  // S05 R-05-19: the price slot of 17 — the current price, else the plan's `priceLabel`.
+  const planPrice = (plan: SignupPlan): string =>
+    plan.price === undefined
+      ? (plan.priceLabel ?? "")
+      : plan.type === "PACK"
+        ? t("signup:dog.packPrice", {
+            months: plan.pack?.validityMonths ?? 1,
+            price: formatMoney(plan.price.amount.amountMinor / 100),
+          })
+        : t("signup:dog.monthlyPrice", {
+            price: formatMoney(plan.price.amount.amountMinor / 100),
+          });
 
   usePendingError(
     "dog",
@@ -1551,7 +1568,23 @@ function DogStep({
       {config.texts.therapyIntro === "" ? null : (
         <p className="signup-copy">{config.texts.therapyIntro}</p>
       )}
-      {config.plans.length === 0 ? null : (
+      {addDog ? (
+        // T-04-32: the add-dog keeps the member's plan (D2 can still change it): one read-only
+        // line, no cards and no selection. A plan the form does not offer has no name to show.
+        memberPlan === undefined ? null : (
+          <section className="signup-plans" aria-labelledby="signup-plans-title">
+            <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
+            <p className="signup-plan-current">
+              {planPrice(memberPlan) === ""
+                ? memberPlan.name
+                : t("signup:dog.currentPlan", {
+                    plan: memberPlan.name,
+                    price: planPrice(memberPlan),
+                  })}
+            </p>
+          </section>
+        )
+      ) : config.plans.length === 0 ? null : (
         <section className="signup-plans" aria-labelledby="signup-plans-title">
           <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
           <div
@@ -1579,29 +1612,21 @@ function DogStep({
                     }}
                     type="button"
                   >
-                    {/* The name, the conditions on one line and the price: the long description is
-                        already in the step's intro texts (E3-W05 17a–d). */}
+                    {/* The name and the price slot, then the fees and the conditions: the long
+                        description is already in the step's intro texts (E3-W05 17a–d). R-05-19: a
+                        plan without a current price shows its `priceLabel` in the slot. */}
                     <span className="signup-plan__head">
                       <strong>{plan.name}</strong>
-                      {plan.maintenanceFee !== undefined ? (
-                        plan.conditions === "" ? null : (
-                          <small className="signup-plan__conditions">{plan.conditions}</small>
+                      {plan.price === undefined ? (
+                        plan.priceLabel === undefined || plan.priceLabel === "" ? null : (
+                          <small className="signup-plan__price-label">{plan.priceLabel}</small>
                         )
-                      ) : plan.price === undefined || plan.type === "PACK" ? null : (
-                        <b>
-                          {t("signup:dog.monthlyPrice", {
-                            price: formatMoney(plan.price.amount.amountMinor / 100),
-                          })}
-                        </b>
+                      ) : plan.type === "PACK" ? null : (
+                        <b>{planPrice(plan)}</b>
                       )}
                     </span>
                     {plan.type !== "PACK" || plan.price === undefined ? null : (
-                      <small className="signup-plan__pack-price">
-                        {t("signup:dog.packPrice", {
-                          months: plan.pack?.validityMonths ?? 1,
-                          price: formatMoney(plan.price.amount.amountMinor / 100),
-                        })}
-                      </small>
+                      <small className="signup-plan__pack-price">{planPrice(plan)}</small>
                     )}
                     {/* R-04-14: a plan without an entry fee (or a zero one) shows no entry line. */}
                     {plan.entryFee === undefined ||
@@ -1613,9 +1638,6 @@ function DogStep({
                         })}
                       </small>
                     )}
-                    {plan.conditions === "" || plan.maintenanceFee !== undefined ? null : (
-                      <small className="signup-plan__conditions">{plan.conditions}</small>
-                    )}
                     {/* No «Entrada a compte: 0,00 €» either: without an entry fee only the fee shows. */}
                     {plan.maintenanceFee === undefined ? null : (
                       <small>
@@ -1625,6 +1647,9 @@ function DogStep({
                           withEntry: (plan.entryFee?.amountMinor ?? 0) > 0 ? "yes" : "no",
                         })}
                       </small>
+                    )}
+                    {plan.conditions === "" ? null : (
+                      <small className="signup-plan__conditions">{plan.conditions}</small>
                     )}
                     {plan.offerLabel === undefined || !familyOffers ? null : (
                       <small>{plan.offerLabel}</small>
@@ -1644,7 +1669,9 @@ function DogStep({
           )}
         </section>
       )}
-      <StepMessage message={message ?? (config.plans.length === 0 ? errors.plan : undefined)} />
+      <StepMessage
+        message={message ?? (addDog || config.plans.length === 0 ? errors.plan : undefined)}
+      />
       <Button className="signup-primary" disabled={uploading} type="submit">
         {t("signup:common.continue")}
       </Button>
@@ -2583,11 +2610,14 @@ export function SignupPage({
           // The signup exists: its committed choices never change (R-04-26).
           if (current.submission?.memberId !== undefined) return current;
           const plans = data.plans ?? [];
-          const memberPlan = addDog ? data.member?.planId : undefined;
           const planAvailable =
-            current.planId !== "" &&
-            (plans.some((plan) => plan.id === current.planId) || current.planId === memberPlan);
-          const planId = planAvailable ? current.planId : (memberPlan ?? plans[0]?.id ?? "");
+            current.planId !== "" && plans.some((plan) => plan.id === current.planId);
+          // T-04-32: the add-dog keeps the member's plan (no selection on 17); D2 can change it.
+          const planId = addDog
+            ? (data.member?.planId ?? "")
+            : planAvailable
+              ? current.planId
+              : (plans[0]?.id ?? "");
           const paymentMethods = data.paymentMethods ?? [];
           const method = paymentMethods.some(
             (candidate) => candidate.type === current.payment.type,

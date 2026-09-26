@@ -139,6 +139,7 @@
       "blocked": "{ring} bloquejada",
       "blockDetail": "{reason} {from}–{to}",
       "activity": "Activitat · {title}",
+      "allRings": "totes les pistes",
       "label": "{when} · {description} · {details}"
     },
     "footer": {

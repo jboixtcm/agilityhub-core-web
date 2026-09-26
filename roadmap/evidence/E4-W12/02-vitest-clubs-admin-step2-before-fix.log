@@ -1,0 +1,71 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (80 tests | 3 failed | 73 skipped) 198ms
+   ❯ T-04-33 D2 signup validation (20)
+     × E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type 21ms
+     × E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type 21ms
+     × E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Passaport$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:218:18
+    216|     const term = value.closest("dd")?.previousElementSibling;
+    217|     expect(term?.tagName).toBe("DT");
+    218|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    219|   });
+    220|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Pasaporte$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:218:18
+    216|     const term = value.closest("dd")?.previousElementSibling;
+    217|     expect(term?.tagName).toBe("DT");
+    218|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    219|   });
+    220|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Passport$/u[39m
+Received:
+[31m  ID document[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:218:18
+    216|     const term = value.closest("dd")?.previousElementSibling;
+    217|     expect(term?.tagName).toBe("DT");
+    218|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    219|   });
+    220|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed | 73 skipped (80)
+   Start at  02:47:17
+   Duration  1.17s (environment 34%, transform 26%, tests 18%, import 15%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx -t E4-W12 step 2

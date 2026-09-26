@@ -90,6 +90,19 @@ test.describe("T-04-29–32 public signup", () => {
       fullPage: true,
       path: resolve(evidenceDirectory, "17-dog-375.png"),
     });
+    // E4-W12 step 3 (R-05-19): Teràpia shows its priceLabel in the price slot, its conditions below.
+    const therapy = page.getByRole("button", { name: "Selecciona Teràpia" });
+    await expect(therapy.locator(".signup-plan__head")).toHaveText(
+      /^Teràpia\s*condicions i cost segons cada cas$/u,
+    );
+    await expect(therapy.locator(".signup-plan__conditions")).toHaveText(
+      /^pagament inicial a compte del 50% de l'entrada/u,
+    );
+    await therapy.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W12/17-dog-375.png"),
+    });
 
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/familia");
@@ -193,6 +206,14 @@ test.describe("T-04-32 add-dog signup", () => {
     await page.waitForURL("**/gossos/nou");
     await expect(page.getByText(/Pas 1 de 2/u)).toBeVisible();
     await fillDog(page, "Neret", "941000012345679");
+    // E4-W12 step 4: the member's plan is one read-only line; no cards, no selection.
+    const modality = page.getByRole("region", { name: "Modalitat" });
+    await expect(modality.locator(".signup-plan-current")).toHaveText(/^Abonat · 60,00\s€\/mes$/u);
+    await expect(page.getByRole("button", { name: /^Selecciona /u })).toHaveCount(0);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W12/17-add-dog-375.png"),
+    });
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/gossos/nou/pagament");
     await expect(page.getByLabel("Mètode de pagament actual")).toHaveValue(

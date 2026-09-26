@@ -243,6 +243,29 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     );
   });
 
+  it("E4-W12 step 7 (R-07-13): 03 names the month of a date in another month: «Dissabte 17 d’octubre · 18:30–20:30 · Central»", async () => {
+    // Read on 4 August 2026 (club-local): October is another month.
+    const october: ActivityRegistrationSummary = {
+      activity: {
+        endTime: "20:30",
+        endsAtLocal: "2026-10-17T20:30",
+        id: WORKSHOP,
+        placeLabel: "Central",
+        startTime: "18:30",
+        startsAtLocal: "2026-10-17T18:30",
+        title: "Seminari E4",
+      },
+      activityId: WORKSHOP,
+      cancellableUntil: "2026-10-17T14:30:00Z",
+      id: "registration-october",
+      origin: "APP",
+      registeredAt: "2026-08-04T08:00:00Z",
+      state: "ACTIVE",
+    };
+    await renderWith(<ActivityReservationRow registration={october} />);
+    expect(await screen.findByText("Dissabte 17 d’octubre · 18:30–20:30 · Central")).toBeVisible();
+  });
+
   it("03: never shows a dog, even when the data carries one", async () => {
     const withDog = {
       activity: {

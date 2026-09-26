@@ -1816,10 +1816,116 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(pack).not.toHaveTextContent("Sis sessions");
     const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
     expect(within(therapy).getByText("condicions i cost segons cada cas")).toHaveClass(
-      "signup-plan__conditions",
+      "signup-plan__price-label",
     );
     expect(therapy).not.toHaveTextContent("Classes de teràpia individual");
     expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€/u);
+  });
+
+  it("E4-W12 step 3 (R-04-09, S05 R-05-19): the Cànic's Teràpia shows its priceLabel in the price slot and its conditions in the body", async () => {
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
+    const therapyHead = therapy.querySelector(".signup-plan__head");
+    // The price slot: «Teràpia · condicions i cost segons cada cas», as mockup 17 draws it.
+    const priceLabel = within(therapy).getByText("condicions i cost segons cada cas");
+    expect(priceLabel).toHaveClass("signup-plan__price-label");
+    expect(therapyHead).toContainElement(priceLabel);
+    // `conditions` stays in the body, as on the other cards.
+    const conditions = within(therapy).getByText(
+      "pagament inicial a compte del 50% de l'entrada i quota manteniment en tant no es faci classe en grup",
+    );
+    expect(conditions).toHaveClass("signup-plan__conditions");
+    expect(therapyHead).not.toContainElement(conditions);
+    expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€ · quota mínima durant el tractament: 10,00\s€\/mes/u);
+    // Without a priceLabel the slot shows the price.
+    const member = screen.getByRole("button", { name: "Selecciona Abonat" });
+    expect(member.querySelector(".signup-plan__head")).toHaveTextContent(/^Abonat60,00\s€\/mes$/u);
+    expect(member.querySelector(".signup-plan__price-label")).toBeNull();
+  });
+
+  it("E4-W12 step 3: the priceLabel comes in the reader's language and a plan without price or label leaves the slot empty", async () => {
+    const config = await signupConfigJson();
+    const plans = config.plans.map((plan) =>
+      plan.id === THERAPY_PLAN ? { ...plan, priceLabel: undefined } : plan,
+    );
+    server.use(http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, plans })));
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
+    expect(therapy.querySelector(".signup-plan__head")).toHaveTextContent(/^Teràpia$/u);
+    expect(therapy.querySelector(".signup-plan__conditions")).toHaveTextContent(/^pagament inicial a compte/u);
+
+    cleanup();
+    server.resetHandlers();
+    const { i18n } = await renderSignup({ path: "/apuntat-hi/gos" });
+    // The page asks GET /signup again in the new language (Accept-Language).
+    await act(async () => {
+      await i18n.changeLanguage("es");
+    });
+    const terapia = await screen.findByRole("button", { name: "Selecciona Terapia" });
+    expect(within(terapia).getByText("condiciones y coste según cada caso")).toHaveClass("signup-plan__price-label");
+  });
+
+  it("E4-W12 step 4 (T-04-32): the add-dog keeps the member's plan: one read-only line with its name and price, no cards and no selection", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    // A draft left with another plan never replaces the member's own plan.
+    seedDraft({ mode: "add-dog", planId: PACK_6_PLAN });
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou" });
+    expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+
+    const modality = screen.getByRole("region", { name: "Modalitat" });
+    expect(modality).toHaveTextContent(/^ModalitatAbonat · 60,00\s€\/mes$/u);
+    expect(within(modality).queryAllByRole("button")).toHaveLength(0);
+    expect(screen.queryAllByRole("button", { name: /^Selecciona /u })).toHaveLength(0);
+    expect(screen.queryByText("ACTIVAR")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pack 6")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/gossos/nou/pagament");
+    expect(await screen.findByText(/Pas 2 de 2/u)).toBeVisible();
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
+    });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({ planIdRequested: MEMBER_PLAN });
+  });
+
+  it("E4-W12 step 4: an add-dog member whose plan is not offered on the form sees no plan cards and keeps that plan", async () => {
+    const navigate = vi.fn();
+    seedDraft({ mode: "add-dog", planId: PACK_6_PLAN });
+    const config = await signupConfigJson();
+    const familyPlan = "10000000-0000-4000-8000-000000000009";
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({
+          ...config,
+          member: { consentsUpToDate: true, planId: familyPlan },
+          upfront: {
+            ...(config.upfront as Record<string, unknown>),
+            planQuotes: [
+              {
+                lines: [{ amount: { amountMinor: 10000, currency: "EUR" }, concept: "ENTRY_FEE" }],
+                options: [],
+                planId: familyPlan,
+                totalDue: { amountMinor: 10000, currency: "EUR" },
+              },
+            ],
+          },
+        }),
+      ),
+    );
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou" });
+    expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+    expect(screen.queryAllByRole("button", { name: /^Selecciona /u })).toHaveLength(0);
+    expect(screen.queryByRole("region", { name: "Modalitat" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Pack 6")).not.toBeInTheDocument();
+    // The quote of 19 and `planIdRequested` stay on the member's own plan.
+    await waitFor(() => {
+      expect(savedDraft().planId).toBe(familyPlan);
+    });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/gossos/nou/pagament");
   });
 
   it("round 2 #6: a maintenance plan without an entry fee shows its minimum fee and no «Entrada a compte: 0,00 €»", async () => {

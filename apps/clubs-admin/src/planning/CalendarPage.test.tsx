@@ -1475,3 +1475,95 @@ describe("T-06-28 E4-W11 D4 follow-ups of the E4-W10 review", () => {
     expect(openingHours).toEqual([]);
   });
 });
+
+/** The ring blocks a published activity leaves on D4 (S07 R-07-05), one per linked ring. */
+function activityBlocks(
+  activityId: string,
+  activityTitle: string,
+  date: string,
+  from: string,
+  to: string,
+  ringIds: readonly string[],
+) {
+  for (const ringId of ringIds) {
+    planningState.blocks.push({
+      activityId,
+      activityTitle,
+      createdByName: "Marc",
+      date,
+      from: `${date}T${from}:00+02:00`,
+      fromLocal: from,
+      id: `block-${activityId}-${ringId}`,
+      kind: "BLOCK",
+      note: null,
+      reason: "ACTIVITY",
+      ringId,
+      state: "ACTIVE",
+      to: `${date}T${to}:00+02:00`,
+      toLocal: to,
+      version: 1,
+    });
+  }
+}
+
+const EVERY_RING = [
+  "ring-muntanya",
+  "ring-central",
+  "ring-carretera",
+  "ring-cadells",
+  "ring-petita",
+] as const;
+
+describe("T-06-28 E4-W12 D4 real-core follow-ups of E4-W05", () => {
+  it("S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes»", async () => {
+    activityBlocks(
+      "activity-torneig",
+      "Torneig d'Estiu 2026",
+      "2026-08-15",
+      "18:30",
+      "20:30",
+      EVERY_RING,
+    );
+    // Another activity on one ring keeps its ring.
+    activityBlocks("activity-seminari", "Seminari E4", "2026-08-15", "10:00", "12:00", [
+      "ring-central",
+    ]);
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    const tournament = within(week).getAllByRole("link", { name: /Torneig d'Estiu 2026/u });
+    expect(tournament).toHaveLength(1);
+    expect(tournament[0]).toHaveAccessibleName(
+      "Activitat · Torneig d'Estiu 2026 · totes les pistes",
+    );
+    expect(tournament[0]).toHaveTextContent(
+      "Activitat · Torneig d'Estiu 2026totes les pistes · 18:30–20:30",
+    );
+    expect(tournament[0]).toHaveAttribute("href", "/activitats/activity-torneig");
+
+    const seminar = within(week).getAllByRole("link", { name: /Seminari E4/u });
+    expect(seminar).toHaveLength(1);
+    expect(seminar[0]).toHaveTextContent("Activitat · Seminari E4Central · 10:00–12:00");
+  });
+
+  it("S06 §2 D4: an activity on some rings keeps one cell per ring", async () => {
+    activityBlocks(
+      "activity-torneig",
+      "Torneig d'Estiu 2026",
+      "2026-08-15",
+      "18:30",
+      "20:30",
+      EVERY_RING.slice(0, 4),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const cells = within(week).getAllByRole("link", { name: /Torneig d'Estiu 2026/u });
+    expect(cells.map((cell) => cell.textContent)).toEqual([
+      "Activitat · Torneig d'Estiu 2026Muntanya · 18:30–20:30",
+      "Activitat · Torneig d'Estiu 2026Central · 18:30–20:30",
+      "Activitat · Torneig d'Estiu 2026Carretera · 18:30–20:30",
+      "Activitat · Torneig d'Estiu 2026Cadells · 18:30–20:30",
+    ]);
+    expect(within(week).queryByText(/totes les pistes/u)).toBeNull();
+  });
+});

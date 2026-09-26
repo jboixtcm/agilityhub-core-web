@@ -63,6 +63,27 @@ function dayOfMonth(date: string): string {
   return String(Number(date.slice(8, 10)));
 }
 
+/**
+ * E4-W12 step 7 (R-07-13): 03 reads «Dissabte 17 · …» in the club's current month and «Dissabte
+ * 17 d’octubre · …» in another one (the club's «today», Europe/Madrid). For the seminar's Saturday.
+ */
+function saturdayOn03(date: string, locale: "ca" | "es"): string {
+  const weekday = locale === "ca" ? "Dissabte" : "Sábado";
+  const today = new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Europe/Madrid",
+    year: "numeric",
+  }).format(new Date());
+  if (today.slice(0, 7) === date.slice(0, 7)) return `${weekday} ${dayOfMonth(date)} · `;
+  const dayMonth = new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T12:00:00Z`));
+  return `${weekday} ${dayMonth} · `;
+}
+
 function caShortDay(date: string): string {
   const index = (new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7;
   return caShortDays[index] ?? "";
@@ -231,6 +252,28 @@ async function navigateClubRoute(page: Page, path: string): Promise<void> {
   }
   expect((await meResponse).status()).toBe(200);
   await expect(page).toHaveURL(new RegExp(`${escapeRegExp(path)}$`, "u"));
+}
+
+/** E4-W12 step 7: the words of the day-grid cell lines drawn over two lines (a mid-word break). */
+async function brokenWords(grid: Locator): Promise<string[]> {
+  return grid
+    .locator(".ah-schedule-cell__title, .ah-schedule-cell__subtitle")
+    .evaluateAll((lines) =>
+      lines.flatMap((line) => {
+        const broken: string[] = [];
+        const walker = document.createTreeWalker(line, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+          for (const match of (node.textContent ?? "").matchAll(/\S+/gu)) {
+            const range = document.createRange();
+            range.setStart(node, match.index);
+            range.setEnd(node, match.index + match[0].length);
+            const tops = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top)));
+            if (tops.size > 1) broken.push(match[0]);
+          }
+        }
+        return broken;
+      }),
+    );
 }
 
 async function screenshot(page: Page, name: string, fullPage = true): Promise<void> {
@@ -643,6 +686,8 @@ test("T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled cla
     .filter({ has: member.getByRole("rowheader", { name: "18:50" }) });
   await expect(evening).toHaveCount(1);
   await expect(evening).not.toContainText("B+C");
+  // E4-W12 step 7: «Ocupada · manteniment» never breaks inside a word in the 375 px cells.
+  expect(await brokenWords(grid)).toEqual([]);
   await screenshot(member, "10-avui-core-375.png");
 
   // The week validated in (b): its Monday classes reach the member.
@@ -661,6 +706,7 @@ test("T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled cla
   await expect(grid.getByText("Bloq.").first()).toBeVisible();
   await expect(grid.getByText(/^anul·lada/u).first()).toBeVisible();
   await expect(grid.getByText(/\d+\/\d+/u).first()).toBeVisible();
+  expect(await brokenWords(grid)).toEqual([]);
   await screenshot(instructor, "23-visio-global-core-375.png");
   await instructorContext.close();
 
@@ -714,9 +760,17 @@ test("T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every r
   // The seeded Torneig (published, conflicts resolved by the seed) blocks the five rings.
   await openCalendar(page, "actives", validatedWeek);
   const week = calendarGrid(page);
-  await expect(
-    week.locator(".ah-schedule-cell", { hasText: "Activitat · Torneig d'Estiu 2026" }),
-  ).toHaveCount(5);
+  // E4-W12 step 8: an activity on every ring of the band is one cell «… · totes les pistes».
+  const tournamentCells = week.locator(".ah-schedule-cell", {
+    hasText: "Activitat · Torneig d'Estiu 2026",
+  });
+  await expect(tournamentCells).toHaveCount(1);
+  await expect(tournamentCells).toHaveAccessibleName(
+    "Activitat · Torneig d'Estiu 2026 · totes les pistes",
+  );
+  await expect(tournamentCells).toContainText("totes les pistes · ");
+  await tournamentCells.scrollIntoViewIfNeeded();
+  await screenshot(page, "D4-activitat-totes-les-pistes-core-1280.png");
   evidence.tournamentSaturday = tournamentSaturday;
 
   // A new seminar on the Saturday of the week generated in (a), over the «Dissabtes» class.
@@ -752,8 +806,17 @@ test("T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every r
     isCall("PATCH", new RegExp(`/api/v1/activities/${seminarId}$`, "u")),
   );
   await card.getByRole("button", { exact: true, name: "DESA" }).click();
-  expect((await saved).status()).toBe(200);
+  const savedResponse = await saved;
+  expect(savedResponse.status()).toBe(200);
   await expect(page.getByText("Canvis desats")).toBeVisible();
+  // E4-W12 step 6: the seed club has no public web (`publicUrl: null`): no «URL:» line.
+  const savedActivity = (await savedResponse.json()) as { publicUrl?: string | null };
+  if (savedActivity.publicUrl == null) {
+    await expect(card.getByText(/^URL:/u)).toHaveCount(0);
+  } else {
+    await expect(card.getByText(/^URL:/u)).toHaveCount(1);
+  }
+  evidence.publicUrl = savedActivity.publicUrl ?? null;
   await screenshot(page, "D7-manteniment-core-1280.png");
 
   const conflictsResponse = page.waitForResponse(
@@ -827,8 +890,8 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   const reservations = member.getByRole("region", { name: "Les meves reserves" });
   const row = reservations.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
   await expect(row).toContainText("inscrita");
-  await expect(row).toContainText(`Dissabte ${dayOfMonth(seminarSaturday)}`);
-  await expect(row).toContainText("18:30–20:30 · Central");
+  await expect(row).toContainText(`${saturdayOn03(seminarSaturday, "ca")}18:30–20:30 · Central`);
+  evidence.row03Ca = (await row.textContent())?.replaceAll(/\s+/gu, " ").trim() ?? null;
   await screenshot(member, "03-inscrita-core-375.png");
   await row.click();
   await member.waitForURL(`**/activitats/${seminarId}`);
@@ -914,6 +977,23 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   await page
     .getByRole("heading", { name: "Inscrits — Seminari de handling" })
     .scrollIntoViewIfNeeded();
+  // E4-W12 step 6 (AGENTS rule 6): with the seed's long demo e-mails the table fits 1280 px: no
+  // sideways page scroll, the header and «Excel · PDF» inside the viewport, the e-mail clipped
+  // with its full value in the tooltip.
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1280);
+  for (const visible of [
+    page.getByRole("heading", { name: "Inscrits — Seminari de handling" }),
+    page.getByText("Excel · PDF"),
+    registrants.getByRole("columnheader", { name: "Contacte" }),
+  ]) {
+    const box = await visible.boundingBox();
+    expect(box).not.toBeNull();
+    expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(1280);
+  }
+  const longContact = registrants.locator(".activity-registrants__contact").first();
+  const contactTitle = await longContact.getAttribute("title");
+  expect(contactTitle).toContain("@");
+  expect(await longContact.textContent()).toBe(contactTitle);
   await screenshot(page, "D7-inscrits-core-1280.png");
 
   // E4-W05 step 7: the registrants export is the file the core returns.
@@ -953,8 +1033,8 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
     .getByRole("region", { name: "Mis reservas" })
     .getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
   await expect(row).toContainText("inscrita");
-  await expect(row).toContainText(`Sábado ${dayOfMonth(seminarSaturday)}`);
-  await expect(row).toContainText("18:30–20:30 · Central");
+  await expect(row).toContainText(`${saturdayOn03(seminarSaturday, "es")}18:30–20:30 · Central`);
+  evidence.row03Es = (await row.textContent())?.replaceAll(/\s+/gu, " ").trim() ?? null;
   await screenshot(member, "03-inscrita-core-es-375.png");
   await row.click();
   await member.waitForURL(`**/activitats/${seminarId}`);
@@ -1080,14 +1160,9 @@ test("E4-W05 step 7 · the «Excel · PDF» menus of D5 and D7 with EXPORT_TOO_L
     await navigateSpa(page, path);
     await expect(page.getByRole("table").first()).toBeVisible();
     if (screen === "D5") {
-      // D5's default view carries a fixture plan id (`plan-member`) that the real core does not
-      // have (reported in E4-W05): the filters are cleared first, as T-03-42 does.
-      const filterMenu = page.locator(".ah-universal-list__filter-menu");
-      await filterMenu.locator("summary").click();
-      const clearFilters = filterMenu.getByRole("button", { name: "Neteja" });
-      if (await clearFilters.isEnabled()) await clearFilters.click();
+      // E4-W12 step 5: D5's default view applies only «Alta», so it lists members as it opens.
       await expect(page.getByText("Cap abonat amb aquests criteris")).toHaveCount(0);
-      await filterMenu.locator("summary").click();
+      await expect(page.getByRole("table").first().getByRole("link").first()).toBeVisible();
     }
     // The api's error shape for the code (CATALEG_ERRORS rule 0: 422).
     await page.route(pattern, (route) =>

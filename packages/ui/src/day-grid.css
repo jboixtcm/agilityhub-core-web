@@ -60,8 +60,13 @@
   letter-spacing: -0.015em;
 }
 
+/* The lines wrap between words only («Ocupada · manteniment», «Bloq.» at 375 px): a word longer
+   than the cell ends with the base rule's ellipsis, never breaks inside (E4-W12). */
 .ah-day-grid .ah-schedule-cell__subtitle {
+  min-width: 0;
   font-size: 0.55rem;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
   white-space: pre-line;
 }

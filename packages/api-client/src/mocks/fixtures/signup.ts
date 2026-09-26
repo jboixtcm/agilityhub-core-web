@@ -39,8 +39,9 @@ const content = {
       "",
       "One time only",
       "One time only · then 40% off the joining fee",
-      "conditions and cost depend on each case",
+      "initial payment on account of 50% of the joining fee and a maintenance fee while no group class is taken",
     ],
+    planPriceLabels: ["", "", "", "conditions and cost depend on each case"],
     offer: "Offers when a family brings more than one dog",
     paymentLabels: ["Direct debit", "Cash"],
     mandate:
@@ -68,8 +69,9 @@ const content = {
       "",
       "Una sola vez",
       "Una sola vez · después 40 % de dto. en la matrícula",
-      "condiciones y coste según cada caso",
+      "pago inicial a cuenta del 50 % de la entrada y cuota de mantenimiento mientras no se haga clase en grupo",
     ],
+    planPriceLabels: ["", "", "", "condiciones y coste según cada caso"],
     offer: "Ofertas si una familia trae más de un perro",
     paymentLabels: ["Domiciliación", "Efectivo"],
     mandate:
@@ -116,6 +118,7 @@ function translatedConfig(locale: keyof typeof content): CompleteSignupConfig {
     plan.name = translated.plans[index] ?? plan.name;
     plan.conditions = translated.planConditions[index] ?? plan.conditions;
     if (plan.offerLabel !== undefined) plan.offerLabel = translated.offer;
+    if (plan.priceLabel !== undefined) plan.priceLabel = translated.planPriceLabels[index] ?? plan.priceLabel;
   });
   config.paymentMethods?.forEach((method, index) => {
     method.label = translated.paymentLabels[index] ?? method.label;

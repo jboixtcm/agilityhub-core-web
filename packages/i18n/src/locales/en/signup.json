@@ -79,6 +79,7 @@
     "optionalDocument": "It is required before classes begin. If you do not have it now, we will ask you for it later.",
     "documentRequired": "Attach the vaccination record to continue: tap «Vaccination record» and upload a photo or a PDF.",
     "planTitle": "Plan",
+    "currentPlan": "{plan} · {price}",
     "monthlyPrice": "{price}/month",
     "entryFee": "Joining fee {price}",
     "packPrice": "{price} · {months} months",

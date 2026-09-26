@@ -1,0 +1,572 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (80 tests | 5 failed | 72 skipped) 265ms
+   ❯ T-04-33 D2 signup validation (20)
+     × E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip 129ms
+     × E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type 20ms
+     × E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type 25ms
+     × E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type 22ms
+     × E4-W12 step 2: in en the identity row of a NIE is labelled by its type 13ms
+ ❯ src/activities/ActivitiesPage.test.tsx (39 tests | 3 failed | 36 skipped) 228ms
+   ❯ T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 (3)
+     × AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}» 125ms
+     × S07 §2 D7: the maintenance block hides its «URL» line when the core sends `publicUrl: null` 66ms
+     × AGENTS rule 6: a long registrant e-mail is truncated in its cell and keeps its full value in the title 35ms
+ ❯ src/planning/CalendarPage.test.tsx (39 tests | 1 failed | 37 skipped) 265ms
+   ❯ T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 (2)
+     × S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes» 182ms
+ ❯ src/census/CensusListPage.test.tsx (4 tests | 1 failed | 3 skipped) 10065ms
+   ❯ T-03-38 D5 universal member list (3)
+     × E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members 10063ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 > AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}»
+AssertionError: expected [ 'id', 'date', 'startTime', …(2) ] to deeply equal ArrayContaining ["id", "title"]
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
+    "id",
+-   "title",
++   "date",
++   "startTime",
++   "endTime",
++   "state",
+  ]
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1410:32
+    1408|       .at(-1)
+    1409|       ?.url.searchParams.get("fields");
+    1410|     expect(fields?.split(",")).toEqual(expect.arrayContaining(["id", "…
+       |                                ^
+    1411|     expect(within(table).getByRole("checkbox", { name: "Obre Torneig d…
+    1412|     expect(within(table).getByRole("checkbox", { name: "Obre Seminari …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 > S07 §2 D7: the maintenance block hides its «URL» line when the core sends `publicUrl: null`
+AssertionError: expected <span …(1)></span> to be null
+
+- Expected:
+null
+
++ Received:
+<span
+  class="activity-status__url"
+>
+  URL:  · surt a l'API de la web (mai noms)
+</span>
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1430:48
+    1428|     const card = await maintenance("Torneig d'Estiu 2026");
+    1429|     expect(within(card).getByText("publicada")).toBeVisible();
+    1430|     expect(within(card).queryByText(/^URL:/u)).toBeNull();
+       |                                                ^
+    1431|     expect(within(card).queryByText(/surt a l'API de la web/u)).toBeNu…
+    1432|     expect(within(card).getByRole("link", { name: "Inscrits (22) ›" })…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 > AGENTS rule 6: a long registrant e-mail is truncated in its cell and keeps its full value in the title
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"activity-registrants__contact"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  activity-registrants__contact[39m
+Received:
+[31m[39m
+ ❯ src/activities/ActivitiesPage.test.tsx:1471:21
+    1469|     const table = await screen.findByRole("table");
+    1470|     const contact = await within(table).findByText(new RegExp(long.rep…
+    1471|     expect(contact).toHaveClass("activity-registrants__contact");
+       |                     ^
+    1472|     // The full value stays readable (tooltip and text); the cell only…
+    1473|     expect(contact).toHaveAttribute("title", contact.textContent);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members
+TestingLibraryElementError: Unable to find an element with the text: Aina Fictícia Riera. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m2 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, DNI, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Modalitat = «plan-member»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mModalitat = «plan-member»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Modalitat"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"bookingBlocked"[39m
+                  [36m>[39m
+      ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m2 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, DNI, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Modalitat = «plan-member»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mModalitat = «plan-member»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Modalitat"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"bookingBlocked"[39m
+                  [36m>[39m
+      ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusListPage.test.tsx:123:25
+    121|     await renderPage("members");
+    122|
+    123|     expect(await screen.findByText("Aina Fictícia Riera")).toBeVisible…
+       |                         ^
+    124|     expect(screen.getByText("Pol Fictici Serra")).toBeVisible();
+    125|     expect(screen.queryByText("Cap abonat amb aquests criteris")).not.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <span
+  class="ah-badge ah-tone--neutral"
+>
+  3 adjunts
+</span> instead[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:195:54
+    193|     const notes = screen.getByText("Notes als instructors");
+    194|     expect(notes.tagName).toBe("DT");
+    195|     expect(within(notes).queryByText(/adjunt/u)).not.toBeInTheDocument…
+       |                                                      ^
+    196|     expect(notes.nextElementSibling).toHaveTextContent(/^—$/u);
+    197|     expect(screen.queryByText(/\badjunts?\b/u)).not.toBeInTheDocument(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Passaport$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:217:18
+    215|     const term = value.closest("dd")?.previousElementSibling;
+    216|     expect(term?.tagName).toBe("DT");
+    217|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    218|   });
+    219|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Pasaporte$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:217:18
+    215|     const term = value.closest("dd")?.previousElementSibling;
+    216|     expect(term?.tagName).toBe("DT");
+    217|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    218|   });
+    219|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Passport$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:217:18
+    215|     const term = value.closest("dd")?.previousElementSibling;
+    216|     expect(term?.tagName).toBe("DT");
+    217|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    218|   });
+    219|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a NIE is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^ID document$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:217:18
+    215|     const term = value.closest("dd")?.previousElementSibling;
+    216|     expect(term?.tagName).toBe("DT");
+    217|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    218|   });
+    219|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes»
+AssertionError: expected [ <a …(3)>…(2)</a>, …(4) ] to have a length of 1 but got 5
+
+- Expected
++ Received
+
+- 1
++ 5
+
+ ❯ src/planning/CalendarPage.test.tsx:1526:24
+    1524|
+    1525|     const tournament = within(week).getAllByRole("link", { name: /Torn…
+    1526|     expect(tournament).toHaveLength(1);
+       |                        ^
+    1527|     expect(tournament[0]).toHaveAccessibleName("Activitat · Torneig d'…
+    1528|     expect(tournament[0]).toHaveTextContent("Activitat · Torneig d'Est…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  10 failed | 4 passed | 148 skipped (162)
+   Start at  02:46:45
+   Duration  11.40s (tests 68%, environment 14%, transform 9%, import 6%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx src/census/CensusListPage.test.tsx src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx -t E4-W12

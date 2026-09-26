@@ -249,6 +249,8 @@
     "fields": {
       "name": "Nombre",
       "idDocument": "DNI/NIE",
+      "passport": "Pasaporte",
+      "otherDocument": "Otro documento",
       "contact": "Contacto",
       "family": "Grupo familiar",
       "payment": "Pago",
@@ -294,7 +296,6 @@
     "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/mes} other {}}",
     "upfront": "Pago inicial (anticipado)",
     "actuallyPaid": "Importe efectivamente cobrado:",
-    "attachments": "{count, plural, one {# adjunto} other {# adjuntos}}",
     "upfrontBreakdown": "{lines} · se registra el cobro; la factura, desde contabilidad",
     "upfrontLines": {
       "ENTRY_FEE": "Entrada {amount}",

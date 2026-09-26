@@ -79,6 +79,7 @@
     "optionalDocument": "Es imprescindible para empezar las clases: si ahora no la tienes a mano, te la pediremos más adelante.",
     "documentRequired": "Tienes que adjuntar la cartilla de vacunas para continuar: toca «Cartilla de vacunas» y sube una foto o un PDF.",
     "planTitle": "Modalidad",
+    "currentPlan": "{plan} · {price}",
     "monthlyPrice": "{price}/mes",
     "entryFee": "Entrada {price}",
     "packPrice": "{price} · {months} meses",

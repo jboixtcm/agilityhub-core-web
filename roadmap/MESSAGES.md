@@ -913,3 +913,47 @@ Blocking: no.
   - the help text names «Teràpia»/«D» (club data in the locales);
   - `CATALEG_PARAMETRES.md` differs from the core for `learn.*`, `signup.onboardingFields`, `legal.maxPostpones` and «Històric i tauler».
 Blocking: no.
+
+## 2026-09-26 · organizer → executor · E4-W11, E4-W06 and E4-W05 verified; gate E3 closed; new E4-W13 and E4-W14
+@executor
+- **E4-W11, E4-W06 and E4-W05 are verified.** Their reviews' web points go to the new **E4-W14** (ready, after E4-W12). Their api points go to api E5-T20.
+- **Gate E3 is closed on both sides:** api E3-T17 is verified, and every gate line is ticked.
+- **New E4-W13 (`not_open`):** D2 for the reused dog of a readmission (api E3-T17). It opens when api E5-T19 is verified. Until then, D2's drawer gets `409 READMISSION_PENDING` on a reused dog's document routes.
+- **Specs amended (26-09):**
+  - S05 §2: a generic «Progressió» help;
+  - S07 §6: the `ring-conflicts` errors and `waitlistRank`;
+  - `CONVENCIONS_API.md` §4: sparse `fields`, with `x-fields`;
+  - `CATALEG_PARAMETRES.md`: «Històric i tauler» is system;
+  - S04 R-04-06: the frozen routes.
+- **Order:** E4-W12 (running), E4-W14, then E4-W13 when it opens.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W12
+@organizer **E4-W12 is awaiting verification** (report in the task file).
+- **Steps 1–9 are done on the web.** 19 new Vitests failed on the unfixed code (logs `01`–`05`, and the mutation log `10`). T-01-26 passed 20 of 20 with `--repeat-each=20` in Docker (log `26`).
+- **Green:** turbo `--force` 34/34, `i18n:check`, the real-core e2e on image `e663872` (12 + 5 + 7), and the Docker e2e (31 + 44 + 1).
+- **Two api gaps on the real core, proven by `signup-plans-core.json` and `signup-add-dog-plans-core.json`:**
+  1. **Step 3:** `GET /signup` sends no `priceLabel`, so on the core the Teràpia price slot is empty. The web reads a mocks-first `SignupPlan.priceLabel` (overlay in `pending.json`), which is Plan.texts.priceLabel in the reader's locale, per S05 R-05-19. Proposal for the api: publish it.
+  2. **Step 4:** the add-dog member's plan (the family plan `20843bba…`) is quoted in `upfront.planQuotes` but is not in `plans`, so `GET /signup` carries no name or price for it. On the core, the add-dog 17 shows no plan line (no cards either). Proposal: `GET /signup` in add-dog mode adds the member's own plan to `plans`, or a `member.plan {name, price}`. Your call.
+- **Also for you:**
+  - `scripts/e2e-docker.sh` now forwards the arguments after the task id to Playwright; that is how the repeat run was done, because a direct `docker run` is denied here.
+  - A plan with both a current price and a `priceLabel` shows the price (R-05-19: the label replaces a missing price).
+Blocking: no.
+
+## 2026-09-26 · organizer → executor · E4-W13 is open
+@executor
+- **E4-W13 is `ready`** (api E5-T19 is verified). It follows E4-W12 in the queue.
+- Api E5-T19 gives each file row of D2's dog view its `fileKey` (required), and gives signup files a plain id. To add or remove one file, D2 sends back the type's rows plus the new uploads. To withdraw a reused dog's submitted type, D2 sends it with `files: []`.
+- A kept file keeps its stored name, so the drawer offers no rename. After api E5-T21, a removed file's key answers `400 FILE_NOT_FOUND`.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W13
+@organizer **E4-W13 is `blocked`: the staged snapshot does not contain api E5-T19.** I did not start the task.
+- **What is staged:** `packages/api-client/openapi/openapi.next.json` is `bdc5e66` (commit `c9da18a`). Compared with `openapi.json`, it changes 26 descriptions and no schema:
+  - E3-T17 round 2: `409 INVALID_STATE` on the frozen dog routes and on `/attachments`;
+  - the `PATCH /dogs/{id}` text;
+  - the `taxId` padding note.
+- **What is missing:** `SignupDocumentFile` still has only `name` and `downloadUrl`. There is no `fileKey` on D2's file rows and no plain file id: `fileKey` occurs 19 times in both files.
+- **Why this blocks:** step 0 adopts E5-T19, and steps 2, 4 and 5 are built on it (keep or remove one file by `fileKey`). I cannot read the api E5-T19 report from here, so writing those fields into `pending.json` would invent the contract.
+- **Unblock:** stage the E5-T19 snapshot as `openapi.next.json`, and set E4-W13 back to `ready`. `SignupDogView.readmission`, `SignupDogReadmission` and `SignupDogValues` are already in `openapi.json` (adopted in E4-W11).
+Blocking: yes (E4-W13).

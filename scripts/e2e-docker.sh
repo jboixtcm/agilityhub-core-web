@@ -23,8 +23,23 @@ fi
 
 mkdir -p "$evidence_directory"
 
+# `pnpm e2e:docker <ID> [--] <Playwright arguments>` (E4-W12): the arguments after the task id go to
+# every app's `playwright test` (for example `--repeat-each=20 --grep=… --pass-with-no-tests`);
+# without them the complete suite runs, as before. The task id itself is informative only.
+playwright_args=()
+if [[ $# -gt 1 ]]; then
+  for argument in "${@:2}"; do
+    [[ "$argument" == "--" ]] || playwright_args+=("$argument")
+  done
+fi
+
 echo "Running Playwright in $playwright_image"
 echo "Evidence copied back for: ${evidence_tasks:-<no task>}"
+if [[ ${#playwright_args[@]} -eq 0 ]]; then
+  echo "Playwright arguments: <none, complete suite>"
+else
+  echo "Playwright arguments: ${playwright_args[*]}"
+fi
 docker run --rm \
   --env CI=1 \
   --env EVIDENCE_TASKS="$evidence_tasks" \
@@ -51,7 +66,11 @@ docker run --rm \
     pnpm install --frozen-lockfile
     touch /tmp/e2e-started
     e2e_status=0
-    pnpm e2e || e2e_status=$?
+    if [ "$#" -gt 0 ]; then
+      pnpm exec turbo run e2e --concurrency=1 -- "$@" || e2e_status=$?
+    else
+      pnpm e2e || e2e_status=$?
+    fi
     for task in $EVIDENCE_TASKS; do
       task_directory="/work/roadmap/evidence/$task"
       [ -d "$task_directory" ] || continue
@@ -62,4 +81,4 @@ docker run --rm \
       done
     done
     exit "$e2e_status"
-  '
+  ' sh ${playwright_args[@]+"${playwright_args[@]}"}

@@ -213,18 +213,32 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
     pageErrors.push(error.stack ?? error.message);
   });
   await loginAdmin(admin);
+  // E4-W12 step 5 (S03 §2 D5): a fresh /abonats applies only the status chip «Alta», so the real
+  // core lists its members without clearing any filter first.
+  const defaultList = admin.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return (
+      response.request().method() === "GET" &&
+      url.pathname.endsWith("/api/v1/members") &&
+      url.searchParams.get("fields") !== "id"
+    );
+  });
   await navigateSpa(admin, "/abonats");
+  const defaultListResponse = await defaultList;
+  expect(defaultListResponse.status()).toBe(200);
+  expect(new URL(defaultListResponse.url()).searchParams.getAll("filter")).toEqual(["status:eq:ACTIVE"]);
+  expect(((await defaultListResponse.json()) as { totalItems: number }).totalItems).toBe(184);
 
   await expect(admin.getByRole("heading", { name: /Abonats/u })).toBeVisible();
   await expect(admin.getByText("184 d'alta")).toBeVisible();
   await expect(admin.getByRole("combobox", { name: "Estat dels abonats" })).toHaveValue("ACTIVE");
+  await expect(admin.getByText("Cap abonat amb aquests criteris")).toHaveCount(0);
+  await expect(admin.getByText(/Filtre \(\d+\)/u)).toHaveCount(0);
+  await expect(admin.getByRole("table").getByRole("link").first()).toBeVisible();
+  await screenshot(admin, "D5-abonats-default-core-1280.png");
 
   const filterMenu = admin.locator(".ah-universal-list__filter-menu");
   await filterMenu.locator("summary").click();
-  const clearFilters = filterMenu.getByRole("button", { name: "Neteja" });
-  if (await clearFilters.isEnabled()) {
-    await clearFilters.click();
-  }
   await filterMenu.getByLabel("Columna").selectOption("dogLevelId");
   const filterValue = filterMenu.locator("select").nth(2);
   await expect(filterValue).toBeEnabled();

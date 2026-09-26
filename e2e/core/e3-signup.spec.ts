@@ -50,7 +50,14 @@ interface Money {
 /** The part of `GET /signup` the «Pagament inicial» card reads (api E3-T08 `planQuotes`). */
 interface SignupQuoteConfig {
   member?: { planId?: string };
-  plans?: { id: string; name: string }[];
+  plans?: {
+    conditions?: string;
+    id: string;
+    name: string;
+    price?: unknown;
+    priceLabel?: string;
+    type?: string;
+  }[];
   upfront?: {
     planQuotes: {
       lines: { amount: Money; concept: string }[];
@@ -454,6 +461,24 @@ async function completePublicSignup({
   const config = (await (await paymentConfig).json()) as SignupQuoteConfig;
   await expect(page.locator(".signup-upfront__total")).toBeVisible();
   await expectQuoteCard(page, config, plan);
+  if (screenshots) {
+    // E4-W12 step 3 (R-05-19): what the core's `GET /signup` sends for each plan card of 17.
+    writeFileSync(
+      join(evidenceDirectory, "signup-plans-core.json"),
+      `${JSON.stringify(
+        (config.plans ?? []).map((item) => ({
+          conditions: item.conditions ?? null,
+          hasPrice: item.price !== undefined && item.price !== null,
+          id: item.id,
+          name: item.name,
+          priceLabel: item.priceLabel ?? null,
+          type: item.type ?? null,
+        })),
+        null,
+        2,
+      )}\n`,
+    );
+  }
   writeFileSync(
     join(evidenceDirectory, `signup-quote-${dog.replaceAll(/[^A-Za-z0-9]+/gu, "-").toLowerCase()}-core.json`),
     `${JSON.stringify({ plan: plan ?? config.plans?.[0]?.name ?? null, today: config.upfront?.today ?? null, planQuotes: config.upfront?.planQuotes ?? null }, null, 2)}\n`,
@@ -829,9 +854,37 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const addDogLink = member.getByRole("link", { name: "＋ AFEGEIX UN GOS" }).first();
   await expect(addDogLink).toBeVisible();
   await screenshot(member, "13-my-dogs-loaded-core-375.png");
+  const addDogFormConfig = member.waitForResponse(
+    (response) => response.url().endsWith("/api/v1/signup") && response.request().method() === "GET",
+  );
   await addDogLink.click();
   await member.waitForURL("**/gossos/nou");
+  const addDogForm = (await (await addDogFormConfig).json()) as SignupQuoteConfig;
   await fillDog(member, additionalDog, "941000000009903");
+  // E4-W12 step 4 (T-04-32): no plan cards and no selection; the member's plan is one read-only
+  // line when the form offers it (a plan off the form has no name in `GET /signup`).
+  await expect(member.getByRole("button", { name: /^Selecciona /u })).toHaveCount(0);
+  const memberPlan = addDogForm.plans?.find((item) => item.id === addDogForm.member?.planId);
+  if (memberPlan === undefined) {
+    await expect(member.getByRole("region", { name: "Modalitat" })).toHaveCount(0);
+  } else {
+    await expect(member.locator(".signup-plan-current")).toContainText(memberPlan.name);
+  }
+  writeFileSync(
+    join(evidenceDirectory, "signup-add-dog-plans-core.json"),
+    `${JSON.stringify(
+      {
+        memberPlanId: addDogForm.member?.planId ?? null,
+        memberPlanOffered: memberPlan !== undefined,
+        memberPlanQuoted:
+          addDogForm.upfront?.planQuotes.some((quote) => quote.planId === addDogForm.member?.planId) ??
+          false,
+        plans: (addDogForm.plans ?? []).map((item) => ({ id: item.id, name: item.name })),
+      },
+      null,
+      2,
+    )}\n`,
+  );
   await screenshot(member, "17-add-dog-core-375.png");
   const addDogConfig = member.waitForResponse(
     (response) =>
@@ -960,6 +1013,11 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   const { member: passportMember, paymentMethods: passportMethods } = await signupViewMethods(passportView);
   await expect(admin.getByRole("heading", { name: /Joana Passaport E3/u })).toBeVisible();
   await expect(admin.getByText("Pendent — ha indicat: Pere Inexistent + gos Tro")).toBeVisible();
+  // E4-W12 steps 1–2: the passport row says «Passaport»; the notes carry no attachment chip.
+  const passportRow = admin.locator(".signup-review-data dt").filter({ hasText: /^Passaport$/u });
+  await expect(passportRow).toHaveCount(1);
+  await expect(admin.locator(".signup-review-data dt").filter({ hasText: /^DNI\/NIE$/u })).toHaveCount(0);
+  await expect(admin.getByText(/\badjunts?\b/u)).toHaveCount(0);
   await screenshot(admin, "D2-signup-family-pending-core-1280.png");
   const planSelect = admin.getByLabel("Modalitat i tarifa");
   const requestedPlan = await planSelect.inputValue();

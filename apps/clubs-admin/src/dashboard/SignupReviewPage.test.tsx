@@ -116,7 +116,7 @@ async function renderReview({
   branding?: Branding;
   dogs?: string;
   fetchOverride?: typeof fetch;
-  language?: "ca" | "en";
+  language?: "ca" | "en" | "es";
   onNavigate?: (path: string) => void;
   refreshCounters?: () => void;
 } = {}) {
@@ -168,7 +168,9 @@ describe("T-04-33 D2 signup validation", () => {
     expect(screen.getByText("tarifa familiar en validar")).toBeVisible();
     expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
     expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute("href", "https://files.example.test/cartilla_Kiwi_1.jpg");
-    expect(screen.getByText("3 adjunts")).toBeVisible();
+    // S04 §3 and §13 #1: the signup notes have no attachments; the documents are not counted again.
+    expect(screen.getByText("Iniciar-nos a l'agility i socialitzar")).toBeVisible();
+    expect(screen.queryByText(/\badjunts?\b/u)).not.toBeInTheDocument();
     expect(screen.getByText(dataRow(/^Kiwi · Femella · Whippet · /u))).toBeVisible();
     expect(screen.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
     expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
@@ -179,6 +181,54 @@ describe("T-04-33 D2 signup validation", () => {
     expect(screen.getByText("cobrat")).toBeVisible();
     // The mockup's neutral outline button.
     expect(screen.getByRole("button", { name: "REBUTJA (amb motiu)" })).toHaveClass("ah-button--ghost");
+  });
+
+  it("E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip", async () => {
+    await renderReview({
+      fetchOverride: recordingFetch((body) => {
+        for (const dog of body.dogs) dog.notesToInstructors = null;
+      }).fetch,
+    });
+
+    // The 3 files stay under «Documents»…
+    expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toBeVisible();
+    expect(screen.getAllByRole("link", { name: /\.(jpg|pdf)$/u })).toHaveLength(3);
+    // …and the notes read «—», with no chip beside the term.
+    const notes = screen.getByText("Notes als instructors");
+    expect(notes.tagName).toBe("DT");
+    expect(within(notes).queryByText(/adjunt/u)).not.toBeInTheDocument();
+    expect(notes.nextElementSibling).toHaveTextContent(/^—$/u);
+    expect(screen.queryByText(/\badjunts?\b/u)).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ["ca", "DNI", "47123456K", "DNI/NIE"],
+    ["ca", "NIE", "X1234567L", "DNI/NIE"],
+    ["ca", "PASSPORT", "PA1234567", "Passaport"],
+    ["es", "PASSPORT", "PA1234567", "Pasaporte"],
+    ["en", "PASSPORT", "PA1234567", "Passport"],
+    ["es", "DNI", "47123456K", "DNI/NIE"],
+    ["en", "NIE", "X1234567L", "ID document"],
+  ] as const)("E4-W12 step 2: in %s the identity row of a %s is labelled by its type", async (language, type, number, label) => {
+    await renderReview({
+      branding: { ...canic, locales: ["ca", "es", "en"] },
+      fetchOverride: recordingFetch((body) => { body.member.idDocument = { number, type }; }).fetch,
+      language,
+    });
+
+    const value = await screen.findByText(number);
+    const term = value.closest("dd")?.previousElementSibling;
+    expect(term?.tagName).toBe("DT");
+    expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+  });
+
+  it("E4-W12 step 2: the edit drawer labels a passport «Passaport» too", async () => {
+    await renderReview({
+      fetchOverride: recordingFetch((body) => { body.member.idDocument = { number: "PA1234567", type: "PASSPORT" }; }).fetch,
+    });
+    const drawer = openDrawer();
+    expect(within(drawer).getByLabelText("Passaport")).toHaveValue("PA1234567");
+    expect(within(drawer).queryByLabelText("DNI/NIE")).toBeNull();
   });
 
   it("shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet", async () => {

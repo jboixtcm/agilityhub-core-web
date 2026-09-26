@@ -1231,6 +1231,16 @@ select {
   line-height: 1.35;
 }
 
+/* The add-dog's plan (T-04-32): one read-only line, no card to select. */
+.signup-plan-current {
+  margin: 0;
+  padding: var(--ah-space-3);
+  font-weight: 700;
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
 .signup-plan__activate {
   justify-self: end;
   padding: var(--ah-space-2);

@@ -1,0 +1,498 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/activities/ActivitiesPage.test.tsx (39 tests | 1 failed) 4879ms
+   ❯ T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 (3)
+     × AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}» 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 > AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}»
+TestingLibraryElementError: Unable to find an accessible element with the role "checkbox" and name "Obre Torneig d'Estiu 2026"
+
+Here are the accessible roles:
+
+  caption:
+
+  Name "Llistat d'activitats":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Data Estat":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Data":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Ordena Data de manera ascendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Ordena Data de manera ascendent"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ordena Estat de manera ascendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Ordena Estat de manera ascendent"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "dg 4/10 esborrany Obre Demostració Festa Major":
+  [36m<tr />[39m
+
+  Name "ds 19/09 · 9:00 publicada Obre Lliga social — 3a jornada":
+  [36m<tr />[39m
+
+  Name "ds 12/09 · 9:00–13:00 publicada Obre Seminari de handling":
+  [36m<tr />[39m
+
+  Name "ds 22 · 10:00–12:00 publicada Obre Taller de contactes":
+  [36m<tr />[39m
+
+  Name "dv 7 · 18:30–20:30 publicada Obre Torneig d'Estiu 2026":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "dg 4/10":
+  [36m<td />[39m
+
+  Name "esborrany":
+  [36m<td />[39m
+
+  Name "Obre Demostració Festa Major":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "ds 19/09 · 9:00":
+  [36m<td />[39m
+
+  Name "publicada":
+  [36m<td />[39m
+
+  Name "Obre Lliga social — 3a jornada":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "ds 12/09 · 9:00–13:00":
+  [36m<td />[39m
+
+  Name "publicada":
+  [36m<td />[39m
+
+  Name "Obre Seminari de handling":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "ds 22 · 10:00–12:00":
+  [36m<td />[39m
+
+  Name "publicada":
+  [36m<td />[39m
+
+  Name "Obre Taller de contactes":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "dv 7 · 18:30–20:30":
+  [36m<td />[39m
+
+  Name "publicada":
+  [36m<td />[39m
+
+  Name "Obre Torneig d'Estiu 2026":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "dg 4/10":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+  [36m/>[39m
+
+  Name "esborrany":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+  [36m/>[39m
+
+  Name "Obre Demostració Festa Major":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+  [36m/>[39m
+
+  Name "ds 19/09 · 9:00":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+  [36m/>[39m
+
+  Name "publicada":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+  [36m/>[39m
+
+  Name "Obre Lliga social — 3a jornada":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+  [36m/>[39m
+
+  Name "ds 12/09 · 9:00–13:00":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+  [36m/>[39m
+
+  Name "publicada":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+  [36m/>[39m
+
+  Name "Obre Seminari de handling":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+  [36m/>[39m
+
+  Name "ds 22 · 10:00–12:00":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+  [36m/>[39m
+
+  Name "publicada":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+  [36m/>[39m
+
+  Name "Obre Taller de contactes":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+  [36m/>[39m
+
+  Name "dv 7 · 18:30–20:30":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+  [36m/>[39m
+
+  Name "publicada":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+  [36m/>[39m
+
+  Name "Obre Torneig d'Estiu 2026":
+  [36m<a[39m
+    [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<table>[39m
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m>[39m
+    [0mLlistat d'activitats[0m
+  [36m</caption>[39m
+  [36m<thead>[39m
+    [36m<tr>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Ordena Data de manera ascendent"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mData[0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m↓[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Ordena Estat de manera ascendent"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m/>[39m
+    [36m</tr>[39m
+  [36m</thead>[39m
+  [36m<tbody>[39m
+    [36m<tr>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+        [36m>[39m
+          [0mdg 4/10[0m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mesborrany[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-demostracio-festa-major"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mObre Demostració Festa Major[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+        [36m>[39m
+          [0mds 19/09 · 9:00[0m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0mpublicada[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-lliga-social-3"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mObre Lliga social — 3a jornada[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+        [36m>[39m
+          [0mds 12/09 · 9:00–13:00[0m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0mpublicada[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-seminari-handling"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mObre Seminari de handling[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+        [36m>[39m
+          [0mds 22 · 10:00–12:00[0m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0mpublicada[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-taller-contactes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mObre Taller de contactes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+        [36m>[39m
+          [0mdv 7 · 18:30–20:30[0m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0mpublicada[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/activitats/activity-torneig-estiu-2026"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mObre Torneig d'Estiu 2026[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+  [36m</tbody>[39m
+[36m</table>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/activities/ActivitiesPage.test.tsx:1411:26
+    1409|       ?.url.searchParams.get("fields");
+    1410|     expect(fields?.split(",")).toEqual(expect.arrayContaining(["id", "…
+    1411|     expect(within(table).getByRole("checkbox", { name: "Obre Torneig d…
+       |                          ^
+    1412|     expect(within(table).getByRole("checkbox", { name: "Obre Seminari …
+    1413|     expect(within(table).queryByRole("checkbox", { name: /^Obre\s*(nul…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 162 passed (163)
+   Start at  02:53:10
+   Duration  7.08s (tests 77%, environment 10%, transform 7%, import 4%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx src/census/CensusListPage.test.tsx src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx

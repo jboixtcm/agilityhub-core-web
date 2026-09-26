@@ -37,9 +37,11 @@ test.describe("T-01-26 first-access onboarding", () => {
   test("pending account completes the screen once and enters the app", async ({ page }) => {
     await prepareScenario(page, "onboarding");
     await login(page);
-    await page.waitForURL("**/benvinguda");
-
+    // E4-W12 step 9: wait for the destination's content, never for a navigation event. The login
+    // lands on /inici with a full page load and the app redirects to /benvinguda client-side, so
+    // `waitForURL` could catch the aborted load (`net::ERR_ABORTED; maybe frame was detached?`).
     await expect(page.getByRole("heading", { name: "Completa el teu perfil" })).toBeVisible();
+    await expect(page).toHaveURL(/\/benvinguda$/u);
     await expect(page.getByLabel("Nom (obligatori)")).toHaveValue("Biel Roca");
     await expect(page.getByRole("combobox", { name: "Idioma (obligatori)" })).toHaveValue("ca");
     await expect(page.getByLabel("Telèfon")).toHaveValue("");
@@ -63,19 +65,24 @@ test.describe("T-01-26 first-access onboarding", () => {
       fields: { locale: "ca", name: "Biel Roca", phone: "+34600111222" },
       imageConsent: true,
     });
-    await page.waitForURL("**/inici");
+    await expect(page.getByRole("link", { exact: true, name: "Inici" })).toBeVisible();
+    await expect(page).toHaveURL(/\/inici$/u);
+    await expect(page.getByRole("heading", { name: "Completa el teu perfil" })).toHaveCount(0);
 
-    await page.goto(`${baseUrl}/benvinguda`);
-    await page.waitForURL("**/inici");
+    // A completed account never sees the screen again: /benvinguda sends it to /inici.
+    await page.goto(`${baseUrl}/benvinguda`, { waitUntil: "commit" });
+    await expect(page.getByRole("link", { exact: true, name: "Inici" })).toBeVisible();
+    await expect(page).toHaveURL(/\/inici$/u);
+    await expect(page.getByRole("heading", { name: "Completa el teu perfil" })).toHaveCount(0);
   });
 
   test("three policy postponements make the next consent blocking", async ({ page }) => {
     await prepareScenario(page, "policyReconsent");
     await login(page);
-    await page.waitForURL("**/inici");
     await expect(
       page.getByRole("dialog", { name: "Hem actualitzat la política de privacitat" }),
     ).toBeVisible();
+    await expect(page).toHaveURL(/\/inici$/u);
 
     const remaining = await page.evaluate(async () => {
       const first = await fetch("/api/v1/me/onboarding/postpone", { method: "POST" });
@@ -85,8 +92,8 @@ test.describe("T-01-26 first-access onboarding", () => {
     expect(remaining).toMatchObject([{ postponeRemaining: 2 }, { postponeRemaining: 1 }]);
     await page.getByRole("button", { name: "Més tard" }).click();
 
-    await page.waitForURL("**/benvinguda");
     await expect(page.getByRole("heading", { name: "Completa el teu perfil" })).toBeVisible();
+    await expect(page).toHaveURL(/\/benvinguda$/u);
     await expect(page.getByRole("button", { name: "Més tard" })).toHaveCount(0);
     await expect(
       page.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),

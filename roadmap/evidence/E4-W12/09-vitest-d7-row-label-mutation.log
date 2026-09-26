@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/activities/ActivitiesPage.test.tsx (39 tests | 1 failed | 38 skipped) 115ms
+   ❯ T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 (3)
+     × AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}» 113ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W12 D7 real-core follow-ups of E4-W05 > AGENTS rule 6: with a view that hides «Activitat» the list still requests `title`, so every row reads «Obre {title}»
+AssertionError: expected [ 'id', 'date', 'startTime', …(2) ] to deeply equal ArrayContaining ["id", "title"]
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
+    "id",
+-   "title",
++   "date",
++   "startTime",
++   "endTime",
++   "state",
+  ]
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1410:32
+    1408|       .at(-1)
+    1409|       ?.url.searchParams.get("fields");
+    1410|     expect(fields?.split(",")).toEqual(expect.arrayContaining(["id", "…
+       |                                ^
+    1411|     // The chevron link of each row is named by `labels.selectRow`.
+    1412|     expect(within(table).getByRole("link", { name: "Obre Torneig d'Est…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 38 skipped (39)
+   Start at  02:53:41
+   Duration  871ms (transform 34%, environment 29%, import 15%, tests 14%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx -t hides «Activitat»

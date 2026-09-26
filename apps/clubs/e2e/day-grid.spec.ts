@@ -37,6 +37,28 @@ async function login(page: Page, scenario: string, landing: string) {
   await page.waitForURL(`**${landing}`);
 }
 
+/** The words of the cell lines drawn over more than one line: a break inside the word. */
+async function brokenWords(grid: Locator): Promise<string[]> {
+  return grid
+    .locator(".ah-schedule-cell__title, .ah-schedule-cell__subtitle")
+    .evaluateAll((lines) =>
+      lines.flatMap((line) => {
+        const broken: string[] = [];
+        const walker = document.createTreeWalker(line, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+          for (const match of (node.textContent ?? "").matchAll(/\S+/gu)) {
+            const range = document.createRange();
+            range.setStart(node, match.index);
+            range.setEnd(node, match.index + match[0].length);
+            const tops = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top)));
+            if (tops.size > 1) broken.push(match[0]);
+          }
+        }
+        return broken;
+      }),
+    );
+}
+
 async function expectIdenticalColumns(grid: Locator) {
   const headers = grid.getByRole("columnheader");
   const widths: number[] = [];
@@ -159,5 +181,34 @@ test.describe("T-06-29 screen 23 «Visió global» (/instructor/avui)", () => {
     expect((await cancellation).postDataJSON()).toEqual({});
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(grid.getByText("Bloq.")).toHaveCount(0);
+  });
+});
+
+test.describe("E4-W12 step 7 the 375 px cells of 10 and 23", () => {
+  const stepEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W12");
+
+  test("member: «Ocupada · manteniment» wraps between words or ends with an ellipsis, never inside a word", async ({
+    page,
+  }) => {
+    await login(page, "member", "/inici");
+    await page.goto(`${baseUrl}/avui?date=2026-08-04`);
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await expect(grid.getByText("Ocupada").first()).toBeVisible();
+    expect(await brokenWords(grid)).toEqual([]);
+    await page.screenshot({ fullPage: true, path: resolve(stepEvidence, "10-avui-cells-375.png") });
+  });
+
+  test("instructor: «Bloq.» and its reason wrap between words or end with an ellipsis, never inside a word", async ({
+    page,
+  }) => {
+    await login(page, "instructor", "/instructor/avui");
+    await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await expect(grid.getByText("Bloq.")).toBeVisible();
+    expect(await brokenWords(grid)).toEqual([]);
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(stepEvidence, "23-visio-global-cells-375.png"),
+    });
   });
 });

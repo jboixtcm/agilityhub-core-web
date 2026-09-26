@@ -72,11 +72,12 @@ const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
 /**
  * `fields` of the list request: response keys only. The core answers `400 INVALID_FILTER` to a key
  * it does not send, and an empty value (`null`, `false`) in every key it was not asked for; it
- * always sends `id` (E4-W05, published core).
+ * always sends `id` (E4-W05, published core). `title` is always asked for too: every row's label
+ * reads «Obre {title}», whatever columns are visible (AGENTS rule 6).
  */
 export function activityFields(columns: readonly string[]): string {
   const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
-  return [...new Set(["id", ...keys])].join(",");
+  return [...new Set(["id", "title", ...keys])].join(",");
 }
 const DEFAULT_FILTERS: UniversalFilter[] = [{ field: "deleted", operator: "eq", value: "false" }];
 

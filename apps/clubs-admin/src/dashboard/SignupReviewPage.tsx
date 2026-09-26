@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { useRefreshCounters } from "./counters";
 import { signupPerson } from "./readmission";
 import { classifySignupReviewError, type SignupReviewError } from "./signup-review-errors";
-import { SignupEditDrawer } from "./SignupEditDrawer";
+import { idDocumentLabel, SignupEditDrawer } from "./SignupEditDrawer";
 
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
@@ -553,7 +553,7 @@ export function SignupReviewPage({
           <h2>{t("admin-census:signupReview.person")}</h2>
           <dl className="signup-review-data">
             <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{member.fullName}</strong></dd>
-            <dt>{t("admin-census:signupReview.fields.idDocument")}</dt><dd><strong>{member.idDocument?.number ?? t("admin-census:values.empty")}</strong></dd>
+            <dt>{idDocumentLabel(member.idDocument?.type, t)}</dt><dd><strong>{member.idDocument?.number ?? t("admin-census:values.empty")}</strong></dd>
             <dt>{t("admin-census:signupReview.fields.contact")}</dt>
             <dd>
               <span>{contact === "" ? t("admin-census:values.empty") : contact}</span>
@@ -670,11 +670,9 @@ export function SignupReviewPage({
                 <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {formatPlainDate(`${dog.birthMonth}-01`, "monthYear")}</dd>
                 <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
                 <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{files.map((file) => <a href={file.downloadUrl} key={file.downloadUrl} rel="noreferrer" target="_blank"><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
-                <dt>
-                  {t("admin-census:signupReview.fields.notes")}
-                  {files.length === 0 ? null : <Badge>{t("admin-census:signupReview.attachments", { count: files.length })}</Badge>}
-                </dt>
-                <dd>{dog.notesToInstructors ?? t("admin-census:values.empty")}</dd>
+                {/* S04 §3 and §13 #1: the signup notes carry no attachments (those come from 13). */}
+                <dt>{t("admin-census:signupReview.fields.notes")}</dt>
+                <dd>{dog.notesToInstructors == null || dog.notesToInstructors.trim() === "" ? t("admin-census:values.empty") : dog.notesToInstructors}</dd>
               </dl>
               <div className="signup-review-dog-decision">
                 {signup.proposals.levels.length === 0 ? null : (

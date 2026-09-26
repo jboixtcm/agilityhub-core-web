@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -229,6 +232,81 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
     expect(block).toHaveClass("ah-schedule-cell--plain", "ah-schedule-cell--dashed");
     expect(screen.getByText("Activitat · Taller de salts")).toBeVisible();
     expect(container.querySelectorAll("button")).toHaveLength(0);
+  });
+
+  it("E4-W12 step 7: «Ocupada · manteniment» and «Bloq.» sit in the word-safe title and subtitle of the cell", () => {
+    const { rerender } = render(
+      <DayGrid
+        columns={columns}
+        labels={labels}
+        rows={[
+          {
+            cells: [{ id: "o1", kind: "OCCUPIED", reasonLabel: "manteniment", ringId: "ring-car" }],
+            time: "11:00",
+          },
+        ]}
+        view="member"
+      />,
+    );
+    expect(screen.getByText("Ocupada")).toHaveClass("ah-schedule-cell__title");
+    expect(screen.getByText("manteniment")).toHaveClass("ah-schedule-cell__subtitle");
+    expect(screen.getByText("manteniment").closest(".ah-day-grid")).not.toBeNull();
+
+    rerender(
+      <DayGrid
+        columns={columns}
+        labels={labels}
+        rows={[
+          {
+            cells: [{ id: "b1", kind: "BLOCK", reasonLabel: "manteniment", ringId: "ring-car" }],
+            time: "11:00",
+          },
+        ]}
+        view="instructor"
+      />,
+    );
+    expect(screen.getByText("Bloq.")).toHaveClass("ah-schedule-cell__title");
+    expect(screen.getByText("manteniment")).toHaveClass("ah-schedule-cell__subtitle");
+  });
+
+  it("E4-W12 step 7: the day-grid cell lines wrap between words or end with an ellipsis, never inside a word", () => {
+    const styles = [
+      readFileSync(resolve(import.meta.dirname, "day-grid.css"), "utf8"),
+      readFileSync(resolve(import.meta.dirname, "schedule-grid.css"), "utf8"),
+    ].join("\n");
+    const rules = [...styles.replaceAll(/\/\*[\s\S]*?\*\//gu, "").matchAll(/([^{}]+)\{([^{}]*)\}/gu)].map(
+      ([, selector = "", body = ""]) => ({
+        declarations: new Map(
+          body
+            .split(";")
+            .map((declaration) => declaration.split(":").map((part) => part.trim()))
+            .filter((parts): parts is [string, string] => parts.length === 2 && parts[0] !== "")
+            .map(([property, value]) => [property, value]),
+        ),
+        selector: selector.trim(),
+      }),
+    );
+    const lineRules = rules.filter((rule) => /ah-schedule-cell__(title|subtitle)\b/u.test(rule.selector));
+    // No rule of a cell line breaks a word (break-word/anywhere, break-all, automatic hyphens).
+    for (const rule of lineRules) {
+      expect(rule.declarations.get("overflow-wrap") ?? "normal", rule.selector).toBe("normal");
+      expect(rule.declarations.get("word-break") ?? "normal", rule.selector).toBe("normal");
+      expect(rule.declarations.get("hyphens") ?? "manual", rule.selector).toBe("manual");
+    }
+    const subtitle = rules.find((rule) => rule.selector === ".ah-day-grid .ah-schedule-cell__subtitle");
+    // The day grid wraps its lines between words (pre-line) and, inherited values aside, never
+    // inside one: an over-long word is clipped with an ellipsis within the cell.
+    expect(subtitle?.declarations.get("white-space")).toBe("pre-line");
+    expect(subtitle?.declarations.get("overflow-wrap")).toBe("normal");
+    expect(subtitle?.declarations.get("word-break")).toBe("normal");
+    expect(subtitle?.declarations.get("hyphens")).toBe("manual");
+    expect(subtitle?.declarations.get("min-width")).toBe("0");
+    const base = rules.find((rule) => rule.selector === ".ah-schedule-cell__subtitle");
+    expect(base?.declarations.get("overflow")).toBe("hidden");
+    expect(base?.declarations.get("text-overflow")).toBe("ellipsis");
+    const title = rules.find((rule) => rule.selector === ".ah-schedule-cell__title");
+    expect(title?.declarations.get("white-space")).toBe("nowrap");
+    expect(title?.declarations.get("text-overflow")).toBe("ellipsis");
   });
 
   it("hides cancelled classes from the member view", () => {

@@ -36,8 +36,13 @@ test.describe("E2-W01 census universal lists", () => {
 
     await expect(page.getByRole("heading", { name: /Abonats/u })).toBeVisible();
     await expect(page.getByText("184 d'alta")).toBeVisible();
-    await expect(page.getByText(/Filtre \(1\): Modalitat = «Abonat»/u)).toBeVisible();
+    // E4-W12 step 5 (S03 §2 D5): only the status chip «Alta» applies by default.
     await expect(page.getByRole("combobox", { name: "Estat dels abonats" })).toHaveValue("ACTIVE");
+    await expect(page.getByText(/Filtre \(\d+\)/u)).toHaveCount(0);
+    await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
+    await page.screenshot({
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W12/D5-abonats-1280.png"),
+    });
     await page.screenshot({
       path: resolve(evidenceDirectory, "D5-abonats-1280.png"),
     });

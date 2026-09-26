@@ -1,0 +1,69 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ❯ src/format.test.ts (43 tests | 3 failed | 38 skipped) 12ms
+   ❯ club-aware formats (43)
+     ❯ R-07-13 activity dates (14)
+       × E4-W12 step 7: 03 (`day`) in ca reads 2026-10-17 on 2026-09-26 as «Dissabte 17 d’octubre · 18:30–20:30» 10ms
+       × E4-W12 step 7: 03 (`day`) in es reads 2026-10-17 on 2026-09-26 as «Sábado 17 de octubre · 18:30–20:30» 1ms
+       × E4-W12 step 7: 03 (`day`) in en reads 2026-10-17 on 2026-09-26 as «Saturday, October 17 · 18:30–20:30» 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in ca reads 2026-10-17 on 2026-09-26 as «Dissabte 17 d’octubre · 18:30–20:30»
+AssertionError: expected 'Dissabte 17 · 18:30–20:30' to be 'Dissabte 17 d’octubre · 18:30–20:30' // Object.is equality
+
+Expected: "Dissabte 17 d’octubre · 18:30–20:30"
+Received: "Dissabte 17 · 18:30–20:30"
+
+ ❯ src/format.test.ts:190:11
+    188|         expect(
+    189|           formatActivityDate(date, "18:30", "20:30", locale, "Europe/M…
+    190|         ).toBe(expected);
+       |           ^
+    191|       },
+    192|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in es reads 2026-10-17 on 2026-09-26 as «Sábado 17 de octubre · 18:30–20:30»
+AssertionError: expected 'Sábado 17 · 18:30–20:30' to be 'Sábado 17 de octubre · 18:30–20:30' // Object.is equality
+
+Expected: "Sábado 17 de octubre · 18:30–20:30"
+Received: "Sábado 17 · 18:30–20:30"
+
+ ❯ src/format.test.ts:190:11
+    188|         expect(
+    189|           formatActivityDate(date, "18:30", "20:30", locale, "Europe/M…
+    190|         ).toBe(expected);
+       |           ^
+    191|       },
+    192|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in en reads 2026-10-17 on 2026-09-26 as «Saturday, October 17 · 18:30–20:30»
+AssertionError: expected 'Saturday 17 · 18:30–20:30' to be 'Saturday, October 17 · 18:30–20:30' // Object.is equality
+
+Expected: "Saturday, October 17 · 18:30–20:30"
+Received: "Saturday 17 · 18:30–20:30"
+
+ ❯ src/format.test.ts:190:11
+    188|         expect(
+    189|           formatActivityDate(date, "18:30", "20:30", locale, "Europe/M…
+    190|         ).toBe(expected);
+       |           ^
+    191|       },
+    192|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed | 38 skipped (43)
+   Start at  02:47:38
+   Duration  181ms (transform 66%, import 21%, tests 12%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/format.test.ts -t E4-W12
