@@ -45,7 +45,7 @@
       "start": "Inici",
       "end": "Final",
       "remove": "Esborra la franja",
-      "closedDays": "El club està tancat {days}: aquesta plantilla no admet franges."
+      "closedDays": "Dies de tancament: {days}. Aquesta plantilla no admet franges."
     },
     "generation": {
       "title": "Generar classes — per setmanes",

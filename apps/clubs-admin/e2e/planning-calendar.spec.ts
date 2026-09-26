@@ -238,7 +238,7 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
   });
 });
 
-test.describe("E4-W09 D4 time pickers and opening hours", () => {
+test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
   test("S06 §3 R-02-09 a 07:05 opening offers slot boundaries, and a closed Sunday offers no times", async ({
     page,
   }) => {
@@ -320,14 +320,15 @@ test.describe("E4-W09 D4 time pickers and opening hours", () => {
   });
 });
 
-test.describe("E4-W10 D4 on a day the club is closed", () => {
-  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+test.describe("T-06-28 E4-W10 D4 on a day the club is closed", () => {
+  // E4-W11 step 2 disables the chip editors there: the capture shows them.
+  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W11");
 
   test.beforeAll(() => {
     mkdirSync(closedDayEvidence, { recursive: true });
   });
 
-  test("R-02-09 R-06-09 a class on a closed Sunday offers only «Notes»: another change keeps [ACCEPTA] disabled, the notes are saved", async ({
+  test("R-02-09 R-06-09 E4-W11 a class on a closed Sunday offers only «Notes»: the chip editors are disabled, the notes are saved", async ({
     page,
   }) => {
     await signIn(page, "admin");
@@ -377,15 +378,23 @@ test.describe("E4-W10 D4 on a day the club is closed", () => {
     const card = page.getByRole("region", { name: /^Classe seleccionada/u });
     await expect(card.getByText("El club està tancat aquest dia")).toBeVisible();
     const accept = card.getByRole("button", { name: "ACCEPTA" });
-    await card.getByRole("spinbutton").fill("6");
+    // Only «Notes» is editable: the api re-validates the whole class on any other change.
+    for (const editor of [
+      card.getByRole("spinbutton"),
+      card.getByLabel("Pista"),
+      card.getByLabel("Hora"),
+      card.getByLabel("Descripció"),
+      card.getByRole("button", { name: /^Nivells/u }),
+    ]) {
+      await expect(editor).toBeDisabled();
+    }
     await expect(accept).toBeDisabled();
-    await card.getByRole("spinbutton").fill("");
     await card.getByLabel("Notes").fill("Porteu aigua");
     await expect(accept).toBeEnabled();
     await card.scrollIntoViewIfNeeded();
     await page.screenshot({
       fullPage: true,
-      path: resolve(closedDayEvidence, "D4-classe-diumenge-tancat-notes-1280.png"),
+      path: resolve(closedDayEvidence, "D4-classe-diumenge-tancat-xips-desactivats-1280.png"),
     });
     const saved = page.waitForRequest(
       (request) => request.method() === "PATCH" && request.url().includes("/class-sessions/"),

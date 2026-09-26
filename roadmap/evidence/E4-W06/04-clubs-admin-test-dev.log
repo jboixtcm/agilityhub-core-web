@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  20 passed (20)
+      Tests  283 passed (283)
+   Start at  02:13:26
+   Duration  8.35s (tests 49%, environment 27%, transform 11%, import 7%, setup 6%)
+

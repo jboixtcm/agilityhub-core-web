@@ -1,4 +1,9 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  type ApiClient,
+  type components,
+} from "@agilityhub/api-client";
 import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Button,
@@ -120,25 +125,6 @@ export function isCountryFieldValid(
 /** «dd/mm/aaaa» of a business date: the calendar day it names in every zone (R-06-14). */
 function fullDate(value: string, locale: string): string {
   return fmtPlainDate(value, normalizeLocale(locale), "short");
-}
-
-function fieldErrors(error: unknown): { code: string; field: string }[] {
-  if (!isApiError(error) || typeof error.details !== "object" || error.details === null) {
-    return [];
-  }
-  const candidate = (error.details as Record<string, unknown>).fieldErrors;
-  if (!Array.isArray(candidate)) {
-    return [];
-  }
-  return candidate.flatMap((item) => {
-    if (typeof item !== "object" || item === null) {
-      return [];
-    }
-    const entry = item as Record<string, unknown>;
-    return typeof entry.code === "string" && typeof entry.field === "string"
-      ? [{ code: entry.code, field: entry.field }]
-      : [];
-  });
 }
 
 function formFieldName(field: string): string {
@@ -944,7 +930,7 @@ export function MyDataPage({ client }: { client: ApiClient }) {
       setProfile(result.data);
       setMessage(t("census:myData.saved"));
     } catch (error) {
-      const serverErrors = fieldErrors(error);
+      const serverErrors = apiFieldErrors(error);
       if (serverErrors.length > 0) {
         setErrors(
           Object.fromEntries(

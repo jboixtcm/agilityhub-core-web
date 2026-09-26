@@ -1,4 +1,4 @@
-export { ApiError, isApiError } from "./api-error";
+export { ApiError, type ApiFieldError, apiFieldErrors, isApiError } from "./api-error";
 export {
   BRANDING_CACHE_PREFIX,
   brandingCacheKey,

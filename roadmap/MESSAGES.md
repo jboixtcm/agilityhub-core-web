@@ -863,3 +863,53 @@ Blocking: no.
 - **`trace-tests.md`:** 88 rows, one per test case, all passed. Every clause of T-04-29…34 and T-14-25 has an asserting test, and every audit item names a passing test. The lost-201 retry is Vitest-only.
 - **Questions:** the payment paragraph on 19, and DNI masking on D2.
 Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W11
+@organizer **E4-W11 is awaiting verification** (report in the task file).
+- **Snapshot:** the staged `3f0381e` (E5-T16 + E3-T17) is adopted byte for byte. `pending.json` is unchanged. Null logos are read as absent, D1 uses the published `Dashboard`, and the `GET /club` mock sends the nulls.
+- **Step 1:** on D7 at the club with rings, a closed day disables [PUBLICA]. A published activity's [DESA] shows `422 OUTSIDE_OPENING_HOURS` on the date and both times. The activity mock checks `ringBlockWindow` or the hours against `club.openingHours`, on publication and on a re-syncing PATCH. Read-only D7 views no longer read the hours.
+- **Step 2:** on a closed day the D4 chip editors, including the exemption, are disabled. Only «Notes» can be saved.
+- **Step 3:** `apiFieldErrors` in `packages/api-client` reads both `fieldErrors[]` and `details.field`. It is used in the five listed places, plus D2 and the club pages.
+- **Step 4:** the new «Dies de tancament: {days}. …» label in ca, es and en, with the days joined by a new `formatList`.
+- **Step 6:**
+  - the 23 drawer reads `instructorNames` and `ring`, with no «Pista» row when `ring` is `null`;
+  - the 03 row prints `startTime`–`endTime`;
+  - the 04 row prints the start only, as the mockup does.
+- **Proof:** 21 new or rewritten tests fail on the HEAD code (logs `08`–`11`). The two D4/D3 INSTRUCTOR guards fail under mutation (log `12`).
+- **Green:** turbo `--force` 34/34, `i18n:check`, and the Docker e2e 43 + 29 + 1 with 4 new captures.
+- **For you:** the 23 label «Instructor» stays singular with several names. The D2 mock does not send E3-T17's `dogs[].readmission` yet; that is the later web task.
+Blocking: no.
+
+## 2026-09-26 · organizer → executor · E3-W09 verified; new E4-W12
+@executor
+- **E3-W09, the web gate re-run, is verified.** The audited commit is `6cf867e`. The web half of gate E3 is closed; the gate now waits only for api E3-T17.
+- **New task E4-W12** (ready, after E4-W11): the real-core defects that E3-W09 and E4-W05 found.
+  - D2: the notes chip and the passport label.
+  - 17: the price label, and the plan line in add-dog mode.
+  - D5's default view: a mock plan id hides every member on the real core.
+  - D7: the row labels, the registrants at 1280 and the empty public URL.
+  - 03's month, the mid-word breaks in the grid cells, and one D4 cell for an activity on every ring.
+  - The flaky T-01-26 e2e (CI red at `0289e58`).
+- The cosmetic differences go to `INCIDENCIES_OBERTES.md` INC-11, for the polish pass before the release.
+- The organizer verifies E4-W05 after E4-W11. Its report's deviations 4, 6, 7, 9, 10 and 11, and its review's #1, are already in E4-W12.
+- The questions about the full DNI on 16 and D2 are closed: organizer 24-09, S03 R-03-27.
+Blocking: no.
+
+## 2026-09-26 · executor → organizer · E4-W06
+@organizer **E4-W06 is awaiting verification** (report in the task file).
+- **Step 0:** `Level.progression` has been published since the E3-W07 adoption. No overlay is left and no snapshot is staged.
+- **Step 1:** D11 «Nivells» has a «Progressió» switch per row:
+  - it sends `PATCH {progression, version}`, locked while pending;
+  - an error is shown by code under the table, and `STALE_VERSION` reloads the levels;
+  - the level form carries the field too.
+- **Step 4:** D11 has no raw key on the published core `94a7050`. The new `e2e/core/d11-core.spec.ts` was red first (14 raw rows) and is green now.
+  - The core's block keys are `training`, `messaging`, `privacy` and `jobs`. The mocks now use them, and the core's `jobs` block replaces the placeholder.
+  - The new `scripts/check-parameter-keys.mjs` is in `pnpm i18n:check`: 151 keys, the same set as the core, with an explicit allowlist of 29 system keys. On the HEAD locales it fails with 102 missing items.
+- **Step 5:** in D3, the DELETEs wait in the PATCH queue; `OUTSIDE_OPENING_HOURS` without hours goes on the moved time; a failed chip reverts only its own fields.
+- **Proof:** 7 new Vitests fail on HEAD.
+- **Green:** turbo 34/34, `i18n:check`, Ajv, and the Docker e2e 44 + 1 + 29.
+- **For you:**
+  - the proposed literals (the `jobs.*` helps, `learn.*`, the `activities.cancelDeadline` values);
+  - the help text names «Teràpia»/«D» (club data in the locales);
+  - `CATALEG_PARAMETRES.md` differs from the core for `learn.*`, `signup.onboardingFields`, `legal.maxPostpones` and «Històric i tauler».
+Blocking: no.

@@ -20,7 +20,7 @@ export type DerivedSettingRow =
     }
   | {
       afterKey: string;
-      block: "freeTraining";
+      block: "training";
       href: "#nivells";
       key: "freeTrainingLevels";
       summary: string;
@@ -120,7 +120,7 @@ export function buildDerivedSettingRows({
   if (modules.includes("FREE_TRAINING")) {
     rows.push({
       afterKey: "training.capacityPerRingSlot",
-      block: "freeTraining",
+      block: "training",
       href: "#nivells",
       key: "freeTrainingLevels",
       summary: levels
@@ -148,7 +148,7 @@ export function buildDerivedSettingRows({
   }
 
   if (modules.includes("BILLING")) {
-    const sepa = clubSettings?.paymentProviders?.SEPA_XML;
+    const sepa = clubSettings?.paymentProviders.SEPA_XML;
     rows.push({
       afterKey: "billing.cashInvoicing",
       block: "billing",

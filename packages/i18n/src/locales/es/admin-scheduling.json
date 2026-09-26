@@ -45,7 +45,7 @@
       "start": "Inicio",
       "end": "Final",
       "remove": "Borra la franja",
-      "closedDays": "El club está cerrado: {days}. Esta plantilla no admite franjas."
+      "closedDays": "Días de cierre: {days}. Esta plantilla no admite franjas."
     },
     "generation": {
       "title": "Generar clases — por semanas",

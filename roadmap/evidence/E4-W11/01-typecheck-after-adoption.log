@@ -1,0 +1,85 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running typecheck in 10 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:typecheck: cache miss, executing 145766d4910fd0a3
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/course-core:typecheck: cache hit, replaying logs 671f426b6643ad21
+@agilityhub/ui:typecheck: cache hit, replaying logs 8a65e8707f016c6d
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/i18n:typecheck: cache hit, replaying logs 68d00774aae3f10c
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4a7a4d38f585971
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/auth:typecheck: cache miss, executing 76b2289eea548070
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs-admin:typecheck: cache miss, executing 33039c2a5a5ec77a
+id:typecheck: cache miss, executing 14c6803999e05c6e
+clubs:typecheck: cache miss, executing 35c0faa53cf3c4a4
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+clubs:typecheck: src/main.tsx(42,22): error TS2379: Argument of type '{ colors: { background: string; border: string; danger: string; info: string; onPrimary: string; primary: string; success: string; surface: string; surfaceAlt: string; text: string; textMuted: string; warning: string; }; ... 6 more ...; ringPalette: string[]; } & { ...; }' is not assignable to parameter of type 'BrandingTheme' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:typecheck:   Types of property 'logoDarkUrl' are incompatible.
+clubs:typecheck:     Type 'string | null' is not assignable to type 'string'.
+clubs:typecheck:       Type 'null' is not assignable to type 'string'.
+clubs:typecheck: src/main.tsx(75,27): error TS2322: Type 'NormalizedBranding' is not assignable to type 'Branding'.
+clubs:typecheck:   The types of 'theme.logoDarkUrl' are incompatible between these types.
+clubs:typecheck:     Type 'string | null' is not assignable to type 'string'.
+clubs:typecheck:       Type 'null' is not assignable to type 'string'.
+clubs:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+clubs#typecheck:  WARNING  command finished with error, but continuing...
+clubs-admin:typecheck: src/main.tsx(37,22): error TS2379: Argument of type '{ colors: { background: string; border: string; danger: string; info: string; onPrimary: string; primary: string; success: string; surface: string; surfaceAlt: string; text: string; textMuted: string; warning: string; }; ... 6 more ...; ringPalette: string[]; } & { ...; }' is not assignable to parameter of type 'BrandingTheme' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs-admin:typecheck:   Types of property 'logoDarkUrl' are incompatible.
+clubs-admin:typecheck:     Type 'string | null' is not assignable to type 'string'.
+clubs-admin:typecheck:       Type 'null' is not assignable to type 'string'.
+clubs-admin:typecheck: src/main.tsx(67,27): error TS2322: Type 'NormalizedBranding' is not assignable to type 'Branding'.
+clubs-admin:typecheck:   The types of 'theme.logoDarkUrl' are incompatible between these types.
+clubs-admin:typecheck:     Type 'string | null' is not assignable to type 'string'.
+clubs-admin:typecheck:       Type 'null' is not assignable to type 'string'.
+clubs-admin:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin#typecheck:  WARNING  command finished with error, but continuing...
+clubs#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+clubs-admin#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+
+ Tasks:    8 successful, 10 total
+Cached:    5 cached, 10 total
+  Time:    8.192s 
+Failed:    clubs#typecheck, clubs-admin#typecheck
+
+ ERROR  run failed: command  exited (2)

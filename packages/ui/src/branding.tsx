@@ -21,9 +21,10 @@ export interface BrandingTheme {
   colors: BrandingThemeColors;
   mode: ThemeMode;
   fontFamily?: string;
-  logoDarkUrl?: string;
-  logoUrl?: string;
-  markUrl?: string;
+  /** `null` when the club has no such asset (the snapshot's `Theme`); read as absent. */
+  logoDarkUrl?: string | null;
+  logoUrl?: string | null;
+  markUrl?: string | null;
   radius?: string;
   ringPalette?: string[];
 }
@@ -67,7 +68,7 @@ export interface Branding {
   timeZone: string;
 }
 
-function nonEmptyAssetUrl(value: string | undefined): string | undefined {
+function nonEmptyAssetUrl(value: string | null | undefined): string | undefined {
   const normalized = value?.trim();
   return normalized === "" ? undefined : normalized;
 }

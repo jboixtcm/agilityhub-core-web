@@ -1,9 +1,9 @@
-import { isApiError } from "@agilityhub/api-client";
+import { apiFieldErrors, isApiError } from "@agilityhub/api-client";
 
 /**
  * Where a D2 error is shown (S04 §2 D2: «els errors 422 es mostren sobre el camp»). The api
  * answers most of these codes bare, with empty `details`, so the target comes from the code; the
- * `details.fieldErrors` of a `VALIDATION_ERROR` only refine it.
+ * fields of a `VALIDATION_ERROR` (`details.fieldErrors` or `details.field`) only refine it.
  */
 export type SignupReviewError =
   | { code: string; dogIds: readonly string[]; kind: "level" }
@@ -21,18 +21,6 @@ function detailsOf(error: unknown): Readonly<Record<string, unknown>> {
   return isApiError(error) && typeof error.details === "object" && error.details !== null
     ? (error.details as Record<string, unknown>)
     : {};
-}
-
-function fieldErrors(error: unknown): readonly { code: string; field: string }[] {
-  const values = detailsOf(error).fieldErrors;
-  if (!Array.isArray(values)) return [];
-  return values.flatMap((entry: unknown) => {
-    if (typeof entry !== "object" || entry === null) return [];
-    const item = entry as Record<string, unknown>;
-    return typeof item.field === "string" && typeof item.code === "string"
-      ? [{ code: item.code, field: item.field }]
-      : [];
-  });
 }
 
 /** `details.reason` of a `409 INVALID_STATE` (`NOT_PENDING`, `CHECKOUT_PENDING`, …). */
@@ -81,7 +69,7 @@ export function classifySignupReviewError(
       return { code, kind: "general" };
     }
     case "VALIDATION_ERROR": {
-      const fields = fieldErrors(error);
+      const fields = apiFieldErrors(error);
       if (fields.some((field) => field.field === "nextInvoiceDate")) {
         return { code, kind: "nextInvoiceDate" };
       }

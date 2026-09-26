@@ -198,8 +198,9 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
   });
 });
 
-test.describe("E4-W10 D3 when a day of the kind is closed", () => {
-  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+test.describe("T-06-26 E4-W10 D3 when a day of the kind is closed", () => {
+  // E4-W11 step 4 rewrites the note as a label («Dies de tancament: …»): the capture shows it.
+  const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W11");
 
   test.beforeAll(() => {
     mkdirSync(closedDayEvidence, { recursive: true });
@@ -246,14 +247,14 @@ test.describe("E4-W10 D3 when a day of the kind is closed", () => {
     await page.getByRole("button", { name: "Franja", exact: true }).click();
     const drawer = page.getByRole("dialog", { name: "Nova franja" });
     await expect(
-      drawer.getByText("El club està tancat dilluns: aquesta plantilla no admet franges."),
+      drawer.getByText("Dies de tancament: dilluns. Aquesta plantilla no admet franges."),
     ).toBeVisible();
     await drawer.getByLabel("Inici").fill("10:00");
     await drawer.getByLabel("Final").fill("11:00");
     await expect(drawer.getByRole("button", { name: "Desa" })).toBeDisabled();
     await page.screenshot({
       fullPage: true,
-      path: resolve(closedDayEvidence, "D3-franja-dilluns-tancat-1280.png"),
+      path: resolve(closedDayEvidence, "D3-franja-dies-de-tancament-1280.png"),
     });
   });
 });

@@ -1306,7 +1306,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record; the chip cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         patch: operations["updateDog"];
         trace?: never;
@@ -5756,22 +5756,27 @@ export interface components {
             items: components["schemas"]["WaitlistEntry"][];
         };
         ClubAddress: {
-            city?: string;
-            country?: string;
-            postalCode?: string;
-            region?: string;
-            street?: string;
+            city?: string | null;
+            country?: string | null;
+            postalCode?: string | null;
+            region?: string | null;
+            street?: string | null;
         };
         ClubDomain: {
             app: string;
             host: string;
             primary: boolean;
-            /** Format: date-time */
-            verifiedAt?: string;
+            /**
+             * Format: date-time
+             * @description null while the domain is pending
+             */
+            verifiedAt?: string | null;
         };
         ClubLegal: {
-            imageConsentText?: string;
-            imageConsentTextI18n?: {
+            /** @description In the club's default locale; null without one */
+            imageConsentText?: string | null;
+            /** @description Per locale; empty without texts */
+            imageConsentTextI18n: {
                 [key: string]: string;
             };
             legalTextsVersion: string;
@@ -5833,16 +5838,17 @@ export interface components {
             version: number;
         };
         ClubPwa: {
-            iconUrls?: {
+            /** @description Icon URL by size; empty without icons */
+            iconUrls: {
                 [key: string]: string;
             };
-            name?: string;
-            shortName?: string;
+            name?: string | null;
+            shortName?: string | null;
         };
         ClubSettings: {
-            address?: components["schemas"]["ClubAddress"];
-            contactEmail?: string;
-            contactPhone?: string;
+            address?: components["schemas"]["ClubAddress"] | null;
+            contactEmail?: string | null;
+            contactPhone?: string | null;
             countryProfile: string;
             currency: string;
             defaultLocale: string;
@@ -5851,24 +5857,26 @@ export interface components {
             domains: components["schemas"]["ClubDomain"][];
             /** Format: uuid */
             id: string;
-            lastChange?: components["schemas"]["LastChange"];
-            legal?: components["schemas"]["ClubLegal"];
-            legalName?: string;
+            /** @description The club's last audit entry; null without one */
+            lastChange?: components["schemas"]["LastChange"] | null;
+            legal?: components["schemas"]["ClubLegal"] | null;
+            legalName?: string | null;
             locales: string[];
             modules: string[];
             name: string;
-            paymentProviders?: {
+            paymentProviders: {
                 [key: string]: components["schemas"]["PaymentProviderSummary"];
             };
-            pwa?: components["schemas"]["ClubPwa"];
+            pwa?: components["schemas"]["ClubPwa"] | null;
             slug: string;
             status: string;
-            taxId?: string;
+            /** @description Normalized: upper case, without spaces or separators (S02 §3). */
+            taxId?: string | null;
             theme: components["schemas"]["Theme"];
             timeZone: string;
             /** Format: int64 */
             version: number;
-            websiteUrl?: string;
+            websiteUrl?: string | null;
         };
         ClubSummary: {
             /** @description The town shown with the club's name: displayCity, else the registered office's town. */
@@ -5878,6 +5886,7 @@ export interface components {
             legalName: string | null;
             name: string;
             slug: string;
+            /** @description Normalized: upper case, without spaces or separators (S02 §3). */
             taxId: string | null;
         };
         /** @description Versioned edit of club identity, contact and theme. Omitted fields are preserved. Console fields are rejected with PLATFORM_ONLY; a timeZone change with existing classes returns TIMEZONE_CHANGE_BLOCKED. */
@@ -5890,7 +5899,7 @@ export interface components {
             displayCity?: string | null;
             legalName?: string;
             name?: string;
-            /** @description Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId. */
+            /** @description Stored normalized: upper case, without spaces or separators; the same id written otherwise is no change. Checked by the club's country profile when it changes (ES: CIF, NIF or NIE with its check character; GENERIC: not validated). A refused one answers 400 VALIDATION_ERROR with details.field = taxId. */
             taxId?: string;
             theme?: components["schemas"]["Theme"];
             /** @description Console-only field; cannot be changed here. */
@@ -5992,12 +6001,12 @@ export interface components {
         };
         /** @description S14 §6: module/parameter-controlled blocks are explicitly null when disabled; cached for the club. */
         Dashboard: {
-            dogsByLevel: components["schemas"]["DogsByLevel"];
+            dogsByLevel: components["schemas"]["DogsByLevel"] | null;
             /** Format: date-time */
             generatedAt: string;
             kpis: components["schemas"]["DashboardKpis"];
-            pendingSignups: components["schemas"]["PendingSignups"];
-            riskReview: components["schemas"]["RiskReview"];
+            pendingSignups: components["schemas"]["PendingSignups"] | null;
+            riskReview: components["schemas"]["RiskReview"] | null;
             /** Format: date */
             today: string;
             week: components["schemas"]["DashboardWeek"];
@@ -6011,10 +6020,10 @@ export interface components {
             pendingSignups: number;
         };
         DashboardKpis: {
-            activeMembers: components["schemas"]["ActiveMembersKpi"];
-            classOccupancy: components["schemas"]["ClassOccupancyKpi"];
-            pendingSignups: components["schemas"]["PendingSignupsKpi"];
-            trainingBookings: components["schemas"]["TrainingBookingsKpi"];
+            activeMembers: components["schemas"]["ActiveMembersKpi"] | null;
+            classOccupancy: components["schemas"]["ClassOccupancyKpi"] | null;
+            pendingSignups: components["schemas"]["PendingSignupsKpi"] | null;
+            trainingBookings: components["schemas"]["TrainingBookingsKpi"] | null;
         };
         DashboardLevel: {
             code: string;
@@ -7053,7 +7062,8 @@ export interface components {
         };
         LastChange: {
             action: string;
-            actorName?: string;
+            /** @description null when the audit entry names no actor */
+            actorName?: string | null;
             /** Format: date-time */
             at: string;
         } | null;
@@ -9099,6 +9109,25 @@ export interface components {
             /** @enum {string} */
             sex: "MALE" | "FEMALE";
         };
+        /** @description R-04-06 (E38): the reused dog's own values beside the submitted ones shown on SignupDogView */
+        SignupDogReadmission: {
+            /** @description The fields whose submitted value differs from the dog record (name, sex, breed, birthMonth, notesToInstructors, documents) */
+            changedFields: string[];
+            current: components["schemas"]["SignupDogValues"];
+            /** Format: date-time */
+            previousDeactivatedAt?: string;
+            previousDeactivationReason?: string;
+        };
+        /** @description The values and documents of the dog record */
+        SignupDogValues: {
+            birthMonth?: string;
+            breed?: string;
+            documents: components["schemas"]["SignupDocumentView"][];
+            name: string;
+            notesToInstructors?: string;
+            /** @enum {string} */
+            sex?: "MALE" | "FEMALE";
+        };
         SignupDogView: {
             birthMonth: string;
             breed: string;
@@ -9110,6 +9139,8 @@ export interface components {
             levelId?: string;
             name: string;
             notesToInstructors?: string;
+            /** @description R-04-06 (E38): only for the reused dog of a pending readmission (the chip of the member's own INACTIVE dog). The fields above show the submitted values and the documents the validation will write; the dog record keeps its own until then, and a rejection leaves it as it was */
+            readmission?: components["schemas"]["SignupDogReadmission"];
             /** @enum {string} */
             sex: "MALE" | "FEMALE";
             /** @enum {string} */
@@ -9596,9 +9627,9 @@ export interface components {
         Theme: {
             colors: components["schemas"]["Colors"];
             fontFamily: string;
-            logoDarkUrl?: string;
-            logoUrl?: string;
-            markUrl?: string;
+            logoDarkUrl?: string | null;
+            logoUrl?: string | null;
+            markUrl?: string | null;
             /** @enum {string} */
             mode: "auto" | "light" | "dark";
             radius: string;
@@ -9717,7 +9748,7 @@ export interface components {
         TrainingBookingRequest: {
             dogId: string;
             /** @description Impersonation only (R-09-16); otherwise 403 OVERRIDE_NOT_ALLOWED */
-            override?: components["schemas"]["TrainingOverride"];
+            override?: components["schemas"]["TrainingOverride"] | null;
             /** @description Absent = «Qualsevol»: first FREE ring by catalog order (R-09-07) */
             ringId?: string | null;
             /** Format: date-time */
@@ -20464,7 +20495,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CHIP_ALREADY_EXISTS, STALE_VERSION, MEMBER_ERASED */
+            /** @description CHIP_ALREADY_EXISTS, STALE_VERSION, INVALID_STATE, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;

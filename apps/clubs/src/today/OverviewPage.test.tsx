@@ -1,5 +1,5 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetPlanningState } from "@agilityhub/api-client/mocks";
+import { catalogState, mockScenario, resetPlanningState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -183,5 +183,64 @@ describe("T-06-29 screen 23 «Visió global»", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "No s'ha pogut carregar el quadre del dia.",
     );
+  });
+});
+
+/**
+ * The staff `GET /class-sessions/{id}` of the «B+C» class of 3/08 as the mock api sends it, and a
+ * handler that answers `changes` on top of it from now on.
+ */
+async function classDetailWith(changes: Record<string, unknown>) {
+  const api = createApiClient({
+    baseUrl: `${window.location.origin}/api/v1`,
+    getLocale: () => "ca",
+  });
+  const grid = await api.GET("/day-grid", {
+    params: { query: { date: "2026-08-03", view: "instructor" } },
+  });
+  const id = grid.data?.rows
+    .flatMap((row) => row.cells)
+    .find((cell) => cell.kind === "CLASS" && cell.description === "B+C")?.classId;
+  if (id === undefined) throw new TypeError("Missing the B+C class");
+  const detail = await api.GET("/class-sessions/{id}", { params: { path: { id } } });
+  server.use(
+    http.get("*/api/v1/class-sessions/:id", ({ params }) =>
+      String(params.id) === id
+        ? HttpResponse.json({ ...(detail.data as object), ...changes })
+        : undefined,
+    ),
+  );
+}
+
+describe("T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15)", () => {
+  it("names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell", async () => {
+    const muntanya = catalogState.rings.find((ring) => ring.id === "ring-muntanya");
+    if (muntanya === undefined) throw new TypeError("Missing Muntanya");
+    await classDetailWith({
+      instructorNames: ["Marc", "Núria"],
+      ring: { color: muntanya.color, id: muntanya.id, name: muntanya.name },
+    });
+    await renderOverview();
+    fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+
+    const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    expect(await within(drawer).findByText("Marc, Núria")).toBeVisible();
+    expect(within(drawer).getByText("Muntanya")).toBeVisible();
+    // The tapped cell says Central and Marc: neither is read any more.
+    expect(within(drawer).queryByText("Central")).not.toBeInTheDocument();
+  });
+
+  it("a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row", async () => {
+    await classDetailWith({ instructorNames: [], ring: null });
+    await renderOverview();
+    fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+
+    const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    expect(await within(drawer).findByText("dl 3 d’agost · 18:50–19:50")).toBeVisible();
+    expect(within(drawer).queryByText("Pista")).not.toBeInTheDocument();
+    expect(within(drawer).queryByText("Central")).not.toBeInTheDocument();
+    expect(within(drawer).queryByText("Instructor")).not.toBeInTheDocument();
+    expect(within(drawer).queryByText("Marc")).not.toBeInTheDocument();
+    expect(within(drawer).getByText("5/5 +2")).toBeVisible();
   });
 });

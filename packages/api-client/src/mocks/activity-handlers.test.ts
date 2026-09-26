@@ -8,7 +8,7 @@ import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
 import { ACTIVITY_IDS, activityState, MEMBER_ID } from "./fixtures/activities";
-import { mockScenario, resetActivityState } from "./handlers";
+import { mockScenario, resetActivityState, resetSettingsState } from "./handlers";
 import { server } from "./server";
 
 type SchemaMap = Record<string, { properties?: Record<string, unknown> }>;
@@ -611,5 +611,131 @@ describe("E4-W08 activity mocks answer like the api (impersonation, parameters)"
       params: { path: { key: "levels.enabled" } },
     });
     expect(admin.data?.value).toBe(false);
+  });
+});
+
+describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers", () => {
+  const weekdays = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
+  ] as const;
+
+  afterEach(() => {
+    resetSettingsState();
+  });
+
+  /** `club.openingHours` through the api: the listed days open `open`–`close`, the rest closed. */
+  async function putOpeningHours(days: readonly string[], open = "07:00", close = "22:00") {
+    const current = await client.GET("/club/opening-hours");
+    await client.PUT("/club/opening-hours", {
+      body: {
+        value: Object.fromEntries(days.map((day) => [day, { close, open }])),
+        version: current.data?.version ?? 1,
+      },
+    });
+  }
+
+  const publish = () =>
+    client.POST("/activities/{id}/publication", {
+      body: { notifyEmail: false },
+      params: {
+        header: { "Idempotency-Key": crypto.randomUUID() },
+        path: { id: ACTIVITY_IDS.demonstration },
+      },
+    });
+
+  async function patchDemonstration(body: Record<string, unknown>) {
+    const current = await client.GET("/activities/{id}", {
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+    return client.PATCH("/activities/{id}", {
+      body: { ...body, version: current.data?.version ?? 0 },
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+  }
+
+  it("publication: a closed Sunday is 422 OUTSIDE_OPENING_HOURS without a field; 06:00 with a 07:00 opening too; 10:00 publishes", async () => {
+    // The Demostració (Sunday 4/10) moved to the club on Cadells, where nothing else is booked.
+    await patchDemonstration({
+      endTime: "12:00",
+      location: { atClub: true },
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+      ringIds: ["ring-cadells"],
+      startTime: "10:00",
+    });
+    await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
+    await expect(failure(publish())).resolves.toEqual({
+      code: "OUTSIDE_OPENING_HOURS",
+      details: {},
+      status: 422,
+    });
+    expect(
+      activityState.activities.find((item) => item.id === ACTIVITY_IDS.demonstration)?.state,
+    ).toBe("DRAFT");
+
+    // Open again, but the draft starts at 6:00: a draft never blocks, so the PATCH is accepted and
+    // the publication is refused.
+    await putOpeningHours(weekdays);
+    expect((await patchDemonstration({ startTime: "06:00" })).data?.startTime).toBe("06:00");
+    await expect(failure(publish())).resolves.toMatchObject({
+      code: "OUTSIDE_OPENING_HOURS",
+      status: 422,
+    });
+    await patchDemonstration({ startTime: "10:00" });
+    expect((await publish()).data?.state).toBe("PUBLISHED");
+  });
+
+  it("PATCH of a published activity: a resync on a closed Friday is 422 and changes nothing; notes alone are saved; a wider ringBlockWindow is checked too", async () => {
+    const tournament = () =>
+      client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.tournament } } });
+    const patch = (body: Record<string, unknown>, version: number) =>
+      client.PATCH("/activities/{id}", {
+        body: { ...body, version },
+        params: { path: { id: ACTIVITY_IDS.tournament } },
+      });
+    const before = (await tournament()).data;
+    if (before === undefined) throw new TypeError("Missing the Torneig");
+    // The Torneig is on Friday 7/08, which the club no longer opens.
+    await putOpeningHours(weekdays.filter((day) => day !== "FRIDAY"));
+    await expect(failure(patch({ endTime: "21:00" }, before.version))).resolves.toEqual({
+      code: "OUTSIDE_OPENING_HOURS",
+      details: {},
+      status: 422,
+    });
+    await expect(
+      failure(patch({ ringIds: ["ring-central"] }, before.version)),
+    ).resolves.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 422 });
+    expect((await tournament()).data).toMatchObject({
+      endTime: "20:30",
+      ringIds: before.ringIds,
+      version: before.version,
+    });
+    // No resync without date, hours, rings, window or place: the notes are saved.
+    const noted = await patch({ internalNotes: "Revisar l'horari" }, before.version);
+    expect(noted.data?.version).toBe(before.version + 1);
+
+    // Friday open 18:00–22:00: 18:30–20:30 fits, a set-up window from 17:30 does not (checked
+    // before the ring conflicts, which the options would resolve).
+    await putOpeningHours(weekdays, "18:00", "22:00");
+    const force = { adminText: "Muntatge del Torneig", cancelBookings: true, cancelClasses: true };
+    await expect(
+      failure(
+        patch(
+          { ...force, ringBlockWindow: { fromTime: "17:30", toTime: "21:00" } },
+          before.version + 1,
+        ),
+      ),
+    ).resolves.toMatchObject({ code: "OUTSIDE_OPENING_HOURS", status: 422 });
+    const widened = await patch(
+      { ...force, ringBlockWindow: { fromTime: "18:00", toTime: "21:00" } },
+      before.version + 1,
+    );
+    expect(widened.data?.ringBlockWindow).toEqual({ fromTime: "18:00", toTime: "21:00" });
   });
 });

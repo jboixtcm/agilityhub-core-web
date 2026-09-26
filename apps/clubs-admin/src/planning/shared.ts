@@ -1,4 +1,9 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  type ApiClient,
+  type components,
+} from "@agilityhub/api-client";
 import type { ClubFormats } from "@agilityhub/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -101,12 +106,10 @@ export function errorCode(error: unknown): string | undefined {
   return isApiError(error) ? error.code : undefined;
 }
 
+/** The first field of a `VALIDATION_ERROR`: `details.fieldErrors[]` or `details.field` (§5). */
 export function fieldOfValidationError(error: unknown): string | undefined {
-  if (!isApiError(error) || error.code !== "VALIDATION_ERROR") return undefined;
-  const fieldErrors = (error.details as { fieldErrors?: { field?: unknown }[] } | undefined)
-    ?.fieldErrors;
-  const field = fieldErrors?.[0]?.field;
-  return typeof field === "string" ? field : undefined;
+  if (!isApiError(error, "VALIDATION_ERROR")) return undefined;
+  return apiFieldErrors(error)[0]?.field;
 }
 
 export interface Resource<Data> {

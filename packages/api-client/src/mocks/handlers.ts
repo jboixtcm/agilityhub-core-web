@@ -1807,23 +1807,54 @@ export const handlers = [
       ? apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400)
       : HttpResponse.json(current.history);
   }),
-  http.get("*/api/v1/club", () => {
+  http.get("*/api/v1/club", ({ request }) => {
     const branding = currentMockScenario().branding;
+    // The club's texts in its default locale (no reader language), as `ClubLegal` carries them.
+    const legal = signupConfiguration(new Request(request.url)).legal;
+    const office = branding.club.legalAddress;
+    // As the api (E5-T16): every optional block is sent, `null` when the club has none.
     const settings: ClubSettings = {
+      address:
+        office === null
+          ? null
+          : {
+              city: office.city,
+              country: branding.countryProfile.code,
+              postalCode: office.postalCode,
+              region: null,
+              street: office.street,
+            },
+      contactEmail: null,
+      contactPhone: null,
       countryProfile: branding.countryProfile.code,
       currency: branding.currency,
       defaultLocale: branding.defaultLocale,
+      displayCity: branding.club.city ?? null,
       domains: [],
       id: "00000000-0000-4000-8000-000000000002",
+      lastChange: null,
+      legal:
+        legal === undefined
+          ? null
+          : {
+              imageConsentText: legal.imageConsentText,
+              imageConsentTextI18n: { [branding.defaultLocale]: legal.imageConsentText },
+              legalTextsVersion: legal.legalTextsVersion,
+              privacyPolicyUrl: legal.privacyPolicyUrl,
+            },
+      legalName: branding.club.legalName ?? null,
       locales: branding.locales,
       modules: branding.modules,
       name: branding.club.name,
       paymentProviders: clubPaymentProviders(),
+      pwa: null,
       slug: branding.club.slug,
       status: branding.status,
+      taxId: branding.club.taxId ?? null,
       theme: branding.theme,
       timeZone: branding.timeZone,
       version: 1,
+      websiteUrl: null,
     };
     return HttpResponse.json(settings);
   }),

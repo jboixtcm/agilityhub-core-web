@@ -213,3 +213,44 @@ test.describe("E2-W05 generated club settings", () => {
     }
   });
 });
+
+test.describe("E4-W06 D11 «Nivells» card (S05 §2, E29)", () => {
+  const levelsEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W06");
+
+  test.beforeAll(() => {
+    mkdirSync(levelsEvidence, { recursive: true });
+  });
+
+  test("S05 §3 the «Progressió» switch per level: Teràpia outside the progression, a toggle is saved", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ viewport: { height: 900, width: 1280 } });
+    const page = await context.newPage();
+    await prepareAdmin(page, "ca");
+    await page.goto(`${baseUrl}/parametres`);
+    const card = page.locator("#nivells");
+    await expect(card.getByRole("table", { name: "Nivells del club" })).toBeVisible();
+    await expect(card.getByRole("columnheader", { name: "Progressió" })).toBeVisible();
+    const therapy = card.getByRole("switch", { name: "Progressió: Teràpia" });
+    await expect(therapy).toHaveAttribute("aria-checked", "false");
+    await expect(card.getByRole("switch", { name: "Progressió: G" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    await expect(
+      card.getByText("Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»"),
+    ).toBeVisible();
+    // The jobs block of the core is the «Processos automàtics» card: one heading, no placeholder.
+    await expect(page.getByRole("heading", { name: "Processos automàtics" })).toHaveCount(1);
+    await card.scrollIntoViewIfNeeded();
+    await card.screenshot({ path: resolve(levelsEvidence, "D11-nivells-1280.png") });
+
+    const saved = page.waitForRequest(
+      (request) => request.method() === "PATCH" && request.url().includes("/levels/"),
+    );
+    await therapy.click();
+    expect((await saved).postDataJSON()).toEqual({ progression: true, version: 1 });
+    await expect(therapy).toHaveAttribute("aria-checked", "true");
+    await context.close();
+  });
+});

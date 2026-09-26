@@ -22,7 +22,7 @@ type ClassSessionMemberView = components["schemas"]["ClassSessionMemberView"];
 type RingBlock = components["schemas"]["RingBlock"];
 type RingBlockMemberView = components["schemas"]["RingBlockMemberView"];
 
-/** The tapped cell and the name of its ring, kept while the grid refetches. */
+/** The tapped cell and the name of its ring (for a block's drawer), kept while the grid refetches. */
 interface Selection {
   cell: DayGridApiCell;
   id: string;
@@ -62,16 +62,19 @@ function isStaffBlock(value: RingBlock | RingBlockMemberView): value is RingBloc
   return "createdByName" in value;
 }
 
+/**
+ * The class drawer of 23: everything from the staff `GET /class-sessions/{id}`, including the
+ * instructors' names and the ring (api E5-T15; `ring: null` for a class without a ring, no row).
+ * Only the risk text comes from the tapped cell, which carries it.
+ */
 function ClassDrawerBody({
   cell,
   client,
   id,
-  ring,
 }: {
   cell: DayGridApiCell;
   client: ApiClient;
   id: string;
-  ring: string | undefined;
 }) {
   const branding = useBranding();
   const { t } = useTranslation(["instructor", "home", "enums"]);
@@ -94,22 +97,23 @@ function ClassDrawerBody({
     branding.modules.includes("WAITLIST") && value.counters.waiting > 0
       ? ` +${String(value.counters.waiting)}`
       : "";
+  const instructors = (value.instructorNames ?? []).join(", ");
   return (
     <dl className="day-drawer">
       <dt>{t("instructor:overview.class.when")}</dt>
       <dd>
         {`${dayLabel(value.date)} · ${timeLabel(value.startTime)}–${timeLabel(value.endTime)}`}
       </dd>
-      {ring === undefined ? null : (
+      {value.ring === null || value.ring === undefined ? null : (
         <>
           <dt>{t("instructor:overview.class.ring")}</dt>
-          <dd>{ring}</dd>
+          <dd>{value.ring.name}</dd>
         </>
       )}
-      {cell.instructorName === null || cell.instructorName === undefined ? null : (
+      {instructors === "" ? null : (
         <>
           <dt>{t("instructor:overview.class.instructors")}</dt>
-          <dd>{cell.instructorName}</dd>
+          <dd>{instructors}</dd>
         </>
       )}
       <dt>{t("instructor:overview.class.occupancy")}</dt>
@@ -302,12 +306,7 @@ export function OverviewPage({ client }: { client: ApiClient }) {
         }
       >
         {selection === undefined ? null : selection.kind === "CLASS" ? (
-          <ClassDrawerBody
-            cell={selection.cell}
-            client={client}
-            id={selection.id}
-            ring={selection.ring}
-          />
+          <ClassDrawerBody cell={selection.cell} client={client} id={selection.id} />
         ) : (
           <BlockDrawerBody
             client={client}

@@ -1,0 +1,11 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running typecheck, lint in 10 packages
+   • Remote caching disabled
+
+
+ Tasks:    20 successful, 20 total
+Cached:    12 cached, 20 total
+  Time:    12.007s 
+

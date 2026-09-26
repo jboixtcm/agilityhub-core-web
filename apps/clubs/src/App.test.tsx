@@ -432,7 +432,7 @@ describe("T-01-21 profile access rows and impersonation", () => {
   });
 });
 
-describe("E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3)", () => {
+describe("T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3)", () => {
   const TOURNAMENT_PATH = "/activitats/activity-torneig-estiu-2026";
 
   function recordMeActivities() {

@@ -483,7 +483,125 @@ function settle(): Promise<void> {
   });
 }
 
-describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
+const CLOSED_MONDAY = "Dies de tancament: dilluns. Aquesta plantilla no admet franges.";
+
+describe("T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review", () => {
+  function openMondayClass() {
+    const [mondayClass] = screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" });
+    if (mondayClass === undefined) throw new TypeError("missing Monday class");
+    fireEvent.click(mondayClass);
+    return screen.getByRole("region", { name: "Classe seleccionada" });
+  }
+
+  it("R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it", async () => {
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const events: string[] = [];
+    server.use(
+      // Falls through to the stateful mock once released.
+      http.patch("*/api/v1/week-templates/:id/classes/:classId", async () => {
+        await held;
+        events.push("PATCH answered");
+      }),
+    );
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "DELETE") events.push("DELETE sent");
+    });
+    await renderTemplates();
+    const card = openMondayClass();
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(within(card).getByRole("button", { name: "Treu de la plantilla" }));
+    await settle();
+    expect(events).toEqual([]);
+
+    release();
+    await waitFor(() => {
+      expect(events).toEqual(["PATCH answered", "DELETE sent"]);
+    });
+    await waitFor(() => {
+      expect(screen.getByRole("region", { name: "Crear classe" })).toBeVisible();
+    });
+  });
+
+  it("S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field", async () => {
+    server.use(
+      http.get("*/api/v1/club/opening-hours", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w06" },
+          { status: 500 },
+        ),
+      ),
+    );
+    await renderTemplates();
+    await screen.findByRole("button", { name: "Torna-ho a provar" });
+    const fieldOf = (input: HTMLElement) => input.closest(".ah-form-field");
+    const outside = "L'hora seleccionada és fora de l'horari d'obertura.";
+
+    fireEvent.click(screen.getByRole("button", { name: "Franja 08:30–09:30" }));
+    const edit = await screen.findByRole("dialog", { name: "Franja 08:30–09:30" });
+    const start = within(edit).getByLabelText("Inici");
+    const end = within(edit).getByLabelText("Final");
+    // Only the end moved (the mock club opens 07:00–22:00): the end is to blame.
+    fireEvent.change(end, { target: { value: "23:00" } });
+    fireEvent.click(within(edit).getByRole("button", { name: "Desa" }));
+    expect(await within(edit).findByText(outside)).toBeVisible();
+    expect(fieldOf(end)).toHaveClass("ah-form-field--error");
+    expect(fieldOf(start)).not.toHaveClass("ah-form-field--error");
+
+    // Only the start moved: the start is to blame.
+    fireEvent.change(end, { target: { value: "09:30" } });
+    fireEvent.change(start, { target: { value: "06:00" } });
+    fireEvent.click(within(edit).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(fieldOf(start)).toHaveClass("ah-form-field--error");
+    });
+    expect(fieldOf(end)).not.toHaveClass("ah-form-field--error");
+    fireEvent.click(within(edit).getByRole("button", { name: "Tanca" }));
+
+    // A new band sends both times: no hours are assumed to pick one.
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const create = await screen.findByRole("dialog", { name: "Nova franja" });
+    const newStart = within(create).getByLabelText("Inici");
+    const newEnd = within(create).getByLabelText("Final");
+    fireEvent.change(newStart, { target: { value: "22:10" } });
+    fireEvent.change(newEnd, { target: { value: "23:00" } });
+    fireEvent.click(within(create).getByRole("button", { name: "Desa" }));
+    expect(await within(create).findByRole("alert")).toHaveTextContent(outside);
+    expect(fieldOf(newStart)).not.toHaveClass("ah-form-field--error");
+    expect(fieldOf(newEnd)).not.toHaveClass("ah-form-field--error");
+  });
+
+  it("R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays", async () => {
+    server.use(
+      http.patch(
+        "*/api/v1/week-templates/:id/classes/:classId",
+        () =>
+          HttpResponse.json(
+            { code: "LEVEL_REQUIRED", message: "At least one level", traceId: "trace-level" },
+            { status: 422 },
+          ),
+        { once: true },
+      ),
+    );
+    await renderTemplates();
+    const card = openMondayClass();
+    // Typed, not committed yet (the commit happens on blur).
+    fireEvent.change(within(card).getByLabelText("Descripció"), {
+      target: { value: "Obed. prova" },
+    });
+    fireEvent.change(within(card).getByLabelText("Límit"), { target: { value: "6" } });
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+
+    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(within(card).getByRole("button", { name: "E" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(card).getByLabelText("Descripció")).toHaveValue("Obed. prova");
+    expect(within(card).getByLabelText("Límit")).toHaveValue(6);
+  });
+});
+
+describe("T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
   it("R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one", async () => {
     // Monday is absent from club.openingHours: every WEEKDAYS band would be refused by the api.
     await putOpeningHours(["TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]);
@@ -492,11 +610,7 @@ describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Franja" }));
     const drawer = await screen.findByRole("dialog", { name: "Nova franja" });
-    expect(
-      await within(drawer).findByText(
-        "El club està tancat dilluns: aquesta plantilla no admet franges.",
-      ),
-    ).toBeVisible();
+    expect(await within(drawer).findByText(CLOSED_MONDAY)).toBeVisible();
     fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "10:00" } });
     fireEvent.change(within(drawer).getByLabelText("Final"), { target: { value: "11:00" } });
     const save = within(drawer).getByRole("button", { name: "Desa" });
@@ -511,9 +625,7 @@ describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
     // An existing band is refused the same way.
     fireEvent.click(screen.getByRole("button", { name: "Franja 08:30–09:30" }));
     const edit = await screen.findByRole("dialog", { name: "Franja 08:30–09:30" });
-    expect(
-      within(edit).getByText("El club està tancat dilluns: aquesta plantilla no admet franges."),
-    ).toBeVisible();
+    expect(within(edit).getByText(CLOSED_MONDAY)).toBeVisible();
     expect(within(edit).getByRole("button", { name: "Desa" })).toBeDisabled();
     fireEvent.click(within(edit).getByRole("button", { name: "Tanca" }));
 
@@ -533,7 +645,9 @@ describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
     expect(bands).toEqual([{ body: { endTime: "14:00", startTime: "13:00" }, method: "POST" }]);
   });
 
-  it("S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00", async () => {
+  it("S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00; after the retry the closed Monday is named again", async () => {
+    // Monday closed: once the hours are read, the WEEKDAYS band drawer must say so.
+    await putOpeningHours(["TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]);
     let failOpeningHours = true;
     server.use(
       http.get("*/api/v1/club/opening-hours", () =>
@@ -547,10 +661,64 @@ describe("E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
     );
     await renderTemplates();
     const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
+    expect(
+      screen.getByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
     failOpeningHours = false;
     fireEvent.click(retry);
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
     });
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const drawer = await screen.findByRole("dialog", { name: "Nova franja" });
+    expect(await within(drawer).findByText(CLOSED_MONDAY)).toBeVisible();
+    expect(within(drawer).getByRole("button", { name: "Desa" })).toBeDisabled();
+  });
+});
+
+describe("T-06-26 E4-W11 D3 follow-ups of the E4-W10 review", () => {
+  it("R-06-01 R-02-09 the closed days read as a label with the days joined as a list: «Dies de tancament: dilluns i dimarts. …»", async () => {
+    await putOpeningHours(["WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]);
+    await renderTemplates();
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const drawer = await screen.findByRole("dialog", { name: "Nova franja" });
+    expect(
+      await within(drawer).findByText(
+        "Dies de tancament: dilluns i dimarts. Aquesta plantilla no admet franges.",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca" }));
+
+    // The Saturday template: a closed Saturday reads the same way.
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SUNDAY"]);
+    cleanup();
+    await renderTemplates();
+    fireEvent.click(screen.getByRole("button", { name: "Dissabtes" }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: "Dissabtes" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Dissabtes»" });
+    fireEvent.click(screen.getByRole("button", { name: "Franja" }));
+    const saturday = await screen.findByRole("dialog", { name: "Nova franja" });
+    expect(
+      await within(saturday).findByText(
+        "Dies de tancament: dissabte. Aquesta plantilla no admet franges.",
+      ),
+    ).toBeVisible();
+  });
+
+  it("MATRIU_PERMISOS an INSTRUCTOR on D3 never calls GET /club/opening-hours (read-only)", async () => {
+    mockScenario("instructor");
+    const seen: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const path = new URL(request.url).pathname;
+      if (path.endsWith("/club/opening-hours")) seen.push(`${request.method} ${path}`);
+    });
+    await renderTemplates({ readOnly: true });
+    expect(
+      await screen.findByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
+    ).toBeVisible();
+    await settle();
+    expect(seen).toEqual([]);
   });
 });

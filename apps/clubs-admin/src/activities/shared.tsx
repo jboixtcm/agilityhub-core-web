@@ -1,4 +1,9 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  type ApiClient,
+  type components,
+} from "@agilityhub/api-client";
 import type { UniversalFilter, UniversalListSavedView, UniversalListState } from "@agilityhub/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -65,19 +70,12 @@ export function errorDetails(error: unknown): Record<string, unknown> {
     : {};
 }
 
-/** `details.fieldErrors[].field` of a 400/422 (the api's field paths, e.g. `registrationTo`). */
+/**
+ * The api's field paths of a 400/409/422 (e.g. `registrationTo`): `details.fieldErrors[].field`,
+ * or the single `details.field` (CONVENCIONS_API §5).
+ */
 export function errorFields(error: unknown): string[] {
-  const fieldErrors = errorDetails(error).fieldErrors;
-  return Array.isArray(fieldErrors)
-    ? fieldErrors.flatMap((item: unknown) =>
-        typeof item === "object" &&
-        item !== null &&
-        "field" in item &&
-        typeof item.field === "string"
-          ? [item.field]
-          : [],
-      )
-    : [];
+  return apiFieldErrors(error).map((entry) => entry.field);
 }
 
 /** Message of an api error by its `code` (never its `message`), with the D7 fallback. */

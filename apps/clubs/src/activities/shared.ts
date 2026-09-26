@@ -8,33 +8,6 @@ export type ActivityRegistrationSummary = components["schemas"]["ActivityRegistr
 export type MemberActivityDetail = components["schemas"]["MemberActivityDetail"];
 export type ActivityState = components["schemas"]["Activity"]["state"];
 
-const LOCAL_DATE_TIME = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/u;
-
-/**
- * Hours of a club-local `startsAtLocal`/`endsAtLocal` pair (S07 form B). The api writes `T00:00`
- * as the start without hours and `null` as the end without an end time (S07 «Canvis» 24-09); an
- * older end on the next day at `T00:00` still means «no end» here.
- */
-export function localHours(
-  startsAtLocal: string,
-  endsAtLocal: string | null,
-): { end: string | null; start: string | null } {
-  const startMatch = LOCAL_DATE_TIME.exec(startsAtLocal);
-  const endMatch = endsAtLocal === null ? null : LOCAL_DATE_TIME.exec(endsAtLocal);
-  const start = startMatch?.[2] ?? null;
-  if (startMatch === null || start === null || start === "00:00") {
-    return { end: null, start: null };
-  }
-  const end =
-    endMatch === null ||
-    endMatch[1] !== startMatch[1] ||
-    endMatch[2] === undefined ||
-    endMatch[2] <= start
-      ? null
-      : endMatch[2];
-  return { end, start };
-}
-
 /** A path segment decoded, or as it came when it is malformed (`/activitats/%E0`). */
 export function safeDecode(segment: string): string {
   try {

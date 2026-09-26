@@ -68,6 +68,8 @@ function LevelForm({
   const [color, setColor] = useState(item?.color ?? branding.theme.ringPalette?.[0] ?? "");
   const [capacity, setCapacity] = useState(item?.capacity ?? 5);
   const [grantsFreeTraining, setGrantsFreeTraining] = useState(item?.grantsFreeTraining ?? false);
+  // S05 §3 (E29): a new level is part of the progression by default.
+  const [progression, setProgression] = useState(item?.progression ?? true);
   const [active, setActive] = useState(item?.active ?? true);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
@@ -85,6 +87,7 @@ function LevelForm({
           color,
           grantsFreeTraining,
           name,
+          progression,
         };
         await client.POST("/levels", { body });
       } else {
@@ -95,6 +98,7 @@ function LevelForm({
           color,
           grantsFreeTraining,
           name,
+          progression,
           version: item.version,
         };
         await client.PATCH("/levels/{id}", {
@@ -188,6 +192,18 @@ function LevelForm({
         </label>
       ) : null}
       <label className="catalog-switch-row">
+        <span>{t("admin-catalogs:levels.fields.progression")}</span>
+        <Switch
+          aria-describedby="level-progression-help"
+          checked={progression}
+          label={t("admin-catalogs:levels.fields.progression")}
+          onCheckedChange={setProgression}
+        />
+      </label>
+      <p className="catalog-section__help" id="level-progression-help">
+        {t("admin-catalogs:levels.progressionHelp")}
+      </p>
+      <label className="catalog-switch-row">
         <span>{t("admin-catalogs:common.active")}</span>
         <Switch
           checked={active}
@@ -205,6 +221,33 @@ function LevelForm({
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * The «Progressió» switch of a D11 «Nivells» row (S05 §2, E29): `PATCH /levels/{id}` with the
+ * row's `version`, like every other level field. Disabled while its own PATCH is pending.
+ */
+function ProgressionSwitch({
+  item,
+  onToggle,
+  pending,
+}: {
+  item: Level;
+  onToggle: (item: Level) => void;
+  pending: boolean;
+}) {
+  const { t } = useTranslation("admin-catalogs");
+  return (
+    <Switch
+      aria-describedby="levels-progression-help"
+      checked={item.progression}
+      disabled={pending}
+      label={t("admin-catalogs:levels.progressionSwitch", { name: item.name })}
+      onCheckedChange={() => {
+        onToggle(item);
+      }}
+    />
   );
 }
 
@@ -424,6 +467,9 @@ export function SettingsPage({ client }: { client: ApiClient }) {
   const [removingFaq, setRemovingFaq] = useState<FaqEntry>();
   const [levelRemoveBlocked, setLevelRemoveBlocked] = useState(false);
   const [feedback, setFeedback] = useState<string>();
+  // The level whose «Progressió» PATCH is on its way, and the error of the last one (by code).
+  const [progressionPending, setProgressionPending] = useState<string>();
+  const [progressionError, setProgressionError] = useState<string>();
   const showFreeTraining = branding.modules.includes("FREE_TRAINING");
 
   useEffect(() => {
@@ -451,6 +497,34 @@ export function SettingsPage({ client }: { client: ApiClient }) {
     } catch (reason) {
       setFeedback(messageForError(reason));
       levels.reload();
+    }
+  };
+
+  /**
+   * «Progressió» (S05 §3, E29): the same `PATCH` + `version` as the level form. The row takes the
+   * saved level; `STALE_VERSION` reloads the list so the next toggle uses the fresh version.
+   */
+  const toggleProgression = async (item: Level) => {
+    setProgressionPending(item.id);
+    setProgressionError(undefined);
+    try {
+      const result = await client.PATCH("/levels/{id}", {
+        body: { progression: !item.progression, version: item.version },
+        params: { path: { id: item.id } },
+      });
+      const saved = result.data;
+      if (saved !== undefined) {
+        levels.setItems((current) =>
+          current.map((level) => (level.id === saved.id ? saved : level)),
+        );
+      }
+    } catch (reason) {
+      setProgressionError(messageForError(reason));
+      if (isApiError(reason, "STALE_VERSION")) {
+        levels.reload();
+      }
+    } finally {
+      setProgressionPending(undefined);
     }
   };
 
@@ -602,6 +676,17 @@ export function SettingsPage({ client }: { client: ApiClient }) {
                   ]
                 : []),
               {
+                header: t("admin-catalogs:levels.columns.progression"),
+                key: "progression",
+                render: (item) => (
+                  <ProgressionSwitch
+                    item={item}
+                    onToggle={(level) => void toggleProgression(level)}
+                    pending={progressionPending === item.id}
+                  />
+                ),
+              },
+              {
                 header: t("admin-catalogs:levels.columns.active"),
                 key: "active",
                 render: (item) => <YesNoBadge value={item.active} />,
@@ -619,6 +704,14 @@ export function SettingsPage({ client }: { client: ApiClient }) {
             onReorder={(source, target) => void reorderLevels(source, target)}
             rows={levels.items}
           />
+          <p className="catalog-section__help" id="levels-progression-help">
+            {t("admin-catalogs:levels.progressionHelp")}
+          </p>
+          {progressionError === undefined ? null : (
+            <p className="ah-form-field__error" role="alert">
+              {progressionError}
+            </p>
+          )}
         </section>
       ) : null}
       {faqEnabled ? (

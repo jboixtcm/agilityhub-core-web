@@ -29,6 +29,7 @@ import {
 } from "./fixtures/activities";
 import { catalogState } from "./fixtures/catalogs";
 import { clubLocalDate } from "./fixtures/planning";
+import { findParameter } from "./fixtures/settings";
 import { apiError, levelsEnabled, readerLocale, validationError } from "./planning-handlers";
 import { currentMockScenario } from "./scenarios";
 
@@ -463,6 +464,40 @@ function conflictResponse(activity: StoredActivity, options: PublicationRequest)
   return undefined;
 }
 
+const WEEKDAYS = [
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+] as const;
+
+/**
+ * R-07-05: the ring-block window (`ringBlockWindow`, else the activity's hours) must fit the day's
+ * `club.openingHours`; a day absent from it is closed (R-02-09), so nothing fits. Only an activity
+ * at the club with rings blocks, and only with both limits (`ACTIVITY_INCOMPLETE` comes first).
+ * The api names no field: the error is about the whole window. The product default (dl–dg
+ * 07:00–22:00) applies only to a club without the parameter.
+ */
+function openingHoursProblem(activity: StoredActivity) {
+  if (!activity.location.atClub || activity.ringIds.length === 0) return undefined;
+  const from = activity.ringBlockWindow?.fromTime ?? activity.startTime;
+  const to = activity.ringBlockWindow?.toTime ?? activity.endTime;
+  if (from === null || to === null) return undefined;
+  const parameter = findParameter("club.openingHours");
+  // Weekday of a business date: UTC arithmetic at midday, never shifted by a zone (R-06-14).
+  const day = WEEKDAYS[new Date(`${activity.date}T12:00:00Z`).getUTCDay()] ?? "MONDAY";
+  const window =
+    parameter === undefined
+      ? { close: "22:00", open: "07:00" }
+      : (parameter.value as Record<string, { close: string; open: string } | undefined>)[day];
+  return window === undefined || from < window.open || to > window.close
+    ? apiError("OUTSIDE_OPENING_HOURS", "Ring block outside opening hours", 422)
+    : undefined;
+}
+
 function incompleteFields(activity: StoredActivity): { code: string; field: string }[] {
   const fields: { code: string; field: string }[] = [];
   const defaultLocale = currentMockScenario().branding.defaultLocale;
@@ -714,6 +749,8 @@ export const activityHandlers = [
         (key) => key in body,
       );
     if (resync) {
+      const outside = openingHoursProblem(next);
+      if (outside !== undefined) return outside;
       const conflict = conflictResponse(next, body);
       if (conflict !== undefined) return conflict;
     }
@@ -804,6 +841,8 @@ export const activityHandlers = [
     if (activity.date < clubLocalDate())
       return apiError("ACTIVITY_IN_PAST", "Activity in the past", 422);
     const body = (await request.json()) as PublicationRequest;
+    const outside = openingHoursProblem(activity);
+    if (outside !== undefined) return outside;
     const conflict = conflictResponse(activity, body);
     if (conflict !== undefined) return conflict;
     activity.state = "PUBLISHED";

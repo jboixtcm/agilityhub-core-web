@@ -1,0 +1,823 @@
+[
+  {
+    "key": "system",
+    "rows": [
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.sessionDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.magicLinkMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.impersonationMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.passwordMinLength",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "files.maxSizeMb",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "files.allowedTypes",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "files.dogPhotoMaxMb",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "history.monthsVisible",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "dashboard.pendingSignupAgeWarnDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.welcomeLinkDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.maxSessions",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.lockoutMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.lockoutMaxAttempts",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "auth.checkCompromisedPasswords",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "signup.rateLimit",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "files.maxAttachmentsPerEntity",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "messaging.push.ttlMinutes",
+        "module": "PUSH"
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "security.eventRetentionDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "jobs.retention.domainEventsDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "jobs.retention.jobRunsDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "jobs.retention.stripeEventsDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "jobs.retention.exportFilesDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "jobs.retention.orphanUploadsHours",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "platform.domainRecheckDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "platform.supportAccessMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "migration.exportRetentionDays",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "migration.leftMaxYears",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "migration.reconciliationTolerancePct",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "migration.playoffReadOnlyMonths",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "signup.onboardingFields",
+        "module": null
+      },
+      {
+        "editableBy": "PLATFORM",
+        "key": "legal.maxPostpones",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.system.title"
+  },
+  {
+    "key": "signup",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "signup.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.pendingExpiryDays",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.requireDogDocumentAtSignup",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.firstMonthSplitDay",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.allowFamilyGroupPending",
+        "module": "FAMILY_GROUP"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.paymentDay",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.cashConditions",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.freeTrainingConditions",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.imageConsent",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.closed",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "census.dogDocumentTypes",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.monthlyPaymentIntro",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.therapyIntro",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "signup.text.familyGroupIntro",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.signup.title"
+  },
+  {
+    "key": "classes",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.maxCurrentWeek",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.maxNextWeek",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.limitUnit",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.weekOpensAt",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.lateCancelThresholdMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.seatHoldSeconds",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.showInstructorHoursBefore",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.instructorLastMinuteNotice",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.defaultCapacity",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.minDogs",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.riskReviewTime",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.riskLookaheadDays",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.riskAutoCancelSameDay",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.maxInstructorsPerClass",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.slotMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "levels.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "coverage.thresholds",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "coverage.activeDogWeeks",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "activities.cancelDeadline",
+        "module": "ACTIVITIES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "bookings.paymentPendingMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "attendance.editDays",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "classes.finishGraceMinutes",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.classes.title"
+  },
+  {
+    "key": "waitlist",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.mode",
+        "module": "WAITLIST"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.fifoConfirmMinutes",
+        "module": "WAITLIST"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.maxPerClass",
+        "module": "WAITLIST"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.maxPerDogPerWeek",
+        "module": "WAITLIST"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.maxPerDogPerWeekIfAttended",
+        "module": "WAITLIST"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "waitlist.notifyThresholdMinutes",
+        "module": "WAITLIST"
+      }
+    ],
+    "title": "admin-settings:block.waitlist.title"
+  },
+  {
+    "key": "training",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "training.slotMinutes",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "training.bookingWindowDays",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "training.maxPerWeek",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "training.cancelThresholdMinutes",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "training.capacityPerRingSlot",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "training.freeTrainingRequiresLicense",
+        "module": "FREE_TRAINING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "ringBlocks.maxHorizonDays",
+        "module": "FREE_TRAINING"
+      }
+    ],
+    "title": "admin-settings:block.training.title"
+  },
+  {
+    "key": "club",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "club.openingHours",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "club.holidays",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "census.bookingBlockReasons",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "activities.publicUrlTemplate",
+        "module": "ACTIVITIES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "learn.linkText",
+        "module": "LEARN_LINK"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "learn.recommendationsTtlMinutes",
+        "module": "LEARN_LINK"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "learn.baseUrl",
+        "module": "LEARN_LINK"
+      }
+    ],
+    "title": "admin-settings:block.club.title"
+  },
+  {
+    "key": "billing",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "billing.entryFeePerDog",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.nextInvoiceDayOfMonth",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.familyDiscountPercentFromSecondDog",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.cashPeriodMonths",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.inactivityFeeFirstMonth",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.inactivityFeeFollowingMonths",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.packLowBalanceSessions",
+        "module": "PACKS"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.packExpiryWarningDays",
+        "module": "PACKS"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.singleClassCancelPolicy",
+        "module": "SINGLE_CLASS"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.stripeReceiptEmail",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.accountingExportFormat",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "inactivity.requestDeadlineDay",
+        "module": "INACTIVITY"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "inactivity.cancelBookingsOnApproval",
+        "module": "INACTIVITY"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "leave.reasons",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "leave.npsEnabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "leave.fullMonthIfLater",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.invoiceSeriesPattern",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.invoiceResetYearly",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.cashInvoicing",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.upfrontCutoffDay",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.packToMemberEntryDiscountPercent",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.packToMemberMinSessions",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.taxIncluded",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.sepa.useFrst",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.sepa.schema",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.sepa.collectionDayOfMonth",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.stripeMaxAttempts",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "billing.remittanceReminderDay",
+        "module": "BILLING"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "inactivity.maxStartMonthsAhead",
+        "module": "INACTIVITY"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "leave.packExpiryGraceDays",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.billing.title"
+  },
+  {
+    "key": "messaging",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.noShowNoticeTime",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.reminderOptionsMinutes",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.email.fromName",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.email.fromAddress",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.email.replyTo",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.sms.senderId",
+        "module": "SMS"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.sms.monthlyCap",
+        "module": "SMS"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.notifyWeekOpening",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.notifyNewRingSetup",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.documentReminderDays",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "messaging.sms.transliterateToGsm7",
+        "module": "SMS"
+      }
+    ],
+    "title": "admin-settings:block.messaging.title"
+  },
+  {
+    "key": "courses",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "courses.setupAutoExpireDays",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.placementMarginMeters",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.showSetupToMembers",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.allowInstructorPublish",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.buildSessionMaxHours",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.gateClearanceMeters",
+        "module": "COURSES"
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "courses.obstacleClearanceMeters",
+        "module": "COURSES"
+      }
+    ],
+    "title": "admin-settings:block.courses.title"
+  },
+  {
+    "key": "privacy",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "audit.retentionYears",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "rgpd.erasureMinDaysAfterLeave",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "rgpd.retentionYearsAfterLeave",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "rgpd.rejectedSignupRetentionDays",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.privacy.title"
+  },
+  {
+    "key": "jobs",
+    "rows": [
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.weekOpening.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.riskReview.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.noShowNotices.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.reminders.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.expirations.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.waitlistFifo.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.paymentTimeouts.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.classFinishing.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.cleanup.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.billingReminder.enabled",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.dailyTime",
+        "module": null
+      },
+      {
+        "editableBy": "CLUB",
+        "key": "jobs.alertAdminsOnFailure",
+        "module": null
+      }
+    ],
+    "title": "admin-settings:block.jobs.title"
+  }
+]

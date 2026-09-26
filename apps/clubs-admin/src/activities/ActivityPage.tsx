@@ -411,7 +411,15 @@ export function ActivityPage({
     };
   }, [client]);
 
+  // Only an editable maintenance offers times: a read-only view (INSTRUCTOR, FINISHED, CANCELLED)
+  // never reads `club.openingHours`, as D4 and D3.
+  const readsOpeningHours =
+    !readOnly &&
+    activity !== undefined &&
+    activity.state !== "FINISHED" &&
+    activity.state !== "CANCELLED";
   useEffect(() => {
+    if (!readsOpeningHours) return undefined;
     let current = true;
     void loadOpeningHours(client).then(
       (value) => {
@@ -424,7 +432,7 @@ export function ActivityPage({
     return () => {
       current = false;
     };
-  }, [client, openingReload]);
+  }, [client, openingReload, readsOpeningHours]);
 
   const ringName = useCallback(
     (ringId: string) =>
@@ -512,20 +520,21 @@ export function ActivityPage({
     onChanged();
   };
 
-  /** The form field a failed `PATCH` belongs to (`general` = no field: a message instead). */
-  const saveErrorTarget = (cause: unknown): FieldKey => {
+  /**
+   * The form fields a failed `PATCH` belongs to (`general` = no field: a message instead). The
+   * api places `OUTSIDE_OPENING_HOURS` on the whole ring-block window (R-07-05), never on a field:
+   * by its code it lands on the date and both times.
+   */
+  const saveErrorTargets = (cause: unknown): FieldKey[] => {
     const code = errorCode(cause);
     const fields = errorFields(cause).map(fieldKey);
-    if (code === "SLUG_LOCKED" || code === "DUPLICATE_SLUG") return "slug";
-    if (code === "CAPACITY_BELOW_REGISTRATIONS") return "maxPlaces";
-    if (
-      code === "INVALID_TIME_RANGE" ||
-      code === "INVALID_SLOT_GRANULARITY" ||
-      code === "OUTSIDE_OPENING_HOURS"
-    ) {
-      return fields[0] ?? "endTime";
+    if (code === "SLUG_LOCKED" || code === "DUPLICATE_SLUG") return ["slug"];
+    if (code === "CAPACITY_BELOW_REGISTRATIONS") return ["maxPlaces"];
+    if (code === "OUTSIDE_OPENING_HOURS") return ["date", "startTime", "endTime"];
+    if (code === "INVALID_TIME_RANGE" || code === "INVALID_SLOT_GRANULARITY") {
+      return [fields[0] ?? "endTime"];
     }
-    return fields[0] ?? "general";
+    return [fields[0] ?? "general"];
   };
 
   const failSave = (cause: unknown) => {
@@ -542,11 +551,12 @@ export function ActivityPage({
       setReload((value) => value + 1);
       return;
     }
-    const target = saveErrorTarget(cause);
-    if (target !== "general") {
-      setErrors({ [target]: errorMessage(cause) });
-    } else {
+    const targets = saveErrorTargets(cause);
+    if (targets.includes("general")) {
       setFeedback({ message: errorMessage(cause), tone: "danger" });
+    } else {
+      const message = errorMessage(cause);
+      setErrors(Object.fromEntries(targets.map((target) => [target, message])));
     }
   };
 
@@ -584,7 +594,7 @@ export function ActivityPage({
           throw cause;
         }
         if (errorCode(cause) === "ADMIN_TEXT_REQUIRED") throw cause;
-        if (errorCode(cause) !== "STALE_VERSION" && saveErrorTarget(cause) === "general") {
+        if (errorCode(cause) !== "STALE_VERSION" && saveErrorTargets(cause).includes("general")) {
           throw cause;
         }
         setConflictDialog(undefined);
@@ -865,7 +875,8 @@ export function ActivityPage({
   // rings the activity may be at any time of the day.
   const blocksRings = form.atClub && form.ringIds.length > 0;
   // At the club with rings, a day absent from `club.openingHours` (closed, R-02-09) gets D4's
-  // treatment: a message and no times (the api refuses its ring block, OUTSIDE_OPENING_HOURS).
+  // treatment: a message, no times and no [PUBLICA] (the api refuses its ring block,
+  // OUTSIDE_OPENING_HOURS; a published activity's [DESA] shows that error on the date and times).
   // Nothing is offered either while the hours are unknown (loading, or a failed read); before a
   // date is typed, the product default (dl–dg 07:00–22:00).
   const closedDay =
@@ -1482,8 +1493,10 @@ export function ActivityPage({
           </div>
           <div className="activity-actions">
             {admin && activity.state === "DRAFT" ? (
+              // R-07-05: on a closed day the api refuses the ring blocks (OUTSIDE_OPENING_HOURS);
+              // the closed-day note above says why.
               <Button
-                disabled={busy}
+                disabled={busy || closedDay}
                 loading={pending === "publish"}
                 onClick={() => void startPublish()}
                 variant="secondary"

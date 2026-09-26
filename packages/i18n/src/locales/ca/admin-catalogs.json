@@ -49,7 +49,8 @@
       "code": "Codi",
       "color": "Color",
       "freeTraining": "Entrenament lliure",
-      "name": "Nom"
+      "name": "Nom",
+      "progression": "Progressió"
     },
     "createTitle": "Nou nivell",
     "editTitle": "Edita el nivell",
@@ -59,10 +60,13 @@
       "code": "Codi",
       "color": "Color",
       "freeTraining": "Dona dret a entrenament lliure",
-      "name": "Nom"
+      "name": "Nom",
+      "progression": "Progressió"
     },
     "inUse": "Aquest nivell té dades relacionades: només es pot desactivar",
     "new": "Nou nivell",
+    "progressionHelp": "Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»",
+    "progressionSwitch": "Progressió: {name}",
     "removeQuestion": "Eliminar el nivell {name}?",
     "removeTitle": "Elimina el nivell",
     "title": "Nivells"

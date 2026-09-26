@@ -6,6 +6,7 @@ import {
   formatDate,
   formatDateRange,
   formatDuration,
+  formatList,
   formatMoney,
   formatPlainDate,
   formatTime,
@@ -21,6 +22,24 @@ describe("club-aware formats", () => {
     ["en", "€45.00"],
   ] as const)("formats money in %s", (locale, expected) => {
     expect(formatMoney(45, locale, "EUR")).toBe(expected);
+  });
+
+  it.each([
+    ["ca", "dilluns", "dilluns i dimarts", "dilluns, dimarts i dissabte"],
+    ["es", "lunes", "lunes y martes", "lunes, martes y sábado"],
+    ["en", "Monday", "Monday and Tuesday", "Monday, Tuesday, and Saturday"],
+  ] as const)("E4-W11 joins weekday names as a list in %s", (locale, one, two, three) => {
+    const days = {
+      ca: ["dilluns", "dimarts", "dissabte"],
+      en: ["Monday", "Tuesday", "Saturday"],
+      es: ["lunes", "martes", "sábado"],
+    }[locale];
+    expect(formatList(days.slice(0, 1), locale)).toBe(one);
+    expect(formatList(days.slice(0, 2), locale)).toBe(two);
+    expect(formatList(days, locale)).toBe(three);
+    expect(createClubFormats(locale, "Europe/Madrid", "EUR").formatList(days.slice(0, 2))).toBe(
+      two,
+    );
   });
 
   it.each([

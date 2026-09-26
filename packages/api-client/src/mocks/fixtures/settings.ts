@@ -76,33 +76,33 @@ const initialParameters: Parameters = {
           tight: 190,
         }),
       ],
-      title: "classes",
+      title: "admin-settings:block.classes.title",
     },
     {
-      key: "freeTraining",
+      key: "training",
       rows: [
-        parameter("training.bookingWindowDays", "freeTraining", "int", 3, {
+        parameter("training.bookingWindowDays", "training", "int", 3, {
           constraints: { min: 0 },
           module: "FREE_TRAINING",
         }),
-        parameter("training.maxPerWeek", "freeTraining", "int", 3, {
+        parameter("training.maxPerWeek", "training", "int", 3, {
           constraints: { min: 0 },
           module: "FREE_TRAINING",
         }),
-        parameter("training.cancelThresholdMinutes", "freeTraining", "duration", 120, {
+        parameter("training.cancelThresholdMinutes", "training", "duration", 120, {
           constraints: { before: true, min: 0, step: 5 },
           module: "FREE_TRAINING",
         }),
-        parameter("training.slotMinutes", "freeTraining", "duration", 30, {
+        parameter("training.slotMinutes", "training", "duration", 30, {
           constraints: { min: 5, step: 5 },
           module: "FREE_TRAINING",
         }),
-        parameter("training.capacityPerRingSlot", "freeTraining", "int", 1, {
+        parameter("training.capacityPerRingSlot", "training", "int", 1, {
           constraints: { min: 1 },
           module: "FREE_TRAINING",
         }),
       ],
-      title: "freeTraining",
+      title: "admin-settings:block.training.title",
     },
     {
       key: "waitlist",
@@ -128,7 +128,7 @@ const initialParameters: Parameters = {
           module: "WAITLIST",
         }),
       ],
-      title: "waitlist",
+      title: "admin-settings:block.waitlist.title",
     },
     {
       key: "billing",
@@ -162,7 +162,7 @@ const initialParameters: Parameters = {
           module: "BILLING",
         }),
       ],
-      title: "billing",
+      title: "admin-settings:block.billing.title",
     },
     {
       key: "club",
@@ -199,28 +199,28 @@ const initialParameters: Parameters = {
           { module: "ACTIVITIES" },
         ),
       ],
-      title: "club",
+      title: "admin-settings:block.club.title",
     },
     {
-      key: "communications",
+      key: "messaging",
       rows: [
-        parameter("messaging.noShowNoticeTime", "communications", "time", "08:00"),
+        parameter("messaging.noShowNoticeTime", "messaging", "time", "08:00"),
         parameter(
           "messaging.reminderOptionsMinutes",
-          "communications",
+          "messaging",
           "list",
           [60, 120, 240, 360, 720, 1440],
         ),
-        parameter("messaging.notifyWeekOpening", "communications", "bool", false),
-        parameter("messaging.notifyNewRingSetup", "communications", "bool", false, {
+        parameter("messaging.notifyWeekOpening", "messaging", "bool", false),
+        parameter("messaging.notifyNewRingSetup", "messaging", "bool", false, {
           module: "COURSES",
         }),
-        parameter("messaging.sms.monthlyCap", "communications", "int", 1000, {
+        parameter("messaging.sms.monthlyCap", "messaging", "int", 1000, {
           constraints: { min: 0 },
           module: "SMS",
         }),
       ],
-      title: "communications",
+      title: "admin-settings:block.messaging.title",
     },
     {
       key: "signup",
@@ -236,7 +236,7 @@ const initialParameters: Parameters = {
           es: "Autorizo la publicación de imágenes en las actividades del club.",
         }),
       ],
-      title: "signup",
+      title: "admin-settings:block.signup.title",
     },
     {
       key: "courses",
@@ -256,22 +256,41 @@ const initialParameters: Parameters = {
           module: "COURSES",
         }),
       ],
-      title: "courses",
+      title: "admin-settings:block.courses.title",
     },
     {
-      key: "privacyAudit",
+      key: "privacy",
       rows: [
-        parameter("audit.retentionYears", "privacyAudit", "int", 6, {
+        parameter("audit.retentionYears", "privacy", "int", 6, {
           constraints: { min: 1 },
         }),
-        parameter("rgpd.retentionYearsAfterLeave", "privacyAudit", "int", 6, {
+        parameter("rgpd.retentionYearsAfterLeave", "privacy", "int", 6, {
           constraints: { min: 1 },
         }),
-        parameter("rgpd.erasureMinDaysAfterLeave", "privacyAudit", "int", 30, {
+        parameter("rgpd.erasureMinDaysAfterLeave", "privacy", "int", 30, {
           constraints: { min: 0 },
         }),
       ],
-      title: "privacyAudit",
+      title: "admin-settings:block.privacy.title",
+    },
+    {
+      // S15 §9, as the published core sends it: one switch per process, then the daily time.
+      key: "jobs",
+      rows: [
+        parameter("jobs.weekOpening.enabled", "jobs", "bool", true),
+        parameter("jobs.riskReview.enabled", "jobs", "bool", true),
+        parameter("jobs.noShowNotices.enabled", "jobs", "bool", true),
+        parameter("jobs.reminders.enabled", "jobs", "bool", true),
+        parameter("jobs.expirations.enabled", "jobs", "bool", true),
+        parameter("jobs.waitlistFifo.enabled", "jobs", "bool", true),
+        parameter("jobs.paymentTimeouts.enabled", "jobs", "bool", true),
+        parameter("jobs.classFinishing.enabled", "jobs", "bool", true),
+        parameter("jobs.cleanup.enabled", "jobs", "bool", true),
+        parameter("jobs.billingReminder.enabled", "jobs", "bool", true),
+        parameter("jobs.dailyTime", "jobs", "time", "06:00"),
+        parameter("jobs.alertAdminsOnFailure", "jobs", "bool", true),
+      ],
+      title: "admin-settings:block.jobs.title",
     },
   ],
   lastChange: { action: "bookings.lateCancelThresholdMinutes", actorName: "Jordi", at: changedAt },

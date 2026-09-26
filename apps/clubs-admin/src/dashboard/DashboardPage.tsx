@@ -6,21 +6,9 @@ import { useTranslation } from "react-i18next";
 
 import { mondayOf } from "../planning/shared";
 
-type ApiDashboard = components["schemas"]["Dashboard"];
-type ClassOccupancy = ApiDashboard["kpis"]["classOccupancy"];
-// The generator drops the `null` of a `$ref` block; S14 §6 sends every disabled block as null.
-type Dashboard = Omit<ApiDashboard, "dogsByLevel" | "kpis" | "pendingSignups" | "riskReview"> & {
-  dogsByLevel: ApiDashboard["dogsByLevel"] | null;
-  kpis: Omit<ApiDashboard["kpis"], "activeMembers" | "classOccupancy" | "pendingSignups" | "trainingBookings"> & {
-    activeMembers: ApiDashboard["kpis"]["activeMembers"] | null;
-    classOccupancy: ClassOccupancy | null;
-    pendingSignups: ApiDashboard["kpis"]["pendingSignups"] | null;
-    trainingBookings: ApiDashboard["kpis"]["trainingBookings"] | null;
-  };
-  pendingSignups: ApiDashboard["pendingSignups"] | null;
-  riskReview: ApiDashboard["riskReview"] | null;
-};
-type RiskItem = NonNullable<ApiDashboard["riskReview"]>["items"][number];
+// S14 §6 sends every disabled block as `null`, and the snapshot declares it (api E5-T16).
+type Dashboard = components["schemas"]["Dashboard"];
+type RiskItem = NonNullable<Dashboard["riskReview"]>["items"][number];
 
 /** The risk card shows at most this many rows; the rest open D4 on the first of them. */
 const RISK_ROWS = 6;

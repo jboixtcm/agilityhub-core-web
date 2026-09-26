@@ -49,7 +49,8 @@
       "code": "Código",
       "color": "Color",
       "freeTraining": "Entrenamiento libre",
-      "name": "Nombre"
+      "name": "Nombre",
+      "progression": "Progresión"
     },
     "createTitle": "Nuevo nivel",
     "editTitle": "Editar el nivel",
@@ -59,10 +60,13 @@
       "code": "Código",
       "color": "Color",
       "freeTraining": "Da derecho a entrenamiento libre",
-      "name": "Nombre"
+      "name": "Nombre",
+      "progression": "Progresión"
     },
     "inUse": "Este nivel tiene datos relacionados: solo se puede desactivar",
     "new": "Nuevo nivel",
+    "progressionHelp": "Los niveles fuera de la progresión, como Terapia, no cuentan para «D y sup.»",
+    "progressionSwitch": "Progresión: {name}",
     "removeQuestion": "¿Eliminar el nivel {name}?",
     "removeTitle": "Eliminar el nivel",
     "title": "Niveles"

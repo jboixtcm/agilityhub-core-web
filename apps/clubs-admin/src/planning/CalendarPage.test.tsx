@@ -1067,7 +1067,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
   });
 });
 
-describe("E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
+describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
   it("S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries", async () => {
     await putOpeningHours("07:05", "21:55");
     await renderCalendar();
@@ -1335,46 +1335,7 @@ describe("E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
   });
 });
 
-describe("E4-W10 D4 follow-ups of the E4-W09 review", () => {
-  it("S06 §3 R-02-09 R-06-09 on a closed Sunday the card allows only notes: a capacity change keeps [ACCEPTA] disabled, a notes change saves", async () => {
-    const sunday = await createSundayClass();
-    await putOpeningHours(
-      "07:00",
-      "22:00",
-      weekdays.filter((day) => day !== "SUNDAY"),
-    );
-    await renderCalendar();
-    const week = await grid(/del 10 al 16 d.agost$/u);
-    const bodies = captureBodies("PATCH", `/class-sessions/${sunday.id}`);
-
-    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
-    const card = selectedCard();
-    expect(within(card).getByText(CLOSED_DAY)).toBeVisible();
-    const accept = within(card).getByRole("button", { name: "ACCEPTA" });
-    const capacity = within(card).getByRole("spinbutton");
-    const notes = within(card).getByLabelText("Notes");
-    fireEvent.change(capacity, { target: { value: "6" } });
-    // The api re-validates the whole class on any patch but notes (OUTSIDE_OPENING_HOURS).
-    expect(accept).toBeDisabled();
-    fireEvent.change(notes, { target: { value: "Porteu aigua" } });
-    expect(accept).toBeDisabled();
-    fireEvent.click(accept);
-    await settle();
-    expect(bodies).toEqual([]);
-
-    // Back to the class's own limit: only the notes change, and they are saved.
-    fireEvent.change(capacity, { target: { value: "" } });
-    expect(accept).toBeEnabled();
-    fireEvent.click(accept);
-    expect(await screen.findByText("Canvis desats")).toBeVisible();
-    await waitFor(() => {
-      expect(bodies).toEqual([{ notes: "Porteu aigua", version: sunday.version }]);
-    });
-    await waitFor(() => {
-      expect(within(selectedCard()).getByLabelText("Notes")).toHaveValue("Porteu aigua");
-    });
-  });
-
+describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
   it("R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida»", async () => {
     await putOpeningHours(
       "07:00",
@@ -1431,5 +1392,86 @@ describe("E4-W10 D4 follow-ups of the E4-W09 review", () => {
     expect(screen.getByRole("button", { name: "Bloqueja pista" })).toBeEnabled();
     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
     expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+  });
+});
+
+/** Records `METHOD path` of the requests whose path ends with `suffix`. */
+function recordRequests(suffix: string): string[] {
+  const seen: string[] = [];
+  server.events.on("request:start", ({ request }) => {
+    const path = new URL(request.url).pathname;
+    if (path.endsWith(suffix)) seen.push(`${request.method} ${path}`);
+  });
+  return seen;
+}
+
+describe("T-06-28 E4-W11 D4 follow-ups of the E4-W10 review", () => {
+  it("S06 §3 R-02-09 R-06-09 on a closed Sunday only «Notes» is editable: every chip editor is disabled, and [ACCEPTA] saves the notes alone", async () => {
+    const sunday = await createSundayClass();
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const bodies = captureBodies("PATCH", `/class-sessions/${sunday.id}`);
+
+    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
+    const card = selectedCard();
+    expect(within(card).getByText(CLOSED_DAY)).toBeVisible();
+    // The api re-validates the whole class on any patch but notes (OUTSIDE_OPENING_HOURS): no
+    // editor can make [ACCEPTA] disable itself without saying why.
+    for (const editor of [
+      within(card).getByLabelText("Pista"),
+      within(card).getByRole("button", { name: /^Nivells/u }),
+      within(card).getByLabelText("Instructor"),
+      within(card).getByRole("spinbutton"),
+      within(card).getByLabelText("Hora"),
+      within(card).getByLabelText("Descripció"),
+      within(card).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    ]) {
+      expect(editor).toBeDisabled();
+    }
+    expect(within(card).getByRole("button", { name: "ANUL·LA LA CLASSE" })).toBeEnabled();
+    const accept = within(card).getByRole("button", { name: "ACCEPTA" });
+    expect(accept).toBeDisabled();
+    const notes = within(card).getByLabelText("Notes");
+    expect(notes).toBeEnabled();
+    fireEvent.change(notes, { target: { value: "Porteu aigua" } });
+    expect(accept).toBeEnabled();
+    fireEvent.click(accept);
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toEqual([{ notes: "Porteu aigua", version: sunday.version }]);
+    });
+    await waitFor(() => {
+      expect(within(selectedCard()).getByLabelText("Notes")).toHaveValue("Porteu aigua");
+    });
+  });
+
+  it("S06 §3 an open day keeps the chip editors enabled", async () => {
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    await waitFor(() => {
+      expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+    });
+    const card = selectedCard();
+    expect(within(card).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
+    for (const editor of cardEditors().slice(0, 6)) expect(editor).toBeEnabled();
+  });
+
+  it("MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only)", async () => {
+    mockScenario("instructor");
+    const openingHours = recordRequests("/club/opening-hours");
+    const calendars = recordRequests("/calendar");
+    await renderCalendar({ readOnly: true });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(selectedCard()).toBeVisible();
+    await settle();
+    expect(calendars.length).toBeGreaterThan(0);
+    expect(openingHours).toEqual([]);
   });
 });

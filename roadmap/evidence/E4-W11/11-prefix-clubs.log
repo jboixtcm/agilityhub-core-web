@@ -1,0 +1,218 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/activities/activities.test.tsx (26 tests | 1 failed) 818ms
+   ❯ T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) (2)
+     × 03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields 8ms
+ ❯ src/today/OverviewPage.test.tsx (8 tests | 2 failed) 10571ms
+   ❯ T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) (2)
+     × names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell 10064ms
+     × a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row 79ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) > 03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields
+AssertionError: expected 'Nit d\'agilityinscritaDiumenge 9 · to…' to be 'Nit d\'agilityinscritaDiumenge 9 · 0:…' // Object.is equality
+
+Expected: "Nit d'agilityinscritaDiumenge 9 · 0:00–2:00 · totes les pistes"
+Received: "Nit d'agilityinscritaDiumenge 9 · totes les pistes"
+
+ ❯ src/activities/activities.test.tsx:699:67
+    697|     );
+    698|     const [reservation, block] = await screen.findAllByRole("link");
+    699|     expect(reservation?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+       |                                                                   ^
+    700|       "Nit d'agilityinscritaDiumenge 9 · 0:00–2:00 · totes les pistes",
+    701|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell
+TestingLibraryElementError: Unable to find an element with the text: Marc, Núria. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<dl[39m
+      [33mclass[39m=[32m"day-drawer"[39m
+    [36m>[39m
+      [36m<dt>[39m
+        [0mData i hora[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mdl 3 d’agost · 18:50–19:50[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mPista[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mCentral[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInstructor[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMarc[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInscrits/places[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0m5/5 +2[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mEstat[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--success"[39m
+        [36m>[39m
+          [0mactiva[0m
+        [36m</span>[39m
+      [36m</dd>[39m
+    [36m</dl>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<dl[39m
+      [33mclass[39m=[32m"day-drawer"[39m
+    [36m>[39m
+      [36m<dt>[39m
+        [0mData i hora[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mdl 3 d’agost · 18:50–19:50[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mPista[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mCentral[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInstructor[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMarc[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInscrits/places[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0m5/5 +2[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mEstat[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--success"[39m
+        [36m>[39m
+          [0mactiva[0m
+        [36m</span>[39m
+      [36m</dd>[39m
+    [36m</dl>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/today/OverviewPage.test.tsx:227:33
+    225|
+    226|     const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    227|     expect(await within(drawer).findByText("Marc, Núria")).toBeVisible…
+       |                                 ^
+    228|     expect(within(drawer).getByText("Muntanya")).toBeVisible();
+    229|     // The tapped cell says Central and Marc: neither is read any more.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <dt>
+  Pista
+</dt> instead[39m
+ ❯ src/today/OverviewPage.test.tsx:240:53
+    238|     const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    239|     expect(await within(drawer).findByText("dl 3 d’agost · 18:50–19:50…
+    240|     expect(within(drawer).queryByText("Pista")).not.toBeInTheDocument(…
+       |                                                     ^
+    241|     expect(within(drawer).queryByText("Central")).not.toBeInTheDocumen…
+    242|     expect(within(drawer).queryByText("Instructor")).not.toBeInTheDocu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 5 passed (7)
+      Tests  3 failed | 168 passed (171)
+   Start at  01:50:34
+   Duration  11.56s (tests 74%, environment 11%, transform 8%, import 4%, setup 3%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run`
+Exit status 1

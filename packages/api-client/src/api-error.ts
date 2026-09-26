@@ -72,3 +72,35 @@ export class ApiError extends Error {
 export function isApiError(error: unknown, code?: string): error is ApiError {
   return error instanceof ApiError && (code === undefined || error.code === code);
 }
+
+/** One field of a refused request: the api's field path and the code to translate. */
+export interface ApiFieldError {
+  code: string;
+  field: string;
+}
+
+/**
+ * The fields an api error names (CONVENCIONS_API §5): every `details.fieldErrors[{field, code}]`
+ * entry, and the single `details.field` of a one-field error, which carries the error's own code
+ * (`400 VALIDATION_ERROR {field: "reason"}`, `409 DUPLICATE_NAME {field: "shortName"}`). An entry
+ * without its own code takes the error's. Empty for anything else.
+ */
+export function apiFieldErrors(error: unknown): ApiFieldError[] {
+  if (!isApiError(error)) return [];
+  const details = recordFrom(error.details);
+  if (details === undefined) return [];
+  const listed = Array.isArray(details.fieldErrors)
+    ? details.fieldErrors.flatMap((entry: unknown) => {
+        const item = recordFrom(entry);
+        return typeof item?.field === "string" && item.field !== ""
+          ? [{ code: typeof item.code === "string" ? item.code : error.code, field: item.field }]
+          : [];
+      })
+    : [];
+  const single = details.field;
+  return typeof single === "string" &&
+    single !== "" &&
+    !listed.some((entry) => entry.field === single)
+    ? [...listed, { code: error.code, field: single }]
+    : listed;
+}

@@ -344,6 +344,8 @@ function bandErrorField(
   cause: unknown,
   values: { endTime: string; startTime: string },
   context: {
+    /** The band being edited; `undefined` for a new one. */
+    band: TimeBand | undefined;
     bands: readonly TimeBand[];
     opening: { close: string; open: string } | undefined;
     slotMinutes: number;
@@ -356,10 +358,17 @@ function bandErrorField(
       return "end";
     case "INVALID_SLOT_GRANULARITY":
       return start % context.slotMinutes === 0 ? "end" : "start";
-    case "OUTSIDE_OPENING_HOURS":
-      // Without a known window (hours not read, or a closed day) no field can be blamed.
-      if (context.opening === undefined) return "general";
-      return start < minutesOf(context.opening.open) ? "start" : "end";
+    case "OUTSIDE_OPENING_HOURS": {
+      if (context.opening !== undefined) {
+        return start < minutesOf(context.opening.open) ? "start" : "end";
+      }
+      // Hours not read: never assume any. Only the time the admin moved can be blamed; a new band,
+      // or both times moved, gets the message without a field.
+      const startMoved = context.band !== undefined && context.band.startTime !== values.startTime;
+      const endMoved = context.band !== undefined && context.band.endTime !== values.endTime;
+      if (startMoved === endMoved) return "general";
+      return startMoved ? "start" : "end";
+    }
     case "BAND_OVERLAP":
       return context.bands.some(
         (band) => minutesOf(band.startTime) <= start && start < minutesOf(band.endTime),
@@ -396,7 +405,7 @@ function BandDrawer({
   slotMinutes: number;
 }) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
-  const { formatPlainDate } = useClubFormats();
+  const { formatList, formatPlainDate } = useClubFormats();
   const errorMessage = useErrorMessage();
   const [startTime, setStartTime] = useState(band?.startTime ?? "");
   const [endTime, setEndTime] = useState(band?.endTime ?? "");
@@ -409,7 +418,7 @@ function BandDrawer({
       field: bandErrorField(
         cause,
         { endTime, startTime },
-        { bands, opening: opening.window, slotMinutes },
+        { band, bands, opening: opening.window, slotMinutes },
       ),
       message: errorMessage(cause),
     });
@@ -461,9 +470,9 @@ function BandDrawer({
         {closed ? (
           <p className="planning-note planning-note--warning" role="note">
             {t("admin-scheduling:templates.bandForm.closedDays", {
-              days: opening.closedDays
-                .map((day) => weekdayLabel(day, formatPlainDate, "weekdayLong"))
-                .join(", "),
+              days: formatList(
+                opening.closedDays.map((day) => weekdayLabel(day, formatPlainDate, "weekdayLong")),
+              ),
             })}
           </p>
         ) : null}
@@ -1193,15 +1202,33 @@ export function TemplatesPage({
     return task;
   };
 
-  const removeClass = async () => {
-    if (current === undefined || cardMode.kind !== "edit") return;
-    await client.DELETE("/week-templates/{id}/classes/{classId}", {
-      params: { path: { classId: cardMode.item.id, id: current.id } },
+  /**
+   * A DELETE of the edit mode waits in the same queue as the PATCHes, so it never overtakes one
+   * queued before it (E4-W01 review #3). Changes queued after it were built on the removed item:
+   * the generation bump drops them.
+   */
+  const queueRemoval = (remove: () => Promise<void>): Promise<void> => {
+    const task = patchQueue.current.then(async () => {
+      patchGeneration.current += 1;
+      await remove();
     });
-    setCardMode({ fromEmptyCell: false, kind: "create" });
-    template.reload();
-    lists.reload();
-    coverage.reload();
+    patchQueue.current = task.catch(() => undefined);
+    return task;
+  };
+
+  const removeClass = (): Promise<void> => {
+    if (current === undefined || cardMode.kind !== "edit") return Promise.resolve();
+    const templateId = current.id;
+    const classId = cardMode.item.id;
+    return queueRemoval(async () => {
+      await client.DELETE("/week-templates/{id}/classes/{classId}", {
+        params: { path: { classId, id: templateId } },
+      });
+      if (cardShowsClass(classId)) setCardMode({ fromEmptyCell: false, kind: "create" });
+      template.reload();
+      lists.reload();
+      coverage.reload();
+    });
   };
 
   const saveTemplate = async (name: string, kind: TemplateKind, copyFromId?: string) => {
@@ -1239,14 +1266,17 @@ export function TemplatesPage({
     setBandDrawer(undefined);
   };
 
-  const removeBand = async (band: TimeBand) => {
-    if (current === undefined) return;
-    await client.DELETE("/week-templates/{id}/bands/{bandId}", {
-      params: { path: { bandId: band.id, id: current.id } },
+  const removeBand = (band: TimeBand): Promise<void> => {
+    if (current === undefined) return Promise.resolve();
+    const templateId = current.id;
+    return queueRemoval(async () => {
+      await client.DELETE("/week-templates/{id}/bands/{bandId}", {
+        params: { path: { bandId: band.id, id: templateId } },
+      });
+      setBandDrawer(undefined);
+      template.reload();
+      lists.reload();
     });
-    setBandDrawer(undefined);
-    template.reload();
-    lists.reload();
   };
 
   const generate = async (candidate: GenerationCandidate, idempotencyKey: string) => {

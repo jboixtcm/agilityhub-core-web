@@ -1264,3 +1264,120 @@ describe("T-07-29 E4-W05 the registrants list against the published core", () =>
     lists.stop();
   });
 });
+
+const OUTSIDE_OPENING_HOURS = "L'hora seleccionada és fora de l'horari d'obertura.";
+
+/** The error line of a D7 form field (`FormField` renders it as `#{id}-error`). */
+function fieldErrorText(id: string): string | undefined {
+  return document.getElementById(`${id}-error`)?.textContent ?? undefined;
+}
+
+describe("T-07-29 E4-W11 D7 follow-ups of the E4-W10 review", () => {
+  it("R-07-05 R-02-09 a draft at the club with rings on a closed Sunday: [PUBLICA] is disabled with the closed-day note; on an open day it is offered", async () => {
+    // The Demostració (Sunday 4/10) moved to the club on Cadells, complete enough to publish.
+    const draft = activityState.activities.find((item) => item.id === DEMONSTRATION);
+    if (draft === undefined) throw new TypeError("Missing the Demostració");
+    Object.assign(draft, {
+      endTime: "12:00",
+      location: { address: null, atClub: true, name: null, url: null },
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+      ringIds: ["ring-cadells"],
+      startTime: "10:00",
+    });
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]);
+    const publications = recordRequests(`/activities/${DEMONSTRATION}/publication`);
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    const publish = within(card).getByRole("button", { name: "PUBLICA" });
+    expect(await within(card).findByText(CLOSED_DAY)).toBeVisible();
+    expect(publish).toBeDisabled();
+    fireEvent.click(publish);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    expect(publications.seen).toEqual([]);
+
+    // Saturday 3/10 is open: the note goes and [PUBLICA] is offered again.
+    fireEvent.change(within(card).getByLabelText("Data"), { target: { value: "03102026" } });
+    expect(within(card).queryByText(CLOSED_DAY)).toBeNull();
+    expect(publish).toBeEnabled();
+    publications.stop();
+  });
+
+  it("R-07-05 T-07-04 saving the published Torneig on a closed Friday shows the api's 422 OUTSIDE_OPENING_HOURS on the date and both times", async () => {
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "SATURDAY", "SUNDAY"]);
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    expect(await within(card).findByText(CLOSED_DAY)).toBeVisible();
+    // Taking Central off re-syncs the ring blocks: the mock checks the window like the api.
+    fireEvent.click(within(card).getByRole("button", { name: "Central" }));
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+
+    await waitFor(() => {
+      expect(fieldErrorText("activity-date")).toBe(OUTSIDE_OPENING_HOURS);
+    });
+    expect(fieldErrorText("activity-start")).toBe(OUTSIDE_OPENING_HOURS);
+    expect(fieldErrorText("activity-end")).toBe(OUTSIDE_OPENING_HOURS);
+    // On the fields, not as a page message; nothing was saved.
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getAllByText(OUTSIDE_OPENING_HOURS)).toHaveLength(3);
+    expect(patchBodies.at(-1)).toMatchObject({ ringIds: expect.any(Array) as unknown });
+    expect(activityState.activities.find((item) => item.id === TOURNAMENT)?.ringIds).toContain(
+      "ring-central",
+    );
+  });
+
+  it("CONVENCIONS_API §5 a single-field VALIDATION_ERROR (details.field) lands on its field, not in a toast", async () => {
+    server.use(
+      http.patch("*/api/v1/activities/:id", () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { field: "maxPlaces" },
+            message: "Validation failed",
+            traceId: "trace-e4-w11",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    fireEvent.change(within(card).getByLabelText("Places"), { target: { value: "41" } });
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+
+    await waitFor(() => {
+      expect(fieldErrorText("activity-places")).toBe("Reviseu els camps destacats.");
+    });
+    expect(screen.getAllByText("Reviseu els camps destacats.")).toHaveLength(1);
+  });
+
+  it("an INSTRUCTOR and a finished activity never read GET /club/opening-hours (the D4/D3 rule)", async () => {
+    const openingHours = recordRequests("/club/opening-hours");
+    mockScenario("instructor");
+    await renderPage({ readOnly: true, selectedId: TOURNAMENT });
+    await maintenance("Torneig d'Estiu 2026");
+    cleanup();
+
+    mockScenario("admin");
+    const workshop = activityState.activities.find((item) => item.id === WORKSHOP);
+    if (workshop === undefined) throw new TypeError("Missing the Taller");
+    workshop.state = "FINISHED";
+    await renderPage({ selectedId: WORKSHOP });
+    await maintenance("Taller de contactes");
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    expect(openingHours.seen).toEqual([]);
+
+    // An editable activity does read them.
+    cleanup();
+    await renderPage({ selectedId: TOURNAMENT });
+    await maintenance("Torneig d'Estiu 2026");
+    await waitFor(() => {
+      expect(openingHours.seen.map((request) => request.method)).toEqual(["GET"]);
+    });
+    openingHours.stop();
+  });
+});

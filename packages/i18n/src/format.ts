@@ -281,6 +281,13 @@ export function formatDuration(
     : duration;
 }
 
+/** Items joined as a list in the reader's language: «dilluns i dimarts», «lunes y martes». */
+export function formatList(values: readonly string[], locale: Locale): string {
+  return new Intl.ListFormat(intlLocales[locale], { style: "long", type: "conjunction" }).format(
+    values,
+  );
+}
+
 export function formatMoney(amount: number, locale: Locale, currency: string): string {
   return new Intl.NumberFormat(intlLocales[locale], {
     currency,
@@ -313,6 +320,8 @@ export interface ClubFormats {
   formatDateRange: (start: DateInput, end: DateInput, presentation?: DatePresentation) => string;
   formatDateTime: (value: DateInput) => string;
   formatDuration: (totalMinutes: number, options?: DurationOptions) => string;
+  /** A conjunction list in the reader's language («dilluns i dimarts»). */
+  formatList: (values: readonly string[]) => string;
   formatMoney: (amount: number) => string;
   formatMonth: (value: DateInput) => string;
   /** A `YYYY-MM-DD` business date, never shifted by the club's zone (R-06-14). */
@@ -331,6 +340,7 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
       formatDateRange(start, end, locale, timeZone, presentation),
     formatDateTime: (value) => formatDateTime(value, locale, timeZone),
     formatDuration: (totalMinutes, options) => formatDuration(totalMinutes, locale, options),
+    formatList: (values) => formatList(values, locale),
     formatMoney: (amount) => formatMoney(amount, locale, currency),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
     formatPlainDate: (value, presentation) => formatPlainDate(value, locale, presentation),

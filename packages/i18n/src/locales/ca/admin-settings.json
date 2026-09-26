@@ -5,12 +5,13 @@
     "classes": "Classes",
     "club": "Club i pistes",
     "clubPages": "Pàgines del club",
-    "communications": "Comunicacions",
     "courses": "Recorreguts",
-    "freeTraining": "Entrenaments lliures",
+    "jobs": "Processos automàtics",
+    "messaging": "Comunicacions",
     "modules": "Mòduls",
-    "privacyAudit": "Privacitat i auditoria",
+    "privacy": "Privacitat i auditoria",
     "signup": "Alta i consentiments",
+    "training": "Entrenaments lliures",
     "waitlist": "Llista d'espera"
   },
   "common": {
@@ -114,6 +115,12 @@
     "time": "Hora"
   },
   "enum": {
+    "activities": {
+      "cancelDeadline": {
+        "EVENT_START": "Fins a l'inici de l'activitat",
+        "REGISTRATION_CLOSE": "Fins al tancament de les inscripcions"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "CSV": "CSV",
@@ -429,10 +436,88 @@
         "label": "Dia límit de sol·licitud d'inactivitat"
       }
     },
+    "jobs": {
+      "alertAdminsOnFailure": {
+        "help": "Envia un avís als administradors quan un procés automàtic falla o no s'executa.",
+        "label": "Avís als administradors si un procés falla"
+      },
+      "billingReminder": {
+        "enabled": {
+          "help": "Recorda a l'administració que encara no s'ha generat la remesa del mes.",
+          "label": "Recordatori de remesa"
+        }
+      },
+      "classFinishing": {
+        "enabled": {
+          "help": "Tanca les classes quan s'acaben.",
+          "label": "Finalització de classes"
+        }
+      },
+      "cleanup": {
+        "enabled": {
+          "help": "Esborra cada dia les dades tècniques caducades.",
+          "label": "Neteja"
+        }
+      },
+      "dailyTime": {
+        "help": "Hora local del club a la qual s'executen els venciments, la neteja i el recordatori de remesa.",
+        "label": "Hora dels processos diaris"
+      },
+      "expirations": {
+        "enabled": {
+          "help": "Tracta cada dia els venciments: preinscripcions, documents, packs, inactivitats i baixes.",
+          "label": "Venciments"
+        }
+      },
+      "noShowNotices": {
+        "enabled": {
+          "help": "Envia cada dia els avisos de les absències sense avís.",
+          "label": "Avisos de no presentats"
+        }
+      },
+      "paymentTimeouts": {
+        "enabled": {
+          "help": "Allibera les places de les reserves amb el pagament caducat.",
+          "label": "Pagaments pendents"
+        }
+      },
+      "reminders": {
+        "enabled": {
+          "help": "Envia els recordatoris de classes i entrenaments.",
+          "label": "Recordatoris"
+        }
+      },
+      "riskReview": {
+        "enabled": {
+          "help": "Revisa cada dia les classes amb pocs inscrits i les anul·la o avisa.",
+          "label": "Revisió de classes en risc"
+        }
+      },
+      "waitlistFifo": {
+        "enabled": {
+          "help": "Ofereix les places lliures per ordre quan la llista d'espera és per ordre d'entrada.",
+          "label": "Llista d'espera per torns"
+        }
+      },
+      "weekOpening": {
+        "enabled": {
+          "help": "Obre les reserves de la setmana vinent a l'hora configurada a Classes.",
+          "label": "Obertura d'inscripcions"
+        }
+      }
+    },
     "learn": {
+      "baseUrl": {
+        "help": "Adreça de l'aplicació AgilityHub Learn.",
+        "label": "Adreça de Learn"
+      },
       "linkText": {
         "help": "Text de l'enllaç a Learn que es mostra a l'app.",
         "label": "Text de l'enllaç a Learn"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Minuts que es guarden les recomanacions de Learn abans de tornar-les a demanar.",
+        "label": "Validesa de les recomanacions de Learn"
       }
     },
     "leave": {

@@ -4,7 +4,7 @@ import { AppBar, Badge, Button, Card, Icon, Skeleton, useBranding } from "@agili
 import { useTranslation } from "react-i18next";
 
 import "./activities.css";
-import { type ActivityRow, localHours, useMeActivities } from "./shared";
+import { type ActivityRow, useMeActivities } from "./shared";
 
 function RowBadge({ row }: { row: ActivityRow }) {
   const { t } = useTranslation("activities");
@@ -34,11 +34,14 @@ function RowBadge({ row }: { row: ActivityRow }) {
   }
 }
 
-/** One row of the 04 block: «{title} · {ds 12/09} · {9:00}» + the R-07-11 badge. */
+/**
+ * One row of the 04 block: «{title} · {ds 12/09} · {9:00}» + the R-07-11 badge. The hours are the
+ * row's `startTime` (R-07-13; the mockup prints only the start there): `null` prints none, so a
+ * date-only activity never reads «0:00».
+ */
 export function ActivityBlockRow({ row }: { row: ActivityRow }) {
   const formats = useClubFormats();
   const { t } = useTranslation("activities");
-  const { start } = localHours(row.startsAtLocal, row.endsAtLocal);
   const inert = row.rowState === "FULL" || row.rowState === "NOT_BOOKABLE";
   const content = (
     <>
@@ -46,7 +49,7 @@ export function ActivityBlockRow({ row }: { row: ActivityRow }) {
       <span className="activity-row__text">
         <strong>{row.title}</strong>
         {t("activities:block.separator")}
-        {formats.formatActivityDate(row.startsAtLocal, start, null, "list")}
+        {formats.formatActivityDate(row.startsAtLocal.slice(0, 10), row.startTime, null, "list")}
       </span>
       <RowBadge row={row} />
     </>

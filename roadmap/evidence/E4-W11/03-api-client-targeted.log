@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run src/api-error.test.ts src/mocks/club-settings-handlers.test.ts src/mocks/activity-handlers.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  01:38:01
+   Duration  721ms (import 44%, transform 40%, tests 16%, worker 1%)
+

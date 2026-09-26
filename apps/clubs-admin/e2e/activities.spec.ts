@@ -155,7 +155,7 @@ test.describe("E4-W04 D7 activities", () => {
   });
 });
 
-test.describe("E4-W08 D7 follow-ups", () => {
+test.describe("T-07-29 E4-W08 D7 follow-ups", () => {
   const followUpEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W08");
 
   test.beforeAll(() => {
@@ -218,43 +218,59 @@ test.describe("E4-W08 D7 follow-ups", () => {
   });
 });
 
-test.describe("E4-W10 D7 on a day the club is closed", () => {
+/**
+ * The D7 list, then `club.openingHours` with `closedDay` absent (closed), through the mock api of
+ * this document: the list is drawn from the mock api, so the mock worker serves it by now. The mock
+ * state lives in this document, so the caller only navigates inside the app afterwards.
+ */
+async function listWithClosedDay(page: Page, closedDay: string) {
+  await signIn(page, "admin");
+  await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+  await page.waitForURL("**/activitats**");
+  const table = page.getByRole("table");
+  await expect(table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" })).toBeVisible();
+  const status = await page.evaluate(async (closed) => {
+    const headers = {
+      Authorization: "Bearer mock-access-token",
+      "Content-Type": "application/json",
+    };
+    const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+      version: number;
+    };
+    const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+    const value = Object.fromEntries(
+      days.filter((day) => day !== closed).map((day) => [day, { close: "22:00", open: "07:00" }]),
+    );
+    const result = await fetch("/api/v1/club/opening-hours", {
+      body: JSON.stringify({ value, version: current.version }),
+      headers,
+      method: "PUT",
+    });
+    return result.status;
+  }, closedDay);
+  expect(status).toBe(200);
+  return table;
+}
+
+test.describe("T-07-29 E4-W10 D7 on a day the club is closed", () => {
   const closedDayEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W10");
+  const saveEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W11");
 
   test.beforeAll(() => {
     mkdirSync(closedDayEvidence, { recursive: true });
+    mkdirSync(saveEvidence, { recursive: true });
   });
 
-  test("R-07-05 R-02-09 at the club with linked rings, a closed Friday shows «El club està tancat aquest dia» and offers no times", async ({
+  test("R-07-05 R-02-09 at the club with linked rings, a closed Friday shows «El club està tancat aquest dia» and offers no times; E4-W11 [DESA] shows OUTSIDE_OPENING_HOURS on the date and times", async ({
     page,
   }) => {
-    await signIn(page, "admin");
-    await page.getByRole("link", { exact: true, name: "Activitats" }).click();
-    await page.waitForURL("**/activitats**");
-    const table = page.getByRole("table");
-    const tournament = table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" });
-    // The list is drawn from the mock api, so the mock worker serves this document by now. The mock
-    // state lives in this document: from here on the test only navigates inside the app.
-    await expect(tournament).toBeVisible();
-    const status = await page.evaluate(async () => {
-      const headers = {
-        Authorization: "Bearer mock-access-token",
-        "Content-Type": "application/json",
-      };
-      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
-        version: number;
-      };
-      const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "SATURDAY", "SUNDAY"];
-      const value = Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }]));
-      const result = await fetch("/api/v1/club/opening-hours", {
-        body: JSON.stringify({ value, version: current.version }),
-        headers,
-        method: "PUT",
-      });
-      return result.status;
-    });
-    expect(status).toBe(200);
-    await tournament.getByRole("link").first().click();
+    const table = await listWithClosedDay(page, "FRIDAY");
+    await table
+      .getByRole("row")
+      .filter({ hasText: "Torneig d'Estiu 2026" })
+      .getByRole("link")
+      .first()
+      .click();
     await page.waitForURL("**/activitats/activity-torneig-estiu-2026");
     const card = maintenance(page, "Torneig d'Estiu 2026");
     const message = card.getByText("El club està tancat aquest dia");
@@ -263,5 +279,47 @@ test.describe("E4-W10 D7 on a day the club is closed", () => {
     await expect(card.getByLabel("Hora d'inici").locator("option")).toHaveCount(2);
     await message.scrollIntoViewIfNeeded();
     await page.screenshot({ path: resolve(closedDayEvidence, "D7-divendres-tancat-1280.png") });
+
+    // Taking Central off re-syncs the published Torneig's ring blocks: the api refuses the window.
+    await card.getByRole("button", { name: "Central" }).click();
+    await card.getByRole("button", { name: "DESA" }).click();
+    const outside = card
+      .getByRole("alert")
+      .filter({ hasText: "L'hora seleccionada és fora de l'horari d'obertura." });
+    await expect(outside).toHaveCount(3);
+    for (const id of ["activity-date-error", "activity-start-error", "activity-end-error"]) {
+      await expect(card.locator(`#${id}`)).toHaveText(
+        "L'hora seleccionada és fora de l'horari d'obertura.",
+      );
+    }
+    await card.getByLabel("Data").scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: resolve(saveEvidence, "D7-desa-divendres-tancat-1280.png"),
+    });
+  });
+
+  test("R-07-05 R-02-09 E4-W11 a draft at the club with rings on a closed Sunday: [PUBLICA] is disabled, with the closed-day note", async ({
+    page,
+  }) => {
+    const table = await listWithClosedDay(page, "SUNDAY");
+    await table
+      .getByRole("row")
+      .filter({ hasText: "Demostració Festa Major" })
+      .getByRole("link")
+      .first()
+      .click();
+    await page.waitForURL("**/activitats/activity-demostracio-festa-major");
+    const card = maintenance(page, "Demostració Festa Major");
+    const publish = card.getByRole("button", { name: "PUBLICA" });
+    // Away from the club nothing is blocked: [PUBLICA] is offered.
+    await expect(publish).toBeEnabled();
+    await card.getByRole("switch", { name: "Al club" }).click();
+    await card.getByRole("button", { name: "Central" }).click();
+    await expect(card.getByText("El club està tancat aquest dia")).toBeVisible();
+    await expect(publish).toBeDisabled();
+    await publish.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: resolve(saveEvidence, "D7-publica-diumenge-tancat-1280.png"),
+    });
   });
 });

@@ -10,11 +10,11 @@ import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ReserveActivitiesPage } from "./ActivitiesBlock";
+import { ActivityBlockRow, ReserveActivitiesPage } from "./ActivitiesBlock";
 import { ActivityDetailPage } from "./ActivityDetailPage";
 import { ActivityHistoryRow } from "./ActivityHistoryRow";
 import { ActivityReservationRow, HomeActivityReservations } from "./ActivityReservationRow";
-import { type ActivityRegistrationSummary, safeDecode } from "./shared";
+import { type ActivityRegistrationSummary, type ActivityRow, safeDecode } from "./shared";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -637,5 +637,92 @@ describe("T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review", ()
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(recorded.bodies).toEqual([]);
     recorded.stop();
+  });
+});
+
+/** A registration of screen 03 as the api sends it (form B, `startTime`/`endTime` of E5-T15). */
+function registrationWith(
+  activity: Pick<
+    ActivityRegistrationSummary["activity"],
+    "endTime" | "endsAtLocal" | "startTime" | "startsAtLocal"
+  >,
+): ActivityRegistrationSummary {
+  return {
+    activity: {
+      ...activity,
+      id: "activity-nit-agility",
+      placeLabel: "totes les pistes",
+      title: "Nit d'agility",
+    },
+    activityId: "activity-nit-agility",
+    cancellableUntil: "2026-08-08T22:00:00Z",
+    id: "registration-nit-agility",
+    origin: "APP",
+    registeredAt: "2026-07-02T08:00:00Z",
+    state: "ACTIVE",
+  };
+}
+
+/** A row of the 04 block as the api sends it. */
+function rowWith(
+  activity: Pick<ActivityRow, "endTime" | "endsAtLocal" | "startTime" | "startsAtLocal">,
+): ActivityRow {
+  return {
+    ...activity,
+    freeSeats: null,
+    id: "activity-nit-agility",
+    notBookableReason: null,
+    placeLabel: "totes les pistes",
+    rowState: "OPEN",
+    title: "Nit d'agility",
+    typeLabel: "altres",
+    waiting: 0,
+    waitlistEnabled: false,
+  };
+}
+
+describe("T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15)", () => {
+  it("03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields", async () => {
+    const hours = {
+      endTime: "02:00",
+      endsAtLocal: "2026-08-09T02:00",
+      startTime: "00:00",
+      startsAtLocal: "2026-08-09T00:00",
+    };
+    await renderWith(
+      <>
+        <ActivityReservationRow registration={registrationWith(hours)} />
+        <ActivityBlockRow row={rowWith(hours)} />
+      </>,
+    );
+    const [reservation, block] = await screen.findAllByRole("link");
+    expect(reservation?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Nit d'agilityinscritaDiumenge 9 · 0:00–2:00 · totes les pistes",
+    );
+    expect(block?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Nit d'agility · dg 9 · 0:00Obertes",
+    );
+  });
+
+  it("03 and 04: a date-only activity (startTime and endTime null) shows no time, never «0:00»", async () => {
+    const hours = {
+      endTime: null,
+      endsAtLocal: null,
+      startTime: null,
+      startsAtLocal: "2026-08-09T00:00",
+    };
+    await renderWith(
+      <>
+        <ActivityReservationRow registration={registrationWith(hours)} />
+        <ActivityBlockRow row={rowWith(hours)} />
+      </>,
+    );
+    const [reservation, block] = await screen.findAllByRole("link");
+    expect(reservation?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Nit d'agilityinscritaDiumenge 9 · totes les pistes",
+    );
+    expect(block?.textContent.replace(/\s+/gu, " ").trim()).toBe("Nit d'agility · dg 9Obertes");
+    expect(reservation).not.toHaveTextContent(/0:00/u);
+    expect(block).not.toHaveTextContent(/0:00/u);
   });
 });

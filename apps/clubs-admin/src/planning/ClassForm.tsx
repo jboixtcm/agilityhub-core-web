@@ -202,7 +202,8 @@ export function ClassForm({
   };
 
   /** Edit mode: the change shows at once and is sent through the parent's PATCH queue; if it
-   * fails, the form goes back to the last saved class (the chips never show an unsaved value). */
+   * fails, only the fields of that PATCH go back to the last saved class (the chips never show an
+   * unsaved value), and text still being typed in «Descripció» or «Límit» stays. */
   const change = async (patch: ClassFormPatch, next: Partial<ClassFormValues>) => {
     setValues((current) => ({ ...current, ...next }));
     setErrors({});
@@ -212,9 +213,18 @@ export function ClassForm({
     } catch (error) {
       const saved = savedItem.current;
       if (saved !== undefined) {
-        setValues(
-          initialValues({ item: saved, kind: "edit" }, bands, days, instructors, maxInstructors),
+        const restored = initialValues(
+          { item: saved, kind: "edit" },
+          bands,
+          days,
+          instructors,
+          maxInstructors,
         );
+        const fields = Object.keys(patch) as (keyof ClassFormPatch & keyof ClassFormValues)[];
+        setValues((current) => ({
+          ...current,
+          ...Object.fromEntries(fields.map((field) => [field, restored[field]])),
+        }));
       }
       showError(error);
     }

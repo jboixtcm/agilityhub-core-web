@@ -1,4 +1,9 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  type ApiClient,
+  type components,
+} from "@agilityhub/api-client";
 import { fmtMaskedIban, LOCALE_STORAGE_KEY, productLocales, useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
@@ -490,23 +495,6 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     sessionStorage.removeItem(DRAFT_KEY);
   }
   return emptyDraft(addDog, profile);
-}
-
-function apiFieldErrors(error: unknown): { code: string; field: string }[] {
-  if (!isApiError(error) || typeof error.details !== "object" || error.details === null) {
-    return [];
-  }
-  const errors = (error.details as Record<string, unknown>).fieldErrors;
-  if (!Array.isArray(errors)) {
-    return [];
-  }
-  return errors.flatMap((entry) => {
-    if (typeof entry !== "object" || entry === null) return [];
-    const candidate = entry as Record<string, unknown>;
-    return typeof candidate.code === "string" && typeof candidate.field === "string"
-      ? [{ code: candidate.code, field: candidate.field }]
-      : [];
-  });
 }
 
 function personFormField(segments: readonly string[]): string | undefined {

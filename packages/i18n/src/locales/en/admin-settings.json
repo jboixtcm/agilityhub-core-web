@@ -5,12 +5,13 @@
     "classes": "Classes",
     "club": "Club and rings",
     "clubPages": "Club pages",
-    "communications": "Communications",
     "courses": "Courses",
-    "freeTraining": "Free training",
+    "jobs": "Automated processes",
+    "messaging": "Communications",
     "modules": "Modules",
-    "privacyAudit": "Privacy and audit",
+    "privacy": "Privacy and audit",
     "signup": "Registration and consent",
+    "training": "Free training",
     "waitlist": "Waitlist"
   },
   "common": {
@@ -114,6 +115,12 @@
     "time": "Time"
   },
   "enum": {
+    "activities": {
+      "cancelDeadline": {
+        "EVENT_START": "Until the activity starts",
+        "REGISTRATION_CLOSE": "Until registration closes"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "CSV": "CSV",
@@ -429,10 +436,88 @@
         "label": "Inactivity request deadline"
       }
     },
+    "jobs": {
+      "alertAdminsOnFailure": {
+        "help": "Sends a notice to the administrators when an automated process fails or does not run.",
+        "label": "Alert administrators when a process fails"
+      },
+      "billingReminder": {
+        "enabled": {
+          "help": "Reminds the administrators that this month's collection has not been generated yet.",
+          "label": "Collection reminder"
+        }
+      },
+      "classFinishing": {
+        "enabled": {
+          "help": "Closes classes when they end.",
+          "label": "Class finishing"
+        }
+      },
+      "cleanup": {
+        "enabled": {
+          "help": "Deletes expired technical data every day.",
+          "label": "Clean-up"
+        }
+      },
+      "dailyTime": {
+        "help": "Club local time when expirations, clean-up and the collection reminder run.",
+        "label": "Daily process time"
+      },
+      "expirations": {
+        "enabled": {
+          "help": "Handles expirations every day: pending sign-ups, documents, packs, inactivity periods and leaves.",
+          "label": "Expirations"
+        }
+      },
+      "noShowNotices": {
+        "enabled": {
+          "help": "Sends the notices for unannounced absences every day.",
+          "label": "No-show notices"
+        }
+      },
+      "paymentTimeouts": {
+        "enabled": {
+          "help": "Releases the places of bookings whose payment has expired.",
+          "label": "Pending payments"
+        }
+      },
+      "reminders": {
+        "enabled": {
+          "help": "Sends class and training reminders.",
+          "label": "Reminders"
+        }
+      },
+      "riskReview": {
+        "enabled": {
+          "help": "Checks classes with few registrants every day and cancels them or sends a warning.",
+          "label": "At-risk class review"
+        }
+      },
+      "waitlistFifo": {
+        "enabled": {
+          "help": "Offers free places in order when the waitlist works by arrival order.",
+          "label": "Waitlist in turns"
+        }
+      },
+      "weekOpening": {
+        "enabled": {
+          "help": "Opens next week's bookings at the time set under Classes.",
+          "label": "Booking opening"
+        }
+      }
+    },
     "learn": {
+      "baseUrl": {
+        "help": "Address of the AgilityHub Learn application.",
+        "label": "Learn address"
+      },
       "linkText": {
         "help": "Text of the Learn link shown in the app.",
         "label": "Learn link text"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Minutes the Learn recommendations are kept before they are requested again.",
+        "label": "Learn recommendations lifetime"
       }
     },
     "leave": {

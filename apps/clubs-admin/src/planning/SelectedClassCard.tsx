@@ -173,7 +173,8 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
  * D4 «Classe seleccionada» (R-06-09): chip editors for ADMIN on DRAFT/ACTIVE classes, [ACCEPTA]
  * sends the diff with `version`; [ANUL·LA LA CLASSE] / [ELIMINA] go through D4c (parent).
  * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c). On a day the
- * club is closed (R-02-09) the card says so and offers «Notes»: [ACCEPTA] saves only them.
+ * club is closed (R-02-09) the card says so, the chip editors are disabled and «Notes» is offered:
+ * [ACCEPTA] saves only them.
  * The parent remounts it (`key`) on every new class or version, so the values always start from
  * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
  * the message on the page while the refetch brings the new version. After a save and after those
@@ -229,7 +230,16 @@ export function SelectedClassCard({
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
   const notesOnly = !readOnly && !editable;
-  const patch = diffOf(session, values, editable);
+  // Starts on slot boundaries that keep the class length inside the day's opening hours; a closed
+  // day (R-02-09) offers none, and neither do the hours while they load: the class keeps its time.
+  const opening = openingHours === undefined ? undefined : openingOf(openingHours, session.date);
+  const closedDay = opening === null;
+  // On a closed day the api re-validates the whole class (OUTSIDE_OPENING_HOURS) on any patch that
+  // is not only `notes`, even with its times unchanged: only «Notes» stays editable there. The
+  // chips are disabled and show the class's own values, so nothing but the notes is ever sent.
+  const chipsEditable = editable && !closedDay;
+  const chips = chipsEditable ? values : { ...initialValues(session), notes: values.notes };
+  const patch = diffOf(session, chips, chipsEditable);
   const changed = Object.keys(patch).length > 1;
 
   // The editors always offer what the class holds, also an inactive ring, level or instructor.
@@ -258,24 +268,19 @@ export function SelectedClassCard({
       .join(", ");
   const preview = useMemo(
     () =>
-      sameSet(values.levelIds, session.levelIds) && (session.description ?? "") === ""
+      sameSet(chips.levelIds, session.levelIds) && (session.description ?? "") === ""
         ? session.displayDescription
-        : automaticDescription(catalogs.levels, values.levelIds, t),
-    [catalogs.levels, session, t, values.levelIds],
+        : automaticDescription(catalogs.levels, chips.levelIds, t),
+    [catalogs.levels, chips.levelIds, session, t],
   );
-  // Starts on slot boundaries that keep the class length inside the day's opening hours; a closed
-  // day (R-02-09) offers none, and neither do the hours while they load: the class keeps its time.
-  const opening = openingHours === undefined ? undefined : openingOf(openingHours, session.date);
-  const closedDay = opening === null;
   const duration = minutesOf(session.endTime) - minutesOf(session.startTime);
   const hours =
-    opening === undefined ? [] : rangeOptions(opening, settings.slotMinutes, duration).starts;
+    opening === undefined || opening === null
+      ? []
+      : rangeOptions(opening, settings.slotMinutes, duration).starts;
   const hourOptions = hours.includes(session.startTime) ? hours : [session.startTime, ...hours];
-  // On a closed day the api re-validates the whole class (OUTSIDE_OPENING_HOURS) on any patch that
-  // is not only `notes`, even with its times unchanged: only the notes can be saved there.
-  const closedDayLocked =
-    editable && closedDay && Object.keys(patch).some((key) => key !== "notes" && key !== "version");
   const notesEditable = notesOnly || (editable && closedDay);
+  const chipsDisabled = busy || !chipsEditable;
 
   const set = (next: Partial<DraftValues>) => {
     setValues((current) => ({ ...current, ...next }));
@@ -283,7 +288,7 @@ export function SelectedClassCard({
   };
 
   const save = async (cancelBookings = false) => {
-    if (busy || closedDayLocked) return;
+    if (busy) return;
     setPending(true);
     setError(undefined);
     try {
@@ -374,12 +379,12 @@ export function SelectedClassCard({
           <label className="calendar-chip calendar-chip--select">
             <span className="calendar-chip__label">{t("admin-scheduling:classCard.ring")}</span>
             <Select
-              disabled={busy}
+              disabled={chipsDisabled}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 set({ ringId: value === "" ? null : value });
               }}
-              value={values.ringId ?? ""}
+              value={chips.ringId ?? ""}
             >
               {ringOptions.map((ring) => (
                 <option key={ring.id} value={ring.id}>
@@ -391,7 +396,7 @@ export function SelectedClassCard({
           </label>
           {settings.levelsEnabled ? (
             <MultiChip
-              disabled={busy}
+              disabled={chipsDisabled}
               label={t("admin-scheduling:classCard.levels")}
               onToggle={(levelId) => {
                 const levelIds = values.levelIds.includes(levelId)
@@ -402,8 +407,8 @@ export function SelectedClassCard({
                 set({ levelIds });
               }}
               options={levelOptions.map((level) => ({ id: level.id, label: level.name }))}
-              selected={values.levelIds}
-              summary={levelNames(values.levelIds)}
+              selected={chips.levelIds}
+              summary={levelNames(chips.levelIds)}
             />
           ) : null}
           {settings.maxInstructors <= 1 ? (
@@ -412,13 +417,13 @@ export function SelectedClassCard({
                 {t("admin-scheduling:classCard.instructor")}
               </span>
               <Select
-                disabled={busy}
+                disabled={chipsDisabled}
                 onChange={(event) => {
                   set({ instructorIds: [event.currentTarget.value] });
                 }}
-                value={values.instructorIds[0] ?? ""}
+                value={chips.instructorIds[0] ?? ""}
               >
-                {values.instructorIds.length === 0 ? (
+                {chips.instructorIds.length === 0 ? (
                   <option disabled value="">
                     {t("admin-scheduling:calendar.selected.noInstructor")}
                   </option>
@@ -432,7 +437,7 @@ export function SelectedClassCard({
             </label>
           ) : (
             <MultiChip
-              disabled={busy}
+              disabled={chipsDisabled}
               label={t("admin-scheduling:classCard.instructors", { max: settings.maxInstructors })}
               max={settings.maxInstructors}
               onToggle={(instructorId) => {
@@ -446,8 +451,8 @@ export function SelectedClassCard({
                 id: instructor.id,
                 label: instructor.shortName,
               }))}
-              selected={values.instructorIds}
-              summary={instructorNames(values.instructorIds)}
+              selected={chips.instructorIds}
+              summary={instructorNames(chips.instructorIds)}
             />
           )}
           <label
@@ -460,14 +465,14 @@ export function SelectedClassCard({
               aria-describedby={error?.field === "capacity" ? "calendar-capacity-error" : undefined}
               aria-invalid={error?.field === "capacity" || undefined}
               className="calendar-chip__number"
-              disabled={busy}
+              disabled={chipsDisabled}
               min={1}
               onChange={(event) => {
                 set({ capacity: event.currentTarget.value });
               }}
               placeholder={String(session.capacity)}
               type="number"
-              value={values.capacity}
+              value={chips.capacity}
             />
           </label>
           <label className="calendar-chip calendar-chip--select">
@@ -475,11 +480,11 @@ export function SelectedClassCard({
               {t("admin-scheduling:calendar.selected.time")}
             </span>
             <Select
-              disabled={busy}
+              disabled={chipsDisabled}
               onChange={(event) => {
                 set({ startTime: event.currentTarget.value });
               }}
-              value={values.startTime}
+              value={chips.startTime}
             >
               {hourOptions.map((time) => (
                 <option key={time} value={time}>
@@ -493,21 +498,22 @@ export function SelectedClassCard({
               {t("admin-scheduling:classCard.description")}
             </span>
             <Input
-              disabled={busy}
+              disabled={chipsDisabled}
               maxLength={40}
               onChange={(event) => {
                 set({ description: event.currentTarget.value });
               }}
               placeholder={preview}
-              value={values.description}
+              value={chips.description}
             />
           </label>
           {session.state === "ACTIVE" ? (
             <button
               aria-pressed={session.riskExempt}
               className="planning-chip"
-              // Saving the exemption reloads the class: unsaved chip edits must go first.
-              disabled={busy || changed}
+              // Saving the exemption reloads the class: unsaved chip edits must go first. On a
+              // closed day it is an editor too: only «Notes» stays editable (R-02-09).
+              disabled={chipsDisabled || changed}
               onClick={() => void toggleExempt()}
               type="button"
             >
@@ -585,7 +591,7 @@ export function SelectedClassCard({
         ) : (
           <>
             <Button
-              disabled={!changed || awaitingVersion || closedDayLocked}
+              disabled={!changed || awaitingVersion}
               loading={pending}
               loadingLabel={t("admin-scheduling:common.saving")}
               onClick={() => void save()}

@@ -109,7 +109,7 @@ const level = (
   version: 1,
 });
 
-/** S05 seed: «Teràpia» is outside the level progression (ruling E29, `pending.json` overlay). */
+/** S05 seed: «Teràpia» is outside the level progression (ruling E29, `Level.progression`). */
 const initialLevels: Level[] = [
   level("P", "Cadells", ringColor(3), 5, 0, false, "Cachorros"),
   level("A", "A", ringColor(0), 5, 10, false),

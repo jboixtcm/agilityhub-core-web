@@ -1,4 +1,9 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  type ApiClient,
+  type components,
+} from "@agilityhub/api-client";
 import {
   Badge,
   Button,
@@ -57,21 +62,7 @@ function hasProvisionalText(page: ClubPage): boolean {
 }
 
 function validationField(error: unknown): string | undefined {
-  if (
-    !isApiError(error, "VALIDATION_ERROR") ||
-    error.details === null ||
-    typeof error.details !== "object"
-  ) {
-    return undefined;
-  }
-  const fieldErrors = (error.details as Record<string, unknown>).fieldErrors;
-  if (!Array.isArray(fieldErrors)) return undefined;
-  const field = fieldErrors
-    .map((item: unknown) =>
-      typeof item === "object" && item !== null ? (item as Record<string, unknown>).field : null,
-    )
-    .find((item): item is string => typeof item === "string");
-  return field;
+  return isApiError(error, "VALIDATION_ERROR") ? apiFieldErrors(error)[0]?.field : undefined;
 }
 
 function ClubPageEditor({

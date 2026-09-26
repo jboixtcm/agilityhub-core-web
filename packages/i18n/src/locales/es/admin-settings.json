@@ -5,12 +5,13 @@
     "classes": "Clases",
     "club": "Club y pistas",
     "clubPages": "Páginas del club",
-    "communications": "Comunicaciones",
     "courses": "Recorridos",
-    "freeTraining": "Entrenamientos libres",
+    "jobs": "Procesos automáticos",
+    "messaging": "Comunicaciones",
     "modules": "Módulos",
-    "privacyAudit": "Privacidad y auditoría",
+    "privacy": "Privacidad y auditoría",
     "signup": "Alta y consentimientos",
+    "training": "Entrenamientos libres",
     "waitlist": "Lista de espera"
   },
   "common": {
@@ -114,6 +115,12 @@
     "time": "Hora"
   },
   "enum": {
+    "activities": {
+      "cancelDeadline": {
+        "EVENT_START": "Hasta el inicio de la actividad",
+        "REGISTRATION_CLOSE": "Hasta el cierre de las inscripciones"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "CSV": "CSV",
@@ -429,10 +436,88 @@
         "label": "Día límite de solicitud de inactividad"
       }
     },
+    "jobs": {
+      "alertAdminsOnFailure": {
+        "help": "Envía un aviso a los administradores cuando un proceso automático falla o no se ejecuta.",
+        "label": "Aviso a los administradores si un proceso falla"
+      },
+      "billingReminder": {
+        "enabled": {
+          "help": "Recuerda a la administración que aún no se ha generado la remesa del mes.",
+          "label": "Recordatorio de remesa"
+        }
+      },
+      "classFinishing": {
+        "enabled": {
+          "help": "Cierra las clases cuando terminan.",
+          "label": "Finalización de clases"
+        }
+      },
+      "cleanup": {
+        "enabled": {
+          "help": "Borra cada día los datos técnicos caducados.",
+          "label": "Limpieza"
+        }
+      },
+      "dailyTime": {
+        "help": "Hora local del club a la que se ejecutan los vencimientos, la limpieza y el recordatorio de remesa.",
+        "label": "Hora de los procesos diarios"
+      },
+      "expirations": {
+        "enabled": {
+          "help": "Trata cada día los vencimientos: preinscripciones, documentos, bonos, inactividades y bajas.",
+          "label": "Vencimientos"
+        }
+      },
+      "noShowNotices": {
+        "enabled": {
+          "help": "Envía cada día los avisos de las ausencias sin aviso.",
+          "label": "Avisos de no presentados"
+        }
+      },
+      "paymentTimeouts": {
+        "enabled": {
+          "help": "Libera las plazas de las reservas con el pago caducado.",
+          "label": "Pagos pendientes"
+        }
+      },
+      "reminders": {
+        "enabled": {
+          "help": "Envía los recordatorios de clases y entrenamientos.",
+          "label": "Recordatorios"
+        }
+      },
+      "riskReview": {
+        "enabled": {
+          "help": "Revisa cada día las clases con pocos inscritos y las cancela o avisa.",
+          "label": "Revisión de clases en riesgo"
+        }
+      },
+      "waitlistFifo": {
+        "enabled": {
+          "help": "Ofrece las plazas libres por orden cuando la lista de espera es por orden de llegada.",
+          "label": "Lista de espera por turnos"
+        }
+      },
+      "weekOpening": {
+        "enabled": {
+          "help": "Abre las reservas de la semana siguiente a la hora configurada en Clases.",
+          "label": "Apertura de inscripciones"
+        }
+      }
+    },
     "learn": {
+      "baseUrl": {
+        "help": "Dirección de la aplicación AgilityHub Learn.",
+        "label": "Dirección de Learn"
+      },
       "linkText": {
         "help": "Texto del enlace a Learn mostrado en la app.",
         "label": "Texto del enlace a Learn"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Minutos que se guardan las recomendaciones de Learn antes de volver a pedirlas.",
+        "label": "Validez de las recomendaciones de Learn"
       }
     },
     "leave": {

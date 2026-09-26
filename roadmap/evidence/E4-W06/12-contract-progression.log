@@ -1,0 +1,2 @@
+Level.progression {"description": "S05 §3 (E29): only progression levels count for the automatic «{first} i sup.» (S06 R-06-03)", "type": "boolean"} required
+pending.json x-schema-overlays: None | schemas: ['DogPatchPendingFields', 'DogPendingFields', 'LicensePendingFields', 'LicenseWithPendingFields', 'NotificationPreferences', 'NotificationPreferencesPatch', 'PlanBillingMode']

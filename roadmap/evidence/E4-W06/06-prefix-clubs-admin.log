@@ -1,0 +1,5581 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/TemplatesPage.test.tsx (20 tests | 3 failed | 17 skipped) 595ms
+   ❯ T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review (3)
+     × R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it 303ms
+     × S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field 145ms
+     × R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays 146ms
+ ❯ src/catalogs/SettingsPage.test.tsx (4 tests | 4 failed) 941ms
+   ❯ E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) (4)
+     × shows one switch per level with the help text: Teràpia is off, the progression levels on 262ms
+     × saves a toggle with PATCH /levels/{id} {progression, version} and keeps the saved level 286ms
+     × shows a refused toggle by its code next to the table and keeps the switch as saved; STALE_VERSION reloads the levels 265ms
+     × the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value 127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > shows one switch per level with the help text: Teràpia is off, the progression levels on
+TestingLibraryElementError: Unable to find an accessible element with the role "columnheader" and name "Progressió"
+
+Here are the accessible roles:
+
+  caption:
+
+  Name "Nivells del club":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Nom Codi Color Aforament Entrenament lliure Actiu":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Nom":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Codi":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Aforament":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Actiu":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Cadells09/09 · Jordi amb històric P #F5D67A 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric A #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric B #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric C #8FCE8F 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric D #8FCE8F 5 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric E #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric F #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric G #C9CDD3 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric T #C9CDD3 1 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Cadells09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "P":
+  [36m<td />[39m
+
+  Name "#F5D67A":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "A":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "B":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "C":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "D":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "E":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "F":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "G":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "T":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "1":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-p"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-a"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-b"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-c"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-d"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-e"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-f"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-g"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Edita level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<table[39m
+  [33mclass[39m=[32m"catalog-table"[39m
+[36m>[39m
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m>[39m
+    [0mNivells del club[0m
+  [36m</caption>[39m
+  [36m<thead>[39m
+    [36m<tr>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"catalog-table__drag"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m/>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mNom[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mCodi[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mColor[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mAforament[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mEntrenament lliure[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [0mActiu[0m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"catalog-table__actions"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m/>[39m
+    [36m</tr>[39m
+  [36m</thead>[39m
+  [36m<tbody>[39m
+    [36m<tr[39m
+      [33mdraggable[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"catalog-table__drag"[39m
+        [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-swap"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"catalog-level-name"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mCadells[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"audit-last-change"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m09/09 · Jordi[0m
+            [36m</span>[39m
+            [0m [0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m—[0m
+            [36m</span>[39m
+            [0m [0m
+            [36m<a[39m
+              [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-p"[39m
+            [36m>[39m
+              [0mamb històric[0m
+            [36m</a>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [0mP[0m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"catalog-color-value"[39m
+          [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"catalog-color-value__dot"[39m
+          [36m/>[39m
+          [0m#F5D67A[0m
+        [36m</span>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [0m5[0m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mno[0m
+        [36m</span>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0msí[0m
+        [36m</span>[39m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"catalog-table__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Edita level-p"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Elimina level-p"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr[39m
+      [33mdraggable[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"catalog-table__drag"[39m
+        [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-swap"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"catalog-level-name"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mA[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"audit-last-change"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m09/09 · Jordi[0m
+            [36m</span>[39m
+            [0m [0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m—[0m
+            [36m</span>[39m
+            [0m [0m
+            [36m<a[39m
+              [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-a"[39m
+            [36m>[39m
+              [0mamb històric[0m
+            [36m</a>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</td>[39m
+      [36m<td>[39m
+   ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:80:26
+     78|   it("shows one switch per level with the help text: Teràpia is off, t…
+     79|     const table = await renderSettings();
+     80|     expect(within(table).getByRole("columnheader", { name: "Progressió…
+       |                          ^
+     81|     expect(screen.getByRole("switch", { name: "Progressió: Teràpia" })…
+     82|       "aria-checked",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > saves a toggle with PATCH /levels/{id} {progression, version} and keeps the saved level
+TestingLibraryElementError: Unable to find an accessible element with the role "switch" and name "Progressió: Teràpia"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Paràmetres":
+  [36m<h1 />[39m
+
+  Name "Classes":
+  [36m<h2 />[39m
+
+  Name "Entrenaments lliures":
+  [36m<h2 />[39m
+
+  Name "Llista d'espera":
+  [36m<h2 />[39m
+
+  Name "Quotes, packs i remesa":
+  [36m<h2 />[39m
+
+  Name "Club i pistes":
+  [36m<h2 />[39m
+
+  Name "Comunicacions":
+  [36m<h2 />[39m
+
+  Name "Alta i consentiments":
+  [36m<h2 />[39m
+
+  Name "Recorreguts":
+  [36m<h2 />[39m
+
+  Name "Privacitat i auditoria":
+  [36m<h2 />[39m
+
+  Name "Mòduls":
+  [36m<h2 />[39m
+
+  Name "Pàgines del club":
+  [36m<h2 />[39m
+
+  Name "Processos automàtics":
+  [36m<h2 />[39m
+
+  Name "Nivells":
+  [36m<h2 />[39m
+
+  Name "Preguntes freqüents — pàgina «Info» de l'app":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+  [36m/>[39m
+
+  Name "Aforament: per nivell (classe = mínim dels seus nivells)Cadells 5 · A–D 5 · E–G 4 · Teràpia 1":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"#nivells"[39m
+  [36m/>[39m
+
+  Name "Caducitat Pack 6 · Pack 103 mesos · 5 mesos":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"/modalitats"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-p"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-a"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-b"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-c"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-d"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-e"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-f"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-g"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Màx. classes setmana en curs (per gos)2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. classes setmana següent1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Obertura d'inscripcions i canvi de setmanaDiumenge 20:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'anul·lació tardana («classe feta»)4 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Aforament per defecte (nivell sense valor)5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · hora07:30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · abast2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostrar instructor a l'abonatEl dia abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindars de coberturabé > 240% · ajustat 190–240% · manca oferta 150–190% · cal ampliar < 150%":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Antelació màxima (dies naturals)dia en curs + 3 dies":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. entrenaments/setmana (reinici dg 20:00)3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Anul·lació fins a2 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Durada del slot30 min":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Gossos alhora per pista1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'avís a la llista d'espera30 min abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. per classe3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes per gos i setmana2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes si ja ha fet classe1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mode d'avís de la llista d'esperaAvís a tothom alhora":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Entrada per gos (matrícula)100,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · primer mes20,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · mesos següents10,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Facturació en efectiuSemestral":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sèrie i numeració de rebuts2026-····":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Horari d'oberturadl–dg 07:00–22:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "FestiusCap festiu":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Motius de bloqueig de reservesRebut impagat · Cartilla pendent · Decisió del club":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç públic de les activitats{websiteUrl}/activitat/{slug}":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enviament d'avisos de no assistència08:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Opcions del recordatori de classe1 h · 2 h · 4 h · 6 h · 12 h · 24 h":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís d'obertura de setmanaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís de recorregut nouNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Límit mensual d'SMS1000":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Altes públiquesSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat de les altes pendents30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Documentació obligatòria durant l'altaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Autorització d'imatgeAutoritzo la publicació d'imatges dins les activitats del club.":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat del recorregut muntat7":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marge de col·locació d'obstacles1.5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra el recorregut als abonatsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Publicació de muntatges pels instructorsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació de l'auditoria6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació després de la baixa6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Espera mínima abans de l'esborrat30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pàgina":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nou nivell":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nova pregunta":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Preguntes freqüents":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Preguntes freqüents"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Notificacions push":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Notificacions push"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç a Learn":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enllaç a Learn"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Carregant"[39m
+    [33mclass[39m=[32m"ah-skeleton"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Nivells del club":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Nivells del club":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Nom Codi Color Aforament Entrenament lliure Actiu":
+  [36m<tr />[39m
+
+  Name "Cadells09/09 · Jordi amb històric P #F5D67A 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric A #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric B #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric C #8FCE8F 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric D #8FCE8F 5 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric E #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric F #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric G #C9CDD3 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric T #C9CDD3 1 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Categoria Pregunta":
+  [36m<tr />[39m
+
+  Name "Convivència al club Puc venir amb més gent al club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Convivència al club El gos pot anar deslligat pel club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe Què he de fer si no puc venir a una classe?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Competicions Què cal per poder participar a competicions d'agility?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Nom":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Codi":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Aforament":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Actiu":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Categoria":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pregunta":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Cadells09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "P":
+  [36m<td />[39m
+
+  Name "#F5D67A":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "A":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "B":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "C":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "D":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "E":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "F":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "G":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "T":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "1":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "Puc venir amb més gent al club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "El gos pot anar deslligat pel club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe":
+  [36m<td />[39m
+
+  Name "Què he de fer si no puc venir a una classe?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Competicions":
+  [36m<td />[39m
+
+  Name "Què cal per poder participar a competicions d'agility?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"catalog-section__help"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mParàmetres[0m
+        [36m</h1>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"audit-last-change"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0múltim canvi: bookings.lateCancelThresholdMinutes · 11/08 · Jordi[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m—[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<a[39m
+            [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+          [36m>[39m
+            [0mamb històric[0m
+          [36m</a>[39m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card settings-card"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mClasses[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"settings-parameters"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana en curs (per gos)[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m2[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana següent[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m1[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mObertura d'inscripcions i canvi de setmana[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0mDiumenge 20:00[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:96:28
+     94|     const bodies = captureLevelBodies("PATCH");
+     95|     await renderSettings();
+     96|     const therapy = screen.getByRole("switch", { name: "Progressió: Te…
+       |                            ^
+     97|     fireEvent.click(therapy);
+     98|     // The switch is locked while its PATCH is on its way.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > shows a refused toggle by its code next to the table and keeps the switch as saved; STALE_VERSION reloads the levels
+TestingLibraryElementError: Unable to find an accessible element with the role "switch" and name "Progressió: D"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Paràmetres":
+  [36m<h1 />[39m
+
+  Name "Classes":
+  [36m<h2 />[39m
+
+  Name "Entrenaments lliures":
+  [36m<h2 />[39m
+
+  Name "Llista d'espera":
+  [36m<h2 />[39m
+
+  Name "Quotes, packs i remesa":
+  [36m<h2 />[39m
+
+  Name "Club i pistes":
+  [36m<h2 />[39m
+
+  Name "Comunicacions":
+  [36m<h2 />[39m
+
+  Name "Alta i consentiments":
+  [36m<h2 />[39m
+
+  Name "Recorreguts":
+  [36m<h2 />[39m
+
+  Name "Privacitat i auditoria":
+  [36m<h2 />[39m
+
+  Name "Mòduls":
+  [36m<h2 />[39m
+
+  Name "Pàgines del club":
+  [36m<h2 />[39m
+
+  Name "Processos automàtics":
+  [36m<h2 />[39m
+
+  Name "Nivells":
+  [36m<h2 />[39m
+
+  Name "Preguntes freqüents — pàgina «Info» de l'app":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+  [36m/>[39m
+
+  Name "Aforament: per nivell (classe = mínim dels seus nivells)Cadells 5 · A–D 5 · E–G 4 · Teràpia 1":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"#nivells"[39m
+  [36m/>[39m
+
+  Name "Caducitat Pack 6 · Pack 103 mesos · 5 mesos":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"/modalitats"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-p"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-a"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-b"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-c"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-d"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-e"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-f"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-g"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Màx. classes setmana en curs (per gos)2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. classes setmana següent1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Obertura d'inscripcions i canvi de setmanaDiumenge 20:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'anul·lació tardana («classe feta»)4 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Aforament per defecte (nivell sense valor)5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · hora07:30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · abast2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostrar instructor a l'abonatEl dia abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindars de coberturabé > 240% · ajustat 190–240% · manca oferta 150–190% · cal ampliar < 150%":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Antelació màxima (dies naturals)dia en curs + 3 dies":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. entrenaments/setmana (reinici dg 20:00)3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Anul·lació fins a2 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Durada del slot30 min":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Gossos alhora per pista1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'avís a la llista d'espera30 min abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. per classe3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes per gos i setmana2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes si ja ha fet classe1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mode d'avís de la llista d'esperaAvís a tothom alhora":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Entrada per gos (matrícula)100,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · primer mes20,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · mesos següents10,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Facturació en efectiuSemestral":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sèrie i numeració de rebuts2026-····":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Horari d'oberturadl–dg 07:00–22:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "FestiusCap festiu":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Motius de bloqueig de reservesRebut impagat · Cartilla pendent · Decisió del club":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç públic de les activitats{websiteUrl}/activitat/{slug}":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enviament d'avisos de no assistència08:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Opcions del recordatori de classe1 h · 2 h · 4 h · 6 h · 12 h · 24 h":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís d'obertura de setmanaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís de recorregut nouNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Límit mensual d'SMS1000":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Altes públiquesSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat de les altes pendents30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Documentació obligatòria durant l'altaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Autorització d'imatgeAutoritzo la publicació d'imatges dins les activitats del club.":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat del recorregut muntat7":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marge de col·locació d'obstacles1.5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra el recorregut als abonatsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Publicació de muntatges pels instructorsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació de l'auditoria6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació després de la baixa6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Espera mínima abans de l'esborrat30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pàgina":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nou nivell":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nova pregunta":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Preguntes freqüents":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Preguntes freqüents"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Notificacions push":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Notificacions push"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç a Learn":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enllaç a Learn"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Carregant"[39m
+    [33mclass[39m=[32m"ah-skeleton"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Nivells del club":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Nivells del club":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Nom Codi Color Aforament Entrenament lliure Actiu":
+  [36m<tr />[39m
+
+  Name "Cadells09/09 · Jordi amb històric P #F5D67A 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric A #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric B #F2B58C 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric C #8FCE8F 5 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric D #8FCE8F 5 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric E #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric F #85B8E8 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric G #C9CDD3 4 sí sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric T #C9CDD3 1 no sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Categoria Pregunta":
+  [36m<tr />[39m
+
+  Name "Convivència al club Puc venir amb més gent al club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Convivència al club El gos pot anar deslligat pel club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe Què he de fer si no puc venir a una classe?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Competicions Què cal per poder participar a competicions d'agility?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Nom":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Codi":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Aforament":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Actiu":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Categoria":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pregunta":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Cadells09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "P":
+  [36m<td />[39m
+
+  Name "#F5D67A":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "A":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "B":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "C":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "D":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "E":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "F":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "G":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "T":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "1":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "Puc venir amb més gent al club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "El gos pot anar deslligat pel club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe":
+  [36m<td />[39m
+
+  Name "Què he de fer si no puc venir a una classe?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Competicions":
+  [36m<td />[39m
+
+  Name "Què cal per poder participar a competicions d'agility?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"catalog-section__help"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mParàmetres[0m
+        [36m</h1>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"audit-last-change"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0múltim canvi: bookings.lateCancelThresholdMinutes · 11/08 · Jordi[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m—[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<a[39m
+            [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+          [36m>[39m
+            [0mamb històric[0m
+          [36m</a>[39m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card settings-card"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mClasses[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"settings-parameters"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana en curs (per gos)[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m2[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana següent[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m1[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mObertura d'inscripcions i canvi de setmana[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0mDiumenge 20:00[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:142:28
+    140|     const section = screen.getByRole("table", { name: "Nivells del clu…
+    141|     if (section === null) throw new TypeError("Missing the Nivells car…
+    142|     fireEvent.click(screen.getByRole("switch", { name: "Progressió: D"…
+       |                            ^
+    143|     expect(await within(section).findByRole("alert")).toHaveTextConten…
+    144|       "No teniu permís per fer aquesta acció.",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value
+TestingLibraryElementError: Unable to find an accessible element with the role "switch" and name "Progressió"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Nou nivell":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_17_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------tablist:
+
+  Name "Idiomes":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Idiomes"[39m
+    [33mclass[39m=[32m"catalog-locale-tabs"[39m
+    [33mrole[39m=[32m"tablist"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "CA":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ES":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Nom":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"level-name"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Codi":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"level-code"[39m
+    [33mmaxlength[39m=[32m"8"[39m
+    [33mpattern[39m=[32m"[A-Za-z0-9_]+"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"level-color"[39m
+    [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m"#F2B58C"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  spinbutton:
+
+  Name "Aforament":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"level-capacity"[39m
+    [33mmax[39m=[32m"99"[39m
+    [33mmin[39m=[32m"1"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"number"[39m
+    [33mvalue[39m=[32m"5"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "#F2B58C":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#F2B58C"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#8FCE8F":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#8FCE8F"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#C9CDD3":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#C9CDD3"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#F5D67A":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#F5D67A"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#85B8E8":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#85B8E8"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Cancel·la":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "DESA":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Dona dret a entrenament lliure":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Dona dret a entrenament lliure"[39m
+    [33mclass[39m=[32m"ah-switch"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Activa":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Activa"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_17_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_17_"[39m
+    [36m>[39m
+      [0mNou nivell[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"catalog-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Idiomes"[39m
+        [33mclass[39m=[32m"catalog-locale-tabs"[39m
+        [33mrole[39m=[32m"tablist"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"true"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCA[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mES[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"level-name"[39m
+        [36m>[39m
+          [0mNom[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"level-name"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"level-code"[39m
+          [36m>[39m
+            [0mCodi[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-code"[39m
+            [33mmaxlength[39m=[32m"8"[39m
+            [33mpattern[39m=[32m"[A-Za-z0-9_]+"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"level-capacity"[39m
+          [36m>[39m
+            [0mAforament[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-capacity"[39m
+            [33mmax[39m=[32m"99"[39m
+            [33mmin[39m=[32m"1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"number"[39m
+            [33mvalue[39m=[32m"5"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"level-color"[39m
+        [36m>[39m
+          [0mColor[0m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-color-picker"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F2B58C"[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#8FCE8F"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#C9CDD3"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F5D67A"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#85B8E8"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-color"[39m
+            [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"#F2B58C"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mDona dret a entrenament lliure[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Dona dret a entrenament lliure"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mActiva[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Activa"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:170:40
+    168|     fireEvent.click(screen.getByRole("button", { name: "Nou nivell" })…
+    169|     const create = await screen.findByRole("dialog", { name: "Nou nive…
+    170|     const progression = within(create).getByRole("switch", { name: "Pr…
+       |                                        ^
+    171|     // A new level is part of the progression by default (S05 §3).
+    172|     expect(progression).toHaveAttribute("aria-checked", "true");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it
+AssertionError: expected [ 'DELETE sent' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "DELETE sent",
++ ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:517:20
+    515|     fireEvent.click(within(card).getByRole("button", { name: "Treu de …
+    516|     await settle();
+    517|     expect(events).toEqual([]);
+       |                    ^
+    518|
+    519|     release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"ah-form-field--error"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  ah-form-field--error[39m
+Received:
+[31m  ah-form-field[39m
+ ❯ src/planning/TemplatesPage.test.tsx:550:26
+    548|     fireEvent.click(within(edit).getByRole("button", { name: "Desa" })…
+    549|     expect(await within(edit).findByText(outside)).toBeVisible();
+    550|     expect(fieldOf(end)).toHaveClass("ah-form-field--error");
+       |                          ^
+    551|     expect(fieldOf(start)).not.toHaveClass("ah-form-field--error");
+    552|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32mObed. prova[39m[2m)[22m
+
+Expected the element to have value:
+[32m  Obed. prova[39m
+Received:
+[31m[39m
+ ❯ src/planning/TemplatesPage.test.tsx:599:55
+    597|     expect(await within(card).findByText("Seleccioneu un nivell.")).to…
+    598|     expect(within(card).getByRole("button", { name: "E" })).toHaveAttr…
+    599|     expect(within(card).getByLabelText("Descripció")).toHaveValue("Obe…
+       |                                                       ^
+    600|     expect(within(card).getByLabelText("Límit")).toHaveValue(6);
+    601|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  7 failed | 17 skipped (24)
+   Start at  02:14:07
+   Duration  1.75s (tests 51%, transform 18%, environment 18%, import 9%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/SettingsPage.test.tsx src/planning/TemplatesPage.test.tsx -t E4-W06

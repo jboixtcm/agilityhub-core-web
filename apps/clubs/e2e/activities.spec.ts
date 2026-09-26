@@ -81,7 +81,7 @@ test.describe("E4-W04 activities in the app", () => {
     await page.screenshot({ path: resolve(evidenceDirectory, "activitat-llista-espera-375.png") });
   });
 
-  test("E4-W08 R-07-09/10 impersonated: the cancellation asks for «Motiu» and sends it", async ({
+  test("T-07-30 E4-W08 R-07-09/10 impersonated: the cancellation asks for «Motiu» and sends it", async ({
     page,
   }) => {
     const followUpEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W08");

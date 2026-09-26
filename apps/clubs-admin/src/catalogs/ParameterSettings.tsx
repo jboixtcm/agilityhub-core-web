@@ -1084,9 +1084,12 @@ export function ParameterSettings({
           ))}
           <ModulesCard client={client} modules={modules} onModulesChange={onModulesChange} />
           <ClubPagesCard client={client} />
-          <Card className="settings-card settings-card--placeholder">
-            <h2>{t("admin-settings:blocks.automatedProcesses")}</h2>
-          </Card>
+          {/* The core's `jobs` block (S15 §9) is the «Processos automàtics» card: no placeholder. */}
+          {blocks.some((block) => block.key === "jobs") ? null : (
+            <Card className="settings-card settings-card--placeholder">
+              <h2>{t("admin-settings:blocks.automatedProcesses")}</h2>
+            </Card>
+          )}
         </div>
       )}
       <Drawer

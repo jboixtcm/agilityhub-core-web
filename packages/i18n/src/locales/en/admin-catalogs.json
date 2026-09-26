@@ -49,7 +49,8 @@
       "code": "Code",
       "color": "Colour",
       "freeTraining": "Free training",
-      "name": "Name"
+      "name": "Name",
+      "progression": "Progression"
     },
     "createTitle": "New level",
     "editTitle": "Edit level",
@@ -59,10 +60,13 @@
       "code": "Code",
       "color": "Colour",
       "freeTraining": "Grants free training",
-      "name": "Name"
+      "name": "Name",
+      "progression": "Progression"
     },
     "inUse": "This level has related data and can only be deactivated",
     "new": "New level",
+    "progressionHelp": "Levels outside the progression, such as Therapy, do not count towards «D and up»",
+    "progressionSwitch": "Progression: {name}",
     "removeQuestion": "Delete level {name}?",
     "removeTitle": "Delete level",
     "title": "Levels"

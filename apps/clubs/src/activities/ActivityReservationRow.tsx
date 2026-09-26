@@ -5,12 +5,13 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./activities.css";
-import { type ActivityRegistrationSummary, localHours, useMeActivities } from "./shared";
+import { type ActivityRegistrationSummary, useMeActivities } from "./shared";
 
 /**
  * Activity row of screen 03 «Les meves reserves» (S07 §2, R-07-11): «{title}» + «inscrita» /
  * «en llista d'espera», then «{Dissabte 7} · {18:30–20:30} · {placeLabel}» — never a dog
- * (§13-7). › opens the activity detail.
+ * (§13-7). The hours are the row's `startTime`–`endTime` (R-07-13): `null` prints none, so a
+ * date-only activity never reads «0:00». › opens the activity detail.
  */
 export function ActivityReservationRow({
   registration,
@@ -20,7 +21,8 @@ export function ActivityReservationRow({
   const formats = useClubFormats();
   const { t } = useTranslation(["activities", "enums"]);
   const { activity } = registration;
-  const { end, start } = localHours(activity.startsAtLocal, activity.endsAtLocal);
+  const start = activity.startTime;
+  const end = start === null ? null : activity.endTime;
   return (
     <Card className="activity-row activity-row--reservation">
       <a
@@ -37,7 +39,12 @@ export function ActivityReservationRow({
         <span className="activity-row__line activity-row__line--muted">
           <span>
             {t("activities:rows.when", {
-              date: formats.formatActivityDate(activity.startsAtLocal, start, end, "day"),
+              date: formats.formatActivityDate(
+                activity.startsAtLocal.slice(0, 10),
+                start,
+                end,
+                "day",
+              ),
               place: activity.placeLabel,
             })}
           </span>

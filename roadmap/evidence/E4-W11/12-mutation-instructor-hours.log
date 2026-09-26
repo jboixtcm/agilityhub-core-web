@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/TemplatesPage.test.tsx (17 tests | 1 failed | 16 skipped) 210ms
+   ❯ T-06-26 E4-W11 D3 follow-ups of the E4-W10 review (2)
+     × MATRIU_PERMISOS an INSTRUCTOR on D3 never calls GET /club/opening-hours (read-only) 208ms
+ ❯ src/planning/CalendarPage.test.tsx (37 tests | 1 failed | 36 skipped) 237ms
+   ❯ T-06-28 E4-W11 D4 follow-ups of the E4-W10 review (3)
+     × MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only) 235ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only)
+AssertionError: expected [ 'GET /api/v1/club/opening-hours' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "GET /api/v1/club/opening-hours",
++ ]
+
+ ❯ src/planning/CalendarPage.test.tsx:1475:26
+    1473|     await settle();
+    1474|     expect(calendars.length).toBeGreaterThan(0);
+    1475|     expect(openingHours).toEqual([]);
+       |                          ^
+    1476|   });
+    1477| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W11 D3 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D3 never calls GET /club/opening-hours (read-only)
+AssertionError: expected [ 'GET /api/v1/club/opening-hours' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "GET /api/v1/club/opening-hours",
++ ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:606:18
+    604|     ).toBeVisible();
+    605|     await settle();
+    606|     expect(seen).toEqual([]);
+       |                  ^
+    607|   });
+    608| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 52 skipped (54)
+   Start at  01:51:15
+   Duration  1.06s (transform 29%, environment 27%, tests 23%, import 14%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx src/planning/TemplatesPage.test.tsx -t never calls GET /club/opening-hours

@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient } from "@agilityhub/api-client";
+import { apiFieldErrors, isApiError, type ApiClient } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -99,15 +99,9 @@ function waitlistAvailable(error: unknown): boolean {
  * `CancellationDeadline.check` on `reason`) or in `details.fieldErrors[]`; both are accepted.
  */
 function isFieldError(error: unknown, field: string): boolean {
-  if (!isApiError(error, "VALIDATION_ERROR")) return false;
-  const details = error.details as { field?: unknown; fieldErrors?: unknown } | undefined;
-  if (details?.field === field) return true;
   return (
-    Array.isArray(details?.fieldErrors) &&
-    details.fieldErrors.some(
-      (item: unknown) =>
-        typeof item === "object" && item !== null && "field" in item && item.field === field,
-    )
+    isApiError(error, "VALIDATION_ERROR") &&
+    apiFieldErrors(error).some((entry) => entry.field === field)
   );
 }
 
