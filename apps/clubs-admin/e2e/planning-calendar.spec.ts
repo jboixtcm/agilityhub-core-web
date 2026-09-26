@@ -407,3 +407,100 @@ test.describe("T-06-28 E4-W10 D4 on a day the club is closed", () => {
     await expect(page.getByText("Canvis desats")).toBeVisible();
   });
 });
+
+test.describe("T-06-28 E4-W14 D4 closed-day chips (E4-W11 review #2 and #3)", () => {
+  const chipsEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W14");
+
+  test.beforeAll(() => {
+    mkdirSync(chipsEvidence, { recursive: true });
+  });
+
+  test("S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled; «Exempta…» stays enabled and is saved", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { name: "Calendari de classes" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    const week = grid(page, "10 al 16 d’agost");
+    await expect(week).toBeVisible();
+    const statuses = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const created = await fetch("/api/v1/class-sessions", {
+        body: JSON.stringify({
+          date: "2026-08-16",
+          endTime: "11:00",
+          instructorIds: ["instructor-marc"],
+          levelIds: ["level-b"],
+          ringId: "ring-central",
+          startTime: "10:00",
+        }),
+        headers,
+        method: "POST",
+      });
+      const current = (await (await fetch("/api/v1/club/opening-hours", { headers })).json()) as {
+        version: number;
+      };
+      const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+      const value = Object.fromEntries(days.map((day) => [day, { close: "22:00", open: "07:00" }]));
+      const closed = await fetch("/api/v1/club/opening-hours", {
+        body: JSON.stringify({ value, version: current.version }),
+        headers,
+        method: "PUT",
+      });
+      return [created.status, closed.status];
+    });
+    expect(statuses).toEqual([201, 200]);
+    await week.getByRole("button", { name: "dc 12", exact: true }).click();
+    await page.waitForURL("**/calendari/dia/2026-08-12?estat=actives");
+    await page.getByRole("button", { name: "Tornar a la visió setmanal" }).click();
+    await page.waitForURL("**/calendari?estat=actives&setmana=2026-08-10");
+    await week.getByRole("button", { name: /^dg 16 10:00/u }).click();
+
+    const card = page.getByRole("region", { name: /^Classe seleccionada/u });
+    await expect(card.getByText("El club està tancat aquest dia")).toBeVisible();
+    // Each disabled editor's chip is muted with a `not-allowed` cursor, the control inside too.
+    for (const editor of [
+      card.getByRole("spinbutton"),
+      card.getByLabel("Pista"),
+      card.getByLabel("Hora"),
+      card.getByLabel("Descripció"),
+      card.getByRole("button", { name: /^Nivells/u }),
+    ]) {
+      await expect(editor).toBeDisabled();
+      const look = await editor.evaluate((control) => {
+        const chip = control.closest(".calendar-chip");
+        if (chip === null) return undefined;
+        return {
+          chipCursor: getComputedStyle(chip).cursor,
+          chipOpacity: Number(getComputedStyle(chip).opacity),
+          controlCursor: getComputedStyle(control).cursor,
+        };
+      });
+      expect(look).toEqual({
+        chipCursor: "not-allowed",
+        chipOpacity: 0.6,
+        controlCursor: "not-allowed",
+      });
+    }
+    const exempt = card.getByRole("button", { name: "Exempta de la revisió de les 7:30" });
+    await expect(exempt).toBeEnabled();
+    await card.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(chipsEvidence, "D4-diumenge-tancat-xips-1280.png"),
+    });
+    const exemption = page.waitForRequest(
+      (request) => request.method() === "POST" && request.url().includes("/risk-exemption"),
+    );
+    await exempt.click();
+    expect((await exemption).postDataJSON()).toEqual({ exempt: true });
+    await expect(
+      page
+        .getByRole("region", { name: /^Classe seleccionada/u })
+        .getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+});

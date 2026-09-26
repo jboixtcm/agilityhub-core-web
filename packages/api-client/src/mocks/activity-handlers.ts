@@ -411,11 +411,16 @@ function filterValueLabel(field: string, value: string, locale: string): string 
   return value;
 }
 
+/** Minutes since midnight of an `HH:mm`. */
+function minutesOf(value: string): number {
+  const [hours = "0", minutes = "0"] = value.split(":");
+  return Number(hours) * 60 + Number(minutes);
+}
+
 /** HH:mm of a time aligned to `classes.slotMinutes`. */
 function alignedTime(value: string | null | undefined): boolean {
   if (value === null || value === undefined) return true;
-  const [hours = "0", minutes = "0"] = value.split(":");
-  return (Number(hours) * 60 + Number(minutes)) % SLOT_MINUTES === 0;
+  return minutesOf(value) % SLOT_MINUTES === 0;
 }
 
 function replay(request: Request): { body: unknown; status: number } | undefined {
@@ -474,18 +479,29 @@ const WEEKDAYS = [
   "SATURDAY",
 ] as const;
 
+/** R-07-05: a ring block lasts at least `training.slotMinutes`. */
+function trainingSlotMinutes(): number {
+  const value = findParameter("training.slotMinutes")?.value;
+  return typeof value === "number" ? value : SLOT_MINUTES;
+}
+
 /**
- * R-07-05: the ring-block window (`ringBlockWindow`, else the activity's hours) must fit the day's
- * `club.openingHours`; a day absent from it is closed (R-02-09), so nothing fits. Only an activity
- * at the club with rings blocks, and only with both limits (`ACTIVITY_INCOMPLETE` comes first).
- * The api names no field: the error is about the whole window. The product default (dl–dg
- * 07:00–22:00) applies only to a club without the parameter.
+ * R-07-05: the ring-block window (`ringBlockWindow`, else the activity's hours) must last at least
+ * `training.slotMinutes` (400 `INVALID_TIME_RANGE`) and fit the day's `club.openingHours` (422
+ * `OUTSIDE_OPENING_HOURS`); a day absent from it is closed (R-02-09), so nothing fits. Only an
+ * activity at the club with rings blocks, and only with both limits (`ACTIVITY_INCOMPLETE` comes
+ * first). The api names no field: the error is about the whole window. The product default
+ * (dl–dg 07:00–22:00) applies only to a club without the parameter. The publication, a re-syncing
+ * `PATCH` and the `ring-conflicts` preview check the same window (S07 §6, amended 26-09).
  */
-function openingHoursProblem(activity: StoredActivity) {
+function ringBlockWindowProblem(activity: StoredActivity) {
   if (!activity.location.atClub || activity.ringIds.length === 0) return undefined;
   const from = activity.ringBlockWindow?.fromTime ?? activity.startTime;
   const to = activity.ringBlockWindow?.toTime ?? activity.endTime;
   if (from === null || to === null) return undefined;
+  if (minutesOf(to) - minutesOf(from) < trainingSlotMinutes()) {
+    return apiError("INVALID_TIME_RANGE", "Invalid ring block window", 400);
+  }
   const parameter = findParameter("club.openingHours");
   // Weekday of a business date: UTC arithmetic at midday, never shifted by a zone (R-06-14).
   const day = WEEKDAYS[new Date(`${activity.date}T12:00:00Z`).getUTCDay()] ?? "MONDAY";
@@ -749,7 +765,7 @@ export const activityHandlers = [
         (key) => key in body,
       );
     if (resync) {
-      const outside = openingHoursProblem(next);
+      const outside = ringBlockWindowProblem(next);
       if (outside !== undefined) return outside;
       const conflict = conflictResponse(next, body);
       if (conflict !== undefined) return conflict;
@@ -820,7 +836,9 @@ export const activityHandlers = [
     if (disabled !== undefined) return disabled;
     if (!isAdmin()) return forbidden();
     const activity = findActivity(String(params.id));
-    return activity === undefined ? notFound() : HttpResponse.json(ringConflicts(activity));
+    if (activity === undefined) return notFound();
+    // The preview builds the same ring-block window as the publication, so it refuses it alike.
+    return ringBlockWindowProblem(activity) ?? HttpResponse.json(ringConflicts(activity));
   }),
   http.post("*/api/v1/activities/:id/publication", async ({ params, request }) => {
     const disabled = moduleDisabled();
@@ -841,7 +859,7 @@ export const activityHandlers = [
     if (activity.date < clubLocalDate())
       return apiError("ACTIVITY_IN_PAST", "Activity in the past", 422);
     const body = (await request.json()) as PublicationRequest;
-    const outside = openingHoursProblem(activity);
+    const outside = ringBlockWindowProblem(activity);
     if (outside !== undefined) return outside;
     const conflict = conflictResponse(activity, body);
     if (conflict !== undefined) return conflict;

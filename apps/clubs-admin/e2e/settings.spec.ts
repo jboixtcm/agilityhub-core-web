@@ -97,7 +97,8 @@ test.describe("E2-W05 generated club settings", () => {
     await expect(page.getByText("2 h abans", { exact: true })).toBeVisible();
     await expect(page.getByText("dl–dg 07:00–22:00", { exact: true })).toBeVisible();
     await expect(
-      page.getByText("Cadells 5 · A–D 5 · E–G 4 · Teràpia 1", { exact: true }),
+      // S05 §12 seed (B32): «Pendent» follows Teràpia.
+      page.getByText("Cadells 5 · A–D 5 · E–G 4 · Teràpia 1 · Pendent 5", { exact: true }),
     ).toBeVisible();
     await expect(page.getByText("D · E · F · G", { exact: true })).toBeVisible();
     await expect(page.getByText("Caducitat Pack 6 · Pack 10", { exact: true })).toBeVisible();
@@ -238,8 +239,14 @@ test.describe("E4-W06 D11 «Nivells» card (S05 §2, E29)", () => {
       "true",
     );
     await expect(
-      card.getByText("Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»"),
+      card.getByText(
+        "Els nivells fora de la progressió no compten per a les descripcions «… i sup.».",
+      ),
     ).toBeVisible();
+    await expect(card.getByRole("switch", { name: "Progressió: Pendent" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
     // The jobs block of the core is the «Processos automàtics» card: one heading, no placeholder.
     await expect(page.getByRole("heading", { name: "Processos automàtics" })).toHaveCount(1);
     await card.scrollIntoViewIfNeeded();
@@ -251,6 +258,60 @@ test.describe("E4-W06 D11 «Nivells» card (S05 §2, E29)", () => {
     await therapy.click();
     expect((await saved).postDataJSON()).toEqual({ progression: true, version: 1 });
     await expect(therapy).toHaveAttribute("aria-checked", "true");
+    await context.close();
+  });
+});
+
+test.describe("T-02-13 E4-W14 D11 «Nivells» card follow-ups of the E4-W06 review", () => {
+  const cardEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W14");
+
+  test.beforeAll(() => {
+    mkdirSync(cardEvidence, { recursive: true });
+  });
+
+  test("S05 §2 at 1280 the help sits inside the card, «+ Nou nivell» keeps its icon inline, the row buttons carry the level's name", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ viewport: { height: 900, width: 1280 } });
+    const page = await context.newPage();
+    await prepareAdmin(page, "ca");
+    await page.goto(`${baseUrl}/parametres`);
+    const card = page.locator("#nivells");
+    const table = card.getByRole("table", { name: "Nivells del club" });
+    await expect(table).toBeVisible();
+    await expect(card.locator(".catalog-table-card #levels-progression-help")).toHaveText(
+      "Els nivells fora de la progressió no compten per a les descripcions «… i sup.».",
+    );
+    await expect(card.getByRole("switch", { name: "Progressió: Pendent" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    await expect(table.getByRole("button", { name: "Edita Teràpia" })).toBeVisible();
+    await expect(table.getByRole("button", { name: /level-/u })).toHaveCount(0);
+
+    // «+» and «Nou nivell» on one line: the icon left of the label, vertically centred on it.
+    const layout = await card.getByRole("button", { name: "Nou nivell" }).evaluate((button) => {
+      const icon = button.querySelector("svg")?.getBoundingClientRect();
+      const text = [...(button.querySelector(".ah-button__content")?.childNodes ?? [])].find(
+        (node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? "").trim() !== "",
+      );
+      if (icon === undefined || text === undefined) return undefined;
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const label = range.getBoundingClientRect();
+      return {
+        centreGap: Math.abs(icon.top + icon.height / 2 - (label.top + label.height / 2)),
+        iconRight: icon.right,
+        labelLeft: label.left,
+        labelLines: range.getClientRects().length,
+      };
+    });
+    expect(layout).toBeDefined();
+    expect(layout?.iconRight).toBeLessThanOrEqual(layout?.labelLeft ?? 0);
+    expect(layout?.centreGap).toBeLessThan(4);
+    expect(layout?.labelLines).toBe(1);
+    await card.scrollIntoViewIfNeeded();
+    await card.screenshot({ path: resolve(cardEvidence, "D11-nivells-1280.png") });
     await context.close();
   });
 });

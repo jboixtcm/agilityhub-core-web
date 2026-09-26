@@ -738,4 +738,73 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
     );
     expect(widened.data?.ringBlockWindow).toEqual({ fromTime: "18:00", toTime: "21:00" });
   });
+
+  it("E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field", async () => {
+    const preview = () =>
+      client.GET("/activities/{id}/ring-conflicts", {
+        params: { path: { id: ACTIVITY_IDS.demonstration } },
+      });
+    const stored = () => {
+      const activity = activityState.activities.find(
+        (item) => item.id === ACTIVITY_IDS.demonstration,
+      );
+      if (activity === undefined) throw new TypeError("Missing the Demostració");
+      return activity;
+    };
+    // The Demostració (Sunday 4/10) at the club on Cadells, 10:00–12:00.
+    await patchDemonstration({
+      endTime: "12:00",
+      location: { atClub: true },
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+      ringIds: ["ring-cadells"],
+      startTime: "10:00",
+    });
+    expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
+
+    // A closed Sunday: the preview answers like the publication.
+    await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
+    await expect(failure(preview())).resolves.toEqual({
+      code: "OUTSIDE_OPENING_HOURS",
+      details: {},
+      status: 422,
+    });
+    await expect(failure(publish())).resolves.toMatchObject({ code: "OUTSIDE_OPENING_HOURS" });
+
+    // Open again, but a draft saved at 6:00 against a 7:00 opening.
+    await putOpeningHours(weekdays);
+    await patchDemonstration({ startTime: "06:00" });
+    await expect(failure(preview())).resolves.toMatchObject({
+      code: "OUTSIDE_OPENING_HOURS",
+      status: 422,
+    });
+
+    // A set-up window that ends before it starts: 400 for the preview and the publication alike.
+    await patchDemonstration({ startTime: "10:00" });
+    stored().ringBlockWindow = { fromTime: "12:00", toTime: "10:00" };
+    await expect(failure(preview())).resolves.toEqual({
+      code: "INVALID_TIME_RANGE",
+      details: {},
+      status: 400,
+    });
+    await expect(failure(publish())).resolves.toMatchObject({
+      code: "INVALID_TIME_RANGE",
+      status: 400,
+    });
+    // Shorter than `training.slotMinutes` (30 in the mock club): refused alike (R-07-05).
+    stored().ringBlockWindow = { fromTime: "10:00", toTime: "10:20" };
+    await expect(failure(preview())).resolves.toMatchObject({
+      code: "INVALID_TIME_RANGE",
+      status: 400,
+    });
+    stored().ringBlockWindow = { fromTime: "10:00", toTime: "10:30" };
+    expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
+    expect(stored().state).toBe("DRAFT");
+
+    // Away from the club nothing blocks: the preview is empty whatever the hours.
+    stored().ringBlockWindow = null;
+    await patchDemonstration({ location: { atClub: false, name: "Plaça Major" }, ringIds: [] });
+    await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
+    expect((await preview()).data).toEqual({ conflicts: [], trainingBookings: [] });
+  });
 });

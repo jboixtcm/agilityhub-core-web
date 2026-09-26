@@ -888,6 +888,7 @@ export function PlansPage({ client }: { client: ApiClient }) {
         onEdit={(plan) => {
           setEditing({ item: plan });
         }}
+        rowName={(plan) => plan.name}
         rows={data.items}
       />
       {selectedPlan === undefined ? null : (

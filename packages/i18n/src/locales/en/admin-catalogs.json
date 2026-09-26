@@ -65,7 +65,7 @@
     },
     "inUse": "This level has related data and can only be deactivated",
     "new": "New level",
-    "progressionHelp": "Levels outside the progression, such as Therapy, do not count towards «D and up»",
+    "progressionHelp": "Levels outside the progression don't count for «… and up» descriptions.",
     "progressionSwitch": "Progression: {name}",
     "removeQuestion": "Delete level {name}?",
     "removeTitle": "Delete level",

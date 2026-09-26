@@ -794,9 +794,27 @@ select {
   font-size: 0.75rem;
 }
 
+/* The preflight makes an icon a block: keep it inline, before the label («+ Nou nivell»). */
+.catalog-page .ah-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
 .catalog-table-card {
   padding: var(--ah-space-1) var(--ah-space-3);
   overflow: hidden;
+}
+
+/* A catalog's help text inside its table card, aligned with the cells. */
+.catalog-table-card > .catalog-section__help {
+  padding: var(--ah-space-2) var(--ah-space-3);
+}
+
+.catalog-progression {
+  display: inline-grid;
+  gap: var(--ah-space-1);
+  justify-items: start;
 }
 
 .catalog-table-scroll {

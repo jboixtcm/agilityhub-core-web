@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { createApiClient } from "@agilityhub/api-client";
 import {
   catalogState,
@@ -1429,10 +1432,10 @@ describe("T-06-28 E4-W11 D4 follow-ups of the E4-W10 review", () => {
       within(card).getByRole("spinbutton"),
       within(card).getByLabelText("Hora"),
       within(card).getByLabelText("Descripció"),
-      within(card).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
     ]) {
       expect(editor).toBeDisabled();
     }
+    // The exemption is its own action, accepted on a closed day (E4-W14, organizer 26-09).
     expect(within(card).getByRole("button", { name: "ANUL·LA LA CLASSE" })).toBeEnabled();
     const accept = within(card).getByRole("button", { name: "ACCEPTA" });
     expect(accept).toBeDisabled();
@@ -1473,6 +1476,113 @@ describe("T-06-28 E4-W11 D4 follow-ups of the E4-W10 review", () => {
     await settle();
     expect(calendars.length).toBeGreaterThan(0);
     expect(openingHours).toEqual([]);
+  });
+});
+
+/** The declarations of a CSS rule whose selector list is exactly `selector`. */
+function cssRule(css: string, selector: string): Map<string, string> | undefined {
+  const rule = [
+    ...css.replaceAll(/\/\*[\s\S]*?\*\//gu, "").matchAll(/([^{}]+)\{([^{}]*)\}/gu),
+  ].find(([, selectors = ""]) => selectors.trim().replaceAll(/\s+/gu, " ") === selector);
+  if (rule === undefined) return undefined;
+  return new Map(
+    (rule[2] ?? "")
+      .split(";")
+      .map((declaration) => declaration.split(":").map((part) => part.trim()))
+      .filter((parts): parts is [string, string] => parts.length === 2 && parts[0] !== "")
+      .map(([property, value]) => [property, value]),
+  );
+}
+
+describe("T-06-28 E4-W14 D4 follow-ups of the E4-W11 review", () => {
+  it("S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not", async () => {
+    const sunday = await createSundayClass();
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
+    const card = selectedCard();
+    expect(within(card).getByText(CLOSED_DAY)).toBeVisible();
+    const chipOf = (editor: HTMLElement) => editor.closest(".calendar-chip");
+    const editors = [
+      within(card).getByLabelText("Pista"),
+      within(card).getByRole("button", { name: /^Nivells/u }),
+      within(card).getByLabelText("Instructor"),
+      within(card).getByRole("spinbutton"),
+      within(card).getByLabelText("Hora"),
+      within(card).getByLabelText("Descripció"),
+    ];
+    for (const editor of editors) {
+      expect(editor).toBeDisabled();
+      expect(chipOf(editor)).toHaveClass("calendar-chip--disabled");
+    }
+    expect(sunday.state).toBe("ACTIVE");
+
+    // The look is token-based: the muted text colour and a `not-allowed` cursor, on the chip and
+    // on the control inside it (which would otherwise keep its `pointer`).
+    const css = readFileSync(resolve(import.meta.dirname, "calendar.css"), "utf8");
+    const disabled = cssRule(css, ".calendar-chip--disabled");
+    expect(disabled?.get("color")).toBe("var(--ah-color-text-muted)");
+    expect(disabled?.get("cursor")).toBe("not-allowed");
+    expect(Number(disabled?.get("opacity"))).toBeLessThan(1);
+    expect(
+      cssRule(
+        css,
+        ".calendar-chip--disabled .ah-select, .calendar-chip--disabled .ah-input, .calendar-chip--disabled .calendar-chip__toggle",
+      )?.get("cursor"),
+    ).toBe("not-allowed");
+    for (const value of disabled?.values() ?? []) expect(value).not.toMatch(/#|rgb|hsl/u);
+    cleanup();
+
+    // An open Wednesday: the same chips are enabled and look it.
+    await renderCalendar();
+    const open = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(open).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    await waitFor(() => {
+      expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+    });
+    expect(selectedCard().querySelector(".calendar-chip--disabled")).toBeNull();
+  });
+
+  it("S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action", async () => {
+    const sunday = await createSundayClass();
+    await putOpeningHours(
+      "07:00",
+      "22:00",
+      weekdays.filter((day) => day !== "SUNDAY"),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    const exemptions = captureBodies("POST", `/class-sessions/${sunday.id}/risk-exemption`);
+    const patches = captureBodies("PATCH", `/class-sessions/${sunday.id}`);
+    fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
+    const exempt = within(selectedCard()).getByRole("button", {
+      name: "Exempta de la revisió de les 7:30",
+    });
+    expect(exempt).toBeEnabled();
+    expect(exempt).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(exempt);
+    await waitFor(() => {
+      expect(exemptions).toEqual([{ exempt: true }]);
+    });
+    await waitFor(() => {
+      expect(
+        within(selectedCard()).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+      ).toHaveAttribute("aria-pressed", "true");
+    });
+    expect(patches).toEqual([]);
+
+    // Unsaved notes go first: the exemption reloads the class.
+    fireEvent.change(within(selectedCard()).getByLabelText("Notes"), {
+      target: { value: "Porteu aigua" },
+    });
+    expect(
+      within(selectedCard()).getByRole("button", { name: "Exempta de la revisió de les 7:30" }),
+    ).toBeDisabled();
   });
 });
 

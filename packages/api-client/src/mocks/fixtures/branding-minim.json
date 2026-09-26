@@ -34,7 +34,10 @@
     "fontFamily": "Montserrat, system-ui, sans-serif",
     "radius": "4px",
     "ringPalette": ["#F2B58C", "#8FCE8F", "#C9CDD3", "#F5D67A", "#85B8E8"],
-    "mode": "light"
+    "mode": "light",
+    "logoUrl": null,
+    "logoDarkUrl": null,
+    "markUrl": null
   },
   "modules": ["WAITLIST", "FAQ", "PUSH"],
   "signup": {

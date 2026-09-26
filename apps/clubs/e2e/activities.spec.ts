@@ -51,7 +51,7 @@ test.describe("E4-W04 activities in the app", () => {
     await page.waitForURL("**/reservar");
     const block = page.getByRole("region", { name: "Activitats" });
     await expect(block.getByRole("link", { name: /Seminari de handling/u })).toContainText(
-      "Seminari de handling · ds 12/09 · 9:00",
+      "Seminari de handling · ds 12/09 · 9:00–13:00",
     );
     await expect(block.getByRole("link", { name: /Seminari de handling/u })).toContainText(
       "6 places",
@@ -135,5 +135,29 @@ test.describe("E4-W04 activities in the app", () => {
     await expect(page.getByText("cancel·lada pel club")).toBeVisible();
     await expect(page.getByText("«Pluja forta: pistes tancades»")).toBeVisible();
     await page.screenshot({ path: resolve(evidenceDirectory, "25-activitat-375.png") });
+  });
+});
+
+test.describe("T-07-30 E4-W14 R-07-13 the 04 rows print the activity's hours", () => {
+  const hoursEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W14");
+
+  test.beforeAll(() => {
+    mkdirSync(hoursEvidence, { recursive: true });
+  });
+
+  test("04: «{hh:mm}–{hh:mm}» for an activity with both, the start alone without an end", async ({
+    page,
+  }) => {
+    await login(page);
+    await page.getByRole("link", { name: "Reservar" }).click();
+    await page.waitForURL("**/reservar");
+    const block = page.getByRole("region", { name: "Activitats" });
+    await expect(block.getByRole("link", { name: /Seminari de handling/u })).toContainText(
+      "Seminari de handling · ds 12/09 · 9:00–13:00",
+    );
+    await expect(block.getByRole("link", { name: /Taller de contactes/u })).toContainText(
+      "Taller de contactes · ds 22 · 10:00–12:00",
+    );
+    await page.screenshot({ path: resolve(hoursEvidence, "04-activitats-hores-375.png") });
   });
 });

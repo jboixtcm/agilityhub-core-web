@@ -163,9 +163,10 @@ describe("E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Covera
       );
     }
     expect(validate("yes")).toBe(false);
+    // S05 §12 seed (B32): Teràpia and Pendent are outside the progression.
     expect(
       catalogState.levels.filter((level) => !level.progression).map((level) => level.name),
-    ).toEqual(["Teràpia"]);
+    ).toEqual(["Teràpia", "Pendent"]);
   });
 
   it("keeps every fixture description equal to the mock resolver, so an edit never flips «D i sup.»", () => {

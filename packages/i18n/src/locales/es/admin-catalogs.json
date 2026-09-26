@@ -65,7 +65,7 @@
     },
     "inUse": "Este nivel tiene datos relacionados: solo se puede desactivar",
     "new": "Nuevo nivel",
-    "progressionHelp": "Los niveles fuera de la progresión, como Terapia, no cuentan para «D y sup.»",
+    "progressionHelp": "Los niveles fuera de la progresión no cuentan para las descripciones «… y sup.».",
     "progressionSwitch": "Progresión: {name}",
     "removeQuestion": "¿Eliminar el nivel {name}?",
     "removeTitle": "Eliminar el nivel",

@@ -236,5 +236,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - 10 and 23: the day-grid cell lines wrap between words or end with an ellipsis, never inside a word («manteni…», not «manteni / ment»).
   - D4: an activity that blocks every active ring of a band is one cell «Activitat · {title}» with «totes les pistes · {from}–{to}».
   - The T-01-26 onboarding e2e waits for the destination's content and URL instead of the navigation event (`net::ERR_ABORTED` at `0289e58`); `pnpm e2e:docker <ID> -- <Playwright arguments>` forwards arguments such as `--repeat-each=20` to every app's run.
+- Follow-ups of the E4-W11, E4-W06 and E4-W05 reviews (E4-W14):
+  - D7 (S07 §6, R-07-05): the `ring-conflicts` preview of [PUBLICA] refuses the window the publication would (`422 OUTSIDE_OPENING_HOURS`, `400 INVALID_TIME_RANGE`, no field) in the mock as in the api, and D7 shows those errors on the date and times (`INVALID_TIME_RANGE` on the end time), never as a page toast.
+  - D4 on a closed day: the disabled chip editors look disabled (`calendar-chip--disabled`: muted text, dashed border, `not-allowed` cursor on the chip and its control); «Exempta de la revisió de les 7:30» stays enabled, as its own action the api accepts there.
+  - 04 (R-07-13): an activity row prints `startTime`–`endTime` when both are present, only the start without an end.
+  - Screen 23's class drawer: the label follows the count («Instructor» / «Instructors», es «Instructores») and the names are a list in the reader's language (`formatList`).
+  - `branding-minim.json` sends `null` logos, as `/branding` does since api E5-T16, with a `resolveBrandingLogo` test for them.
+  - D11 «Nivells»: a generic «Progressió» help (S05 §2, no club level named); each switch has its own pending state and its own error in its row; the help sits inside the card and «+ Nou nivell» keeps its icon inline at 1280. The catalog tables name their row buttons after the row («Edita Teràpia», «Elimina Laura Serra Vidal (Duna)»), not its id.
+  - D3: a class change dropped by the PATCH queue rejects, so its chips go back (keeping the message of the change that caused it); only a class DELETE that succeeded drops the changes queued after it; a band removal drops none and reads the template's new version before the next change is sent.
+  - Mocks: the seed level «Pendent» (S05 §12, B32, outside the progression); `/coverage` lists only the active progression levels, in the catalog's order (R-06-06).
+  - `pnpm e2e:core` keeps the tail of each stage's seed container log (`seed-<stage>.log`, the run's password redacted), which proves `seed:demo --week-start`. `e2e/core/e4-core.spec.ts` asserts the generation body (`weekdayTemplateId` «Setmana A», `saturdayTemplateId` «Dissabtes»), the Torneig's single cell in its Saturday column, the whole 03 row (no dog), the 04 start–end, and in the es run the row gone after the member's own cancellation and the admin's «en lista de espera (n)» chip.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

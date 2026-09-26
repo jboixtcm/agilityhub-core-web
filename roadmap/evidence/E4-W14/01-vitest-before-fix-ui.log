@@ -1,0 +1,64 @@
+$ (cd packages/ui && pnpm exec vitest run src/branding.test.tsx)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/branding.test.tsx (5 tests | 1 failed) 28ms
+   ❯ T-02-05 BrandingProvider (5)
+     × E4-W14 a club without assets: `/branding` sends null logos (api E5-T16), read as absent in both placements 4ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  03:56:41
+   Duration  466ms (environment 66%, setup 14%, transform 10%, tests 7%, import 2%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/branding.test.tsx > T-02-05 BrandingProvider > E4-W14 a club without assets: `/branding` sends null logos (api E5-T16), read as absent in both placements
+AssertionError: expected { colors: { …(12) }, …(4) } to match object { logoDarkUrl: null, …(2) }
+(17 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "logoDarkUrl": null,
+-   "logoUrl": null,
+-   "markUrl": null,
++   "colors": {
++     "background": "#FFFFFF",
++     "border": "#D8DCE5",
++     "danger": "#B42318",
++     "info": "#2457D6",
++     "onPrimary": "#FFFFFF",
++     "primary": "#2457D6",
++     "success": "#237A4B",
++     "surface": "#FFFFFF",
++     "surfaceAlt": "#F4F6FA",
++     "text": "#17191F",
++     "textMuted": "#626875",
++     "warning": "#A66400",
++   },
++   "fontFamily": "Montserrat, system-ui, sans-serif",
++   "mode": "light",
++   "radius": "4px",
++   "ringPalette": [
++     "#F2B58C",
++     "#8FCE8F",
++     "#C9CDD3",
++     "#F5D67A",
++     "#85B8E8",
++   ],
+  }
+
+ ❯ src/branding.test.tsx:81:32
+     79|   it("E4-W14 a club without assets: `/branding` sends null logos (api …
+     80|     // The minimal club's fixture sends the three keys as `null`, as t…
+     81|     expect(minimFixture.theme).toMatchObject({ logoDarkUrl: null, logo…
+       |                                ^
+     82|     const theme: Branding["theme"] = { ...minimFixture.theme, mode: "d…
+     83|     const initial = { kind: "initial", showName: true, src: undefined …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+exit 1

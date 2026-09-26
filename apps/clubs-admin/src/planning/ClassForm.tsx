@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import { automaticDescription } from "./description";
 import {
+  DroppedChangeError,
   errorCode,
   errorProp,
   fieldOfValidationError,
@@ -202,8 +203,9 @@ export function ClassForm({
   };
 
   /** Edit mode: the change shows at once and is sent through the parent's PATCH queue; if it
-   * fails, only the fields of that PATCH go back to the last saved class (the chips never show an
-   * unsaved value), and text still being typed in «Descripció» or «Límit» stays. */
+   * fails or the queue drops it, only the fields of that PATCH go back to the last saved class
+   * (the chips never show an unsaved value), and text still being typed in «Descripció» or
+   * «Límit» stays. A dropped change keeps the message of the change that caused the drop. */
   const change = async (patch: ClassFormPatch, next: Partial<ClassFormValues>) => {
     setValues((current) => ({ ...current, ...next }));
     setErrors({});
@@ -226,7 +228,7 @@ export function ClassForm({
           ...Object.fromEntries(fields.map((field) => [field, restored[field]])),
         }));
       }
-      showError(error);
+      if (!(error instanceof DroppedChangeError)) showError(error);
     }
   };
 

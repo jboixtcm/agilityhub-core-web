@@ -1481,3 +1481,99 @@ describe("T-07-29 E4-W12 D7 real-core follow-ups of E4-W05", () => {
     expect(screen.getByText("Excel · PDF")).toBeVisible();
   });
 });
+
+describe("T-07-29 E4-W14 D7 follow-ups of the E4-W11 review", () => {
+  /** The Demostració (Sunday 4/10) at the club on Cadells, complete enough to publish. */
+  function demonstrationAtTheClub(times: { endTime: string; startTime: string }) {
+    const draft = activityState.activities.find((item) => item.id === DEMONSTRATION);
+    if (draft === undefined) throw new TypeError("Missing the Demostració");
+    Object.assign(draft, {
+      ...times,
+      location: { address: null, atClub: true, name: null, url: null },
+      registrationFrom: "2026-09-01",
+      registrationTo: "2026-10-01",
+      ringIds: ["ring-cadells"],
+    });
+    return draft;
+  }
+
+  it("R-07-05 S07 §6 a draft saved at 6:00 against a 7:00 opening: the preview's 422 OUTSIDE_OPENING_HOURS lands on the date and both times, not in a toast", async () => {
+    demonstrationAtTheClub({ endTime: "12:00", startTime: "06:00" });
+    const previews = recordRequests(`/activities/${DEMONSTRATION}/ring-conflicts`);
+    const publications = recordRequests(`/activities/${DEMONSTRATION}/publication`);
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    const publish = within(card).getByRole("button", { name: "PUBLICA" });
+    // An open Sunday: [PUBLICA] is offered, the saved 6:00 is kept among the options.
+    await waitFor(() => {
+      expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toContain("07:00");
+    });
+    expect(publish).toBeEnabled();
+    fireEvent.click(publish);
+
+    await waitFor(() => {
+      expect(fieldErrorText("activity-date")).toBe(OUTSIDE_OPENING_HOURS);
+    });
+    expect(fieldErrorText("activity-start")).toBe(OUTSIDE_OPENING_HOURS);
+    expect(fieldErrorText("activity-end")).toBe(OUTSIDE_OPENING_HOURS);
+    // Only the three field lines: no toast (a danger toast would repeat the text).
+    expect(screen.getAllByText(OUTSIDE_OPENING_HOURS)).toHaveLength(3);
+    expect(document.querySelector(".ah-toast")).toBeNull();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(previews.seen.map((request) => request.method)).toEqual(["GET"]);
+    expect(publications.seen).toEqual([]);
+    expect(publish).toBeEnabled();
+
+    // Moved to 10:00 and saved: [PUBLICA] clears the fields and opens the confirmation.
+    fireEvent.change(within(card).getByLabelText("Hora d'inici"), { target: { value: "10:00" } });
+    fireEvent.click(publish);
+    expect(await screen.findByRole("dialog")).toBeVisible();
+    expect(fieldErrorText("activity-date")).toBeUndefined();
+    expect(fieldErrorText("activity-start")).toBeUndefined();
+    previews.stop();
+    publications.stop();
+  });
+
+  it("R-07-05 S07 §6 with the opening hours unread, a closed Sunday reaches the preview: its 422 lands on the fields; a 400 INVALID_TIME_RANGE of the window on the end time", async () => {
+    const draft = demonstrationAtTheClub({ endTime: "12:00", startTime: "10:00" });
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]);
+    // The page's opening-hours read fails: no closed-day note, so [PUBLICA] stays enabled.
+    let failOpeningHours = true;
+    server.use(
+      http.get("*/api/v1/club/opening-hours", () =>
+        failOpeningHours
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", message: "Internal error", traceId: "trace-e4-w14" },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    await within(card).findByRole("button", { name: "Torna-ho a provar" });
+    failOpeningHours = false;
+    expect(within(card).queryByText(CLOSED_DAY)).toBeNull();
+    fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
+    await waitFor(() => {
+      expect(fieldErrorText("activity-start")).toBe(OUTSIDE_OPENING_HOURS);
+    });
+    expect(fieldErrorText("activity-date")).toBe(OUTSIDE_OPENING_HOURS);
+    expect(fieldErrorText("activity-end")).toBe(OUTSIDE_OPENING_HOURS);
+    expect(screen.getAllByText(OUTSIDE_OPENING_HOURS)).toHaveLength(3);
+    expect(document.querySelector(".ah-toast")).toBeNull();
+
+    // Open again, but the set-up window ends before it starts: the api's 400 names no field.
+    await putOpeningHours(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SUNDAY"]);
+    draft.ringBlockWindow = { fromTime: "12:00", toTime: "10:00" };
+    fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
+    await waitFor(() => {
+      expect(fieldErrorText("activity-end")).toBe("L'interval horari no és vàlid.");
+    });
+    expect(fieldErrorText("activity-start")).toBeUndefined();
+    expect(fieldErrorText("activity-date")).toBeUndefined();
+    expect(screen.getAllByText("L'interval horari no és vàlid.")).toHaveLength(1);
+    expect(document.querySelector(".ah-toast")).toBeNull();
+    expect(draft.state).toBe("DRAFT");
+  });
+});

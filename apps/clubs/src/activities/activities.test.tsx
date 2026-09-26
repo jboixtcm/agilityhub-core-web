@@ -80,9 +80,10 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       screen.getByText("Seleccioneu l'activitat o classe que vulgueu reservar."),
     ).toBeVisible();
     const block = await screen.findByRole("region", { name: "Activitats" });
+    // R-07-13: start–end when the activity has both (E4-W14; the mockup's «9:00» has no end).
     expect(rowTexts(block)).toEqual([
-      "Taller de contactes · ds 22 · 10:00Completa · ⏳2",
-      "Seminari de handling · ds 12/09 · 9:006 places",
+      "Taller de contactes · ds 22 · 10:00–12:00Completa · ⏳2",
+      "Seminari de handling · ds 12/09 · 9:00–13:006 places",
     ]);
     expect(within(block).getByRole("link", { name: /Seminari de handling/u })).toHaveAttribute(
       "href",
@@ -101,7 +102,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       branding.modules.filter((module) => module !== "WAITLIST"),
     );
     const block = await screen.findByRole("region", { name: "Activitats" });
-    expect(rowTexts(block)[0]).toBe("Taller de contactes · ds 22 · 10:00Completa");
+    expect(rowTexts(block)[0]).toBe("Taller de contactes · ds 22 · 10:00–12:00Completa");
     expect(within(block).queryByRole("link", { name: /Taller de contactes/u })).toBeNull();
     cleanup();
 
@@ -110,7 +111,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     await renderWith(<ReserveActivitiesPage client={client()} />);
     const september = await screen.findByRole("region", { name: "Activitats" });
     expect(rowTexts(september)).toEqual([
-      "Seminari de handling · ds 12 · 9:006 places",
+      "Seminari de handling · ds 12 · 9:00–13:006 places",
       "Lliga social — 3a jornada · ds 19 · 9:00Obertes",
     ]);
   });
@@ -723,7 +724,7 @@ describe("T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (
       "Nit d'agilityinscritaDiumenge 9 · 0:00–2:00 · totes les pistes",
     );
     expect(block?.textContent.replace(/\s+/gu, " ").trim()).toBe(
-      "Nit d'agility · dg 9 · 0:00Obertes",
+      "Nit d'agility · dg 9 · 0:00–2:00Obertes",
     );
   });
 
@@ -747,5 +748,45 @@ describe("T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (
     expect(block?.textContent.replace(/\s+/gu, " ").trim()).toBe("Nit d'agility · dg 9Obertes");
     expect(reservation).not.toHaveTextContent(/0:00/u);
     expect(block).not.toHaveTextContent(/0:00/u);
+  });
+});
+
+describe("T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours", () => {
+  it("04: «{hh:mm}–{hh:mm}» when startTime and endTime are both present, only «{hh:mm}» without an end", async () => {
+    await renderWith(
+      <>
+        <ActivityBlockRow
+          row={{
+            ...rowWith({
+              endTime: "13:00",
+              endsAtLocal: "2026-08-22T13:00",
+              startTime: "09:00",
+              startsAtLocal: "2026-08-22T09:00",
+            }),
+            id: "activity-seminari-mati",
+            title: "Seminari de matí",
+          }}
+        />
+        <ActivityBlockRow
+          row={{
+            ...rowWith({
+              endTime: null,
+              endsAtLocal: null,
+              startTime: "09:00",
+              startsAtLocal: "2026-08-22T09:00",
+            }),
+            id: "activity-lliga-mati",
+            title: "Lliga de matí",
+          }}
+        />
+      </>,
+    );
+    const [both, startOnly] = await screen.findAllByRole("link");
+    expect(both?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Seminari de matí · ds 22 · 9:00–13:00Obertes",
+    );
+    expect(startOnly?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+      "Lliga de matí · ds 22 · 9:00Obertes",
+    );
   });
 });

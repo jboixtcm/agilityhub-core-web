@@ -224,30 +224,50 @@ function LevelForm({
   );
 }
 
+function withoutKey<Value>(
+  record: Readonly<Record<string, Value>>,
+  key: string,
+): Record<string, Value> {
+  return Object.fromEntries(Object.entries(record).filter(([candidate]) => candidate !== key));
+}
+
 /**
  * The «Progressió» switch of a D11 «Nivells» row (S05 §2, E29): `PATCH /levels/{id}` with the
- * row's `version`, like every other level field. Disabled while its own PATCH is pending.
+ * row's `version`, like every other level field. Disabled while its own PATCH is pending; a
+ * refused toggle shows its error under the switch, in the row it belongs to.
  */
 function ProgressionSwitch({
+  error,
   item,
   onToggle,
   pending,
 }: {
+  error: string | undefined;
   item: Level;
   onToggle: (item: Level) => void;
   pending: boolean;
 }) {
   const { t } = useTranslation("admin-catalogs");
+  const errorId = `level-progression-error-${item.id}`;
   return (
-    <Switch
-      aria-describedby="levels-progression-help"
-      checked={item.progression}
-      disabled={pending}
-      label={t("admin-catalogs:levels.progressionSwitch", { name: item.name })}
-      onCheckedChange={() => {
-        onToggle(item);
-      }}
-    />
+    <span className="catalog-progression">
+      <Switch
+        aria-describedby={
+          error === undefined ? "levels-progression-help" : `levels-progression-help ${errorId}`
+        }
+        checked={item.progression}
+        disabled={pending}
+        label={t("admin-catalogs:levels.progressionSwitch", { name: item.name })}
+        onCheckedChange={() => {
+          onToggle(item);
+        }}
+      />
+      {error === undefined ? null : (
+        <span className="ah-form-field__error" id={errorId} role="alert">
+          {error}
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -467,9 +487,12 @@ export function SettingsPage({ client }: { client: ApiClient }) {
   const [removingFaq, setRemovingFaq] = useState<FaqEntry>();
   const [levelRemoveBlocked, setLevelRemoveBlocked] = useState(false);
   const [feedback, setFeedback] = useState<string>();
-  // The level whose «Progressió» PATCH is on its way, and the error of the last one (by code).
-  const [progressionPending, setProgressionPending] = useState<string>();
-  const [progressionError, setProgressionError] = useState<string>();
+  // The levels whose «Progressió» PATCH is on its way, and each level's last error (by code): one
+  // toggle never unlocks or clears another row's.
+  const [progressionPending, setProgressionPending] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [progressionErrors, setProgressionErrors] = useState<Readonly<Record<string, string>>>({});
   const showFreeTraining = branding.modules.includes("FREE_TRAINING");
 
   useEffect(() => {
@@ -505,8 +528,9 @@ export function SettingsPage({ client }: { client: ApiClient }) {
    * saved level; `STALE_VERSION` reloads the list so the next toggle uses the fresh version.
    */
   const toggleProgression = async (item: Level) => {
-    setProgressionPending(item.id);
-    setProgressionError(undefined);
+    if (progressionPending.has(item.id)) return;
+    setProgressionPending((current) => new Set(current).add(item.id));
+    setProgressionErrors((current) => withoutKey(current, item.id));
     try {
       const result = await client.PATCH("/levels/{id}", {
         body: { progression: !item.progression, version: item.version },
@@ -519,12 +543,16 @@ export function SettingsPage({ client }: { client: ApiClient }) {
         );
       }
     } catch (reason) {
-      setProgressionError(messageForError(reason));
+      setProgressionErrors((current) => ({ ...current, [item.id]: messageForError(reason) }));
       if (isApiError(reason, "STALE_VERSION")) {
         levels.reload();
       }
     } finally {
-      setProgressionPending(undefined);
+      setProgressionPending((current) => {
+        const next = new Set(current);
+        next.delete(item.id);
+        return next;
+      });
     }
   };
 
@@ -680,9 +708,10 @@ export function SettingsPage({ client }: { client: ApiClient }) {
                 key: "progression",
                 render: (item) => (
                   <ProgressionSwitch
+                    error={progressionErrors[item.id]}
                     item={item}
                     onToggle={(level) => void toggleProgression(level)}
-                    pending={progressionPending === item.id}
+                    pending={progressionPending.has(item.id)}
                   />
                 ),
               },
@@ -693,6 +722,11 @@ export function SettingsPage({ client }: { client: ApiClient }) {
               },
             ]}
             empty={t("admin-catalogs:levels.empty")}
+            footer={
+              <p className="catalog-section__help" id="levels-progression-help">
+                {t("admin-catalogs:levels.progressionHelp")}
+              </p>
+            }
             loading={levels.loading}
             onEdit={(item) => {
               setEditingLevel({ item });
@@ -702,16 +736,9 @@ export function SettingsPage({ client }: { client: ApiClient }) {
               setLevelRemoveBlocked(false);
             }}
             onReorder={(source, target) => void reorderLevels(source, target)}
+            rowName={(item) => item.name}
             rows={levels.items}
           />
-          <p className="catalog-section__help" id="levels-progression-help">
-            {t("admin-catalogs:levels.progressionHelp")}
-          </p>
-          {progressionError === undefined ? null : (
-            <p className="ah-form-field__error" role="alert">
-              {progressionError}
-            </p>
-          )}
         </section>
       ) : null}
       {faqEnabled ? (
@@ -754,6 +781,7 @@ export function SettingsPage({ client }: { client: ApiClient }) {
             }}
             onRemove={setRemovingFaq}
             onReorder={(source, target) => void reorderFaq(source, target)}
+            rowName={(item) => item.question}
             rows={faq.items}
           />
           <p className="catalog-section__help">{t("admin-catalogs:faq.rowHelp")}</p>

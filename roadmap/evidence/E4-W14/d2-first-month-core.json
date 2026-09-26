@@ -1,0 +1,9 @@
+{
+  "option": "TODAY",
+  "portion": "HALF",
+  "startDate": "2026-09-26",
+  "amountDue": {
+    "amountMinor": 3000,
+    "currency": "EUR"
+  }
+}

@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { createApiClient } from "@agilityhub/api-client";
 import {
   catalogState,
@@ -21,7 +24,7 @@ const branding: Branding = {
   theme: { ...brandingCanicFixture.theme, mode: "dark" },
 };
 
-const HELP = "Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»";
+const HELP = "Els nivells fora de la progressió no compten per a les descripcions «… i sup.».";
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
@@ -42,22 +45,30 @@ afterAll(() => {
   server.close();
 });
 
-async function renderSettings() {
+async function renderSettings(locale: "ca" | "en" | "es" = "ca") {
+  const localized: Branding = { ...branding, locales: ["ca", "es", "en"] };
   const i18n = await createI18n({
-    branding,
-    browserLanguages: ["ca"],
+    branding: localized,
+    browserLanguages: [locale],
     initialNamespaces: ["admin-catalogs", "admin-settings", "admin-audit", "enums", "errors"],
     storage: undefined,
   });
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={branding}>
-        <SettingsPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />
+      <BrandingProvider branding={localized}>
+        <SettingsPage
+          client={createApiClient({
+            baseUrl: `${window.location.origin}/api/v1`,
+            getLocale: () => locale,
+          })}
+        />
       </BrandingProvider>
     </I18nextProvider>,
   );
-  const table = await screen.findByRole("table", { name: "Nivells del club" });
-  await within(table).findByText("Teràpia");
+  const table = await screen.findByRole("table", {
+    name: i18n.t("admin-catalogs:levels.caption"),
+  });
+  await within(table).findByText(locale === "ca" ? "Teràpia" : /Teràpia|Terapia/u);
   return table;
 }
 
@@ -74,7 +85,7 @@ function captureLevelBodies(method: string): Record<string, unknown>[] {
   return bodies;
 }
 
-describe("E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29)", () => {
+describe("T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29)", () => {
   it("shows one switch per level with the help text: Teràpia is off, the progression levels on", async () => {
     const table = await renderSettings();
     expect(within(table).getByRole("columnheader", { name: "Progressió" })).toBeVisible();
@@ -171,22 +182,22 @@ describe("E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Le
     // A new level is part of the progression by default (S05 §3).
     expect(progression).toHaveAttribute("aria-checked", "true");
     expect(within(create).getByText(HELP)).toBeVisible();
-    fireEvent.change(within(create).getByLabelText("Nom"), { target: { value: "Pendent" } });
-    fireEvent.change(within(create).getByLabelText("Codi"), { target: { value: "pen" } });
+    fireEvent.change(within(create).getByLabelText("Nom"), { target: { value: "Avaluació" } });
+    fireEvent.change(within(create).getByLabelText("Codi"), { target: { value: "ava" } });
     fireEvent.click(progression);
     fireEvent.click(within(create).getByRole("button", { name: "DESA" }));
     await waitFor(() => {
       expect(posts).toHaveLength(1);
     });
-    expect(posts[0]).toMatchObject({ code: "PEN", progression: false });
+    expect(posts[0]).toMatchObject({ code: "AVA", progression: false });
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: "Nou nivell" })).not.toBeInTheDocument();
     });
 
     const row = (await screen.findByText("Teràpia")).closest("tr");
     if (row === null) throw new TypeError("Missing the Teràpia row");
-    // The catalog table names its row actions after the row id.
-    fireEvent.click(within(row).getByRole("button", { name: "Edita level-t" }));
+    // The catalog table names its row actions after the row's name (E4-W14, AGENTS rule 6).
+    fireEvent.click(within(row).getByRole("button", { name: "Edita Teràpia" }));
     const edit = await screen.findByRole("dialog", { name: "Edita el nivell" });
     expect(within(edit).getByRole("switch", { name: "Progressió" })).toHaveAttribute(
       "aria-checked",
@@ -197,5 +208,155 @@ describe("E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Le
       expect(patches).toHaveLength(1);
     });
     expect(patches[0]).toMatchObject({ progression: false, version: 1 });
+  });
+});
+
+/** The «Nivells» row of the level whose «Progressió» switch is named `name`. */
+function levelRow(name: string): HTMLElement {
+  const row = screen.getByRole("switch", { name: `Progressió: ${name}` }).closest("tr");
+  if (row === null) throw new TypeError(`Missing the ${name} row`);
+  return row;
+}
+
+/**
+ * `PATCH /levels/{id}` held until `release(id)`; then a level in `refuse` answers 403 FORBIDDEN as
+ * the api does, any other falls through to the mock (which saves it).
+ */
+function heldLevelPatches(refuse: ReadonlySet<string>) {
+  const waiting = new Map<string, () => void>();
+  server.use(
+    http.patch("*/api/v1/levels/:id", async ({ params }) => {
+      const id = String(params.id);
+      await new Promise<void>((resolve) => {
+        waiting.set(id, resolve);
+      });
+      return refuse.has(id)
+        ? HttpResponse.json(
+            { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "trace-e4-w14" },
+            { status: 403 },
+          )
+        : undefined;
+    }),
+  );
+  return {
+    release: async (id: string) => {
+      await waitFor(() => {
+        expect(waiting.has(id)).toBe(true);
+      });
+      waiting.get(id)?.();
+      waiting.delete(id);
+    },
+  };
+}
+
+describe("T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review", () => {
+  it("S05 §2 the «Progressió» help names no club level, in ca, es and en", async () => {
+    const helps = {
+      ca: HELP,
+      en: "Levels outside the progression don't count for «… and up» descriptions.",
+      es: "Los niveles fuera de la progresión no cuentan para las descripciones «… y sup.».",
+    } as const;
+    for (const locale of ["ca", "es", "en"] as const) {
+      await renderSettings(locale);
+      const help = document.getElementById("levels-progression-help");
+      expect(help).toHaveTextContent(helps[locale]);
+      // No level of the club (Teràpia, Pendent, D…) is named in a text every club reads.
+      for (const level of catalogState.levels) {
+        for (const name of [level.name, ...Object.values(level.nameI18n ?? {})]) {
+          expect(help?.textContent).not.toMatch(new RegExp(`(^|[\\s«])${name}\\b`, "u"));
+        }
+      }
+      cleanup();
+    }
+  });
+
+  it("R-06-06 S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia)", async () => {
+    await renderSettings();
+    expect(screen.getByRole("switch", { name: "Progressió: Pendent" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(within(levelRow("Pendent")).getByText("PENDENT")).toBeVisible();
+    expect(screen.getByRole("switch", { name: "Progressió: Teràpia" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+  });
+
+  it("a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error", async () => {
+    const patches = heldLevelPatches(new Set(["level-d"]));
+    await renderSettings();
+    fireEvent.click(screen.getByRole("switch", { name: "Progressió: D" }));
+    fireEvent.click(screen.getByRole("switch", { name: "Progressió: E" }));
+    expect(screen.getByRole("switch", { name: "Progressió: D" })).toBeDisabled();
+    expect(screen.getByRole("switch", { name: "Progressió: E" })).toBeDisabled();
+
+    // D is refused: its error is in its own row, and E, still on its way, stays locked.
+    await patches.release("level-d");
+    expect(await within(levelRow("D")).findByRole("alert")).toHaveTextContent(
+      "No teniu permís per fer aquesta acció.",
+    );
+    expect(screen.getByRole("switch", { name: "Progressió: D" })).toBeEnabled();
+    expect(screen.getByRole("switch", { name: "Progressió: D" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(screen.getByRole("switch", { name: "Progressió: E" })).toBeDisabled();
+    expect(within(levelRow("E")).queryByRole("alert")).toBeNull();
+
+    // Another row's toggle keeps D's error; E is saved without touching it.
+    fireEvent.click(screen.getByRole("switch", { name: "Progressió: F" }));
+    expect(within(levelRow("D")).getByRole("alert")).toBeVisible();
+    await patches.release("level-e");
+    await waitFor(() => {
+      expect(screen.getByRole("switch", { name: "Progressió: E" })).toHaveAttribute(
+        "aria-checked",
+        "false",
+      );
+    });
+    expect(screen.getByRole("switch", { name: "Progressió: E" })).toBeEnabled();
+    expect(screen.getByRole("switch", { name: "Progressió: F" })).toBeDisabled();
+    expect(within(levelRow("D")).getByRole("alert")).toBeVisible();
+    expect(within(levelRow("E")).queryByRole("alert")).toBeNull();
+    // The error describes its switch.
+    expect(screen.getByRole("switch", { name: "Progressió: D" })).toHaveAccessibleDescription(
+      `${HELP} No teniu permís per fer aquesta acció.`,
+    );
+    await patches.release("level-f");
+    await waitFor(() => {
+      expect(screen.getByRole("switch", { name: "Progressió: F" })).toBeEnabled();
+    });
+  });
+
+  it("AGENTS rule 6: the catalog row buttons are named after the row's name, not its id", async () => {
+    const table = await renderSettings();
+    expect(
+      within(levelRow("Teràpia")).getByRole("button", { name: "Edita Teràpia" }),
+    ).toBeVisible();
+    expect(within(levelRow("D")).getByRole("button", { name: "Elimina D" })).toBeVisible();
+    expect(within(table).queryByRole("button", { name: /level-/u })).toBeNull();
+    const faq = await screen.findByRole("table", { name: "Preguntes freqüents" });
+    const [firstQuestion] = within(faq).getAllByRole("row").slice(1);
+    const question = firstQuestion?.querySelectorAll("td")[2]?.textContent ?? "";
+    expect(question).not.toBe("");
+    expect(within(faq).getByRole("button", { name: `Edita ${question}` })).toBeVisible();
+    expect(within(faq).queryByRole("button", { name: /faq-/u })).toBeNull();
+  });
+
+  it("S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline", async () => {
+    const table = await renderSettings();
+    const card = table.closest(".catalog-table-card");
+    expect(card).not.toBeNull();
+    expect(card?.contains(document.getElementById("levels-progression-help") ?? null)).toBe(true);
+
+    const button = screen.getByRole("button", { name: "Nou nivell" });
+    expect(button.closest(".catalog-page")).not.toBeNull();
+    const content = button.querySelector(".ah-button__content");
+    expect(content?.querySelector("svg")).not.toBeNull();
+    // Tailwind's preflight makes the icon a block; the catalog pages lay the content out inline.
+    const css = readFileSync(resolve(import.meta.dirname, "../styles.css"), "utf8");
+    const rule = /\.catalog-page \.ah-button__content\s*\{([^}]*)\}/u.exec(css)?.[1] ?? "";
+    expect(rule).toMatch(/display:\s*inline-flex;/u);
+    expect(rule).toMatch(/align-items:\s*center;/u);
   });
 });

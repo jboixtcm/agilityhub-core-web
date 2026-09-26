@@ -34,24 +34,32 @@ export function CatalogSectionHeader({ action, title }: { action?: ReactNode; ti
   );
 }
 
+/**
+ * A catalog's table in its card. The row buttons are named after `rowName` («Edita Nivell A»),
+ * never after the row id (AGENTS rule 6); `footer` (a help text) sits inside the card.
+ */
 export function CatalogTable<Row extends { active?: boolean; id: string }>({
   actions,
   caption,
   columns,
   empty,
+  footer,
   loading,
   onActivate,
   onEdit,
   onRemove,
   onReorder,
+  rowName,
   rows,
 }: {
   caption: string;
   columns: CatalogColumn<Row>[];
   empty: string;
   loading: boolean;
+  rowName: (row: Row) => string;
   rows: Row[];
   actions?: (row: Row) => ReactNode;
+  footer?: ReactNode;
   onActivate?: (row: Row) => void;
   onEdit?: (row: Row) => void;
   onRemove?: (row: Row) => void;
@@ -173,7 +181,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                       {onEdit === undefined ? null : (
                         <IconButton
                           icon="edit"
-                          label={t("admin-catalogs:common.editNamed", { name: row.id })}
+                          label={t("admin-catalogs:common.editNamed", { name: rowName(row) })}
                           onClick={(event) => {
                             event.stopPropagation();
                             onEdit(row);
@@ -183,7 +191,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                       {onRemove === undefined ? null : (
                         <IconButton
                           icon="x"
-                          label={t("admin-catalogs:common.removeNamed", { name: row.id })}
+                          label={t("admin-catalogs:common.removeNamed", { name: rowName(row) })}
                           onClick={(event) => {
                             event.stopPropagation();
                             onRemove(row);
@@ -198,6 +206,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
           </tbody>
         </table>
       </div>
+      {footer}
     </Card>
   );
 }

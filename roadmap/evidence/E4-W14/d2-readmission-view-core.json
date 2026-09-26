@@ -1,0 +1,28 @@
+{
+  "changedFields": [
+    "contactEmails",
+    "phones"
+  ],
+  "memberContact": {
+    "emails": [
+      "pau.e3@example.test"
+    ],
+    "phones": [
+      "699000902"
+    ]
+  },
+  "submittedContact": {
+    "emails": [
+      "retorn.e3@example.test"
+    ],
+    "phones": [
+      "699000905"
+    ]
+  },
+  "submittedPaymentMethod": {
+    "type": "SEPA_DD",
+    "maskedAccount": null,
+    "holderName": "Pau Rebuig E3",
+    "channel": null
+  }
+}

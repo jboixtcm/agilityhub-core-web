@@ -10,7 +10,7 @@
       "loadError": "The class could not be loaded.",
       "when": "Date and time",
       "ring": "Ring",
-      "instructors": "Instructor",
+      "instructors": "{count, plural, one {Instructor} other {Instructors}}",
       "occupancy": "Booked/places",
       "state": "Status",
       "risk": "At risk"

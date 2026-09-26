@@ -1,4 +1,5 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Card, Chip, DayGrid, Drawer, Skeleton, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -77,6 +78,7 @@ function ClassDrawerBody({
   id: string;
 }) {
   const branding = useBranding();
+  const formats = useClubFormats();
   const { t } = useTranslation(["instructor", "home", "enums"]);
   const dayLabel = useDayLabel();
   const session = useResource(
@@ -97,7 +99,9 @@ function ClassDrawerBody({
     branding.modules.includes("WAITLIST") && value.counters.waiting > 0
       ? ` +${String(value.counters.waiting)}`
       : "";
-  const instructors = (value.instructorNames ?? []).join(", ");
+  // «Instructor: Marc» / «Instructors: Marc i Núria»: the label follows the count, the names are a
+  // list in the reader's language.
+  const instructorNames = value.instructorNames ?? [];
   return (
     <dl className="day-drawer">
       <dt>{t("instructor:overview.class.when")}</dt>
@@ -110,10 +114,10 @@ function ClassDrawerBody({
           <dd>{value.ring.name}</dd>
         </>
       )}
-      {instructors === "" ? null : (
+      {instructorNames.length === 0 ? null : (
         <>
-          <dt>{t("instructor:overview.class.instructors")}</dt>
-          <dd>{instructors}</dd>
+          <dt>{t("instructor:overview.class.instructors", { count: instructorNames.length })}</dt>
+          <dd>{formats.formatList(instructorNames)}</dd>
         </>
       )}
       <dt>{t("instructor:overview.class.occupancy")}</dt>

@@ -551,6 +551,11 @@ export function ActivityPage({
       setReload((value) => value + 1);
       return;
     }
+    showOnFields(cause);
+  };
+
+  /** An error on the fields it belongs to (`saveErrorTargets`), else as the page message. */
+  const showOnFields = (cause: unknown) => {
     const targets = saveErrorTargets(cause);
     if (targets.includes("general")) {
       setFeedback({ message: errorMessage(cause), tone: "danger" });
@@ -684,9 +689,15 @@ export function ActivityPage({
     }
   };
 
+  /**
+   * [PUBLICA]: the conflicts preview first (R-07-05). It builds the same ring-block window as the
+   * publication, so it answers `422 OUTSIDE_OPENING_HOURS` / `400 INVALID_TIME_RANGE` for a window
+   * the publication would refuse (S07 §6): those land on the date and times, as a save's.
+   */
   const startPublish = async () => {
     if (dirty && !(await save())) return;
     setPending("publish");
+    setErrors({});
     try {
       const result = await client.GET("/activities/{id}/ring-conflicts", {
         params: { path: { id: activity.id } },
@@ -701,7 +712,7 @@ export function ActivityPage({
         setConflictDialog({ initial: {}, mode: "publish", preview });
       }
     } catch (cause) {
-      setFeedback({ message: errorMessage(cause), tone: "danger" });
+      showOnFields(cause);
     } finally {
       setPending(undefined);
     }

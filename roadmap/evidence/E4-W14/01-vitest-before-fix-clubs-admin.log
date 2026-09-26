@@ -1,0 +1,4462 @@
+$ (cd apps/clubs-admin && pnpm exec vitest run src/activities/ActivitiesPage.test.tsx src/planning/CalendarPage.test.tsx src/catalogs/SettingsPage.test.tsx src/planning/TemplatesPage.test.tsx)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/SettingsPage.test.tsx (9 tests | 7 failed) 1470ms
+   ❯ T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) (4)
+     × shows one switch per level with the help text: Teràpia is off, the progression levels on 251ms
+     × the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value 155ms
+   ❯ T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review (5)
+     × S05 §2 the «Progressió» help names no club level, in ca, es and en 50ms
+     × R-06-06 S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia) 391ms
+     × a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error 134ms
+     × AGENTS rule 6: the catalog row buttons are named after the row's name, not its id 79ms
+     × S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline 52ms
+ ❯ src/planning/CalendarPage.test.tsx (41 tests | 2 failed) 6632ms
+   ❯ T-06-28 E4-W14 D4 follow-ups of the E4-W11 review (2)
+     × S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not 92ms
+     × S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action 89ms
+ ❯ src/activities/ActivitiesPage.test.tsx (41 tests | 2 failed) 25698ms
+   ❯ T-07-29 E4-W14 D7 follow-ups of the E4-W11 review (2)
+     × R-07-05 S07 §6 a draft saved at 6:00 against a 7:00 opening: the preview's 422 OUTSIDE_OPENING_HOURS lands on the date and both times, not in a toast 10116ms
+     × R-07-05 S07 §6 with the opening hours unread, a closed Sunday reaches the preview: its 422 lands on the fields; a 400 INVALID_TIME_RANGE of the window on the end time 10116ms
+ ❯ src/planning/TemplatesPage.test.tsx (25 tests | 4 failed) 45225ms
+   ❯ T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) (1)
+     × R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression 10125ms
+   ❯ T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) (4)
+     × R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers 10241ms
+     × R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent 10235ms
+     × R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays 10167ms
+
+ Test Files  4 failed (4)
+      Tests  15 failed | 101 passed (116)
+   Start at  03:56:54
+   Duration  46.24s (tests 95%, transform 2%, environment 2%, import 1%)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W14 D7 follow-ups of the E4-W11 review > R-07-05 S07 §6 a draft saved at 6:00 against a 7:00 opening: the preview's 422 OUTSIDE_OPENING_HOURS lands on the date and both times, not in a toast
+AssertionError: expected undefined to be 'L\'hora seleccionada és fora de l\'ho…' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+
+- Expected:
+"L'hora seleccionada és fora de l'horari d'obertura."
+
++ Received:
+undefined
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1515:47
+    1513|
+    1514|     await waitFor(() => {
+    1515|       expect(fieldErrorText("activity-date")).toBe(OUTSIDE_OPENING_HOU…
+       |                                               ^
+    1516|     });
+    1517|     expect(fieldErrorText("activity-start")).toBe(OUTSIDE_OPENING_HOUR…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 E4-W14 D7 follow-ups of the E4-W11 review > R-07-05 S07 §6 with the opening hours unread, a closed Sunday reaches the preview: its 422 lands on the fields; a 400 INVALID_TIME_RANGE of the window on the end time
+AssertionError: expected undefined to be 'L\'hora seleccionada és fora de l\'ho…' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activities-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"activities-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitats[0m
+          [36m</h1>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNova activitat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Llistat d'activitats"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca una activitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca una activitat"[39m
+                [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Mostra"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"false"[39m
+              [36m>[39m
+                [0mSense les eliminades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"state"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"type"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"date"[39m
+                    [36m>[39m
+                      [0mData[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ringId"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"levelId"[39m
+                    [36m>[39m
+                      [0mNivell[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"registrationOpen"[39m
+                    [36m>[39m
+                      [0mInscripció oberta[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [3...
+
+- Expected:
+"L'hora seleccionada és fora de l'horari d'obertura."
+
++ Received:
+undefined
+
+ ❯ src/activities/ActivitiesPage.test.tsx:1559:48
+    1557|     fireEvent.click(within(card).getByRole("button", { name: "PUBLICA"…
+    1558|     await waitFor(() => {
+    1559|       expect(fieldErrorText("activity-start")).toBe(OUTSIDE_OPENING_HO…
+       |                                                ^
+    1560|     });
+    1561|     expect(fieldErrorText("activity-date")).toBe(OUTSIDE_OPENING_HOURS…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > shows one switch per level with the help text: Teràpia is off, the progression levels on
+TestingLibraryElementError: Unable to find an element with the text: Els nivells fora de la progressió no compten per a les descripcions «… i sup.».. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mParàmetres[0m
+        [36m</h1>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"audit-last-change"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0múltim canvi: bookings.lateCancelThresholdMinutes · 11/08 · Jordi[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m—[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<a[39m
+            [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+          [36m>[39m
+            [0mamb històric[0m
+          [36m</a>[39m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card settings-card"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mClasses[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"settings-parameters"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana en curs (per gos)[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m2[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana següent[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m1[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mObertura d'inscripcions i canvi de setmana[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0mDiumenge 20:00[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:100:19
+     98|       "true",
+     99|     );
+    100|     expect(screen.getByText(HELP)).toBeVisible();
+       |                   ^
+    101|     expect(screen.getByRole("switch", { name: "Progressió: D" })).toHa…
+    102|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) > the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value
+TestingLibraryElementError: Unable to find an element with the text: Els nivells fora de la progressió no compten per a les descripcions «… i sup.».. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_17_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_17_"[39m
+    [36m>[39m
+      [0mNou nivell[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"catalog-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Idiomes"[39m
+        [33mclass[39m=[32m"catalog-locale-tabs"[39m
+        [33mrole[39m=[32m"tablist"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"true"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCA[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mES[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mEN[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"level-name"[39m
+        [36m>[39m
+          [0mNom[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"level-name"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"level-code"[39m
+          [36m>[39m
+            [0mCodi[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-code"[39m
+            [33mmaxlength[39m=[32m"8"[39m
+            [33mpattern[39m=[32m"[A-Za-z0-9_]+"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"level-capacity"[39m
+          [36m>[39m
+            [0mAforament[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-capacity"[39m
+            [33mmax[39m=[32m"99"[39m
+            [33mmin[39m=[32m"1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"number"[39m
+            [33mvalue[39m=[32m"5"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"level-color"[39m
+        [36m>[39m
+          [0mColor[0m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-color-picker"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F2B58C"[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#8FCE8F"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#C9CDD3"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F5D67A"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#85B8E8"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"level-color"[39m
+            [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"#F2B58C"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mDona dret a entrenament lliure[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Dona dret a entrenament lliure"[39m
+          [33mclass[39m=[32m"ah-switch"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mProgressió[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-describedby[39m=[32m"level-progression-help"[39m
+          [33maria-label[39m=[32m"Progressió"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"catalog-section__help"[39m
+        [33mid[39m=[32m"level-progression-help"[39m
+      [36m>[39m
+        [0mEls nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»[0m
+      [36m</p>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mActiva[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Activa"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:184:27
+    182|     // A new level is part of the progression by default (S05 §3).
+    183|     expect(progression).toHaveAttribute("aria-checked", "true");
+    184|     expect(within(create).getByText(HELP)).toBeVisible();
+       |                           ^
+    185|     fireEvent.change(within(create).getByLabelText("Nom"), { target: {…
+    186|     fireEvent.change(within(create).getByLabelText("Codi"), { target: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > S05 §2 the «Progressió» help names no club level, in ca, es and en
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Els nivells fora de la progressió no compten per a les descripcions «… i sup.».[39m
+Received:
+[31m  Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»[39m
+ ❯ src/catalogs/SettingsPage.test.tsx:262:20
+    260|       await renderSettings(locale);
+    261|       const help = document.getElementById("levels-progression-help");
+    262|       expect(help).toHaveTextContent(helps[locale]);
+       |                    ^
+    263|       // No level of the club (Teràpia, Pendent, D…) is named in a tex…
+    264|       for (const level of catalogState.levels) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > R-06-06 S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia)
+TestingLibraryElementError: Unable to find an accessible element with the role "switch" and name "Progressió: Pendent"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Paràmetres":
+  [36m<h1 />[39m
+
+  Name "Classes":
+  [36m<h2 />[39m
+
+  Name "Entrenaments lliures":
+  [36m<h2 />[39m
+
+  Name "Llista d'espera":
+  [36m<h2 />[39m
+
+  Name "Quotes, packs i remesa":
+  [36m<h2 />[39m
+
+  Name "Club i pistes":
+  [36m<h2 />[39m
+
+  Name "Comunicacions":
+  [36m<h2 />[39m
+
+  Name "Alta i consentiments":
+  [36m<h2 />[39m
+
+  Name "Recorreguts":
+  [36m<h2 />[39m
+
+  Name "Privacitat i auditoria":
+  [36m<h2 />[39m
+
+  Name "Processos automàtics":
+  [36m<h2 />[39m
+
+  Name "Mòduls":
+  [36m<h2 />[39m
+
+  Name "Pàgines del club":
+  [36m<h2 />[39m
+
+  Name "Nivells":
+  [36m<h2 />[39m
+
+  Name "Preguntes freqüents — pàgina «Info» de l'app":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+  [36m/>[39m
+
+  Name "Aforament: per nivell (classe = mínim dels seus nivells)Cadells 5 · A–D 5 · E–G 4 · Teràpia 1":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"#nivells"[39m
+  [36m/>[39m
+
+  Name "Nivells amb entrenament lliure:D · E · F · G":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"#nivells"[39m
+  [36m/>[39m
+
+  Name "Caducitat Pack 6 · Pack 103 mesos · 5 mesos":
+  [36m<a[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mhref[39m=[32m"/modalitats"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-p"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-a"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-b"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-c"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-d"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-e"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-f"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-g"[39m
+  [36m/>[39m
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Màx. classes setmana en curs (per gos)2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana en curs (per gos)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. classes setmana següent1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. classes setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Obertura d'inscripcions i canvi de setmanaDiumenge 20:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Obertura d'inscripcions i canvi de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Obertura d'inscripcions i canvi de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'anul·lació tardana («classe feta»)4 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'anul·lació tardana («classe feta»)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'anul·lació tardana («classe feta»)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Aforament per defecte (nivell sense valor)5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Aforament per defecte (nivell sense valor)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Aforament per defecte (nivell sense valor)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · hora07:30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · hora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · hora"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en risc · abast2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc · abast":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc · abast"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostrar instructor a l'abonatEl dia abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostrar instructor a l'abonat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostrar instructor a l'abonat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindars de coberturabé > 240% · ajustat 190–240% · manca oferta 150–190% · cal ampliar < 150%":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindars de cobertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindars de cobertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Antelació màxima (dies naturals)dia en curs + 3 dies":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Antelació màxima (dies naturals)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Antelació màxima (dies naturals)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. entrenaments/setmana (reinici dg 20:00)3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. entrenaments/setmana (reinici dg 20:00)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. entrenaments/setmana (reinici dg 20:00)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Anul·lació fins a2 h abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Anul·lació fins a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Anul·lació fins a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Durada del slot30 min":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Durada del slot":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Durada del slot"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Gossos alhora per pista1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Gossos alhora per pista":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Gossos alhora per pista"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llindar d'avís a la llista d'espera30 min abans":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llindar d'avís a la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llindar d'avís a la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. per classe3":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. per classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. per classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes per gos i setmana2":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes per gos i setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes per gos i setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Màx. llistes si ja ha fet classe1":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Màx. llistes si ja ha fet classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Màx. llistes si ja ha fet classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mode d'avís de la llista d'esperaAvís a tothom alhora":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mode d'avís de la llista d'espera":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mode d'avís de la llista d'espera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Entrada per gos (matrícula)100,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Entrada per gos (matrícula)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Entrada per gos (matrícula)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · primer mes20,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · primer mes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · primer mes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Quota d'inactivitat · mesos següents10,00 €":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Quota d'inactivitat · mesos següents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Quota d'inactivitat · mesos següents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Facturació en efectiuSemestral":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Facturació en efectiu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Facturació en efectiu"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Sèrie i numeració de rebuts2026-····":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Sèrie i numeració de rebuts":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Sèrie i numeració de rebuts"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Horari d'oberturadl–dg 07:00–22:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Horari d'obertura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Horari d'obertura"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "FestiusCap festiu":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Festius":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Festius"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Motius de bloqueig de reservesRebut impagat · Cartilla pendent · Decisió del club":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Motius de bloqueig de reserves":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Motius de bloqueig de reserves"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç públic de les activitats{websiteUrl}/activitat/{slug}":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enllaç públic de les activitats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enllaç públic de les activitats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enviament d'avisos de no assistència08:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Enviament d'avisos de no assistència":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Enviament d'avisos de no assistència"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Opcions del recordatori de classe1 h · 2 h · 4 h · 6 h · 12 h · 24 h":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Opcions del recordatori de classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Opcions del recordatori de classe"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís d'obertura de setmanaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís d'obertura de setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís d'obertura de setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís de recorregut nouNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís de recorregut nou":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís de recorregut nou"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Límit mensual d'SMS1000":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Límit mensual d'SMS":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Límit mensual d'SMS"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Altes públiquesSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Altes públiques":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Altes públiques"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat de les altes pendents30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat de les altes pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat de les altes pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Documentació obligatòria durant l'altaNo":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Documentació obligatòria durant l'alta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Documentació obligatòria durant l'alta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Autorització d'imatgeAutoritzo la publicació d'imatges dins les activitats del club.":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Autorització d'imatge":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Autorització d'imatge"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Caducitat del recorregut muntat7":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Caducitat del recorregut muntat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Caducitat del recorregut muntat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marge de col·locació d'obstacles1.5":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Marge de col·locació d'obstacles":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Marge de col·locació d'obstacles"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra el recorregut als abonatsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Mostra el recorregut als abonats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Mostra el recorregut als abonats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Publicació de muntatges pels instructorsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Publicació de muntatges pels instructors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Publicació de muntatges pels instructors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació de l'auditoria6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació de l'auditoria":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació de l'auditoria"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Conservació després de la baixa6":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Conservació després de la baixa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Conservació després de la baixa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Espera mínima abans de l'esborrat30":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Espera mínima abans de l'esborrat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Espera mínima abans de l'esborrat"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Obertura d'inscripcionsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Obertura d'inscripcions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Obertura d'inscripcions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Obertura d'inscripcions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Revisió de classes en riscSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Revisió de classes en risc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Revisió de classes en risc"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Revisió de classes en risc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Revisió de classes en risc"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avisos de no presentatsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avisos de no presentats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avisos de no presentats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avisos de no presentats":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avisos de no presentats"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "RecordatorisSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Recordatoris":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Recordatoris"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Recordatoris":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Recordatoris"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "VencimentsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Venciments":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Venciments"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Venciments":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Venciments"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Llista d'espera per tornsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Llista d'espera per torns":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Llista d'espera per torns"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Llista d'espera per torns":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Llista d'espera per torns"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pagaments pendentsSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Pagaments pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Pagaments pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Pagaments pendents":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Pagaments pendents"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Finalització de classesSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Finalització de classes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Finalització de classes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Finalització de classes":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Finalització de classes"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "NetejaSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Neteja":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Neteja"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Neteja":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Neteja"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Recordatori de remesaSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Recordatori de remesa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Recordatori de remesa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Recordatori de remesa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Recordatori de remesa"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Hora dels processos diaris06:00":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Hora dels processos diaris":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Hora dels processos diaris"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Hora dels processos diaris":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Hora dels processos diaris"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Avís als administradors si un procés fallaSí":
+  [36m<button[39m
+    [33mclass[39m=[32m"settings-parameter__main"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra l'històric de Avís als administradors si un procés falla":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra l'històric de Avís als administradors si un procés falla"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita Avís als administradors si un procés falla":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita Avís als administradors si un procés falla"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pàgina":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nou nivell":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-p":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-p"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-a":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-a"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-b":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-b"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-c":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-c"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-d":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-d"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-e":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-e"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-f":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-f"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-g":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-g"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Nova pregunta":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-visitors":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-visitors"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-off-lead":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-off-lead"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-cancel":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-cancel"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina faq-competitions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina faq-competitions"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Preguntes freqüents":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Preguntes freqüents"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Notificacions push":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Notificacions push"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enllaç a Learn":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enllaç a Learn"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: Cadells":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: Cadells"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: A":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: A"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: B":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: B"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: C":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: C"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: D":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: D"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: E":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: E"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: F":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: F"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: G":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: G"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Progressió: Teràpia":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: Teràpia"[39m
+    [33mclass[39m=[32m"ah-switch"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Carregant"[39m
+    [33mclass[39m=[32m"ah-skeleton"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Nivells del club":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<table[39m
+    [33mclass[39m=[32m"catalog-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Nivells del club":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  Name "Preguntes freqüents":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Nom Codi Color Aforament Entrenament lliure Progressió Actiu":
+  [36m<tr />[39m
+
+  Name "Cadells09/09 · Jordi amb històric P #F5D67A 5 no Progressió: Cadells sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric A #F2B58C 5 no Progressió: A sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric B #F2B58C 5 no Progressió: B sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric C #8FCE8F 5 no Progressió: C sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric D #8FCE8F 5 sí Progressió: D sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric E #85B8E8 4 sí Progressió: E sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric F #85B8E8 4 sí Progressió: F sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric G #C9CDD3 4 sí Progressió: G sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric T #C9CDD3 1 no Progressió: Teràpia sí":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Categoria Pregunta":
+  [36m<tr />[39m
+
+  Name "Convivència al club Puc venir amb més gent al club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Convivència al club El gos pot anar deslligat pel club?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe Què he de fer si no puc venir a una classe?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Competicions Què cal per poder participar a competicions d'agility?":
+  [36m<tr[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Nom":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Codi":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Aforament":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Progressió":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Actiu":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Categoria":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pregunta":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<th[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Cadells09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "P":
+  [36m<td />[39m
+
+  Name "#F5D67A":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "Progressió: Cadells":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "A09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "A":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "Progressió: A":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "B09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "B":
+  [36m<td />[39m
+
+  Name "#F2B58C":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "Progressió: B":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "C09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "C":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "Progressió: C":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "D09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "D":
+  [36m<td />[39m
+
+  Name "#8FCE8F":
+  [36m<td />[39m
+
+  Name "5":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "Progressió: D":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "E09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "E":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "Progressió: E":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "F09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "F":
+  [36m<td />[39m
+
+  Name "#85B8E8":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "Progressió: F":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "G09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "G":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "4":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "Progressió: G":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Teràpia09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  Name "T":
+  [36m<td />[39m
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  Name "1":
+  [36m<td />[39m
+
+  Name "no":
+  [36m<td />[39m
+
+  Name "Progressió: Teràpia":
+  [36m<td />[39m
+
+  Name "sí":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "Puc venir amb més gent al club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Convivència al club":
+  [36m<td />[39m
+
+  Name "El gos pot anar deslligat pel club?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Reserves de classe":
+  [36m<td />[39m
+
+  Name "Què he de fer si no puc venir a una classe?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  Name "Competicions":
+  [36m<td />[39m
+
+  Name "Què cal per poder participar a competicions d'agility?":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"catalog-section__help"[39m
+    [33mid[39m=[32m"levels-progression-help"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"catalog-section__help"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mParàmetres[0m
+        [36m</h1>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"audit-last-change"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0múltim canvi: bookings.lateCancelThresholdMinutes · 11/08 · Jordi[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m—[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<a[39m
+            [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+          [36m>[39m
+            [0mamb històric[0m
+          [36m</a>[39m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card settings-card"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mClasses[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"settings-parameters"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana en curs (per gos)[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m2[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana següent[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m1[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mObertura d'inscripcions i canvi de setmana[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0mDiumenge 20:00[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Obertura d'inscripcions i canvi de setmana"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:275:19
+    273|   it("R-06-06 S05 §12 B32 the mock levels include «Pendent», outside t…
+    274|     await renderSettings();
+    275|     expect(screen.getByRole("switch", { name: "Progressió: Pendent" })…
+       |                   ^
+    276|       "aria-checked",
+    277|       "false",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  aria-checked="true"
+  aria-describedby="levels-progression-help"
+  aria-label="Progressió: D"
+  class="ah-switch ah-switch--checked"
+  role="switch"
+  type="button"
+/>[39m
+ ❯ src/catalogs/SettingsPage.test.tsx:291:67
+    289|     fireEvent.click(screen.getByRole("switch", { name: "Progressió: D"…
+    290|     fireEvent.click(screen.getByRole("switch", { name: "Progressió: E"…
+    291|     expect(screen.getByRole("switch", { name: "Progressió: D" })).toBe…
+       |                                                                   ^
+    292|     expect(screen.getByRole("switch", { name: "Progressió: E" })).toBe…
+    293|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > AGENTS rule 6: the catalog row buttons are named after the row's name, not its id
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Edita Teràpia"
+
+Here are the accessible roles:
+
+  cell:
+
+  Name "Arrossega per reordenar":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------cell:
+
+  Name "Teràpia09/09 · Jordi amb històric":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "amb històric":
+  [36m<a[39m
+    [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+  [36m/>[39m
+
+  --------------------------------------------------cell:
+
+  Name "T":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "#C9CDD3":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "1":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "no":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "Progressió: Teràpia":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Progressió: Teràpia":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-describedby[39m=[32m"levels-progression-help"[39m
+    [33maria-label[39m=[32m"Progressió: Teràpia"[39m
+    [33mclass[39m=[32m"ah-switch"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------cell:
+
+  Name "sí":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Edita level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina level-t":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina level-t"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<tr[39m
+  [33mdraggable[39m=[32m"true"[39m
+[36m>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__drag"[39m
+    [33mtitle[39m=[32m"Arrossega per reordenar"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-swap"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"catalog-level-name"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mTeràpia[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"audit-last-change"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m09/09 · Jordi[0m
+        [36m</span>[39m
+        [0m [0m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+        [36m>[39m
+          [0m—[0m
+        [36m</span>[39m
+        [0m [0m
+        [36m<a[39m
+          [33mhref[39m=[32m"/auditoria?entityType=Level&entityId=level-t"[39m
+        [36m>[39m
+          [0mamb històric[0m
+        [36m</a>[39m
+      [36m</span>[39m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mT[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"catalog-color-value"[39m
+      [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"catalog-color-value__dot"[39m
+      [36m/>[39m
+      [0m#C9CDD3[0m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0m1[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+    [36m>[39m
+      [0mno[0m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"false"[39m
+      [33maria-describedby[39m=[32m"levels-progression-help"[39m
+      [33maria-label[39m=[32m"Progressió: Teràpia"[39m
+      [33mclass[39m=[32m"ah-switch"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [0msí[0m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"catalog-table__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Edita level-t"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Elimina level-t"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/SettingsPage.test.tsx:333:40
+    331|   it("AGENTS rule 6: the catalog row buttons are named after the row's…
+    332|     const table = await renderSettings();
+    333|     expect(within(levelRow("Teràpia")).getByRole("button", { name: "Ed…
+       |                                        ^
+    334|     expect(within(levelRow("D")).getByRole("button", { name: "Elimina …
+    335|     expect(within(table).queryByRole("button", { name: /level-/u })).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  src/catalogs/SettingsPage.test.tsx > T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review > S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/catalogs/SettingsPage.test.tsx:348:88
+    346|     const card = table.closest(".catalog-table-card");
+    347|     expect(card).not.toBeNull();
+    348|     expect(card?.contains(document.getElementById("levels-progression-…
+       |                                                                                        ^
+    349|
+    350|     const button = screen.getByRole("button", { name: "Nou nivell" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"calendar-chip--disabled"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  calendar-chip--disabled[39m
+Received:
+[31m  calendar-chip calendar-chip--select[39m
+ ❯ src/planning/CalendarPage.test.tsx:1521:30
+    1519|     for (const editor of editors) {
+    1520|       expect(editor).toBeDisabled();
+    1521|       expect(chipOf(editor)).toHaveClass("calendar-chip--disabled");
+       |                              ^
+    1522|     }
+    1523|     expect(sunday.state).toBe("ACTIVE");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  aria-pressed="false"
+  class="planning-chip"
+  disabled=""
+  type="button"
+/>[39m
+ ❯ src/planning/CalendarPage.test.tsx:1566:20
+    1564|       name: "Exempta de la revisió de les 7:30",
+    1565|     });
+    1566|     expect(exempt).toBeEnabled();
+       |                    ^
+    1567|     expect(exempt).toHaveAttribute("aria-pressed", "false");
+    1568|     fireEvent.click(exempt);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression
+AssertionError: expected [ 'Cadells', 'A', 'B', 'C', 'D', …(3) ] to deeply equal [ 'A', 'B', 'C', 'D', 'E', 'F', 'G' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"planning-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPlantilles[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mdl–dv: «Setmana A»[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mDissabtes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-header__actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mDuplica[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFranja[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCrear classe[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+                [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mQuadre setmanal de la plantilla «Setmana A»[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                    [36m/>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                        [33mtype[39m=[32m"button"[3...
+
+- Expected
++ Received
+
+@@ -1,6 +1,7 @@
+  [
++   "Cadells",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+
+ ❯ src/planning/TemplatesPage.test.tsx:670:33
+    668|     const without = await screen.findByRole("table", { name: title });
+    669|     await waitFor(() => {
+    670|       expect(levelsOf(without)).toEqual(["A", "B", "C", "D", "E", "F",…
+       |                                 ^
+    671|     });
+    672|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers
+AssertionError: expected [ Array(3) ] to deeply equal [ Array(4) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"planning-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPlantilles[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mdl–dv: «Setmana A»[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mDissabtes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-header__actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mDuplica[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFranja[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCrear classe[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+                [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mQuadre setmanal de la plantilla «Setmana A»[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                    [36m/>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                        [33mtype[39m=[32m"button"[3...
+
+- Expected
++ Received
+
+  [
+    "PATCH sent",
+    "PATCH answered",
+    "DELETE sent",
+-   "PATCH sent",
+  ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:723:28
+    721|     queue.release();
+    722|     await waitFor(() => {
+    723|       expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "D…
+       |                            ^
+    724|     });
+    725|     await waitFor(() => {
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent
+AssertionError: expected [ Array(3) ] to deeply equal [ Array(4) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"planning-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPlantilles[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mdl–dv: «Setmana A»[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mDissabtes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-header__actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mDuplica[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFranja[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCrear classe[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+                [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mQuadre setmanal de la plantilla «Setmana A»[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                    [36m/>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                        [33mtype[39m=[32m"button"[3...
+
+- Expected
++ Received
+
+  [
+    "PATCH sent",
+    "PATCH answered",
+    "DELETE sent",
+-   "PATCH sent",
+  ]
+
+ ❯ src/planning/TemplatesPage.test.tsx:755:28
+    753|     queue.release();
+    754|     await waitFor(() => {
+    755|       expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "D…
+       |                            ^
+    756|     });
+    757|     // The class is still there, with both changes saved, and the DELE…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-checked"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-checked") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-checked="true"[39m
+Received:
+[31m  aria-checked="false"[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"planning-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPlantilles[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mdl–dv: «Setmana A»[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mDissabtes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-header__actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mDuplica[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFranja[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCrear classe[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+                [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mQuadre setmanal de la plantilla «Setmana A»[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                    [36m/>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                        [33mtype[39m=[32m"button"[3...
+ ❯ src/planning/TemplatesPage.test.tsx:788:70
+    786|     // The ring change was built on the refused one: dropped, and its …
+    787|     await waitFor(() => {
+    788|       expect(within(card).getByRole("radio", { name: "Carretera" })).t…
+       |                                                                      ^
+    789|         "aria-checked",
+    790|         "true",
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
+
+exit 1

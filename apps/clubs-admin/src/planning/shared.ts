@@ -106,6 +106,18 @@ export function errorCode(error: unknown): string | undefined {
   return isApiError(error) ? error.code : undefined;
 }
 
+/**
+ * The rejection of a D3 edit-mode change the PATCH queue dropped unsent: it was built on a change
+ * that failed or on a class that was removed. The form puts its fields back and keeps the message
+ * of the change that caused it.
+ */
+export class DroppedChangeError extends Error {
+  constructor() {
+    super("Change dropped: it was built on a failed change or a removed class");
+    this.name = "DroppedChangeError";
+  }
+}
+
 /** The first field of a `VALIDATION_ERROR`: `details.fieldErrors[]` or `details.field` (§5). */
 export function fieldOfValidationError(error: unknown): string | undefined {
   if (!isApiError(error, "VALIDATION_ERROR")) return undefined;

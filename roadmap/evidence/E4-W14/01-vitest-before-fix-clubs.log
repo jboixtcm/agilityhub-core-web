@@ -1,0 +1,281 @@
+$ (cd apps/clubs && pnpm exec vitest run src/activities/activities.test.tsx src/today/OverviewPage.test.tsx)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/activities/activities.test.tsx (28 tests | 4 failed) 828ms
+   ❯ T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 (19)
+     × draws the 04 block with the exact badges; the full row with waitlist stays tappable 111ms
+     × R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes» 25ms
+   ❯ T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) (2)
+     × 03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields 8ms
+   ❯ T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours (1)
+     × 04: «{hh:mm}–{hh:mm}» when startTime and endTime are both present, only «{hh:mm}» without an end 7ms
+ ❯ src/today/OverviewPage.test.tsx (9 tests | 2 failed) 10644ms
+   ❯ T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) (2)
+     × names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell 10062ms
+   ❯ T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list (1)
+     × ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria» 100ms
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 31 passed (37)
+   Start at  03:56:42
+   Duration  11.48s (tests 88%, environment 4%, transform 4%, import 2%, setup 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Taller de contactes · ds 22 · 10:00–12:00Completa · ⏳2",
+-   "Seminari de handling · ds 12/09 · 9:00–13:006 places",
++   "Taller de contactes · ds 22 · 10:00Completa · ⏳2",
++   "Seminari de handling · ds 12/09 · 9:006 places",
+  ]
+
+ ❯ src/activities/activities.test.tsx:84:29
+     82|     const block = await screen.findByRole("region", { name: "Activitat…
+     83|     // R-07-13: start–end when the activity has both (E4-W14; the mock…
+     84|     expect(rowTexts(block)).toEqual([
+       |                             ^
+     85|       "Taller de contactes · ds 22 · 10:00–12:00Completa · ⏳2",
+     86|       "Seminari de handling · ds 12/09 · 9:00–13:006 places",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»
+AssertionError: expected 'Taller de contactes · ds 22 · 10:00Co…' to be 'Taller de contactes · ds 22 · 10:00–1…' // Object.is equality
+
+Expected: "Taller de contactes · ds 22 · 10:00–12:00Completa"
+Received: "Taller de contactes · ds 22 · 10:00Completa"
+
+ ❯ src/activities/activities.test.tsx:105:32
+    103|     );
+    104|     const block = await screen.findByRole("region", { name: "Activitat…
+    105|     expect(rowTexts(block)[0]).toBe("Taller de contactes · ds 22 · 10:…
+       |                                ^
+    106|     expect(within(block).queryByRole("link", { name: /Taller de contac…
+    107|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) > 03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields
+AssertionError: expected 'Nit d\'agility · dg 9 · 0:00Obertes' to be 'Nit d\'agility · dg 9 · 0:00–2:00Ober…' // Object.is equality
+
+Expected: "Nit d'agility · dg 9 · 0:00–2:00Obertes"
+Received: "Nit d'agility · dg 9 · 0:00Obertes"
+
+ ❯ src/activities/activities.test.tsx:726:61
+    724|       "Nit d'agilityinscritaDiumenge 9 · 0:00–2:00 · totes les pistes",
+    725|     );
+    726|     expect(block?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+       |                                                             ^
+    727|       "Nit d'agility · dg 9 · 0:00–2:00Obertes",
+    728|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/activities/activities.test.tsx > T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours > 04: «{hh:mm}–{hh:mm}» when startTime and endTime are both present, only «{hh:mm}» without an end
+AssertionError: expected 'Seminari de matí · ds 22 · 9:00Obertes' to be 'Seminari de matí · ds 22 · 9:00–13:00…' // Object.is equality
+
+Expected: "Seminari de matí · ds 22 · 9:00–13:00Obertes"
+Received: "Seminari de matí · ds 22 · 9:00Obertes"
+
+ ❯ src/activities/activities.test.tsx:785:60
+    783|     );
+    784|     const [both, startOnly] = await screen.findAllByRole("link");
+    785|     expect(both?.textContent.replace(/\s+/gu, " ").trim()).toBe(
+       |                                                            ^
+    786|       "Seminari de matí · ds 22 · 9:00–13:00Obertes",
+    787|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell
+TestingLibraryElementError: Unable to find an element with the text: Marc i Núria. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<dl[39m
+      [33mclass[39m=[32m"day-drawer"[39m
+    [36m>[39m
+      [36m<dt>[39m
+        [0mData i hora[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mdl 3 d’agost · 18:50–19:50[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mPista[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMuntanya[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInstructor[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMarc, Núria[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInscrits/places[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0m5/5 +2[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mEstat[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--success"[39m
+        [36m>[39m
+          [0mactiva[0m
+        [36m</span>[39m
+      [36m</dd>[39m
+    [36m</dl>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<dl[39m
+      [33mclass[39m=[32m"day-drawer"[39m
+    [36m>[39m
+      [36m<dt>[39m
+        [0mData i hora[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mdl 3 d’agost · 18:50–19:50[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mPista[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMuntanya[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInstructor[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0mMarc, Núria[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mInscrits/places[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [0m5/5 +2[0m
+      [36m</dd>[39m
+      [36m<dt>[39m
+        [0mEstat[0m
+      [36m</dt>[39m
+      [36m<dd>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--success"[39m
+        [36m>[39m
+          [0mactiva[0m
+        [36m</span>[39m
+      [36m</dd>[39m
+    [36m</dl>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/today/OverviewPage.test.tsx:227:33
+    225|
+    226|     const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    227|     expect(await within(drawer).findByText("Marc i Núria")).toBeVisibl…
+       |                                 ^
+    228|     expect(within(drawer).getByText("Muntanya")).toBeVisible();
+    229|     // The tapped cell says Central and Marc: neither is read any more.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list > ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»
+AssertionError: expected [ 'Instructor', 'Marc, Núria' ] to deeply equal [ 'Instructors', 'Marc i Núria' ]
+
+- Expected
++ Received
+
+  [
+-   "Instructors",
+-   "Marc i Núria",
++   "Instructor",
++   "Marc, Núria",
+  ]
+
+ ❯ src/today/OverviewPage.test.tsx:266:58
+    264|   it("ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instruc…
+    265|     await expect(instructorsRow(["Marc"], "ca")).resolves.toEqual(["In…
+    266|     await expect(instructorsRow(["Marc", "Núria"], "ca")).resolves.toE…
+       |                                                          ^
+    267|       "Instructors",
+    268|       "Marc i Núria",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+exit 1

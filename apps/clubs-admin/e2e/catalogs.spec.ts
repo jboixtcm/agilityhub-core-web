@@ -121,14 +121,18 @@ test.describe("E2-W04 club catalogs", () => {
     await page.getByRole("dialog", { name: "Nou instructor" }).getByLabel("Tanca").click();
 
     const administratorTable = page.getByRole("table", { name: "Administradors del club" });
-    await administratorTable.getByRole("button", { name: "Elimina membership-laura" }).click();
+    await administratorTable
+      .getByRole("button", { name: "Elimina Laura Serra Vidal (Duna)" })
+      .click();
     await page
       .getByRole("dialog", { name: "Elimina el membre de l'equip" })
       .getByRole("button", { name: "Elimina" })
       .click();
     await expect(administratorTable.getByText("Laura Serra Vidal (Duna)")).toHaveCount(0);
 
-    await administratorTable.getByRole("button", { name: "Elimina membership-marc" }).click();
+    await administratorTable
+      .getByRole("button", { name: "Elimina Marc Prats García (Chun-li)" })
+      .click();
     await page
       .getByRole("dialog", { name: "Elimina el membre de l'equip" })
       .getByRole("button", { name: "Elimina" })
@@ -162,7 +166,8 @@ test.describe("E2-W04 club catalogs", () => {
     await expect(page.locator(".catalog-plan-preview")).toContainText("Text de prova en viu");
 
     const plansTable = page.getByRole("table", { name: "Modalitats i tarifes" });
-    await plansTable.getByRole("button", { name: "Edita plan-member" }).click();
+    // AGENTS rule 6: the row buttons are named after the row, not its id (E4-W14).
+    await plansTable.getByRole("button", { exact: true, name: "Edita Abonat" }).click();
     const dialog = page.getByRole("dialog", { name: "Edita Abonat" });
     await expect(dialog.getByLabel("Mode de facturació")).toHaveValue("MONTHLY_FEE");
     await dialog.getByLabel("Import", { exact: true }).fill("70");

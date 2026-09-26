@@ -323,6 +323,29 @@ function calendarGrid(page: Page): Locator {
   return page.getByRole("table", { name: /^Calendari de classes · del /u });
 }
 
+/**
+ * The cells of a schedule grid whose text contains `text`, counted per column header («ds 3»): each
+ * body row holds one slot per header, in the same order.
+ */
+async function cellsByColumn(grid: Locator, text: string): Promise<Record<string, number>> {
+  return grid.evaluate((table, wanted) => {
+    const headers = [...table.querySelectorAll("thead th")].map((header) =>
+      header.textContent.trim(),
+    );
+    const counts: Record<string, number> = {};
+    for (const row of table.querySelectorAll("tbody tr")) {
+      row.querySelectorAll("td.ah-schedule-grid__slot").forEach((slot, index) => {
+        const matching = [...slot.querySelectorAll(".ah-schedule-cell")].filter((cell) =>
+          cell.textContent.includes(wanted),
+        ).length;
+        const header = headers[index] ?? String(index);
+        if (matching > 0) counts[header] = (counts[header] ?? 0) + matching;
+      });
+    }
+    return counts;
+  }, text);
+}
+
 function admin(): Page {
   if (adminPage === undefined) throw new Error("The administrator session is not available");
   return adminPage;
@@ -416,10 +439,14 @@ test("T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by i
 
   // D3 reads one list per kind (WEEKDAYS, SATURDAY): the seed's three templates between them.
   const templateNames = new Set<string>();
+  const templateIds = new Map<string, string>();
   const collectTemplates = async (response: Response) => {
     if (!isCall("GET", /\/api\/v1\/week-templates$/u)(response)) return;
-    const body = (await response.json()) as { items: { name: string }[] };
-    for (const item of body.items) templateNames.add(item.name);
+    const body = (await response.json()) as { items: { id: string; name: string }[] };
+    for (const item of body.items) {
+      templateNames.add(item.name);
+      templateIds.set(item.name, item.id);
+    }
   };
   page.on("response", collectTemplates);
   const candidatesResponse = page.waitForResponse(
@@ -487,9 +514,21 @@ test("T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by i
   await confirmation.getByRole("button", { name: "GENERAR CLASSES" }).click();
   const generated = await generation;
   expect(generated.status()).toBe(200);
+  // E4-W14 (E4-W05 review #5): the week is generated from «Setmana A» and the Saturday template.
+  const generationBody = generated.request().postDataJSON() as Record<string, unknown>;
+  expect(templateIds.get("Dissabtes")).toBeDefined();
+  expect(generationBody).toEqual({
+    saturdayTemplateId: templateIds.get("Dissabtes"),
+    weekdayTemplateId: templateIds.get("Setmana A"),
+  });
   const outcome = (await generated.json()) as { classCount: number; skipped: unknown[] };
   expect(outcome.classCount).toBeGreaterThan(0);
-  evidence.generation = { status: generated.status(), ...outcome, week: generatedWeek };
+  evidence.generation = {
+    body: generationBody,
+    status: generated.status(),
+    ...outcome,
+    week: generatedWeek,
+  };
   await expect(
     page.getByText(new RegExp(`^${String(outcome.classCount)} classes generades`, "u")),
   ).toBeVisible();
@@ -769,9 +808,16 @@ test("T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every r
     "Activitat · Torneig d'Estiu 2026 · totes les pistes",
   );
   await expect(tournamentCells).toContainText("totes les pistes · ");
+  // E4-W14 (E4-W05 review #7): that one cell is on the Torneig's Saturday, not another day.
+  const saturdayColumn = `${caShortDay(tournamentSaturday)} ${dayOfMonth(tournamentSaturday)}`;
+  const tournamentByColumn = await cellsByColumn(week, "Activitat · Torneig d'Estiu 2026");
+  const tournamentColumns = Object.entries(tournamentByColumn);
+  expect(tournamentColumns).toHaveLength(1);
+  expect(tournamentColumns[0]?.[0]).toMatch(new RegExp(`^${saturdayColumn}(\\D|$)`, "u"));
+  expect(tournamentColumns[0]?.[1]).toBe(1);
   await tournamentCells.scrollIntoViewIfNeeded();
   await screenshot(page, "D4-activitat-totes-les-pistes-core-1280.png");
-  evidence.tournamentSaturday = tournamentSaturday;
+  evidence.tournamentSaturday = { cellsByColumn: tournamentByColumn, date: tournamentSaturday };
 
   // A new seminar on the Saturday of the week generated in (a), over the «Dissabtes» class.
   await navigateSpa(page, "/activitats");
@@ -869,7 +915,8 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   await navigateClubRoute(member, "/reservar");
   const block = member.getByRole("region", { name: "Activitats" });
   const seminarRow = block.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
-  const seminarWhen = `${seminarTitle} · ${caShortDay(seminarSaturday)} ${dayOfMonth(seminarSaturday)}/${seminarSaturday.slice(5, 7)} · 18:30`;
+  // E4-W14 (R-07-13): the 04 row prints the start–end of an activity that has both.
+  const seminarWhen = `${seminarTitle} · ${caShortDay(seminarSaturday)} ${dayOfMonth(seminarSaturday)}/${seminarSaturday.slice(5, 7)} · 18:30–20:30`;
   await expect(seminarRow).toContainText(seminarWhen);
   await expect(seminarRow).toContainText("5 places");
   await screenshot(member, "04-activitats-core-375.png");
@@ -891,6 +938,14 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   const row = reservations.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
   await expect(row).toContainText("inscrita");
   await expect(row).toContainText(`${saturdayOn03(seminarSaturday, "ca")}18:30–20:30 · Central`);
+  // E4-W14 (E4-W05 review #7, T-07-30 «(no dog)»): an activity row names no dog: the whole row
+  // is the title, the state and «{day} · {hh:mm}–{hh:mm} · {place}», nothing else.
+  await expect(row).toHaveText(
+    new RegExp(
+      `^\\s*${escapeRegExp(seminarTitle)}\\s*inscrita\\s*${escapeRegExp(`${saturdayOn03(seminarSaturday, "ca")}18:30–20:30 · Central`)}\\s*$`,
+      "u",
+    ),
+  );
   evidence.row03Ca = (await row.textContent())?.replaceAll(/\s+/gu, " ").trim() ?? null;
   await screenshot(member, "03-inscrita-core-375.png");
   await row.click();
@@ -1048,7 +1103,16 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
     .click();
   expect((await cancelled).status()).toBe(200);
   await expect(member.getByText("Inscripción anulada")).toBeVisible();
+  // E4-W14 (E4-W05 review #7): after her own cancellation the row leaves «Mis reservas» (checked
+  // once 03 has read her activities).
+  const activitiesRead = member.waitForResponse(isCall("GET", /\/api\/v1\/me\/activities$/u));
+  await navigateClubRoute(member, "/inici");
+  expect((await activitiesRead).status()).toBe(200);
+  await expect(
+    member.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") }),
+  ).toHaveCount(0);
   // Registered again, so that the club's cancellation below reaches a live registration.
+  await navigateClubRoute(member, `/activitats/${seminarId}`);
   registration = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
   await member.getByRole("button", { name: "INSCRÍBEME" }).click();
   const again = await registration;
@@ -1073,9 +1137,22 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
 
   // A second place: the head of the queue again (FIFO), never the members who joined last.
   const page = admin();
+  // E4-W14 (E4-W05 review #7): the admin reads the list in es too: the member's chip «en lista de
+  // espera (n)», then back to ca for the rest of the flow.
+  const language = page.getByRole("combobox", { name: "Idioma" });
+  await language.selectOption("es");
   const before = await registrantsOf(page, handlingId, async () => {
     await openFresh(page, `/activitats/${handlingId}/inscrits`);
   });
+  const joinedListed = before.find((item) => item.registrationId === joinedRegistration.id);
+  if (joinedListed === undefined) throw new Error("The es member is not on the waitlist");
+  await expect(
+    page.getByRole("table").getByRole("row").filter({ hasText: joinedListed.member.fullName }),
+  ).toContainText(`en lista de espera (${String(joinedListed.position)})`);
+  await screenshot(page, "D7-inscrits-llista-espera-core-es-1280.png");
+  evidence.waitlistChipEs = `en lista de espera (${String(joinedListed.position)})`;
+  await language.selectOption("ca");
+  await expect(language).toHaveValue("ca");
   const head = before
     .filter((item) => item.state === "WAITLISTED")
     .sort((left, right) => (left.position ?? 0) - (right.position ?? 0))[0];

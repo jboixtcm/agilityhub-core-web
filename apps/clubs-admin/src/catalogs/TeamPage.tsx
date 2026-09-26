@@ -421,6 +421,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
           onRemove={(item) => {
             setRemoving({ item, kind: "instructor" });
           }}
+          rowName={(item) => memberLabel(memberById.get(item.memberId ?? ""), item.shortName)}
           rows={instructors.items}
         />
       </section>
@@ -472,6 +473,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
           onRemove={(item) => {
             setRemoving({ item, kind: "administrator" });
           }}
+          rowName={(item) => memberLabel(memberById.get(item.memberId), item.shortName)}
           rows={administrators.items.map((item) => ({ ...item, id: item.membershipId }))}
         />
       </section>

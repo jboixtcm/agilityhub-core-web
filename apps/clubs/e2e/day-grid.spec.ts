@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { expect, type Locator, test, type Page } from "@playwright/test";
@@ -181,6 +181,33 @@ test.describe("T-06-29 screen 23 «Visió global» (/instructor/avui)", () => {
     expect((await cancellation).postDataJSON()).toEqual({});
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(grid.getByText("Bloq.")).toHaveCount(0);
+  });
+});
+
+test.describe("T-06-29 E4-W14 screen 23's class drawer names its instructors", () => {
+  const drawerEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W14");
+
+  test.beforeAll(() => {
+    mkdirSync(drawerEvidence, { recursive: true });
+  });
+
+  test("the «Instructor» row follows the count of instructorNames, the names as a list", async ({
+    page,
+  }) => {
+    await login(page, "instructor", "/instructor/avui");
+    await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await grid.getByRole("button", { name: /B\+C/u }).click();
+    const drawer = page.getByRole("dialog", { name: "B+C" });
+    await expect(drawer.getByText("dl 3 d’agost · 18:50–19:50")).toBeVisible();
+    // One instructor in the mock class: the singular label.
+    const term = drawer.getByRole("term").filter({ hasText: /^Instructors?$/u });
+    await expect(term).toHaveText("Instructor");
+    await expect(term.locator("xpath=following-sibling::dd[1]")).toHaveText("Marc");
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(drawerEvidence, "23-calaix-instructor-375.png"),
+    });
   });
 });
 

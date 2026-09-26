@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import brandingFixture from "../../api-client/src/mocks/fixtures/branding-canic.json";
+import minimFixture from "../../api-client/src/mocks/fixtures/branding-minim.json";
 
 import { type Branding, BrandingProvider, resolveBrandingLogo, useBranding } from "./branding";
 
@@ -73,6 +74,31 @@ describe("T-02-05 BrandingProvider", () => {
       showName: true,
       src: undefined,
     });
+  });
+
+  it("E4-W14 a club without assets: `/branding` sends null logos (api E5-T16), read as absent in both placements", () => {
+    // The minimal club's fixture sends the three keys as `null`, as the api does.
+    expect(minimFixture.theme).toMatchObject({ logoDarkUrl: null, logoUrl: null, markUrl: null });
+    const theme: Branding["theme"] = { ...minimFixture.theme, mode: "dark" };
+    const initial = { kind: "initial", showName: true, src: undefined };
+    expect(resolveBrandingLogo(theme, { placement: "compact" })).toEqual(initial);
+    expect(resolveBrandingLogo(theme, { placement: "full" })).toEqual(initial);
+    expect(resolveBrandingLogo({ ...theme, mode: "light" }, { placement: "full" })).toEqual(
+      initial,
+    );
+    // A null dark logo falls back to the light one; a null logo to the mark.
+    const canic = canicBranding().theme;
+    expect(resolveBrandingLogo({ ...canic, logoDarkUrl: null }, { placement: "full" })).toEqual({
+      kind: "full",
+      showName: false,
+      src: canic.logoUrl,
+    });
+    expect(
+      resolveBrandingLogo({ ...canic, logoDarkUrl: null, logoUrl: null }, { placement: "full" }),
+    ).toEqual({ kind: "mark", showName: true, src: canic.markUrl });
+    expect(resolveBrandingLogo({ ...canic, markUrl: null }, { placement: "compact" })).toEqual(
+      initial,
+    );
   });
 
   it("applies theme tokens and exposes public branding", () => {

@@ -10,7 +10,7 @@
       "loadError": "No s'ha pogut carregar la classe.",
       "when": "Data i hora",
       "ring": "Pista",
-      "instructors": "Instructor",
+      "instructors": "{count, plural, one {Instructor} other {Instructors}}",
       "occupancy": "Inscrits/places",
       "state": "Estat",
       "risk": "En risc"

@@ -621,12 +621,22 @@ export const planningHandlers = [
     if (templateId === null && weekId === null) {
       return validationError("templateId", "REQUIRED");
     }
+    // R-06-06 / S05 §3: one row per active level of the progression, in the catalog's order and
+    // under its current name; a level outside it (Teràpia, Pendent) has no row. The figures are
+    // the D3 mockup's: a level put into the progression later has none here, so it gets no row.
+    const levels = catalogState.levels
+      .filter((level) => level.active && level.progression)
+      .sort((left, right) => left.order - right.order)
+      .flatMap((level) => {
+        const row = coverageFixture.levels.find((item) => item.levelId === level.id);
+        return row === undefined ? [] : [{ ...row, name: level.name }];
+      });
     return HttpResponse.json(
       weekId === null
-        ? coverageFixture
+        ? { ...coverageFixture, levels }
         : {
             ...coverageFixture,
-            levels: coverageFixture.levels.map((level) => ({ ...level, booked: level.dogsActive })),
+            levels: levels.map((level) => ({ ...level, booked: level.dogsActive })),
             scope: "WEEK" as const,
           },
     );

@@ -109,7 +109,10 @@ const level = (
   version: 1,
 });
 
-/** S05 seed: «Teràpia» is outside the level progression (ruling E29, `Level.progression`). */
+/**
+ * S05 seed: «Teràpia» and «Pendent» (B32: dogs not yet assessed, no classes) are outside the level
+ * progression (ruling E29, `Level.progression`).
+ */
 const initialLevels: Level[] = [
   level("P", "Cadells", ringColor(3), 5, 0, false, "Cachorros"),
   level("A", "A", ringColor(0), 5, 10, false),
@@ -120,6 +123,7 @@ const initialLevels: Level[] = [
   level("F", "F", ringColor(4), 4, 60, true),
   level("G", "G", ringColor(2), 4, 70, true),
   level("T", "Teràpia", ringColor(2), 1, 80, false, "Terapia", false),
+  level("PENDENT", "Pendent", ringColor(2), 5, 90, false, "Pendiente", false),
 ];
 
 const initialInstructors: Instructor[] = [

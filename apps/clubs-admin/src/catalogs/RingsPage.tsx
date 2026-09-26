@@ -314,6 +314,7 @@ export function RingsPage({ client }: { client: ApiClient }) {
           setRemoveBlocked(false);
         }}
         onReorder={(source, target) => void reorder(source, target)}
+        rowName={(ring) => ring.name}
         rows={data.items}
       />
       <Modal

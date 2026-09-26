@@ -121,7 +121,15 @@ function MultiChip({
     }
   };
   return (
-    <div className="calendar-chip calendar-chip--multi" onBlur={closeOnFocusOut} ref={container}>
+    <div
+      className={
+        disabled
+          ? "calendar-chip calendar-chip--multi calendar-chip--disabled"
+          : "calendar-chip calendar-chip--multi"
+      }
+      onBlur={closeOnFocusOut}
+      ref={container}
+    >
       <button
         aria-expanded={open && !disabled}
         className="calendar-chip__toggle"
@@ -173,8 +181,8 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
  * D4 «Classe seleccionada» (R-06-09): chip editors for ADMIN on DRAFT/ACTIVE classes, [ACCEPTA]
  * sends the diff with `version`; [ANUL·LA LA CLASSE] / [ELIMINA] go through D4c (parent).
  * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c). On a day the
- * club is closed (R-02-09) the card says so, the chip editors are disabled and «Notes» is offered:
- * [ACCEPTA] saves only them.
+ * club is closed (R-02-09) the card says so, the chip editors are disabled (and look it) and «Notes»
+ * is offered: [ACCEPTA] saves only them; the «Exempta…» chip, its own action, stays.
  * The parent remounts it (`key`) on every new class or version, so the values always start from
  * the version shown: `STALE_VERSION`/`INVALID_STATE` go to the parent (`onConflict`), which keeps
  * the message on the page while the refetch brings the new version. After a save and after those
@@ -281,6 +289,10 @@ export function SelectedClassCard({
   const hourOptions = hours.includes(session.startTime) ? hours : [session.startTime, ...hours];
   const notesEditable = notesOnly || (editable && closedDay);
   const chipsDisabled = busy || !chipsEditable;
+  // A disabled chip editor looks disabled too (muted, `not-allowed`): on a closed day the admin
+  // sees at once that only «Notes» can be saved.
+  const chipClass = (className: string) =>
+    chipsDisabled ? `${className} calendar-chip--disabled` : className;
 
   const set = (next: Partial<DraftValues>) => {
     setValues((current) => ({ ...current, ...next }));
@@ -376,7 +388,7 @@ export function SelectedClassCard({
 
       {editable ? (
         <div className="calendar-chips">
-          <label className="calendar-chip calendar-chip--select">
+          <label className={chipClass("calendar-chip calendar-chip--select")}>
             <span className="calendar-chip__label">{t("admin-scheduling:classCard.ring")}</span>
             <Select
               disabled={chipsDisabled}
@@ -412,7 +424,7 @@ export function SelectedClassCard({
             />
           ) : null}
           {settings.maxInstructors <= 1 ? (
-            <label className="calendar-chip calendar-chip--select">
+            <label className={chipClass("calendar-chip calendar-chip--select")}>
               <span className="calendar-chip__label">
                 {t("admin-scheduling:classCard.instructor")}
               </span>
@@ -456,9 +468,11 @@ export function SelectedClassCard({
             />
           )}
           <label
-            className={
-              error?.field === "capacity" ? "calendar-chip calendar-chip--invalid" : "calendar-chip"
-            }
+            className={chipClass(
+              error?.field === "capacity"
+                ? "calendar-chip calendar-chip--invalid"
+                : "calendar-chip",
+            )}
           >
             <span className="calendar-chip__label">{t("admin-scheduling:classCard.capacity")}</span>
             <Input
@@ -475,7 +489,7 @@ export function SelectedClassCard({
               value={chips.capacity}
             />
           </label>
-          <label className="calendar-chip calendar-chip--select">
+          <label className={chipClass("calendar-chip calendar-chip--select")}>
             <span className="calendar-chip__label">
               {t("admin-scheduling:calendar.selected.time")}
             </span>
@@ -493,7 +507,7 @@ export function SelectedClassCard({
               ))}
             </Select>
           </label>
-          <label className="calendar-chip calendar-chip--wide">
+          <label className={chipClass("calendar-chip calendar-chip--wide")}>
             <span className="calendar-chip__label">
               {t("admin-scheduling:classCard.description")}
             </span>
@@ -511,9 +525,10 @@ export function SelectedClassCard({
             <button
               aria-pressed={session.riskExempt}
               className="planning-chip"
-              // Saving the exemption reloads the class: unsaved chip edits must go first. On a
-              // closed day it is an editor too: only «Notes» stays editable (R-02-09).
-              disabled={chipsDisabled || changed}
+              // Saving the exemption reloads the class: unsaved edits (notes too) must go first.
+              // It is its own action (`POST …/risk-exemption`), which the api accepts on a closed
+              // day as well: it stays enabled there.
+              disabled={busy || changed}
               onClick={() => void toggleExempt()}
               type="button"
             >

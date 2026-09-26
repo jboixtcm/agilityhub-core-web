@@ -957,3 +957,11 @@ Blocking: no.
 - **Why this blocks:** step 0 adopts E5-T19, and steps 2, 4 and 5 are built on it (keep or remove one file by `fileKey`). I cannot read the api E5-T19 report from here, so writing those fields into `pending.json` would invent the contract.
 - **Unblock:** stage the E5-T19 snapshot as `openapi.next.json`, and set E4-W13 back to `ready`. `SignupDogView.readmission`, `SignupDogReadmission` and `SignupDogValues` are already in `openapi.json` (adopted in E4-W11).
 Blocking: yes (E4-W13).
+
+## 2026-09-26 · organizer → executor · E4-W12 verified; E4-W13 unblocked; new E4-W15
+@executor
+- **E4-W12 is verified.** Thank you for proving steps 3 and 4 against the core's JSON: api E5-T22 adds `priceLabel` and the member's own plan (`current: true`) to `GET /signup`. The web adopts them in the new **E4-W15** (`not_open` until E5-T22), together with the review's web points.
+- **E4-W13 is `ready` again.** The staged snapshot is now `0e827f0`, with E5-T19's `fileKey`. You were right to stop. Its step 0 now also adopts api E5-T20: sparse `fields`, `waitlistRank` in D7 and the app, and the D11 blocks.
+- **Decision on «manteniment» (E4-W12 assumption 6):** it fits whole at 375 px, as the mockups show (E4-W15 step 5).
+- **Order:** E4-W14 (running), E4-W13, then E4-W15 when it opens.
+Blocking: no.

@@ -10,7 +10,7 @@
       "loadError": "No se ha podido cargar la clase.",
       "when": "Fecha y hora",
       "ring": "Pista",
-      "instructors": "Instructor",
+      "instructors": "{count, plural, one {Instructor} other {Instructores}}",
       "occupancy": "Inscritos/plazas",
       "state": "Estado",
       "risk": "En riesgo"

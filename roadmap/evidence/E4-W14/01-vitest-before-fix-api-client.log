@@ -1,0 +1,57 @@
+$ (cd packages/api-client && pnpm exec vitest run src/mocks/activity-handlers.test.ts src/mocks/fixtures.contract.test.ts)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/activity-handlers.test.ts (20 tests | 1 failed) 204ms
+   ❯ E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers (3)
+     × E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field 7ms
+ ❯ src/mocks/fixtures.contract.test.ts (53 tests | 1 failed) 297ms
+   ❯ E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) (6)
+     × validates the E29 level catalog (Level.progression overlay of pending.json) 2ms
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 71 passed (73)
+   Start at  03:56:40
+   Duration  868ms (import 34%, tests 34%, transform 32%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field
+AssertionError: promise rejected "Error: Expected an ApiError" instead of resolving
+ ❯ src/mocks/activity-handlers.test.ts:767:37
+    765|     // A closed Sunday: the preview answers like the publication.
+    766|     await putOpeningHours(weekdays.filter((day) => day !== "SUNDAY"));
+    767|     await expect(failure(preview())).resolves.toEqual({
+       |                                     ^
+    768|       code: "OUTSIDE_OPENING_HOURS",
+    769|       details: {},
+
+Caused by: Error: Expected an ApiError
+ ❯ failure src/mocks/activity-handlers.test.ts:82:9
+ ❯ src/mocks/activity-handlers.test.ts:767:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the E29 level catalog (Level.progression overlay of pending.json)
+AssertionError: expected [ 'Teràpia' ] to deeply equal [ 'Teràpia', 'Pendent' ]
+
+- Expected
++ Received
+
+  [
+    "Teràpia",
+-   "Pendent",
+  ]
+
+ ❯ src/mocks/fixtures.contract.test.ts:169:7
+    167|     expect(
+    168|       catalogState.levels.filter((level) => !level.progression).map((l…
+    169|     ).toEqual(["Teràpia", "Pendent"]);
+       |       ^
+    170|   });
+    171|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+exit 1

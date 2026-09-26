@@ -260,6 +260,21 @@
   min-height: 2rem;
 }
 
+/* A disabled chip editor (a closed day, a save in flight) looks disabled: muted, not clickable. */
+.calendar-chip--disabled {
+  color: var(--ah-color-text-muted);
+  cursor: not-allowed;
+  background: var(--ah-color-surface);
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.calendar-chip--disabled .ah-select,
+.calendar-chip--disabled .ah-input,
+.calendar-chip--disabled .calendar-chip__toggle {
+  cursor: not-allowed;
+}
+
 .calendar-notes {
   display: grid;
   gap: var(--ah-space-1);

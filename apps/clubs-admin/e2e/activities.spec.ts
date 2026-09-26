@@ -323,3 +323,65 @@ test.describe("T-07-29 E4-W10 D7 on a day the club is closed", () => {
     });
   });
 });
+
+test.describe("T-07-29 E4-W14 D7 the publication preview's errors (S07 §6)", () => {
+  const previewEvidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W14");
+
+  test.beforeAll(() => {
+    mkdirSync(previewEvidence, { recursive: true });
+  });
+
+  test("R-07-05 a draft saved at 6:00 against a 7:00 opening: [PUBLICA] shows the preview's 422 OUTSIDE_OPENING_HOURS on the date and both times", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+    await page.waitForURL("**/activitats**");
+    const table = page.getByRole("table");
+    const row = table.getByRole("row").filter({ hasText: "Demostració Festa Major" });
+    await expect(row).toBeVisible();
+    // The Demostració moved to the club on Cadells from 6:00 (a draft never blocks, so it saves).
+    const status = await page.evaluate(async () => {
+      const headers = {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+      };
+      const path = "/api/v1/activities/activity-demostracio-festa-major";
+      const current = (await (await fetch(path, { headers })).json()) as { version: number };
+      const saved = await fetch(path, {
+        body: JSON.stringify({
+          endTime: "12:00",
+          location: { atClub: true },
+          registrationFrom: "2026-09-01",
+          registrationTo: "2026-10-01",
+          ringIds: ["ring-cadells"],
+          startTime: "06:00",
+          version: current.version,
+        }),
+        headers,
+        method: "PATCH",
+      });
+      return saved.status;
+    });
+    expect(status).toBe(200);
+    await row.getByRole("link").first().click();
+    await page.waitForURL("**/activitats/activity-demostracio-festa-major");
+    const card = maintenance(page, "Demostració Festa Major");
+    await expect(card.getByLabel("Hora d'inici")).toHaveValue("06:00");
+    const preview = page.waitForResponse(
+      (response) =>
+        response.request().method() === "GET" && response.url().includes("/ring-conflicts"),
+    );
+    await card.getByRole("button", { name: "PUBLICA" }).click();
+    expect((await preview).status()).toBe(422);
+    const outside = "L'hora seleccionada és fora de l'horari d'obertura.";
+    for (const id of ["activity-date-error", "activity-start-error", "activity-end-error"]) {
+      await expect(card.locator(`#${id}`)).toHaveText(outside);
+    }
+    // On the fields, not as a page message; no dialog opens.
+    await expect(page.locator(".ah-toast")).toHaveCount(0);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await card.getByLabel("Data").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: resolve(previewEvidence, "D7-publica-6h-camps-1280.png") });
+  });
+});

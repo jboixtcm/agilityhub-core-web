@@ -46,6 +46,7 @@ import {
   bandLabel,
   clubToday,
   type DayOfWeek,
+  DroppedChangeError,
   errorCode,
   errorProp,
   fieldOfValidationError,
@@ -1093,7 +1094,10 @@ export function TemplatesPage({
   }, [card]);
   /** Edit-mode PATCHes run one after the other (R-06-02 «each change is saved at once»). */
   const patchQueue = useRef<Promise<unknown>>(Promise.resolve());
-  /** Bumped when a PATCH fails: the changes queued after it were built on the rejected one. */
+  /**
+   * Bumped when a PATCH fails or a class DELETE succeeds: the changes queued after it were built on
+   * the rejected change or on the removed class, so they are dropped (and reject).
+   */
   const patchGeneration = useRef(0);
 
   const applyTemplate = (next: WeekTemplate) => {
@@ -1174,7 +1178,8 @@ export function TemplatesPage({
     const classId = cardMode.item.id;
     const ticket = patchGeneration.current;
     const send = async () => {
-      if (ticket !== patchGeneration.current) return;
+      // Dropped, never silently: the form puts this change's chips back.
+      if (ticket !== patchGeneration.current) throw new DroppedChangeError();
       const version =
         versionRef.current?.id === templateId ? versionRef.current.version : current.version;
       try {
@@ -1204,13 +1209,17 @@ export function TemplatesPage({
 
   /**
    * A DELETE of the edit mode waits in the same queue as the PATCHes, so it never overtakes one
-   * queued before it (E4-W01 review #3). Changes queued after it were built on the removed item:
-   * the generation bump drops them.
+   * queued before it (E4-W01 review #3). Only a class DELETE that succeeded drops the changes
+   * queued after it (they were built on the removed class); a failed one keeps them, and a band
+   * removal never drops a class change.
    */
-  const queueRemoval = (remove: () => Promise<void>): Promise<void> => {
+  const queueRemoval = (
+    remove: () => Promise<void>,
+    { dropsQueuedChanges }: { dropsQueuedChanges: boolean },
+  ): Promise<void> => {
     const task = patchQueue.current.then(async () => {
-      patchGeneration.current += 1;
       await remove();
+      if (dropsQueuedChanges) patchGeneration.current += 1;
     });
     patchQueue.current = task.catch(() => undefined);
     return task;
@@ -1220,15 +1229,18 @@ export function TemplatesPage({
     if (current === undefined || cardMode.kind !== "edit") return Promise.resolve();
     const templateId = current.id;
     const classId = cardMode.item.id;
-    return queueRemoval(async () => {
-      await client.DELETE("/week-templates/{id}/classes/{classId}", {
-        params: { path: { classId, id: templateId } },
-      });
-      if (cardShowsClass(classId)) setCardMode({ fromEmptyCell: false, kind: "create" });
-      template.reload();
-      lists.reload();
-      coverage.reload();
-    });
+    return queueRemoval(
+      async () => {
+        await client.DELETE("/week-templates/{id}/classes/{classId}", {
+          params: { path: { classId, id: templateId } },
+        });
+        if (cardShowsClass(classId)) setCardMode({ fromEmptyCell: false, kind: "create" });
+        template.reload();
+        lists.reload();
+        coverage.reload();
+      },
+      { dropsQueuedChanges: true },
+    );
   };
 
   const saveTemplate = async (name: string, kind: TemplateKind, copyFromId?: string) => {
@@ -1269,14 +1281,29 @@ export function TemplatesPage({
   const removeBand = (band: TimeBand): Promise<void> => {
     if (current === undefined) return Promise.resolve();
     const templateId = current.id;
-    return queueRemoval(async () => {
-      await client.DELETE("/week-templates/{id}/bands/{bandId}", {
-        params: { path: { bandId: band.id, id: templateId } },
-      });
-      setBandDrawer(undefined);
-      template.reload();
-      lists.reload();
-    });
+    return queueRemoval(
+      async () => {
+        await client.DELETE("/week-templates/{id}/bands/{bandId}", {
+          params: { path: { bandId: band.id, id: templateId } },
+        });
+        setBandDrawer(undefined);
+        // The DELETE (204) changed the template's version: read it before a class change queued
+        // after the removal is sent, which carries only the admin's own field.
+        const fresh = await client
+          .GET("/week-templates/{id}", { params: { path: { id: templateId } } })
+          .then(
+            (result) => result.data,
+            () => undefined,
+          );
+        if (fresh !== undefined && versionRef.current?.id === templateId) {
+          applyTemplate(fresh);
+        } else {
+          template.reload();
+          lists.reload();
+        }
+      },
+      { dropsQueuedChanges: false },
+    );
   };
 
   const generate = async (candidate: GenerationCandidate, idempotencyKey: string) => {

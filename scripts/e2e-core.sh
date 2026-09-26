@@ -39,9 +39,24 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# E4-W14: the tail of the seed container's log goes to the evidence folder (`seed-<stage>.log`), so a
+# run proves what the seed did with its options (`seed:demo --week-start`); the run's generated
+# password never reaches the file.
+save_seed_log() {
+  docker compose -f "$compose_file" logs --no-color --no-log-prefix --tail=200 seed 2>&1 \
+    | sed "s/${E1_CORE_PASSWORD}/[redacted]/g" >"$evidence_directory/seed-$1.log" || true
+  echo "seed log: $evidence_directory/seed-$1.log ($(wc -l <"$evidence_directory/seed-$1.log" | tr -d ' ') lines)"
+}
+
 run_core_suite() {
-  # `run_core_suite || status=$?` turns `set -e` off in here: a core that does not start stops the stage.
-  docker compose -f "$compose_file" up -d --wait mongo seed core || return $?
+  # `run_core_suite <stage> || status=$?` turns `set -e` off in here: a core that does not start
+  # stops the stage (its seed log is kept all the same).
+  local up_status=0
+  docker compose -f "$compose_file" up -d --wait mongo seed core || up_status=$?
+  save_seed_log "$1"
+  if [[ "$up_status" -ne 0 ]]; then
+    return "$up_status"
+  fi
   docker compose -f "$compose_file" --profile e2e run --rm playwright
 }
 
@@ -86,17 +101,17 @@ cleanup
 status=0
 if [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
-  run_core_suite || status=$?
+  run_core_suite e1-e2 || status=$?
   cleanup
   export CORE_TEST_FILES="e3-signup.spec.ts"
-  run_core_suite || status=$?
+  run_core_suite e3 || status=$?
   check_n37_notification || status=1
   cleanup
   export CORE_TEST_FILES="e4-core.spec.ts"
-  run_core_suite || status=$?
+  run_core_suite e4 || status=$?
 else
   export CORE_TEST_FILES="$2"
-  run_core_suite || status=$?
+  run_core_suite files || status=$?
 fi
 
 exit "$status"

@@ -1,0 +1,131 @@
+{
+  "runId": "hrlxo1",
+  "weekStart": "2026-09-21",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "body": {
+      "saturdayTemplateId": "998c13af-cea2-4382-a5dd-2d9603e978dc",
+      "weekdayTemplateId": "43032dc7-c976-4ba0-9ee5-4e9d7c415d2a"
+    },
+    "status": 200,
+    "weekId": "bc265d8b-da23-4cbd-9419-8f9e9b409296",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-12"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-09-28"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 hrlxo1: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "662dcb64-7d7e-45b4-9253-29384815e43a",
+    "at": "2026-09-26T02:23:02.139Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "df23cd96-4a9b-4a0a-af18-c266c3aab950",
+          "type": "CLASS",
+          "id": "6d959c49-649c-4c8b-88e2-81cf2d44c414",
+          "from": "2026-10-07T18:00:00Z",
+          "to": "2026-10-07T19:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "0ee6406a-90a0-4d44-ac8b-e01753dff826"
+  },
+  "ringBlock": {
+    "id": "05838527-45d7-4ab8-a530-4ffa4b8fadc2",
+    "status": 201
+  },
+  "activitiesExport": {
+    "bytes": 4062,
+    "contentDisposition": "attachment; filename=\"canic_activities_20260926-0423.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+    "status": 200,
+    "suggestedFilename": "canic_activities_20260926-0423.xlsx"
+  },
+  "tournamentSaturday": {
+    "cellsByColumn": {
+      "ds 10": 1
+    },
+    "date": "2026-10-10"
+  },
+  "publicUrl": null,
+  "seminarConflicts": {
+    "conflicts": [
+      {
+        "ringId": "df23cd96-4a9b-4a0a-af18-c266c3aab950",
+        "type": "CLASS",
+        "id": "2d336041-a838-4aec-b0ab-55c9754cc41a",
+        "from": "2026-10-17T16:30:00Z",
+        "to": "2026-10-17T17:30:00Z",
+        "label": "A+B",
+        "bookedCount": 0
+      }
+    ],
+    "trainingBookings": []
+  },
+  "row03Ca": "Seminari E4 hrlxo1inscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "waitlistCa": {
+    "member": {
+      "after": "WAITLISTED",
+      "before": 3
+    },
+    "promoted": {
+      "after": "ACTIVE",
+      "before": 1
+    }
+  },
+  "registrantsExport": {
+    "bytes": 4661,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260926-0423.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A505ce14b-883b-442b-a687-c3ea40d4b77e&format=xlsx&sort=registeredAt%2Casc",
+    "status": 200,
+    "suggestedFilename": "canic_activity-registrations_20260926-0423.xlsx"
+  },
+  "row03Es": "Seminari E4 hrlxo1inscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "waitlistChipEs": "en lista de espera (4)",
+  "waitlistEs": {
+    "joinedPosition": 4,
+    "promoted": 2
+  },
+  "seminarCancellation": {
+    "status": 200
+  },
+  "seminarRegistrants": [
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "ACTIVITY_CANCELLED",
+      "state": "CANCELLED"
+    }
+  ]
+}

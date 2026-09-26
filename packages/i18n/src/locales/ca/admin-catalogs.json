@@ -65,7 +65,7 @@
     },
     "inUse": "Aquest nivell té dades relacionades: només es pot desactivar",
     "new": "Nou nivell",
-    "progressionHelp": "Els nivells fora de la progressió, com Teràpia, no compten per a «D i sup.»",
+    "progressionHelp": "Els nivells fora de la progressió no compten per a les descripcions «… i sup.».",
     "progressionSwitch": "Progressió: {name}",
     "removeQuestion": "Eliminar el nivell {name}?",
     "removeTitle": "Elimina el nivell",

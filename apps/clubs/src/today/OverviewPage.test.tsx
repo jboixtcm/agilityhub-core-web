@@ -33,17 +33,17 @@ afterAll(() => {
   server.close();
 });
 
-async function renderPage(runtimeBranding: Branding) {
+async function renderPage(runtimeBranding: Branding, locale: "ca" | "en" | "es" = "ca") {
   window.history.replaceState(null, "", "/instructor/avui?date=2026-08-03");
   const i18n = await createI18n({
     branding: runtimeBranding,
-    browserLanguages: ["ca"],
+    browserLanguages: [locale],
     initialNamespaces: ["home", "enums", "instructor", "errors"],
     storage: undefined,
   });
   const client = createApiClient({
     baseUrl: `${window.location.origin}/api/v1`,
-    getLocale: () => "ca",
+    getLocale: () => locale,
   });
   render(
     <I18nextProvider i18n={i18n}>
@@ -224,7 +224,7 @@ describe("T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5
     fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
 
     const drawer = await screen.findByRole("dialog", { name: "B+C" });
-    expect(await within(drawer).findByText("Marc, Núria")).toBeVisible();
+    expect(await within(drawer).findByText("Marc i Núria")).toBeVisible();
     expect(within(drawer).getByText("Muntanya")).toBeVisible();
     // The tapped cell says Central and Marc: neither is read any more.
     expect(within(drawer).queryByText("Central")).not.toBeInTheDocument();
@@ -242,5 +242,40 @@ describe("T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5
     expect(within(drawer).queryByText("Instructor")).not.toBeInTheDocument();
     expect(within(drawer).queryByText("Marc")).not.toBeInTheDocument();
     expect(within(drawer).getByText("5/5 +2")).toBeVisible();
+  });
+});
+
+describe("T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list", () => {
+  /** The «Instructor(s)» term of the drawer and its value. */
+  async function instructorsRow(names: string[], locale: "ca" | "en" | "es") {
+    await classDetailWith({ instructorNames: names });
+    await renderPage({ ...branding, locales: ["ca", "es", "en"] }, locale);
+    await screen.findByRole("table");
+    fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+    const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    const value = await within(drawer).findByText(names.length === 1 ? "Marc" : /Marc.+Núria/u);
+    const term = value.previousElementSibling;
+    const row = [term?.textContent, value.textContent];
+    cleanup();
+    server.resetHandlers();
+    return row;
+  }
+
+  it("ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»", async () => {
+    await expect(instructorsRow(["Marc"], "ca")).resolves.toEqual(["Instructor", "Marc"]);
+    await expect(instructorsRow(["Marc", "Núria"], "ca")).resolves.toEqual([
+      "Instructors",
+      "Marc i Núria",
+    ]);
+    await expect(instructorsRow(["Marc"], "es")).resolves.toEqual(["Instructor", "Marc"]);
+    await expect(instructorsRow(["Marc", "Núria"], "es")).resolves.toEqual([
+      "Instructores",
+      "Marc y Núria",
+    ]);
+    await expect(instructorsRow(["Marc"], "en")).resolves.toEqual(["Instructor", "Marc"]);
+    await expect(instructorsRow(["Marc", "Núria"], "en")).resolves.toEqual([
+      "Instructors",
+      "Marc and Núria",
+    ]);
   });
 });

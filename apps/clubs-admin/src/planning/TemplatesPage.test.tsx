@@ -601,6 +601,205 @@ describe("T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review", (
   });
 });
 
+/**
+ * The first class `PATCH` waits until `release()`, then answers `answer` (or falls through to the
+ * stateful mock). `events` records, in order, what is sent and when the held PATCH answers.
+ */
+function holdFirstClassPatch(answer?: () => Response) {
+  let release: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const events: string[] = [];
+  let first = true;
+  server.use(
+    http.patch("*/api/v1/week-templates/:id/classes/:classId", async () => {
+      if (!first) return undefined;
+      first = false;
+      await held;
+      events.push("PATCH answered");
+      return answer?.();
+    }),
+  );
+  server.events.on("request:start", ({ request }) => {
+    if (request.method === "PATCH" || request.method === "DELETE") {
+      events.push(`${request.method} sent`);
+    }
+  });
+  return {
+    events,
+    release: () => {
+      release();
+    },
+  };
+}
+
+/** An empty band 21:00–22:00 on «Setmana A» (the mock refuses to remove a band with classes). */
+async function addEmptyBand() {
+  const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  await api.POST("/week-templates/{id}/bands", {
+    body: { endTime: "22:00", startTime: "21:00" },
+    params: { path: { id: "template-setmana-a" } },
+  });
+}
+
+describe("T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8)", () => {
+  it("R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression", async () => {
+    await renderTemplates();
+    const title = "Cobertura per nivell (places de la setmana)";
+    const levelsOf = (table: HTMLElement) =>
+      within(table)
+        .getAllByRole("row")
+        .slice(1)
+        .map((row) => row.querySelector("th, td")?.textContent.trim());
+    const coverage = await screen.findByRole("table", { name: title });
+    expect(levelsOf(coverage)).toEqual(["Cadells", "A", "B", "C", "D", "E", "F", "G"]);
+    cleanup();
+
+    // The admin takes Cadells out of the progression on D11 (PATCH /levels/{id}, S05 §2).
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const cadells = (await api.GET("/levels")).data?.items.find((level) => level.code === "P");
+    if (cadells === undefined) throw new TypeError("Missing Cadells");
+    await api.PATCH("/levels/{id}", {
+      body: { progression: false, version: cadells.version },
+      params: { path: { id: cadells.id } },
+    });
+    await renderTemplates();
+    const without = await screen.findByRole("table", { name: title });
+    await waitFor(() => {
+      expect(levelsOf(without)).toEqual(["A", "B", "C", "D", "E", "F", "G"]);
+    });
+  });
+});
+
+describe("T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4)", () => {
+  function openMondayClass() {
+    const [mondayClass] = screen.getAllByRole("button", { name: "C+D+E · Laura · Carretera" });
+    if (mondayClass === undefined) throw new TypeError("missing Monday class");
+    fireEvent.click(mondayClass);
+    return screen.getByRole("region", { name: "Classe seleccionada" });
+  }
+
+  it("R-06-02 «Esborra la franja» (removeBand) waits in the queue for the level PATCH before it; then the drawer closes", async () => {
+    await addEmptyBand();
+    const queue = holdFirstClassPatch();
+    await renderTemplates();
+    const card = openMondayClass();
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(screen.getByRole("button", { name: "Franja 21:00–22:00" }));
+    const drawer = await screen.findByRole("dialog", { name: "Franja 21:00–22:00" });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Esborra la franja" }));
+    await settle();
+    expect(queue.events).toEqual(["PATCH sent"]);
+
+    queue.release();
+    await waitFor(() => {
+      expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "DELETE sent"]);
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Franja 21:00–22:00" })).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: "Franja 21:00–22:00" })).not.toBeInTheDocument();
+    });
+  });
+
+  it("R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers", async () => {
+    await addEmptyBand();
+    const queue = holdFirstClassPatch();
+    await renderTemplates();
+    const card = openMondayClass();
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(screen.getByRole("button", { name: "Franja 21:00–22:00" }));
+    const drawer = await screen.findByRole("dialog", { name: "Franja 21:00–22:00" });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Esborra la franja" }));
+    // The removal waits behind the held PATCH; the admin moves the class to Central meanwhile.
+    fireEvent.click(within(classCard()).getByRole("radio", { name: "Central" }));
+    await settle();
+    expect(queue.events).toEqual(["PATCH sent"]);
+
+    queue.release();
+    await waitFor(() => {
+      expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "DELETE sent", "PATCH sent"]);
+    });
+    await waitFor(() => {
+      expect(within(classCard()).getByRole("radio", { name: "Central" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    });
+    expect(
+      await screen.findByRole("button", { name: "C+D · Laura · Central" }),
+    ).toBeInTheDocument();
+  });
+
+  it("R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent", async () => {
+    server.use(
+      http.delete("*/api/v1/week-templates/:id/classes/:classId", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", message: "Unexpected error", traceId: "trace-e4-w14" },
+          { status: 500 },
+        ),
+      ),
+    );
+    const queue = holdFirstClassPatch();
+    await renderTemplates();
+    const card = openMondayClass();
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(within(card).getByRole("button", { name: "Treu de la plantilla" }));
+    fireEvent.click(within(card).getByRole("radio", { name: "Central" }));
+    await settle();
+
+    queue.release();
+    await waitFor(() => {
+      expect(queue.events).toEqual(["PATCH sent", "PATCH answered", "DELETE sent", "PATCH sent"]);
+    });
+    // The class is still there, with both changes saved, and the DELETE's error in the card.
+    await waitFor(() => {
+      expect(within(classCard()).getByRole("radio", { name: "Central" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    });
+    expect(screen.getByRole("region", { name: "Classe seleccionada" })).toBeVisible();
+    expect(await screen.findByRole("button", { name: "C+D · Laura · Central" })).toBeVisible();
+  });
+
+  it("R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays", async () => {
+    const queue = holdFirstClassPatch(() =>
+      HttpResponse.json(
+        { code: "LEVEL_REQUIRED", message: "At least one level", traceId: "trace-level" },
+        { status: 422 },
+      ),
+    );
+    await renderTemplates();
+    const card = openMondayClass();
+    fireEvent.click(within(card).getByRole("button", { name: "E" }));
+    fireEvent.click(within(card).getByRole("radio", { name: "Central" }));
+    expect(within(card).getByRole("radio", { name: "Central" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    queue.release();
+    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    // The ring change was built on the refused one: dropped, and its chip is put back.
+    await waitFor(() => {
+      expect(within(card).getByRole("radio", { name: "Carretera" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    });
+    expect(within(card).getByRole("radio", { name: "Central" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(within(card).getByText("Seleccioneu un nivell.")).toBeVisible();
+    await settle();
+    expect(queue.events).toEqual(["PATCH sent", "PATCH answered"]);
+  });
+});
+
 describe("T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
   it("R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one", async () => {
     // Monday is absent from club.openingHours: every WEEKDAYS band would be refused by the api.

@@ -35,9 +35,9 @@ function RowBadge({ row }: { row: ActivityRow }) {
 }
 
 /**
- * One row of the 04 block: «{title} · {ds 12/09} · {9:00}» + the R-07-11 badge. The hours are the
- * row's `startTime` (R-07-13; the mockup prints only the start there): `null` prints none, so a
- * date-only activity never reads «0:00».
+ * One row of the 04 block: «{title} · {ds 12/09} · {9:00}[–{13:00}]» + the R-07-11 badge. The
+ * hours are the row's `startTime`–`endTime` (R-07-13); without an end only the start (the
+ * mockup's «9:00» row), and a `null` start prints none, so a date-only activity never reads «0:00».
  */
 export function ActivityBlockRow({ row }: { row: ActivityRow }) {
   const formats = useClubFormats();
@@ -49,7 +49,12 @@ export function ActivityBlockRow({ row }: { row: ActivityRow }) {
       <span className="activity-row__text">
         <strong>{row.title}</strong>
         {t("activities:block.separator")}
-        {formats.formatActivityDate(row.startsAtLocal.slice(0, 10), row.startTime, null, "list")}
+        {formats.formatActivityDate(
+          row.startsAtLocal.slice(0, 10),
+          row.startTime,
+          row.endTime,
+          "list",
+        )}
       </span>
       <RowBadge row={row} />
     </>
