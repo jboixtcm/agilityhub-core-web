@@ -1,4 +1,5 @@
 import type { components } from "../../generated/schema";
+import type { ListItemWith } from "../../list-fields";
 
 export type WeekTemplate = components["schemas"]["WeekTemplate"];
 export type TemplateClass = components["schemas"]["TemplateClass"];
@@ -6,7 +7,11 @@ export type TimeBand = components["schemas"]["TimeBand"];
 export type Inconsistency = components["schemas"]["Inconsistency"];
 export type Coverage = components["schemas"]["Coverage"];
 export type Week = components["schemas"]["Week"];
-export type WeekListItem = components["schemas"]["WeekListItem"];
+/** A week of `GET /weeks` asked for whole (no `fields`): the keys the api always sends. */
+export type WeekListItem = ListItemWith<
+  components["schemas"]["WeekListItem"],
+  "classCounts" | "endDate" | "isoWeek" | "isoYear" | "startDate" | "state"
+>;
 export type DayOfWeek = TemplateClass["dayOfWeek"];
 
 /** Internal week record: the `Week` resource plus the list projection fields. */

@@ -26,9 +26,11 @@ import {
   type MockWeek,
   type TemplateClass,
   type TimeBand,
+  type WeekListItem,
   type WeekTemplate,
 } from "./fixtures/planning";
 import { findParameter } from "./fixtures/settings";
+import { fieldsProjection, WEEK_LIST_FIELDS } from "./list-fields";
 import { currentMockScenario } from "./scenarios";
 
 type ApiErrorResponse = components["schemas"]["ApiError"];
@@ -41,7 +43,6 @@ type TemplateClassPatchRequest = components["schemas"]["TemplateClassPatchReques
 type WeekCreateRequest = components["schemas"]["WeekCreateRequest"];
 type GenerationRequest = components["schemas"]["GenerationRequest"];
 type GenerationCandidate = components["schemas"]["GenerationCandidate"];
-type WeekListItem = components["schemas"]["WeekListItem"];
 type SkippedClasses = components["schemas"]["SkippedClasses"];
 
 const SLOT_MINUTES = 10;
@@ -660,6 +661,8 @@ export const planningHandlers = [
   ),
   http.get("*/api/v1/weeks", ({ request }) => {
     const url = new URL(request.url);
+    const projection = fieldsProjection<WeekListItem>(url, WEEK_LIST_FIELDS, ["id"]);
+    if (projection === undefined) return apiError("INVALID_FILTER", "Unsupported field", 400);
     let items = [...planningState.weeks];
     for (const filter of url.searchParams.getAll("filter")) {
       const [field, op, value] = filter.split(":");
@@ -686,7 +689,10 @@ export const planningHandlers = [
     const size = Number(url.searchParams.get("size") ?? 50);
     return HttpResponse.json({
       appliedFilters: [],
-      items: items.slice(0, size).map(weekListItem),
+      items: items
+        .slice(0, size)
+        .map(weekListItem)
+        .map((item) => (projection === null ? item : projection(item))),
       page: 0,
       size,
       totalItems: items.length,

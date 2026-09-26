@@ -81,6 +81,7 @@
     "planTitle": "Modalidad",
     "currentPlan": "{plan} · {price}",
     "monthlyPrice": "{price}/mes",
+    "singleClassPrice": "{price}/clase",
     "entryFee": "Entrada {price}",
     "packPrice": "{price} · {months} meses",
     "maintenance": "{withEntry, select, yes {Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes} other {Cuota mínima durante el tratamiento: {fee}/mes}}",

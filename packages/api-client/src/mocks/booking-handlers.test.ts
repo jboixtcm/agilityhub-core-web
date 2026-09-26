@@ -90,6 +90,19 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
     expect((await call("GET", "/me/home?dogId=dog-stranger")).status).toBe(404);
   });
 
+  it("GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3)", async () => {
+    const duna = await home("member", "?dogId=dog-duna");
+    expect(duna.reservations.map((row) => `${row.type} ${row.startsAtLocal}`)).toEqual([
+      "CLASS 2026-08-03T18:50",
+      "CLASS_WAITLIST 2026-08-06T20:00",
+      "ACTIVITY 2026-08-07T18:30",
+    ]);
+    const toby = await home("member", "?dogId=dog-toby");
+    expect(toby.reservations.map((row) => `${row.type} ${row.dogName ?? "—"}`)).toEqual([
+      "ACTIVITY —",
+    ]);
+  });
+
   it("GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants", async () => {
     const duna = await bookable();
     expect(duna.dog).toMatchObject({ name: "Duna", sex: "FEMALE" });

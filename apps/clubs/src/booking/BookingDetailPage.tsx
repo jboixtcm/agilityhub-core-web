@@ -62,8 +62,8 @@ export function BookingBar() {
  * Screen 07 «Detall de la reserva» (`/reserves/:id`, S08 §2): the class with the dog, the api's
  * `displayState`, when and by whom it was booked, and [ANUL·LA LA RESERVA] while the api still
  * shows it confirmed. The confirmation warns inside `bookings.lateCancelThresholdMinutes` (the
- * booking's `lateCancelThresholdMinutes`; a MEMBER cannot read `/parameters`); the note after the
- * cancellation follows the api's `late` (R-08-10).
+ * booking's `lateCancelThresholdMinutes`; a MEMBER cannot read `/parameters`); only this page's
+ * own cancellation leaves a note, by the `late` of its answer (R-08-10).
  */
 export function BookingDetailPage({ bookingId, client }: { bookingId: string; client: ApiClient }) {
   const { t } = useTranslation(["booking", "enums", "errors", "common"]);
@@ -74,6 +74,9 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // The answer of this page's own cancellation: only it says «dins el termini» or «tard» (step 6).
+  // A booking cancelled elsewhere (a swap, the system, an old one) shows just its state chip.
+  const [cancelled, setCancelled] = useState<{ late: boolean }>();
 
   if (booking.status === "loading") {
     return (
@@ -148,10 +151,11 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
     data.displayState ?? (data.state === "ACTIVE" ? "CONFIRMED" : data.state);
   const threshold = data.lateCancelThresholdMinutes;
   const cancellable = data.state === "ACTIVE" && displayState === "CONFIRMED";
-  const cancelled =
-    data.cancellation !== null &&
-    data.cancellation !== undefined &&
-    (data.state === "CANCELLED" || data.state === "CANCELLED_LATE");
+  // The note waits for the booking read again, so it lands together with the new state chip.
+  const note =
+    cancelled !== undefined && (data.state === "CANCELLED" || data.state === "CANCELLED_LATE")
+      ? cancelled
+      : undefined;
 
   const open = () => {
     setError(undefined);
@@ -164,10 +168,14 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
     setPending(true);
     setError(undefined);
     try {
-      await client.POST("/bookings/{id}/cancellation", {
+      const response = await client.POST("/bookings/{id}/cancellation", {
         body: {},
         params: { path: { id: data.id } },
       });
+      const result = response.data;
+      if (result === undefined)
+        throw new TypeError("The cancellation response did not contain data");
+      setCancelled({ late: result.cancellation?.late ?? result.state === "CANCELLED_LATE" });
       setDialog(undefined);
     } catch (cause) {
       // The refusal stays in the dialog, where the member is; the booking is read again.
@@ -193,8 +201,8 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
         </p>
       </Card>
       {cancellable ? <Button onClick={open}>{t("booking:detail.cancel")}</Button> : null}
-      {cancelled && data.cancellation !== null && data.cancellation !== undefined ? (
-        data.cancellation.late ? (
+      {note !== undefined ? (
+        note.late ? (
           <p className="booking-note booking-note--warning" role="status">
             {threshold === undefined
               ? t("booking:detail.cancelledLateNoThreshold")

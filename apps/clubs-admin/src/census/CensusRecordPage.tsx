@@ -1,4 +1,11 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  isApiError,
+  itemsWith,
+  listFields,
+  type ApiClient,
+  type components,
+  type ListItemWith,
+} from "@agilityhub/api-client";
 import { fmtMaskedIban, fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
@@ -35,6 +42,9 @@ type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
     licenses: License[];
   };
 type DogListItem = components["schemas"]["DogListItem"];
+/** The transfer's new owner: the member list asked for the name only (`fields`). */
+const TRANSFER_MEMBER_FIELDS = ["fullName"] as const;
+type TransferMember = ListItemWith<components["schemas"]["MemberListItem"], "fullName">;
 type DogPatchRequest = components["schemas"]["DogPatch"] &
   components["schemas"]["DogPatchPendingFields"];
 type LevelSummary = components["schemas"]["LevelSummary"];
@@ -1699,7 +1709,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
   const [dog, setDog] = useState<DogDetail>();
   const [levels, setLevels] = useState<LevelSummary[]>([]);
-  const [members, setMembers] = useState<DogListItem["owner"][]>([]);
+  const [members, setMembers] = useState<TransferMember[]>([]);
   const [failure, setFailure] = useState(false);
   const [reload, setReload] = useState(0);
   const [feedback, setFeedback] = useState<Feedback>();
@@ -1723,7 +1733,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
       client.GET("/members", {
         params: {
           query: {
-            fields: "fullName",
+            fields: listFields(TRANSFER_MEMBER_FIELDS),
             filter: ["status:eq:ACTIVE"],
             page: 0,
             size: 200,
@@ -1749,11 +1759,11 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
               : "false",
         );
         setLevels(levelResult.data?.items ?? []);
-        setMembers(
-          (memberResult.data?.items ?? []).map(
-            (member) => member as unknown as DogListItem["owner"],
-          ),
-        );
+        try {
+          setMembers(itemsWith(memberResult.data?.items ?? [], TRANSFER_MEMBER_FIELDS));
+        } catch {
+          setFailure(true);
+        }
       },
       () => {
         if (current) setFailure(true);

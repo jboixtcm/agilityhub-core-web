@@ -1,0 +1,138 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a DNI is labelled by its type 94ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a NIE is labelled by its type 21ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type 17ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type 21ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type 19ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a DNI is labelled by its type 13ms
+ × src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a NIE is labelled by its type 13ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^DNI\/NIE$/u[39m
+Received:
+[31m  ID document[39m
+ × src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a DNI is labelled by its type 12ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^DNI\/NIE$/u[39m
+Received:
+[31m  ID document[39m
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: the edit drawer labels a passport «Passaport» too
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 0 days
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 1 days
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 5 days
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > R-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > step 0 renders each review warning by its code, so a new api value needs only its key
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > tolerates null optional fields (INC-08) and never sends null back
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > T-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group)
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > validates a signup with a null payment method, upfront and family claim without sending null
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows signup warnings as compact header badges
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > requires explicit confirmation when a manual upfront payment is zero
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > edits the member and the dog in one save: the dog PATCH carries the dog's version, not the member's
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > add-dog: the person is read-only and the new dog is saved with its version 0 while the member is at 7 (R-04-25)
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 async drawer: nothing typed during a save is lost > locks the fields while the save is in flight
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > LEVEL_REQUIRED (422, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > LEVEL_NOT_ACTIVE (422, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > NEXT_INVOICE_DATE_REQUIRED (422, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > VALIDATION_ERROR (400, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > UPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > PLAN_NOT_AVAILABLE (422, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > INVALID_STATE (409, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > MEMBERSHIP_EXISTS (409, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > MEMBER_ERASED (409, bare as the api sends it) is shown on its field
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > caps the amount input at the amount due
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > maps the mock's own answers too: a missing level and a missing date
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > editing the first email keeps the second, and the untouched phones are not sent
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > editing the second phone sends both phones, each with its label
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > offers gender (three values), the notes, holderTaxId and the requested plan read-only
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > adds a dog document forwarding the signed upload headers, and removes one
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > lists planOptions with their periodicity and runs dryRun on a change to Pack 6: lines, date and body updated
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > renders the dry run's warnings on the plan card (PAID_EXCEEDS_QUOTE on a cheaper plan)
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > a NOT_FOUND_PENDING claim is resolved with an explicit «Sense grup»: no familyGroupId
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > after VALIDA navigates to /tauler and refreshes the menu counters
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > a signup with nothing pending (409 INVALID_STATE NOT_PENDING) says it is resolved and links to D10
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > a VALIDA on a signup another admin already resolved shows the resolved state
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 7 · the refund warning (R-04-23) > warns before rejecting a signup with a collected payment and keeps the refund flag for D1
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 7 · the refund warning (R-04-23) > rejects a signup with nothing collected without the warning
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > STALE_VERSION offers a reload that keeps the admin's own choices
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > shows a rejection error inside the modal, with the reload action
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > names the first month and its portion from upfront.firstMonth: a full month has no «(mitja quota)»
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > E3-W08 step 0: a first month frozen without its portion (null, api E3-T12) names the month, never «(mitja quota)»
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > en: gender OTHER → «them»
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > gates the plan, payment and upfront blocks on BILLING and the group row on FAMILY_GROUP
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 1 the invoice date is canonical (R-04-15, S04 §10) > 10/11/2026 typed in ca still sends 2026-11-10 after a switch to en, shown in the en format
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > Pack 6 is quoted, then the Pack 10 quote fails: no 135 € breakdown or max remains, and VALIDA is disabled
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > a reload after a full payment shows no editable amount (the old quote is discarded)
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > drops a Pack 6 answer that lands after the change to Pack 10
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > a delayed reload after STALE_VERSION: no upfront block and VALIDA disabled until the reload and the new quote both land
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > a failed reload shows its error with a retry, never the old quote (its «Data del proper rebut» included), and the retry brings a fresh one
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > the reload after a drawer save drops the quote too, until the fresh view lands
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the applicant's card, not assignable any more, is shown preselected but cannot be chosen again
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the preselected method is the view's `current` one (a readmission's submitted method)
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a PENDING applicant with no assignable method sees the current one read-only
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > add-dog (R-04-19, R-04-25): the member's method is shown read-only, as the view lists it
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > an empty list (an ACTIVE member without a method) shows no method row
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > moves a cash applicant to direct debit with IBAN and holder, among the view's methods
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > moves a direct-debit applicant to cash: only the type is sent, and D2 reads «Efectiu»
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > offers the card too when the club has Stripe enabled
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > without BILLING the drawer has no payment method
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > shows the «Readmissió» badge and, for each changed field only, the LEFT record's value and the submitted one
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > an edit of the submitted phone updates the «Ara» value; the LEFT record's value stays
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: the person card, its WhatsApp and the drawer carry the submitted values, not the LEFT record's
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: a submitted SEPA method without an account (the core's `maskedAccount: null`) is «Compte no informat» on the card
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: during a readmission, editing phone 2 keeps the submitted phone 1 in the PATCH
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > the DNI/NIE is read-only while the readmission waits, and says how to correct it
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > a 409 INVALID_STATE READMISSION_PENDING shows «rebutja la readmissió» inside the drawer
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > a signup that is not a readmission has no readmission block and an editable DNI/NIE
+ ↓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member`
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 1: an ordinary signup's dog, or a dog with `readmission: null` (as the core writes it), has no block
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: the last file of a submitted type withdraws it (files: []); a second change before the view reload lands carries the version the PATCH answered
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: a 409 READMISSION_PENDING that still arrives shows the new literal inside the drawer, for a field save and for a file
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: a removed file's key (400 FILE_NOT_FOUND, api E5-T21) shows the error in the drawer and re-reads the view
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 3: the reused dog's chip is read-only while the readmission waits, with the literal as its hint, and never sent
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 3: an ordinary signup's chip stays editable
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change
+ ↓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 (review nit #5): a document type without files reads as pending, not as absent
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a NIE is labelled by its type
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a DNI is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^DNI\/NIE$/u[39m
+Received:
+[31m  ID document[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:224:18
+    222|     const term = value.closest("dd")?.previousElementSibling;
+    223|     expect(term?.tagName).toBe("DT");
+    224|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    225|   });
+    226|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed | 85 skipped (93)
+   Start at  18:00:45
+   Duration  1.17s (environment 32%, transform 26%, tests 19%, import 16%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx -t labelled by its type --reporter=verbose

@@ -248,7 +248,7 @@
     "dog": "Dog ({current} of {total})",
     "fields": {
       "name": "Name",
-      "idDocument": "ID document",
+      "idDocument": "DNI/NIE",
       "passport": "Passport",
       "otherDocument": "Other document",
       "contact": "Contact",

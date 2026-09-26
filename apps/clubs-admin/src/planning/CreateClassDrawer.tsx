@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient } from "@agilityhub/api-client";
+import { isApiError, itemsWith, listFields, type ApiClient } from "@agilityhub/api-client";
 import { Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
 import {
   type CSSProperties,
@@ -56,15 +56,13 @@ const fieldByCode: Readonly<Record<string, FieldKey>> = {
 function VisibleNowNote({ client, monday }: { client: ApiClient; monday: string }) {
   const { t } = useTranslation("admin-scheduling");
   const week = useResource(
-    useCallback(
-      async () =>
-        (
-          await client.GET("/weeks", {
-            params: { query: { filter: [`startDate:eq:${monday}`] } },
-          })
-        ).data?.items[0],
-      [client, monday],
-    ),
+    useCallback(async () => {
+      // Only the week's state is read (`fields`, CONVENCIONS_API §4).
+      const result = await client.GET("/weeks", {
+        params: { query: { fields: listFields(["state"]), filter: [`startDate:eq:${monday}`] } },
+      });
+      return itemsWith(result.data?.items ?? [], ["state"])[0];
+    }, [client, monday]),
   );
   return week.data?.state === "VALIDATED" ? (
     <p className="planning-note planning-note--warning" role="note">

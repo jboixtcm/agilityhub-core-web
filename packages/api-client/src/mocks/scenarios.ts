@@ -40,6 +40,8 @@ export interface MockScenarioDefinition {
   signupRequireDogDocument?: boolean;
   /** The club's date `GET /signup` quotes for (R-04-15); default `SIGNUP_MOCK_TODAY` (17-08-2026). */
   signupToday?: string;
+  /** R-04-09 (S05 B34): the member adding a dog has no plan, so 17 offers the plans to choose. */
+  signupMemberWithoutPlan?: boolean;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
   signupReview?: SignupReviewVariant;
 }
@@ -311,6 +313,13 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
     signupStripe: true,
+  },
+  /** R-04-09 (S05 B34): the member adding a dog has no plan and must choose one on 17. */
+  signupMemberNoPlan: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupMemberWithoutPlan: true,
   },
   /** R-04-08: `signup.requireDogDocumentAtSignup = true` (a submission without a file is 422). */
   signupDocumentRequired: {

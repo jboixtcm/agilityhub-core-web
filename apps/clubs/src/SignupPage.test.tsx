@@ -247,6 +247,15 @@ async function signupConfigJson(): Promise<SignupConfigJson> {
   return (await response.json()) as SignupConfigJson;
 }
 
+/** `GET /signup` as the member adding a dog reads it (`member`, and `current` on each plan). */
+async function addDogConfigJson(scenario: MockScenario = "signup"): Promise<SignupConfigJson> {
+  mockScenario(scenario);
+  const response = await fetch(`${window.location.origin}/api/v1/signup`, {
+    headers: { Authorization: "Bearer mock-access-token" },
+  });
+  return (await response.json()) as SignupConfigJson;
+}
+
 function apiErrorResponse(code: string, status: number, details: unknown = {}, headers?: HeadersInit) {
   return HttpResponse.json(
     { code, details, message: code, traceId: "test-trace" },
@@ -1891,16 +1900,28 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({ planIdRequested: MEMBER_PLAN });
   });
 
-  it("E4-W12 step 4: an add-dog member whose plan is not offered on the form sees no plan cards and keeps that plan", async () => {
+  it("E4-W12 step 4, E4-W15 step 1 (R-04-09, api E5-T22): the plan the public offer hides comes listed and marked current: 17 names it read-only and requests it", async () => {
     const navigate = vi.fn();
     seedDraft({ mode: "add-dog", planId: PACK_6_PLAN });
-    const config = await signupConfigJson();
+    const config = await addDogConfigJson();
     const familyPlan = "10000000-0000-4000-8000-000000000009";
+    const hidden = {
+      ...config.plans[0],
+      current: true,
+      id: familyPlan,
+      name: "Família",
+      price: {
+        amount: { amountMinor: 4500, currency: "EUR" },
+        id: "20000000-0000-4000-8000-000000000009",
+        periodicity: "MONTHLY",
+      },
+    };
     server.use(
       http.get("*/api/v1/signup", () =>
         HttpResponse.json({
           ...config,
           member: { consentsUpToDate: true, planId: familyPlan },
+          plans: [...config.plans.map((plan) => ({ ...plan, current: false })), hidden],
           upfront: {
             ...(config.upfront as Record<string, unknown>),
             planQuotes: [
@@ -1918,7 +1939,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     await renderSignup({ addDog: true, navigate, path: "/gossos/nou" });
     expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
     expect(screen.queryAllByRole("button", { name: /^Selecciona /u })).toHaveLength(0);
-    expect(screen.queryByRole("region", { name: "Modalitat" })).not.toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Modalitat" })).toHaveTextContent(
+      /^ModalitatFamília · 45,00\s€\/mes$/u,
+    );
     expect(screen.queryByText("Pack 6")).not.toBeInTheDocument();
     // The quote of 19 and `planIdRequested` stay on the member's own plan.
     await waitFor(() => {
@@ -2177,5 +2200,142 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
       "El document d'identitat no és vàlid.",
     );
     expect(screen.getByLabelText("DNI / NIE")).not.toHaveAttribute("aria-invalid");
+  });
+});
+
+describe("E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22)", () => {
+  const THERAPY_INTRO = /^Es poden fer també classes de teràpia individual/u;
+  const SINGLE_CLASS_PLAN = "10000000-0000-4000-8000-000000000005";
+  const singleClass = (config: SignupConfigJson, current?: boolean) => ({
+    ...config.plans[0],
+    ...(current === undefined ? {} : { current }),
+    conditions: "",
+    id: SINGLE_CLASS_PLAN,
+    name: "Classe solta",
+    price: {
+      amount: { amountMinor: 2500, currency: "EUR" },
+      id: "20000000-0000-4000-8000-000000000005",
+      periodicity: "ONE_OFF",
+    },
+    type: "SINGLE_CLASS",
+  });
+
+  it("step 1: the add-dog line follows the plan GET /signup marks current, not a plan id of its own", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    seedDraft({ mode: "add-dog", planId: "" });
+    const config = await addDogConfigJson();
+    // Pack 10 is the member's plan: the api marks it `current` (the member block may omit its id).
+    const PACK_10_PLAN = "10000000-0000-4000-8000-000000000003";
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({
+          ...config,
+          member: { consentsUpToDate: true },
+          plans: config.plans.map((plan) => ({ ...plan, current: plan.id === PACK_10_PLAN })),
+        }),
+      ),
+    );
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou" });
+    expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+    expect(screen.getByRole("region", { name: "Modalitat" })).toHaveTextContent(
+      /^ModalitatPack 10 · 180,00\s€ · 5 mesos$/u,
+    );
+    expect(screen.queryAllByRole("button", { name: /^Selecciona /u })).toHaveLength(0);
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(navigate).toHaveBeenCalledWith("/gossos/nou/pagament");
+    expect(await screen.findByText(/Pas 2 de 2/u)).toBeVisible();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
+    });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({
+      planIdRequested: PACK_10_PLAN,
+    });
+  });
+
+  it("step 2 (review #5): a member without a plan chooses one: the offered cards, [CONTINUA] disabled until then, and planIdRequested", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    seedDraft({ mode: "add-dog", planId: "" });
+    await renderSignup({
+      addDog: true,
+      navigate,
+      path: "/gossos/nou",
+      scenario: "signupMemberNoPlan",
+    });
+    expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+    const continueButton = screen.getByRole("button", { name: "CONTINUA" });
+    const cards = await screen.findAllByRole("button", { name: /^Selecciona /u });
+    expect(cards.map((card) => card.getAttribute("aria-pressed"))).toEqual([
+      "false",
+      "false",
+      "false",
+      "false",
+    ]);
+    expect(continueButton).toBeDisabled();
+    // The member chooses here, so the therapy intro that helps to choose stays.
+    expect(screen.getByText(THERAPY_INTRO)).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Selecciona Pack 6" }));
+    expect(continueButton).toBeEnabled();
+    fireEvent.click(continueButton);
+    expect(navigate).toHaveBeenCalledWith("/gossos/nou/pagament");
+    expect(await screen.findByText(/Pas 2 de 2/u)).toBeVisible();
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
+    });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({
+      planIdRequested: PACK_6_PLAN,
+    });
+  });
+
+  it("step 4 (review #2): the therapy intro is hidden above the member's read-only plan, and stays on the public form", async () => {
+    seedDraft({ mode: "add-dog", planId: "" });
+    await renderSignup({ addDog: true, path: "/gossos/nou" });
+    expect(await screen.findByRole("region", { name: "Modalitat" })).toHaveTextContent(
+      /Abonat · 60,00\s€\/mes/u,
+    );
+    expect(screen.queryByText(THERAPY_INTRO)).not.toBeInTheDocument();
+
+    cleanup();
+    sessionStorage.clear();
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    expect(screen.getByText(THERAPY_INTRO)).toBeVisible();
+  });
+
+  it("step 6 (review #4, R-05-19): a SINGLE_CLASS plan reads «{price}/classe» on its card and on the add-dog line", async () => {
+    const config = await signupConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({ ...config, plans: [...config.plans, singleClass(config)] }),
+      ),
+    );
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const card = screen.getByRole("button", { name: "Selecciona Classe solta" });
+    expect(card.querySelector(".signup-plan__head")).toHaveTextContent(
+      /^Classe solta25,00\s€\/classe$/u,
+    );
+
+    cleanup();
+    server.resetHandlers();
+    const memberConfig = await addDogConfigJson();
+    server.use(
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({
+          ...memberConfig,
+          plans: [
+            ...memberConfig.plans.map((plan) => ({ ...plan, current: false })),
+            singleClass(memberConfig, true),
+          ],
+        }),
+      ),
+    );
+    seedDraft({ mode: "add-dog", planId: "" });
+    await renderSignup({ addDog: true, path: "/gossos/nou" });
+    expect(await screen.findByRole("region", { name: "Modalitat" })).toHaveTextContent(
+      /^ModalitatClasse solta · 25,00\s€\/classe$/u,
+    );
   });
 });

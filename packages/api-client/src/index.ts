@@ -20,4 +20,5 @@ export {
   saveFile,
 } from "./exports";
 export type { components, operations, paths } from "./generated/schema";
+export { itemsWith, type ListItemWith, listFields } from "./list-fields";
 export { createQueryClient, queryKeys, useBranding, useMe } from "./query";

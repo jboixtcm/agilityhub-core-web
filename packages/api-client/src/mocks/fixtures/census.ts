@@ -1,12 +1,32 @@
 import type { components } from "../../generated/schema";
+import type { ListItemWith } from "../../list-fields";
 
-export type MemberListItem = components["schemas"]["MemberListItem"];
+/**
+ * A member as the mock stores it: the whole item the api sends without `fields` (the list
+ * projects it per request, CONVENCIONS_API §4).
+ */
+export type MemberListItem = ListItemWith<
+  components["schemas"]["MemberListItem"],
+  "bookingBlocked" | "displayStatus" | "dogs" | "fullName" | "version"
+>;
 type License = components["schemas"]["LicenseWithPendingFields"];
 type DogPendingFields = components["schemas"]["DogPendingFields"];
 type ApiDog = components["schemas"]["Dog"];
 type Dog = Omit<ApiDog, "licenses"> & DogPendingFields & { licenses: License[] };
-export type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
-  DogPendingFields & { licenses: License[] };
+/** A dog as the mock stores it: the whole item of `GET /dogs` without `fields`. */
+export type DogListItem = ListItemWith<
+  Omit<components["schemas"]["DogListItem"], "licenses"> &
+    DogPendingFields & { licenses: License[] },
+  | "age"
+  | "breed"
+  | "displayStatus"
+  | "name"
+  | "owner"
+  | "pendingDocuments"
+  | "registeredAt"
+  | "sex"
+  | "version"
+>;
 export type SavedView = components["schemas"]["SavedView"];
 export type MemberOverview = components["schemas"]["MemberOverview"];
 export type DogDetail = Omit<components["schemas"]["DogDetail"], "dog" | "licenses"> & {

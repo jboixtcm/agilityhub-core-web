@@ -339,6 +339,15 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
           {t("booking:confirm.chargeOnAttendance", { price })}
         </p>
       ) : null}
+      {hold.payment?.mode === "PAY_TO_BOOK" &&
+      price !== undefined &&
+      swap &&
+      selected !== undefined ? (
+        // The swap button names both days, not the payment: the Checkout still follows (R-08-18).
+        <p className="booking-note booking-note--neutral">
+          {t("booking:confirm.payAfterSwap", { price })}
+        </p>
+      ) : null}
       {error === undefined ? null : (
         <p className="booking-note booking-note--danger" role="alert">
           {error}
@@ -401,6 +410,10 @@ function RefusedView({
   let note;
   if (state.code === "BOOKING_LIMIT_REACHED") {
     const details = state.details as Partial<BookingLimitReachedDetails>;
+    // S08 §2 row 29 (amended 26-09): both sentences follow the week of the limit, and a limit per
+    // person names no dog. With CURRENT the class is over by `nextBookableAt`: the mockup's «per a
+    // la setmana vinent»; with NEXT the class turns current then: B1's «aquesta classe».
+    const week = details.week === "NEXT" ? "NEXT" : "CURRENT";
     note = (
       <p className="booking-note booking-note--warning">
         <Icon aria-hidden="true" name="warn" />
@@ -408,10 +421,14 @@ function RefusedView({
           count: details.current ?? details.limit ?? 0,
           dogArticle: article,
           dogName: state.dog.name,
+          unit: details.unit === "DOG" ? "DOG" : "MEMBER",
+          week,
         })}
-        {typeof details.nextBookableAt === "string"
+        {typeof details.nextBookableAt === "string" &&
+        (details.week === "CURRENT" || details.week === "NEXT")
           ? ` ${t("booking:confirm.nextBookableAt", {
               nextBookableAt: formats.formatDayAtTime(details.nextBookableAt),
+              week,
             })}`
           : null}
       </p>

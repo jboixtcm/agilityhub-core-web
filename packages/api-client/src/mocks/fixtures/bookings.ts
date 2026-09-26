@@ -178,11 +178,19 @@ interface MockRow {
   waiting?: number;
 }
 
-type StoredBooking = Omit<Booking, "calendarLinks" | "classSession" | "displayState"> & {
-  lateCancelThresholdMinutes?: number;
-};
+// What the api derives on every read is not stored: the class, the dog, the calendar links,
+// `displayState`, the threshold and `cancellableInTimeUntil` (api E5-T25).
+type StoredBooking = Omit<
+  Booking,
+  | "calendarLinks"
+  | "cancellableInTimeUntil"
+  | "classSession"
+  | "displayState"
+  | "dog"
+  | "lateCancelThresholdMinutes"
+>;
 
-type StoredEntry = Omit<WaitlistEntry, "classSession" | "dogName">;
+type StoredEntry = Omit<WaitlistEntry, "classSession" | "dog" | "dogName">;
 
 interface StoredHold {
   classSessionId: string;
@@ -215,7 +223,8 @@ function booking(
 ): StoredBooking {
   return {
     bookedAt,
-    bookedBy: { displayName: viewerFirstName, viaClub: false },
+    // The fixture bookings were made by the session's own account (api E5-T25 `BookedBy.self`).
+    bookedBy: { displayName: viewerFirstName, self: true, viaClub: false },
     cancellation: null,
     charge: null,
     checkoutUrl: null,
@@ -463,8 +472,9 @@ export function meHome(
       type: "TRAINING",
     });
   }
-  // S07 rows (ACTIVITIES): the member's live registrations, never tied to a dog, so only in «Tots».
-  if (options.modules.includes("ACTIVITIES") && dogId === null) rows.push(...activityRows);
+  // S07 rows (ACTIVITIES): the member's live registrations belong to the member, not to a dog, so
+  // the api's dog filter keeps them (`MemberHomeQuery`).
+  if (options.modules.includes("ACTIVITIES")) rows.push(...activityRows);
   rows.sort((left, right) =>
     (left.startsAt ?? left.startsAtLocal).localeCompare(right.startsAt ?? right.startsAtLocal),
   );
@@ -818,25 +828,32 @@ function displayState(item: StoredBooking, now: number): NonNullable<Booking["di
 
 const CALENDAR_BASE = "https://calendar.example.test";
 
-/** The `Booking` as the api answers it: `GET /bookings/{id}` adds `displayState`. */
+/**
+ * The `Booking` as the api answers it: `GET /bookings/{id}` adds `displayState`; the dog, the
+ * club's threshold and `cancellableInTimeUntil` (the class start minus the threshold) come with
+ * every booking (api E5-T25).
+ */
 export function bookingResource(
   item: StoredBooking,
   options: BookingOptions,
   withDisplayState = true,
-): Booking & { lateCancelThresholdMinutes: number } {
+): Booking {
   const session = findClass(item.classSessionId);
   if (session === undefined) throw new RangeError(`Unknown class ${item.classSessionId}`);
   const dog = findDog(item.dogId);
+  if (dog === undefined) throw new RangeError(`Unknown dog ${item.dogId}`);
+  const startsAt = Date.parse(localInstant(session.startsAtLocal));
   return {
     ...item,
-    ...(dog === undefined ? {} : { dog: { id: dog.id, name: dog.name, sex: dog.sex } }),
     calendarLinks: {
       google: `${CALENDAR_BASE}/google/${item.id}`,
       ics: `${CALENDAR_BASE}/ics/${item.id}.ics`,
       outlook: `${CALENDAR_BASE}/outlook/${item.id}`,
     },
+    cancellableInTimeUntil: new Date(startsAt - options.thresholdMinutes * 60_000).toISOString(),
     classSession: bookingClassSession(session, options.now),
     ...(withDisplayState ? { displayState: displayState(item, options.now) } : {}),
+    dog: { id: dog.id, name: dog.name, sex: dog.sex },
     lateCancelThresholdMinutes: options.thresholdMinutes,
   };
 }
@@ -845,11 +862,12 @@ export function waitlistResource(entry: StoredEntry, options: BookingOptions): W
   const session = findClass(entry.classSessionId);
   if (session === undefined) throw new RangeError(`Unknown class ${entry.classSessionId}`);
   const dog = findDog(entry.dogId);
+  if (dog === undefined) throw new RangeError(`Unknown dog ${entry.dogId}`);
   return {
     ...entry,
     classSession: bookingClassSession(session, options.now),
-    ...(dog === undefined ? {} : { dog: { id: dog.id, name: dog.name, sex: dog.sex } }),
-    dogName: dog?.name ?? null,
+    dog: { id: dog.id, name: dog.name, sex: dog.sex },
+    dogName: dog.name,
   };
 }
 

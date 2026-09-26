@@ -1,4 +1,11 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  isApiError,
+  itemsWith,
+  listFields,
+  type ApiClient,
+  type components,
+  type ListItemWith,
+} from "@agilityhub/api-client";
 import { Button, FormField, Icon, Input, Modal, Switch, useBranding } from "@agilityhub/ui";
 import { type SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,7 +29,9 @@ type Instructor = components["schemas"]["Instructor"];
 type InstructorCreate = components["schemas"]["InstructorCreate"];
 type InstructorPatch = components["schemas"]["InstructorPatch"];
 type InstructorReaderView = components["schemas"]["InstructorReaderView"];
-type Member = components["schemas"]["MemberListItem"];
+/** What the picker and the rows show of a member: the name and the dogs (`fields`, CONVENCIONS_API §4). */
+const MEMBER_FIELDS = ["fullName", "dogs"] as const;
+type Member = ListItemWith<components["schemas"]["MemberListItem"], (typeof MEMBER_FIELDS)[number]>;
 type TeamKind = "administrator" | "instructor";
 
 function isManagedInstructor(item: Instructor | InstructorReaderView): item is Instructor {
@@ -67,6 +76,7 @@ function TeamMemberPicker({
       .GET("/members", {
         params: {
           query: {
+            fields: listFields(MEMBER_FIELDS),
             filter: ["status:eq:ACTIVE"],
             ...(query.trim() === "" ? {} : { q: query.trim() }),
             size: 20,
@@ -75,7 +85,7 @@ function TeamMemberPicker({
       })
       .then((result) => {
         if (current && result.data !== undefined) {
-          setMembers(result.data.items);
+          setMembers(itemsWith(result.data.items, MEMBER_FIELDS));
         }
       });
     return () => {
@@ -293,12 +303,14 @@ export function TeamPage({ client }: { client: ApiClient }) {
   }, [client]);
   const loadMembers = useCallback(async () => {
     const result = await client.GET("/members", {
-      params: { query: { filter: ["status:eq:ACTIVE"], size: 200 } },
+      params: {
+        query: { fields: listFields(MEMBER_FIELDS), filter: ["status:eq:ACTIVE"], size: 200 },
+      },
     });
     if (result.data === undefined) {
       throw new TypeError("Member response did not contain data");
     }
-    return result.data.items;
+    return itemsWith(result.data.items, MEMBER_FIELDS);
   }, [client]);
   const instructors = useCatalogData(loadInstructors, client);
   const administrators = useCatalogData(loadAdministrators, client);

@@ -1,5 +1,5 @@
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
@@ -74,7 +74,7 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     expect(screen.getByText("anul·lada tard")).toHaveClass("ah-tone--warning");
   });
 
-  it("the threshold comes from the booking: 90 minutes read «90 minuts»; without it no warning and the late note has no number", async () => {
+  it("the threshold comes from the booking: 90 minutes warn «Falten menys de 90 minuts»", async () => {
     vi.setSystemTime(new Date("2026-08-03T17:30:00+02:00"));
     rewrite("/bookings/booking-duna-mon3", (body) => {
       body.lateCancelThresholdMinutes = 90;
@@ -98,6 +98,51 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     expect(await screen.findByText(/^Anul·lació feta fora del termini establert\./u)).toBeVisible();
     expect(reads.calls).toBeGreaterThan(1);
   });
+
+  it("a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)", async () => {
+    // The mock's swap (bookingLimit, mockup 06) cancels Friday 7 in time, as R-08-09.
+    await renderApp("/reservar", { scenario: "bookingLimit" });
+    await screen.findByRole("heading", { name: "Classes" });
+    const limitRow = document.querySelectorAll<HTMLElement>(".class-row")[3];
+    fireEvent.click(within(limitRow ?? document.body).getByRole("button"));
+    fireEvent.click(await screen.findByRole("radio", { name: /^Divendres 7/u }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "ANUL·LA DIVENDRES 7 I CONFIRMA DISSABTE 8" }),
+    );
+    await screen.findByText("Reserva confirmada. Afegeix-la al calendari:");
+    cleanup();
+    await openBooking("booking-duna-fri7");
+    expect(screen.getByText("anul·lada")).toBeVisible();
+    expect(screen.queryByText(/^Anul·lació feta/u)).toBeNull();
+    expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
+  });
+
+  it.each([
+    ["CANCELLED", "SYSTEM", "anul·lada", false],
+    ["CANCELLED_LATE", "MEMBER", "anul·lada tard", true],
+  ] as const)(
+    "a %s booking cancelled by %s, opened later: its chip «%s» only, no note (review #4)",
+    async (state, byRole, chip, late) => {
+      rewrite("/bookings/:id", (body) => {
+        Object.assign(body, {
+          cancellation: {
+            at: "2026-08-01T09:00:00Z",
+            byDisplayName: "Laura",
+            byRole,
+            late,
+            message: null,
+            minutesBefore: 3350,
+          },
+          displayState: state,
+          state,
+        });
+      });
+      await openBooking();
+      expect(screen.getByText(chip)).toBeVisible();
+      expect(screen.queryByText(/^Anul·lació feta/u)).toBeNull();
+      expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
+    },
+  );
 
   it("who booked it: another member of the group", async () => {
     rewrite("/bookings/:id", (body) => {

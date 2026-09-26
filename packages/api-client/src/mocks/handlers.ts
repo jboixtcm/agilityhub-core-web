@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
+import type { ListItemWith } from "../list-fields";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
@@ -87,6 +88,12 @@ import {
   exportQueued,
   mockExportBody,
 } from "./list-exports";
+import {
+  AUDIT_LIST_FIELDS,
+  DOG_LIST_FIELDS,
+  fieldsProjection,
+  MEMBER_LIST_FIELDS,
+} from "./list-fields";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -152,7 +159,11 @@ type RingCreate = components["schemas"]["RingCreate"];
 type RingOrder = components["schemas"]["RingOrder"];
 type RingPatch = components["schemas"]["RingPatch"];
 type AuditEntry = components["schemas"]["AuditEntry"];
-type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
+/** An audit row as the mock stores it: the whole item the api sends without `fields`. */
+type AuditEntryListItem = ListItemWith<
+  components["schemas"]["AuditEntryListItem"],
+  "action" | "actorRole" | "at" | "changes" | "entityId" | "entityType" | "origin"
+>;
 type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
 type ExportJob = components["schemas"]["ExportJob"];
 type SignupIdentityCheckRequest = components["schemas"]["IdentityCheckRequest"];
@@ -672,8 +683,10 @@ function auditPage(
 ): AuditListResponse | undefined {
   const url = new URL(request.url);
   const filters = parseFilters(url);
+  const projection = fieldsProjection<AuditEntryListItem>(url, AUDIT_LIST_FIELDS, ["id"]);
   if (
     filters === undefined ||
+    projection === undefined ||
     filters.some((filter) => auditFilterLabels[filter.field] === undefined)
   ) {
     return undefined;
@@ -692,9 +705,10 @@ function auditPage(
   const direction = url.searchParams.getAll("sort")[0]?.endsWith(",asc") === true ? 1 : -1;
   const sorted = [...filtered].sort((left, right) => left.at.localeCompare(right.at) * direction);
   const { page, size } = pagination(url);
+  const items = sorted.slice(page * size, (page + 1) * size);
   return {
     appliedFilters: filters,
-    items: sorted.slice(page * size, (page + 1) * size),
+    items: projection === null ? items : items.map(projection),
     page,
     size,
     totalItems: sorted.length,
@@ -758,7 +772,7 @@ function labelForValue<Item>(
   }
   const member = items.find((item) => values(item, field)?.includes(value));
   if (member !== undefined && field === "planId") {
-    return (member as MemberListItem).plan?.name ?? value;
+    return (member as unknown as MemberListItem).plan?.name ?? value;
   }
   if (member !== undefined && field === "levelId") {
     return (member as unknown as DogListItem).level?.name ?? value;
@@ -921,6 +935,13 @@ function setSignupMockToday(today: string | undefined): void {
   signupMockToday = today;
 }
 
+/** A member migrated without a modality (S05 B34): `GET /signup.member` has no `planId`. */
+function withoutPlan(member: typeof signupMemberFixture): typeof signupMemberFixture {
+  const copy = { ...member };
+  delete copy.planId;
+  return copy;
+}
+
 function signupConfiguration(request: Request) {
   const scenario = currentMockScenario();
   const modules = scenario.branding.modules;
@@ -933,7 +954,14 @@ function signupConfiguration(request: Request) {
     privacyPolicyUrl: scenario.branding.legal.privacyPolicyUrl,
     stripe: scenario.signupStripe === true,
     today: signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
-    ...(request.headers.has("Authorization") ? { member: signupMemberFixture } : {}),
+    ...(request.headers.has("Authorization")
+      ? {
+          member:
+            scenario.signupMemberWithoutPlan === true
+              ? withoutPlan(signupMemberFixture)
+              : signupMemberFixture,
+        }
+      : {}),
   });
   config.requireDogDocumentAtSignup = scenario.signupRequireDogDocument === true;
   if (config.allowFamilyGroupPending !== undefined) {
@@ -1547,6 +1575,17 @@ export const handlers = [
     if (replay !== undefined) {
       return HttpResponse.json(replay, { status: 201 });
     }
+    // R-04-09 (api E5-T22): a plan outside the offer is 422; a member without a current plan must
+    // request one (400 VALIDATION_ERROR on `planIdRequested`).
+    const offer = signupConfiguration(request).plans ?? [];
+    const requested = body.planIdRequested ?? undefined;
+    if (requested === undefined) {
+      if (offer.length > 0 && !offer.some((plan) => plan.current === true)) {
+        return validationError([{ code: "REQUIRED", field: "planIdRequested" }]);
+      }
+    } else if (!offer.some((plan) => plan.id === requested)) {
+      return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
+    }
     if (missingRequiredDogDocument(request, body.documents)) {
       return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
@@ -1571,7 +1610,10 @@ export const handlers = [
         },
       ],
     };
-    const quote = submittedQuote(request, body.planIdRequested ?? signupMemberFixture.planId);
+    const quote = submittedQuote(
+      request,
+      requested ?? offer.find((plan) => plan.current === true)?.id,
+    );
     const result = {
       checkout: { memberId: "member-signup-357", required: scenario.signupStripe === true },
       dogId,
@@ -2101,8 +2143,10 @@ export const handlers = [
     await delay(120);
     const url = new URL(request.url);
     const filters = parseFilters(url);
+    const projection = fieldsProjection<MemberListItem>(url, MEMBER_LIST_FIELDS, ["id"]);
     if (
       filters === undefined ||
+      projection === undefined ||
       filters.some((filter) => memberFilterLabels[filter.field] === undefined)
     ) {
       return apiError("INVALID_FILTER", "Invalid member filter", 400);
@@ -2114,11 +2158,12 @@ export const handlers = [
     }
     const sorted = sortMembers(filtered, url.searchParams.getAll("sort"));
     const { page, size } = pagination(url);
+    const items = sorted.slice(page * size, (page + 1) * size);
     return HttpResponse.json({
       appliedFilters: appliedFilters(filters, memberFilterLabels, (filter) =>
         labelForValue(censusMembers, filter.field, filter.value, memberValues),
       ),
-      items: sorted.slice(page * size, (page + 1) * size),
+      items: projection === null ? items : items.map(projection),
       page,
       size,
       totalItems: sorted.length,
@@ -2424,8 +2469,10 @@ export const handlers = [
     await delay(120);
     const url = new URL(request.url);
     const filters = parseFilters(url);
+    const projection = fieldsProjection<DogListItem>(url, DOG_LIST_FIELDS, ["id"]);
     if (
       filters === undefined ||
+      projection === undefined ||
       filters.some((filter) => dogFilterLabels[filter.field] === undefined)
     ) {
       return apiError("INVALID_FILTER", "Invalid dog filter", 400);
@@ -2437,11 +2484,12 @@ export const handlers = [
     }
     const sorted = sortDogs(filtered, url.searchParams.getAll("sort"));
     const { page, size } = pagination(url);
+    const items = sorted.slice(page * size, (page + 1) * size);
     return HttpResponse.json({
       appliedFilters: appliedFilters(filters, dogFilterLabels, (filter) =>
         labelForValue(censusDogs, filter.field, filter.value, dogValues),
       ),
-      items: sorted.slice(page * size, (page + 1) * size),
+      items: projection === null ? items : items.map(projection),
       page,
       size,
       totalItems: sorted.length,

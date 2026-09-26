@@ -1142,6 +1142,7 @@
             "$ref" : "#/components/schemas/SignupDog"
           },
           "planIdRequested" : {
+            "description" : "R-04-09: omitted, the member's own plan. A member without a plan, or whose plan is no longer assignable (inactive or its module off; GET /signup then marks no plan current), must send one of the offered plans (400 VALIDATION_ERROR, fieldErrors planIdRequested REQUIRED), unless GET /signup offers none",
             "format" : "uuid",
             "type" : "string"
           }
@@ -1405,7 +1406,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bookingId", "classDate", "classSessionId", "classStartsAt", "dogId", "dogName", "id", "memberId", "memberName", "state" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "AttendanceNotice" : {
@@ -1756,7 +1757,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "action", "actorRole", "at", "changes", "entityId", "entityType", "id", "origin" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "AuditSummary" : {
@@ -1949,12 +1950,16 @@
           "displayName" : {
             "type" : "string"
           },
+          "self" : {
+            "description" : "True when the reader's own account made the booking (07: «Reservada el…» instead of «Reservada per {displayName} el…»)",
+            "type" : "boolean"
+          },
           "viaClub" : {
             "description" : "True when booked by the club (BACKOFFICE)",
             "type" : "boolean"
           }
         },
-        "required" : [ "displayName", "viaClub" ],
+        "required" : [ "displayName", "self", "viaClub" ],
         "type" : "object"
       },
       "Booking" : {
@@ -1969,6 +1974,11 @@
           },
           "calendarLinks" : {
             "$ref" : "#/components/schemas/CalendarLinks"
+          },
+          "cancellableInTimeUntil" : {
+            "description" : "R-08-10: the class start minus lateCancelThresholdMinutes, computed by the api; a cancellation is in time while now <= this instant",
+            "format" : "date-time",
+            "type" : "string"
           },
           "cancellation" : {
             "anyOf" : [ {
@@ -2001,11 +2011,20 @@
             "enum" : [ "CONFIRMED", "DONE", "NO_SHOW", "CANCELLED", "CANCELLED_LATE", "CANCELLED_BY_CLUB", "PAYMENT_PENDING" ],
             "type" : "string"
           },
+          "dog" : {
+            "$ref" : "#/components/schemas/HoldDog",
+            "description" : "The booked dog; its sex gives 07's Catalan article («amb la Duna»)"
+          },
           "dogId" : {
             "type" : "string"
           },
           "id" : {
             "type" : "string"
+          },
+          "lateCancelThresholdMinutes" : {
+            "description" : "The club's bookings.lateCancelThresholdMinutes (R-08-10), for 07's warning and late note",
+            "format" : "int32",
+            "type" : "integer"
           },
           "memberId" : {
             "description" : "Owner of the dog (the member + dog unit)",
@@ -2031,7 +2050,7 @@
             "type" : [ "string", "null" ]
           }
         },
-        "required" : [ "bookedAt", "bookedBy", "calendarLinks", "classSession", "classSessionId", "dogId", "id", "memberId", "origin", "state" ],
+        "required" : [ "bookedAt", "bookedBy", "calendarLinks", "cancellableInTimeUntil", "classSession", "classSessionId", "dog", "dogId", "id", "lateCancelThresholdMinutes", "memberId", "origin", "state" ],
         "type" : "object"
       },
       "BookingBlock" : {
@@ -2250,7 +2269,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bookedAt", "bookingWeekKey", "classSessionId", "classStartsAt", "dogId", "dogName", "id", "memberId", "memberName", "origin", "state" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "BookingRequest" : {
@@ -2812,11 +2831,57 @@
         "required" : [ "seatHoldId" ],
         "type" : "object"
       },
+      "ClassBookingItem" : {
+        "properties" : {
+          "bookedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "bookingWeekKey" : {
+            "type" : "string"
+          },
+          "classSessionId" : {
+            "type" : "string"
+          },
+          "classStartsAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "dogId" : {
+            "type" : "string"
+          },
+          "dogName" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "late" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "memberId" : {
+            "type" : "string"
+          },
+          "memberName" : {
+            "type" : "string"
+          },
+          "origin" : {
+            "enum" : [ "APP", "BACKOFFICE", "INSTRUCTOR", "SYSTEM" ],
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "PAYMENT_PENDING", "ACTIVE", "CANCELLED", "CANCELLED_LATE", "CANCELLED_BY_CLUB" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "bookedAt", "bookingWeekKey", "classSessionId", "classStartsAt", "dogId", "dogName", "id", "memberId", "memberName", "origin", "state" ],
+        "type" : "object"
+      },
       "ClassBookings" : {
         "properties" : {
           "items" : {
             "items" : {
-              "$ref" : "#/components/schemas/BookingListItem"
+              "$ref" : "#/components/schemas/ClassBookingItem"
             },
             "type" : "array"
           }
@@ -3045,8 +3110,8 @@
             } ]
           },
           "placementId" : {
-            "description" : "Only with COURSES",
-            "type" : "string"
+            "description" : "Only with COURSES; null for a class without a placement",
+            "type" : [ "string", "null" ]
           },
           "ring" : {
             "anyOf" : [ {
@@ -3130,6 +3195,110 @@
           }
         },
         "required" : [ "date", "endTime", "instructorIds", "levelIds", "startTime" ],
+        "type" : "object"
+      },
+      "ClassSessionListItem" : {
+        "properties" : {
+          "atRisk" : {
+            "type" : "boolean"
+          },
+          "cancellation" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/ClassCancellation"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "capacity" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "capacityMode" : {
+            "enum" : [ "AUTO", "MANUAL" ],
+            "type" : "string"
+          },
+          "counters" : {
+            "$ref" : "#/components/schemas/ClassCounters"
+          },
+          "date" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "description" : {
+            "type" : [ "string", "null" ]
+          },
+          "displayDescription" : {
+            "type" : "string"
+          },
+          "endTime" : {
+            "type" : "string"
+          },
+          "endsAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "inconsistencyIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "instructorIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "levelIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "notes" : {
+            "description" : "ADMIN only; omitted for INSTRUCTOR",
+            "type" : [ "string", "null" ]
+          },
+          "origin" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/ClassOrigin"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "placementId" : {
+            "description" : "Only with COURSES; null for a class without a placement",
+            "type" : [ "string", "null" ]
+          },
+          "ringId" : {
+            "type" : [ "string", "null" ]
+          },
+          "riskExempt" : {
+            "type" : "boolean"
+          },
+          "startTime" : {
+            "type" : "string"
+          },
+          "startsAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "DRAFT", "ACTIVE", "FINISHED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "weekId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "id" ],
         "type" : "object"
       },
       "ClassSessionMemberView" : {
@@ -4580,7 +4749,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "age", "breed", "displayStatus", "id", "licenses", "name", "owner", "pendingDocuments", "registeredAt", "sex", "version" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "DogPatch" : {
@@ -4604,7 +4773,7 @@
             "type" : "string"
           },
           "documents" : {
-            "description" : "PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new signup upload. The key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId} answers 400 FILE_NOT_FOUND. At most 10 new uploads per request (kept files do not count). Sending back the view's keys is no change.",
+            "description" : "PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new file: the caller's own POST /attachments/upload-url with purpose = DOG_DOCUMENT, uploaded in the club and not claimed by another dog or type (a signup upload is also taken). Another club's, purpose's or account's key, one claimed elsewhere or never uploaded answers 400 FILE_NOT_FOUND, and so does the key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId}. At most 10 new files per request (kept files do not count). Sending back the view's keys is no change.",
             "items" : {
               "$ref" : "#/components/schemas/SignupDocument"
             },
@@ -5355,7 +5524,7 @@
             "type" : "boolean"
           }
         },
-        "required" : [ "activityAt", "authorName", "authorRole", "createdAt", "dogId", "dogName", "id", "kind", "memberId", "memberName", "textExcerpt", "unread" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "FollowupPage" : {
@@ -6595,7 +6764,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "counters", "dryRun", "errorCount", "runId", "scheduledFor", "scheduledForLocal", "startedAt", "status", "trigger" ],
+        "required" : [ "runId" ],
         "type" : "object"
       },
       "JobScheduleView" : {
@@ -7336,7 +7505,7 @@
         "required" : [ "appliedFilters", "items", "page", "size", "totalItems", "totalPages" ],
         "type" : "object"
       },
-      "ListPageClassSession" : {
+      "ListPageClassSessionListItem" : {
         "properties" : {
           "appliedFilters" : {
             "items" : {
@@ -7346,7 +7515,7 @@
           },
           "items" : {
             "items" : {
-              "$ref" : "#/components/schemas/ClassSession"
+              "$ref" : "#/components/schemas/ClassSessionListItem"
             },
             "type" : "array"
           },
@@ -7501,7 +7670,7 @@
               "anyOf" : [ {
                 "$ref" : "#/components/schemas/MemberListItem"
               }, {
-                "$ref" : "#/components/schemas/MemberInstructorView"
+                "$ref" : "#/components/schemas/MemberInstructorListItem"
               } ],
               "description" : "Role-selected projection: ADMIN first, reduced reader second. Exactly one projection is returned per request."
             },
@@ -7531,7 +7700,7 @@
         "required" : [ "appliedFilters", "items", "page", "size", "totalItems", "totalPages" ],
         "type" : "object"
       },
-      "ListPageRingBlock" : {
+      "ListPageRingBlockListItem" : {
         "properties" : {
           "appliedFilters" : {
             "items" : {
@@ -7541,12 +7710,7 @@
           },
           "items" : {
             "items" : {
-              "anyOf" : [ {
-                "$ref" : "#/components/schemas/RingBlock"
-              }, {
-                "$ref" : "#/components/schemas/RingBlockMemberView"
-              } ],
-              "description" : "ADMIN/INSTRUCTOR receive RingBlock; MEMBER receives RingBlockMemberView without note/createdByName."
+              "$ref" : "#/components/schemas/RingBlockListItem"
             },
             "type" : "array"
           },
@@ -8398,6 +8562,68 @@
         "required" : [ "dogs", "from", "items", "monthsVisible", "showDog", "types" ],
         "type" : "object"
       },
+      "MemberInstructorListItem" : {
+        "description" : "R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason.",
+        "properties" : {
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "bookingBlocked" : {
+            "type" : "boolean"
+          },
+          "contactEmails" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ContactEmail"
+            },
+            "type" : "array"
+          },
+          "displayStatus" : {
+            "$ref" : "#/components/schemas/DisplayStatus"
+          },
+          "dogs" : {
+            "items" : {
+              "$ref" : "#/components/schemas/DogSummary"
+            },
+            "type" : "array"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "fullName" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lastName1" : {
+            "type" : "string"
+          },
+          "lastName2" : {
+            "type" : "string"
+          },
+          "memberNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "phones" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Phone"
+            },
+            "type" : "array"
+          },
+          "status" : {
+            "enum" : [ "PENDING", "ACTIVE", "INACTIVE", "LEFT" ],
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "id" ],
+        "type" : "object"
+      },
       "MemberInstructorView" : {
         "description" : "R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason.",
         "properties" : {
@@ -8570,7 +8796,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "bookingBlocked", "displayStatus", "dogs", "fullName", "id", "version" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "MemberListSignup" : {
@@ -10912,6 +11138,10 @@
       },
       "ReservationRow" : {
         "properties" : {
+          "activityId" : {
+            "description" : "ACTIVITY rows only (S07 §2): the activity of the registration `id`; null on the other rows",
+            "type" : [ "string", "null" ]
+          },
           "dogId" : {
             "type" : [ "string", "null" ]
           },
@@ -10932,6 +11162,10 @@
           },
           "instructorVisibleAt" : {
             "format" : "date-time",
+            "type" : [ "string", "null" ]
+          },
+          "ringColor" : {
+            "description" : "The ring's colour for 03's dot: CLASS, CLASS_WAITLIST and TRAINING rows; null on ACTIVITY rows and for a ring without one",
             "type" : [ "string", "null" ]
           },
           "ringName" : {
@@ -11110,6 +11344,66 @@
           }
         },
         "required" : [ "from", "kind", "reason", "ringId", "to" ],
+        "type" : "object"
+      },
+      "RingBlockListItem" : {
+        "properties" : {
+          "activityId" : {
+            "type" : [ "string", "null" ]
+          },
+          "activityTitle" : {
+            "type" : [ "string", "null" ]
+          },
+          "createdByName" : {
+            "description" : "Not sent to MEMBER",
+            "type" : "string"
+          },
+          "date" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "from" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "fromLocal" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "kind" : {
+            "enum" : [ "BLOCK", "RESERVATION" ],
+            "type" : "string"
+          },
+          "note" : {
+            "description" : "Not sent to MEMBER",
+            "type" : [ "string", "null" ]
+          },
+          "reason" : {
+            "enum" : [ "MAINTENANCE", "PRIVATE_CLASS", "THERAPY", "PREPARATION", "ACTIVITY", "OTHER" ],
+            "type" : "string"
+          },
+          "ringId" : {
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "ACTIVE", "CANCELLED" ],
+            "type" : "string"
+          },
+          "to" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "toLocal" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "id" ],
         "type" : "object"
       },
       "RingBlockMemberView" : {
@@ -12757,6 +13051,10 @@
           "conditions" : {
             "type" : "string"
           },
+          "current" : {
+            "description" : "R-04-09: add-dog mode (MEMBER) only. true on the member's own plan, listed even when the public offer hides it (M8); false on the others. A member without a plan, or whose plan is no longer assignable, gets the offer with no current plan, and POST /me/dogs/signup then requires planIdRequested. Absent in the public signup",
+            "type" : "boolean"
+          },
           "description" : {
             "type" : "string"
           },
@@ -12781,6 +13079,10 @@
           },
           "price" : {
             "$ref" : "#/components/schemas/SignupPrice"
+          },
+          "priceLabel" : {
+            "description" : "R-05-19: the plan's texts.priceLabel in the reader's locale, when the plan has one (the text of screen 17's price line without a current price)",
+            "type" : "string"
           },
           "type" : {
             "enum" : [ "MONTHLY", "PACK", "SINGLE_CLASS" ],
@@ -13634,8 +13936,8 @@
             "type" : "array"
           },
           "placementId" : {
-            "description" : "Only with COURSES",
-            "type" : "string"
+            "description" : "The class's placement with COURSES; null for a class without one, and always without COURSES",
+            "type" : [ "string", "null" ]
           },
           "ringId" : {
             "type" : [ "string", "null" ]
@@ -14042,7 +14344,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "createdAt", "date", "dogId", "dogName", "id", "memberId", "memberName", "origin", "ringId", "ringName", "startsAt", "startsAtLocal", "state" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "TrainingBookingRequest" : {
@@ -14684,6 +14986,10 @@
             "format" : "date-time",
             "type" : [ "string", "null" ]
           },
+          "dog" : {
+            "$ref" : "#/components/schemas/HoldDog",
+            "description" : "The waiting dog; its sex gives the Catalan article of the waiting-list detail"
+          },
           "dogId" : {
             "type" : "string"
           },
@@ -14714,7 +15020,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "classSession", "classSessionId", "dogId", "id", "joinedAt", "memberId", "state" ],
+        "required" : [ "classSession", "classSessionId", "dog", "dogId", "id", "joinedAt", "memberId", "state" ],
         "type" : "object"
       },
       "WaitlistEntryRequest" : {
@@ -15012,7 +15318,7 @@
             "type" : [ "string", "null" ]
           }
         },
-        "required" : [ "classCounts", "endDate", "id", "isoWeek", "isoYear", "startDate", "state" ],
+        "required" : [ "id" ],
         "type" : "object"
       },
       "WeekOpensAt" : {
@@ -15860,7 +16166,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -16028,7 +16334,7 @@
         "x-exportable" : true,
         "x-fields" : [ "id", "title", "typeDisplay", "date", "startTime", "endTime", "rings", "allRings", "location", "registrations", "maxPlaces", "state", "type", "slug", "registrationTo", "createdAt" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen" ],
+        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen", "id" ],
         "x-sortable" : [ "date", "title", "state", "createdAt" ]
       },
       "post" : {
@@ -16250,7 +16556,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -16433,8 +16739,9 @@
           "key" : "registrationTo"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "title", "typeDisplay", "date", "startTime", "endTime", "rings", "allRings", "location", "registrations", "maxPlaces", "state", "type", "slug", "registrationTo", "createdAt" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen" ],
+        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen", "id" ],
         "x-sortable" : [ "date", "title", "state", "createdAt" ]
       }
     },
@@ -16500,13 +16807,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -16668,7 +16968,7 @@
         } ],
         "x-exportable" : true,
         "x-filter-operators" : { },
-        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen" ],
+        "x-filterable" : [ "state", "type", "date", "ringId", "levelId", "deleted", "registrationOpen", "id" ],
         "x-sortable" : [ "date", "title", "state", "createdAt" ]
       }
     },
@@ -18258,7 +18558,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -18402,13 +18702,13 @@
         "x-exportable" : true,
         "x-fields" : [ "registrationId", "member", "state", "position", "waitlistRank", "origin", "registeredAt", "cancelledAt", "cancelReason" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "state", "origin", "registeredAt", "memberId" ],
+        "x-filterable" : [ "state", "origin", "registeredAt", "memberId", "id" ],
         "x-sortable" : [ "registeredAt", "position", "memberLastName" ]
       }
     },
     "/api/v1/activities/{id}/ring-conflicts" : {
       "get" : {
-        "description" : "Roles: ADMIN. The preview of R-07-05's dialog: a window the publication would refuse answers the same error (400 INVALID_TIME_RANGE without a date or hours, 422 OUTSIDE_OPENING_HOURS). Tenant comes from the JWT. Requires ACTIVITIES.",
+        "description" : "Roles: ADMIN. The preview of R-07-05's dialog. A window outside the opening hours answers 422 OUTSIDE_OPENING_HOURS, as the publication does. Rings without a date or without hours leave no window to block: the preview answers 400 INVALID_TIME_RANGE, while the publication refuses such an activity earlier, with 422 ACTIVITY_INCOMPLETE. Tenant comes from the JWT. Requires ACTIVITIES.",
         "operationId" : "ringConflicts",
         "parameters" : [ {
           "in" : "path",
@@ -18782,7 +19082,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -18970,8 +19270,9 @@
           "key" : "cancelReason"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "registrationId", "member", "state", "position", "waitlistRank", "origin", "registeredAt", "cancelledAt", "cancelReason" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "activityId", "state", "origin", "registeredAt", "memberId" ],
+        "x-filterable" : [ "activityId", "state", "origin", "registeredAt", "memberId", "id" ],
         "x-sortable" : [ "registeredAt", "position", "memberLastName" ]
       }
     },
@@ -20557,7 +20858,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -20782,7 +21083,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -21027,7 +21328,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -21218,6 +21519,7 @@
           "key" : "details"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "clubId", "at", "actorAccountId", "actorName", "actorRole", "impersonatedMemberId", "impersonatedName", "origin", "entityType", "entityId", "entityLabel", "memberId", "action", "changes", "reason", "details" ],
         "x-filter-operators" : {
           "at" : [ "between" ]
         },
@@ -21294,7 +21596,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -21485,6 +21787,7 @@
           "key" : "details"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "clubId", "at", "actorAccountId", "actorName", "actorRole", "impersonatedMemberId", "impersonatedName", "origin", "entityType", "entityId", "entityLabel", "memberId", "action", "changes", "reason", "details" ],
         "x-filter-operators" : {
           "at" : [ "between" ]
         },
@@ -22104,7 +22407,7 @@
     },
     "/api/v1/bookings" : {
       "get" : {
-        "description" : "Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Without fields every item property is sent; with fields an item has id and the requested keys only. Tenant comes from the JWT.",
         "operationId" : "bookings",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -22158,7 +22461,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -22324,15 +22627,16 @@
           "key" : "late"
         } ],
         "x-exportable" : false,
-        "x-fields" : [ "id", "state", "origin", "classSessionId", "classStartsAt", "bookingWeekKey", "dogId", "memberId", "bookedAt", "late" ],
+        "x-fields" : [ "id", "state", "origin", "classSessionId", "classStartsAt", "bookingWeekKey", "dogId", "dogName", "memberId", "memberName", "bookedAt", "late" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "state", "dogId", "memberId", "classSessionId", "bookingWeekKey", "origin", "classStartsAt" ],
+        "x-filterable" : [ "id", "state", "dogId", "memberId", "classSessionId", "bookingWeekKey", "origin", "classStartsAt" ],
         "x-sortable" : [ "classStartsAt", "bookedAt" ]
       },
       "post" : {
-        "description" : "Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId); Idempotency-Key = seatHoldId, a repeated key returns the same response, also a 409. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.",
+        "description" : "Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.",
         "operationId" : "confirmBooking",
         "parameters" : [ {
+          "description" : "One client UUID per request body (R-08-08): reused by a retry of the same body, new for a different body",
           "in" : "header",
           "name" : "Idempotency-Key",
           "required" : true,
@@ -23248,7 +23552,7 @@
     },
     "/api/v1/class-sessions" : {
       "get" : {
-        "description" : "Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. MEMBER cannot list classes; use day-grid or class detail. Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. MEMBER cannot list classes; use day-grid or class detail. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.",
         "operationId" : "classes",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -23302,7 +23606,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -23314,11 +23618,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ListPageClassSession"
+                  "$ref" : "#/components/schemas/ListPageClassSessionListItem"
                 }
               }
             },
-            "description" : "ListPage<ClassSession>"
+            "description" : "ListPage<ClassSessionListItem>"
           },
           "400" : {
             "content" : {
@@ -23446,7 +23750,7 @@
         "x-exportable" : false,
         "x-fields" : [ "id", "weekId", "date", "startTime", "endTime", "startsAt", "endsAt", "ringId", "levelIds", "instructorIds", "capacity", "capacityMode", "description", "displayDescription", "state", "counters", "atRisk", "riskExempt", "cancellation", "origin", "version", "inconsistencyIds", "placementId", "notes" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "date", "state", "ringId", "instructorId", "levelId", "weekId" ],
+        "x-filterable" : [ "id", "date", "state", "ringId", "instructorId", "levelId", "weekId" ],
         "x-sortable" : [ "startsAt", "date" ]
       },
       "post" : {
@@ -27555,7 +27859,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -27827,7 +28131,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -28042,6 +28346,7 @@
           "key" : "registeredAt"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "name", "breed", "level", "owner", "handler", "handlerName", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
         "x-filter-operators" : {
           "breed" : [ "contains" ],
           "handlerName" : [ "contains" ],
@@ -28121,7 +28426,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -28336,6 +28641,7 @@
           "key" : "registeredAt"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "name", "breed", "level", "owner", "handler", "handlerName", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
         "x-filter-operators" : {
           "breed" : [ "contains" ],
           "handlerName" : [ "contains" ],
@@ -28667,7 +28973,7 @@
         "tags" : [ "clubs.census" ]
       },
       "patch" : {
-        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new signup upload (R-04-19). With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED, unless the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.",
+        "description" : "Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new file, the ADMIN's own POST /attachments/upload-url with purpose = DOG_DOCUMENT (R-04-19, amended 26-09); see DogPatch.documents. With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED only when the request changes the card's keys (sending back a PENDING card is no change), and never when the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.",
         "operationId" : "updateDog",
         "parameters" : [ {
           "in" : "path",
@@ -32763,7 +33069,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -34673,13 +34979,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -34977,7 +35276,7 @@
     },
     "/api/v1/jobs/{name}/runs" : {
       "get" : {
-        "description" : "Roles: ADMIN. Run history of the club (universal list, CONVENCIONS_API §4); unknown name → JOB_UNKNOWN, module of the process off → MODULE_DISABLED. Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN. Run history of the club (universal list, CONVENCIONS_API §4): without fields every item property is sent; with fields an item has runId and the requested keys only. Unknown name → JOB_UNKNOWN, module of the process off → MODULE_DISABLED. Tenant comes from the JWT.",
         "operationId" : "jobRuns",
         "parameters" : [ {
           "description" : "R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder",
@@ -35039,7 +35338,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -35195,7 +35494,7 @@
           "key" : "skipReason"
         } ],
         "x-exportable" : false,
-        "x-fields" : [ "id" ],
+        "x-fields" : [ "runId", "scheduledFor", "scheduledForLocal", "trigger", "dryRun", "status", "skipReason", "startedAt", "finishedAt", "durationMs", "counters", "errorCount" ],
         "x-filter-operators" : { },
         "x-filterable" : [ "status", "scheduledFor", "trigger", "dryRun" ],
         "x-sortable" : [ "scheduledFor", "startedAt" ]
@@ -40574,7 +40873,7 @@
     },
     "/api/v1/members" : {
       "get" : {
-        "description" : "S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorView without financial or internal data. Fields/filters are limited by role. S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields.",
+        "description" : "S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields.",
         "operationId" : "listMembers",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -40628,7 +40927,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -40917,7 +41216,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -41151,6 +41450,7 @@
           "key" : "idDocument"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "memberNumber", "fullName", "dogs", "plan", "displayStatus", "contact", "paymentMethod", "nextInvoiceDate", "familyGroup", "joinedAt", "leaveDate", "bookingBlocked", "imageRights", "roles", "city", "postalCode", "pendingDocuments", "freeTraining", "birthDate", "gender", "idDocument", "version", "signupPending", "pendingDogs", "warnings", "signup", "firstName", "lastName1", "lastName2", "contactEmails", "phones", "address", "status" ],
         "x-filter-operators" : {
           "dogName" : [ "contains" ],
           "fullName" : [ "contains" ]
@@ -41228,7 +41528,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -41462,6 +41762,7 @@
           "key" : "idDocument"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "memberNumber", "fullName", "dogs", "plan", "displayStatus", "contact", "paymentMethod", "nextInvoiceDate", "familyGroup", "joinedAt", "leaveDate", "bookingBlocked", "imageRights", "roles", "city", "postalCode", "pendingDocuments", "freeTraining", "birthDate", "gender", "idDocument", "version", "signupPending", "pendingDogs", "warnings", "signup", "firstName", "lastName1", "lastName2", "contactEmails", "phones", "address", "status" ],
         "x-filter-operators" : {
           "dogName" : [ "contains" ],
           "fullName" : [ "contains" ]
@@ -42158,7 +42459,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -44558,13 +44859,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -46897,7 +47191,7 @@
     },
     "/api/v1/platform/audit-entries" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).",
         "operationId" : "platformAuditEntries",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -46950,13 +47244,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -47281,7 +47568,7 @@
     },
     "/api/v1/platform/erasure-requests" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).",
         "operationId" : "platformErasureRequests",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -47334,13 +47621,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -47828,7 +48108,7 @@
     },
     "/api/v1/platform/security-events" : {
       "get" : {
-        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.",
+        "description" : "Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).",
         "operationId" : "platformSecurityEvents",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -47881,13 +48161,6 @@
             "type" : "array"
           },
           "style" : "form"
-        }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
-          "in" : "query",
-          "name" : "fields",
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -49581,7 +49854,7 @@
     },
     "/api/v1/ring-blocks" : {
       "get" : {
-        "description" : "Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER receives RingBlockMemberView without note or createdByName. Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER rows leave out note and createdByName (as RingBlockMemberView), and asking for them in fields is INVALID_FILTER. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.",
         "operationId" : "blocks",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -49635,7 +49908,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -49647,11 +49920,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ListPageRingBlock"
+                  "$ref" : "#/components/schemas/ListPageRingBlockListItem"
                 }
               }
             },
-            "description" : "ListPage<RingBlock>"
+            "description" : "ListPage<RingBlockListItem>"
           },
           "400" : {
             "content" : {
@@ -49779,7 +50052,7 @@
         "x-exportable" : false,
         "x-fields" : [ "id", "ringId", "from", "to", "date", "fromLocal", "toLocal", "kind", "reason", "activityId", "activityTitle", "state", "version", "note", "createdByName" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "ringId", "kind", "reason", "state", "from", "to" ],
+        "x-filterable" : [ "id", "ringId", "kind", "reason", "state", "from", "to" ],
         "x-sortable" : [ "from" ]
       },
       "post" : {
@@ -54564,7 +54837,7 @@
     },
     "/api/v1/training-bookings" : {
       "get" : {
-        "description" : "Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Requires FREE_TRAINING. Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Without fields every item property is sent; with fields an item has id and the requested keys only. Requires FREE_TRAINING. Tenant comes from the JWT.",
         "operationId" : "trainingBookings",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -54618,7 +54891,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -54786,7 +55059,7 @@
         "x-exportable" : true,
         "x-fields" : [ "id", "date", "startsAt", "startsAtLocal", "ringId", "ringName", "memberId", "memberName", "dogId", "dogName", "state", "origin", "createdAt" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "date", "ringId", "memberId", "dogId", "state", "origin" ],
+        "x-filterable" : [ "id", "date", "ringId", "memberId", "dogId", "state", "origin" ],
         "x-sortable" : [ "startsAt" ]
       },
       "post" : {
@@ -55017,7 +55290,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -55200,8 +55473,9 @@
           "key" : "createdAt"
         } ],
         "x-exportable" : false,
+        "x-fields" : [ "id", "date", "startsAt", "startsAtLocal", "ringId", "ringName", "memberId", "memberName", "dogId", "dogName", "state", "origin", "createdAt" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "date", "ringId", "memberId", "dogId", "state", "origin" ],
+        "x-filterable" : [ "id", "date", "ringId", "memberId", "dogId", "state", "origin" ],
         "x-sortable" : [ "startsAt" ]
       }
     },
@@ -57832,7 +58106,7 @@
     },
     "/api/v1/weeks" : {
       "get" : {
-        "description" : "Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.",
+        "description" : "Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.",
         "operationId" : "weeks",
         "parameters" : [ {
           "description" : "Zero-based page index.",
@@ -57886,7 +58160,7 @@
           },
           "style" : "form"
         }, {
-          "description" : "Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER.",
+          "description" : "Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER.",
           "in" : "query",
           "name" : "fields",
           "schema" : {
@@ -58030,7 +58304,7 @@
         "x-exportable" : false,
         "x-fields" : [ "id", "isoYear", "isoWeek", "startDate", "endDate", "state", "generatedAt", "validatedAt", "weekdayTemplateName", "saturdayTemplateName", "classCounts" ],
         "x-filter-operators" : { },
-        "x-filterable" : [ "startDate", "state" ],
+        "x-filterable" : [ "id", "startDate", "state" ],
         "x-sortable" : [ "startDate" ]
       },
       "post" : {

@@ -1,0 +1,49 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home: the mockup rows in order, «amb {dog}» only with «Tots», counters from what counts (R-08-02) 21ms
+ × src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3) 4ms
+   → expected [ 'CLASS 2026-08-03T18:50', …(1) ] to deeply equal [ 'CLASS 2026-08-03T18:50', …(2) ]
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants 5ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > module variants: WAITLIST off reads FULL without counts; SINGLE_CLASS prices every row and drops the pack 7ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details 13ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED 10ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one 4ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt 4ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /bookings/{id} and the cancellation: late by R-08-10 (4 h, the edge in time), displayState, then 409 5ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry 12ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > WAITLIST off: every waitlist route is 404 MODULE_DISABLED 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3)
+AssertionError: expected [ 'CLASS 2026-08-03T18:50', …(1) ] to deeply equal [ 'CLASS 2026-08-03T18:50', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "CLASS 2026-08-03T18:50",
+    "CLASS_WAITLIST 2026-08-06T20:00",
+-   "ACTIVITY 2026-08-07T18:30",
+  ]
+
+ ❯ src/mocks/booking-handlers.test.ts:95:80
+     93|   it("GET /me/home?dogId= keeps the member's activity rows under every…
+     94|     const duna = await home("member", "?dogId=dog-duna");
+     95|     expect(duna.reservations.map((row) => `${row.type} ${row.startsAtL…
+       |                                                                                ^
+     96|       "CLASS 2026-08-03T18:50",
+     97|       "CLASS_WAITLIST 2026-08-06T20:00",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  17:32:13
+   Duration  423ms (transform 40%, import 34%, tests 25%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/booking-handlers.test.ts --reporter=verbose

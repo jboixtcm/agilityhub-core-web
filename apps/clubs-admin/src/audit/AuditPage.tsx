@@ -1,4 +1,11 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  isApiError,
+  itemsWith,
+  listFields,
+  type ApiClient,
+  type components,
+  type ListItemWith,
+} from "@agilityhub/api-client";
 import { fmtDateTime, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
@@ -23,7 +30,14 @@ import { useListExport } from "./useListExport";
 
 type AuditEntry = components["schemas"]["AuditEntry"];
 type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
-type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
+type AuditAction = NonNullable<AuditEntryListItem["action"]>;
+type AuditOrigin = NonNullable<AuditEntryListItem["origin"]>;
+type AuditRole = NonNullable<AuditEntryListItem["actorRole"]>;
+/** A row of the list: the keys of its visible columns, and always its action (the row's label). */
+type AuditRow = ListItemWith<AuditEntryListItem, "action">;
+type AuditListResponse = Omit<components["schemas"]["ListPageAuditEntryListItem"], "items"> & {
+  items: AuditRow[];
+};
 type ListFilter = components["schemas"]["Filter"];
 type SavedView = components["schemas"]["SavedView"];
 type SavedViewCreate = components["schemas"]["SavedViewCreate"];
@@ -40,7 +54,19 @@ const DEFAULT_COLUMNS = [
   "origin",
 ];
 
-const FEATURED_ACTIONS: readonly AuditEntryListItem["action"][] = [
+/**
+ * The keys a visible column shows (CONVENCIONS_API §4 `fields`, api E5-T22): «Entitat» falls back
+ * to the entity's type and «Actor» to the actor's role, so they ask for both keys (E4-W13 report,
+ * question 4). Any other column shows the key it is named after.
+ */
+const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
+  actorName: ["actorName", "actorRole"],
+  entityLabel: ["entityLabel", "entityType"],
+};
+/** Asked for whatever the visible columns: the row's label names its action. */
+const ROW_FIELDS = ["action"] as const;
+
+const FEATURED_ACTIONS: readonly AuditAction[] = [
   "MEMBER_UPDATED",
   "MEMBER_PAYMENT_METHOD_CHANGED",
   "MEMBER_PLAN_CHANGED",
@@ -88,7 +114,10 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
 
 function queryFor(state: UniversalListState) {
   return {
-    fields: state.columns.join(","),
+    fields: listFields([
+      ...ROW_FIELDS,
+      ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
+    ]),
     filter: apiFilters(state.filters),
     page: state.page,
     ...(state.q === "" ? {} : { q: state.q }),
@@ -101,7 +130,7 @@ function actionLabel(t: Translation, action: string): string {
   return t(`admin-audit:actions.${action}`, { defaultValue: action });
 }
 
-function originLabel(t: Translation, origin: AuditEntryListItem["origin"]): string {
+function originLabel(t: Translation, origin: AuditOrigin): string {
   switch (origin) {
     case "APP":
       return t("admin-audit:origins.APP");
@@ -116,7 +145,7 @@ function originLabel(t: Translation, origin: AuditEntryListItem["origin"]): stri
   }
 }
 
-function roleLabel(t: Translation, role: AuditEntryListItem["actorRole"]): string {
+function roleLabel(t: Translation, role: AuditRole): string {
   switch (role) {
     case "ADMIN":
       return t("admin-audit:roles.ADMIN");
@@ -136,13 +165,13 @@ function roleLabel(t: Translation, role: AuditEntryListItem["actorRole"]): strin
 function filterLabel(t: Translation, field: string, value: string): string {
   if (field === "action") return actionLabel(t, value);
   if (field === "origin" && ["APP", "BACKOFFICE", "PUBLIC", "SYSTEM", "WEBHOOK"].includes(value)) {
-    return originLabel(t, value as AuditEntryListItem["origin"]);
+    return originLabel(t, value as AuditOrigin);
   }
   if (
     field === "actorRole" &&
     ["ADMIN", "INSTRUCTOR", "MEMBER", "PLATFORM", "SYSTEM", "WEBHOOK"].includes(value)
   ) {
-    return roleLabel(t, value as AuditEntryListItem["actorRole"]);
+    return roleLabel(t, value as AuditRole);
   }
   return value;
 }
@@ -243,8 +272,12 @@ function useAuditData(client: ApiClient, memberId: string | undefined, state: Un
         if (result.data === undefined) {
           setError(new TypeError("Audit response did not contain data"));
         } else {
-          setData(result.data);
-          setError(undefined);
+          try {
+            setData({ ...result.data, items: itemsWith(result.data.items, ROW_FIELDS) });
+            setError(undefined);
+          } catch (cause) {
+            setError(cause);
+          }
         }
         setCompletedKey(requestKey);
       },
@@ -448,12 +481,17 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
     { key: "impersonatedMemberId", label: t("admin-audit:filters.asMember"), type: "relation" },
     { key: "origin", label: t("admin-audit:filters.origin"), type: "enum" },
   ];
-  const columns = useMemo<UniversalListColumn<AuditEntryListItem>[]>(
+  // Each cell reads only the keys its column asks for (`COLUMN_FIELDS`); a value the entry does
+  // not have reads «—».
+  const columns = useMemo<UniversalListColumn<AuditRow>[]>(
     () => [
       {
         key: "at",
         label: t("admin-audit:columns.at"),
-        render: (entry) => fmtDateTime(entry.at, locale, branding.timeZone),
+        render: (entry) =>
+          entry.at === undefined
+            ? t("admin-audit:none")
+            : fmtDateTime(entry.at, locale, branding.timeZone),
         sortKey: "at",
       },
       {
@@ -464,12 +502,14 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
       {
         key: "entityLabel",
         label: t("admin-audit:columns.entity"),
-        render: (entry) => entry.entityLabel ?? entry.entityType,
+        render: (entry) => entry.entityLabel ?? entry.entityType ?? t("admin-audit:none"),
       },
       {
         key: "actorName",
         label: t("admin-audit:columns.actor"),
-        render: (entry) => entry.actorName ?? roleLabel(t, entry.actorRole),
+        render: (entry) =>
+          entry.actorName ??
+          (entry.actorRole === undefined ? t("admin-audit:none") : roleLabel(t, entry.actorRole)),
       },
       {
         key: "impersonatedName",
@@ -482,12 +522,20 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
       {
         key: "changes",
         label: t("admin-audit:columns.changes"),
-        render: (entry) => t("admin-audit:changesCount", { count: entry.changes.length }),
+        render: (entry) =>
+          entry.changes === undefined
+            ? t("admin-audit:none")
+            : t("admin-audit:changesCount", { count: entry.changes.length }),
       },
       {
         key: "origin",
         label: t("admin-audit:columns.origin"),
-        render: (entry) => <Badge>{originLabel(t, entry.origin)}</Badge>,
+        render: (entry) =>
+          entry.origin === undefined ? (
+            t("admin-audit:none")
+          ) : (
+            <Badge>{originLabel(t, entry.origin)}</Badge>
+          ),
       },
       {
         key: "details",
@@ -529,7 +577,7 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
     nin: t("census:list.operators.nin"),
     startsWith: t("census:list.operators.startsWith"),
   };
-  const labels: UniversalListLabels<AuditEntryListItem> = {
+  const labels: UniversalListLabels<AuditRow> = {
     addFilter: t("census:list.addFilter"),
     clearFilters: t("census:list.clearFilters"),
     closeError: t("census:list.closeError"),
@@ -593,7 +641,7 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
     });
   };
 
-  const detailHref = (entry: AuditEntryListItem) => {
+  const detailHref = (entry: AuditRow) => {
     const path = memberId === undefined ? "/auditoria" : `/abonats/${memberId}/auditoria`;
     const parameters = universalListSearchParams(state);
     parameters.set("entry", entry.id);
@@ -608,7 +656,7 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
 
   return (
     <>
-      <UniversalList<AuditEntryListItem>
+      <UniversalList<AuditRow>
         appliedFilters={applied}
         caption={memberId === undefined ? t("admin-audit:caption") : t("admin-audit:memberCaption")}
         columns={columns}

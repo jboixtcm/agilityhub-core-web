@@ -1,0 +1,450 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running typecheck in 10 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:typecheck: cache miss, executing e34ebe3a4be43168
+@agilityhub/ui:typecheck: cache hit, replaying logs 8bf3a797fdc669ba
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/course-core:typecheck: cache hit, replaying logs 671f426b6643ad21
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/i18n:typecheck: cache hit, replaying logs df83106f5839b77d
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4a7a4d38f585971
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: src/mocks/booking-handlers.ts(224,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: boolean; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+@agilityhub/api-client:typecheck: src/mocks/booking-handlers.ts(386,31): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+@agilityhub/api-client:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+@agilityhub/api-client:typecheck: src/mocks/booking-handlers.ts(389,47): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+@agilityhub/api-client:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+@agilityhub/api-client:typecheck: src/mocks/fixtures/bookings.ts(218,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: false; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+@agilityhub/api-client:typecheck: src/mocks/fixtures/bookings.ts(274,5): error TS2741: Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: "dog-duna"; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+@agilityhub/api-client:typecheck: src/mocks/fixtures/census.ts(757,3): error TS2375: Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'DogListItem' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+@agilityhub/api-client:typecheck:   Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'Omit<{ age?: number; breed?: string; chip?: string; displayStatus?: { date?: string | null; kind: string; label: string; }; freeTraining?: { allowed: boolean; override: boolean | null; source: "MANUAL" | "LEVEL"; }; ... 12 more ...; version?: number; }, "licenses">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+@agilityhub/api-client:typecheck:     Types of property 'sex' are incompatible.
+@agilityhub/api-client:typecheck:       Type '"FEMALE" | "MALE" | undefined' is not assignable to type '"FEMALE" | "MALE"'.
+@agilityhub/api-client:typecheck:         Type 'undefined' is not assignable to type '"FEMALE" | "MALE"'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(557,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(559,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(561,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(567,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(579,15): error TS18048: 'item.fullName' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(597,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(608,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(618,22): error TS18048: 'item.pendingDocuments' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(628,15): error TS18048: 'item.owner' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(630,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(632,15): error TS18048: 'item.owner' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(634,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(636,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(638,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(647,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(651,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(653,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(655,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(657,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(663,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(687,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(693,54): error TS18048: 'left.at' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(693,76): error TS2769: No overload matches this call.
+@agilityhub/api-client:typecheck:   Overload 1 of 3, '(that: string, locales?: LocalesArgument, options?: CollatorOptions | undefined): number', gave the following error.
+@agilityhub/api-client:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:       Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Overload 2 of 3, '(that: string, locales?: string | string[] | undefined, options?: CollatorOptions | undefined): number', gave the following error.
+@agilityhub/api-client:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:       Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Overload 3 of 3, '(that: string): number', gave the following error.
+@agilityhub/api-client:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:       Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(730,10): error TS18048: 'item.dogs' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(731,34): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(741,17): error TS18048: 'item.owner' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(742,18): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(793,26): error TS18048: 'item.fullName' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(795,25): error TS18048: 'item.fullName' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(815,22): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(818,21): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(819,30): error TS18048: 'item.owner' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(820,29): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(2043,11): error TS2375: Type '{ eventIds: string[]; traceId: string; action?: components["schemas"]["AuditAction"]; actorAccountId?: string; actorName?: string; actorRole?: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK"; ... 12 more ...; reason?: string; }' is not assignable to type '{ action: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+@agilityhub/api-client:typecheck:   Property 'action' is optional in type '{ eventIds: string[]; traceId: string; action?: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | ... 61 more ... | "ONBOARDING_COMPLETED"; ... 15 more ...; reason?: string; }' but required in type '{ action: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(2669,52): error TS18048: 'member.displayStatus' is possibly 'undefined'.
+@agilityhub/api-client:typecheck: src/mocks/handlers.ts(2675,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck:   Type 'undefined' is not assignable to type 'string'.
+@agilityhub/api-client:typecheck: src/mocks/planning-handlers.ts(282,3): error TS2375: Type '{ classCounts: { active: number; cancelled: number; draft: number; } | undefined; endDate: string; generatedAt: string | null; id: string; isoWeek: number; isoYear: number; saturdayTemplateName: string | null; startDate: string; state: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt: string | null; weekdayTemp...' is not assignable to type '{ classCounts?: { active: number; cancelled: number; draft: number; }; endDate?: string; generatedAt?: string | null; id: string; isoWeek?: number; isoYear?: number; saturdayTemplateName?: string | null; startDate?: string; state?: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt?: string | null; weekdayTemplat...' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+@agilityhub/api-client:typecheck:   Types of property 'classCounts' are incompatible.
+@agilityhub/api-client:typecheck:     Type '{ active: number; cancelled: number; draft: number; } | undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+@agilityhub/api-client:typecheck:       Type 'undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+@agilityhub/api-client:typecheck: src/mocks/planning-handlers.ts(794,50): error TS18048: 'week.classCounts' is possibly 'undefined'.
+@agilityhub/api-client:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+@agilityhub/api-client#typecheck:  WARNING  command finished with error, but continuing...
+@agilityhub/auth:typecheck: cache miss, executing b173d24c59356db1
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs-admin:typecheck: cache miss, executing 0759e5a5876c9993
+id:typecheck: cache miss, executing 9219b534a7e946af
+clubs:typecheck: cache miss, executing 0038fdd0b6b73b9a
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+id:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(224,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: boolean; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+id:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(386,31): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+id:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+id:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(389,47): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+id:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+id:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(218,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: false; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+id:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(274,5): error TS2741: Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: "dog-duna"; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+id:typecheck: ../../packages/api-client/src/mocks/fixtures/census.ts(757,3): error TS2375: Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'DogListItem' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+id:typecheck:   Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'Omit<{ age?: number; breed?: string; chip?: string; displayStatus?: { date?: string | null; kind: string; label: string; }; freeTraining?: { allowed: boolean; override: boolean | null; source: "MANUAL" | "LEVEL"; }; ... 12 more ...; version?: number; }, "licenses">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+id:typecheck:     Types of property 'sex' are incompatible.
+id:typecheck:       Type '"MALE" | "FEMALE" | undefined' is not assignable to type '"MALE" | "FEMALE"'.
+id:typecheck:         Type 'undefined' is not assignable to type '"MALE" | "FEMALE"'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(557,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(559,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(561,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(567,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(579,15): error TS18048: 'item.fullName' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(597,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(608,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(618,22): error TS18048: 'item.pendingDocuments' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(628,15): error TS18048: 'item.owner' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(630,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(632,15): error TS18048: 'item.owner' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(634,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(636,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(638,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(647,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(651,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(653,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(655,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(657,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(663,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(687,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,54): error TS18048: 'left.at' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,76): error TS2769: No overload matches this call.
+id:typecheck:   Overload 1 of 3, '(that: string, locales?: LocalesArgument, options?: CollatorOptions | undefined): number', gave the following error.
+id:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:       Type 'undefined' is not assignable to type 'string'.
+id:typecheck:   Overload 2 of 3, '(that: string, locales?: string | string[] | undefined, options?: CollatorOptions | undefined): number', gave the following error.
+id:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:       Type 'undefined' is not assignable to type 'string'.
+id:typecheck:   Overload 3 of 3, '(that: string): number', gave the following error.
+id:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:       Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(730,10): error TS18048: 'item.dogs' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(731,34): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(741,17): error TS18048: 'item.owner' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(742,18): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(793,26): error TS18048: 'item.fullName' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(795,25): error TS18048: 'item.fullName' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(815,22): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(818,21): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(819,30): error TS18048: 'item.owner' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(820,29): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2043,11): error TS2375: Type '{ eventIds: string[]; traceId: string; action?: components["schemas"]["AuditAction"]; actorAccountId?: string; actorName?: string; actorRole?: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK"; ... 12 more ...; reason?: string; }' is not assignable to type '{ action: "MEMBER_ERASED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+id:typecheck:   Property 'action' is optional in type '{ eventIds: string[]; traceId: string; action?: "MEMBER_ERASED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | ... 61 more ... | "ONBOARDING_COMPLETED"; ... 15 more ...; reason?: string; }' but required in type '{ action: "MEMBER_ERASED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2669,52): error TS18048: 'member.displayStatus' is possibly 'undefined'.
+id:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2675,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+id:typecheck:   Type 'undefined' is not assignable to type 'string'.
+id:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(282,3): error TS2375: Type '{ classCounts: { active: number; cancelled: number; draft: number; } | undefined; endDate: string; generatedAt: string | null; id: string; isoWeek: number; isoYear: number; saturdayTemplateName: string | null; startDate: string; state: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt: string | null; weekdayTemp...' is not assignable to type '{ classCounts?: { active: number; cancelled: number; draft: number; }; endDate?: string; generatedAt?: string | null; id: string; isoWeek?: number; isoYear?: number; saturdayTemplateName?: string | null; startDate?: string; state?: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt?: string | null; weekdayTemplat...' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+id:typecheck:   Types of property 'classCounts' are incompatible.
+id:typecheck:     Type '{ active: number; cancelled: number; draft: number; } | undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+id:typecheck:       Type 'undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+id:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(794,50): error TS18048: 'week.classCounts' is possibly 'undefined'.
+id:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+id#typecheck:  WARNING  command finished with error, but continuing...
+clubs:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(224,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: boolean; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+clubs:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(386,31): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+clubs:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(389,47): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+clubs:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(218,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: false; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+clubs:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(274,5): error TS2741: Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: "dog-duna"; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs:typecheck: ../../packages/api-client/src/mocks/fixtures/census.ts(757,3): error TS2375: Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'DogListItem' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:typecheck:   Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'Omit<{ age?: number; breed?: string; chip?: string; displayStatus?: { date?: string | null; kind: string; label: string; }; freeTraining?: { allowed: boolean; override: boolean | null; source: "MANUAL" | "LEVEL"; }; ... 12 more ...; version?: number; }, "licenses">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:typecheck:     Types of property 'sex' are incompatible.
+clubs:typecheck:       Type '"FEMALE" | "MALE" | undefined' is not assignable to type '"FEMALE" | "MALE"'.
+clubs:typecheck:         Type 'undefined' is not assignable to type '"FEMALE" | "MALE"'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(557,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(559,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(561,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(567,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(579,15): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(597,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(608,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(618,22): error TS18048: 'item.pendingDocuments' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(628,15): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(630,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(632,15): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(634,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(636,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(638,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(647,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(651,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(653,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(655,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(657,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(663,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(687,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,54): error TS18048: 'left.at' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,76): error TS2769: No overload matches this call.
+clubs:typecheck:   Overload 1 of 3, '(that: string, locales?: LocalesArgument, options?: CollatorOptions | undefined): number', gave the following error.
+clubs:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck:   Overload 2 of 3, '(that: string, locales?: string | string[] | undefined, options?: CollatorOptions | undefined): number', gave the following error.
+clubs:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck:   Overload 3 of 3, '(that: string): number', gave the following error.
+clubs:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(730,10): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(731,34): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(741,17): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(742,18): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(793,26): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(795,25): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(815,22): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(818,21): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(819,30): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(820,29): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2043,11): error TS2375: Type '{ eventIds: string[]; traceId: string; action?: components["schemas"]["AuditAction"]; actorAccountId?: string; actorName?: string; actorRole?: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK"; ... 12 more ...; reason?: string; }' is not assignable to type '{ action: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:typecheck:   Property 'action' is optional in type '{ eventIds: string[]; traceId: string; action?: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | ... 61 more ... | "ONBOARDING_COMPLETED"; ... 15 more ...; reason?: string; }' but required in type '{ action: "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2669,52): error TS18048: 'member.displayStatus' is possibly 'undefined'.
+clubs:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2675,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(282,3): error TS2375: Type '{ classCounts: { active: number; cancelled: number; draft: number; } | undefined; endDate: string; generatedAt: string | null; id: string; isoWeek: number; isoYear: number; saturdayTemplateName: string | null; startDate: string; state: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt: string | null; weekdayTemp...' is not assignable to type '{ classCounts?: { active: number; cancelled: number; draft: number; }; endDate?: string; generatedAt?: string | null; id: string; isoWeek?: number; isoYear?: number; saturdayTemplateName?: string | null; startDate?: string; state?: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt?: string | null; weekdayTemplat...' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:typecheck:   Types of property 'classCounts' are incompatible.
+clubs:typecheck:     Type '{ active: number; cancelled: number; draft: number; } | undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+clubs:typecheck:       Type 'undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+clubs:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(794,50): error TS18048: 'week.classCounts' is possibly 'undefined'.
+clubs:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+clubs#typecheck:  WARNING  command finished with error, but continuing...
+clubs-admin:typecheck: src/audit/AuditPage.tsx(104,77): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(119,76): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(456,40): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'DateInput'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'DateInput'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(462,52): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(485,67): error TS18048: 'entry.changes' is possibly 'undefined'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(565,78): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(655,13): error TS2322: Type '{ label: string; value: "MEMBER_PAYMENT_METHOD_CHANGED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 61 more ... | undefined; }' is not assignable to type 'UniversalListStatusOption'.
+clubs-admin:typecheck:   Types of property 'value' are incompatible.
+clubs-admin:typecheck:     Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/audit/AuditPage.tsx(655,74): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/catalogs/TeamPage.tsx(40,15): error TS18048: 'member.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: src/catalogs/TeamPage.tsx(41,30): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/catalogs/TeamPage.tsx(41,56): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/catalogs/TeamPage.tsx(109,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(439,9): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(441,13): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(442,41): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(450,9): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(452,13): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(453,41): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(472,16): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(662,29): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(721,29): error TS18048: 'item.pendingDocuments' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(747,40): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(919,16): error TS2532: Object is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusListPage.tsx(919,40): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusRecordPage.tsx(2142,35): error TS18048: 'member' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusRecordPage.tsx(2145,30): error TS18048: 'member' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusRecordPage.tsx(2145,48): error TS18048: 'member' is possibly 'undefined'.
+clubs-admin:typecheck: src/census/CensusRecordPage.tsx(2146,20): error TS18048: 'member' is possibly 'undefined'.
+clubs-admin:typecheck: src/dashboard/SignupReviewPage.tsx(287,15): error TS2345: Argument of type '{ dogs: string[]; familyGroup: { id: string; name: string; } | undefined; fullName: string | undefined; id: string; }[]' is not assignable to parameter of type 'SetStateAction<readonly FamilyCandidate[] | undefined>'.
+clubs-admin:typecheck:   Type '{ dogs: string[]; familyGroup: { id: string; name: string; } | undefined; fullName: string | undefined; id: string; }[]' is not assignable to type 'readonly FamilyCandidate[]'.
+clubs-admin:typecheck:     Type '{ dogs: string[]; familyGroup: { id: string; name: string; } | undefined; fullName: string | undefined; id: string; }' is not assignable to type 'FamilyCandidate'.
+clubs-admin:typecheck:       Types of property 'fullName' are incompatible.
+clubs-admin:typecheck:         Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:           Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: src/dashboard/SignupReviewPage.tsx(290,25): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: src/planning/CalendarPage.tsx(270,27): error TS18048: 'week.classCounts' is possibly 'undefined'.
+clubs-admin:typecheck: src/planning/CalendarPage.tsx(384,69): error TS18048: 'value' is possibly 'undefined'.
+clubs-admin:typecheck: src/planning/CalendarPage.tsx(385,83): error TS18048: 'value' is possibly 'undefined'.
+clubs-admin:typecheck: src/planning/TemplatesPage.tsx(779,47): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(224,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: boolean; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(386,31): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+clubs-admin:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/booking-handlers.ts(389,47): error TS2345: Argument of type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' is not assignable to parameter of type 'StoredEntry'.
+clubs-admin:typecheck:   Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: string; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(218,5): error TS2741: Property 'self' is missing in type '{ displayName: string; viaClub: false; }' but required in type '{ displayName: string; self: boolean; viaClub: boolean; }'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/fixtures/bookings.ts(274,5): error TS2741: Property 'dog' is missing in type '{ bookingId: null; cancelReason: null; cancelledAt: null; classSessionId: string; confirmBy: null; dogId: "dog-duna"; id: string; joinedAt: string; memberId: string; notifiedAt: null; position: null; state: "ACTIVE"; }' but required in type 'StoredEntry'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/fixtures/census.ts(757,3): error TS2375: Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'DogListItem' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs-admin:typecheck:   Type '{ pendingDocuments: string[]; registeredAt: string; sex: DogListItem["sex"]; version: number; pack?: { expiresOn: string; id: string; remaining: number; total: number; }; level: { code: string; id: string; name: string; }; ... 10 more ...; id: string; }' is not assignable to type 'Omit<{ age?: number; breed?: string; chip?: string; displayStatus?: { date?: string | null; kind: string; label: string; }; freeTraining?: { allowed: boolean; override: boolean | null; source: "MANUAL" | "LEVEL"; }; ... 12 more ...; version?: number; }, "licenses">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs-admin:typecheck:     Types of property 'sex' are incompatible.
+clubs-admin:typecheck:       Type '"FEMALE" | "MALE" | undefined' is not assignable to type '"FEMALE" | "MALE"'.
+clubs-admin:typecheck:         Type 'undefined' is not assignable to type '"FEMALE" | "MALE"'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(557,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(559,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(561,14): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(567,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(579,15): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(597,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(608,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(618,22): error TS18048: 'item.pendingDocuments' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(628,15): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(630,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(632,15): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(634,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(636,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(638,15): error TS18048: 'item.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(647,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(651,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(653,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(655,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(657,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(663,15): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(687,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,54): error TS18048: 'left.at' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(693,76): error TS2769: No overload matches this call.
+clubs-admin:typecheck:   Overload 1 of 3, '(that: string, locales?: LocalesArgument, options?: CollatorOptions | undefined): number', gave the following error.
+clubs-admin:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Overload 2 of 3, '(that: string, locales?: string | string[] | undefined, options?: CollatorOptions | undefined): number', gave the following error.
+clubs-admin:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Overload 3 of 3, '(that: string): number', gave the following error.
+clubs-admin:typecheck:     Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:       Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(730,10): error TS18048: 'item.dogs' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(731,34): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(741,17): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(742,18): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(793,26): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(795,25): error TS18048: 'item.fullName' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(815,22): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(818,21): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(819,30): error TS18048: 'item.owner' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(820,29): error TS2322: Type 'string | undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string | number'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2043,11): error TS2375: Type '{ eventIds: string[]; traceId: string; action?: components["schemas"]["AuditAction"]; actorAccountId?: string; actorName?: string; actorRole?: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK"; ... 12 more ...; reason?: string; }' is not assignable to type '{ action: "MEMBER_PAYMENT_METHOD_CHANGED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs-admin:typecheck:   Property 'action' is optional in type '{ eventIds: string[]; traceId: string; action?: "MEMBER_PAYMENT_METHOD_CHANGED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | ... 61 more ... | "ONBOARDING_COMPLETED"; ... 15 more ...; reason?: string; }' but required in type '{ action: "MEMBER_PAYMENT_METHOD_CHANGED" | "CATALOG_CHANGED" | "ACTIVITY_CANCELLED" | "CLASS_CANCELLED" | "MEMBER_PLAN_CHANGED" | "DOG_LEVEL_CHANGED" | "PARAMETER_CHANGED" | ... 60 more ... | "ONBOARDING_COMPLETED"; ... 19 more ...; userAgent?: string; }'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2669,52): error TS18048: 'member.displayStatus' is possibly 'undefined'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/handlers.ts(2675,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+clubs-admin:typecheck:   Type 'undefined' is not assignable to type 'string'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(282,3): error TS2375: Type '{ classCounts: { active: number; cancelled: number; draft: number; } | undefined; endDate: string; generatedAt: string | null; id: string; isoWeek: number; isoYear: number; saturdayTemplateName: string | null; startDate: string; state: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt: string | null; weekdayTemp...' is not assignable to type '{ classCounts?: { active: number; cancelled: number; draft: number; }; endDate?: string; generatedAt?: string | null; id: string; isoWeek?: number; isoYear?: number; saturdayTemplateName?: string | null; startDate?: string; state?: "PENDING" | ... 1 more ... | "VALIDATED"; validatedAt?: string | null; weekdayTemplat...' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs-admin:typecheck:   Types of property 'classCounts' are incompatible.
+clubs-admin:typecheck:     Type '{ active: number; cancelled: number; draft: number; } | undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+clubs-admin:typecheck:       Type 'undefined' is not assignable to type '{ active: number; cancelled: number; draft: number; }'.
+clubs-admin:typecheck: ../../packages/api-client/src/mocks/planning-handlers.ts(794,50): error TS18048: 'week.classCounts' is possibly 'undefined'.
+clubs-admin:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin#typecheck:  WARNING  command finished with error, but continuing...
+@agilityhub/api-client#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+id#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+clubs#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+clubs-admin#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+
+ Tasks:    6 successful, 10 total
+Cached:    5 cached, 10 total
+  Time:    9.607s 
+Failed:    @agilityhub/api-client#typecheck, clubs#typecheck, clubs-admin#typecheck, id#typecheck
+
+ ERROR  run failed: command  exited (2)

@@ -1136,3 +1136,19 @@ Blocking: no.
 - **Point 3 is not doable with this image.** Your E5-T24 message (`dd3c246`) came during the session, but the local image `e9a58c1` lacks E5-T24: its seed has no «Demo Boira», and the add still answers 400. So the 400 fallback and the upload bearer stay. I did not pull a newer image, since that changes Docker state outside the repo.
 - **Green:** turbo `--force` 34/34 (`30`), `i18n:check` (`31`), real core 12 + 5 + 7 (`32`), Docker 42 + 48 + 1 (`33`).
 Blocking: no.
+
+## 2026-09-26 · executor → organizer · E5-W01 round 2
+@organizer **E5-W01 is awaiting verification again** (report under «### Round 2 report»).
+- **Points 1–6 are fixed.** The 10 round-2 tests fail on the HEAD sources (logs `12` and `13`).
+  - 29's limit note follows `week` and `unit`: with CURRENT, the mockup's «Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.»; with NEXT, B1's sentence; with MEMBER, no dog.
+  - 03 with one dog shows no « · amb …».
+  - The mock keeps the activity rows under every dog.
+  - 07's notes come only from the page's own cancellation.
+  - `PAY_TO_BOOK` + swap shows the price.
+  - The two tests are renamed.
+- **Proposed literals** (ca; es and en in the locales), for Josep's review:
+  - the NEXT first sentence, «La setmana vinent ja tens {una classe} amb la Duna.» (the decision fixes only the second sentence);
+  - `booking:confirm.payAfterSwap`, «En confirmar, pagaràs aquesta classe ({price}).».
+- **Green:** turbo `--force` 34/34 (`20`), `i18n:check` (`23`), booking Vitest 52/52 (`21`), Ajv + mocks 87/87 (`22`), Docker 48 + 1 + 42 (`19`).
+- **Screenshots:** the ten 375 px captures are refreshed. The booking spec now waits for the sprite icons before each capture: the first run's `29-limit` came out without them.
+Blocking: no.

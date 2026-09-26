@@ -324,7 +324,7 @@ export interface paths {
         };
         /**
          * ringConflicts
-         * @description Roles: ADMIN. The preview of R-07-05's dialog: a window the publication would refuse answers the same error (400 INVALID_TIME_RANGE without a date or hours, 422 OUTSIDE_OPENING_HOURS). Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN. The preview of R-07-05's dialog. A window outside the opening hours answers 422 OUTSIDE_OPENING_HOURS, as the publication does. Rings without a date or without hours leave no window to block: the preview answers 400 INVALID_TIME_RANGE, while the publication refuses such an activity earlier, with 422 ACTIVITY_INCOMPLETE. Tenant comes from the JWT. Requires ACTIVITIES.
          */
         get: operations["ringConflicts"];
         put?: never;
@@ -680,13 +680,13 @@ export interface paths {
         };
         /**
          * bookings
-         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Without fields every item property is sent; with fields an item has id and the requested keys only. Tenant comes from the JWT.
          */
         get: operations["bookings"];
         put?: never;
         /**
          * confirmBooking
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId); Idempotency-Key = seatHoldId, a repeated key returns the same response, also a 409. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
          */
         post: operations["confirmBooking"];
         delete?: never;
@@ -800,7 +800,7 @@ export interface paths {
         };
         /**
          * classes
-         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. MEMBER cannot list classes; use day-grid or class detail. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. MEMBER cannot list classes; use day-grid or class detail. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.
          */
         get: operations["classes"];
         put?: never;
@@ -1306,7 +1306,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new signup upload (R-04-19). With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED, unless the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new file, the ADMIN's own POST /attachments/upload-url with purpose = DOG_DOCUMENT (R-04-19, amended 26-09); see DogPatch.documents. With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED only when the request changes the card's keys (sending back a PENDING card is no change), and never when the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.
          */
         patch: operations["updateDog"];
         trace?: never;
@@ -1984,7 +1984,7 @@ export interface paths {
         };
         /**
          * jobRuns
-         * @description Roles: ADMIN. Run history of the club (universal list, CONVENCIONS_API §4); unknown name → JOB_UNKNOWN, module of the process off → MODULE_DISABLED. Tenant comes from the JWT.
+         * @description Roles: ADMIN. Run history of the club (universal list, CONVENCIONS_API §4): without fields every item property is sent; with fields an item has runId and the requested keys only. Unknown name → JOB_UNKNOWN, module of the process off → MODULE_DISABLED. Tenant comes from the JWT.
          */
         get: operations["jobRuns"];
         put?: never;
@@ -2608,7 +2608,7 @@ export interface paths {
         };
         /**
          * List members
-         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorView without financial or internal data. Fields/filters are limited by role. S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields.
+         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields.
          */
         get: operations["listMembers"];
         put?: never;
@@ -3172,7 +3172,7 @@ export interface paths {
         };
         /**
          * Platform audit entries
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).
          */
         get: operations["platformAuditEntries"];
         put?: never;
@@ -3212,7 +3212,7 @@ export interface paths {
         };
         /**
          * Platform erasure requests
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).
          */
         get: operations["platformErasureRequests"];
         put?: never;
@@ -3272,7 +3272,7 @@ export interface paths {
         };
         /**
          * Platform security events
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).
          */
         get: operations["platformSecurityEvents"];
         put?: never;
@@ -3440,7 +3440,7 @@ export interface paths {
         };
         /**
          * blocks
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER receives RingBlockMemberView without note or createdByName. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER rows leave out note and createdByName (as RingBlockMemberView), and asking for them in fields is INVALID_FILTER. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.
          */
         get: operations["blocks"];
         put?: never;
@@ -3888,7 +3888,7 @@ export interface paths {
         };
         /**
          * trainingBookings
-         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Without fields every item property is sent; with fields an item has id and the requested keys only. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         get: operations["trainingBookings"];
         put?: never;
@@ -4208,7 +4208,7 @@ export interface paths {
         };
         /**
          * weeks
-         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.
          */
         get: operations["weeks"];
         put?: never;
@@ -4943,7 +4943,10 @@ export interface components {
             consents?: components["schemas"]["SignupConsents"];
             documents: components["schemas"]["SignupDocument"][];
             dog: components["schemas"]["SignupDog"];
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description R-04-09: omitted, the member's own plan. A member without a plan, or whose plan is no longer assignable (inactive or its module off; GET /signup then marks no plan current), must send one of the offered plans (400 VALIDATION_ERROR, fieldErrors planIdRequested REQUIRED), unless GET /signup offers none
+             */
             planIdRequested?: string;
         };
         AddDogSignupResult: {
@@ -5028,22 +5031,22 @@ export interface components {
             bookingId: string;
         };
         AttendanceListItem: {
-            bookingId: string;
+            bookingId?: string;
             /** Format: date */
-            classDate: string;
-            classSessionId: string;
+            classDate?: string;
+            classSessionId?: string;
             /** Format: date-time */
-            classStartsAt: string;
-            dogId: string;
-            dogName: string;
+            classStartsAt?: string;
+            dogId?: string;
+            dogName?: string;
             id: string;
             /** Format: date-time */
             markedAt?: string | null;
             markedByName?: string | null;
-            memberId: string;
-            memberName: string;
+            memberId?: string;
+            memberName?: string;
             /** @enum {string} */
-            state: "PENDING" | "PRESENT" | "NOTIFIED" | "NO_SHOW";
+            state?: "PENDING" | "PRESENT" | "NOTIFIED" | "NO_SHOW";
         };
         AttendanceNotice: {
             afterClassEnd: boolean;
@@ -5169,24 +5172,24 @@ export interface components {
             userAgent?: string;
         };
         AuditEntryListItem: {
-            action: components["schemas"]["AuditAction"];
+            action?: components["schemas"]["AuditAction"];
             /** Format: uuid */
             actorAccountId?: string;
             actorName?: string;
             /** @enum {string} */
-            actorRole: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK";
+            actorRole?: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK";
             /** Format: date-time */
-            at: string;
-            changes: components["schemas"]["AuditChange"][];
+            at?: string;
+            changes?: components["schemas"]["AuditChange"][];
             /** Format: uuid */
             clubId?: string;
             details?: {
                 [key: string]: unknown;
             };
             /** Format: uuid */
-            entityId: string;
+            entityId?: string;
             entityLabel?: string;
-            entityType: string;
+            entityType?: string;
             /** Format: uuid */
             id: string;
             /** Format: uuid */
@@ -5195,7 +5198,7 @@ export interface components {
             /** Format: uuid */
             memberId?: string;
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC";
+            origin?: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC";
             reason?: string;
         };
         AuditSummary: {
@@ -5276,6 +5279,8 @@ export interface components {
         };
         BookedBy: {
             displayName: string;
+            /** @description True when the reader's own account made the booking (07: «Reservada el…» instead of «Reservada per {displayName} el…») */
+            self: boolean;
             /** @description True when booked by the club (BACKOFFICE) */
             viaClub: boolean;
         };
@@ -5285,6 +5290,11 @@ export interface components {
             bookedAt: string;
             bookedBy: components["schemas"]["BookedBy"];
             calendarLinks: components["schemas"]["CalendarLinks"];
+            /**
+             * Format: date-time
+             * @description R-08-10: the class start minus lateCancelThresholdMinutes, computed by the api; a cancellation is in time while now <= this instant
+             */
+            cancellableInTimeUntil: string;
             cancellation?: components["schemas"]["BookingCancellation"] | null;
             /** @description Only with SINGLE_CLASS */
             charge?: components["schemas"]["BookingCharge"] | null;
@@ -5300,8 +5310,15 @@ export interface components {
              * @enum {string}
              */
             displayState?: "CONFIRMED" | "DONE" | "NO_SHOW" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB" | "PAYMENT_PENDING";
+            /** @description The booked dog; its sex gives 07's Catalan article («amb la Duna») */
+            dog: components["schemas"]["HoldDog"];
             dogId: string;
             id: string;
+            /**
+             * Format: int32
+             * @description The club's bookings.lateCancelThresholdMinutes (R-08-10), for 07's warning and late note
+             */
+            lateCancelThresholdMinutes: number;
             /** @description Owner of the dog (the member + dog unit) */
             memberId: string;
             /** @enum {string} */
@@ -5311,13 +5328,6 @@ export interface components {
             /** @enum {string} */
             state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
             swapFromBookingId?: string | null;
-            /** @description S08 §2 07 (E5-W01): the booked dog, as SeatHoldResponse.dog, for «Classe {description} · amb la Duna» (name and the Catalan article by sex). Omitted by the published core, whose Booking carries only dogId. */
-            dog?: components["schemas"]["HoldDog"];
-            /**
-             * Format: int32
-             * @description S08 R-08-10 (E5-W01): bookings.lateCancelThresholdMinutes as the booking's club applies it (240 = «4 hores»). Screen 07 warns before a cancellation inside it and names it in the late note; a MEMBER cannot read /parameters (ADMIN only). Omitted by the published core.
-             */
-            lateCancelThresholdMinutes?: number;
         };
         BookingBlock: {
             active: boolean;
@@ -5392,21 +5402,21 @@ export interface components {
         };
         BookingListItem: {
             /** Format: date-time */
-            bookedAt: string;
-            bookingWeekKey: string;
-            classSessionId: string;
+            bookedAt?: string;
+            bookingWeekKey?: string;
+            classSessionId?: string;
             /** Format: date-time */
-            classStartsAt: string;
-            dogId: string;
-            dogName: string;
+            classStartsAt?: string;
+            dogId?: string;
+            dogName?: string;
             id: string;
             late?: boolean | null;
-            memberId: string;
-            memberName: string;
+            memberId?: string;
+            memberName?: string;
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
+            origin?: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
             /** @enum {string} */
-            state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
+            state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
         };
         BookingRequest: {
             seatHoldId: string;
@@ -5616,8 +5626,26 @@ export interface components {
             seatHoldId: string;
             swapBookingId?: string | null;
         };
+        ClassBookingItem: {
+            /** Format: date-time */
+            bookedAt: string;
+            bookingWeekKey: string;
+            classSessionId: string;
+            /** Format: date-time */
+            classStartsAt: string;
+            dogId: string;
+            dogName: string;
+            id: string;
+            late?: boolean | null;
+            memberId: string;
+            memberName: string;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
+            /** @enum {string} */
+            state: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
+        };
         ClassBookings: {
-            items: components["schemas"]["BookingListItem"][];
+            items: components["schemas"]["ClassBookingItem"][];
         };
         ClassCancellation: {
             adminText?: string | null;
@@ -5708,8 +5736,8 @@ export interface components {
             /** @description ADMIN only; omitted for INSTRUCTOR */
             notes?: string | null;
             origin?: components["schemas"]["ClassOrigin"] | null;
-            /** @description Only with COURSES */
-            placementId?: string;
+            /** @description Only with COURSES; null for a class without a placement */
+            placementId?: string | null;
             /** @description Only in GET /class-sessions/{id} (E5-T15), where it is always sent: the ring, null for a class without a ring */
             ring?: components["schemas"]["ClassRing"] | null;
             ringId?: string | null;
@@ -5735,6 +5763,41 @@ export interface components {
             levelIds: string[];
             ringId?: string | null;
             startTime: string;
+        };
+        ClassSessionListItem: {
+            atRisk?: boolean;
+            cancellation?: components["schemas"]["ClassCancellation"] | null;
+            /** Format: int32 */
+            capacity?: number;
+            /** @enum {string} */
+            capacityMode?: "AUTO" | "MANUAL";
+            counters?: components["schemas"]["ClassCounters"];
+            /** Format: date */
+            date?: string;
+            description?: string | null;
+            displayDescription?: string;
+            endTime?: string;
+            /** Format: date-time */
+            endsAt?: string;
+            id: string;
+            inconsistencyIds?: string[];
+            instructorIds?: string[];
+            levelIds?: string[];
+            /** @description ADMIN only; omitted for INSTRUCTOR */
+            notes?: string | null;
+            origin?: components["schemas"]["ClassOrigin"] | null;
+            /** @description Only with COURSES; null for a class without a placement */
+            placementId?: string | null;
+            ringId?: string | null;
+            riskExempt?: boolean;
+            startTime?: string;
+            /** Format: date-time */
+            startsAt?: string;
+            /** @enum {string} */
+            state?: "DRAFT" | "ACTIVE" | "FINISHED" | "CANCELLED";
+            /** Format: int64 */
+            version?: number;
+            weekId?: string;
         };
         ClassSessionMemberView: {
             /** Format: int32 */
@@ -6237,10 +6300,10 @@ export interface components {
         };
         DogListItem: {
             /** Format: double */
-            age: number;
-            breed: string;
+            age?: number;
+            breed?: string;
             chip?: string;
-            displayStatus: components["schemas"]["DisplayStatus"];
+            displayStatus?: components["schemas"]["DisplayStatus"];
             freeTraining?: components["schemas"]["FreeTraining"];
             handler?: string;
             handlerName?: string;
@@ -6249,17 +6312,17 @@ export interface components {
             level?: components["schemas"]["LevelSummary"];
             /** Format: date-time */
             levelAssignedAt?: string;
-            licenses: components["schemas"]["License"][];
-            name: string;
-            owner: components["schemas"]["OwnerSummary"];
+            licenses?: components["schemas"]["License"][];
+            name?: string;
+            owner?: components["schemas"]["OwnerSummary"];
             pack?: components["schemas"]["PackSummary"];
-            pendingDocuments: string[];
+            pendingDocuments?: string[];
             /** Format: date-time */
-            registeredAt: string;
+            registeredAt?: string;
             /** @enum {string} */
-            sex: "MALE" | "FEMALE";
+            sex?: "MALE" | "FEMALE";
             /** Format: int64 */
-            version: number;
+            version?: number;
         };
         DogPatch: {
             /** Format: date */
@@ -6268,7 +6331,7 @@ export interface components {
             birthMonth?: string;
             breed?: string;
             chip?: string;
-            /** @description PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new signup upload. The key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId} answers 400 FILE_NOT_FOUND. At most 10 new uploads per request (kept files do not count). Sending back the view's keys is no change. */
+            /** @description PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new file: the caller's own POST /attachments/upload-url with purpose = DOG_DOCUMENT, uploaded in the club and not claimed by another dog or type (a signup upload is also taken). Another club's, purpose's or account's key, one claimed elsewhere or never uploaded answers 400 FILE_NOT_FOUND, and so does the key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId}. At most 10 new files per request (kept files do not count). Sending back the view's keys is no change. */
             documents?: components["schemas"]["SignupDocument"][];
             handlerName?: string;
             licenses?: components["schemas"]["License"][];
@@ -6535,31 +6598,31 @@ export interface components {
              * Format: date-time
              * @description Task creation or last note change; completing does not move it
              */
-            activityAt: string;
-            authorName: string;
+            activityAt?: string;
+            authorName?: string;
             /** @enum {string} */
-            authorRole: "MEMBER" | "INSTRUCTOR" | "ADMIN";
+            authorRole?: "MEMBER" | "INSTRUCTOR" | "ADMIN";
             /**
              * Format: date-time
              * @description «—» while pending
              */
             completedAt?: string | null;
             /** Format: date-time */
-            createdAt: string;
-            dogId: string;
-            dogName: string;
+            createdAt?: string;
+            dogId?: string;
+            dogName?: string;
             id: string;
             /** @enum {string} */
-            kind: "TASK" | "MEMBER_NOTE";
+            kind?: "TASK" | "MEMBER_NOTE";
             /** @description Null with levels.enabled = false */
             levelCode?: string | null;
-            memberId: string;
-            memberName: string;
+            memberId?: string;
+            memberName?: string;
             /** @description Only TASK */
             taskId?: string | null;
             /** @description At most 120 characters */
-            textExcerpt: string;
-            unread: boolean;
+            textExcerpt?: string;
+            unread?: boolean;
         };
         /** @description Universal list page (CONVENCIONS_API §4) of D14: unread first (activityAt desc), then the rest (activityAt desc) */
         FollowupPage: {
@@ -7016,28 +7079,28 @@ export interface components {
             trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
         };
         JobRunListItem: {
-            counters: {
+            counters?: {
                 [key: string]: number;
             };
-            dryRun: boolean;
+            dryRun?: boolean;
             /** Format: int64 */
             durationMs?: number | null;
             /** Format: int32 */
-            errorCount: number;
+            errorCount?: number;
             /** Format: date-time */
             finishedAt?: string | null;
             runId: string;
             /** Format: date-time */
-            scheduledFor: string;
-            scheduledForLocal: string;
+            scheduledFor?: string;
+            scheduledForLocal?: string;
             /** @enum {string|null} */
             skipReason?: "DISABLED" | "MODULE_OFF" | "CLUB_INACTIVE" | "MISSED_WINDOW" | "LOCKED" | "NOT_DUE" | null;
             /** Format: date-time */
-            startedAt: string;
+            startedAt?: string;
             /** @enum {string} */
-            status: "RUNNING" | "SUCCEEDED" | "PARTIAL" | "FAILED" | "SKIPPED";
+            status?: "RUNNING" | "SUCCEEDED" | "PARTIAL" | "FAILED" | "SKIPPED";
             /** @enum {string} */
-            trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
+            trigger?: "SCHEDULE" | "CATCH_UP" | "MANUAL";
         };
         JobScheduleView: {
             /** Format: int32 */
@@ -7306,9 +7369,9 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
-        ListPageClassSession: {
+        ListPageClassSessionListItem: {
             appliedFilters: components["schemas"]["Filter"][];
-            items: components["schemas"]["ClassSession"][];
+            items: components["schemas"]["ClassSessionListItem"][];
             /** Format: int32 */
             page: number;
             /** Format: int32 */
@@ -7356,7 +7419,7 @@ export interface components {
         };
         ListPageMemberListItem: {
             appliedFilters: components["schemas"]["Filter"][];
-            items: (components["schemas"]["MemberListItem"] | components["schemas"]["MemberInstructorView"])[];
+            items: (components["schemas"]["MemberListItem"] | components["schemas"]["MemberInstructorListItem"])[];
             /** Format: int32 */
             page: number;
             /** Format: int32 */
@@ -7366,9 +7429,9 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
-        ListPageRingBlock: {
+        ListPageRingBlockListItem: {
             appliedFilters: components["schemas"]["Filter"][];
-            items: (components["schemas"]["RingBlock"] | components["schemas"]["RingBlockMemberView"])[];
+            items: components["schemas"]["RingBlockListItem"][];
             /** Format: int32 */
             page: number;
             /** Format: int32 */
@@ -7654,6 +7717,27 @@ export interface components {
             types: ("CLASS" | "TRAINING" | "ACTIVITY")[];
         };
         /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
+        MemberInstructorListItem: {
+            address?: components["schemas"]["Address"];
+            bookingBlocked?: boolean;
+            contactEmails?: components["schemas"]["ContactEmail"][];
+            displayStatus?: components["schemas"]["DisplayStatus"];
+            dogs?: components["schemas"]["DogSummary"][];
+            firstName?: string;
+            fullName?: string;
+            /** Format: uuid */
+            id: string;
+            lastName1?: string;
+            lastName2?: string;
+            /** Format: int32 */
+            memberNumber?: number;
+            phones?: components["schemas"]["Phone"][];
+            /** @enum {string} */
+            status?: "PENDING" | "ACTIVE" | "INACTIVE" | "LEFT";
+            /** Format: int64 */
+            version?: number;
+        };
+        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
         MemberInstructorView: {
             address?: components["schemas"]["Address"];
             bookingBlocked: boolean;
@@ -7678,14 +7762,14 @@ export interface components {
         MemberListItem: {
             /** Format: date */
             birthDate?: string;
-            bookingBlocked: boolean;
+            bookingBlocked?: boolean;
             city?: string;
             contact?: components["schemas"]["ContactSummary"];
-            displayStatus: components["schemas"]["DisplayStatus"];
-            dogs: components["schemas"]["DogSummary"][];
+            displayStatus?: components["schemas"]["DisplayStatus"];
+            dogs?: components["schemas"]["DogSummary"][];
             familyGroup?: components["schemas"]["NamedReference"];
             freeTraining?: boolean;
-            fullName: string;
+            fullName?: string;
             /** @enum {string} */
             gender?: "MALE" | "FEMALE" | "OTHER";
             /** Format: uuid */
@@ -7710,7 +7794,7 @@ export interface components {
             /** @description S04 virtual field; E3-T03 projection */
             signupPending?: boolean;
             /** Format: int64 */
-            version: number;
+            version?: number;
             warnings?: components["schemas"]["SignupWarning"][];
         };
         MemberListSignup: {
@@ -8591,6 +8675,8 @@ export interface components {
             version: string;
         } | null;
         ReservationRow: {
+            /** @description ACTIVITY rows only (S07 §2): the activity of the registration `id`; null on the other rows */
+            activityId?: string | null;
             dogId?: string | null;
             /** @description Only with «Tots» (no dogId); null when a dog is selected (T-08-12) */
             dogName?: string | null;
@@ -8601,6 +8687,8 @@ export interface components {
             instructorName?: string | null;
             /** Format: date-time */
             instructorVisibleAt?: string | null;
+            /** @description The ring's colour for 03's dot: CLASS, CLASS_WAITLIST and TRAINING rows; null on ACTIVITY rows and for a ring without one */
+            ringColor?: string | null;
             ringName?: string | null;
             /** Format: date-time */
             startsAt?: string | null;
@@ -8675,6 +8763,32 @@ export interface components {
             ringId: string;
             /** Format: date-time */
             to: string;
+        };
+        RingBlockListItem: {
+            activityId?: string | null;
+            activityTitle?: string | null;
+            /** @description Not sent to MEMBER */
+            createdByName?: string;
+            /** Format: date */
+            date?: string;
+            /** Format: date-time */
+            from?: string;
+            fromLocal?: string;
+            id: string;
+            /** @enum {string} */
+            kind?: "BLOCK" | "RESERVATION";
+            /** @description Not sent to MEMBER */
+            note?: string | null;
+            /** @enum {string} */
+            reason?: "MAINTENANCE" | "PRIVATE_CLASS" | "THERAPY" | "PREPARATION" | "ACTIVITY" | "OTHER";
+            ringId?: string;
+            /** @enum {string} */
+            state?: "ACTIVE" | "CANCELLED";
+            /** Format: date-time */
+            to?: string;
+            toLocal?: string;
+            /** Format: int64 */
+            version?: number;
         };
         RingBlockMemberView: {
             activityId?: string | null;
@@ -9289,6 +9403,8 @@ export interface components {
             /** @enum {string} */
             billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             conditions: string;
+            /** @description R-04-09: add-dog mode (MEMBER) only. true on the member's own plan, listed even when the public offer hides it (M8); false on the others. A member without a plan, or whose plan is no longer assignable, gets the offer with no current plan, and POST /me/dogs/signup then requires planIdRequested. Absent in the public signup */
+            current?: boolean;
             description: string;
             entryFee?: components["schemas"]["Money"];
             /** Format: uuid */
@@ -9298,10 +9414,10 @@ export interface components {
             offerLabel?: string;
             pack?: components["schemas"]["SignupPack"];
             price?: components["schemas"]["SignupPrice"];
+            /** @description R-05-19: the plan's texts.priceLabel in the reader's locale, when the plan has one (the text of screen 17's price line without a current price) */
+            priceLabel?: string;
             /** @enum {string} */
             type: "MONTHLY" | "PACK" | "SINGLE_CLASS";
-            /** @description S05 R-05-19 / S04 R-04-09 (E4-W12 step 3): Plan.texts.priceLabel in the reader's locale, the text screen 17 shows in the price slot of a plan without a current price («condicions i cost segons cada cas»). Omitted when the plan has none. */
-            priceLabel?: string;
         };
         SignupPlanOption: {
             name: string;
@@ -9622,8 +9738,8 @@ export interface components {
             inconsistencyIds: string[];
             instructorIds: string[];
             levelIds: string[];
-            /** @description Only with COURSES */
-            placementId?: string;
+            /** @description The class's placement with COURSES; null for a class without one, and always without COURSES */
+            placementId?: string | null;
             ringId?: string | null;
         };
         TemplateClassCreateRequest: {
@@ -9752,24 +9868,24 @@ export interface components {
         };
         TrainingBookingListItem: {
             /** Format: date-time */
-            createdAt: string;
+            createdAt?: string;
             /** Format: date */
-            date: string;
-            dogId: string;
-            dogName: string;
+            date?: string;
+            dogId?: string;
+            dogName?: string;
             id: string;
-            memberId: string;
-            memberName: string;
+            memberId?: string;
+            memberName?: string;
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE";
-            ringId: string;
-            ringName: string;
+            origin?: "APP" | "BACKOFFICE";
+            ringId?: string;
+            ringName?: string;
             /** Format: date-time */
-            startsAt: string;
+            startsAt?: string;
             /** @example 08:30 */
-            startsAtLocal: string;
+            startsAtLocal?: string;
             /** @enum {string} */
-            state: "ACTIVE" | "CANCELLED" | "CANCELLED_BY_CLUB";
+            state?: "ACTIVE" | "CANCELLED" | "CANCELLED_BY_CLUB";
         };
         TrainingBookingRequest: {
             dogId: string;
@@ -10018,6 +10134,8 @@ export interface components {
              * @description FIFO only (R-08-14)
              */
             confirmBy?: string | null;
+            /** @description The waiting dog; its sex gives the Catalan article of the waiting-list detail */
+            dog: components["schemas"]["HoldDog"];
             dogId: string;
             dogName?: string | null;
             id: string;
@@ -10033,8 +10151,6 @@ export interface components {
             position?: number | null;
             /** @enum {string} */
             state: "ACTIVE" | "NOTIFIED" | "CONSOLIDATED" | "EXPIRED" | "CANCELLED";
-            /** @description S08 §2 /espera/:id (E5-W01): the waiting dog, as SeatHoldResponse.dog, for the Catalan article by sex (dogName carries no sex). Omitted by the published core. */
-            dog?: components["schemas"]["HoldDog"];
         };
         WaitlistEntryRequest: {
             classSessionId: string;
@@ -10139,21 +10255,21 @@ export interface components {
             rings: components["schemas"]["RingRef"][];
         };
         WeekListItem: {
-            classCounts: components["schemas"]["ClassCounts"];
+            classCounts?: components["schemas"]["ClassCounts"];
             /** Format: date */
-            endDate: string;
+            endDate?: string;
             /** Format: date-time */
             generatedAt?: string | null;
             id: string;
             /** Format: int32 */
-            isoWeek: number;
+            isoWeek?: number;
             /** Format: int32 */
-            isoYear: number;
+            isoYear?: number;
             saturdayTemplateName?: string | null;
             /** Format: date */
-            startDate: string;
+            startDate?: string;
             /** @enum {string} */
-            state: "PENDING" | "GENERATED" | "VALIDATED";
+            state?: "PENDING" | "GENERATED" | "VALIDATED";
             /** Format: date-time */
             validatedAt?: string | null;
             weekdayTemplateName?: string | null;
@@ -10789,7 +10905,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -11050,7 +11166,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -11195,8 +11311,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -12580,7 +12694,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -12968,7 +13082,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14367,7 +14481,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14501,7 +14615,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14637,7 +14751,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -14784,7 +14898,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -15425,7 +15539,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -15550,6 +15664,7 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
+                /** @description One client UUID per request body (R-08-08): reused by a retry of the same body, new for a different body */
                 "Idempotency-Key": string;
             };
             path?: never;
@@ -16316,7 +16431,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -16325,13 +16440,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<ClassSession> */
+            /** @description ListPage<ClassSessionListItem> */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListPageClassSession"];
+                    "application/json": components["schemas"]["ListPageClassSessionListItem"];
                 };
             };
             /** @description VALIDATION_ERROR */
@@ -19800,7 +19915,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -19936,7 +20051,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -20083,7 +20198,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -23729,7 +23844,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -25231,8 +25346,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -25488,7 +25601,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30060,7 +30173,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30196,7 +30309,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30343,7 +30456,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -30986,7 +31099,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -32876,8 +32989,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -34765,8 +34876,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -35019,8 +35128,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -35398,8 +35505,6 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
-                fields?: string;
             };
             header?: never;
             path?: never;
@@ -36670,7 +36775,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -36679,13 +36784,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<RingBlock> */
+            /** @description ListPage<RingBlockListItem> */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListPageRingBlock"];
+                    "application/json": components["schemas"]["ListPageRingBlockListItem"];
                 };
             };
             /** @description VALIDATION_ERROR */
@@ -40667,7 +40772,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -40930,7 +41035,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;
@@ -43205,7 +43310,7 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
-                /** @description Comma-separated item keys, published in the list operation's x-fields; any other key is INVALID_FILTER. */
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
                 fields?: string;
             };
             header?: never;

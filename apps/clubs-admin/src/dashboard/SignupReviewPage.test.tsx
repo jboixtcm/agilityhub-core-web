@@ -208,7 +208,9 @@ describe("T-04-33 D2 signup validation", () => {
     ["es", "PASSPORT", "PA1234567", "Pasaporte"],
     ["en", "PASSPORT", "PA1234567", "Passport"],
     ["es", "DNI", "47123456K", "DNI/NIE"],
-    ["en", "NIE", "X1234567L", "ID document"],
+    // E4-W15 step 3 (E4-W12 review #1): English names the type too, as screen 16 does.
+    ["en", "NIE", "X1234567L", "DNI/NIE"],
+    ["en", "DNI", "47123456K", "DNI/NIE"],
   ] as const)("E4-W12 step 2: in %s the identity row of a %s is labelled by its type", async (language, type, number, label) => {
     await renderReview({
       branding: { ...canic, locales: ["ca", "es", "en"] },

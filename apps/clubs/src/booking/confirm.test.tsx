@@ -236,15 +236,81 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
     );
   });
 
-  it("the limit done: «Aquesta setmana ja has fet dues classes…» and when it opens again, without a countdown", async () => {
+  it("the limit done this week (CURRENT, per dog): the mockup's «… per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown", async () => {
     await tapRow(3);
     expect(
       screen.getByText(
-        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
+    expect(screen.queryByText(/Podràs reservar aquesta classe/u)).toBeNull();
     expect(screen.queryByText(/Plaça bloquejada/u)).toBeNull();
     expect(screen.queryByRole("button", { name: "CONFIRMAR LA RESERVA" })).toBeNull();
+  });
+
+  /** A hold refused with `409 BOOKING_LIMIT_REACHED` and no swappable booking (S08 §6). */
+  function limitReached(details: Record<string, unknown>) {
+    server.use(
+      http.post("*/api/v1/seat-holds", () =>
+        HttpResponse.json(
+          {
+            code: "BOOKING_LIMIT_REACHED",
+            details: {
+              nextBookableAt: "2026-08-09T18:00:00Z",
+              swappable: [],
+              ...details,
+            },
+            message: "Booking limit reached",
+            traceId: "t",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+  }
+
+  it("the limit of next week reached (NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de …»", async () => {
+    limitReached({
+      current: 1,
+      limit: 1,
+      notSelectable: [
+        {
+          bookingId: "booking-duna-mon10",
+          description: "C",
+          reason: "LATE_WINDOW",
+          startsAtLocal: "2026-08-10T09:00",
+        },
+      ],
+      unit: "DOG",
+      week: "NEXT",
+    });
+    await tapRow(0);
+    expect(
+      screen.getByText(
+        "La setmana vinent ja tens una classe amb la Duna. Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText(/Aquesta setmana ja has fet/u)).toBeNull();
+  });
+
+  it("the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.»", async () => {
+    limitReached({
+      current: 2,
+      limit: 2,
+      notSelectable: [
+        { bookingId: "booking-duna-past-1", reason: "DONE" },
+        { bookingId: "booking-rock-past-1", reason: "DONE" },
+      ],
+      unit: "MEMBER",
+      week: "CURRENT",
+    });
+    await tapRow(0);
+    expect(
+      screen.getByText(
+        "Aquesta setmana ja has fet dues classes. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText(/Duna\./u)).toBeNull();
   });
 
   it("«Properament»: «Disponible a partir de diumenge 9 a les 20 h.»", async () => {
@@ -290,12 +356,55 @@ describe("R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-
     const assign = vi.fn();
     const origin = window.location.origin;
     vi.stubGlobal("location", { assign, origin, pathname: "/reservar/confirmar" });
+    // Without a swap the button itself names the payment.
+    expect(screen.queryByText(/En confirmar, pagaràs/u)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "PAGAR I CONFIRMAR (12,00 €)" }));
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith(
         expect.stringMatching(new RegExp(`^${origin}/reserves/booking-`, "u")),
       );
     });
+  });
+
+  it("PAY_TO_BOOK with a swap keeps the price in view: «En confirmar, pagaràs aquesta classe (12,00 €).» above «ANUL·LA … I CONFIRMA …» (review #8)", async () => {
+    const serverNow = new Date().toISOString();
+    const hold = heldSeat(serverNow, new Date(Date.parse(serverNow) + 30_000).toISOString());
+    window.history.replaceState(
+      {
+        confirm: {
+          hold: {
+            ...hold,
+            limit: {
+              count: 2,
+              max: 2,
+              notSelectable: [],
+              reached: true,
+              swappable: [
+                {
+                  bookingId: "booking-duna-mon3",
+                  description: "B+C",
+                  ringName: "Central",
+                  startsAtLocal: "2026-08-03T18:50",
+                },
+              ],
+              unit: "DOG",
+              week: "CURRENT",
+            },
+            payment: { mode: "PAY_TO_BOOK", price: { amountMinor: 1200, currency: "EUR" } },
+          } satisfies SeatHoldResponse,
+          kind: "hold",
+          receivedAt: Date.now(),
+          waitlistEntryId: null,
+        },
+      },
+      "",
+      "/reservar/confirmar",
+    );
+    await renderPage(<ConfirmPage client={apiClient()} />, single);
+    expect(screen.getByText("En confirmar, pagaràs aquesta classe (12,00 €).")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DIMECRES 5" }),
+    ).toBeEnabled();
   });
 
   it("CHARGE_ON_ATTENDANCE: the note above the normal button", async () => {

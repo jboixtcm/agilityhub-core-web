@@ -1,4 +1,4 @@
-import { type ApiClient, type components } from "@agilityhub/api-client";
+import { itemsWith, listFields, type ApiClient, type components } from "@agilityhub/api-client";
 import { fmtMaskedIban, type Locale, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -58,6 +58,8 @@ const DOG_READMISSION_FIELDS = {
   documents: "documents",
 } as const;
 type DogReadmissionField = keyof typeof DOG_READMISSION_FIELDS;
+/** What the family search shows of each member (`fields`, CONVENCIONS_API §4). */
+const FAMILY_SEARCH_FIELDS = ["fullName", "dogs"] as const;
 interface FamilyCandidate {
   dogs: readonly string[];
   familyGroup: components["schemas"]["NamedReference"] | undefined;
@@ -277,14 +279,16 @@ export function SignupReviewPage({
       setFamilySearching(true);
       client
         .GET("/members", {
-          // `familyGroup` is not a default column of D5: ask for it (S03 §6 `fields`).
-          params: { query: { fields: "id,fullName,dogs,familyGroup", filter: ["status:eq:ACTIVE"], q: query, size: 20 } },
+          // `familyGroup` is not a default column of D5: ask for it (S03 §6 `fields`). A member
+          // without a group has no `familyGroup` key; the name and the dogs are always sent.
+          params: { query: { fields: listFields([...FAMILY_SEARCH_FIELDS, "familyGroup"]), filter: ["status:eq:ACTIVE"], q: query, size: 20 } },
         })
+        .then((result) => itemsWith(result.data?.items ?? [], FAMILY_SEARCH_FIELDS))
         .then(
-          (result) => {
+          (items) => {
             if (!active) return;
             setFamilyResults(
-              (result.data?.items ?? [])
+              items
                 .filter((item) => item.id !== memberId)
                 .map((item) => ({
                   dogs: item.dogs.map((dog) => dog.name),

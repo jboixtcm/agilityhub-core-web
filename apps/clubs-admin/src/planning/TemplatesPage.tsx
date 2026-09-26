@@ -1,4 +1,11 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import {
+  isApiError,
+  itemsWith,
+  listFields,
+  type ApiClient,
+  type components,
+  type ListItemWith,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -68,7 +75,15 @@ import {
 
 type Coverage = components["schemas"]["Coverage"];
 type CoverageLevel = Coverage["levels"][number];
-type WeekListItem = components["schemas"]["WeekListItem"];
+/**
+ * A row of «SETMANES» (`fields`, CONVENCIONS_API §4): its year, week and start, always sent once
+ * asked for; `generatedAt` and `validatedAt` are asked for too (`null` until then).
+ */
+const WEEK_ROW_FIELDS = ["isoYear", "isoWeek", "startDate"] as const;
+type WeekRow = ListItemWith<
+  components["schemas"]["WeekListItem"],
+  (typeof WEEK_ROW_FIELDS)[number]
+>;
 type GenerationCandidate = components["schemas"]["GenerationCandidate"];
 
 interface Feedback {
@@ -699,7 +714,7 @@ function GenerationCard({
   onGenerate: (candidate: GenerationCandidate, idempotencyKey: string) => Promise<void>;
   readOnly: boolean;
   weekdayTemplateId: string | undefined;
-  weeks: readonly WeekListItem[] | undefined;
+  weeks: readonly WeekRow[] | undefined;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums"]);
   const { formatDate, formatPlainDate, formatTime, formatWeekRange } = useClubFormats();
@@ -768,7 +783,7 @@ function GenerationCard({
           </div>
         </>
       )}
-      <DataTable<WeekListItem>
+      <DataTable<WeekRow>
         caption={t("admin-scheduling:weeks.caption")}
         columns={[
           { header: t("admin-scheduling:weeks.year"), key: "year", render: (week) => week.isoYear },
@@ -1057,9 +1072,15 @@ export function TemplatesPage({
     useCallback(async () => {
       const monday = mondayOf(clubToday(branding.timeZone));
       const result = await client.GET("/weeks", {
-        params: { query: { filter: [`startDate:gte:${monday}`], sort: ["startDate,asc"] } },
+        params: {
+          query: {
+            fields: listFields([...WEEK_ROW_FIELDS, "generatedAt", "validatedAt"]),
+            filter: [`startDate:gte:${monday}`],
+            sort: ["startDate,asc"],
+          },
+        },
       });
-      return result.data?.items ?? [];
+      return itemsWith(result.data?.items ?? [], WEEK_ROW_FIELDS);
     }, [branding.timeZone, client]),
   );
 

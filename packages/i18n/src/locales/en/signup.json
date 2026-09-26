@@ -81,6 +81,7 @@
     "planTitle": "Plan",
     "currentPlan": "{plan} · {price}",
     "monthlyPrice": "{price}/month",
+    "singleClassPrice": "{price}/class",
     "entryFee": "Joining fee {price}",
     "packPrice": "{price} · {months} months",
     "maintenance": "{withEntry, select, yes {Deposit: {entry} · minimum fee during treatment: {fee}/month} other {Minimum fee during treatment: {fee}/month}}",

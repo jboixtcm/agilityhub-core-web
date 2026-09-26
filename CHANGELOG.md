@@ -274,5 +274,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     - The drawer offers no [Retira] on a file of the record's own row, and a withdrawal falls back to that row until the view is read again.
     - D2's «Abans / Ara» shows one line per document type, named after `census.dogDocumentTypes` («Cartilla de vacunes»). A row without files reads «pendent».
     - The real-core readmission reuses a dog whose record has a card with its file, and changes the breed. D2 shows the old card under «Abans». Withdrawing the submitted card brings the record's card back, with no [Retira] and no documents change. After the rejection the dog keeps its old breed and its card. The add still takes the `400 FILE_NOT_FOUND` branch while the core image lacks api E5-T24.
+- The S08 member flow, round 2 of the E5-W01 review:
+  - 29 (S08 §2 row 29 and B1, amended 26-09): the limit-done note follows `details.week` and `details.unit`. With this week's limit it reads the mockup's «Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.». With next week's limit it reads «La setmana vinent ja tens una classe amb la Duna. Podràs reservar aquesta classe a partir de …». A limit per person names no dog.
+  - 29: `PAY_TO_BOOK` with a swap keeps the price in view with a new note, «En confirmar, pagaràs aquesta classe ({price}).» (ca, es, en).
+  - 03 (V3): with a single dog, the rows show no « · amb {dog}».
+  - 07: the green and yellow notes come only from the page's own cancellation, from its answer's `late`, once the booking has been read again. A booking cancelled elsewhere (by a swap, by the system, or long ago) shows just its state chip.
+  - Mocks: `GET /me/home?dogId=` keeps the member's activity rows under every dog, as the api's `MemberHomeQuery` does.
+  - The booking e2e captures wait until the sprite icons are painted.
 
 [Unreleased]: https://github.com/agilityhub/agilityhub-core-web/commits/main

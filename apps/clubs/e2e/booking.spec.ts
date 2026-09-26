@@ -47,8 +47,27 @@ async function login(page: Page, scenario = "member", { clock = bookingNow, loca
   await page.waitForURL("**/inici");
 }
 
-const shot = (page: Page, name: string) =>
-  page.screenshot({ fullPage: true, path: resolve(evidenceDirectory, name) });
+// Icons are `<use>` references to the external sprite. A page that has just changed can be
+// captured before the browser resolves them (the round-2 29 limit capture came out without its
+// «×», paw and warning icons), so a capture waits until every rendered icon has a box, as
+// `planning-calendar.spec.ts` does.
+async function shot(page: Page, name: string) {
+  await expect
+    .poll(() =>
+      page
+        .locator("svg.ah-icon")
+        .evaluateAll((icons) =>
+          icons.every(
+            (icon) =>
+              !(icon instanceof SVGSVGElement) ||
+              icon.getClientRects().length === 0 ||
+              icon.getBBox().width > 0,
+          ),
+        ),
+    )
+    .toBe(true);
+  await page.screenshot({ fullPage: true, path: resolve(evidenceDirectory, name) });
+}
 
 async function openReserve(page: Page) {
   await page.getByRole("link", { name: "Reservar" }).click();
@@ -95,15 +114,16 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await expect(page.getByText("Dimecres 5 · 18:50–19:50 · Central")).toBeVisible();
   });
 
-  test("29 limit done and «Properament»: the notes without a countdown (decision B1)", async ({
+  test("29 limit done and «Properament»: the notes without a countdown (S08 §2 row 29 amended 26-09, B1)", async ({
     page,
   }) => {
     await login(page);
     await openReserve(page);
     await tapRow(page, "ds 8 · 9:00");
+    // This week's limit (CURRENT): the class is over by Sunday, so the mockup's sentence.
     await expect(
       page.getByText(
-        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     await shot(page, "29-limit-375.png");

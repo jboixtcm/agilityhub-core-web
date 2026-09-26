@@ -110,7 +110,7 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     expect(document.querySelector(".pack-card")).toBeNull();
   });
 
-  it("modules gate the page: no ACTIVITIES block, no PACKS card, WAITLIST off reads «Completa» inert, SINGLE_CLASS adds the price", async () => {
+  it("modules gate the page: ACTIVITIES off has no «Activitats» block, PACKS off has no pack card", async () => {
     await renderBook({
       branding: { ...canic, modules: without("ACTIVITIES").filter((module) => module !== "PACKS") },
     });

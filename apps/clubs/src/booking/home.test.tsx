@@ -1,3 +1,4 @@
+import { activityState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -94,7 +95,7 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     expect(screen.getByRole("link", { name: "Inici" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("a dog selected: its rows without « · amb …», its counters, and «Tots» brings them back", async () => {
+  it("a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back", async () => {
     await renderHome();
     fireEvent.click(screen.getByRole("button", { name: "Duna · C" }));
     await waitFor(() => {
@@ -102,6 +103,13 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
         "Classe B+C | confirmada / Dilluns 3 · 18:50–19:50 · Central · instructor: es mostra el dia abans",
       );
     });
+    // E5-W01 round 2 (review #3): an activity registration belongs to the member, so the api's
+    // dog filter keeps it (`MemberHomeQuery`).
+    expect(reservationRows()).toEqual([
+      "Classe B+C | confirmada / Dilluns 3 · 18:50–19:50 · Central · instructor: es mostra el dia abans",
+      "Classe C i sup. | en llista d'espera / Dijous 6 · 20:00 · Carretera · t'avisarem si s'allibera plaça",
+      "Torneig d'Estiu 2026 | inscrita / Divendres 7 · 18:30–20:30 · totes les pistes",
+    ]);
     expect(reservationRows().some((row) => row.includes("amb "))).toBe(false);
     expect(screen.getByRole("button", { name: "Duna · C" })).toHaveAttribute(
       "aria-pressed",
@@ -115,7 +123,9 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     });
   });
 
-  it("a dog without reservations: «Encara no tens cap reserva» and a way to 04", async () => {
+  it("a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04", async () => {
+    // Activity rows stay under every dog (review #3): the member here has none.
+    activityState.registrations = [];
     await renderHome();
     fireEvent.click(screen.getByRole("button", { name: "Toby · B (Joan Antoni)" }));
     expect(await screen.findByText("Encara no tens cap reserva")).toBeVisible();
@@ -126,9 +136,13 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     expect(reservationRows()).toEqual([]);
   });
 
-  it("only one accessible dog: no «Tots», its chip selected; nothing unread: the bell is still", async () => {
+  it("only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still", async () => {
+    // As the api answers a member with one dog: the «Tots» view of that dog, `dogName` filled in.
     rewrite("/me/home", (body) => {
       body.dogs = [(body.dogs as unknown[])[0]];
+      body.reservations = (body.reservations as { dogId?: string | null }[]).filter(
+        (row) => row.dogId === "dog-duna" || row.dogId === null,
+      );
       body.notifications = { unreadCount: 0 };
     });
     await renderHome();
@@ -136,6 +150,14 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     expect(chips.map((chip) => [chip.textContent, chip.getAttribute("aria-pressed")])).toEqual([
       ["Duna · C", "true"],
     ]);
+    // E5-W01 round 2 (review #2): the dog's name only shows with more than one dog.
+    await waitFor(() => {
+      expect(reservationRows()).toEqual([
+        "Classe B+C | confirmada / Dilluns 3 · 18:50–19:50 · Central · instructor: es mostra el dia abans",
+        "Classe C i sup. | en llista d'espera / Dijous 6 · 20:00 · Carretera · t'avisarem si s'allibera plaça",
+        "Torneig d'Estiu 2026 | inscrita / Divendres 7 · 18:30–20:30 · totes les pistes",
+      ]);
+    });
     const bell = screen.getByRole("link", { name: "Avisos" });
     expect(bell.querySelector("svg")).not.toHaveClass("home-header__bell-icon--ringing");
   });

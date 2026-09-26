@@ -217,9 +217,12 @@ export function signupPlanQuote(
 export function signupUpfrontConfig(
   plans: readonly SignupPlan[],
   today: string,
-  { currency = "EUR", memberPlanId }: { currency?: string; memberPlanId?: string | undefined } = {},
+  {
+    addDog = false,
+    currency = "EUR",
+    memberPlanId,
+  }: { addDog?: boolean; currency?: string; memberPlanId?: string | undefined } = {},
 ): SignupUpfrontConfig {
-  const addDog = memberPlanId !== undefined;
   const planQuotes = plans.map((plan) => signupPlanQuote(plan, today, { addDog, currency }));
   const choices = (quote: SignupPlanQuote | undefined) =>
     (quote?.options ?? []).map((option) => ({
@@ -231,7 +234,7 @@ export function signupUpfrontConfig(
   const firstMonthlyQuote =
     firstMonthly === undefined ? undefined : signupPlanQuote(firstMonthly, today, { currency });
   return {
-    ...(addDog
+    ...(addDog && memberPlanId !== undefined
       ? { additionalDogOptions: choices(planQuotes.find((quote) => quote.planId === memberPlanId)) }
       : {}),
     firstMonthOptions: choices(firstMonthlyQuote),
@@ -281,6 +284,20 @@ export function signupConfig({
   if (!packs) {
     config.plans = config.plans.filter((plan) => plan.type !== "PACK");
   }
+  // Add-dog mode (R-04-09, api E5-T22): the member's own plan is listed and marked `current`, even
+  // when the public offer hides it; every other plan is `current: false`. A member without a plan,
+  // or whose plan can no longer be assigned (a pack without PACKS), gets the offer with no current
+  // plan and must choose one (`planIdRequested` is then required).
+  let memberPlanId: string | undefined;
+  if (member !== undefined) {
+    const own = translatedConfig(locale).plans.find((plan) => plan.id === member.planId);
+    const assignable = own !== undefined && (packs || own.type !== "PACK");
+    memberPlanId = assignable ? own.id : undefined;
+    if (assignable && !config.plans.some((plan) => plan.id === own.id)) {
+      config.plans = [...config.plans, own];
+    }
+    config.plans = config.plans.map((plan) => ({ ...plan, current: plan.id === memberPlanId }));
+  }
   if (!billing) {
     delete config.paymentMethods;
     config.plans = config.plans.map((plan) => {
@@ -291,14 +308,10 @@ export function signupConfig({
       return copy;
     });
   } else {
-    // Add-dog mode also quotes the member's own plan (SignupUpfrontConfig.planQuotes).
-    const quoted = [
-      ...config.plans,
-      ...baseline.plans.filter(
-        (plan) => plan.id === member?.planId && !config.plans.some((offered) => offered.id === plan.id),
-      ),
-    ];
-    config.upfront = signupUpfrontConfig(quoted, today, { memberPlanId: member?.planId });
+    config.upfront = signupUpfrontConfig(config.plans, today, {
+      addDog: member !== undefined,
+      memberPlanId,
+    });
     if (stripe) {
       config.paymentMethods?.splice(1, 0, {
         label: signupPaymentLabel("CARD", locale),

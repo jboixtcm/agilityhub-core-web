@@ -47,37 +47,7 @@
       }
     }
   },
-  "x-schema-overlays": {
-    "Booking": {
-      "properties": {
-        "dog": {
-          "$ref": "#/components/schemas/HoldDog",
-          "description": "S08 §2 07 (E5-W01): the booked dog, as SeatHoldResponse.dog, for «Classe {description} · amb la Duna» (name and the Catalan article by sex). Omitted by the published core, whose Booking carries only dogId."
-        },
-        "lateCancelThresholdMinutes": {
-          "type": "integer",
-          "format": "int32",
-          "description": "S08 R-08-10 (E5-W01): bookings.lateCancelThresholdMinutes as the booking's club applies it (240 = «4 hores»). Screen 07 warns before a cancellation inside it and names it in the late note; a MEMBER cannot read /parameters (ADMIN only). Omitted by the published core."
-        }
-      }
-    },
-    "WaitlistEntry": {
-      "properties": {
-        "dog": {
-          "$ref": "#/components/schemas/HoldDog",
-          "description": "S08 §2 /espera/:id (E5-W01): the waiting dog, as SeatHoldResponse.dog, for the Catalan article by sex (dogName carries no sex). Omitted by the published core."
-        }
-      }
-    },
-    "SignupPlan": {
-      "properties": {
-        "priceLabel": {
-          "type": "string",
-          "description": "S05 R-05-19 / S04 R-04-09 (E4-W12 step 3): Plan.texts.priceLabel in the reader's locale, the text screen 17 shows in the price slot of a plan without a current price («condicions i cost segons cada cas»). Omitted when the plan has none."
-        }
-      }
-    }
-  },
+  "x-schema-overlays": {},
   "components": {
     "schemas": {
       "NotificationPreferences": {

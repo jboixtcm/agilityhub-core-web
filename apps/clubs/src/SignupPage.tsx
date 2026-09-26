@@ -1294,22 +1294,22 @@ function DogStep({
   const familyOffers = branding.modules.includes("FAMILY_GROUP");
   // R-04-08: `signup.requireDogDocumentAtSignup` makes the vaccination card required on 17.
   const documentRequired = config.requireDogDocumentAtSignup === true;
-  // T-04-32: the add-dog keeps the member's own plan; the form names it when it offers it.
-  const memberPlan = addDog
-    ? config.plans.find((plan) => plan.id === config.member?.planId)
-    : undefined;
-  // S05 R-05-19: the price slot of 17 — the current price, else the plan's `priceLabel`.
-  const planPrice = (plan: SignupPlan): string =>
-    plan.price === undefined
-      ? (plan.priceLabel ?? "")
-      : plan.type === "PACK"
-        ? t("signup:dog.packPrice", {
-            months: plan.pack?.validityMonths ?? 1,
-            price: formatMoney(plan.price.amount.amountMinor / 100),
-          })
-        : t("signup:dog.monthlyPrice", {
-            price: formatMoney(plan.price.amount.amountMinor / 100),
-          });
+  // T-04-32, R-04-09 (api E5-T22): the add-dog keeps the member's own plan, the one `GET /signup`
+  // marks `current`. A member without one (S05 B34) chooses among the offered plans.
+  const memberPlan = addDog ? config.plans.find((plan) => plan.current === true) : undefined;
+  const choosesPlan = !addDog || memberPlan === undefined;
+  const planChosen = config.plans.some((plan) => plan.id === draft.planId);
+  // S05 R-05-19: the price slot of 17 — «{price}/mes», «{price}/classe» or the pack's price, else
+  // the plan's `priceLabel`.
+  const planPrice = (plan: SignupPlan): string => {
+    if (plan.price === undefined) return plan.priceLabel ?? "";
+    const price = formatMoney(plan.price.amount.amountMinor / 100);
+    return plan.type === "PACK"
+      ? t("signup:dog.packPrice", { months: plan.pack?.validityMonths ?? 1, price })
+      : plan.type === "SINGLE_CLASS"
+        ? t("signup:dog.singleClassPrice", { price })
+        : t("signup:dog.monthlyPrice", { price });
+  };
 
   usePendingError(
     "dog",
@@ -1565,25 +1565,24 @@ function DogStep({
       {config.texts.freeTrainingConditions === "" ? null : (
         <p className="signup-copy">{config.texts.freeTrainingConditions}</p>
       )}
-      {config.texts.therapyIntro === "" ? null : (
+      {/* The therapy intro helps to choose a plan: not above a plan the member cannot change. */}
+      {config.texts.therapyIntro === "" || !choosesPlan ? null : (
         <p className="signup-copy">{config.texts.therapyIntro}</p>
       )}
-      {addDog ? (
+      {memberPlan !== undefined ? (
         // T-04-32: the add-dog keeps the member's plan (D2 can still change it): one read-only
-        // line, no cards and no selection. A plan the form does not offer has no name to show.
-        memberPlan === undefined ? null : (
-          <section className="signup-plans" aria-labelledby="signup-plans-title">
-            <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
-            <p className="signup-plan-current">
-              {planPrice(memberPlan) === ""
-                ? memberPlan.name
-                : t("signup:dog.currentPlan", {
-                    plan: memberPlan.name,
-                    price: planPrice(memberPlan),
-                  })}
-            </p>
-          </section>
-        )
+        // line, no cards and no selection.
+        <section className="signup-plans" aria-labelledby="signup-plans-title">
+          <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
+          <p className="signup-plan-current">
+            {planPrice(memberPlan) === ""
+              ? memberPlan.name
+              : t("signup:dog.currentPlan", {
+                  plan: memberPlan.name,
+                  price: planPrice(memberPlan),
+                })}
+          </p>
+        </section>
       ) : config.plans.length === 0 ? null : (
         <section className="signup-plans" aria-labelledby="signup-plans-title">
           <h2 id="signup-plans-title">{t("signup:dog.planTitle")}</h2>
@@ -1670,9 +1669,14 @@ function DogStep({
         </section>
       )}
       <StepMessage
-        message={message ?? (addDog || config.plans.length === 0 ? errors.plan : undefined)}
+        message={message ?? (!choosesPlan || config.plans.length === 0 ? errors.plan : undefined)}
       />
-      <Button className="signup-primary" disabled={uploading} type="submit">
+      {/* R-04-09: a member without a plan must choose one before going on (`planIdRequested`). */}
+      <Button
+        className="signup-primary"
+        disabled={uploading || (addDog && choosesPlan && config.plans.length > 0 && !planChosen)}
+        type="submit"
+      >
         {t("signup:common.continue")}
       </Button>
     </form>
@@ -2612,9 +2616,12 @@ export function SignupPage({
           const plans = data.plans ?? [];
           const planAvailable =
             current.planId !== "" && plans.some((plan) => plan.id === current.planId);
-          // T-04-32: the add-dog keeps the member's plan (no selection on 17); D2 can change it.
+          // T-04-32, R-04-09: the add-dog keeps the member's plan, the one marked `current` (no
+          // selection on 17; D2 can change it). Without one the member chooses: nothing is
+          // preselected, and a choice already made is kept while the offer still lists it.
+          const memberPlanId = plans.find((plan) => plan.current === true)?.id;
           const planId = addDog
-            ? (data.member?.planId ?? "")
+            ? (memberPlanId ?? (planAvailable ? current.planId : ""))
             : planAvailable
               ? current.planId
               : (plans[0]?.id ?? "");

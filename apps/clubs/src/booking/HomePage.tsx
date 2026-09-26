@@ -156,7 +156,14 @@ export function HomePage({ client }: { client: ApiClient }) {
                 return <ActivityReservationRow key={row.id} registration={registration} />;
               }
             }
-            return <ReservationRow key={`${row.type}-${row.id}`} row={row} />;
+            // With a single dog its lone chip is the view: no « · amb {dog}» (03, V3).
+            return (
+              <ReservationRow
+                key={`${row.type}-${row.id}`}
+                row={row}
+                showDog={data.dogs.length > 1}
+              />
+            );
           })
         )}
       </section>

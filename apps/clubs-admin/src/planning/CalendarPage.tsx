@@ -1,4 +1,4 @@
-import type { ApiClient } from "@agilityhub/api-client";
+import { itemsWith, listFields, type ApiClient, type ListItemWith } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -65,6 +65,9 @@ import {
 } from "./shared";
 
 type Relative = WeekCalendar["week"]["relative"];
+/** The week selector reads each week's start and its draft count (`fields`, CONVENCIONS_API §4). */
+const WEEK_OPTION_FIELDS = ["startDate", "classCounts"] as const;
+type WeekOption = ListItemWith<WeekListItem, (typeof WEEK_OPTION_FIELDS)[number]>;
 
 interface Feedback {
   message: string;
@@ -257,11 +260,17 @@ export function CalendarPage({
   const [blockDrawer, setBlockDrawer] = useState<RingBlockDrawerMode>();
 
   const weeks = useResource(
-    useCallback(async (): Promise<WeekListItem[]> => {
+    useCallback(async (): Promise<WeekOption[]> => {
       const result = await client.GET("/weeks", {
-        params: { query: { filter: [`startDate:gte:${currentMonday}`], sort: ["startDate,asc"] } },
+        params: {
+          query: {
+            fields: listFields(WEEK_OPTION_FIELDS),
+            filter: [`startDate:gte:${currentMonday}`],
+            sort: ["startDate,asc"],
+          },
+        },
       });
-      return result.data?.items ?? [];
+      return itemsWith(result.data?.items ?? [], WEEK_OPTION_FIELDS);
     }, [client, currentMonday]),
   );
   const draftWeeks = useMemo(
@@ -298,8 +307,9 @@ export function CalendarPage({
         monday === undefined
           ? undefined
           : async () => {
+              // Only the week's id is read: the calendar of that week.
               const result = await client.GET("/weeks", {
-                params: { query: { filter: [`startDate:eq:${monday}`] } },
+                params: { query: { fields: listFields([]), filter: [`startDate:eq:${monday}`] } },
               });
               return { item: result.data?.items[0], monday };
             },

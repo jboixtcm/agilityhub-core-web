@@ -26,9 +26,9 @@ function hiddenHours(row: ReservationRowData): number | undefined {
  * A row of «Les meves reserves» (03, S08 §2) for a class, a waiting entry or a training, as the
  * api delivers it: «{title}[ · amb {dog}]» + the state badge, then «{Dilluns 3} · {18:50–19:50} ·
  * {ring}» and the instructor (or when it shows) or the waiting notice. The dog only in «Tots»
- * (`dogName` is `null` when a dog is selected).
+ * (`dogName` is `null` when a dog is selected) and with more than one dog (`showDog`, V3).
  */
-export function ReservationRow({ row }: { row: ReservationRowData }) {
+export function ReservationRow({ row, showDog }: { row: ReservationRowData; showDog: boolean }) {
   const { t } = useTranslation(["home", "enums"]);
   const formats = useClubFormats();
   const branding = useBranding();
@@ -56,7 +56,7 @@ export function ReservationRow({ row }: { row: ReservationRowData }) {
   const second =
     extra === undefined ? place : t("home:reservations.join", { first: place, second: extra });
   const title =
-    row.dogName === null || row.dogName === undefined
+    !showDog || row.dogName === null || row.dogName === undefined
       ? row.title
       : t("home:reservations.withDog", { dogName: row.dogName, title: row.title });
   const link = href(row, branding.modules.includes("WAITLIST"));

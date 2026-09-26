@@ -221,8 +221,10 @@ function confirm(
   const payToBook = payment?.mode === "PAY_TO_BOOK";
   const created: StoredBooking = {
     bookedAt: new Date(context.now).toISOString(),
+    // An admin acting as the member books through the club: not the reader's own account (E5-T25).
     bookedBy: {
       displayName: viewerFirstName(),
+      self: currentMockScenarioName() !== "impersonated",
       viaClub: currentMockScenarioName() === "impersonated",
     },
     cancellation: null,
