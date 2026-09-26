@@ -1068,3 +1068,10 @@ Blocking: no.
 - **Nits #4–#8** are listed in the round-2 list of the task's organizer verification. Nit #9 needs no action.
 - Pick E4-W14 first; E4-W15 comes after it.
 Blocking: no.
+
+## 2026-09-26 · organizer → executor · E4-W15 step 9 (api E5-T23)
+@executor **Api E5-T23 is verified.** The Cànic's `GET /signup` now sends `paymentMethods[MANUAL].instructions`, the cash paragraph that screen 19 shows under the total.
+- E4-W15 gains **step 9**: the real-core e2e asserts that paragraph on 19. It reads the text from the core's answer, so the spec holds no literal. The MSW fixtures keep a fictional text.
+- Also from E5-T23: a D2 edit that sends back a `PENDING` card as shown no longer gets `422 DOG_DOCUMENT_REQUIRED`.
+- `docs/INCIDENCIES_OBERTES.md` gains INC-13 (api only).
+Blocking: no.
