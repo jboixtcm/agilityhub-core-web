@@ -26,7 +26,7 @@ import { noticeText, pageNotice, type PageNotice, useMeHome } from "./shared";
  * computed: rows, counters and instructor visibility come from `GET /me/home`.
  */
 export function HomePage({ client }: { client: ApiClient }) {
-  const { t } = useTranslation(["home", "booking", "enums", "errors"]);
+  const { t } = useTranslation(["home", "booking", "enums", "errors", "training"]);
   const branding = useBranding();
   const [dogId, setDogId] = useState<string | null>(null);
   const home = useMeHome(client, dogId);

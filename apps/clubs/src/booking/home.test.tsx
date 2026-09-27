@@ -80,10 +80,10 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     const links = [...document.querySelectorAll(".reservation-row, .activity-row")].map(
       (row) => row.querySelector("a")?.getAttribute("href") ?? null,
     );
-    // The training's page belongs to E5-W02 (S09): the row is not a link yet.
+    // The training's row opens its detail (S09, E5-W02).
     expect(links).toEqual([
       "/reserves/booking-duna-mon3",
-      null,
+      "/entrenaments/training-rock-tue4",
       "/espera/waitlist-duna-thu6",
       expect.stringMatching(/^\/activitats\//u) as unknown,
       "/reserves/booking-rock-mon10",

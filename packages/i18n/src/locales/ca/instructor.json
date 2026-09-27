@@ -50,6 +50,7 @@
     },
     "ring": "Pista",
     "grid": "Hores de la franja",
+    "occupant": "{member} + {dog}",
     "noSlots": "No hi ha hores en aquesta franja.",
     "note": {
       "label": "Nota",

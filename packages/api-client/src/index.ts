@@ -24,6 +24,7 @@ export { itemsWith, type ListItemWith, listFields } from "./list-fields";
 export { createQueryClient, queryKeys, useBranding, useMe } from "./query";
 export {
   createRingBlock,
+  RING_BLOCK_HORIZON_DAYS,
   RING_BLOCK_REASONS_BY_KIND,
   type RingBlockConflict,
   ringBlockCreateBody,
@@ -31,7 +32,15 @@ export {
   type RingBlockFailure,
   ringBlockFailure,
   type RingBlockFields,
+  type RingBlockGrid,
   type RingBlockKind,
   ringBlockKinds,
   type RingBlockReason,
+  type RingBlockResource,
+  type RingBlockRing,
+  type RingBlockSlot,
+  type RingBlockSubmission,
+  useActiveRings,
+  useRingBlockGrid,
+  useRingBlockSubmit,
 } from "./ring-blocks";

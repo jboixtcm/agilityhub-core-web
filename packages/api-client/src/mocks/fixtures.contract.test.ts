@@ -56,6 +56,18 @@ import {
   signupReviewDryRun,
   signupReviewVariant,
 } from "./fixtures/signup-review";
+import {
+  limitReachedDetails as trainingLimitDetails,
+  resetTrainingState,
+  TRAINING_DOG_IDS,
+  TRAINING_MOCK_NOW,
+  trainingBookingResource,
+  trainingSlots,
+  trainingState,
+  trainingSummary,
+  type TrainingVariant,
+  trainingWeekOf,
+} from "./fixtures/training";
 import { planningLevels } from "./planning-handlers";
 
 const fixturesDirectory = fileURLToPath(new URL("./fixtures", import.meta.url));
@@ -707,5 +719,74 @@ describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, 
       expect(entry(waitlistResource(item, options)), JSON.stringify(entry.errors, null, 2)).toBe(true);
     }
     expect(limit(limitReachedDetails("CURRENT")), JSON.stringify(limit.errors, null, 2)).toBe(true);
+  });
+});
+
+describe("E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const canicModules = (brandingCanicFixture as { modules: string[] }).modules;
+  const now = Date.parse(TRAINING_MOCK_NOW);
+  const variants: TrainingVariant[] = ["default", "atLimit", "atLimitNone", "noRight"];
+
+  afterEach(() => {
+    resetTrainingState();
+  });
+
+  it.each(variants)("validates the member and staff grids, the summaries and every booking (%s)", (variant) => {
+    resetTrainingState(variant);
+    const slots = schema("TrainingSlots");
+    const summary = schema("TrainingSummary");
+    const booking = schema("TrainingBooking");
+    const limit = schema("TrainingLimitReachedDetails");
+    for (const modules of [canicModules, canicModules.filter((module) => module !== "COURSES")]) {
+      for (const staff of [false, true]) {
+        for (const ringId of [null, "ring-petita"]) {
+          const grid = trainingSlots({
+            dogId: staff ? null : TRAINING_DOG_IDS.rock,
+            from: "2026-08-03",
+            levelsEnabled: true,
+            modules,
+            now,
+            ringId,
+            showSetup: modules.includes("COURSES"),
+            staff,
+            to: "2026-08-14",
+          });
+          expect(slots(grid), JSON.stringify(slots.errors, null, 2)).toBe(true);
+        }
+      }
+      for (const dogId of [null, TRAINING_DOG_IDS.rock, TRAINING_DOG_IDS.toby]) {
+        for (const levelsEnabled of [true, false]) {
+          const view = trainingSummary({ date: null, dogId, levelsEnabled, modules, now });
+          if (view !== undefined) {
+            expect(summary(view), JSON.stringify(summary.errors, null, 2)).toBe(true);
+          }
+        }
+      }
+    }
+    for (const item of trainingState.bookings) {
+      const resource = trainingBookingResource(item, now);
+      expect(booking(resource), JSON.stringify(booking.errors, null, 2)).toBe(true);
+    }
+    const week = trainingWeekOf(TRAINING_MOCK_NOW);
+    const details = trainingLimitDetails(TRAINING_DOG_IDS.rock, week, now);
+    expect(limit(details), JSON.stringify(limit.errors, null, 2)).toBe(true);
+  });
+
+  it("R-09-03/R-09-05 derive the instants and the training week in the club zone across the DST change", () => {
+    // Sunday 25-10-2026 changes to CET at 03:00: 20:00 local is 19:00Z, a week of 169 hours.
+    expect(trainingWeekOf("2026-10-25T18:30:00Z")).toEqual({
+      end: "2026-10-25T19:00:00Z",
+      start: "2026-10-18T18:00:00Z",
+    });
+    expect(trainingWeekOf("2026-10-25T19:00:00Z")).toEqual({
+      end: "2026-11-01T19:00:00Z",
+      start: "2026-10-25T19:00:00Z",
+    });
+    expect(clubInstant("2026-10-25", "07:00")).toBe("2026-10-25T06:00:00Z");
   });
 });

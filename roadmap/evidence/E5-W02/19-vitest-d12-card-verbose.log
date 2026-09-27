@@ -1,0 +1,16 @@
+heavy.sh: 11:22 waiting for the host lock, held by: 10:21 agilityhub-core-api: bin/e6-smoke
+heavy.sh: 12:13 got the host lock after 50 min 57 s
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA 272ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > offers only the free half hours of the ring and their runs, and posts the block 221ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an instructor with live bookings in the way is told to ask the administration 180ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an ADMIN confirms the listed bookings and resends with cancelBookings (R-09-13) 212ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > FREE_TRAINING off: «Bloqueig» only, and the times without a grid 87ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  12:13:20
+   Duration  587.40s (environment 100%)
+

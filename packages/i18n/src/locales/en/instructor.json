@@ -50,6 +50,7 @@
     },
     "ring": "Ring",
     "grid": "Times of the day part",
+    "occupant": "{member} + {dog}",
     "noSlots": "There are no times in this part of the day.",
     "note": {
       "label": "Note",

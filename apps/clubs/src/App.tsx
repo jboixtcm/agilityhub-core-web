@@ -40,11 +40,15 @@ import { ConfirmPage } from "./booking/ConfirmPage";
 import { HomePage } from "./booking/HomePage";
 import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
 import { InfoPage } from "./InfoPage";
+import { RingBlockPage } from "./instructor/RingBlockPage";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
 import { OverviewPage } from "./today/OverviewPage";
 import { TodayPage } from "./today/TodayPage";
+import { useTrainingTab } from "./training/shared";
+import { TrainingDetailPage } from "./training/TrainingDetailPage";
+import { TrainingPage } from "./training/TrainingPage";
 
 interface RouteDefinition {
   path: string;
@@ -67,8 +71,9 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/reserves/:id" },
   // S08 §2: the detail of a waiting entry (07's card, WAITLIST).
   { path: "/espera/:id" },
-  // Screen 08.
+  // Screen 08 (S09 §2 writes `/training`) and the training booking detail (07 pattern).
   { path: "/entrenaments" },
+  { path: "/entrenaments/:id" },
   // Screen 10.
   { path: "/avui" },
   // Screen 11.
@@ -83,8 +88,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // Screens 16–19.
   { path: "/apuntat-hi/*", public: true },
   { path: "/gossos/nou*" },
-  // Screens 20, 21, 22, 24 and 26.
-  { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR"] },
+  // Screens 20, 21, 22, 24 and 26 (S09 §2 writes 24 as `/instructor/ring-blocks/new`).
+  { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/instructor/tasques", roles: ["INSTRUCTOR"] },
   { path: "/instructor/*", roles: ["INSTRUCTOR"] },
   // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
@@ -229,11 +234,14 @@ export function MobileNavigation({
   modules,
   pathname,
   roles,
+  trainingTab = true,
 }: {
   activeProfile?: Role | null;
   modules: readonly string[];
   pathname: string;
   roles: readonly Role[];
+  /** S09 §2 row 08: the tab exists only when the member has a dog with the right (T-09-37). */
+  trainingTab?: boolean;
 }) {
   const { t } = useTranslation("shell");
   const staffProfile = activeProfile === "INSTRUCTOR" || activeProfile === "ADMIN";
@@ -262,16 +270,19 @@ export function MobileNavigation({
   const items = definitions
     .filter((item) => isModuleUiItemEnabled(modules, "tabs", item.id))
     .filter((item) => item.roles === undefined || item.roles.some((role) => roles.includes(role)))
+    .filter((item) => item.id !== "training" || trainingTab)
     .map((item) => ({
       active:
         item.id === "profile"
           ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
-          : item.id === "reserve"
-            ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
-              ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some((path) =>
-                matchesPath(pathname, path),
-              )
-            : matchesPath(pathname, item.href),
+          : item.id === "training"
+            ? ["/entrenaments", "/entrenaments/:id"].some((path) => matchesPath(pathname, path))
+            : item.id === "reserve"
+              ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
+                ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some((path) =>
+                  matchesPath(pathname, path),
+                )
+              : matchesPath(pathname, item.href),
       href: item.href,
       icon: item.icon,
       label: item.label,
@@ -307,16 +318,25 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
 function MobileShell({
   authClient,
   children,
+  client,
   detail = false,
 }: {
   authClient: AuthClient;
   children: ReactNode;
+  client: ApiClient;
   detail?: boolean;
 }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
+  // `GET /me/training-summary` is the member's (also impersonated): no call for staff-only roles.
+  const trainingTab = useTrainingTab(
+    client,
+    session.status === "signedIn" &&
+      branding.modules.includes("FREE_TRAINING") &&
+      (session.roles.includes("MEMBER") || session.me?.impersonation !== undefined),
+  );
 
   return (
     <div className="clubs-shell">
@@ -356,6 +376,7 @@ function MobileShell({
         modules={branding.modules}
         pathname={window.location.pathname}
         roles={session.roles}
+        trainingTab={trainingTab}
       />
     </div>
   );
@@ -1298,6 +1319,32 @@ export function App({
           />
         </RequireModule>
       </RequireAuth>
+    ) : pathname === "/entrenaments" ? (
+      // Screen 08 (S09 §2): the page itself goes back to 03 without a dog with the right.
+      <RequireAuth>
+        <RequireModule module="FREE_TRAINING">
+          <TrainingPage client={apiClient} />
+        </RequireModule>
+      </RequireAuth>
+    ) : route.path === "/entrenaments/:id" ? (
+      <RequireAuth>
+        <RequireModule module="FREE_TRAINING">
+          <TrainingDetailPage
+            bookingId={safeDecode(pathname.split("/")[2] ?? "")}
+            client={apiClient}
+            key={pathname}
+          />
+        </RequireModule>
+      </RequireAuth>
+    ) : route.path === "/instructor/pistes/:ringId/reservar" ? (
+      // Screen 24 (S09 §2): not module-gated, blocks exist without FREE_TRAINING (§9).
+      <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
+        <RingBlockPage
+          client={apiClient}
+          key={pathname}
+          ringId={safeDecode(pathname.split("/")[3] ?? "")}
+        />
+      </RequireRole>
     ) : import.meta.env.DEV && pathname === "/_gallery/historic-activitats" ? (
       // Development-only evidence of the screen 25 activity rows (S10/E6 owns `/historic`).
       <RequireAuth>
@@ -1324,6 +1371,7 @@ export function App({
     >
       <MobileShell
         authClient={authClient}
+        client={apiClient}
         detail={
           [
             "/gossos",
@@ -1334,8 +1382,15 @@ export function App({
             "/inici",
             "/reservar",
             "/reservar/confirmar",
+            "/entrenaments",
           ].includes(pathname) ||
-          ["/activitats/:id", "/reserves/:id", "/espera/:id"].includes(route.path)
+          [
+            "/activitats/:id",
+            "/reserves/:id",
+            "/espera/:id",
+            "/entrenaments/:id",
+            "/instructor/pistes/:ringId/reservar",
+          ].includes(route.path)
         }
       >
         {content}

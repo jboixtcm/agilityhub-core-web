@@ -17,6 +17,7 @@
     "free": "free",
     "taken": "taken",
     "cell": "{time}, {state}",
+    "time": "Time",
     "stale": "may be out of date"
   },
   "anyRing": {
@@ -29,6 +30,7 @@
   },
   "confirm": {
     "button": "Confirm {day} · {from}–{to} · {ring}",
+    "idle": "Confirm",
     "sending": "Sending",
     "done": "Training booked"
   },

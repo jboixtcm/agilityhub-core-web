@@ -4,11 +4,15 @@ import { useTranslation } from "react-i18next";
 
 import { localParts, type ReservationRowData } from "./shared";
 
-/** The row's link: 07 for a class, the waiting entry's detail, none for a training yet (E5-W02). */
-function href(row: ReservationRowData, waitlist: boolean): string | undefined {
+/** The row's link: 07 for a class, the waiting entry's detail, the training's (S09, E5-W02). */
+function href(row: ReservationRowData, modules: readonly string[]): string | undefined {
   if (row.type === "CLASS") return `/reserves/${encodeURIComponent(row.id)}`;
-  if (row.type === "CLASS_WAITLIST" && waitlist) return `/espera/${encodeURIComponent(row.id)}`;
-  // TRAINING: `/entrenaments/{id}` belongs to E5-W02 (S09); until then the row is not a link.
+  if (row.type === "CLASS_WAITLIST" && modules.includes("WAITLIST")) {
+    return `/espera/${encodeURIComponent(row.id)}`;
+  }
+  if (row.type === "TRAINING" && modules.includes("FREE_TRAINING")) {
+    return `/entrenaments/${encodeURIComponent(row.id)}`;
+  }
   return undefined;
 }
 
@@ -59,7 +63,7 @@ export function ReservationRow({ row, showDog }: { row: ReservationRowData; show
     !showDog || row.dogName === null || row.dogName === undefined
       ? row.title
       : t("home:reservations.withDog", { dogName: row.dogName, title: row.title });
-  const link = href(row, branding.modules.includes("WAITLIST"));
+  const link = href(row, branding.modules);
   const tone = row.state === "CONFIRMED" ? "success" : "warning";
   const content = (
     <>

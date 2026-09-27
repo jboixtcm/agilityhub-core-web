@@ -57,6 +57,7 @@ import { CalendarPage } from "./planning/CalendarPage";
 import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
+import { AgendaRingCardPage } from "./training/RingBlockCard";
 
 interface AdminRouteDefinition {
   path: string;
@@ -480,6 +481,10 @@ function routeContent(
       <Placeholder />
     );
   }
+  if (route.path === "/agenda") {
+    // D12: the agenda grid is E6-W03; E5-W02 mounts only its ring card (S09 §2 row D12).
+    return <AgendaRingCardPage client={client} />;
+  }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;
   }
@@ -607,7 +612,9 @@ function AdminShell({
         roles={session.roles}
       />
       <main className="admin-shell__content">
-        <CountersRefreshContext.Provider value={refreshCounters}>{children}</CountersRefreshContext.Provider>
+        <CountersRefreshContext.Provider value={refreshCounters}>
+          {children}
+        </CountersRefreshContext.Provider>
       </main>
     </div>
   );

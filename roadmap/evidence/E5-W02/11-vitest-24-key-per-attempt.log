@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/RingBlockPage.test.tsx (8 tests | 1 failed | 7 skipped) 374ms
+   ❯ screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) (8)
+     × a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key 371ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key
+AssertionError: expected '84a36572-57c5-4981-aa0f-9c67fd4902ff' to be 'ea07e4d3-3378-4cf4-a766-f7b9d5867675' // Object.is equality
+
+Expected: "ea07e4d3-3378-4cf4-a766-f7b9d5867675"
+Received: "84a36572-57c5-4981-aa0f-9c67fd4902ff"
+
+ ❯ src/instructor/RingBlockPage.test.tsx:258:30
+    256|     expect(await screen.findByText("L'interval horari no és vàlid.")).…
+    257|     expect(requests.keys).toHaveLength(2);
+    258|     expect(requests.keys[1]).toBe(requests.keys[0]);
+       |                              ^
+    259|   });
+    260| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  08:53:45
+   Duration  1.68s (transform 37%, tests 24%, environment 22%, import 13%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/RingBlockPage.test.tsx -t lost answer

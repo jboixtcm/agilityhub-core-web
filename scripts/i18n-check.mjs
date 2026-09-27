@@ -177,6 +177,8 @@ const dynamicKeyPrefixes = [
   "enums:ringBlockKind.",
   "enums:ringBlockReason.",
   "enums:skipReason.",
+  // S09 (E5-W02): the api's `SlotCell.reason` names why a half hour is taken.
+  "enums:slotReason.",
   "enums:templateKind.",
   "enums:weekState.",
 ];

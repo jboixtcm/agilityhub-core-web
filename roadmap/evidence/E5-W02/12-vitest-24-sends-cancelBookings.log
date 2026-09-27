@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/RingBlockPage.test.tsx (8 tests | 1 failed | 7 skipped) 327ms
+   ❯ screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) (8)
+     × 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it 324ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it
+TestingLibraryElementError: Unable to find an element with the text: Aquesta pista té reserves.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"booking-note booking-note--danger ring-block-conflicts"[39m
+  [33mrole[39m=[32m"alert"[39m
+[36m>[39m
+  [36m<p>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [0mNo teniu permís per fer aquesta acció.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/RingBlockPage.test.tsx:171:26
+    169|     fireEvent.click(screen.getByRole("button", { name: "Reserva la pis…
+    170|     const alert = await screen.findByRole("alert");
+    171|     expect(within(alert).getByText("Aquesta pista té reserves.")).toBe…
+       |                          ^
+    172|     expect(
+    173|       within(alert).getByText("Demana a l'administració que alliberi l…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  08:54:00
+   Duration  1.73s (transform 38%, environment 22%, tests 20%, import 14%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/RingBlockPage.test.tsx -t RING_HAS_BOOKINGS

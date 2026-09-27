@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { isApiError } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
@@ -5,12 +7,17 @@ import type { components } from "./generated/schema";
 export type RingBlockKind = components["schemas"]["RingBlockCreateRequest"]["kind"];
 export type RingBlockReason = components["schemas"]["RingBlockCreateRequest"]["reason"];
 export type RingBlockCreateRequest = components["schemas"]["RingBlockCreateRequest"];
+export type RingBlockResource = components["schemas"]["RingBlock"];
+type RingReader = components["schemas"]["RingReaderView"];
+type TrainingSlot = components["schemas"]["TrainingSlot"];
 
 /**
  * The reasons each kind takes (S06 §3, S09 §3 and R-09-11): `ACTIVITY` only through S07, never
  * offered by a form.
  */
-export const RING_BLOCK_REASONS_BY_KIND: Readonly<Record<RingBlockKind, readonly RingBlockReason[]>> = {
+export const RING_BLOCK_REASONS_BY_KIND: Readonly<
+  Record<RingBlockKind, readonly RingBlockReason[]>
+> = {
   BLOCK: ["MAINTENANCE", "OTHER"],
   RESERVATION: ["PRIVATE_CLASS", "THERAPY", "PREPARATION", "OTHER"],
 };
@@ -42,7 +49,11 @@ export type RingBlockFailure =
   | { bookings: unknown[]; code: string; kind: "bookings" }
   | { code: string; kind: "general" | "time" };
 
-const TIME_CODES = new Set(["INVALID_SLOT_GRANULARITY", "INVALID_TIME_RANGE", "OUTSIDE_OPENING_HOURS"]);
+const TIME_CODES = new Set([
+  "INVALID_SLOT_GRANULARITY",
+  "INVALID_TIME_RANGE",
+  "OUTSIDE_OPENING_HOURS",
+]);
 
 export function ringBlockFailure(cause: unknown): RingBlockFailure {
   const code = isApiError(cause) ? cause.code : "INTERNAL_ERROR";
@@ -58,7 +69,11 @@ export function ringBlockFailure(cause: unknown): RingBlockFailure {
     };
   }
   if (code === "RING_HAS_BOOKINGS") {
-    return { bookings: Array.isArray(details.bookings) ? details.bookings : [], code, kind: "bookings" };
+    return {
+      bookings: Array.isArray(details.bookings) ? details.bookings : [],
+      code,
+      kind: "bookings",
+    };
   }
   return { code, kind: TIME_CODES.has(code) ? "time" : "general" };
 }
@@ -104,6 +119,182 @@ export async function createRingBlock(
     body,
     params: { header: { "Idempotency-Key": idempotencyKey } },
   });
-  if (result.data === undefined) throw new TypeError("The ring block response did not contain data");
+  if (result.data === undefined)
+    throw new TypeError("The ring block response did not contain data");
   return result.data;
+}
+
+/**
+ * `ringBlocks.maxHorizonDays` (CATALEG_PARAMETRES, 60): the days screen 24 and the D12 card offer.
+ * An INSTRUCTOR cannot read `/parameters`, so the forms use the catalog default and the api
+ * refuses a later day (R-09-11).
+ */
+export const RING_BLOCK_HORIZON_DAYS = 60;
+
+/** A ring of the forms: every active ring (R-09-02, blocks go to any active ring). */
+export interface RingBlockRing {
+  color: string;
+  id: string;
+  name: string;
+  order: number;
+}
+
+type Load<Data> =
+  | { data: Data; error?: undefined; status: "ready" }
+  | { data?: undefined; error: unknown; status: "error" }
+  | { data?: undefined; error?: undefined; status: "loading" };
+
+/** `GET /rings` (S05): the active rings in catalog order (`order`, then the name). */
+export function useActiveRings(client: ApiClient) {
+  const [state, setState] = useState<Load<RingBlockRing[]>>({ status: "loading" });
+  const [reload, setReload] = useState(0);
+  useEffect(() => {
+    let current = true;
+    client.GET("/rings").then(
+      ({ data }) => {
+        if (!current) return;
+        const items: readonly RingReader[] = data?.items ?? [];
+        setState({
+          data: items
+            .filter((ring) => ring.active)
+            .sort((left, right) => left.order - right.order || left.name.localeCompare(right.name))
+            .map((ring) => ({
+              color: ring.color,
+              id: ring.id,
+              name: ring.name,
+              order: ring.order,
+            })),
+          status: "ready",
+        });
+      },
+      (error: unknown) => {
+        if (current) setState({ error, status: "error" });
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, reload]);
+  const refetch = useCallback(() => {
+    setState({ status: "loading" });
+    setReload((value) => value + 1);
+  }, []);
+  return { ...state, refetch };
+}
+
+/** One 30-min cell of a ring as the api computed it (INSTRUCTOR projection, R-09-03/R-09-12). */
+export interface RingBlockSlot {
+  /** `FREE` and not started: a cell the form may take. */
+  bookable: boolean;
+  cell: components["schemas"]["SlotCell"] | undefined;
+  /** Club-local `HH:mm`. */
+  end: string;
+  start: string;
+  startsAt: string;
+}
+
+export type RingBlockGrid =
+  | { status: "closed" }
+  | { error: unknown; status: "error" }
+  | { status: "loading" }
+  | { slots: RingBlockSlot[]; status: "ready" }
+  /**
+   * No grid to draw: `FREE_TRAINING` is off (`/training-slots` answers `404 MODULE_DISABLED`, S09
+   * §9) or the api left the ring out of it. The forms then take the times and the api validates.
+   */
+  | { status: "unavailable" };
+
+function slotOf(slot: TrainingSlot, ringId: string): RingBlockSlot {
+  const cell = slot.rings[ringId];
+  return {
+    bookable: cell?.state === "FREE" && Date.parse(slot.startsAt) > Date.now(),
+    cell,
+    end: slot.endsAtLocal,
+    start: slot.startsAtLocal,
+    startsAt: slot.startsAt,
+  };
+}
+
+/**
+ * `GET /training-slots?from={date}&to={date}&ringId=` (S09 §2 row 24): the half-hour cells of one
+ * ring on one day. An answer for another day or ring than the fields show now is dropped.
+ */
+export function useRingBlockGrid(
+  client: ApiClient,
+  { date, enabled, ringId }: { date: string; enabled: boolean; ringId: string },
+) {
+  const key = enabled && ringId !== "" && date !== "" ? `${date}|${ringId}` : null;
+  const [state, setState] = useState<RingBlockGrid & { key: string | null }>({
+    key: null,
+    status: "unavailable",
+  });
+  const [reload, setReload] = useState(0);
+  useEffect(() => {
+    if (key === null) return undefined;
+    let current = true;
+    client.GET("/training-slots", { params: { query: { from: date, ringId, to: date } } }).then(
+      ({ data }) => {
+        if (!current) return;
+        const day = data?.days.find((item) => item.date === date);
+        if (!data?.rings.some((ring) => ring.id === ringId)) {
+          setState({ key, status: "unavailable" });
+        } else if (day === undefined || day.closed) {
+          setState({ key, status: "closed" });
+        } else {
+          setState({ key, slots: day.slots.map((slot) => slotOf(slot, ringId)), status: "ready" });
+        }
+      },
+      (error: unknown) => {
+        if (!current) return;
+        setState(
+          isApiError(error, "MODULE_DISABLED")
+            ? { key, status: "unavailable" }
+            : { error, key, status: "error" },
+        );
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, date, key, reload, ringId]);
+  const refetch = useCallback(() => {
+    setReload((value) => value + 1);
+  }, []);
+  const view: RingBlockGrid =
+    key === null ? { status: "unavailable" } : state.key === key ? state : { status: "loading" };
+  return { ...view, refetch };
+}
+
+export type RingBlockSubmission =
+  { block: RingBlockResource; status: "created" } | { failure: RingBlockFailure; status: "failed" };
+
+/**
+ * `POST /ring-blocks` for screen 24 and the D12 card (R-09-11): one `Idempotency-Key` per payload,
+ * kept only while its outcome is unknown (an answer lost to the network), so a retry replays it
+ * instead of creating a second block; any answer drops it, and a changed payload gets its own.
+ */
+export function useRingBlockSubmit(client: ApiClient) {
+  const keys = useRef(new Map<string, string>());
+  const [pending, setPending] = useState(false);
+  const submit = useCallback(
+    async (fields: RingBlockFields, cancelBookings = false): Promise<RingBlockSubmission> => {
+      const body = ringBlockCreateBody(fields, cancelBookings);
+      const fingerprint = JSON.stringify(body);
+      const key = keys.current.get(fingerprint) ?? crypto.randomUUID();
+      keys.current.set(fingerprint, key);
+      setPending(true);
+      try {
+        const block = await createRingBlock(client, body, key);
+        keys.current.delete(fingerprint);
+        return { block, status: "created" };
+      } catch (cause) {
+        if (!isApiError(cause, "NETWORK")) keys.current.delete(fingerprint);
+        return { failure: ringBlockFailure(cause), status: "failed" };
+      } finally {
+        setPending(false);
+      }
+    },
+    [client],
+  );
+  return { pending, submit };
 }

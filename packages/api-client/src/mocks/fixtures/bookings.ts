@@ -2,6 +2,7 @@ import type { components } from "../../generated/schema";
 
 import { clubInstant } from "./calendar";
 import { catalogState } from "./catalogs";
+import { trainingReservationRows } from "./training";
 
 type Booking = components["schemas"]["Booking"];
 type BookableClass = components["schemas"]["BookableClass"];
@@ -457,20 +458,17 @@ export function meHome(
       });
     }
   }
-  // S09 row (FREE_TRAINING): Rock's training of Tuesday 4, as the mockup.
-  if (options.modules.includes("FREE_TRAINING") && filter.includes(BOOKING_DOG_IDS.rock)) {
-    rows.push({
-      dogId: BOOKING_DOG_IDS.rock,
-      dogName: dogName(BOOKING_DOG_IDS.rock),
-      endsAtLocal: "2026-08-04T08:30",
-      id: "training-rock-tue4",
-      ringName: "Muntanya",
-      startsAt: localInstant("2026-08-04T08:00"),
-      startsAtLocal: "2026-08-04T08:00",
-      state: "CONFIRMED",
-      title: TRAINING_TITLE[options.locale] ?? "Entrenament",
-      type: "TRAINING",
-    });
+  // S09 rows (FREE_TRAINING): the live trainings of the S09 world (E5-W02), as the api lists
+  // them; on Sunday 2 at noon only Rock's Tuesday 4 exists, as the mockup.
+  if (options.modules.includes("FREE_TRAINING")) {
+    rows.push(
+      ...trainingReservationRows(
+        filter,
+        options.now,
+        TRAINING_TITLE[options.locale] ?? "Entrenament",
+        dogName,
+      ),
+    );
   }
   // S07 rows (ACTIVITIES): the member's live registrations belong to the member, not to a dog, so
   // the api's dog filter keeps them (`MemberHomeQuery`).

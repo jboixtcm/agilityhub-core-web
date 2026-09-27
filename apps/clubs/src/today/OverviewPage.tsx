@@ -1,8 +1,10 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Button, Card, Chip, DayGrid, Drawer, Skeleton, useBranding } from "@agilityhub/ui";
+import { Button, Card, Chip, DayGrid, Drawer, Skeleton, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { noticeText, pageNotice, type PageNotice } from "../booking/shared";
 
 import "./today.css";
 import {
@@ -235,10 +237,12 @@ function BlockDrawerBody({
 /** Screen 23 «Visió global» (`/instructor/avui`): instructor view of form D + detail drawers. */
 export function OverviewPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
-  const { t } = useTranslation(["instructor", "home", "enums"]);
+  const { t } = useTranslation(["instructor", "home", "enums", "booking", "errors"]);
   const labels = useGridLabels();
   const day = useDayGrid(client, "instructor");
   const [selection, setSelection] = useState<Selection>();
+  // S09 screen 24 comes back here with «Pista reservada» / «Pista bloquejada» (E5-W02).
+  const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
   const mapped = useMemo(
     () =>
       day.grid === undefined
@@ -263,6 +267,17 @@ export function OverviewPage({ client }: { client: ApiClient }) {
         }}
         title={t("instructor:overview.title")}
       />
+      {notice === undefined ? null : (
+        <Toast
+          dismissLabel={t("booking:confirm.close")}
+          onDismiss={() => {
+            setNotice(undefined);
+          }}
+          tone={notice.tone}
+        >
+          {noticeText(t, notice)}
+        </Toast>
+      )}
       {day.status === "error" ? <DayGridError onRetry={day.refetch} /> : null}
       {day.status === "loading" ? <DayGridLoading /> : null}
       {mapped === undefined ? null : (

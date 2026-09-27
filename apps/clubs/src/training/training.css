@@ -1,0 +1,220 @@
+/* S09 screens 08, the training detail and 24 (mockups V8, 375 px). Tokens only; ring colours
+   arrive as the `--ah-ring-color` custom property. */
+
+.training-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1);
+}
+
+.training-chip {
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.training-chip:disabled {
+  cursor: default;
+}
+
+.training-chip--selected {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.training-ring-dot {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--ah-ring-color, var(--ah-color-text-muted));
+  border-radius: var(--ah-radius-full);
+}
+
+.training-chip__setup {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.training-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.training-stale {
+  font-size: 0.75rem;
+}
+
+.training-closed p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+}
+
+.training-chooser {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.training-chooser p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+/* «Portes 2/3 entrenaments aquesta setmana · reinici dg 20:00» + the bar (mockup card). */
+.training-counter {
+  display: grid;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border-color: color-mix(in srgb, var(--ah-color-primary) 40%, transparent);
+}
+
+.training-counter__line {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ah-space-2);
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.training-counter__line strong {
+  flex: 1;
+  min-width: 0;
+}
+
+.training-counter__reset {
+  color: var(--ah-color-text-muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.training-counter__bar {
+  width: 100%;
+  height: 0.35rem;
+  overflow: hidden;
+  background: var(--ah-color-surface-2);
+  border: 0;
+  border-radius: var(--ah-radius-full);
+  appearance: none;
+}
+
+.training-counter__bar::-webkit-progress-bar {
+  background: var(--ah-color-surface-2);
+  border-radius: var(--ah-radius-full);
+}
+
+.training-counter__bar::-webkit-progress-value {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-full);
+}
+
+.training-counter__bar::-moz-progress-bar {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-full);
+}
+
+/* «CONFIRMA DILLUNS 3 · 8:30–9:00 · MUNTANYA»: upper-cased by CSS (S09 §10). */
+.training-confirm {
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.training-limit p {
+  margin: 0;
+}
+
+.training-limit__links {
+  display: grid;
+  gap: var(--ah-space-1);
+  margin: var(--ah-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.training-limit__links a {
+  color: inherit;
+  font-weight: 700;
+}
+
+/* Screen 24: the «Reserva de pista» / «Bloqueig» segment and the summary note. */
+.ring-block-segment {
+  display: flex;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-1);
+  background: var(--ah-color-surface-2);
+  border-radius: var(--ah-radius-sm);
+}
+
+.ring-block-segment button {
+  flex: 1;
+  padding: var(--ah-space-2) var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+  border-radius: var(--ah-radius-sm);
+}
+
+.ring-block-segment button[aria-pressed="true"] {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+}
+
+.ring-block-selects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.ring-block-selects label {
+  display: grid;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font-size: 0.72rem;
+}
+
+.ring-block-selects select {
+  min-height: 1.9rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
+  color: var(--ah-color-primary-fg);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--ah-color-primary);
+  border: 1px solid var(--ah-color-primary);
+  border-radius: var(--ah-radius-full);
+}
+
+.ring-block-selects select + select,
+.ring-block-selects label + label select {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border-color: var(--ah-color-border);
+}
+
+.ring-block-note {
+  width: 100%;
+}
+
+.ring-block-summary {
+  --ah-note-color: var(--ah-color-primary);
+}
+
+.ring-block-conflicts ul {
+  margin: var(--ah-space-1) 0 0;
+  padding-left: var(--ah-space-4);
+}
+
+.ring-block-submit {
+  width: 100%;
+  text-transform: uppercase;
+}

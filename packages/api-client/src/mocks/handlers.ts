@@ -81,6 +81,7 @@ import {
   storeSignupDogDocuments,
   withReadmissionValues,
 } from "./fixtures/signup-review";
+import { TRAINING_MOCK_NOW, trainingState } from "./fixtures/training";
 import {
   exportFileName,
   exportFileResponse,
@@ -102,6 +103,7 @@ import {
   type MockScenario,
   type MockScenarioDefinition,
 } from "./scenarios";
+import { resetTrainingMockState, trainingHandlers } from "./training-handlers";
 
 type ApiErrorResponse = components["schemas"]["ApiError"];
 type MagicLinkRequest = components["schemas"]["MagicLinkRequest"];
@@ -3497,6 +3499,8 @@ export const handlers = [
   }),
   ...planningHandlers,
   ...dayGridHandlers,
+  // S09 (E5-W02) before the calendar world: a ring block on a mockup day is answered here.
+  ...trainingHandlers,
   ...calendarHandlers,
   ...activityHandlers,
   ...bookingHandlers,
@@ -3527,6 +3531,9 @@ export {
   resetPlanningState,
   resetSettingsState,
   resetSignupMockState,
+  resetTrainingMockState,
   setSignupMockToday,
+  TRAINING_MOCK_NOW,
+  trainingState,
   type MockScenario,
 };

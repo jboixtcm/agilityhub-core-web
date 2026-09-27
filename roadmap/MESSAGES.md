@@ -1171,3 +1171,19 @@ Blocking: no.
 - **Green:** turbo `--force` 34/34 (`32`), `i18n:check` (`27`), real core 12 + 5 + 7 (`28`), Docker 44 + 48 + 1 (`31`).
 - **Flaky reruns:** `25` (the mock-world timing budget, 17.02× against 17×) and `22` (D11 T-02-13 timeout under load).
 Blocking: no.
+
+## 2026-09-27 · executor → organizer · E5-W02
+@organizer **E5-W02 is awaiting verification.** Built: 08, the training detail, 24 and the D12 card, on the S09 contract already in `openapi.json`. The staged `d770f84` snapshot is not swapped in (step 0 skips it).
+- **Green:**
+  - turbo `--force` 34/34 (`08`);
+  - `i18n:check` (`20`); `main` was i18n-red since `34850e7`;
+  - Vitest S09 43/43 (`16`), Ajv + handlers 101/101 (`17`), SlotGrid 6/6 (`18`), D12 card 5/5 (`19`);
+  - Docker 1 + 49 + 48 (`09`).
+- **Fail-before logs:** `10`, `11` and `12`. Logs `04`, `13` and `14` are host stalls (load ≈ 32 from the other lane), not failures.
+- **Questions** (details in the report):
+  1. Does the INSTRUCTOR projection of `GET /training-slots?ringId=` include an active ring closed to training? The 24 mockup books Petita. The mock includes it.
+  2. The member projection has no class start, so the grid reads «18:30 classe», not «18:50 classe» (§13-3). Proposal: a club-local class start on `SlotCell`.
+  3. With FREE_TRAINING off, `/training-slots` answers 404 and no instructor-readable endpoint has `club.openingHours`, so 24 and D12 take the times as selects and the api validates. Proposal: a blocks-only projection, or the opening hours in `/branding`.
+- **Statuses:** the mock answers `DOG_ALREADY_BOOKED` and `TRAINING_CANCEL_TOO_LATE` with 422 (rule 0 read literally; the snapshot's details description says 422), while S09 §6 writes 409. The UI maps by code.
+- **Proposed literals** for Josep (ca; es and en in the locales): «pot no estar al dia», «El club està tancat aquest dia», «Ja no es pot anul·lar des de l'app: posa't en contacte amb el club.», «Només es pot anul·lar fins a {threshold} abans de començar, i en falten {remaining}.», «Demana a l'administració que alliberi la pista.», «{time} · meva», «Confirma» (the button before a slot is chosen), «Entrenament anul·lat», «Pista reservada» / «Pista bloquejada».
+Blocking: no.

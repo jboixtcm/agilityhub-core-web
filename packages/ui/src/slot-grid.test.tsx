@@ -71,12 +71,39 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
     expect(screen.getByRole("button", { name: "8:00, 8:00 · meva" })).toHaveClass("ah-slot--own");
     expect(screen.getByRole("button", { name: "19:00, ocupada" })).toHaveClass("ah-slot--taken");
 
-    for (const inert of ["7:00, ocupada", "8:30, ocupada", "18:30, 18:50 classe", "19:00, ocupada"]) {
+    for (const inert of [
+      "7:00, ocupada",
+      "8:30, ocupada",
+      "18:30, 18:50 classe",
+      "19:00, ocupada",
+    ]) {
       fireEvent.click(screen.getByRole("button", { name: inert }));
     }
     expect(onCellPress).not.toHaveBeenCalled();
     fireEvent.click(free);
     expect(onCellPress).toHaveBeenCalledWith(expect.objectContaining({ id: "ring-mun_07:30" }));
+  });
+
+  it("names why a taken cell is taken when the page gives the reasons", () => {
+    render(
+      <SlotGrid
+        columns={columns}
+        labels={{
+          ...labels,
+          reason: (reason) => (reason === "RING_BLOCK" ? "bloqueig" : "entrenament"),
+        }}
+        mode="single"
+        rows={[
+          row("09:00", { reason: "RING_BLOCK", state: "BLOCKED" }),
+          row("09:30", { reason: "TRAINING", state: "BOOKED" }),
+          row("10:00", { bookable: false }),
+        ]}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "9:00, bloqueig" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "9:30, entrenament" })).toBeDisabled();
+    // A free half hour that has begun has no reason: it reads as taken.
+    expect(screen.getByRole("button", { name: "10:00, ocupada" })).toBeDisabled();
   });
 
   it("fills the selected cell", () => {
@@ -108,19 +135,21 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
       "ring-mun_18:30",
     ]);
     // Across the booked 19:00: no range, a new run.
-    expect(contiguousSelection(cells, ["ring-mun_18:00", "ring-mun_18:30"], "ring-mun_19:30")).toEqual([
-      "ring-mun_19:30",
-    ]);
+    expect(
+      contiguousSelection(cells, ["ring-mun_18:00", "ring-mun_18:30"], "ring-mun_19:30"),
+    ).toEqual(["ring-mun_19:30"]);
     // A free range fills; an end leaves the run.
     expect(contiguousSelection(cells, ["ring-mun_19:30"], "ring-mun_20:00")).toEqual([
       "ring-mun_19:30",
       "ring-mun_20:00",
     ]);
-    expect(contiguousSelection(cells, ["ring-mun_19:30", "ring-mun_20:00"], "ring-mun_19:30")).toEqual([
-      "ring-mun_20:00",
-    ]);
+    expect(
+      contiguousSelection(cells, ["ring-mun_19:30", "ring-mun_20:00"], "ring-mun_19:30"),
+    ).toEqual(["ring-mun_20:00"]);
     // An inert cell changes nothing.
-    expect(contiguousSelection(cells, ["ring-mun_18:00"], "ring-mun_19:00")).toEqual(["ring-mun_18:00"]);
+    expect(contiguousSelection(cells, ["ring-mun_18:00"], "ring-mun_19:00")).toEqual([
+      "ring-mun_18:00",
+    ]);
   });
 
   it("in contiguous mode the grid hands the next run to the page", () => {
@@ -140,11 +169,23 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
     render(<Harness />);
     fireEvent.click(screen.getByRole("button", { name: "18:00, lliure" }));
     fireEvent.click(screen.getByRole("button", { name: "18:30, lliure" }));
-    expect(screen.getByRole("button", { name: "18:00, lliure" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "18:30, lliure" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "18:00, lliure" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "18:30, lliure" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
     fireEvent.click(screen.getByRole("button", { name: "19:30, lliure" }));
-    expect(screen.getByRole("button", { name: "18:00, lliure" })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("button", { name: "19:30, lliure" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "18:00, lliure" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: "19:30, lliure" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it("several rings make a time × ring table with identical columns", () => {
@@ -158,7 +199,10 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
         mode="single"
         rows={[
           {
-            cells: [cell("08:30"), cell("08:30", { columnId: "ring-cen", id: "ring-cen_08:30", state: "BOOKED" })],
+            cells: [
+              cell("08:30"),
+              cell("08:30", { columnId: "ring-cen", id: "ring-cen_08:30", state: "BOOKED" }),
+            ],
             time: "08:30",
           },
         ]}

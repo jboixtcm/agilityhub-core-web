@@ -296,7 +296,8 @@ describe("TanStack Query defaults", () => {
 
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
-    expect(handlers).toHaveLength(193);
+    // E5-W02: + the seven S09 handlers of `training-handlers.ts`.
+    expect(handlers).toHaveLength(200);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

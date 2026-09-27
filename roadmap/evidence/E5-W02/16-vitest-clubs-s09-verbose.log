@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > has no forbidden term nor requirement code in training, instructor and enums (ca/es/en) 89ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > the three locales carry the same training and instructor keys, none empty 52ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > keeps the exact ca literals of mockups 08 and 24 and the S09 §10 keys 59ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 252ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > a future booking: title, state, line, who booked it, and the cancellation back to 03 275ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two 266ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03 296ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back 93ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04 69ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > past cancellableUntil the button gives way to the notice; «Reservada pel club» for BACKOFFICE 86ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > cancelled by the club: its state, and nothing to do 83ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > every active ring (also those closed to training), the route's ring preselected 100ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30» 305ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip 153ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still 65ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch 58ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog 114ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma 57ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row 49ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere) 112ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module 117ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > es and en: the same page in the reader's language 85ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article 61ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English 61ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 70ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a contiguous selection writes the summary and posts the block, then 23 with its toast 299ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed 191ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > «Qualsevol» with two free rings asks which one, Muntanya first, and books with it 284ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again 344ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > the counter card reads the selected day's week and follows the dog 166ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it 167ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > a closed day says so and draws no grid 129ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates) 171ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > while the block is sent the button is busy and the grid, kinds and rings are inert 203ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > with cancellable sessions: no button, the message and a link to each 170ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > without any cancellable session: the short message 153ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key 209ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered 243ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details 207ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 422 codes show their message by code, never the api's text 205ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert 261ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > a lost answer keeps its Idempotency-Key for the retry; an answer drops it 279ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 without network (S09 §2 «sense connexió») > keeps the last grid marked «pot no estar al dia» and blocks the booking 188ms
+
+ Test Files  5 passed (5)
+      Tests  43 passed (43)
+   Start at  10:21:36
+   Duration  4.49s (tests 51%, transform 18%, environment 17%, import 8%, setup 5%)
+

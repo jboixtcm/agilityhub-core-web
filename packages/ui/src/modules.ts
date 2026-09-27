@@ -36,7 +36,9 @@ export interface ModuleUiRegistration {
 export const moduleUi = {
   FREE_TRAINING: {
     menuEntries: ["training"],
-    routes: ["/entrenaments", "/instructor/pistes/:ringId/reservar"],
+    // Screen 08 and its booking detail. Screen 24 and the D12 card are not gated: a `BLOCK`
+    // exists without the module (S09 §9), only the «Reserva de pista» kind needs it.
+    routes: ["/entrenaments", "/entrenaments/:id"],
     tabs: ["training"],
   },
   BILLING: {

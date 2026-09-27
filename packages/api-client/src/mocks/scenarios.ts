@@ -44,6 +44,8 @@ export interface MockScenarioDefinition {
   signupMemberWithoutPlan?: boolean;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
   signupReview?: SignupReviewVariant;
+  /** The S09 world (`fixtures/training.ts`): Rock at the limit, or no dog with the right. */
+  training?: "atLimit" | "atLimitNone" | "default" | "noRight";
 }
 
 const canic = brandingCanic as Branding;
@@ -157,6 +159,46 @@ const scenarios = {
   },
   instructor: {
     branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S09 R-09-01: no dog of the member (nor of the group) may train alone (tab 08 absent). */
+  trainingNoRight: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    training: "noRight",
+  },
+  /** S09 R-09-05: Rock at 3/3 this week, with two sessions still cancellable. */
+  trainingAtLimit: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    training: "atLimit",
+  },
+  /** S09 R-09-05: Rock at 3/3 this week and none of them cancellable any more. */
+  trainingAtLimitNoCancellable: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    training: "atLimitNone",
+  },
+  /** S09 §9 `FREE_TRAINING` off: no tab 08, and 24 offers only «Bloqueig». */
+  trainingModuleOff: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "FREE_TRAINING"),
+    },
+    me: member,
+    sessions: accountSessions,
+  },
+  trainingModuleOffInstructor: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "FREE_TRAINING"),
+    },
     me: meInstructor as Me,
     sessions: accountSessions,
   },

@@ -130,8 +130,8 @@ describe("T-02-14 clubs shell", () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");
     // A page with the shell header: since E5-W01 03 draws the mockup's own header (mark,
-    // greeting and bell) instead.
-    window.history.pushState(null, "", "/entrenaments");
+    // greeting and bell) instead, and since E5-W02 08 its «Entrenaments» bar.
+    window.history.pushState(null, "", "/historic");
     await renderApplication(client);
 
     expect(document.querySelector(".clubs-shell__logo")).toHaveAttribute(

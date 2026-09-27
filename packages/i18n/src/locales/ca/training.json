@@ -17,6 +17,7 @@
     "free": "lliure",
     "taken": "ocupada",
     "cell": "{time}, {state}",
+    "time": "Hora",
     "stale": "pot no estar al dia"
   },
   "anyRing": {
@@ -29,6 +30,7 @@
   },
   "confirm": {
     "button": "Confirma {day} · {from}–{to} · {ring}",
+    "idle": "Confirma",
     "sending": "Enviant",
     "done": "Entrenament reservat"
   },

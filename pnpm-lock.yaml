@@ -402,6 +402,9 @@ importers:
         specifier: 'catalog:'
         version: 0.17.0
     devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.18
       ajv:
         specifier: 'catalog:'
         version: 8.20.0

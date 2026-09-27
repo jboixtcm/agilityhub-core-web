@@ -51,6 +51,8 @@ export interface SlotGridLabels {
   cell: (time: string, state: string) => string;
   free: string;
   taken: string;
+  /** Why a taken cell is taken («entrenament», «bloqueig»): its state in the accessible name. */
+  reason?: (reason: SlotCellReason) => string;
 }
 
 export type SlotGridMode = "contiguous" | "single";
@@ -101,7 +103,11 @@ export function contiguousSelection(
   const last = selected.at(-1);
   if (first === undefined || last === undefined) return [pressed];
   if (index === first || index === last) {
-    return first === last ? [] : cells.slice(index === first ? first + 1 : first, index === last ? last : last + 1).map((cell) => cell.id);
+    return first === last
+      ? []
+      : cells
+          .slice(index === first ? first + 1 : first, index === last ? last : last + 1)
+          .map((cell) => cell.id);
   }
   if (index > first && index < last) return [pressed];
   const from = Math.min(first, index);
@@ -153,7 +159,11 @@ export function SlotGrid({
     const variant = slotCellVariant(cell);
     const isSelected = selected.includes(cell.id);
     const text = cellText(cell, time, labels);
-    const state = variant === "free" ? labels.free : variant === "taken" ? labels.taken : text;
+    const takenBy =
+      cell.reason === null || cell.reason === undefined || labels.reason === undefined
+        ? labels.taken
+        : labels.reason(cell.reason);
+    const state = variant === "free" ? labels.free : variant === "taken" ? takenBy : text;
     const className = [
       "ah-slot",
       `ah-slot--${variant}`,
@@ -201,7 +211,12 @@ export function SlotGrid({
     gridTemplateColumns: `var(--ah-slot-grid-time, 2.75rem) repeat(${String(columns.length)}, minmax(0, 1fr))`,
   } satisfies CSSProperties;
   return (
-    <div aria-label={labels.grid} className="ah-slot-grid ah-slot-grid--table" role="table" style={style}>
+    <div
+      aria-label={labels.grid}
+      className="ah-slot-grid ah-slot-grid--table"
+      role="table"
+      style={style}
+    >
       <div className="ah-slot-grid__row" role="row">
         <span className="ah-slot-grid__corner" role="columnheader">
           <span className="ah-sr-only">{labels.time}</span>

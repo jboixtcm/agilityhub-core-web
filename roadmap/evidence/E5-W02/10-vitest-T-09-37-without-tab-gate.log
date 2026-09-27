@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (15 tests | 2 failed | 12 skipped) 653ms
+   ❯ T-09-37 screen 08 exists only with a dog allowed to train alone (3)
+     × without eligible dogs the tab is absent and /entrenaments goes back to 03 345ms
+     × FREE_TRAINING off: no tab, and the route shows nothing of the module 125ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <a
+  class="ah-tab-bar__item"
+  href="/entrenaments"
+>
+  <svg
+    aria-hidden="true"
+    class="ah-icon"
+  >
+    <use
+      href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+    />
+  </svg>
+  <span>
+    Entrenaments
+  </span>
+</a> instead[39m
+ ❯ src/training/TrainingPage.test.tsx:70:70
+     68|       setTimeout(resolve, 30);
+     69|     });
+     70|     expect(screen.queryByRole("link", { name: "Entrenaments" })).not.t…
+       |                                                                      ^
+     71|     expect(screen.getByRole("link", { name: "Inici" })).toBeInTheDocum…
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <a
+  class="ah-tab-bar__item"
+  href="/entrenaments"
+>
+  <svg
+    aria-hidden="true"
+    class="ah-icon"
+  >
+    <use
+      href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+    />
+  </svg>
+  <span>
+    Entrenaments
+  </span>
+</a> instead[39m
+ ❯ src/training/TrainingPage.test.tsx:93:70
+     91|     await renderApp("/inici", { scenario: "trainingModuleOff" });
+     92|     await screen.findByRole("heading", { name: "Les meves reserves" });
+     93|     expect(screen.queryByRole("link", { name: "Entrenaments" })).not.t…
+       |                                                                      ^
+     94|   });
+     95| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 12 skipped (15)
+   Start at  08:53:31
+   Duration  2.51s (tests 28%, transform 27%, environment 26%, import 13%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingPage.test.tsx -t T-09-37

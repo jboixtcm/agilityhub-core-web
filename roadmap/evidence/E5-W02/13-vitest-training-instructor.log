@@ -1,0 +1,60 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 3 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/instructor/RingBlockPage.test.tsx.
+ ❯ ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:94
+ ❯ runNextTicks node:internal/process/task_queues:64:5
+ ❯ listOnTimeout node:internal/timers:547:9
+ ❯ processTimers node:internal/timers:521:7
+ ❯ Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:10968:58
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/training/TrainingDetailPage.test.tsx.
+ ❯ ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:94
+ ❯ runNextTicks node:internal/process/task_queues:64:5
+ ❯ listOnTimeout node:internal/timers:547:9
+ ❯ processTimers node:internal/timers:521:7
+ ❯ Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:10968:58
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/training/i18n.test.tsx.
+ ❯ ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:94
+ ❯ runNextTicks node:internal/process/task_queues:64:5
+ ❯ processTimers node:internal/timers:518:9
+ ❯ Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:11469:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:10968:58
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+     Errors  3 errors
+   Start at  08:54:11
+   Duration  1060.13s (environment 100%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training src/instructor

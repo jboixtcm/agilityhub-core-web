@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (15 tests | 1 failed) 1070559ms
+   ❯ screen 08 refusals by code (S09 §6, R-09-06) (5)
+     × while the booking is sent the button is busy and the grid, days and dogs are inert 1065313ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/training/TrainingPage.test.tsx:314:3
+    312|   });
+    313|
+    314|   it("while the booking is sent the button is busy and the grid, days …
+       |   ^
+    315|     let release: () => void = () => undefined;
+    316|     server.use(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 32 passed (33)
+   Start at  09:20:43
+   Duration  1075.43s (tests 50%, import 50%)
+
+     Import  159 modules were evaluated 834 times · 1066.52s total, 50% of tracked time
+             ~336.32s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training src/instructor --maxWorkers=2

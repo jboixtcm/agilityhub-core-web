@@ -34,13 +34,26 @@ export function navigateInApp(path: string, state: unknown = null, replace = fal
  */
 export interface PageNotice {
   code?: string;
-  messageKey?: "booking:waitlist.joined" | "booking:waitlist.left";
+  messageKey?:
+    | "booking:waitlist.joined"
+    | "booking:waitlist.left"
+    | "instructor:ringBlock.saved.BLOCK"
+    | "instructor:ringBlock.saved.RESERVATION"
+    | "training:detail.cancelled";
   tone: "danger" | "success";
 }
 
 export function noticeText(t: Translate, notice: PageNotice): string {
   if (notice.messageKey === "booking:waitlist.left") return t("booking:waitlist.left");
   if (notice.messageKey === "booking:waitlist.joined") return t("booking:waitlist.joined");
+  // S09 (E5-W02): the training detail's cancellation and screen 24's block, back on 03 / 23.
+  if (notice.messageKey === "training:detail.cancelled") return t("training:detail.cancelled");
+  if (notice.messageKey === "instructor:ringBlock.saved.BLOCK") {
+    return t("instructor:ringBlock.saved.BLOCK");
+  }
+  if (notice.messageKey === "instructor:ringBlock.saved.RESERVATION") {
+    return t("instructor:ringBlock.saved.RESERVATION");
+  }
   return t(`errors:${notice.code ?? "INTERNAL_ERROR"}`, {
     defaultValue: t("errors:INTERNAL_ERROR"),
   });
