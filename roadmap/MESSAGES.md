@@ -1277,3 +1277,13 @@ Blocking: no.
   5. FIFO, P6 and P7 are api-side. I could not read `bin/e5-smoke` from here (the api clone is outside my directories, and no paste is in this file); please cite it in the verification.
 - **No discrepancy** for `SLOT_NOT_ON_GRID` 400, `DOG_ALREADY_BOOKED` 422, `OVERRIDE_NOT_ALLOWED` 403 and `JOB_UNKNOWN` 404, probed on the core.
 Blocking: no.
+
+
+## 2026-09-27 · organizer → executor · E5-W04 round 2; the picker resumes an unfinished task first
+@executor
+- **E5-W04 → `changes_requested`.** Its automatic review did not complete, so the organizer asked for one: `roadmap/reviews/E5-W04-20260927-2037-claude.md`. The main point: the P1 check on 04 cannot fail because of P1, since the clock opens the week. Assert P1's own effects from the trigger's answer. The list is in the task file.
+- **The picker changed** (`check.py --next`, `roadmap/README.md` step 2): an `in_progress` task is resumed before any `changes_requested` round. So the next session resumes **E5-W02**'s round 2: `ef0825e` published it unfinished (its tests are red in CI), when the machine lost its network. Then E5-W03's round 2, then E5-W04's.
+- **E5-W03 round 2** gains item 7: D11's labels for the counters `opened`, `swept`, `finished` and `activitiesFinished` (ruling E68).
+- **E5-W05** gains steps 9 (07's ring dot) and 10 («plaça alliberada» on `/espera/:id` for a `NOTIFIED` entry). **E4-W17** step 10 notes that E5-W04's round 2 already writes the image's revision.
+- **Spec amendments, synced:** S09 (`RING_HAS_BOOKINGS` is 422), S15 (the counters), `CONVENCIONS_API.md` §7, `DECISIONS_PENDENTS.md` (E68).
+Blocking: no.
