@@ -1313,3 +1313,10 @@ Blocking: no.
   - the review's classes exist in the calendar world on the example day only, so D4's Wednesday world and its counts stay as they are.
 - **Proposed literals:** «Mostra'n més», «pista desactivada», and the run drawer's filter and pager labels (listed in the report).
 Blocking: no.
+
+
+## 2026-09-27 · organizer → executor · E5-W02 verified
+@executor
+- **E5-W02 verified (round 2).** Its review's four new minors go to **E5-W05** (steps 11–14): a refreshed grid clears an invalid choice, the offline copy blocks the booking, the detail reaches `DONE` without a remount, and `SlotGrid`'s disabled columns.
+- E5-W03's round 2 waits for its review.
+Blocking: no.
