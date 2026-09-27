@@ -21,7 +21,11 @@ import { LastChange } from "../audit/LastChange";
 
 import { ClubPagesCard } from "./ClubPagesCard";
 import { buildDerivedSettingRows, type DerivedSettingRow } from "./derived-settings";
+import { JobsCard } from "./JobsCard";
 import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
+
+/** `jobs.<name>.enabled` (S15 §9): the process switches of the «Processos automàtics» card. */
+const JOB_SWITCH_KEY = /^jobs\.[A-Za-z]+\.enabled$/u;
 
 type ClubSettings = components["schemas"]["ClubSettings"];
 type Holiday = components["schemas"]["Holiday"];
@@ -1021,6 +1025,62 @@ export function ParameterSettings({
 
   const lastChange = data?.lastChange;
 
+  const parameterRow = (blockKey: string, parameter: Parameter) => {
+    const label = parameterLabel(t, parameter.key);
+    return (
+      <Fragment key={`${parameter.key}-${parameter.scopeRef ?? "club"}`}>
+        <div className="settings-parameter">
+          <button
+            className="settings-parameter__main"
+            disabled={parameter.editableBy !== "CLUB"}
+            onClick={() => {
+              setEditing(parameter);
+            }}
+            type="button"
+          >
+            <span>{label}</span>
+            <strong>{valueSummary(parameter, locale, formats, t)}</strong>
+          </button>
+          <IconButton
+            icon="list"
+            label={t("admin-settings:history.open", { label })}
+            onClick={() => void openHistory(parameter)}
+          />
+          {parameter.editableBy === "CLUB" ? (
+            <IconButton
+              icon="edit"
+              label={t("admin-settings:editor.open", { label })}
+              onClick={() => {
+                setEditing(parameter);
+              }}
+            />
+          ) : null}
+        </div>
+        {derivedRows
+          .filter((row) => row.block === blockKey && row.afterKey === parameter.key)
+          .map((row) => (
+            <DerivedSetting key={row.key} row={row} />
+          ))}
+      </Fragment>
+    );
+  };
+
+  // The core's `jobs` block (S15 §9) is the «Processos automàtics» card (E5-W03): each process's
+  // `jobs.<name>.enabled` is its switch there (`PUT /jobs/{name}/switch`), and the block's other
+  // parameters (`jobs.dailyTime`, `jobs.alertAdminsOnFailure`) keep their rows inside the card.
+  const jobsBlock = blocks.find((block) => block.key === "jobs");
+  const otherBlocks = blocks.filter((block) => block.key !== "jobs");
+  const jobsAfter = otherBlocks.findIndex((block) => block.key === "club");
+  const jobsCard = (
+    <JobsCard client={client} key="jobs">
+      {jobsBlock === undefined
+        ? null
+        : jobsBlock.rows
+            .filter((parameter) => !JOB_SWITCH_KEY.test(parameter.key))
+            .map((parameter) => parameterRow(jobsBlock.key, parameter))}
+    </JobsCard>
+  );
+
   return (
     <>
       <header className="catalog-page__header settings-page__header">
@@ -1040,49 +1100,11 @@ export function ParameterSettings({
         </Card>
       ) : (
         <div className="settings-grid">
-          {blocks.map((block) => (
+          {otherBlocks.flatMap((block, index) => [
             <Card className="settings-card" key={block.key}>
               <h2>{t(`admin-settings:blocks.${block.key}`, { defaultValue: block.title })}</h2>
               <div className="settings-parameters">
-                {block.rows.map((parameter) => {
-                  const label = parameterLabel(t, parameter.key);
-                  return (
-                    <Fragment key={`${parameter.key}-${parameter.scopeRef ?? "club"}`}>
-                      <div className="settings-parameter">
-                        <button
-                          className="settings-parameter__main"
-                          disabled={parameter.editableBy !== "CLUB"}
-                          onClick={() => {
-                            setEditing(parameter);
-                          }}
-                          type="button"
-                        >
-                          <span>{label}</span>
-                          <strong>{valueSummary(parameter, locale, formats, t)}</strong>
-                        </button>
-                        <IconButton
-                          icon="list"
-                          label={t("admin-settings:history.open", { label })}
-                          onClick={() => void openHistory(parameter)}
-                        />
-                        {parameter.editableBy === "CLUB" ? (
-                          <IconButton
-                            icon="edit"
-                            label={t("admin-settings:editor.open", { label })}
-                            onClick={() => {
-                              setEditing(parameter);
-                            }}
-                          />
-                        ) : null}
-                      </div>
-                      {derivedRows
-                        .filter((row) => row.block === block.key && row.afterKey === parameter.key)
-                        .map((row) => (
-                          <DerivedSetting key={row.key} row={row} />
-                        ))}
-                    </Fragment>
-                  );
-                })}
+                {block.rows.map((parameter) => parameterRow(block.key, parameter))}
                 {derivedRows
                   .filter(
                     (row) =>
@@ -1093,16 +1115,13 @@ export function ParameterSettings({
                     <DerivedSetting key={row.key} row={row} />
                   ))}
               </div>
-            </Card>
-          ))}
+            </Card>,
+            // S15 §2: «Processos automàtics» sits under «Club i pistes».
+            ...(index === jobsAfter ? [jobsCard] : []),
+          ])}
+          {jobsAfter < 0 ? jobsCard : null}
           <ModulesCard client={client} modules={modules} onModulesChange={onModulesChange} />
           <ClubPagesCard client={client} />
-          {/* The core's `jobs` block (S15 §9) is the «Processos automàtics» card: no placeholder. */}
-          {blocks.some((block) => block.key === "jobs") ? null : (
-            <Card className="settings-card settings-card--placeholder">
-              <h2>{t("admin-settings:blocks.automatedProcesses")}</h2>
-            </Card>
-          )}
         </div>
       )}
       <Drawer

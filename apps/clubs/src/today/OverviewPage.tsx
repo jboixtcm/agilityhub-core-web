@@ -1,6 +1,24 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type ClassBookingItem,
+  type components,
+  isApiError,
+  isLiveWaitlistEntry,
+  useClassRegistrants,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Button, Card, Chip, DayGrid, Drawer, Skeleton, Toast, useBranding } from "@agilityhub/ui";
+import {
+  Button,
+  Card,
+  Chip,
+  DayGrid,
+  Drawer,
+  RegistrantsPanel,
+  Skeleton,
+  Toast,
+  type Tone,
+  useBranding,
+} from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -61,6 +79,87 @@ function isStaffSession(value: ClassSession | ClassSessionMemberView): value is 
   return "counters" in value;
 }
 
+const BOOKING_STATE_TONES: Readonly<Record<ClassBookingItem["state"], Tone>> = {
+  ACTIVE: "success",
+  CANCELLED: "neutral",
+  CANCELLED_BY_CLUB: "danger",
+  CANCELLED_LATE: "warning",
+  PAYMENT_PENDING: "warning",
+};
+
+/**
+ * S08 §6 (E5-W03): who is booked and who waits, read-only for every role here — the waiting-list
+ * removal is D4's (ADMIN), and attendance is S10's screen 21. The copy is D4's
+ * (`admin-scheduling:registrants.*`), one literal for both screens.
+ */
+function ClassRegistrants({ client, session }: { client: ApiClient; session: ClassSession }) {
+  const branding = useBranding();
+  const { t } = useTranslation(["admin-scheduling", "enums"]);
+  const waitlistEnabled = branding.modules.includes("WAITLIST");
+  const registrants = useClassRegistrants(client, session.id, waitlistEnabled);
+  const entries =
+    registrants.status === "ready"
+      ? (registrants.waitlist ?? []).filter(isLiveWaitlistEntry).map((entry) => {
+          const name = entry.dogName ?? entry.dog.name;
+          return {
+            id: entry.id,
+            label:
+              entry.position === null || entry.position === undefined
+                ? name
+                : t("admin-scheduling:registrants.position", { name, position: entry.position }),
+          };
+        })
+      : [];
+  return (
+    <RegistrantsPanel
+      emptyLabel={t("admin-scheduling:registrants.empty")}
+      {...(registrants.status === "error"
+        ? {
+            error: (
+              <>
+                <span>{t("admin-scheduling:registrants.loadError")}</span>{" "}
+                <Button onClick={registrants.refetch} variant="ghost">
+                  {t("admin-scheduling:registrants.retry")}
+                </Button>
+              </>
+            ),
+          }
+        : {})}
+      loading={registrants.status === "loading"}
+      loadingLabel={t("admin-scheduling:registrants.loading")}
+      rows={
+        registrants.status === "ready"
+          ? registrants.bookings.map((item) => ({
+              id: item.id,
+              name: t("admin-scheduling:registrants.name", {
+                dog: item.dogName,
+                member: item.memberName,
+              }),
+              state: {
+                label: t(`enums:bookingState.${item.state}`),
+                tone: BOOKING_STATE_TONES[item.state],
+              },
+            }))
+          : []
+      }
+      title={t("admin-scheduling:registrants.title", {
+        booked: session.counters.booked,
+        capacity: session.capacity,
+      })}
+      {...(waitlistEnabled
+        ? {
+            waiting: {
+              entries,
+              text: t("admin-scheduling:registrants.waiting", {
+                names: entries.map((entry) => entry.label).join(" · "),
+              }),
+            },
+          }
+        : {})}
+    />
+  );
+}
+
 function isStaffBlock(value: RingBlock | RingBlockMemberView): value is RingBlock {
   return "createdByName" in value;
 }
@@ -105,38 +204,41 @@ function ClassDrawerBody({
   // list in the reader's language.
   const instructorNames = value.instructorNames ?? [];
   return (
-    <dl className="day-drawer">
-      <dt>{t("instructor:overview.class.when")}</dt>
-      <dd>
-        {`${dayLabel(value.date)} · ${timeLabel(value.startTime)}–${timeLabel(value.endTime)}`}
-      </dd>
-      {value.ring === null || value.ring === undefined ? null : (
-        <>
-          <dt>{t("instructor:overview.class.ring")}</dt>
-          <dd>{value.ring.name}</dd>
-        </>
-      )}
-      {instructorNames.length === 0 ? null : (
-        <>
-          <dt>{t("instructor:overview.class.instructors", { count: instructorNames.length })}</dt>
-          <dd>{formats.formatList(instructorNames)}</dd>
-        </>
-      )}
-      <dt>{t("instructor:overview.class.occupancy")}</dt>
-      <dd>{`${String(value.counters.booked)}/${String(value.capacity)}${waiting}`}</dd>
-      <dt>{t("instructor:overview.class.state")}</dt>
-      <dd>
-        <Chip tone={value.state === "CANCELLED" ? "danger" : "success"}>
-          {t(`enums:classState.${value.state}`)}
-        </Chip>
-      </dd>
-      {value.atRisk ? (
-        <>
-          <dt>{t("instructor:overview.class.risk")}</dt>
-          <dd className="day-drawer__risk">{cell.riskText ?? t("home:today.atRisk")}</dd>
-        </>
-      ) : null}
-    </dl>
+    <>
+      <dl className="day-drawer">
+        <dt>{t("instructor:overview.class.when")}</dt>
+        <dd>
+          {`${dayLabel(value.date)} · ${timeLabel(value.startTime)}–${timeLabel(value.endTime)}`}
+        </dd>
+        {value.ring === null || value.ring === undefined ? null : (
+          <>
+            <dt>{t("instructor:overview.class.ring")}</dt>
+            <dd>{value.ring.name}</dd>
+          </>
+        )}
+        {instructorNames.length === 0 ? null : (
+          <>
+            <dt>{t("instructor:overview.class.instructors", { count: instructorNames.length })}</dt>
+            <dd>{formats.formatList(instructorNames)}</dd>
+          </>
+        )}
+        <dt>{t("instructor:overview.class.occupancy")}</dt>
+        <dd>{`${String(value.counters.booked)}/${String(value.capacity)}${waiting}`}</dd>
+        <dt>{t("instructor:overview.class.state")}</dt>
+        <dd>
+          <Chip tone={value.state === "CANCELLED" ? "danger" : "success"}>
+            {t(`enums:classState.${value.state}`)}
+          </Chip>
+        </dd>
+        {value.atRisk ? (
+          <>
+            <dt>{t("instructor:overview.class.risk")}</dt>
+            <dd className="day-drawer__risk">{cell.riskText ?? t("home:today.atRisk")}</dd>
+          </>
+        ) : null}
+      </dl>
+      {value.state === "DRAFT" ? null : <ClassRegistrants client={client} session={value} />}
+    </>
   );
 }
 

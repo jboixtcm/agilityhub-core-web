@@ -1,0 +1,48 @@
+/* S08 registrants of a class (D4 selected-class card, screen 23 drawer). Theme tokens only. */
+.ah-registrants {
+  display: grid;
+  gap: var(--ah-space-2);
+  border-top: 1px solid var(--ah-color-border);
+  padding-top: var(--ah-space-3);
+}
+
+.ah-registrants__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ah-registrants__list,
+.ah-registrants__waiting-list {
+  display: grid;
+  gap: var(--ah-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ah-registrants__row,
+.ah-registrants__waiting-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+  font-size: 0.85rem;
+}
+
+.ah-registrants__empty,
+.ah-registrants__waiting p {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.ah-registrants__waiting {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.ah-registrants__error {
+  color: var(--ah-color-danger);
+  font-size: 0.8rem;
+}

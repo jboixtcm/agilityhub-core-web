@@ -1,0 +1,60 @@
+{
+  "title": "Entrenaments",
+  "tab": {
+    "label": "Registre d'ús de pistes",
+    "bookings": "Reserves d'entrenament",
+    "blocks": "Bloquejos i reserves de pista"
+  },
+  "list": {
+    "when": "{day} · {time}",
+    "none": "—",
+    "error": "No s'ha pogut carregar el llistat.",
+    "emptyDescription": "Canvia els filtres o la cerca per veure'n més.",
+    "dismiss": "Tanca l'avís"
+  },
+  "bookings": {
+    "caption": "Reserves d'entrenament",
+    "search": "Cerca per abonat, gos o pista",
+    "emptyTitle": "Cap reserva d'entrenament",
+    "selectRow": "Reserva de {name}",
+    "statusLabel": "Estat de la reserva",
+    "statuses": {
+      "all": "Totes"
+    },
+    "columns": {
+      "date": "Dia i hora",
+      "ring": "Pista",
+      "member": "Abonat",
+      "dog": "Gos",
+      "state": "Estat",
+      "origin": "Origen",
+      "createdAt": "Reservada el"
+    }
+  },
+  "blocks": {
+    "caption": "Bloquejos i reserves de pista",
+    "search": "Cerca per nota o per qui l'ha creat",
+    "emptyTitle": "Cap bloqueig ni reserva de pista",
+    "selectRow": "Bloqueig de {when}",
+    "statusLabel": "Estat del bloqueig",
+    "statuses": {
+      "all": "Tots"
+    },
+    "when": "{day} · {from}–{to}",
+    "activityReason": "{reason} · {title}",
+    "cancel": "Anul·la el bloqueig",
+    "cancelLabel": "Anul·la el bloqueig de {when}",
+    "cancelling": "Anul·lant el bloqueig…",
+    "cancelled": "Bloqueig anul·lat.",
+    "columns": {
+      "from": "Dia i hora",
+      "ring": "Pista",
+      "kind": "Tipus",
+      "reason": "Motiu",
+      "note": "Nota",
+      "createdBy": "Creat per",
+      "state": "Estat",
+      "actions": "Accions"
+    }
+  }
+}

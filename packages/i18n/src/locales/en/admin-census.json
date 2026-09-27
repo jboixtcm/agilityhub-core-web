@@ -380,5 +380,25 @@
     "no": "No",
     "other": "other",
     "yes": "Yes"
+  },
+  "bookings": {
+    "title": "Bookings",
+    "actAsMember": "To book or cancel on their behalf, use «Sign in as the member».",
+    "classes": "Classes",
+    "trainings": "Training",
+    "columns": {
+      "when": "Day and time",
+      "ring": "Ring",
+      "dog": "Dog",
+      "state": "Status",
+      "origin": "Origin"
+    },
+    "when": "{day} · {time}",
+    "noClasses": "No class bookings.",
+    "noTrainings": "No training bookings.",
+    "seeAll": "See them all ›",
+    "loading": "Loading the bookings…",
+    "error": "The bookings could not be loaded.",
+    "retry": "Try again"
   }
 }

@@ -1,0 +1,70 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > renders the four statuses with the mockup's exact literals and «4 avisos» 104ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > WILL_REVIEW (`autoCancelSameDay = false`) reads «el club decidirà» 14ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > opens D4 on the class's week with the class selected (a cancelled one under «Anul·lades») 31ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > says «Cap classe en risc» when the api lists none 16ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > an error shows its message and a retry 25ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > lists every booking as the api orders it, with its state, and the D12 «En espera: …» line 118ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > offers [Treu de la llista] only to an ADMIN; an INSTRUCTOR reads the same panel 59ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in es 19ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in en 19ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > reads `reviewAt` in the club's zone (Europe/Madrid), not the device's (America/Bogota) 14ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > renders the server aggregate, all risk rows, pending signups, and accessible chart 165ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > hides nullable module blocks and refetches when the window regains the focus 36ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > S14 R-14-06: a null `riskReview` block shows no risk card and never asks for GET /risk-review 22ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note 161ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run 149ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > paints a failed last run in the danger tone 29ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula]) 28ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > «Veure'ls tots ›» reads every class booking of the member (the first page is 20) 97ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > S09 §9: without FREE_TRAINING the training table is absent and never asked for 40ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN) 191ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-16 removes a waiting entry after the confirmation, reads the list again and tells the host 68ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE shows why inside the panel and reads the list again 50ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > uses the same ICU day plural as D2 in the pending signups card 23ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > gives each VALIDA its own accessible name 18ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > marks an add-dog row «(nou gos)» 18ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-14-05 paints the submission date red only when pendingDays > warnDays 17ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 3 as «+3 aquest mes» 17ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta -2 as «−2 aquest mes» 18ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation 78ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied 38ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > another error stays inside the confirmation, where the admin is 47ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-14 shows each waiting entry's position in a FIFO club (`waitlist.mode = FIFO`) 38ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > S08 §9: without WAITLIST there is no waiting line and no waiting request 32ms
+Not implemented: navigation to another Document
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > offers the api's values with their counts in the universal filter (no filter-values route: counted from the list) 114ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 0 as «0 aquest mes» 17ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 1 risk alert(s) with an ICU plural 19ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 4 risk alert(s) with an ICU plural 21ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > writes times as «7:30» and links each risk row to D4 on its class 30ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > shows at most 6 risk rows, then «+{n} més» to D4 on the first hidden one 29ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again 47ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it 67ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR 131ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message 59ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > puts the warning icon on the risk card title 22ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > E35 paints one column per progression level with the level name as tooltip, never `others` 26ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 1 in the chart legend 14ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 2 in the chart legend 13ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 3 in the chart legend 13ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-04-23 keeps the refund notice after a rejection with a collected payment 15ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again 42ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (404: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 34ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (422: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 35ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > opens a process's run history and a run's sheet (effects and errors) 46ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 an impersonation token cannot manage the processes: the card says why and lists none 13ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden 7ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in es 20ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in en 18ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > shows the cadence in club-local time whatever the device's time zone 18ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others 123ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action 139ms
+
+ Test Files  6 passed (6)
+      Tests  60 passed (60)
+   Start at  13:41:11
+   Duration  1.76s (tests 35%, environment 24%, transform 23%, import 12%, setup 6%)
+

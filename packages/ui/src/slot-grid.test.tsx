@@ -82,6 +82,10 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
     expect(onCellPress).not.toHaveBeenCalled();
     fireEvent.click(free);
     expect(onCellPress).toHaveBeenCalledWith(expect.objectContaining({ id: "ring-mun_07:30" }));
+    // E5-W04: the hooks the real-core E2E selects cells by (variant and ring).
+    expect(free).toHaveAttribute("data-slot-state", "free");
+    expect(free).toHaveAttribute("data-ring", "ring-mun");
+    expect(booked).toHaveAttribute("data-slot-state", "taken");
   });
 
   it("names why a taken cell is taken when the page gives the reasons", () => {

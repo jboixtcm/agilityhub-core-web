@@ -140,6 +140,7 @@ describe("T-02-14 clubs-admin shell", () => {
         "/comunicats",
         "/parametres",
         "/agenda",
+        "/entrenaments",
         "/alumnes/:id",
         "/seguiment",
         "/pistes",

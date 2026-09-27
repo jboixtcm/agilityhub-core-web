@@ -133,19 +133,55 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
 
   it("who booked it: another member of the group", async () => {
     rewrite("/bookings/:id", (body) => {
-      body.bookedBy = { displayName: "Joan", viaClub: false };
+      body.bookedBy = { displayName: "Joan", self: false, viaClub: false };
     });
     await openBooking();
     expect(screen.getByText("Reservada per Joan el dijous 30/07 a les 20:14")).toBeVisible();
   });
 
+  it("E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel»", async () => {
+    // The reader's account is «Biel Roca»; another Biel of the family group booked it.
+    rewrite("/bookings/:id", (body) => {
+      body.bookedBy = { displayName: "Biel", self: false, viaClub: false };
+    });
+    await openBooking();
+    expect(screen.getByText("Reservada per Biel el dijous 30/07 a les 20:14")).toBeVisible();
+  });
+
+  it("E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries", async () => {
+    rewrite("/bookings/:id", (body) => {
+      body.bookedBy = { displayName: "Laura Serra", self: true, viaClub: false };
+    });
+    await openBooking();
+    expect(screen.getByText("Reservada el dijous 30/07 a les 20:14")).toBeVisible();
+  });
+
   it("booked by the club reads «Reservada pel club el …»", async () => {
     rewrite("/bookings/:id", (body) => {
-      body.bookedBy = { displayName: "Jordi Soler", viaClub: true };
+      body.bookedBy = { displayName: "Jordi Soler", self: false, viaClub: true };
     });
     await openBooking();
     expect(screen.getByText("Reservada pel club el dijous 30/07 a les 20:14")).toBeVisible();
   });
+
+  it.each([
+    // Inside the booking's 4 h, but the api says it is still in time until 18:00.
+    ["2026-08-03T16:00:00+02:00", "2026-08-03T16:00:00Z", false],
+    // Well before the 4 h, but the api's instant has passed.
+    ["2026-08-03T12:00:00+02:00", "2026-08-03T09:00:00Z", true],
+  ] as const)(
+    "E5-W04 step 0 (R-08-10, api E5-T25): at %s with `cancellableInTimeUntil` %s the dialog warns: %s",
+    async (now, until, warns) => {
+      vi.setSystemTime(new Date(now));
+      rewrite("/bookings/:id", (body) => {
+        body.cancellableInTimeUntil = until;
+      });
+      await openBooking();
+      fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+      const dialog = screen.getByRole("dialog");
+      expect(within(dialog).queryByText(/^Falten menys de 4 hores/u) !== null).toBe(warns);
+    },
+  );
 
   it.each([422, 409])(
     "BOOKING_NOT_CANCELLABLE (%i) shows its message inside the dialog and reads the booking again",

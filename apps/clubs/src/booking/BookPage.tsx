@@ -352,6 +352,9 @@ export function BookPage({ client }: { client: ApiClient }) {
             return (
               <Card
                 className={`class-row class-row--${row.state.toLowerCase().replaceAll("_", "-")}${canTap ? "" : " class-row--inert"}`}
+                // Stable hooks for the real-core E2E (E5-W04): the api's class and row state.
+                data-bookable-state={row.state}
+                data-class-id={row.id}
                 key={row.id}
               >
                 {canTap ? (

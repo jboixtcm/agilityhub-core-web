@@ -245,5 +245,23 @@
     "confirmWaitlist": "ANULA Y AVISA A LA LISTA DE ESPERA",
     "simpleCancel": "¿Quieres anular la clase?",
     "simpleDelete": "¿Quieres eliminar la clase?"
+  },
+  "registrants": {
+    "title": "Inscritos ({booked}/{capacity})",
+    "empty": "Todavía no hay ningún inscrito.",
+    "loading": "Cargando los inscritos…",
+    "loadError": "No se han podido cargar los inscritos.",
+    "retry": "Vuelve a intentarlo",
+    "name": "{member} + {dog}",
+    "position": "{position}. {name}",
+    "waiting": "En espera: {names}",
+    "remove": "Quita de la lista",
+    "removeLabel": "Quita {name} de la lista de espera",
+    "removeConfirm": {
+      "title": "Quitar de la lista de espera",
+      "text": "{name} dejará de estar en espera de esta clase.",
+      "confirm": "Quita de la lista",
+      "cancel": "Cancela"
+    }
   }
 }

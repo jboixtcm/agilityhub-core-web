@@ -1,6 +1,5 @@
 import { type ApiClient, isApiError } from "@agilityhub/api-client";
-import { useSession } from "@agilityhub/auth";
-import { clubLocalInstant, dogArticle, useClubFormats } from "@agilityhub/i18n";
+import { dogArticle, useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
   Badge,
@@ -11,7 +10,6 @@ import {
   Modal,
   Skeleton,
   type Tone,
-  useBranding,
 } from "@agilityhub/ui";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,11 +34,6 @@ export function thresholdText(t: Translate, minutes: number): string {
   return minutes % 60 === 0
     ? t("booking:detail.thresholdHours", { count: minutes / 60 })
     : t("booking:detail.thresholdMinutes", { count: minutes });
-}
-
-/** The first word of the session's name: how the api names a member in `bookedBy` («Laura»). */
-function firstName(name: string | undefined): string {
-  return name?.trim().split(/\s+/u)[0] ?? "";
 }
 
 export function BookingBar() {
@@ -68,8 +61,6 @@ export function BookingBar() {
 export function BookingDetailPage({ bookingId, client }: { bookingId: string; client: ApiClient }) {
   const { t } = useTranslation(["booking", "enums", "errors", "common"]);
   const formats = useClubFormats();
-  const branding = useBranding();
-  const { me } = useSession();
   const booking = useBooking(client, bookingId);
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
@@ -139,12 +130,13 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
     }),
     time: formats.formatTime(data.bookedAt),
   };
+  // The api says whether the reader's own account booked it (`BookedBy.self`, api E5-T25): two
+  // members of a family group may share a first name, so names are never compared.
   const bookedLine = data.bookedBy.viaClub
     ? t("booking:detail.bookedByClub", bookedAt)
-    : firstName(me?.account.name) !== "" &&
-        data.bookedBy.displayName !== firstName(me?.account.name)
-      ? t("booking:detail.bookedByMember", { ...bookedAt, name: data.bookedBy.displayName })
-      : t("booking:detail.bookedAt", bookedAt);
+    : data.bookedBy.self
+      ? t("booking:detail.bookedAt", bookedAt)
+      : t("booking:detail.bookedByMember", { ...bookedAt, name: data.bookedBy.displayName });
   const displayState: DisplayState =
     data.displayState ?? (data.state === "ACTIVE" ? "CONFIRMED" : data.state);
   // Always sent with the booking (api E5-T25): a MEMBER cannot read `/parameters`.
@@ -158,9 +150,9 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
 
   const open = () => {
     setError(undefined);
-    // Inside the threshold the session counts as done (R-08-10): the dialog says so first.
-    const startsAt = clubLocalInstant(session.startsAtLocal, branding.timeZone);
-    setDialog({ late: Date.now() > startsAt - threshold * 60_000 });
+    // R-08-10: in time while now ≤ `cancellableInTimeUntil`, the instant the api computes (the
+    // class start minus the threshold); after it the dialog warns first.
+    setDialog({ late: Date.now() > Date.parse(data.cancellableInTimeUntil) });
   };
 
   const cancel = async () => {

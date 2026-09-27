@@ -620,7 +620,11 @@ test("T-06-28 E2E (b) D4: «Esborrany» opens the seeded draft week, [VALIDAR LA
 
   await navigateSpa(page, "/calendari");
   await page.waitForURL(`**/calendari?estat=actives&setmana=${weekStart}`);
-  await expect(calendarGrid(page)).toBeVisible();
+  // Since api E5-T06 the seed skips the current week's past days: on a Sunday that week has no
+  // class left and D4 shows its empty state instead of the grid (E5-W04).
+  await expect(
+    calendarGrid(page).or(page.getByText("Cap classe aquesta setmana", { exact: true })),
+  ).toBeVisible();
   await page.getByRole("button", { exact: true, name: "Esborrany" }).click();
   // R-06-07: the first week with drafts is the seeded week +1.
   await page.waitForURL(`**/calendari?estat=esborrany&setmana=${draftWeek}`);
@@ -1191,7 +1195,11 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
     registrants.getByRole("row").filter({ hasText: mine.member.fullName }),
   ).toContainText("en llista d'espera (2)");
   evidence.waitlistCa = {
-    member: { after: "WAITLISTED", rankAfter: mineAfter?.waitlistRank ?? null, rankBefore: mine.waitlistRank ?? null },
+    member: {
+      after: "WAITLISTED",
+      rankAfter: mineAfter?.waitlistRank ?? null,
+      rankBefore: mine.waitlistRank ?? null,
+    },
     promoted: { after: "ACTIVE", rankBefore: first.waitlistRank ?? null },
   };
   await page

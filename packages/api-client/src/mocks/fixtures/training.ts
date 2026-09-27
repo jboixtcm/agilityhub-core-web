@@ -863,10 +863,13 @@ export function trainingReservationRows(
         Date.parse(clubInstant(booking.date, booking.end)) > now,
     )
     .map((booking) => ({
+      activityId: null,
       dogId: booking.dogId,
       dogName: dogName(booking.dogId),
       endsAtLocal: `${booking.date}T${booking.end}`,
       id: booking.id,
+      // api E5-T25: the ring's colour for 03's dot.
+      ringColor: findRing(booking.ringId)?.color ?? null,
       ringName: findRing(booking.ringId)?.name ?? null,
       startsAt: startsAtOf(booking),
       startsAtLocal: `${booking.date}T${booking.start}`,
@@ -936,4 +939,82 @@ export function trainingsOnRing(
       booking.date === date &&
       overlaps(range, { end: booking.end, start: booking.start }),
   );
+}
+
+type TrainingBookingListItem = components["schemas"]["TrainingBookingListItem"];
+
+/**
+ * `GET /training-bookings` (S09 §6, the ring-usage register of the back office): this world's
+ * bookings on the mockup days and the calendar world's on any other day, whole items (the handler
+ * applies `fields`). Only what exists already (`createdAt ≤ now`).
+ */
+export function trainingBookingListItems(now: number): Required<TrainingBookingListItem>[] {
+  const ringName = (ringId: string) => findRing(ringId)?.name ?? ringId;
+  const mockup = visibleBookings(now).map((booking) => ({
+    createdAt: booking.createdAt,
+    date: booking.date,
+    dogId: booking.dogId,
+    dogName: booking.dogName,
+    id: booking.id,
+    memberId: booking.memberId,
+    memberName: booking.memberName,
+    origin: booking.origin,
+    ringId: booking.ringId,
+    ringName: ringName(booking.ringId),
+    startsAt: clubInstant(booking.date, booking.start),
+    startsAtLocal: booking.start,
+    state: booking.state,
+  }));
+  const calendar = planningState.trainingBookings
+    .filter((booking) => !isMockupDay(booking.date))
+    .map((booking) => ({
+      createdAt: "2026-08-01T09:00:00Z",
+      date: booking.date,
+      dogId: `dog-${booking.dogName.toLowerCase()}`,
+      dogName: booking.dogName,
+      id: booking.id,
+      memberId: `member-${(booking.memberName.split(" ")[0] ?? "").toLowerCase()}`,
+      memberName: booking.memberName,
+      origin: "APP" as const,
+      ringId: booking.ringId,
+      ringName: ringName(booking.ringId),
+      startsAt: booking.from,
+      startsAtLocal: booking.fromLocal,
+      state: "ACTIVE" as const,
+    }));
+  return [...mockup, ...calendar];
+}
+
+/**
+ * The block of the «Taller d'iniciació» of Thursday 6 (S07 R-07-11, the activity of the day-grid
+ * world): its activity manages it, so the register offers no cancellation.
+ */
+export const ACTIVITY_RING_BLOCK: RingBlock = {
+  activityId: "activity-taller-iniciacio",
+  activityTitle: "Taller d'iniciació",
+  createdByName: "Aina Serra",
+  date: "2026-08-06",
+  from: clubInstant("2026-08-06", "10:00"),
+  fromLocal: "10:00",
+  id: "rb-2026-08-06-1000-muntanya-activity",
+  kind: "BLOCK",
+  note: null,
+  reason: "ACTIVITY",
+  ringId: MUN,
+  state: "ACTIVE",
+  to: clubInstant("2026-08-06", "12:00"),
+  toLocal: "12:00",
+  version: 1,
+};
+
+/**
+ * `GET /ring-blocks` (S06/S09 §6): every block of the club, this world's on the mockup days (and
+ * the activity's), the calendar world's on any other day.
+ */
+export function ringBlockListItems(): RingBlock[] {
+  return [
+    ...trainingState.blocks,
+    ACTIVITY_RING_BLOCK,
+    ...planningState.blocks.filter((block) => !isMockupDay(block.date)),
+  ];
 }

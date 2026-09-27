@@ -1084,6 +1084,110 @@ select {
   padding: var(--ah-space-4);
 }
 
+/* D11 «Processos automàtics» (S15 §2, no mockup): one row per process, the whole grid's width. */
+.jobs-card {
+  grid-column: 1 / -1;
+}
+
+.jobs-card__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jobs-card__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--ah-space-3);
+  align-items: center;
+  padding: var(--ah-space-2) 0;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.jobs-card__row--off .jobs-card__main {
+  opacity: 0.55;
+}
+
+.jobs-card__main {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(10rem, 0.8fr) minmax(0, 1.6fr);
+  gap: var(--ah-space-3);
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.jobs-card__main > span {
+  color: var(--ah-color-text-muted);
+}
+
+.jobs-card__last,
+.jobs-card__link {
+  padding: 0;
+  color: var(--ah-color-text-muted);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.jobs-card__last--failed {
+  color: var(--ah-color-danger);
+  font-weight: 700;
+}
+
+.jobs-card__actions,
+.jobs-card__modal-actions {
+  display: flex;
+  gap: var(--ah-space-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.jobs-card__note {
+  color: var(--ah-color-text-muted);
+  font-size: 0.82rem;
+}
+
+.jobs-card__parameters {
+  margin-top: var(--ah-space-3);
+}
+
+.jobs-card__effects ul,
+.jobs-card__run ul {
+  margin: var(--ah-space-2) 0;
+  padding-left: var(--ah-space-4);
+  font-size: 0.82rem;
+}
+
+.jobs-card__errors {
+  color: var(--ah-color-danger);
+}
+
+/* D10 «Reserves» (E5-W03): the member's class and training bookings, read-only. */
+.member-bookings {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin-top: var(--ah-space-4);
+}
+
+.member-bookings h3 {
+  margin: var(--ah-space-2) 0 0;
+  font-size: 0.85rem;
+}
+
+.member-bookings__note {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.member-bookings__more {
+  justify-self: start;
+}
+
 .settings-card h2 {
   margin: 0 0 var(--ah-space-2);
   color: var(--ah-color-text-muted);

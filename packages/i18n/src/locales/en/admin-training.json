@@ -1,0 +1,60 @@
+{
+  "title": "Training",
+  "tab": {
+    "label": "Ring usage register",
+    "bookings": "Training bookings",
+    "blocks": "Ring blocks and reservations"
+  },
+  "list": {
+    "when": "{day} · {time}",
+    "none": "—",
+    "error": "The list could not be loaded.",
+    "emptyDescription": "Change the filters or the search to see more.",
+    "dismiss": "Close the notice"
+  },
+  "bookings": {
+    "caption": "Training bookings",
+    "search": "Search by member, dog or ring",
+    "emptyTitle": "No training bookings",
+    "selectRow": "Booking of {name}",
+    "statusLabel": "Booking status",
+    "statuses": {
+      "all": "All"
+    },
+    "columns": {
+      "date": "Day and time",
+      "ring": "Ring",
+      "member": "Member",
+      "dog": "Dog",
+      "state": "Status",
+      "origin": "Origin",
+      "createdAt": "Booked on"
+    }
+  },
+  "blocks": {
+    "caption": "Ring blocks and reservations",
+    "search": "Search by note or by who created it",
+    "emptyTitle": "No ring blocks or reservations",
+    "selectRow": "Block of {when}",
+    "statusLabel": "Block status",
+    "statuses": {
+      "all": "All"
+    },
+    "when": "{day} · {from}–{to}",
+    "activityReason": "{reason} · {title}",
+    "cancel": "Cancel the block",
+    "cancelLabel": "Cancel the block of {when}",
+    "cancelling": "Cancelling the block…",
+    "cancelled": "Block cancelled.",
+    "columns": {
+      "from": "Day and time",
+      "ring": "Ring",
+      "kind": "Type",
+      "reason": "Reason",
+      "note": "Note",
+      "createdBy": "Created by",
+      "state": "Status",
+      "actions": "Actions"
+    }
+  }
+}

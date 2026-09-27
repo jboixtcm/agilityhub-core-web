@@ -149,6 +149,9 @@ const dynamicKeyPrefixes = [
   // Rendered by SignupWarning code (E3-W07 step 0), so a new api value needs only its key.
   "admin-census:signupReview.warning.",
   "admin-census:values.",
+  // S15 form A (E5-W03): rendered by the api's `dayLabel` and `status`.
+  "admin-dashboard:risk.day.",
+  "admin-dashboard:risk.notified.",
   "admin-dashboard:risk.status.",
   "admin-dashboard:signups.payment.",
   "admin-audit:actions.",
@@ -159,6 +162,9 @@ const dynamicKeyPrefixes = [
   "admin-settings:enum.",
   "admin-settings:modules.",
   "admin-settings:param.",
+  // S15 (E5-W03): a process's `jobName` and the counter keys its runs send.
+  "admin-settings:jobs.counter.",
+  "admin-settings:jobs.name.",
   "admin-scheduling:cancelModal.channel.",
   "enums:activityOrigin.",
   "enums:activityRegistrationState.",
@@ -166,7 +172,14 @@ const dynamicKeyPrefixes = [
   "enums:activityType.",
   // S08 (E5-W01): rendered by the api's state, so a new value needs only its key.
   "enums:bookableState.",
+  "enums:bookingOrigin.",
   "enums:bookingState.",
+  // S15 and the ring-usage register (E5-W03): the api's run status, trigger, origin and state.
+  "enums:jobRunStatus.",
+  "enums:jobTrigger.",
+  "enums:ringBlockState.",
+  "enums:trainingBookingState.",
+  "enums:trainingOrigin.",
   "enums:reservationState.",
   "enums:waitlistState.",
   "enums:cancellationReason.",

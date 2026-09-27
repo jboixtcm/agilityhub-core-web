@@ -48,7 +48,8 @@
     "CONFIRMED": "confirmada",
     "DONE": "fet",
     "CANCELLED": "anul·lada",
-    "CANCELLED_BY_CLUB": "cancel·lada pel club"
+    "CANCELLED_BY_CLUB": "cancel·lada pel club",
+    "ACTIVE": "confirmada"
   },
   "slotReason": {
     "CLASS": "classe",
@@ -106,7 +107,8 @@
     "CANCELLED": "anul·lada",
     "CANCELLED_LATE": "anul·lada tard",
     "CANCELLED_BY_CLUB": "cancel·lada pel club",
-    "PAYMENT_PENDING": "pendent de pagament"
+    "PAYMENT_PENDING": "pendent de pagament",
+    "ACTIVE": "confirmada"
   },
   "bookableState": {
     "BOOKABLE": "reservable",
@@ -124,5 +126,31 @@
     "CONSOLIDATED": "reserva confirmada",
     "EXPIRED": "caducada",
     "CANCELLED": "anul·lada"
+  },
+  "bookingOrigin": {
+    "APP": "app",
+    "BACKOFFICE": "club",
+    "INSTRUCTOR": "instructor",
+    "SYSTEM": "sistema"
+  },
+  "trainingOrigin": {
+    "APP": "app",
+    "BACKOFFICE": "club"
+  },
+  "ringBlockState": {
+    "ACTIVE": "actiu",
+    "CANCELLED": "anul·lat"
+  },
+  "jobRunStatus": {
+    "SUCCEEDED": "correcta",
+    "PARTIAL": "parcial",
+    "FAILED": "fallida",
+    "SKIPPED": "omesa",
+    "RUNNING": "en curs"
+  },
+  "jobTrigger": {
+    "SCHEDULE": "programada",
+    "CATCH_UP": "recuperada",
+    "MANUAL": "manual"
   }
 }

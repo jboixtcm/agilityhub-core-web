@@ -1,6 +1,7 @@
 import "./components.css";
 import "./day-grid.css";
 import "./limited-markdown.css";
+import "./registrants-panel.css";
 import "./rich-text.css";
 import "./schedule-grid.css";
 import "./slot-grid.css";
@@ -13,6 +14,7 @@ export * from "./icons/Icon";
 export * from "./icons/names";
 export * from "./limited-markdown";
 export * from "./modules";
+export * from "./registrants-panel";
 export * from "./rich-text";
 export * from "./rich-text-editor";
 export * from "./safe-html";

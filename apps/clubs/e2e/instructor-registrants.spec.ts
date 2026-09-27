@@ -1,0 +1,52 @@
+import { mkdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+import { expect, test } from "@playwright/test";
+
+const baseUrl = "http://127.0.0.1:4173";
+const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W03");
+const brandingCanic: unknown = JSON.parse(
+  readFileSync(
+    resolve(
+      import.meta.dirname,
+      "../../../packages/api-client/src/mocks/fixtures/branding-canic.json",
+    ),
+    "utf8",
+  ),
+);
+
+test.beforeAll(() => {
+  mkdirSync(evidenceDirectory, { recursive: true });
+});
+
+test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (S08 §6)", () => {
+  test("an INSTRUCTOR reads who is booked and who waits, without actions", async ({ page }) => {
+    await page.addInitScript(
+      ({ cachedBranding }) => {
+        localStorage.setItem("agilityhub.locale", "ca");
+        localStorage.setItem("agilityhub.mockScenario", "instructor");
+        localStorage.setItem(
+          `agilityhub.branding:${location.host}`,
+          JSON.stringify(cachedBranding),
+        );
+      },
+      { cachedBranding: brandingCanic },
+    );
+    await page.goto(`${baseUrl}/entrar`);
+    await page.getByLabel("Correu electrònic").fill("ivet.puig@example.test");
+    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+    await page.waitForURL("**/instructor/avui");
+    await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
+
+    const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await grid.getByRole("button", { name: /B\+C/u }).click();
+    const drawer = page.getByRole("dialog", { name: "B+C" });
+    const panel = drawer.getByRole("region", { name: "Inscrits (5/5)" });
+    await expect(panel.getByRole("listitem")).toHaveCount(6);
+    await expect(panel.getByText("En espera: Kira · Lluna")).toBeVisible();
+    await expect(panel.getByRole("button")).toHaveCount(0);
+    await panel.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: resolve(evidenceDirectory, "23-classe-inscrits-375.png") });
+  });
+});

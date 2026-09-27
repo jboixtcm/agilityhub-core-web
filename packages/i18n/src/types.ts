@@ -13,6 +13,7 @@ export const namespaces = [
   "admin-dashboard",
   "admin-scheduling",
   "admin-settings",
+  "admin-training",
   "booking",
   "census",
   "enums",

@@ -1,4 +1,4 @@
-import { activityState } from "@agilityhub/api-client/mocks";
+import { activityState, catalogState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -93,6 +93,29 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
       "/historic",
     );
     expect(screen.getByRole("link", { name: "Inici" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none", async () => {
+    await renderApp("/inici");
+    await waitFor(() => {
+      expect(reservationRows()).toHaveLength(5);
+    });
+    const colour = (name: string) =>
+      catalogState.rings.find((ring) => ring.name === name)?.color ?? "missing";
+    expect(
+      [...document.querySelectorAll(".reservation-row, .activity-row")].map(
+        (row) =>
+          row
+            .querySelector<HTMLElement>(".reservation-row__dot")
+            ?.style.getPropertyValue("--class-row-ring") ?? null,
+      ),
+    ).toEqual([
+      colour("Central"),
+      colour("Muntanya"),
+      colour("Carretera"),
+      null,
+      colour("Muntanya"),
+    ]);
   });
 
   it("a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back", async () => {

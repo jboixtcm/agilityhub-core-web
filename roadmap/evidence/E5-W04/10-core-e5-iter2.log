@@ -1,0 +1,506 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E5-W04 e5-core.spec.ts
+
+E4_WEEK_START=2026-09-21 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-09-28 (the club-local Monday after today, Europe/Madrid)
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Network agilityhub-e5-w04_default Created 
+ Network agilityhub-e5-w04_default Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Started 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Starting 
+ Container agilityhub-e5-w04-core-1 Started 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-core-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W04/seed-files.log (106 lines)
+ Container agilityhub-e5-w04-core-1 Running 
+ Container agilityhub-e5-w04-mongo-1 Running 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Waiting 
+ Container agilityhub-e5-w04-core-1 Healthy 
+ Container agilityhub-e5-w04-playwright-run-5aa9c80fb905 Creating 
+ Container agilityhub-e5-w04-playwright-run-5aa9c80fb905 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 97, added 97
+Progress: resolved 851, reused 0, downloaded 310, added 310
+Progress: resolved 851, reused 0, downloaded 490, added 490
+Progress: resolved 851, reused 0, downloaded 545, added 545
+Progress: resolved 851, reused 0, downloaded 570, added 570
+Progress: resolved 851, reused 0, downloaded 607, added 607
+Progress: resolved 851, reused 0, downloaded 697, added 697
+Progress: resolved 851, reused 0, downloaded 791, added 790
+Progress: resolved 851, reused 0, downloaded 848, added 848
+Progress: resolved 851, reused 0, downloaded 849, added 849
+Progress: resolved 851, reused 0, downloaded 850, added 849
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 12.3s using pnpm v9.15.9
+
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:214) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 9 tests using 1 worker
+
+[1/9] e2e/core/e5-core.spec.ts:724:5 › E5-W04 step 2 · POST /test/clock to demoNow, and the seed the run starts from
+[2/9] e2e/core/e5-core.spec.ts:782:5 › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation
+  1) e2e/core/e5-core.spec.ts:782:5 › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+    > 442 |   expect((await routeRefresh).status()).toBe(200);
+          |                                         ^
+      443 |   await expect(page.locator(".clubs-shell")).toBeVisible();
+      444 | }
+      445 |
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:442:41)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:864:19
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:25:55.877Z grant_type=refresh_token status=400 cookie=none test="T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:25:55.979Z grant_type=password status=200 cookie=none test="T-08-...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-08-40-a-b-·-03-a-c40a0-ime-and-a-late-cancellation/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-08-40-a-b-·-03-a-c40a0-ime-and-a-late-cancellation/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-08-40-a-b-·-03-a-c40a0-ime-and-a-late-cancellation/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/9] e2e/core/e5-core.spec.ts:884:5 › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29
+  2) e2e/core/e5-core.spec.ts:884:5 › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:440:3)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:888:19
+
+    Error: page.waitForResponse: Test ended.
+
+      437 |   // The app refreshes once it lands; a navigation that aborted that call would leave the browser
+      438 |   // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E4 do.
+    > 439 |   const routeRefresh = page.waitForResponse(isRefresh);
+          |                             ^
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+      442 |   expect((await routeRefresh).status()).toBe(200);
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:439:29)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:888:19
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:25:59.522Z grant_type=refresh_token status=400 cookie=none test="T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:25:59.597Z grant_type=password status=429 cookie=none test="T-08-40 (c) · 06 swaps the week...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-08-40-c-·-06-swa-e8237--without-a-swappable-one-29/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-08-40-c-·-06-swa-e8237--without-a-swappable-one-29/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-08-40-c-·-06-swa-e8237--without-a-swappable-one-29/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/9] e2e/core/e5-core.spec.ts:988:5 › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim
+  3) e2e/core/e5-core.spec.ts:988:5 › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:440:3)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:992:18
+
+    Error: page.waitForResponse: Test ended.
+
+      437 |   // The app refreshes once it lands; a navigation that aborted that call would leave the browser
+      438 |   // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E4 do.
+    > 439 |   const routeRefresh = page.waitForResponse(isRefresh);
+          |                             ^
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+      442 |   expect((await routeRefresh).status()).toBe(200);
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:439:29)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:992:18
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:00.239Z grant_type=refresh_token status=400 cookie=none test="T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:00.312Z grant_type=password status=429 cookie=none test="T-08-40 (d) ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-08-40-d-·-ALL-AT-5c978-30-min-ahead-NOTIFIED-claim/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-08-40-d-·-ALL-AT-5c978-30-min-ahead-NOTIFIED-claim/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-08-40-d-·-ALL-AT-5c978-30-min-ahead-NOTIFIED-claim/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/9] e2e/core/e5-core.spec.ts:1096:5 › T-08-40 (g) · the same flows in es: a booking inside the hold, and a waiting entry claimed
+  4) e2e/core/e5-core.spec.ts:1096:5 › T-08-40 (g) · the same flows in es: a booking inside the hold, and a waiting entry claimed 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:440:3)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:1100:18
+
+    Error: page.waitForResponse: Test ended.
+
+      437 |   // The app refreshes once it lands; a navigation that aborted that call would leave the browser
+      438 |   // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E4 do.
+    > 439 |   const routeRefresh = page.waitForResponse(isRefresh);
+          |                             ^
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+      442 |   expect((await routeRefresh).status()).toBe(200);
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:439:29)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:1100:18
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:00.935Z grant_type=refresh_token status=400 cookie=none test="T-08-40 (g) · the same flows in es: a booking inside the hold, and a waiting entry claimed" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:00.996Z grant_type=password status=429 cookie=none test="T-08-40 (g) · the same ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-08-40-g-·-the-sa-18cdd-and-a-waiting-entry-claimed/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-08-40-g-·-the-sa-18cdd-and-a-waiting-entry-claimed/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-08-40-g-·-the-sa-18cdd-and-a-waiting-entry-claimed/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/9] e2e/core/e5-core.spec.ts:1161:5 › T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 blocks a ring, never over bookings
+  5) e2e/core/e5-core.spec.ts:1161:5 › T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 blocks a ring, never over bookings 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:440:3)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:1165:18
+
+    Error: page.waitForResponse: Test ended.
+
+      437 |   // The app refreshes once it lands; a navigation that aborted that call would leave the browser
+      438 |   // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E4 do.
+    > 439 |   const routeRefresh = page.waitForResponse(isRefresh);
+          |                             ^
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+      442 |   expect((await routeRefresh).status()).toBe(200);
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:439:29)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at /work/e2e/core/e5-core.spec.ts:1165:18
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:01.649Z grant_type=refresh_token status=400 cookie=none test="T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 blocks a ring, never over bookings" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:01.712Z grant_type=password status=429 cookie=none test="T-09-40 ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-09-40-e-·-08-cou-e425c--a-ring-never-over-bookings/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-09-40-e-·-08-cou-e425c--a-ring-never-over-bookings/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-09-40-e-·-08-cou-e425c--a-ring-never-over-bookings/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/9] e2e/core/e5-core.spec.ts:1365:5 › T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run
+  6) e2e/core/e5-core.spec.ts:1365:5 › T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginAdmin (/work/e2e/core/e5-core.spec.ts:422:3)
+        at adminSession (/work/e2e/core/e5-core.spec.ts:464:3)
+        at /work/e2e/core/e5-core.spec.ts:1369:17
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:02.380Z grant_type=refresh_token status=400 cookie=none test="T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:02.495Z grant_type=password status=429 cookie=none test="T-15-...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-T-15-32-T-15-33-f--e994e-D1-reports-it-P9-by-its-run/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-T-15-32-T-15-33-f--e994e-D1-reports-it-P9-by-its-run/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-T-15-32-T-15-33-f--e994e-D1-reports-it-P9-by-its-run/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/9] e2e/core/e5-core.spec.ts:1442:5 › E5-W04 (h) · cleanup: every booking, entry, training booking and block the run created is cancelled
+  7) e2e/core/e5-core.spec.ts:1442:5 › E5-W04 (h) · cleanup: every booking, entry, training booking and block the run created is cancelled 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 429
+
+      360 |     noWaitAfter: true,
+      361 |   });
+    > 362 |   expect((await tokenResponse).status()).toBe(200);
+          |                                          ^
+      363 |   await expect.poll(() => meStatuses.at(-1)).toBe(200);
+      364 | }
+      365 |
+        at submitPasswordLogin (/work/e2e/core/e5-core.spec.ts:362:42)
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:440:3)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at cancelBooking (/work/e2e/core/e5-core.spec.ts:1451:21)
+        at /work/e2e/core/e5-core.spec.ts:1463:36
+
+    Error: page.waitForResponse: Test ended.
+
+      437 |   // The app refreshes once it lands; a navigation that aborted that call would leave the browser
+      438 |   // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E4 do.
+    > 439 |   const routeRefresh = page.waitForResponse(isRefresh);
+          |                             ^
+      440 |   await submitPasswordLogin(page);
+      441 |   await page.waitForURL(`**${landing}`);
+      442 |   expect((await routeRefresh).status()).toBe(200);
+        at loginClubs (/work/e2e/core/e5-core.spec.ts:439:29)
+        at clubsSession (/work/e2e/core/e5-core.spec.ts:455:3)
+        at cancelBooking (/work/e2e/core/e5-core.spec.ts:1451:21)
+        at /work/e2e/core/e5-core.spec.ts:1463:36
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:03.107Z grant_type=refresh_token status=400 cookie=none test="E5-W04 (h) · cleanup: every booking, entry, training booking and block the run created is cancelled" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:03.180Z grant_type=password status=429 cookie=none test="E5-W04 (h) · c...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-E5-W04-h-·-cleanup-81b1f-he-run-created-is-cancelled/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-E5-W04-h-·-cleanup-81b1f-he-run-created-is-cancelled/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-E5-W04-h-·-cleanup-81b1f-he-run-created-is-cancelled/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/9] e2e/core/e5-core.spec.ts:1487:5 › R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before Sunday 20:00, BOOKABLE after week-opening
+  8) e2e/core/e5-core.spec.ts:1487:5 › R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before Sunday 20:00, BOOKABLE after week-opening 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 409
+    Received: 422
+
+      1506 |   await classRow(member.page, row.id).getByRole("button").click();
+      1507 |   const refusal = await refused;
+    > 1508 |   expect(refusal.status()).toBe(409);
+           |                            ^
+      1509 |   expect(((await refusal.json()) as ApiProblem).code).toBe("NOT_YET_OPEN");
+      1510 |   await expect(
+      1511 |     member.page.getByText(/^Disponible a partir de diumenge .+ a les 20 h\.$/u),
+        at /work/e2e/core/e5-core.spec.ts:1508:28
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-09-27T12:26:03.775Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before Sunday 20:00, BOOKABLE after week-opening" body={"code":"REFRESH_EXPIRED"}
+    2026-09-27T12:26:04.063Z grant_type=refresh_token status=400 cookie=none...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-R-15-11-f-·-P1-wit-80495-BOOKABLE-after-week-opening/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-R-15-11-f-·-P1-wit-80495-BOOKABLE-after-week-opening/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-R-15-11-f-·-P1-wit-80495-BOOKABLE-after-week-opening/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  8 failed
+    e2e/core/e5-core.spec.ts:782:5 › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation 
+    e2e/core/e5-core.spec.ts:884:5 › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29 
+    e2e/core/e5-core.spec.ts:988:5 › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim 
+    e2e/core/e5-core.spec.ts:1096:5 › T-08-40 (g) · the same flows in es: a booking inside the hold, and a waiting entry claimed 
+    e2e/core/e5-core.spec.ts:1161:5 › T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 blocks a ring, never over bookings 
+    e2e/core/e5-core.spec.ts:1365:5 › T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run 
+    e2e/core/e5-core.spec.ts:1442:5 › E5-W04 (h) · cleanup: every booking, entry, training booking and block the run created is cancelled 
+    e2e/core/e5-core.spec.ts:1487:5 › R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before Sunday 20:00, BOOKABLE after week-opening 
+  1 passed (20.0s)
+
+ ELIFECYCLE  Command failed with exit code 1.

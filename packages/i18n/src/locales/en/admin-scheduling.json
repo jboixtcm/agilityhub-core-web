@@ -245,5 +245,23 @@
     "confirmWaitlist": "CANCEL AND NOTIFY THE WAITING LIST",
     "simpleCancel": "Cancel the class?",
     "simpleDelete": "Delete the class?"
+  },
+  "registrants": {
+    "title": "Booked ({booked}/{capacity})",
+    "empty": "Nobody has booked yet.",
+    "loading": "Loading the bookings…",
+    "loadError": "The bookings could not be loaded.",
+    "retry": "Try again",
+    "name": "{member} + {dog}",
+    "position": "{position}. {name}",
+    "waiting": "Waiting: {names}",
+    "remove": "Remove from the list",
+    "removeLabel": "Remove {name} from the waiting list",
+    "removeConfirm": {
+      "title": "Remove from the waiting list",
+      "text": "{name} will no longer wait for this class.",
+      "confirm": "Remove from the list",
+      "cancel": "Cancel"
+    }
   }
 }

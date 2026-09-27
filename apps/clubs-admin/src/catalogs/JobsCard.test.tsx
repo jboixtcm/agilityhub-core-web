@@ -1,0 +1,435 @@
+import { createApiClient } from "@agilityhub/api-client";
+import {
+  JOBS_MOCK_NOW,
+  mockScenario,
+  type MockScenario,
+  resetBackofficeMockState,
+  resetSettingsState,
+} from "@agilityhub/api-client/mocks";
+import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
+import { server } from "@agilityhub/api-client/mocks/server";
+import { createI18n } from "@agilityhub/i18n";
+import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { I18nextProvider } from "react-i18next";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+
+import dashboardCa from "../../../../packages/i18n/src/locales/ca/admin-dashboard.json";
+import settingsCa from "../../../../packages/i18n/src/locales/ca/admin-settings.json";
+import dashboardEn from "../../../../packages/i18n/src/locales/en/admin-dashboard.json";
+import settingsEn from "../../../../packages/i18n/src/locales/en/admin-settings.json";
+import dashboardEs from "../../../../packages/i18n/src/locales/es/admin-dashboard.json";
+import settingsEs from "../../../../packages/i18n/src/locales/es/admin-settings.json";
+
+import { JobsCard } from "./JobsCard";
+
+const branding: Branding = {
+  ...brandingCanicFixture,
+  locales: ["ca", "es", "en"],
+  theme: { ...brandingCanicFixture.theme, mode: "dark" },
+};
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+});
+// Monday 10 August 2026 at 8:12 in the club, after the 7:30 review.
+beforeEach(() => {
+  vi.useFakeTimers({ now: new Date(JOBS_MOCK_NOW), shouldAdvanceTime: true, toFake: ["Date"] });
+  resetBackofficeMockState();
+  resetSettingsState();
+});
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  server.events.removeAllListeners();
+  vi.useRealTimers();
+  mockScenario("admin");
+});
+afterAll(() => {
+  server.close();
+});
+
+function recordRequests(): { body: unknown; method: string; url: URL }[] {
+  const requests: { body: unknown; method: string; url: URL }[] = [];
+  server.events.on("request:start", ({ request }) => {
+    const entry = { body: undefined as unknown, method: request.method, url: new URL(request.url) };
+    requests.push(entry);
+    if (request.method !== "GET") {
+      void request
+        .clone()
+        .json()
+        .then((body: unknown) => {
+          entry.body = body;
+        });
+    }
+  });
+  return requests;
+}
+
+async function renderCard(scenario: MockScenario = "jobsFullClub", language = "ca") {
+  mockScenario(scenario);
+  const i18n = await createI18n({
+    branding,
+    browserLanguages: [language],
+    initialNamespaces: ["admin-settings", "enums", "errors"],
+    storage: undefined,
+  });
+  render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <JobsCard client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+  return screen.findByRole("region", {
+    name:
+      language === "ca"
+        ? "Processos automàtics"
+        : language === "es"
+          ? "Procesos automáticos"
+          : "Automated processes",
+  });
+}
+
+function rowOf(card: HTMLElement, name: string): HTMLElement {
+  const row = within(card).getByText(name).closest("li");
+  if (row === null) throw new TypeError(`No row ${name}`);
+  return row;
+}
+
+describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09)", () => {
+  it("lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run", async () => {
+    const card = await renderCard();
+    await within(card).findByText("Revisió de classes en risc");
+    expect(within(card).getAllByRole("listitem")).toHaveLength(10);
+    const risk = rowOf(card, "Revisió de classes en risc");
+    expect(within(risk).getByText("cada dia a les 7:30")).toBeVisible();
+    expect(
+      within(risk).getByRole("button", {
+        name: "fa 42 min · correcta · 1 en risc · 2 anul·lades · 1 sense inscrits · 1 alumne avisat · 4 classes revisades",
+      }),
+    ).toBeVisible();
+    expect(
+      within(rowOf(card, "Obertura de la setmana")).getByText("diumenge a les 20:00"),
+    ).toBeVisible();
+    expect(within(rowOf(card, "Recordatoris")).getByText("continu")).toBeVisible();
+    expect(
+      within(rowOf(card, "Recordatori de facturació")).getByText("el dia 22 a les 6:00"),
+    ).toBeVisible();
+    expect(
+      within(rowOf(card, "Llista d'espera (FIFO)")).getByRole("button", { name: /omesa/u }),
+    ).toBeVisible();
+
+    cleanup();
+    const minimal = await renderCard("jobsMinimalClub");
+    await within(minimal).findByText("Llista d'espera (FIFO)");
+    expect(within(minimal).getAllByRole("listitem")).toHaveLength(8);
+    expect(within(minimal).queryByText("Temps de pagament exhaurit")).toBeNull();
+    expect(within(minimal).queryByText("Recordatori de facturació")).toBeNull();
+  });
+
+  it("paints a failed last run in the danger tone", async () => {
+    const card = await renderCard();
+    const failed = within(await waitForRow(card, "Avisos de no presentat")).getByRole("button", {
+      name: /fallida/u,
+    });
+    expect(failed).toHaveClass("jobs-card__last--failed");
+    expect(
+      within(rowOf(card, "Caducitats")).getByRole("button", { name: /parcial/u }),
+    ).not.toHaveClass("jobs-card__last--failed");
+  });
+
+  it("R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula])", async () => {
+    const card = await renderCard();
+    const off = await waitForRow(card, "Recordatori de facturació");
+    expect(off).toHaveClass("jobs-card__row--off");
+    expect(
+      within(off).getByRole("switch", { name: "Recordatori de facturació activat" }),
+    ).toHaveAttribute("aria-checked", "false");
+    expect(
+      within(off).getByRole("button", { name: "Executa ara Recordatori de facturació" }),
+    ).toBeEnabled();
+    expect(
+      within(off).getByRole("button", { name: "Simula Recordatori de facturació" }),
+    ).toBeEnabled();
+  });
+
+  it("asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation", async () => {
+    const requests = recordRequests();
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    fireEvent.click(
+      within(risk).getByRole("switch", { name: "Revisió de classes en risc activat" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Desactivar «Revisió de classes en risc»",
+    });
+    expect(
+      within(dialog).getByText(
+        "Els efectes d'aquest procés deixaran d'aplicar-se fins que el tornis a activar.",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(requests.some((request) => request.method === "PUT")).toBe(false);
+
+    fireEvent.click(
+      within(risk).getByRole("switch", { name: "Revisió de classes en risc activat" }),
+    );
+    fireEvent.click(
+      within(await screen.findByRole("dialog")).getByRole("button", { name: "Desactiva" }),
+    );
+    await waitFor(() => {
+      expect(rowOf(card, "Revisió de classes en risc")).toHaveClass("jobs-card__row--off");
+    });
+    const put = requests.find((request) => request.method === "PUT");
+    expect(put?.url.pathname).toBe("/api/v1/jobs/risk-review/switch");
+    expect(put?.body).toEqual({ enabled: false });
+
+    // Turning it on again asks nothing.
+    fireEvent.click(within(rowOf(card, "Revisió de classes en risc")).getByRole("switch"));
+    await waitFor(() => {
+      expect(rowOf(card, "Revisió de classes en risc")).not.toHaveClass("jobs-card__row--off");
+    });
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied", async () => {
+    const requests = recordRequests();
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Revisió de classes en risc")).getByRole("button", {
+        name: "Simula Revisió de classes en risc",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Simulació: què faria ara · Revisió de classes en risc",
+    });
+    expect(within(dialog).getByText("Simulació: no s'ha aplicat cap canvi.")).toBeVisible();
+    expect(
+      within(dialog)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "ClassSession 41000000-0000-4000-8000-000000000005 · WOULD_CANCEL",
+      "ClassSession 41000000-0000-4000-8000-000000000004 · WOULD_NOTIFY",
+    ]);
+    expect(
+      within(dialog).getByText(/1 en risc · 1 anul·lada · 3 classes revisades/u),
+    ).toBeVisible();
+    const trigger = requests.find((request) => request.method === "POST");
+    expect(trigger?.url.pathname).toBe("/api/v1/jobs/risk-review/trigger");
+    expect(trigger?.body).toEqual({ dryRun: true });
+  });
+
+  it("R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again", async () => {
+    const requests = recordRequests();
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Revisió de classes en risc")).getByRole("button", {
+        name: "Executa ara Revisió de classes en risc",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(
+      await within(card).findByText(
+        "Revisió de classes en risc: correcta · 1 en risc · 1 anul·lada · 3 classes revisades",
+      ),
+    ).toBeVisible();
+    expect(requests.find((request) => request.method === "POST")?.body).toEqual({ dryRun: false });
+    await waitFor(() => {
+      expect(
+        requests.filter(
+          (request) => request.method === "GET" && request.url.pathname === "/api/v1/jobs",
+        ),
+      ).toHaveLength(2);
+    });
+  });
+
+  it("keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it", async () => {
+    const keys: string[] = [];
+    server.use(
+      http.post("*/api/v1/jobs/:name/trigger", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key") ?? "");
+        // The first [Executa ara] never gets its answer back (the network drops it).
+        return keys.length === 1 ? HttpResponse.error() : undefined;
+      }),
+    );
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    fireEvent.click(
+      within(risk).getByRole("button", { name: "Executa ara Revisió de classes en risc" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(await within(dialog).findByRole("alert")).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(
+      await within(card).findByText(
+        "Revisió de classes en risc: correcta · 1 en risc · 1 anul·lada · 3 classes revisades",
+      ),
+    ).toBeVisible();
+    // A different payload ([Simula]) takes its own key.
+    fireEvent.click(
+      within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" }),
+    );
+    await screen.findByRole("dialog", { name: /^Simulació: què faria ara/u });
+    expect(keys).toHaveLength(3);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+    expect(keys.every((key) => /^[0-9a-f-]{36}$/u.test(key))).toBe(true);
+  });
+
+  it("409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again", async () => {
+    const requests = recordRequests();
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Tancament de classes")).getByRole("button", {
+        name: "Executa ara Tancament de classes",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Aquesta tasca programada ja s'està executant.",
+    );
+    await waitFor(() => {
+      expect(requests.filter((request) => request.url.pathname === "/api/v1/jobs")).toHaveLength(2);
+    });
+  });
+
+  it.each([404, 422])(
+    "JOB_UNKNOWN (%i: S15 writes 404, rule 0 implies 422) shows its message and reads the list again",
+    async (status) => {
+      const requests = recordRequests();
+      server.use(
+        http.post("*/api/v1/jobs/:name/trigger", () =>
+          HttpResponse.json(
+            { code: "JOB_UNKNOWN", details: {}, message: "Unknown process", traceId: "t" },
+            { status },
+          ),
+        ),
+      );
+      const card = await renderCard();
+      fireEvent.click(
+        within(await waitForRow(card, "Neteja tècnica")).getByRole("button", {
+          name: "Simula Neteja tècnica",
+        }),
+      );
+      expect(await within(card).findByText("No es reconeix la tasca programada.")).toBeVisible();
+      await waitFor(() => {
+        expect(requests.filter((request) => request.url.pathname === "/api/v1/jobs")).toHaveLength(
+          2,
+        );
+      });
+    },
+  );
+
+  it("opens a process's run history and a run's sheet (effects and errors)", async () => {
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Avisos de no presentat")).getByRole("button", {
+        name: /fallida/u,
+      }),
+    );
+    const drawer = await screen.findByRole("dialog", {
+      name: "Execucions · Avisos de no presentat",
+    });
+    const table = await within(drawer).findByRole("table", { name: "Darreres execucions" });
+    expect(within(table).getAllByRole("row")).toHaveLength(1 + 3);
+    fireEvent.click(within(table).getByRole("button", { name: "09/08/2026 21:00" }));
+    const sheet = await within(drawer).findByRole("region", { name: "Fitxa de l'execució" });
+    expect(
+      await within(sheet).findByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
+  });
+
+  it("R-15-09 an impersonation token cannot manage the processes: the card says why and lists none", async () => {
+    const card = await renderCard("impersonated");
+    expect(
+      await within(card).findByText(
+        "Els processos automàtics no es poden gestionar mentre actues com un abonat.",
+      ),
+    ).toBeVisible();
+    expect(within(card).queryAllByRole("listitem")).toHaveLength(0);
+  });
+});
+
+describe("T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en", () => {
+  function keys(value: unknown, prefix = ""): string[] {
+    if (typeof value !== "object" || value === null) return [prefix];
+    return Object.entries(value).flatMap(([key, child]) =>
+      keys(child, prefix === "" ? key : `${prefix}.${key}`),
+    );
+  }
+  function values(value: unknown): string[] {
+    if (typeof value === "string") return [value];
+    return typeof value === "object" && value !== null ? Object.values(value).flatMap(values) : [];
+  }
+
+  it("has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden", () => {
+    const groups = [
+      [settingsCa.jobs, settingsEs.jobs, settingsEn.jobs],
+      [dashboardCa.risk, dashboardEs.risk, dashboardEn.risk],
+    ] as const;
+    for (const [ca, es, en] of groups) {
+      expect(keys(es).sort()).toEqual(keys(ca).sort());
+      expect(keys(en).sort()).toEqual(keys(ca).sort());
+      for (const text of [...values(ca), ...values(es), ...values(en)]) {
+        expect(text.trim()).not.toBe("");
+        expect(text).not.toMatch(
+          /\bparell(?:a|es)?\b|\bamigable\b|\(paràmetre\)|\bF\d+\b|\bRF-|\bBR-/iu,
+        );
+      }
+    }
+    // One name per R-15-01 process.
+    expect(Object.keys(settingsCa.jobs.name).sort()).toEqual([
+      "BILLING_REMINDER",
+      "CLASS_FINISHING",
+      "CLEANUP",
+      "EXPIRATIONS",
+      "NO_SHOW_NOTICES",
+      "PAYMENT_TIMEOUTS",
+      "REMINDERS",
+      "RISK_REVIEW",
+      "WAITLIST_FIFO",
+      "WEEK_OPENING",
+    ]);
+  });
+
+  it.each([
+    ["es", "Revisión de clases en riesgo", "cada día a las 7:30"],
+    ["en", "At-risk class review", "every day at 7:30"],
+  ])("renders the card in %s", async (language, name, cadence) => {
+    const card = await renderCard("jobsFullClub", language);
+    const row = await waitForRow(card, name);
+    expect(within(row).getByText(cadence)).toBeVisible();
+  });
+
+  it("shows the cadence in club-local time whatever the device's time zone", async () => {
+    const deviceZone = process.env.TZ;
+    process.env.TZ = "America/Bogota";
+    try {
+      const card = await renderCard();
+      const risk = await waitForRow(card, "Revisió de classes en risc");
+      expect(within(risk).getByText("cada dia a les 7:30")).toBeVisible();
+      expect(
+        within(rowOf(card, "Obertura de la setmana")).getByText("diumenge a les 20:00"),
+      ).toBeVisible();
+    } finally {
+      process.env.TZ = deviceZone;
+    }
+  });
+});
+
+async function waitForRow(card: HTMLElement, name: string): Promise<HTMLElement> {
+  await within(card).findByText(name);
+  return rowOf(card, name);
+}

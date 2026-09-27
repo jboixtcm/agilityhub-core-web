@@ -1,6 +1,5 @@
 {
   "blocks": {
-    "automatedProcesses": "Processos automàtics",
     "billing": "Quotes, packs i remesa",
     "classes": "Classes",
     "club": "Club i pistes",
@@ -735,5 +734,77 @@
     "todayPlusDays": "dia en curs + {count} dies",
     "weekOpensAt": "{day} {time}",
     "yes": "Sí"
+  },
+  "jobs": {
+    "title": "Processos automàtics",
+    "name": {
+      "WEEK_OPENING": "Obertura de la setmana",
+      "RISK_REVIEW": "Revisió de classes en risc",
+      "NO_SHOW_NOTICES": "Avisos de no presentat",
+      "REMINDERS": "Recordatoris",
+      "EXPIRATIONS": "Caducitats",
+      "WAITLIST_FIFO": "Llista d'espera (FIFO)",
+      "PAYMENT_TIMEOUTS": "Temps de pagament exhaurit",
+      "CLASS_FINISHING": "Tancament de classes",
+      "CLEANUP": "Neteja tècnica",
+      "BILLING_REMINDER": "Recordatori de facturació"
+    },
+    "cadence": {
+      "DAILY": "cada dia a les {time}",
+      "WEEKLY": "{day} a les {time}",
+      "MONTHLY": "el dia {day} a les {time}",
+      "CONTINUOUS": "continu"
+    },
+    "lastRun": {
+      "never": "encara no s'ha executat"
+    },
+    "counter": {
+      "reviewed": "{count, plural, one {# classe revisada} other {# classes revisades}}",
+      "cancelled": "{count, plural, one {# anul·lada} other {# anul·lades}}",
+      "cancelledSilent": "{count, plural, one {# sense inscrits} other {# sense inscrits}}",
+      "atRisk": "{count, plural, one {# en risc} other {# en risc}}",
+      "notifiedMembers": "{count, plural, one {# alumne avisat} other {# alumnes avisats}}",
+      "exempt": "{count, plural, one {# exempta} other {# exemptes}}",
+      "skippedStarted": "{count, plural, one {# ja començada} other {# ja començades}}",
+      "activeClasses": "{count, plural, one {# classe activa} other {# classes actives}}",
+      "notified": "{count, plural, one {# avís enviat} other {# avisos enviats}}",
+      "notices": "{count, plural, one {# avís} other {# avisos}}",
+      "late": "{count, plural, one {# amb retard} other {# amb retard}}",
+      "classReminders": "{count, plural, one {# recordatori de classe} other {# recordatoris de classe}}",
+      "trainingReminders": "{count, plural, one {# recordatori d'entrenament} other {# recordatoris d'entrenament}}"
+    },
+    "counterRaw": "{key}: {count}",
+    "switchLabel": "{name} activat",
+    "dryRun": "Simula",
+    "dryRunLabel": "Simula {name}",
+    "run": "Executa ara",
+    "runLabel": "Executa ara {name}",
+    "running": "S'està executant…",
+    "disable": "Desactiva",
+    "disableTitle": "Desactivar «{name}»",
+    "disableConfirm": "Els efectes d'aquest procés deixaran d'aplicar-se fins que el tornis a activar.",
+    "runTitle": "Executar «{name}» ara",
+    "runConfirm": "El procés s'executarà ara, encara que estigui desactivat, i en quedarà constància a l'auditoria.",
+    "cancel": "Cancel·la",
+    "dryRunTitle": "Simulació: què faria ara · {name}",
+    "dryRunNote": "Simulació: no s'ha aplicat cap canvi.",
+    "dryRunTag": "simulació",
+    "noItems": "No hi ha res a fer.",
+    "item": "{entityType} {entityId} · {action}",
+    "runDone": "{name}: {summary}",
+    "retry": "Torna-ho a provar",
+    "none": "—",
+    "impersonationNote": "Els processos automàtics no es poden gestionar mentre actues com un abonat.",
+    "runs": {
+      "title": "Execucions · {name}",
+      "caption": "Darreres execucions",
+      "when": "Ocurrència",
+      "trigger": "Origen",
+      "status": "Resultat",
+      "effects": "Efectes",
+      "errors": "Errors",
+      "empty": "Encara no hi ha execucions.",
+      "detail": "Fitxa de l'execució"
+    }
   }
 }

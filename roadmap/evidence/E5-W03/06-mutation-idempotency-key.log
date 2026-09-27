@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (16 tests | 1 failed | 15 skipped) 151ms
+   ❯ T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) (12)
+     × keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it 149ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it
+AssertionError: expected '6a30961a-d905-4a31-8d88-6a39f0b389bb' to be 'bbb2e3e0-df4b-443e-8e2e-c997e2a8f09e' // Object.is equality
+
+Expected: "bbb2e3e0-df4b-443e-8e2e-c997e2a8f09e"
+Received: "6a30961a-d905-4a31-8d88-6a39f0b389bb"
+
+ ❯ src/catalogs/JobsCard.test.tsx:283:21
+    281|     await screen.findByRole("dialog", { name: /^Simulació: què faria a…
+    282|     expect(keys).toHaveLength(3);
+    283|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    284|     expect(keys[2]).not.toBe(keys[0]);
+    285|     expect(keys.every((key) => /^[0-9a-f-]{36}$/u.test(key))).toBe(tru…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  13:40:07
+   Duration  898ms (transform 33%, environment 27%, tests 18%, import 16%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCard.test.tsx -t Idempotency-Key

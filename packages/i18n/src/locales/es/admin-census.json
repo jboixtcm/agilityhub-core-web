@@ -380,5 +380,25 @@
     "no": "No",
     "other": "otro",
     "yes": "Sí"
+  },
+  "bookings": {
+    "title": "Reservas",
+    "actAsMember": "Para reservar o anular en su nombre, usa «Entra como el abonado».",
+    "classes": "Clases",
+    "trainings": "Entrenamientos",
+    "columns": {
+      "when": "Día y hora",
+      "ring": "Pista",
+      "dog": "Perro",
+      "state": "Estado",
+      "origin": "Origen"
+    },
+    "when": "{day} · {time}",
+    "noClasses": "Ninguna reserva de clase.",
+    "noTrainings": "Ninguna reserva de entrenamiento.",
+    "seeAll": "Verlas todas ›",
+    "loading": "Cargando las reservas…",
+    "error": "No se han podido cargar las reservas.",
+    "retry": "Vuelve a intentarlo"
   }
 }

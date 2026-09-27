@@ -1,0 +1,60 @@
+{
+  "title": "Entrenamientos",
+  "tab": {
+    "label": "Registro de uso de pistas",
+    "bookings": "Reservas de entrenamiento",
+    "blocks": "Bloqueos y reservas de pista"
+  },
+  "list": {
+    "when": "{day} · {time}",
+    "none": "—",
+    "error": "No se ha podido cargar el listado.",
+    "emptyDescription": "Cambia los filtros o la búsqueda para ver más.",
+    "dismiss": "Cierra el aviso"
+  },
+  "bookings": {
+    "caption": "Reservas de entrenamiento",
+    "search": "Busca por abonado, perro o pista",
+    "emptyTitle": "Ninguna reserva de entrenamiento",
+    "selectRow": "Reserva de {name}",
+    "statusLabel": "Estado de la reserva",
+    "statuses": {
+      "all": "Todas"
+    },
+    "columns": {
+      "date": "Día y hora",
+      "ring": "Pista",
+      "member": "Abonado",
+      "dog": "Perro",
+      "state": "Estado",
+      "origin": "Origen",
+      "createdAt": "Reservada el"
+    }
+  },
+  "blocks": {
+    "caption": "Bloqueos y reservas de pista",
+    "search": "Busca por nota o por quién lo creó",
+    "emptyTitle": "Ningún bloqueo ni reserva de pista",
+    "selectRow": "Bloqueo de {when}",
+    "statusLabel": "Estado del bloqueo",
+    "statuses": {
+      "all": "Todos"
+    },
+    "when": "{day} · {from}–{to}",
+    "activityReason": "{reason} · {title}",
+    "cancel": "Anula el bloqueo",
+    "cancelLabel": "Anula el bloqueo de {when}",
+    "cancelling": "Anulando el bloqueo…",
+    "cancelled": "Bloqueo anulado.",
+    "columns": {
+      "from": "Día y hora",
+      "ring": "Pista",
+      "kind": "Tipo",
+      "reason": "Motivo",
+      "note": "Nota",
+      "createdBy": "Creado por",
+      "state": "Estado",
+      "actions": "Acciones"
+    }
+  }
+}

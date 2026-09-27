@@ -1,5 +1,6 @@
 import { useClubFormats } from "@agilityhub/i18n";
 import { Badge, Card, Icon, useBranding } from "@agilityhub/ui";
+import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 
 import { localParts, type ReservationRowData } from "./shared";
@@ -68,6 +69,14 @@ export function ReservationRow({ row, showDog }: { row: ReservationRowData; show
   const content = (
     <>
       <span className="reservation-row__line">
+        {/* The ring's colour, as the api sends it (api E5-T25; `null` on activity rows). */}
+        {row.ringColor === null || row.ringColor === undefined ? null : (
+          <span
+            aria-hidden="true"
+            className="reservation-row__dot"
+            style={{ "--class-row-ring": row.ringColor } as CSSProperties}
+          />
+        )}
         <strong className="reservation-row__title">{title}</strong>
         <Badge className="reservation-row__badge" tone={tone}>
           {t(`enums:reservationState.${row.state}`)}

@@ -121,11 +121,14 @@ function activityRows(locale: string, now: number): ReservationRow[] {
     const summary = registrationResource(registration, activity, locale).activity;
     return [
       {
+        // api E5-T25: the registration's activity; no ring colour on an activity row.
+        activityId: registration.activityId,
         dogId: null,
         dogName: null,
         endsAtLocal: summary.endsAtLocal,
         // S07 §4 `liveRegistrationsFor`: the row id is the registration's.
         id: registration.id,
+        ringColor: null,
         ringName: summary.placeLabel,
         startsAt: localInstant(summary.startsAtLocal),
         startsAtLocal: summary.startsAtLocal,

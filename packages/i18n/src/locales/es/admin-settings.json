@@ -1,6 +1,5 @@
 {
   "blocks": {
-    "automatedProcesses": "Procesos automáticos",
     "billing": "Cuotas, bonos y remesa",
     "classes": "Clases",
     "club": "Club y pistas",
@@ -735,5 +734,77 @@
     "todayPlusDays": "día actual + {count} días",
     "weekOpensAt": "{day} {time}",
     "yes": "Sí"
+  },
+  "jobs": {
+    "title": "Procesos automáticos",
+    "name": {
+      "WEEK_OPENING": "Apertura de la semana",
+      "RISK_REVIEW": "Revisión de clases en riesgo",
+      "NO_SHOW_NOTICES": "Avisos de no presentado",
+      "REMINDERS": "Recordatorios",
+      "EXPIRATIONS": "Caducidades",
+      "WAITLIST_FIFO": "Lista de espera (FIFO)",
+      "PAYMENT_TIMEOUTS": "Tiempo de pago agotado",
+      "CLASS_FINISHING": "Cierre de clases",
+      "CLEANUP": "Limpieza técnica",
+      "BILLING_REMINDER": "Recordatorio de facturación"
+    },
+    "cadence": {
+      "DAILY": "cada día a las {time}",
+      "WEEKLY": "{day} a las {time}",
+      "MONTHLY": "el día {day} a las {time}",
+      "CONTINUOUS": "continuo"
+    },
+    "lastRun": {
+      "never": "todavía no se ha ejecutado"
+    },
+    "counter": {
+      "reviewed": "{count, plural, one {# clase revisada} other {# clases revisadas}}",
+      "cancelled": "{count, plural, one {# anulada} other {# anuladas}}",
+      "cancelledSilent": "{count, plural, one {# sin inscritos} other {# sin inscritos}}",
+      "atRisk": "{count, plural, one {# en riesgo} other {# en riesgo}}",
+      "notifiedMembers": "{count, plural, one {# alumno avisado} other {# alumnos avisados}}",
+      "exempt": "{count, plural, one {# exenta} other {# exentas}}",
+      "skippedStarted": "{count, plural, one {# ya empezada} other {# ya empezadas}}",
+      "activeClasses": "{count, plural, one {# clase activa} other {# clases activas}}",
+      "notified": "{count, plural, one {# aviso enviado} other {# avisos enviados}}",
+      "notices": "{count, plural, one {# aviso} other {# avisos}}",
+      "late": "{count, plural, one {# con retraso} other {# con retraso}}",
+      "classReminders": "{count, plural, one {# recordatorio de clase} other {# recordatorios de clase}}",
+      "trainingReminders": "{count, plural, one {# recordatorio de entrenamiento} other {# recordatorios de entrenamiento}}"
+    },
+    "counterRaw": "{key}: {count}",
+    "switchLabel": "{name} activado",
+    "dryRun": "Simula",
+    "dryRunLabel": "Simula {name}",
+    "run": "Ejecuta ahora",
+    "runLabel": "Ejecuta ahora {name}",
+    "running": "Ejecutándose…",
+    "disable": "Desactiva",
+    "disableTitle": "Desactivar «{name}»",
+    "disableConfirm": "Los efectos de este proceso dejarán de aplicarse hasta que lo vuelvas a activar.",
+    "runTitle": "Ejecutar «{name}» ahora",
+    "runConfirm": "El proceso se ejecutará ahora, aunque esté desactivado, y quedará constancia en la auditoría.",
+    "cancel": "Cancela",
+    "dryRunTitle": "Simulación: qué haría ahora · {name}",
+    "dryRunNote": "Simulación: no se ha aplicado ningún cambio.",
+    "dryRunTag": "simulación",
+    "noItems": "No hay nada que hacer.",
+    "item": "{entityType} {entityId} · {action}",
+    "runDone": "{name}: {summary}",
+    "retry": "Vuelve a intentarlo",
+    "none": "—",
+    "impersonationNote": "Los procesos automáticos no se pueden gestionar mientras actúas como un abonado.",
+    "runs": {
+      "title": "Ejecuciones · {name}",
+      "caption": "Últimas ejecuciones",
+      "when": "Ocurrencia",
+      "trigger": "Origen",
+      "status": "Resultado",
+      "effects": "Efectos",
+      "errors": "Errores",
+      "empty": "Todavía no hay ejecuciones.",
+      "detail": "Ficha de la ejecución"
+    }
   }
 }

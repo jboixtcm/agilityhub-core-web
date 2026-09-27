@@ -1,0 +1,22 @@
+{
+  "runId": "jt8t60",
+  "weekStart": "2026-09-21",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "body": {
+      "saturdayTemplateId": "fe4422f8-3ed7-427b-9870-b97dd2029d80",
+      "weekdayTemplateId": "c030ca41-5bc7-4ff6-87e6-7cd82b78ce76"
+    },
+    "status": 200,
+    "weekId": "f38d8abe-0227-40be-9540-8d2e59ff6b79",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-12"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ]
+}

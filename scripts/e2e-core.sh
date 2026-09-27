@@ -28,6 +28,19 @@ if ! club_monday="$(date -j -v-"${days_since_monday}"d -f %F "$club_today" +%F 2
 fi
 export E4_WEEK_START="${E4_WEEK_START:-$club_monday}"
 echo "E4_WEEK_START=$E4_WEEK_START (club-local Monday, Europe/Madrid)"
+# E5-W04: the E5 scenario of the demo seed (api E5-T06, `scenario:` of `demo-canic.yaml`) lives on
+# week 0 and needs every day of it ahead: `seed:demo` applies it only when `--week-start` is the
+# run's club-local Monday or later. So the E5 stage seeds from the next Monday (a week ahead on a
+# Monday): its spec sets the core's test clock to the scenario's `demoNow` (Monday 07:00 of that
+# week), always ahead of the browsers' own clock, which the run never fakes.
+days_to_monday="$(( 8 - $(TZ=Europe/Madrid date +%u) ))"
+if ! next_monday="$(date -j -v+"${days_to_monday}"d -f %F "$club_today" +%F 2>/dev/null)"; then
+  next_monday="$(date -d "$club_today + $days_to_monday days" +%F)"
+fi
+export E5_WEEK_START="${E5_WEEK_START:-$next_monday}"
+echo "E5_WEEK_START=$E5_WEEK_START (the club-local Monday after today, Europe/Madrid)"
+# The seed's `--week-start` of a stage (`docker-compose.yml`): E4's Monday unless a stage says so.
+export SEED_WEEK_START="$E4_WEEK_START"
 
 mkdir -p "$evidence_directory"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
@@ -109,8 +122,16 @@ if [[ "$staged" == true ]]; then
   cleanup
   export CORE_TEST_FILES="e4-core.spec.ts"
   run_core_suite e4 || status=$?
+  cleanup
+  # E5-W04: bookings, waitlist, training and processes on their own fresh seed (they change it).
+  export CORE_TEST_FILES="e5-core.spec.ts"
+  export SEED_WEEK_START="$E5_WEEK_START"
+  run_core_suite e5 || status=$?
 else
   export CORE_TEST_FILES="$2"
+  if [[ "$2" == *e5-core* ]]; then
+    export SEED_WEEK_START="$E5_WEEK_START"
+  fi
   run_core_suite files || status=$?
 fi
 

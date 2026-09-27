@@ -27,6 +27,7 @@ import {
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import type { ClassHeading } from "./CancelClassModal";
+import { ClassRegistrantsPanel } from "./ClassRegistrantsPanel";
 import { automaticDescription } from "./description";
 import type { PlanningCatalogs } from "./shared";
 
@@ -198,6 +199,7 @@ export function SelectedClassCard({
   onCancel,
   onClose,
   onConflict,
+  onRegistrantsChanged,
   onSaved,
   openingHours,
   readOnly,
@@ -212,6 +214,8 @@ export function SelectedClassCard({
   onClose: () => void;
   /** Shows the message and refetches the calendar; resolves once the refetch settles. */
   onConflict: (message: string) => Promise<void>;
+  /** A waiting entry was removed (R-08-16): the calendar refetches its counters. */
+  onRegistrantsChanged?: () => void;
   /** Refetches the calendar; resolves once the refetch settles. */
   onSaved: (session: ClassSession) => Promise<void>;
   /** `undefined` while `club.openingHours` is unknown (loading, failed, or a read-only page). */
@@ -587,6 +591,18 @@ export function SelectedClassCard({
           />
         </label>
       ) : null}
+
+      {/* S08 §6 (E5-W03): who is booked and who waits; a draft has no bookings. */}
+      {session.state === "DRAFT" ? null : (
+        <ClassRegistrantsPanel
+          booked={session.counters.booked}
+          capacity={session.capacity}
+          classSessionId={session.id}
+          client={client}
+          {...(onRegistrantsChanged === undefined ? {} : { onChanged: onRegistrantsChanged })}
+          readOnly={readOnly}
+        />
+      )}
 
       {error === undefined ? null : (
         <p

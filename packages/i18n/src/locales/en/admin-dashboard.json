@@ -23,16 +23,24 @@
     "alerts": "{count, plural, one {# alert} other {# alerts}}",
     "empty": "No classes at risk",
     "booked": "{count, plural, one {# booked} other {# booked}}",
-    "today": "today",
-    "tomorrow": "tomorrow",
-    "notified": "{count, plural, one {notified {names}} other {notified {names}}}",
+    "more": "+{count} more",
+    "day": {
+      "TODAY": "today",
+      "TOMORROW": "tomorrow"
+    },
+    "name": "{member} + {dog}",
     "status": {
-      "CANCELLED": "cancelled",
+      "AUTO_CANCELLED": "cancelled",
       "AT_RISK": "at risk",
       "WILL_CANCEL": "will be cancelled {day} at {time}",
-      "PENDING_DECISION": "at risk · the club will decide"
+      "WILL_REVIEW": "the club will decide"
     },
-    "more": "+{count} more"
+    "notified": {
+      "AUTO_CANCELLED": "notified {names}",
+      "AT_RISK": "notified {names}"
+    },
+    "loading": "Loading the at-risk class review…",
+    "error": "The at-risk class review could not be loaded."
   },
   "signups": {
     "title": "Pending signups",
@@ -40,7 +48,11 @@
     "validate": "VALIDATE",
     "validated": "The signup was validated.",
     "accountNotProvided": "Account not provided",
-    "payment": { "SEPA_DD": "direct debit", "CARD": "card", "MANUAL": "cash" },
+    "payment": {
+      "SEPA_DD": "direct debit",
+      "CARD": "card",
+      "MANUAL": "cash"
+    },
     "dog": "{name} {isAddDog, select, true {(new dog)} other {({breed})}}",
     "validateLabel": "VALIDATE: {name}",
     "submitted": "submitted on {date}",

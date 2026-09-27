@@ -23,16 +23,24 @@
     "alerts": "{count, plural, one {# avís} other {# avisos}}",
     "empty": "Cap classe en risc",
     "booked": "{count, plural, one {# inscrit} other {# inscrits}}",
-    "today": "avui",
-    "tomorrow": "demà",
-    "notified": "{count, plural, one {{gender, select, female {avisada} other {avisat}} {names}} other {avisats {names}}}",
+    "more": "+{count} més",
+    "day": {
+      "TODAY": "avui",
+      "TOMORROW": "demà"
+    },
+    "name": "{member} + {dog}",
     "status": {
-      "CANCELLED": "anul·lada",
+      "AUTO_CANCELLED": "anul·lada",
       "AT_RISK": "en risc",
       "WILL_CANCEL": "s'anul·larà {day} a les {time}",
-      "PENDING_DECISION": "en risc · el club decidirà"
+      "WILL_REVIEW": "el club decidirà"
     },
-    "more": "+{count} més"
+    "notified": {
+      "AUTO_CANCELLED": "avisada {names}",
+      "AT_RISK": "avisats {names}"
+    },
+    "loading": "Carregant la revisió de classes en risc…",
+    "error": "No s'ha pogut carregar la revisió de classes en risc."
   },
   "signups": {
     "title": "Preinscripcions pendents",
@@ -40,7 +48,11 @@
     "validate": "VALIDA",
     "validated": "L'alta s'ha validat.",
     "accountNotProvided": "Compte no informat",
-    "payment": { "SEPA_DD": "domiciliació", "CARD": "targeta", "MANUAL": "efectiu" },
+    "payment": {
+      "SEPA_DD": "domiciliació",
+      "CARD": "targeta",
+      "MANUAL": "efectiu"
+    },
     "dog": "{name} {isAddDog, select, true {(nou gos)} other {({breed})}}",
     "validateLabel": "VALIDA: {name}",
     "submitted": "enviada el {date}",

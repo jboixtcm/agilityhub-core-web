@@ -1,0 +1,171 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/RiskReviewCard.test.tsx (8 tests | 1 failed | 7 skipped) 84ms
+   ❯ T-15-34 the risk card in es and en, and in club-local time on a device in another zone (3)
+     × reads `reviewAt` in the club's zone (Europe/Madrid), not the device's (America/Bogota) 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > reads `reviewAt` in the club's zone (Europe/Madrid), not the device's (America/Bogota)
+TestingLibraryElementError: Unable to find an element with the text: s'anul·larà dc a les 7:30. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card dashboard-risk"[39m
+    [36m>[39m
+      [36m<header>[39m
+        [36m<h2>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m [0m
+          [0mRevisió de classes en risc — 7:30, avui i 2 dies vista[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0m4 avisos[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<article[39m
+        [33mclass[39m=[32m"dashboard-risk__row"[39m
+        [33mdata-class-id[39m=[32m"41000000-0000-4000-8000-000000000001"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/calendari?classe=41000000-0000-4000-8000-000000000001&estat=anul%C2%B7lades&setmana=2026-08-10"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mCadells[0m
+          [36m</strong>[39m
+          [0m · [0m
+          [0mavui[0m
+          [0m [0m
+          [0m9:30[0m
+          [0m · Cadells[0m
+        [36m</a>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"dashboard-risk__booked"[39m
+        [36m>[39m
+          [0m0 inscrits[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+        [36m>[39m
+          [0manul·lada[0m
+        [36m</span>[39m
+      [36m</article>[39m
+      [36m<article[39m
+        [33mclass[39m=[32m"dashboard-risk__row"[39m
+        [33mdata-class-id[39m=[32m"41000000-0000-4000-8000-000000000002"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/calendari?classe=41000000-0000-4000-8000-000000000002&estat=anul%C2%B7lades&setmana=2026-08-10"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mNivell D[0m
+          [36m</strong>[39m
+          [0m · [0m
+          [0mavui[0m
+          [0m [0m
+          [0m17:40[0m
+          [0m · Petita[0m
+        [36m</a>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"dashboard-risk__booked"[39m
+        [36m>[39m
+          [0m1 inscrit[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+        [36m>[39m
+          [0manul·lada · avisada Laura + Duna[0m
+        [36m</span>[39m
+      [36m</article>[39m
+      [36m<article[39m
+        [33mclass[39m=[32m"dashboard-risk__row"[39m
+        [33mdata-class-id[39m=[32m"41000000-0000-4000-8000-000000000003"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/calendari?classe=41000000-0000-4000-8000-000000000003&estat=actives&setmana=2026-08-10"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mF i G[0m
+          [36m</strong>[39m
+          [0m · [0m
+          [0mdemà[0m
+          [0m [0m
+          [0m20:00[0m
+          [0m · Carretera[0m
+        [36m</a>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"dashboard-risk__booked"[39m
+        [36m>[39m
+          [0m1 inscrit[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0men risc · avisats Pau + Blat[0m
+        [36m</span>[39m
+      [36m</article>[39m
+      [36m<article[39m
+        [33mclass[39m=[32m"dashboard-risk__row"[39m
+        [33mdata-class-id[39m=[32m"41000000-0000-4000-8000-000000000004"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/calendari?classe=41000000-0000-4000-8000-000000000004&estat=actives&setmana=2026-08-10"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mCadells[0m
+          [36m</strong>[39m
+          [0m · [0m
+          [0mdc[0m
+          [0m [0m
+          [0m9:30[0m
+          [0m · Cadells[0m
+        [36m</a>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"dashboard-risk__booked"[39m
+        [36m>[39m
+          [0m0 inscrits[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0ms'anul·larà dc a les 0:30[0m
+        [36m</span>[39m
+      [36m</article>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/RiskReviewCard.test.tsx:192:21
+    190|       expect(new Date("2026-08-12T05:30:00Z").getHours()).toBe(0);
+    191|       await renderCard();
+    192|       expect(screen.getByText("s'anul·larà dc a les 7:30")).toBeVisibl…
+       |                     ^
+    193|       expect(screen.queryByText(/a les 0:30/u)).toBeNull();
+    194|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  13:40:23
+   Duration  802ms (transform 34%, environment 30%, import 17%, tests 11%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/RiskReviewCard.test.tsx -t club's zone

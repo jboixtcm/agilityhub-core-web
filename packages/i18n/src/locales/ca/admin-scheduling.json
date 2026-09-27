@@ -245,5 +245,23 @@
     "confirmWaitlist": "ANUL·LA I AVISA LA LLISTA D'ESPERA",
     "simpleCancel": "Vols anul·lar la classe?",
     "simpleDelete": "Vols eliminar la classe?"
+  },
+  "registrants": {
+    "title": "Inscrits ({booked}/{capacity})",
+    "empty": "Encara no hi ha cap inscrit.",
+    "loading": "Carregant els inscrits…",
+    "loadError": "No s'han pogut carregar els inscrits.",
+    "retry": "Torna-ho a provar",
+    "name": "{member} + {dog}",
+    "position": "{position}. {name}",
+    "waiting": "En espera: {names}",
+    "remove": "Treu de la llista",
+    "removeLabel": "Treu {name} de la llista d'espera",
+    "removeConfirm": {
+      "title": "Treure de la llista d'espera",
+      "text": "{name} deixarà d'estar en espera d'aquesta classe.",
+      "confirm": "Treu de la llista",
+      "cancel": "Cancel·la"
+    }
   }
 }

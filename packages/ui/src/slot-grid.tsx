@@ -178,6 +178,9 @@ export function SlotGrid({
         aria-label={labels.cell(time, state)}
         aria-pressed={pressable ? isSelected : undefined}
         className={className}
+        // Stable hooks for the real-core E2E (E5-W04): the cell's variant and its column (ring).
+        data-ring={cell.columnId}
+        data-slot-state={variant}
         disabled={!pressable}
         key={cell.id}
         onClick={() => {

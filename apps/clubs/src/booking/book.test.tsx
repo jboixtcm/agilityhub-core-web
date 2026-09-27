@@ -56,6 +56,16 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       "dl 10 · 18:50 · B+C | 4 places",
       "dl 17 · 9:30 · C | Properament",
     ]);
+    // E5-W04: the hooks the real-core E2E selects rows by (the api's state and class id).
+    expect(rows().map((row) => row.dataset.bookableState)).toEqual([
+      "BOOKABLE",
+      "WAITLIST_OPEN",
+      "WAITLIST_FULL",
+      "WEEKLY_LIMIT_DONE",
+      "BOOKABLE",
+      "NOT_YET_OPEN",
+    ]);
+    expect(rows().every((row) => (row.dataset.classId ?? "") !== "")).toBe(true);
     expect(
       rows().map((row) => row.querySelector(".ah-badge")?.className.match(/ah-tone--\w+/u)?.[0]),
     ).toEqual([

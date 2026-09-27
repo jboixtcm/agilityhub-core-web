@@ -128,7 +128,11 @@ const scenarios = {
   },
   /** S08 R-08-18 `SINGLE_CLASS`: Duna's plan pays to book, Rock's is charged on the receipt. */
   bookingSingleClass: {
-    branding: { ...canic, locales: ["ca", "es", "en"], modules: [...canic.modules, "SINGLE_CLASS"] },
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: [...canic.modules, "SINGLE_CLASS"],
+    },
     me: member,
     sessions: accountSessions,
   },
@@ -214,6 +218,31 @@ const scenarios = {
   },
   minimalAdmin: {
     branding: minimal,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * S15 T-15-32: a club with every process of R1 — the Cànic plus `SINGLE_CLASS`, so `GET /jobs`
+   * lists all ten (the Cànic itself has no `payment-timeouts`).
+   */
+  jobsFullClub: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: [...canic.modules, "SINGLE_CLASS"],
+    },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S15 T-15-32 «club mínim» (WAITLIST, FAQ, PUSH): eight processes, `waitlist-fifo` included. */
+  jobsMinimalClub: {
+    branding: { ...minimal, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S15 T-15-33: `GET /risk-review` without items («Cap classe en risc»). */
+  riskReviewEmpty: {
+    branding: canic,
     me: meAdmin as Me,
     sessions: accountSessions,
   },

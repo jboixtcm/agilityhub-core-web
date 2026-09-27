@@ -300,7 +300,11 @@
     },
     "sameHolder": "titular: la mateixa",
     "paymentSummary": "{method} · {account} · {holder}",
-    "paymentMethod": { "SEPA_DD": "Domiciliació", "CARD": "Targeta", "MANUAL": "Efectiu" },
+    "paymentMethod": {
+      "SEPA_DD": "Domiciliació",
+      "CARD": "Targeta",
+      "MANUAL": "Efectiu"
+    },
     "whatsapp": "WhatsApp",
     "datePlaceholder": "dd/mm/aaaa",
     "required": "obligatori",
@@ -391,5 +395,25 @@
     "no": "No",
     "other": "altre",
     "yes": "Sí"
+  },
+  "bookings": {
+    "title": "Reserves",
+    "actAsMember": "Per reservar o anul·lar en nom seu, fes servir «Entra com l'abonat».",
+    "classes": "Classes",
+    "trainings": "Entrenaments",
+    "columns": {
+      "when": "Dia i hora",
+      "ring": "Pista",
+      "dog": "Gos",
+      "state": "Estat",
+      "origin": "Origen"
+    },
+    "when": "{day} · {time}",
+    "noClasses": "Cap reserva de classe.",
+    "noTrainings": "Cap reserva d'entrenament.",
+    "seeAll": "Veure'ls tots ›",
+    "loading": "Carregant les reserves…",
+    "error": "No s'han pogut carregar les reserves.",
+    "retry": "Torna-ho a provar"
   }
 }

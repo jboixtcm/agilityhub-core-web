@@ -1187,3 +1187,31 @@ Blocking: no.
 - **Statuses:** the mock answers `DOG_ALREADY_BOOKED` and `TRAINING_CANCEL_TOO_LATE` with 422 (rule 0 read literally; the snapshot's details description says 422), while S09 §6 writes 409. The UI maps by code.
 - **Proposed literals** for Josep (ca; es and en in the locales): «pot no estar al dia», «El club està tancat aquest dia», «Ja no es pot anul·lar des de l'app: posa't en contacte amb el club.», «Només es pot anul·lar fins a {threshold} abans de començar, i en falten {remaining}.», «Demana a l'administració que alliberi la pista.», «{time} · meva», «Confirma» (the button before a slot is chosen), «Entrenament anul·lat», «Pista reservada» / «Pista bloquejada».
 Blocking: no.
+
+## 2026-09-27 · executor → organizer · E5-W03
+@organizer **E5-W03 is awaiting verification.** Built on the S08/S09/S15 contract already in `openapi.json`: nothing to swap, since the staged `d770f84` only changes E6 paths.
+- **Built:**
+  - the registrants panel in D4's card (ADMIN removes a waiting entry) and, read-only, in screen 23's drawer;
+  - `/entrenaments`, the ring-usage register (two universal lists, exports, block cancellation);
+  - D10 «Reserves»;
+  - D11 «Processos automàtics» (switch, [Simula], [Executa ara], run drawer);
+  - D1's risk card, rebuilt as `RiskReviewCard` on form A (exported for S14).
+- **Green:**
+  - turbo `--force` 34/34 (`08`);
+  - `i18n:check` (`09`);
+  - the E5-W03 Vitests 60/60 (`10`);
+  - api-client + Ajv 257/257 (`11`);
+  - Docker 1 + 56 + 49 (`12`);
+  - the eight captures.
+- **Fail-before:** logs `06` (Idempotency-Key per payload) and `07` (`reviewAt` in the device's zone). Logs `01`–`04` are earlier failed attempts, one line each in the report.
+- **Changes to verified behaviour:**
+  - the sidebar's «Entrenaments» now opens `/entrenaments`, and D12 gets its own «Agenda de la setmana» entry;
+  - D1's risk rows come from `GET /risk-review`, so «avisat Pau + Blat» (gendered, E3-W02) becomes the mockup's «avisats Pau + Blat»;
+  - D11's `jobs.*.enabled` parameter rows became the card's switches.
+- **Questions** (details in the report):
+  1. Fields for the api: `memberName` on the staff `WaitlistEntry`; the level on `ClassBookingItem`; `endsAtLocal` and `memberNumber` on `TrainingBookingListItem`; `classDescription` and `ringName` on `BookingListItem`; `ringName` on `RingBlockListItem`.
+  2. `filter-values` routes for `/training-bookings` and `/ring-blocks`. Meanwhile the values are counted from the list.
+  3. Form A has no gender: which literal wins, the mockup's «avisats» or S14/S15's «avisat»?
+  4. Process names: this task's list or S15 §10's? I used the task's.
+- **Proposed literals** for Josep: every literal of the no-mockup screens (register, D10 card, D11 card and run drawer, registrants confirmation), listed in the report.
+Blocking: no.

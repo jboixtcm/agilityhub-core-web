@@ -425,12 +425,15 @@ export function meHome(
     if (item.state !== "ACTIVE" && item.state !== "PAYMENT_PENDING") continue;
     if (Date.parse(localInstant(session.endsAtLocal)) <= options.now) continue;
     rows.push({
+      activityId: null,
       dogId: item.dogId,
       dogName: dogName(item.dogId),
       endsAtLocal: session.endsAtLocal,
       id: item.id,
       instructorName: visibleInstructor(session, options.now),
       instructorVisibleAt: instructorVisibleAt(session),
+      // api E5-T25: the ring's colour for 03's dot.
+      ringColor: ringColor(session.ringName),
       ringName: session.ringName,
       startsAt: localInstant(session.startsAtLocal),
       startsAtLocal: session.startsAtLocal,
@@ -445,10 +448,12 @@ export function meHome(
       if (session === undefined || !filter.includes(entry.dogId)) continue;
       if (entry.state !== "ACTIVE" && entry.state !== "NOTIFIED") continue;
       rows.push({
+        activityId: null,
         dogId: entry.dogId,
         dogName: dogName(entry.dogId),
         endsAtLocal: null,
         id: entry.id,
+        ringColor: ringColor(session.ringName),
         ringName: session.ringName,
         startsAt: localInstant(session.startsAtLocal),
         startsAtLocal: session.startsAtLocal,
@@ -870,3 +875,156 @@ export function waitlistResource(entry: StoredEntry, options: BookingOptions): W
 }
 
 export type { StoredBooking, StoredEntry, StoredHold, MockClass, MockDog };
+
+type ClassSession = components["schemas"]["ClassSession"];
+type ClassBookingItem = components["schemas"]["ClassBookingItem"];
+
+/**
+ * The registrants of the staff reads (fictional): the D12 mockup's five first, then more members,
+ * so a class takes a slice of the pool and no dog is booked twice at the same hour.
+ */
+const REGISTRANT_POOL: readonly (readonly [string, string, "FEMALE" | "MALE"])[] = [
+  ["Laura", "Duna", "FEMALE"],
+  ["Marc", "Chun-li", "FEMALE"],
+  ["Anna", "Nass", "MALE"],
+  ["Eva", "Fish", "MALE"],
+  ["Pau", "Blat", "MALE"],
+  ["Clara", "Trevi", "FEMALE"],
+  ["Jana", "Mixa", "FEMALE"],
+  ["Pol", "Bruc", "MALE"],
+  ["Carla", "Nala", "FEMALE"],
+  ["Irene", "Kai", "MALE"],
+  ["Nil", "Coco", "MALE"],
+  ["Martí", "Bitxo", "MALE"],
+];
+/** Where each start time's classes take their slice (the 18:50 ones start with the D12 names). */
+const POOL_OFFSETS: Readonly<Record<string, number>> = {
+  "08:30": 6,
+  "09:30": 9,
+  "17:40": 3,
+  "18:00": 7,
+  "18:50": 0,
+  "20:00": 2,
+};
+/** A booking cancelled late: the 18:50 classes show the api's «any state». */
+const LATE_CANCELLER = ["Sergio", "Thai", "MALE"] as const;
+
+/** The class's slice of the pool: by its start time, and by its place among that time's classes. */
+function registrantsOf(session: ClassSession, count: number) {
+  const slot = Number(/-(\d+)$/u.exec(session.id)?.[1] ?? "0");
+  const offset = (POOL_OFFSETS[session.startTime] ?? 8) + slot * 5;
+  return Array.from(
+    { length: Math.min(count, REGISTRANT_POOL.length) },
+    (_, index) => REGISTRANT_POOL[(offset + index) % REGISTRANT_POOL.length] ?? LATE_CANCELLER,
+  );
+}
+const WAITING_POOL: readonly (readonly [string, string, "FEMALE" | "MALE"])[] = [
+  ["Júlia", "Kira", "FEMALE"],
+  ["Roser", "Lluna", "FEMALE"],
+  ["Oriol", "Llamp", "MALE"],
+];
+
+const slug = (value: string) =>
+  value
+    .normalize("NFD")
+    .replaceAll(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replaceAll(/[^a-z]+/gu, "-");
+
+/** `bookingWeekKey`: the Sunday the class's booking week opens (S08 R-08-01). */
+function bookingWeekKey(date: string): string {
+  const day = new Date(`${date}T12:00:00Z`);
+  day.setUTCDate(day.getUTCDate() - ((day.getUTCDay() + 6) % 7) - 1);
+  return day.toISOString().slice(0, 10);
+}
+
+/**
+ * `GET /class-sessions/{id}/bookings` (S08 §6) of a class of the calendar or day-grid world: its
+ * `counters.booked` live bookings, plus one late cancellation; a cancelled class has its
+ * `affectedBookings` cancelled by the club; a draft has none.
+ */
+export function classBookingItems(session: ClassSession): ClassBookingItem[] {
+  const item = (
+    [member, dog]: readonly [string, string, string],
+    index: number,
+    state: ClassBookingItem["state"],
+  ): ClassBookingItem => ({
+    bookedAt: new Date(Date.parse(session.startsAt) - (72 + index * 5) * 3_600_000).toISOString(),
+    bookingWeekKey: bookingWeekKey(session.date),
+    classSessionId: session.id,
+    classStartsAt: session.startsAt,
+    dogId: `dog-${slug(dog)}`,
+    dogName: dog,
+    id: `cb-${session.id}-${String(index)}`,
+    late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
+    memberId: `member-${slug(member)}`,
+    memberName: member,
+    origin: index === 1 ? "BACKOFFICE" : "APP",
+    state,
+  });
+  if (session.state === "DRAFT") return [];
+  if (session.state === "CANCELLED") {
+    const affected = session.cancellation?.affectedBookings ?? 0;
+    return registrantsOf(session, affected).map((person, index) =>
+      item(person, index, "CANCELLED_BY_CLUB"),
+    );
+  }
+  const booked = registrantsOf(session, session.counters.booked).map((person, index) =>
+    item(person, index, "ACTIVE"),
+  );
+  return booked.length === 0 || session.startTime !== "18:50"
+    ? booked
+    : [...booked, item(LATE_CANCELLER, booked.length, "CANCELLED_LATE")];
+}
+
+/** The staff-read waiting entries of each class, made on first read (removals change them). */
+export const registrantsState: { entries: Map<string, WaitlistEntry[]> } = { entries: new Map() };
+
+export function resetRegistrantsState(): void {
+  registrantsState.entries = new Map();
+}
+
+/**
+ * `GET /class-sessions/{id}/waitlist-entries` (S08 §6): `counters.waiting` live entries in position
+ * order; `position` only with `waitlist.mode = FIFO` (R-08-14), `null` otherwise.
+ */
+export function classWaitlistEntries(session: ClassSession, fifo: boolean): WaitlistEntry[] {
+  const stored = registrantsState.entries.get(session.id);
+  if (stored !== undefined) return stored;
+  const entries = WAITING_POOL.slice(0, session.counters.waiting).map(
+    ([member, dog, sex], index): WaitlistEntry => ({
+      bookingId: null,
+      cancelReason: null,
+      cancelledAt: null,
+      classSession: {
+        description: session.displayDescription,
+        endsAtLocal: `${session.date}T${session.endTime}`,
+        instructorName: null,
+        ringName: null,
+        startsAtLocal: `${session.date}T${session.startTime}`,
+      },
+      classSessionId: session.id,
+      confirmBy: null,
+      dog: { id: `dog-${slug(dog)}`, name: dog, sex },
+      dogId: `dog-${slug(dog)}`,
+      dogName: dog,
+      id: `wl-${session.id}-${String(index)}`,
+      joinedAt: new Date(Date.parse(session.startsAt) - (48 - index) * 3_600_000).toISOString(),
+      memberId: `member-${slug(member)}`,
+      notifiedAt: null,
+      position: fifo ? index + 1 : null,
+      state: "ACTIVE",
+    }),
+  );
+  registrantsState.entries.set(session.id, entries);
+  return entries;
+}
+
+/** The stored staff-read entry with `id`, and its class id. */
+export function findRegistrantEntry(id: string): WaitlistEntry | undefined {
+  for (const entries of registrantsState.entries.values()) {
+    const entry = entries.find((candidate) => candidate.id === id);
+    if (entry !== undefined) return entry;
+  }
+  return undefined;
+}

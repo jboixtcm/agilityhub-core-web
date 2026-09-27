@@ -848,6 +848,9 @@ export function CalendarPage({
               setFeedback({ message, tone: "danger" });
               return calendar.refetch();
             }}
+            onRegistrantsChanged={() => {
+              void calendar.refetch();
+            }}
             onSaved={() => {
               setFeedback({ message: t("admin-scheduling:calendar.saved"), tone: "success" });
               weeks.reload();

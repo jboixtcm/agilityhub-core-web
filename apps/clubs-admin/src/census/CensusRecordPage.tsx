@@ -28,6 +28,8 @@ import { useTranslation } from "react-i18next";
 
 import { AuditTrail } from "../audit/AuditPage";
 import { loadDogDocumentTypes } from "../dashboard/readmission";
+
+import { MemberBookingsCard } from "./MemberBookingsCard";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -884,6 +886,9 @@ function MemberSummary({
           </Card>
         ) : null}
       </div>
+
+      {/* S08/S09 (E5-W03): the member's class and training bookings, read-only (R-08-19). */}
+      <MemberBookingsCard client={client} memberId={member.id} />
 
       {modules.includes("TASKS") ? (
         <Card className="census-record__notes">

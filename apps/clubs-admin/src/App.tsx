@@ -58,6 +58,7 @@ import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
 import { AgendaRingCardPage } from "./training/RingBlockCard";
+import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
 
 interface AdminRouteDefinition {
   path: string;
@@ -98,6 +99,9 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/parametres", roles: ["ADMIN"] },
   // Screen D12.
   { path: "/agenda", roles: ["INSTRUCTOR", "ADMIN"] },
+  // «Entrenaments» (menú Camp): the ring-usage register, no mockup (S09 §2 writes `/admin/training`;
+  // the admin app's paths are Catalan and unprefixed). Gated by FREE_TRAINING through `modules.ts`.
+  { path: "/entrenaments", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D13.
   { path: "/alumnes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D14.
@@ -266,6 +270,13 @@ export function AdminNavigation({
         },
         {
           href: "/agenda",
+          icon: "day",
+          id: "agenda",
+          label: t("shell:nav.agenda"),
+          roles: ["INSTRUCTOR", "ADMIN"],
+        },
+        {
+          href: "/entrenaments",
           icon: "cone",
           id: "training",
           label: t("shell:nav.training"),
@@ -484,6 +495,9 @@ function routeContent(
   if (route.path === "/agenda") {
     // D12: the agenda grid is E6-W03; E5-W02 mounts only its ring card (S09 §2 row D12).
     return <AgendaRingCardPage client={client} />;
+  }
+  if (route.path === "/entrenaments") {
+    return <TrainingRegisterPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;

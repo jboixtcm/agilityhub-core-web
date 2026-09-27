@@ -1,5 +1,10 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { catalogState, mockScenario, resetPlanningState } from "@agilityhub/api-client/mocks";
+import {
+  catalogState,
+  mockScenario,
+  resetBackofficeMockState,
+  resetPlanningState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -102,6 +107,31 @@ describe("T-06-29 screen 23 «Visió global»", () => {
     });
     expect(within(grid).getByText("5/5 · Marc")).toBeVisible();
     expect(within(grid).queryByText(/\+2/u)).not.toBeInTheDocument();
+  });
+
+  it("E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)", async () => {
+    resetBackofficeMockState();
+    await renderOverview();
+    fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+
+    const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    const panel = await within(drawer).findByRole("region", { name: "Inscrits (5/5)" });
+    expect(await within(panel).findByText("Laura + Duna")).toBeVisible();
+    expect(
+      within(panel)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Laura + Dunaconfirmada",
+      "Marc + Chun-liconfirmada",
+      "Anna + Nassconfirmada",
+      "Eva + Fishconfirmada",
+      "Pau + Blatconfirmada",
+      "Sergio + Thaianul·lada tard",
+    ]);
+    expect(within(panel).getByText("En espera: Kira · Lluna")).toBeVisible();
+    // The removal is D4's (ADMIN); attendance is screen 21's (S10).
+    expect(within(panel).queryByRole("button")).toBeNull();
   });
 
   it("opens the class drawer with the instructor projection of the tapped class", async () => {

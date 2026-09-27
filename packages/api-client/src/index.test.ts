@@ -226,16 +226,21 @@ describe("typed API client", () => {
 
   it("E5-W01 step 0 (S08 §6) sends an Idempotency-Key on the seat hold, the booking, the waitlist entry and the claim", async () => {
     const keys: string[] = [];
-    const record = (name: string) => ({ request }: { request: Request }) => {
-      keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
-      return HttpResponse.json({}, { status: 201 });
-    };
+    const record =
+      (name: string) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({}, { status: 201 });
+      };
     server.use(
       http.post("https://core.example.test/api/v1/seat-holds", record("seat-hold")),
       http.post("https://core.example.test/api/v1/bookings", record("booking")),
       http.post("https://core.example.test/api/v1/waitlist-entries", record("waitlist")),
       http.post("https://core.example.test/api/v1/waitlist-entries/:id/claim", record("claim")),
-      http.post("https://core.example.test/api/v1/bookings/:id/cancellation", record("cancellation")),
+      http.post(
+        "https://core.example.test/api/v1/bookings/:id/cancellation",
+        record("cancellation"),
+      ),
     );
     const client = createApiClient({
       baseUrl: "https://core.example.test/api/v1",
@@ -251,7 +256,10 @@ describe("typed API client", () => {
       // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
       params: { path: { id: "entry-1" } },
     });
-    await client.POST("/bookings/{id}/cancellation", { body: {}, params: { path: { id: "booking-1" } } });
+    await client.POST("/bookings/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "booking-1" } },
+    });
 
     expect(keys).toEqual([
       "seat-hold:123e4567-e89b-42d3-a456-426614174003",
@@ -259,6 +267,46 @@ describe("typed API client", () => {
       "waitlist:123e4567-e89b-42d3-a456-426614174003",
       "claim:123e4567-e89b-42d3-a456-426614174003",
       "cancellation:",
+    ]);
+  });
+
+  it("E5-W03 step 0 (R-15-09) sends an Idempotency-Key on a job trigger, never on its switch", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({});
+      };
+    server.use(
+      http.post("https://core.example.test/api/v1/jobs/:name/trigger", record("trigger")),
+      http.put("https://core.example.test/api/v1/jobs/:name/switch", record("switch")),
+      http.post(
+        "https://core.example.test/api/v1/waitlist-entries/:id/cancellation",
+        record("waitlist-removal"),
+      ),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174004",
+    });
+
+    await client.POST("/jobs/{name}/trigger", {
+      body: { dryRun: true },
+      params: { path: { name: "risk-review" } },
+    });
+    await client.PUT("/jobs/{name}/switch", {
+      body: { enabled: false },
+      params: { path: { name: "risk-review" } },
+    });
+    await client.POST("/waitlist-entries/{id}/cancellation", {
+      params: { path: { id: "entry-1" } },
+    });
+
+    expect(keys).toEqual([
+      "trigger:123e4567-e89b-42d3-a456-426614174004",
+      "switch:",
+      "waitlist-removal:",
     ]);
   });
 });
@@ -297,7 +345,8 @@ describe("TanStack Query defaults", () => {
 describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
     // E5-W02: + the seven S09 handlers of `training-handlers.ts`.
-    expect(handlers).toHaveLength(200);
+    // E5-W03: + the 13 back-office handlers of `backoffice-handlers.ts` and the register export.
+    expect(handlers).toHaveLength(214);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

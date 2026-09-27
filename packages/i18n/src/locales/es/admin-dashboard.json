@@ -23,16 +23,24 @@
     "alerts": "{count, plural, one {# aviso} other {# avisos}}",
     "empty": "Ninguna clase en riesgo",
     "booked": "{count, plural, one {# inscrito} other {# inscritos}}",
-    "today": "hoy",
-    "tomorrow": "mañana",
-    "notified": "{count, plural, one {{gender, select, female {avisada} other {avisado}} {names}} other {avisados {names}}}",
+    "more": "+{count} más",
+    "day": {
+      "TODAY": "hoy",
+      "TOMORROW": "mañana"
+    },
+    "name": "{member} + {dog}",
     "status": {
-      "CANCELLED": "anulada",
+      "AUTO_CANCELLED": "anulada",
       "AT_RISK": "en riesgo",
       "WILL_CANCEL": "se anulará {day} a las {time}",
-      "PENDING_DECISION": "en riesgo · el club decidirá"
+      "WILL_REVIEW": "el club decidirá"
     },
-    "more": "+{count} más"
+    "notified": {
+      "AUTO_CANCELLED": "avisada {names}",
+      "AT_RISK": "avisados {names}"
+    },
+    "loading": "Cargando la revisión de clases en riesgo…",
+    "error": "No se ha podido cargar la revisión de clases en riesgo."
   },
   "signups": {
     "title": "Preinscripciones pendientes",
@@ -40,7 +48,11 @@
     "validate": "VALIDA",
     "validated": "El alta se ha validado.",
     "accountNotProvided": "Cuenta no informada",
-    "payment": { "SEPA_DD": "domiciliación", "CARD": "tarjeta", "MANUAL": "efectivo" },
+    "payment": {
+      "SEPA_DD": "domiciliación",
+      "CARD": "tarjeta",
+      "MANUAL": "efectivo"
+    },
     "dog": "{name} {isAddDog, select, true {(perro nuevo)} other {({breed})}}",
     "validateLabel": "VALIDA: {name}",
     "submitted": "enviada el {date}",

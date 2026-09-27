@@ -1,0 +1,518 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/booking/home.test.tsx (11 tests | 1 failed | 10 skipped) 108ms
+   ❯ screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) (8)
+     × E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none 106ms
+ ❯ src/booking/detail.test.tsx (19 tests | 4 failed | 15 skipped) 270ms
+   ❯ T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) (14)
+     × E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel» 123ms
+     × E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries 44ms
+     × E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false 55ms
+     × E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true 46ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel»
+TestingLibraryElementError: Unable to find an element with the text: Reservada per Biel el dijous 30/07 a les 20:14. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mconfirmada[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mANUL·LA LA RESERVA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/booking/detail.test.tsx:148:19
+    146|     });
+    147|     await openBooking();
+    148|     expect(screen.getByText("Reservada per Biel el dijous 30/07 a les …
+       |                   ^
+    149|   });
+    150|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries
+TestingLibraryElementError: Unable to find an element with the text: Reservada el dijous 30/07 a les 20:14. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mconfirmada[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada per Laura Serra el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mANUL·LA LA RESERVA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/booking/detail.test.tsx:156:19
+    154|     });
+    155|     await openBooking();
+    156|     expect(screen.getByText("Reservada el dijous 30/07 a les 20:14")).…
+       |                   ^
+    157|   });
+    158|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/booking/detail.test.tsx:182:80
+    180|       fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA R…
+    181|       const dialog = screen.getByRole("dialog");
+    182|       expect(within(dialog).queryByText(/^Falten menys de 4 hores/u) !…
+       |                                                                                ^
+    183|     },
+    184|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking/detail.test.tsx:182:80
+    180|       fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA R…
+    181|       const dialog = screen.getByRole("dialog");
+    182|       expect(within(dialog).queryByText(/^Falten menys de 4 hores/u) !…
+       |                                                                                ^
+    183|     },
+    184|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none
+AssertionError: expected [ null, null, null, null, null ] to deeply equal [ '#8FCE8F', '#F2B58C', …(3) ]
+
+- Expected
++ Received
+
+  [
+-   "#8FCE8F",
+-   "#F2B58C",
+-   "#C9CDD3",
+    null,
+-   "#F2B58C",
++   null,
++   null,
++   null,
++   null,
+  ]
+
+ ❯ src/booking/home.test.tsx:112:7
+    110|             ?.style.getPropertyValue("--class-row-ring") ?? null,
+    111|       ),
+    112|     ).toEqual([
+       |       ^
+    113|       colour("Central"),
+    114|       colour("Muntanya"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 25 skipped (30)
+   Start at  13:51:29
+   Duration  1.17s (transform 37%, environment 24%, tests 18%, import 15%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/detail.test.tsx src/booking/home.test.tsx -t E5-W04

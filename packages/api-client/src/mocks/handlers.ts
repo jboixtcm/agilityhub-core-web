@@ -4,6 +4,12 @@ import type { components } from "../generated/schema";
 import type { ListItemWith } from "../list-fields";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
+import {
+  backofficeHandlers,
+  JOBS_MOCK_NOW,
+  resetBackofficeMockState,
+  trainingBookingExportRows,
+} from "./backoffice-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
@@ -2081,6 +2087,13 @@ export const handlers = [
       ? listExport(request, "activity-registrations", rows, "00000000-0000-4000-8000-000000000408")
       : rows;
   }),
+  // S09 ring-usage register export (ADMIN, S14 R-14-12), same `q`, filters and columns as the list.
+  http.get("*/api/v1/training-bookings/export", ({ request }) => {
+    const rows = trainingBookingExportRows(request);
+    return typeof rows === "number"
+      ? listExport(request, "training-bookings", rows, "00000000-0000-4000-8000-000000000409")
+      : rows;
+  }),
   http.get("*/api/v1/audit-entries/:id", ({ params }) => {
     const item = auditEntries.find((entry) => entry.id === String(params.id));
     if (item === undefined) return apiError("NOT_FOUND", "Audit entry not found", 404);
@@ -3497,6 +3510,9 @@ export const handlers = [
     savedViews.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
   }),
+  // E5-W03 (S08/S09/S15 back office) first: a waiting entry or a ring block of another world falls
+  // through to its own handlers.
+  ...backofficeHandlers,
   ...planningHandlers,
   ...dayGridHandlers,
   // S09 (E5-W02) before the calendar world: a ring block on a mockup day is answered here.
@@ -3517,11 +3533,13 @@ export {
   activityState,
   bookingState,
   catalogState,
+  JOBS_MOCK_NOW,
   mockExportBody,
   mockScenario,
   planningState,
   resetActivityState,
   resetAuditMockState,
+  resetBackofficeMockState,
   resetBookingMockState,
   resetCatalogState,
   resetCensusRecordState,

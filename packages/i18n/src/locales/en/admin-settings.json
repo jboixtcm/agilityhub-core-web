@@ -1,6 +1,5 @@
 {
   "blocks": {
-    "automatedProcesses": "Automated processes",
     "billing": "Fees, packs and collections",
     "classes": "Classes",
     "club": "Club and rings",
@@ -735,5 +734,77 @@
     "todayPlusDays": "today + {count} days",
     "weekOpensAt": "{day} {time}",
     "yes": "Yes"
+  },
+  "jobs": {
+    "title": "Automated processes",
+    "name": {
+      "WEEK_OPENING": "Week opening",
+      "RISK_REVIEW": "At-risk class review",
+      "NO_SHOW_NOTICES": "No-show notices",
+      "REMINDERS": "Reminders",
+      "EXPIRATIONS": "Expirations",
+      "WAITLIST_FIFO": "Waiting list (FIFO)",
+      "PAYMENT_TIMEOUTS": "Payment timeouts",
+      "CLASS_FINISHING": "Class closing",
+      "CLEANUP": "Technical cleanup",
+      "BILLING_REMINDER": "Billing reminder"
+    },
+    "cadence": {
+      "DAILY": "every day at {time}",
+      "WEEKLY": "{day} at {time}",
+      "MONTHLY": "on day {day} at {time}",
+      "CONTINUOUS": "continuous"
+    },
+    "lastRun": {
+      "never": "has not run yet"
+    },
+    "counter": {
+      "reviewed": "{count, plural, one {# class reviewed} other {# classes reviewed}}",
+      "cancelled": "{count, plural, one {# cancelled} other {# cancelled}}",
+      "cancelledSilent": "{count, plural, one {# without bookings} other {# without bookings}}",
+      "atRisk": "{count, plural, one {# at risk} other {# at risk}}",
+      "notifiedMembers": "{count, plural, one {# member notified} other {# members notified}}",
+      "exempt": "{count, plural, one {# exempt} other {# exempt}}",
+      "skippedStarted": "{count, plural, one {# already started} other {# already started}}",
+      "activeClasses": "{count, plural, one {# active class} other {# active classes}}",
+      "notified": "{count, plural, one {# notice sent} other {# notices sent}}",
+      "notices": "{count, plural, one {# notice} other {# notices}}",
+      "late": "{count, plural, one {# late} other {# late}}",
+      "classReminders": "{count, plural, one {# class reminder} other {# class reminders}}",
+      "trainingReminders": "{count, plural, one {# training reminder} other {# training reminders}}"
+    },
+    "counterRaw": "{key}: {count}",
+    "switchLabel": "{name} on",
+    "dryRun": "Simulate",
+    "dryRunLabel": "Simulate {name}",
+    "run": "Run now",
+    "runLabel": "Run {name} now",
+    "running": "Running…",
+    "disable": "Turn off",
+    "disableTitle": "Turn off «{name}»",
+    "disableConfirm": "The effects of this process will stop applying until you turn it on again.",
+    "runTitle": "Run «{name}» now",
+    "runConfirm": "The process will run now, even if it is turned off, and the audit log will record it.",
+    "cancel": "Cancel",
+    "dryRunTitle": "Simulation: what it would do now · {name}",
+    "dryRunNote": "Simulation: no change has been applied.",
+    "dryRunTag": "simulation",
+    "noItems": "There is nothing to do.",
+    "item": "{entityType} {entityId} · {action}",
+    "runDone": "{name}: {summary}",
+    "retry": "Try again",
+    "none": "—",
+    "impersonationNote": "Automated processes cannot be managed while you act as a member.",
+    "runs": {
+      "title": "Runs · {name}",
+      "caption": "Latest runs",
+      "when": "Occurrence",
+      "trigger": "Origin",
+      "status": "Result",
+      "effects": "Effects",
+      "errors": "Errors",
+      "empty": "There are no runs yet.",
+      "detail": "Run sheet"
+    }
   }
 }

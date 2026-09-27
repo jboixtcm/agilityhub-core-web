@@ -313,6 +313,15 @@
   font-size: 0.9rem;
 }
 
+/* Mockup 03: the ring's dot before the title (the ring's colour arrives as `--class-row-ring`). */
+.reservation-row__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  background: var(--class-row-ring, var(--ah-color-text-muted));
+  border-radius: var(--ah-radius-full);
+}
+
 .reservation-row__badge {
   flex: none;
   font-size: 0.66rem;

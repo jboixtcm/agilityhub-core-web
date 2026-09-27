@@ -8,6 +8,14 @@ export {
   type NormalizedBranding,
   writeCachedBranding,
 } from "./branding-cache";
+export {
+  type ClassBookingItem,
+  type ClassRegistrants,
+  type ClassWaitlistEntry,
+  isLiveWaitlistEntry,
+  removeWaitlistEntry,
+  useClassRegistrants,
+} from "./class-registrants";
 export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {
