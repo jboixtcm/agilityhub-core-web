@@ -190,10 +190,13 @@ interface TrainingSummary {
 
 interface TrainingBookingItem {
   date: string;
+  dogId: string;
   id: string;
   ringId: string;
   ringName: string;
+  startsAt: string;
   startsAtLocal: string;
+  state: string;
 }
 
 interface RiskReviewItem {
@@ -244,11 +247,23 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
   return Math.round((local - instant) / 60_000);
 }
 
-/** The instant of a club-local date and time (Europe/Madrid). */
+/**
+ * The instant of a club-local date and time (Europe/Madrid). Across a DST change an ambiguous time
+ * takes its first occurrence and a missing one moves forward by the gap.
+ */
 function clubInstant(date: string, time: string): string {
   const wall = Date.parse(`${date}T${time}:00Z`);
-  const guess = wall - zoneOffsetMinutes(wall, clubTimeZone) * 60_000;
-  return new Date(wall - zoneOffsetMinutes(guess, clubTimeZone) * 60_000).toISOString();
+  const halfDay = 12 * 60 * 60_000;
+  // The zone's offsets on each side of that day, the larger one first (= the earlier instant).
+  const offsets = [
+    ...new Set([wall - halfDay, wall + halfDay].map((at) => zoneOffsetMinutes(at, clubTimeZone))),
+  ].sort((first, second) => second - first);
+  const valid = offsets.find(
+    (offset) => zoneOffsetMinutes(wall - offset * 60_000, clubTimeZone) === offset,
+  );
+  // No offset maps back to that wall time: it falls in the spring gap, read with the offset before it.
+  const offset = valid ?? Math.min(...offsets);
+  return new Date(wall - offset * 60_000).toISOString();
 }
 
 /** Plain-date arithmetic (UTC noon, never formatted in a zone). */
@@ -1379,6 +1394,80 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   ).toHaveCount(1);
 });
 
+/**
+ * Step 5: the known candidates for a contract discrepancy, answered by the core itself (no UI
+ * offers them). Each must carry its code with the status the snapshot documents for it
+ * (`openapi.json`, the generated types' source): a different status is a proposal for the report.
+ */
+test("E5-W04 step 5 · the core's statuses for JOB_UNKNOWN, SLOT_NOT_ON_GRID, DOG_ALREADY_BOOKED and OVERRIDE_NOT_ALLOWED", async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const member = await clubsSession(browser, BOOKER);
+  const trainings = await call<{ items: TrainingBookingItem[] }>(member, "/me/training-bookings");
+  expect(trainings.status).toBe(200);
+  // The seeded Tuesday training (live: (e) cancelled only its own booking).
+  const seeded = trainings.body.items.find(
+    (item) => item.date === addDays(weekStart, 1) && item.state === "ACTIVE",
+  );
+  if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
+  const slots = await call<TrainingSlots>(
+    member,
+    `/training-slots?from=${weekStart}&to=${addDays(weekStart, 3)}&dogId=${encodeURIComponent(seeded.dogId)}`,
+  );
+  expect(slots.status).toBe(200);
+  const otherRing = slots.body.rings.find((ring) => ring.id !== seeded.ringId);
+  const free = slots.body.days
+    .flatMap((day) => day.slots)
+    .find((slot) => slot.anyFree && slot.bookable && slot.startsAt !== seeded.startsAt);
+  if (otherRing === undefined || free === undefined) {
+    throw new Error("The window has no other ring or no free slot to probe with");
+  }
+  const created: string[] = [];
+  const probe = async (path: string, body: unknown, session: Session = member) => {
+    const answer = await call<ApiProblem & { id?: string }>(session, path, "POST", body);
+    if (answer.status === 201 && answer.body.id !== undefined) created.push(answer.body.id);
+    return { code: answer.body.code ?? null, status: answer.status };
+  };
+  const observed = {
+    // S09 R-09-03: a start off the 30 min grid.
+    slotNotOnGrid: await probe("/training-bookings", {
+      dogId: seeded.dogId,
+      startsAt: new Date(Date.parse(free.startsAt) + 10 * 60_000).toISOString(),
+    }),
+    // S09 R-09-06 (T-09-18): the same dog, the same start, on another ring.
+    dogAlreadyBooked: await probe("/training-bookings", {
+      dogId: seeded.dogId,
+      ringId: otherRing.id,
+      startsAt: seeded.startsAt,
+    }),
+    // S09 R-09-16 (T-09-23): `override` with a token that is not an impersonation.
+    overrideNotAllowed: await probe("/training-bookings", {
+      dogId: seeded.dogId,
+      override: { limit: true, reason: `E5 ${runId}` },
+      startsAt: free.startsAt,
+    }),
+    // S15 §6: a process name that does not exist.
+    jobUnknown: await probe(
+      "/jobs/e5-unknown-process/trigger",
+      { dryRun: true },
+      await adminSession(browser),
+    ),
+  };
+  // A probe the core accepted would leave a booking behind: it is cancelled at once, and the test fails.
+  for (const id of created) {
+    await call(member, `/training-bookings/${id}/cancellation`, "POST", {});
+  }
+  note("step5-statuses", observed);
+  expect(created).toEqual([]);
+  expect(observed).toEqual({
+    dogAlreadyBooked: { code: "DOG_ALREADY_BOOKED", status: 422 },
+    jobUnknown: { code: "JOB_UNKNOWN", status: 404 },
+    overrideNotAllowed: { code: "OVERRIDE_NOT_ALLOWED", status: 403 },
+    slotNotOnGrid: { code: "SLOT_NOT_ON_GRID", status: 400 },
+  });
+});
+
 test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run", async ({
   browser,
 }) => {
@@ -1566,6 +1655,68 @@ test("R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before
     member.page.getByText(/^Disponible a partir de diumenge .+ a les 20 h\.$/u),
   ).toBeVisible();
 
+  // R-09-05 by session date: on Sunday the day+3 window reaches the next week. Sunday counts the
+  // week of the seed's two trainings, Monday the next one; a Monday booking moves only Monday's.
+  const eligibility = await call<TrainingSummary>(member, "/me/training-summary");
+  const trainingDog = eligibility.body.defaultDogId;
+  if (trainingDog === null || trainingDog === undefined) throw new Error("No default training dog");
+  const usedOn = async (date: string) =>
+    (
+      await call<TrainingSummary>(
+        member,
+        `/me/training-summary?dogId=${encodeURIComponent(trainingDog)}&date=${date}`,
+      )
+    ).body.counter.used;
+  const monday = addDays(opening, 1);
+  const trainingPage = member.page;
+  const slotsRead = trainingPage.waitForResponse(isCall("GET", /\/api\/v1\/training-slots$/u));
+  await navigateClubRoute(trainingPage, "/entrenaments");
+  const trainingWindow = (await (await slotsRead).json()) as TrainingSlots;
+  expect(trainingWindow.days.map((day) => day.date)).toEqual(
+    [0, 1, 2, 3].map((n) => addDays(opening, n)),
+  );
+  const sundayBefore = await usedOn(opening);
+  expect(sundayBefore).toBe(2);
+  expect(await usedOn(monday)).toBe(0);
+  const mondayCounter = trainingPage.waitForResponse(
+    isCall("GET", /\/api\/v1\/me\/training-summary$/u),
+  );
+  await trainingPage.getByRole("group", { name: "Dia" }).getByRole("button").nth(1).click();
+  expect((await mondayCounter).status()).toBe(200);
+  await expect(trainingPage.getByText("Portes 0/3 entrenaments aquesta setmana")).toBeVisible();
+  await trainingPage
+    .getByRole("group", { name: "Matí" })
+    .locator('[data-slot-state="free"]')
+    .first()
+    .click();
+  const mondayPosting = trainingPage.waitForResponse(
+    isCall("POST", /\/api\/v1\/training-bookings$/u),
+  );
+  await trainingPage.getByRole("button", { name: /^Confirma / }).click();
+  const mondayPosted = await mondayPosting;
+  expect(mondayPosted.status()).toBe(201);
+  const mondayTraining = (await mondayPosted.json()) as { date: string; id: string };
+  expect(mondayTraining.date).toBe(monday);
+  await expect(trainingPage.getByText("Portes 1/3 entrenaments aquesta setmana")).toBeVisible();
+  const sessionDate = { monday: await usedOn(monday), sunday: await usedOn(opening) };
+  expect(sessionDate).toEqual({ monday: 1, sunday: sundayBefore });
+  // Idempotence (h): cancelled at once, never left behind.
+  const mondayCancelled = await call(
+    member,
+    `/training-bookings/${mondayTraining.id}/cancellation`,
+    "POST",
+    {},
+  );
+  expect(mondayCancelled.status).toBe(200);
+  expect(await usedOn(monday)).toBe(0);
+  note("f-r0905", {
+    after: sessionDate,
+    before: { monday: 0, sunday: sundayBefore },
+    booked: { date: mondayTraining.date, status: mondayPosted.status() },
+    cancelled: mondayCancelled.status,
+    window: trainingWindow.days.map((day) => day.date),
+  });
+
   await closeSessions();
   expect((await setCoreClock(browser, afterOpening)).status).toBe(200);
   const admin = await adminSession(browser);
@@ -1580,7 +1731,10 @@ test("R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before
     .getByRole("button", { name: "Executa ara" })
     .click();
   const triggered = await triggering;
-  const triggerBody = (await triggered.json()) as unknown;
+  expect(triggered.status()).toBe(200);
+  const triggerBody = (await triggered.json()) as { dryRun: boolean; status: string };
+  expect(triggerBody).toMatchObject({ dryRun: false, status: "SUCCEEDED" });
+  await expect(card.getByText(/^Obertura de la setmana: /u)).toBeVisible();
   const runs = await call<{ items: unknown[] }>(admin, "/jobs/week-opening/runs");
 
   member = await clubsSession(browser, BOOKER);

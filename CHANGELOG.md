@@ -69,8 +69,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - **D1 «Revisió de classes en risc»**: `RiskReviewCard` (exported for S14) reads S15's form A (`GET /risk-review`) with the four statuses and the mockup's literals; `reviewAt` in the club's zone.
   - `packages/ui`: `RegistrantsPanel`. `packages/api-client`: `useClassRegistrants`, `removeWaitlistEntry`, `/jobs/{name}/trigger` among the idempotent paths, the back-office MSW handlers (`backoffice-handlers.ts`, `fixtures/jobs.ts`) and the scenarios `jobsFullClub`, `jobsMinimalClub` and `riskReviewEmpty`.
   - `packages/i18n`: the `admin-training` namespace, `admin-scheduling` `registrants.*`, `admin-census` `bookings.*`, `admin-settings` `jobs.*`, `admin-dashboard` `risk.*` (form A), `shell` `nav.agenda`, and the `enums` `bookingOrigin`, `trainingOrigin`, `ringBlockState`, `jobRunStatus`, `jobTrigger` and the `ACTIVE` booking states (ca, es, en).
+- Add the E5 real-core integration (E5-W04): `e2e/core/e5-core.spec.ts` runs T-08-40 and T-09-40 against the published core with the E5 demo seed:
+  - the flows: book inside the 30 s hold, cancel in time and late («4 hores»), swap on 06, the 29 limit note, `ALL_AT_ONCE` join → seat released → `NOTIFIED` → claim, the same in `es`;
+  - free training at 3/week in the day+3 window, the instructor's «Bloqueig» on 24 seen on 23, D4 and the ring-usage register, and `RING_HAS_BOOKINGS` over a live training;
+  - the processes: D11 [Simula] (nothing written) and [Executa ara] on `risk-review` reported by D1, the `cleanup` run, and P1 `week-opening` with the core's test clock advanced (a `NOT_YET_OPEN` row of 04 becomes `BOOKABLE`);
+  - the core's statuses for `JOB_UNKNOWN`, `SLOT_NOT_ON_GRID`, `DOG_ALREADY_BOOKED` and `OVERRIDE_NOT_ALLOWED`, and the cancellation of everything the run created.
+
+  `pnpm e2e:core` gains the E5 stage on its own fresh seed (`seed:demo --week-start` = the club-local Monday after the run's day, `E5_WEEK_START`); the core's clock goes to the scenario's `demoNow` before any login and back at the end. The 04 rows carry `data-class-id`/`data-bookable-state` and the `SlotGrid` cells `data-slot-state`/`data-ring` for that spec.
 
 ### Changed
+
+- Adopt the api snapshot `d770f84` as `openapi.json` (api E5-T25: `Booking.dog`, `lateCancelThresholdMinutes`, `cancellableInTimeUntil`, `WaitlistEntry.dog`, `ReservationRow.ringColor` and `activityId`, `BookedBy.self`) and regenerate the client types (E5-W04 step 0).
+  - Screen 07 names another booker only when `bookedBy.self` is false (never by comparing first names), and its late-cancellation warning follows the api's `cancellableInTimeUntil`.
+  - 03 paints each row's ring dot with `ringColor`; the MSW 03 rows carry `ringColor` and `activityId` as the api sends them (`null` on activity rows).
+  - The E4 real-core D4 check accepts the current week's empty state: since api E5-T06 the seed skips that week's past days, so on a Sunday no class is left.
 
 - D1's risk card reads S15's form A (`GET /risk-review`, S14 R-14-06 single source) instead of the `/dashboard` embed; `riskReview: null` still hides it. Form A has no gender, so the notified names read with the mockup's literals («avisada Laura + Duna», «avisats Pau + Blat») (E5-W03).
 - Adopt the api snapshot `8117f37` as `packages/api-client/openapi/openapi.json` (E5 booking, waitlist, training and job contracts; `AuditAction` reordered) and regenerate the client types (E4-W01).

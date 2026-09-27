@@ -21,11 +21,11 @@ Order: W01 → W02 ∥ W03 → W04 → W05 → W06 → W07 → W09 · W08 when J
 | E0-W09 | Playbook «screen from mockup» + checklist | W06, W07 |
 
 ### Gate E0 (front part)
-- [ ] The three shells render with the theme of the host's club **before first paint**, the navigation matches the mockups (6 tabs / sidebar groups) and hides disabled modules and unauthorised entries.
-- [ ] CI green: lint (incl. color rule), typecheck, tests, `i18n:check`, generated types diff, e2e, size budget.
-- [ ] Gallery screenshots in both themes; shell screenshots at 375 px and 1280 px committed under `roadmap/evidence/E0-W06/`.
+- [x] The three shells render with the theme of the host's club **before first paint**, the navigation matches the mockups (6 tabs / sidebar groups) and hides disabled modules and unauthorised entries. — organizer 26-09: `roadmap/evidence/E0-W06/{admin,clubs}-{canic,minim}-*.png` (E0-W06 verified 06-09).
+- [x] CI green: lint (incl. color rule), typecheck, tests, `i18n:check`, generated types diff, e2e, size budget. — organizer 26-09: E0-W07 CI run green (06-09); size budget guards `apps/clubs` only (E4-W16 extends it).
+- [x] Gallery screenshots in both themes; shell screenshots at 375 px and 1280 px committed under `roadmap/evidence/E0-W06/`. — organizer 26-09: captured by the organizer at E0-W02/E0-W06.
 - [x] `course-core` + `shared-types` in the monorepo with tests green (or explicitly deferred). — organizer 24-09: E0-W08 verified (2 rounds, 363 tests; JSON Schema split off to WP-16-C′).
-- [ ] Playbook written.
+- [x] Playbook written — `docs/playbooks/screen-from-mockup.md` (E0-W09 verified 06-09). **GATE E0 (front): passed** (organizer 26-09); `gate/E0` tag on the web when Jordi promotes.
 
 ## E1 · AgilityHub ID (front part) — OPENED 2026-09-06 (E1-W01 ready; W02–W04 open when the api contract E1-T01 lands)
 Planned: E1-W01 screens 01 (access), 02 (first access), 03b (profile choice), rows of 12 (password, language, sessions, sign out), impersonation banner, admin login with magic link · E1-W02 onboarding «Completa el teu perfil» · E1-W03 `apps/id` (login, magic link, set password, account, products) · E1-W04 e2e + screenshots next to `docs/pantalles/mobil/01, 02, 03b, 12`. · E1-W05 footer from `branding.club.city` (removes the club literal left by E1-W01; organizer 06-09). · E1-W06 adopt the verified api OpenAPI snapshot (replace the stub, regenerate types, fixture-vs-schema contract test) before E1-W04.
@@ -58,11 +58,14 @@ Added 24-09 (the gate audit's result: **fail**, see `roadmap/reviews/gate-E3/`):
 Decisions in force: A21, A22 (instructor reads D3/D4; single automatic description form «B+C» / «D i sup.»; the student never sees counts on 10), B20. Planned tasks: E4-W01 D3 + D3b (templates, class form, coverage) · E4-W02 D4/D4b/D4c (calendar, validation, class edition, D4c cancellation modal, ring blocks) · E4-W03 screens 10 + 23 (`DayGrid` in `packages/ui`) · E4-W04 D7 + activities in the app (04 block, detail, rows of 03/25) · E4-W05 integration against the published core with the E4 seed (T-06-28, T-07-32) — gate E4 (front).
 
 ### Gate E4 (front — checked by the organizer)
-- [ ] `e2e:core` E4 scenario green: generate from «Setmana A» + «Dissabtes» → validate → cancel the Wednesday 18:50 class with 4 registrants from D4c → the student sees it on 10/25; publish an activity → block on D4 → block on 04 → register → FIFO promotion.
-- [ ] Screenshots of D3/D3b/D4/D4b/D4c/D7 at 1280 and 10/23/04/detail/03/25 at 375 compared with the mockups (A22 d/e deviations only).
-- [ ] Complete `pnpm e2e` green; CI green.
+- [x] `e2e:core` E4 scenario green: generate from «Setmana A» + «Dissabtes» → validate → cancel the Wednesday 18:50 class with 4 registrants from D4c → the student sees it on 10/25; publish an activity → block on D4 → block on 04 → register → FIFO promotion. — organizer 26-09: E4-W05 verified 26-09 (T-06-28, T-07-32 on the real core with the E4 seed).
+- [x] Screenshots of D3/D3b/D4/D4b/D4c/D7 at 1280 and 10/23/04/detail/03/25 at 375 compared with the mockups (A22 d/e deviations only). — organizer 26-09: E3-W09/E4-W05/E4-W12 captures re-checked; the cosmetic differences are INC-11 (polish before the release).
+- [ ] Complete `pnpm e2e` green; CI green on a non-`[skip ci]` commit after E4-W13…W17 (the E4 front gate closes with those tasks — organizer 26-09 and 27-09).
 
 ## E5 · E6 · E7 · E8 — INSTALLED 2026-09-19 (organizer-less mode: all tasks `ready`, chained by `depends_on`)
+
+Added 26-09 (global audit): **E4-W16** (corrections pulled forward: «Entra com l'abonat» through the handoff code, an impersonated session that never refreshes, a session that survives an offline/5xx refresh, production bundles without the MSW world, downloadable queued exports, the «＋ DOC.» dialog, D10 with `BILLING` off, D8's tax default, D7's edits on `STALE_VERSION`, password recovery, the task rows of 13) after E4-W13; E5-W04 depends on it. The E5–E8 task texts carry the amendments listed in `backlog/revisio-26-09/REVISIO_GLOBAL_26-09.md` (published contracts instead of mocks-first, method-aware `Idempotency-Key`, the seed/clock recipe of E5-T06, the chip-wrap `SlotGrid`, existing D1/D10/D11 pieces extended instead of rebuilt); E7-W01/W02 and E8-W01/W02/W03 open only when the api E7-T01/E8-T01 snapshot is staged (`not_open`).
+Added 27-09 (organizer verifications): **E4-W17** (the round-2 review points of E4-W13 and E4-W14, and E4-W15's questions 2 and 4) after E4-W16; **E5-W05** (the E5-W01…E5-W03 follow-ups that need api E5-T29, and the mock clock after the week opens) waits for api E5-T29 (`external:api:E5-T29`; `not_open` until the organizer verifies E5-T29 and its snapshot is staged).
 E5 W01 screens 03/04/06/29/07 (bookings + waitlist), W02 screen 08 + 24 + D12 card (free training, `SlotGrid`), W03 back-office (D4/23 registrants panel, `/entrenaments` register, D10 bookings card, D11 «Processos automàtics» + D1 risk card), W04 integration · E6 W01 20/21/22, W02 25/26/D13, W03 D12 agenda + PDF and D14, W04 integration · E7 W01 D9 templates + announcements + log + D10 block, W02 screens 11/12/30 + push, W03 integration · E8 W01 D6 + remittances + accounting export, W02 12/rebuts + 13 pack + 14/15, W03 D10 drawers + «Inactivitats i baixes», W04 integration. The session wrapper stages the api snapshot automatically (`openapi.next.json`); each screen task's step 0 adopts it or goes mocks-first.
 
 ## E9 → E12 (summary)

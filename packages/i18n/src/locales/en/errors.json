@@ -127,6 +127,7 @@
   "MAPPING_INVALID": "The data mapping is invalid.",
   "MAX_ATTEMPTS": "The maximum number of attempts has been reached.",
   "MEMBER_ALREADY_EXISTS": "This member already exists.",
+  "MEMBER_LEAVING": "The member's leave is scheduled: nothing can be booked after the leave date.",
   "MEMBER_NOT_ACTIVE": "This member is not active.",
   "MEMBER_ERASED": "This member has been erased and can no longer be modified.",
   "MEMBER_NOT_LEFT": "This member has not left the club.",

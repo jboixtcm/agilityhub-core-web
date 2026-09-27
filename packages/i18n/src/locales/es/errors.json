@@ -127,6 +127,7 @@
   "MAPPING_INVALID": "El mapeo de datos no es válido.",
   "MAX_ATTEMPTS": "Se ha alcanzado el número máximo de intentos.",
   "MEMBER_ALREADY_EXISTS": "Este abonado ya existe.",
+  "MEMBER_LEAVING": "El abonado tiene la baja programada: no se puede reservar más allá de la fecha de baja.",
   "MEMBER_NOT_ACTIVE": "Este abonado no está activo.",
   "MEMBER_ERASED": "Este abonado ha sido suprimido y ya no se puede modificar.",
   "MEMBER_NOT_LEFT": "Este abonado todavía no ha causado baja.",

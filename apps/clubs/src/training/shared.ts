@@ -1,5 +1,6 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
-import type { SlotCellModel } from "@agilityhub/ui";
+import { useSession } from "@agilityhub/auth";
+import { type SlotCellModel, useBranding } from "@agilityhub/ui";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 export type TrainingSlots = components["schemas"]["TrainingSlots"];
@@ -120,19 +121,81 @@ export type CachedLoad<Data> =
   | { data?: undefined; error: unknown; stale: false; status: "error" }
   | { data?: undefined; error?: undefined; stale: false; status: "loading" };
 
-/** Last answers of this tab, per request key: what 08 shows offline (S09 §2 «sense connexió»). */
+const LOADING: CachedLoad<never> = { stale: false, status: "loading" };
+
+/**
+ * Whose answers the offline copy holds (S09 §6, tenant isolation): the club, the session's account
+ * and member, and whether the session is an impersonation (the admin's own answers are never read
+ * as the member's). Signed out it is `null`, and nothing is read or kept.
+ */
+export function useTrainingCacheScope(): string | null {
+  const { me, status } = useSession();
+  const branding = useBranding();
+  if (status !== "signedIn" || me === null) return null;
+  return JSON.stringify([
+    branding.club.slug,
+    me.membership?.clubId ?? null,
+    me.account.id,
+    me.membership?.memberId ?? null,
+    me.impersonation === undefined ? "self" : "impersonated",
+  ]);
+}
+
+/** Last answers of this tab, per scope and request key: what 08 shows offline (S09 §2). */
 const lastAnswers = new Map<string, unknown>();
+let cacheScope: string | null = null;
+
+function scopedKey(scope: string, key: string): string {
+  return `${scope}\n${key}`;
+}
+
+/**
+ * The identity changed (logout, another account, the start or the end of an impersonation): every
+ * kept answer and the shared eligibility are dropped. The first reader of the new scope clears.
+ */
+export function syncTrainingCacheScope(scope: string | null): void {
+  if (scope === cacheScope) return;
+  cacheScope = scope;
+  lastAnswers.clear();
+  resetEligibility(scope);
+}
+
+/** The app shell's guard: clears the training cache on every identity change, even off 08. */
+export function useTrainingCacheIdentity(): void {
+  const scope = useTrainingCacheScope();
+  useEffect(() => {
+    syncTrainingCacheScope(scope);
+  }, [scope]);
+}
 
 function networkFailure(error: unknown): boolean {
   return isApiError(error, "NETWORK") || !navigator.onLine;
 }
 
 /**
- * A read keyed by `key` (an answer that arrives after the key changed is dropped). A failed read
- * without network falls back to this tab's last answer for the key, marked `stale`; `refetch`
- * keeps the current data on screen while it reloads.
+ * The refusals that say the member's training rights changed (R-09-01, S09 §7 and §9): the module
+ * is off, the dog lost the right or is no longer the member's, or the route is forbidden.
+ */
+const RIGHTS_REFUSALS = new Set([
+  "DOG_NOT_ACCESSIBLE",
+  "DOG_NOT_ALLOWED",
+  "FORBIDDEN",
+  "MODULE_DISABLED",
+]);
+
+/** Any training read or write that ends in a rights refusal asks the eligibility again. */
+export function reportTrainingRefusal(error: unknown): void {
+  if (RIGHTS_REFUSALS.has(codeOf(error))) loadEligibility(true);
+}
+
+/**
+ * A read keyed by `key` and by the session's scope (an answer that arrives after either changed is
+ * dropped). A failed read without network falls back to this tab's last answer for the same scope
+ * and key, marked `stale`; `refetch` keeps the current data on screen while it reloads.
  */
 export function useCachedLoad<Data>(key: string | null, load: () => Promise<Data>) {
+  const scope = useTrainingCacheScope();
+  const fullKey = key === null || scope === null ? null : scopedKey(scope, key);
   const [state, setState] = useState<CachedLoad<Data> & { key: string | null }>({
     key: null,
     stale: false,
@@ -140,38 +203,168 @@ export function useCachedLoad<Data>(key: string | null, load: () => Promise<Data
   });
   const [reload, setReload] = useState(0);
   useEffect(() => {
-    if (key === null) return undefined;
+    if (fullKey === null) return undefined;
+    syncTrainingCacheScope(scope);
     let current = true;
     setState((previous) =>
-      previous.key === key && previous.status === "ready"
+      previous.key === fullKey && previous.status === "ready"
         ? previous
-        : { key, stale: false, status: "loading" },
+        : { key: fullKey, stale: false, status: "loading" },
     );
     load().then(
       (data) => {
         if (!current) return;
-        lastAnswers.set(key, data);
-        setState({ data, key, stale: false, status: "ready" });
+        // An answer for a scope that is no longer the session's is not kept.
+        if (cacheScope === scope) lastAnswers.set(fullKey, data);
+        setState({ data, key: fullKey, stale: false, status: "ready" });
       },
       (error: unknown) => {
         if (!current) return;
-        const cached = lastAnswers.get(key) as Data | undefined;
+        const cached = lastAnswers.get(fullKey) as Data | undefined;
         setState(
           cached !== undefined && networkFailure(error)
-            ? { data: cached, key, stale: true, status: "ready" }
-            : { error, key, stale: false, status: "error" },
+            ? { data: cached, key: fullKey, stale: true, status: "ready" }
+            : { error, key: fullKey, stale: false, status: "error" },
         );
+        reportTrainingRefusal(error);
       },
     );
     return () => {
       current = false;
     };
-  }, [key, load, reload]);
+  }, [fullKey, load, reload, scope]);
   const refetch = useCallback(() => {
     setReload((value) => value + 1);
   }, []);
-  // A state of another key is never shown: the new key reads as loading until it lands.
-  const view: CachedLoad<Data> = state.key === key ? state : { stale: false, status: "loading" };
+  // A state of another key or scope is never shown: the new one reads as loading until it lands.
+  const view: CachedLoad<Data> = fullKey !== null && state.key === fullKey ? state : LOADING;
+  return { ...view, refetch };
+}
+
+interface EligibilitySnapshot {
+  scope: string | null;
+  state: CachedLoad<TrainingSummary>;
+}
+
+/**
+ * The shared eligibility query (S09 §2 row 08, R-09-01): one `GET /me/training-summary` without a
+ * dog for the shell's tab and for 08, read again on focus and after a rights refusal.
+ */
+const eligibility: {
+  client: ApiClient | undefined;
+  /** The newest request: an older answer is dropped. */
+  generation: number;
+  inflight: boolean;
+  /** Asked again (forced) while a request was out: one more after it. */
+  queued: boolean;
+  requested: boolean;
+  snapshot: EligibilitySnapshot;
+} = {
+  client: undefined,
+  generation: 0,
+  inflight: false,
+  queued: false,
+  requested: false,
+  snapshot: { scope: null, state: LOADING },
+};
+const eligibilityListeners = new Set<() => void>();
+
+function publishEligibility(state: CachedLoad<TrainingSummary>): void {
+  eligibility.snapshot = { scope: eligibility.snapshot.scope, state };
+  for (const listener of eligibilityListeners) listener();
+}
+
+function resetEligibility(scope: string | null): void {
+  eligibility.generation += 1;
+  eligibility.inflight = false;
+  eligibility.queued = false;
+  eligibility.requested = false;
+  eligibility.snapshot = { scope, state: LOADING };
+  for (const listener of eligibilityListeners) listener();
+}
+
+function loadEligibility(force: boolean): void {
+  const { client } = eligibility;
+  const { scope } = eligibility.snapshot;
+  if (client === undefined || scope === null) return;
+  if (eligibility.inflight) {
+    // A focus while a read is out shares it; a refusal needs an answer given after it.
+    if (force) eligibility.queued = true;
+    return;
+  }
+  eligibility.inflight = true;
+  eligibility.requested = true;
+  eligibility.generation += 1;
+  const generation = eligibility.generation;
+  const key = scopedKey(scope, "eligibility");
+  const settle = (state: CachedLoad<TrainingSummary>) => {
+    if (generation !== eligibility.generation) return;
+    eligibility.inflight = false;
+    publishEligibility(state);
+    if (eligibility.queued) {
+      eligibility.queued = false;
+      loadEligibility(false);
+    }
+  };
+  client.GET("/me/training-summary").then(
+    ({ data }) => {
+      if (data === undefined) {
+        settle({
+          error: new TypeError("The response did not contain data"),
+          stale: false,
+          status: "error",
+        });
+        return;
+      }
+      if (generation === eligibility.generation) lastAnswers.set(key, data);
+      settle({ data, stale: false, status: "ready" });
+    },
+    (error: unknown) => {
+      const cached = lastAnswers.get(key) as TrainingSummary | undefined;
+      settle(
+        cached !== undefined && networkFailure(error)
+          ? { data: cached, stale: true, status: "ready" }
+          : { error, stale: false, status: "error" },
+      );
+    },
+  );
+}
+
+function subscribeEligibility(listener: () => void): () => void {
+  eligibilityListeners.add(listener);
+  return () => {
+    eligibilityListeners.delete(listener);
+  };
+}
+
+function eligibilitySnapshot(): EligibilitySnapshot {
+  return eligibility.snapshot;
+}
+
+/**
+ * The member's dogs with the right to train alone and the default one (R-09-01, R-09-09), shared
+ * by the shell and 08; `enabled = false` reads nothing (a staff-only session).
+ */
+export function useTrainingEligibility(client: ApiClient, enabled = true) {
+  const scope = useTrainingCacheScope();
+  const snapshot = useSyncExternalStore(
+    subscribeEligibility,
+    eligibilitySnapshot,
+    eligibilitySnapshot,
+  );
+  const active = enabled && scope !== null;
+  useEffect(() => {
+    if (!active) return;
+    syncTrainingCacheScope(scope);
+    eligibility.client = client;
+    if (!eligibility.requested) loadEligibility(false);
+  }, [active, client, scope]);
+  const refetch = useCallback(() => {
+    if (active && eligibility.snapshot.scope === scope) loadEligibility(false);
+  }, [active, scope]);
+  useWindowFocus(refetch);
+  const view: CachedLoad<TrainingSummary> =
+    active && snapshot.scope === scope ? snapshot.state : LOADING;
   return { ...view, refetch };
 }
 
@@ -242,26 +435,12 @@ export function useTrainingBooking(client: ApiClient, id: string) {
 
 /**
  * The «Entrenaments» tab (S09 §2 row 08, T-09-37): only with `FREE_TRAINING` and a non-empty
- * `eligibleDogs` of `GET /me/training-summary`; hidden while unknown and after any refusal.
+ * `eligibleDogs` of the shared eligibility (read again on focus and after a rights refusal);
+ * hidden while unknown and after any refusal.
  */
 export function useTrainingTab(client: ApiClient, enabled: boolean): boolean {
-  const [available, setAvailable] = useState(false);
-  useEffect(() => {
-    if (!enabled) return undefined;
-    let current = true;
-    client.GET("/me/training-summary").then(
-      ({ data }) => {
-        if (current) setAvailable((data?.eligibleDogs.length ?? 0) > 0);
-      },
-      () => {
-        if (current) setAvailable(false);
-      },
-    );
-    return () => {
-      current = false;
-    };
-  }, [client, enabled]);
-  return enabled && available;
+  const eligibility = useTrainingEligibility(client, enabled);
+  return enabled && eligibility.status === "ready" && eligibility.data.eligibleDogs.length > 0;
 }
 
 /** The rings whose cell is `FREE` at a slot, in the api's (catalog) order (R-09-07). */

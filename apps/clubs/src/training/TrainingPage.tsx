@@ -37,11 +37,13 @@ import {
   codeOf,
   detailsOf,
   freeRingsOf,
+  reportTrainingRefusal,
   ringCell,
   shortTime,
   type TrainingRing,
   type TrainingSlot,
   useOnline,
+  useTrainingEligibility,
   useTrainingSlots,
   useTrainingSummary,
   useWindowFocus,
@@ -110,7 +112,8 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const online = useOnline();
   const today = clubToday(branding.timeZone);
-  const eligibility = useTrainingSummary(client, null, null);
+  // The shell's tab reads the same query (R-09-01): a change of rights shows in both at once.
+  const eligibility = useTrainingEligibility(client);
   const [dogId, setDogId] = useState<string | null>(null);
   const dogs = eligibility.data?.eligibleDogs ?? [];
   const selectedDog =
@@ -302,6 +305,7 @@ export function TrainingPage({ client }: { client: ApiClient }) {
       const code = codeOf(cause);
       // A lost answer keeps its key, so a retry replays it instead of booking twice.
       if (code !== "NETWORK") keys.current.delete(fingerprint);
+      reportTrainingRefusal(cause);
       const details = detailsOf(cause);
       if (code === "MODULE_DISABLED") {
         navigateInApp("/inici", null, true);
@@ -520,7 +524,16 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           </div>
         </div>
       )}
-      {summary === undefined ? (
+      {counter.status === "error" ? (
+        // The selected day's counter failed: its own error and retry, and no [Confirma] until
+        // the summary is there (the limit is the api's, never guessed).
+        <Card className="booking-error training-counter" role="alert">
+          <p>{t("training:error")}</p>
+          <Button onClick={counter.refetch} variant="secondary">
+            {t("training:retry")}
+          </Button>
+        </Card>
+      ) : summary === undefined ? (
         <Skeleton height="3.5rem" label={t("training:loading")} />
       ) : (
         <Card className="training-counter">
@@ -559,7 +572,11 @@ export function TrainingPage({ client }: { client: ApiClient }) {
         <Button
           className="training-confirm"
           disabled={
-            choice === undefined || chosenSlot === undefined || chosenRing === undefined || !online
+            choice === undefined ||
+            chosenSlot === undefined ||
+            chosenRing === undefined ||
+            summary === undefined ||
+            !online
           }
           loading={pending}
           loadingLabel={t("training:confirm.sending")}

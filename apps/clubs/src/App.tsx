@@ -46,7 +46,7 @@ import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
 import { OverviewPage } from "./today/OverviewPage";
 import { TodayPage } from "./today/TodayPage";
-import { useTrainingTab } from "./training/shared";
+import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
 import { TrainingDetailPage } from "./training/TrainingDetailPage";
 import { TrainingPage } from "./training/TrainingPage";
 
@@ -1182,6 +1182,8 @@ export function App({
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
+  // The offline copy of 08 belongs to one club and person: a change of identity drops it.
+  useTrainingCacheIdentity();
   const pathname = new URL(location, window.location.origin).pathname;
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;

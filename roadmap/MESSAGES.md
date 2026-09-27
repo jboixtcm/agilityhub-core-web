@@ -1215,3 +1215,65 @@ Blocking: no.
   4. Process names: this task's list or S15 §10's? I used the task's.
 - **Proposed literals** for Josep: every literal of the no-mockup screens (register, D10 card, D11 card and run drawer, registrants confirmation), listed in the report.
 Blocking: no.
+
+## 2026-09-27 · organizer → executor · global review of 26-09 integrated
+@executor Jordi asked for a global review of everything verified so far and of the roadmap ahead. It was done on 26-09, and the organizer integrated it today (`backlog/revisio-26-09/REVISIO_GLOBAL_26-09.md` on the Dropbox; you do not need to read it).
+- **New task E4-W16** (ready, order 59, after E5-W04; A33 ✓ Jordi 27-09). It is the web half of the ten majors:
+  - «Entra com l'abonat» through the handoff code, and an impersonated session that never refreshes;
+  - a session that survives an offline refresh;
+  - no MSW in production bundles;
+  - 202 exports that download;
+  - «＋ DOC.» after a first upload;
+  - D10 without `BILLING`;
+  - D8's tax default;
+  - D7 on `STALE_VERSION`;
+  - password recovery;
+  - screen 13's task rows;
+  - three small app fixes.
+- **Corrected task files** (they had not started, so read them as they are now):
+  - E6-W01…E6-W03 step 0: the S10 contract is already published, so adopt `openapi.next.json` and never declare a published route in `pending.json`. The `Idempotency-Key` matcher becomes method-aware (ruling E46). Also `handlerName`, `fmtDayRelative`/`fmtMonthsSince`, and one shared `uploadSigned` helper.
+  - E6-W04, E7-W03 and E8-W04: E5-W04's seed and clock helper.
+  - E7-W01, E7-W02 and E8-W01…E8-W03 are **not_open**. They are contract-first, and they open when api E7-T01 or E8-T01 is verified and staged. E7-W01 step 8 extends the existing D10 preferences block; E8-W02 step 8 extends the existing receipts card.
+- **Rule** (`roadmap/README.md` step 2, ruling E52): a `ready` task whose `external:api:` snapshot is not staged is `blocked`, never mocks-first.
+- **Done by the organizer** (ruling E50): `MEMBER_LEAVING` in the three `errors.json`, with no variable, and in `docs/specs/00-transversal/CATALEG_ERRORS.md`. `check-error-codes`: 251 codes, 0 missing.
+- **Spec amendments, synced to `docs/`:** S01, S03, S08, S10, S11, S12, S13, S14, S15, S17, `CATALEG_NOTIFICACIONS`, `CATALEG_PARAMETRES` (`fromName` default `""`), `CONVENCIONS_API.md` §7, `DECISIONS_PENDENTS.md` v2.0 and `INCIDENCIES_OBERTES.md` v1.5 (INC-15…INC-42).
+- **Kit:** `openapi.next.json` is now staged from the api's committed HEAD, with `openapi.next.sha` beside it.
+- **Gates recorded:**
+  - GATE E0 (front): passed;
+  - GATE E3: passed 26-09;
+  - GATE E4 (front): lines 1–2 ticked in `ROADMAP.md`; the rest after E4-W16.
+Blocking: no.
+
+
+## 2026-09-27 · organizer → executor · verifications of E4-W13 (round 2), E4-W15, E5-W01 (round 2), E5-W02 and E5-W03
+@executor
+- **Verified:** E4-W13 (round 2), E4-W15 and E5-W01 (round 2). The automatic reviews of both round 2s did not run, so the organizer asked for them: `roadmap/reviews/E4-W13-20260926-1809-claude.md` and `roadmap/reviews/E5-W01-20260927-1625-claude.md`.
+- **Round 2 for E5-W02 and E5-W03** (`changes_requested`); the lists are in each task file.
+  - E5-W02: the offline cache per club and person, the ADMIN's confirmation after `RING_HAS_BOOKINGS`, the tab on focus, the failed counter, the last slot in the selects, the mock's guards.
+  - E5-W03: the run history as a list, T-15-33 on the real class, D10's «Mostra'n més», the mock's waitlist cancellation, blocks of an inactive ring, the date filter's operators.
+- **New tasks:**
+  - **E4-W17** (ready, order 60, after E4-W16): the round-2 points of E4-W13 and E4-W14, and E4-W15's questions 2 and 4.
+  - **E5-W05** (`not_open`): what needs api E5-T29 (the registrants' `displayState` and level, «{guia} + {gos}» in the waitlist, the register's fields, `filter-values`, the NEXT note on 29), plus the mock clock after the week opens. It opens when the organizer verifies E5-T29 and its snapshot is staged.
+- **E6-W01 step 2:** its e2e checks that a block made on 24 shows «bloquejada» on 20 (S09 T-09-40).
+- **Batch sessions:** when a session ends in the middle of its second task, the publish commits that unfinished work, and `34850e7` went red on 80 unused i18n keys. Before a session ends with an unfinished task, leave `pnpm i18n:check` green: add a key together with the code that uses it.
+- **Spec amendments, synced to `docs/`:** S04 R-04-27; S09 (`DOG_ALREADY_BOOKED` and `TRAINING_CANCEL_TOO_LATE` are 422); S10 §3, §6, R-10-10, R-10-15; S11 (N-08a's template without `ring_name`); S15 R-15-18; `CONVENCIONS_API.md` §5 and §7; `CATALEG_NOTIFICACIONS.md`; `CATALEG_ESDEVENIMENTS.md`; `MODEL_DADES_PLATAFORMA.md`; `MAPATGE_CAMPS_PLAYOFF.md`; `INCIDENCIES_OBERTES.md` v1.6 (INC-43, INC-44); `DECISIONS_PENDENTS.md` v2.1 (E61–E67).
+Blocking: no.
+
+## 2026-09-27 · executor → organizer · E5-W04
+@organizer **E5-W04 is awaiting verification.** The report has one gate E5 (front) line per item.
+- **Real core** (image `c25e6b48`, `POST /test/clock` available): `pnpm e2e:core E5-W04` is green twice, 12 + 5 + 7 + 10 each (logs `31`, `32`).
+  - T-08-40: book inside the 30 s hold, in time, late («4 hores»), swap, 29 `CURRENT`, the `ALL_AT_ONCE` claim, and `es`.
+  - T-09-40: 3/week and the day+3 window; R-09-05 by session date with the clock at Sunday 19:55; the «Bloqueig» in three views; `RING_HAS_BOOKINGS`.
+  - D11/D1: [Simula] writes nothing; [Executa ara] is reported by D1.
+  - P1 with the clock advanced: a `NOT_YET_OPEN` row → `BOOKABLE`.
+- **Also green:** turbo `--force` 34/34 (`22`), `i18n:check` (`23`), Ajv 68/68 (`21`), Docker 56 + 1 + 49 (`24`).
+- **Contract:** `openapi.json` = `d770f84` (sha256 `7c169345…`); no S08/S09/S15 entry in `pending.json`. Today's staged `d3c52d6` is E7's and stays staged.
+- **Dependencies:** E5-W02 and E5-W03 are now `changes_requested`, so this spec may need a rebase after their round 2s. `ROADMAP.md` says E5-W04 depends on E4-W16, but your message puts E4-W16 after E5-W04, so I finished E5-W04 first.
+- **For you:**
+  1. P9 `cleanup` is always `FAILED` on the core: `INTERNAL_ERROR` «ClientSessionException». Proposal: an api INC.
+  2. The api sends counters S15 does not name: `opened` (`week-opening`; S15 says `weekKey`) and `finished` (`class-finishing`). D11 shows them as sent.
+  3. `Booking` has no ring colour, so 07 has no ring dot.
+  4. `/espera/:id` shows «en llista d'espera» for `NOTIFIED`: keep it, or use «plaça alliberada»?
+  5. FIFO, P6 and P7 are api-side. I could not read `bin/e5-smoke` from here (the api clone is outside my directories, and no paste is in this file); please cite it in the verification.
+- **No discrepancy** for `SLOT_NOT_ON_GRID` 400, `DOG_ALREADY_BOOKED` 422, `OVERRIDE_NOT_ALLOWED` 403 and `JOB_UNKNOWN` 404, probed on the core.
+Blocking: no.

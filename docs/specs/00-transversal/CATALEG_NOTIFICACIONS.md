@@ -6,6 +6,8 @@ Categories (D9): `OPERATIONAL` (Operativa: correu OFF per defecte per a l'alumne
 
 Públics: `MEMBER` (alumne), `INSTRUCTORS` (tots els instructors del club, o els de la classe si s'indica), `ADMINS`, `APPLICANT` (sol·licitant d'alta sense compte: només correu).
 
+Numeració: no hi ha cap N-12; el salt de N-11b a N-13 és històric (organitzador 27-09).
+
 Canals: `APP` (feed 11 + badge) · `EMAIL` · `SMS` (a tots els telèfons de l'abonat) · `PUSH` (web push, si subscrit). Regla del Josep (18-08): **tot missatge sobre una acció de l'alumne que no és a iniciativa seva porta SMS** → categoria `CLUB_CHANGES`.
 
 Accions natives (`action`): `CHANGE_CLASS` (obre 04 amb el gos preseleccionat) · `CLAIM_SEAT` (POST claim de la llista d'espera) · `OPEN_BOOKING` · `OPEN_DOG` · `OPEN_TASKS` · `OPEN_INVOICES` · `OPEN_ACTIVITY` · `OPEN_SETUP`. Les plantilles admeten variables però **no** accions (R28-08): l'acció la fixa el codi per `code`.
@@ -58,7 +60,7 @@ Accions natives (`action`): `CHANGE_CLASS` (obre 04 amb el gos preseleccionat) �
 
 ## Variables disponibles (claus de codi; etiqueta en l'idioma de l'admin a D9)
 
-`member_name`, `member_first_name`, `gender`, `dog_name`, `level_name`, `class_date`, `class_time`, `class_description`, `ring_name`, `instructor_name`, `club_name`, `admin_text`, `reason`, `amount`, `invoice_number`, `pack_remaining`, `pack_expiry`, `date`, `time`, `link`, `confirm_by`, `activity_title`, `effective_date`, `from_month`, `to_month`. Sintaxi a la plantilla: `[[dog_name]]`. Les dates es formaten segons el `locale` del destinatari i el fus del club.
+`member_name`, `member_first_name`, `gender`, `dog_name`, `level_name`, `class_date`, `class_time`, `class_description`, `ring_name`, `instructor_name`, `club_name`, `admin_text`, `reason`, `amount`, `invoice_number`, `pack_remaining`, `pack_expiry`, `date`, `time`, `link`, `confirm_by`, `activity_title`, `effective_date`, `from_month`, `to_month`, `plan_name`, `requested_date`, `level`, `actor`, `period`, `pending_count`, `job_name`, `error_count`, `host`, `challenge_title`, `score`, `role`, `execute_date`, `inviter_name` (les catorze últimes, el 27-09: ja les feien servir les files). Sintaxi a la plantilla: `[[dog_name]]`. Les dates es formaten segons el `locale` del destinatari i el fus del club. `club_name` és una variable general: qualsevol plantilla la pot fer servir, sigui quin sigui el codi (organitzador 27-09, E66).
 
 ## Regles
 
@@ -70,7 +72,7 @@ Accions natives (`action`): `CHANGE_CLASS` (obre 04 amb el gos preseleccionat) �
 4. **Push**: només si hi ha subscripció activa; error 410 → es dona de baixa la subscripció.
 5. **Correu**: proveïdor per ADR-005; bounce/complaint → marca a `Member.contactEmails[].bounced` i avís a l'admin.
 6. **Idempotència**: una notificació per (`eventId`, `recipient`, `channel`); els reintents no dupliquen.
-7. **Log** (`notifications`): estat per canal (`QUEUED`, `SENT`, `DELIVERED`, `FAILED`, `SKIPPED_BY_PREFERENCE`, `SKIPPED_MODULE_OFF`), `readAt` per a l'app.
+7. **Log** (`notifications`): estat per canal (`QUEUED`, `SENT`, `DELIVERED`, `FAILED`, `SKIPPED_BY_PREFERENCE`, `SKIPPED_MODULE_OFF`, `SKIPPED_NO_CONTACT` —sense adreça ni telèfon—, `SKIPPED_CAP` —límit mensual d'SMS— i `SKIPPED_STALE` —l'avís ja no és rellevant quan s'envia—; 27-09, E66), `readAt` per a l'app.
 8. Tests: per a cada codi, la matriu canals×públics amb preferències ON/OFF i mòduls ON/OFF (PLA_BACKEND §9.8).
 
 ## Annex A — codis afegits el 03-09 a partir de les specs (numeració tancada)
@@ -96,4 +98,4 @@ Accions natives (`action`): `CHANGE_CLASS` (obre 04 amb el gos preseleccionat) �
 | N-54 | **Classe amb pocs alumnes** (per sota del mínim) | `ClassBelowMinimum` (anul·lació dins termini) | OPERATIONAL | INSTRUCTORS de la classe + ADMINS → APP+EMAIL | class_date, class_time, class_description, ring_name, dogs_count | CHANGE_CLASS | S15 |
 | N-53 | Invitació com a administrador del club | `POST /platform/clubs/{id}/admins` | SYSTEM | compte convidat → EMAIL | club_name, link, inviter_name | — | S17 |
 
-Variants: N-02 `MIGRATED` (S18, benvinguda dels abonats migrats) · N-32b amb `origin=BACKOFFICE` → CLUB_CHANGES (S07) · N-36 cobreix també les reserves de classe fetes/anul·lades pel club. Accions natives noves: `OPEN_JOBS`, `OPEN_EXPORT`, `OPEN_CHALLENGE`, `OPEN_MEMBER`, `OPEN_SIGNUP`. Variables noves: `upfront_total`, `payment_instructions`, `pay_link` (N-01), `member_last_names`, `dog_name_article`, `kind` (N-13), `class_description` (N-19), `admin_text`/`cancelled_count` (N-18b/N-28), `auto_cancel` (N-16/N-17).
+Variants: N-02 `MIGRATED` (S18, benvinguda dels abonats migrats) · N-32b amb `origin=BACKOFFICE` → CLUB_CHANGES (S07) · N-36 cobreix també les reserves de classe fetes/anul·lades pel club. Accions natives noves: `OPEN_JOBS`, `OPEN_EXPORT`, `OPEN_CHALLENGE`, `OPEN_MEMBER`, `OPEN_SIGNUP`. Variables noves: `upfront_total`, `payment_instructions`, `pay_link` (N-01), `member_last_names`, `dog_name_article`, `kind` (N-13), `class_description` (N-13/N-15/N-16/N-19), `admin_text`/`cancelled_count` (N-18b/N-28), `decision`, `source`, `member_first_name`, `dog_name` (N-28), `gender` (N-21/N-22), `auto_cancel` (N-16/N-17). Origen: `decision` i `source` de N-28 venen de S13 §13-7 i de la revisió global del 26-09; `class_description` de N-13, N-15 i N-16, `member_first_name` i `dog_name` de N-28 i `gender` de N-21 i N-22, de les verificacions d'E7-T01 i d'E6-T03 del 27-09, decisió E66.

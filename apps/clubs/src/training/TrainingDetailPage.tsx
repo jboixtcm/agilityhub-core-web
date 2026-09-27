@@ -9,7 +9,14 @@ import "../booking/booking.css";
 import { errorText, navigateInApp, type Translate } from "../booking/shared";
 
 import "./training.css";
-import { codeOf, detailsOf, type TrainingBooking, useNowUntil, useTrainingBooking } from "./shared";
+import {
+  codeOf,
+  detailsOf,
+  reportTrainingRefusal,
+  type TrainingBooking,
+  useNowUntil,
+  useTrainingBooking,
+} from "./shared";
 
 type DisplayState = "CANCELLED" | "CANCELLED_BY_CLUB" | "CONFIRMED" | "DONE";
 
@@ -132,6 +139,7 @@ export function TrainingDetailPage({
     } catch (cause) {
       // The refusal stays in the dialog, where the member is; the booking is read again.
       const code = codeOf(cause);
+      reportTrainingRefusal(cause);
       if (code === "TRAINING_CANCEL_TOO_LATE") {
         const details = detailsOf(cause);
         const threshold =

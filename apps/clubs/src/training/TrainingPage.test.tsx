@@ -1,6 +1,7 @@
-import { trainingState } from "@agilityhub/api-client/mocks";
+import { mockScenario, trainingState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import type { Me } from "@agilityhub/auth";
+import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
@@ -375,5 +376,162 @@ describe("screen 08 without network (S09 §2 «sense connexió»)", () => {
     expect(await screen.findByText("pot no estar al dia")).toBeVisible();
     expect(within(group("Matí")).getByRole("button", { name: "7:30, lliure" })).toBeVisible();
     expect(confirmButton()).toBeDisabled();
+  });
+});
+
+/** The scenario's own `/me` (the mock answers it without a bearer). */
+async function scenarioMe(): Promise<Me> {
+  return (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as Me;
+}
+
+/** Every training read of 08 without network: only a kept answer could fill the screen. */
+function trainingOffline(): void {
+  server.use(
+    http.get("*/api/v1/me/training-summary", () => HttpResponse.error()),
+    http.get("*/api/v1/training-slots", () => HttpResponse.error()),
+  );
+}
+
+/** 08 for `me` (the session `/me` answers), without network: the error, never kept answers. */
+async function expectNothingKept(me: Me): Promise<void> {
+  server.use(http.get("*/api/v1/me", () => HttpResponse.json(me)));
+  trainingOffline();
+  await renderApp("/entrenaments");
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "No s'han pogut carregar els entrenaments.",
+  );
+  expect(screen.queryByRole("button", { name: "Rock · D" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Matí" })).not.toBeInTheDocument();
+  cleanup();
+  server.resetHandlers();
+}
+
+describe("E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6)", () => {
+  it("A's answers never show for B after a network failure, and B's session drops A's copy", async () => {
+    const own = await scenarioMe();
+    // A: the member's 08, online.
+    await openTraining();
+    expect(pressed(group("Gossos"))).toEqual(["Rock · D"]);
+    cleanup();
+    // B: another account of the same club, every training read without network.
+    await expectNothingKept({
+      ...own,
+      account: { ...own.account, id: "10000000-0000-4000-8000-0000000000b2", name: "Marc Puig" },
+      ...(own.membership === undefined
+        ? {}
+        : {
+            membership: { ...own.membership, memberId: "20000000-0000-4000-8000-0000000000b2" },
+          }),
+    });
+    // A again, still without network: B's session dropped A's copy.
+    await expectNothingKept(own);
+  });
+
+  it("an impersonated session never reads the answers the account's own session kept", async () => {
+    const own = await scenarioMe();
+    await openTraining();
+    expect(pressed(group("Gossos"))).toEqual(["Rock · D"]);
+    cleanup();
+    // The same account, now through «Entra com l'abonat»: another scope.
+    await expectNothingKept({ ...own, impersonation: { actorName: "Aina Serra" } });
+    // The impersonation ended: its start already dropped the account's own copy.
+    await expectNothingKept(own);
+  });
+});
+
+function trainingTab(): HTMLElement | null {
+  return screen.queryByRole("link", { name: "Entrenaments" });
+}
+
+describe("E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7)", () => {
+  it("rights granted while away: the tab appears when the app regains focus", async () => {
+    await renderApp("/inici", { scenario: "trainingNoRight" });
+    await screen.findByRole("heading", { name: "Les meves reserves" });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 30);
+    });
+    expect(trainingTab()).not.toBeInTheDocument();
+    mockScenario("member");
+    fireEvent.focus(window);
+    expect(await screen.findByRole("link", { name: "Entrenaments" })).toBeVisible();
+  });
+
+  it("rights revoked while away: the tab goes when the app regains focus", async () => {
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Entrenaments" })).toBeVisible();
+    mockScenario("trainingNoRight");
+    fireEvent.focus(window);
+    await waitFor(() => {
+      expect(trainingTab()).not.toBeInTheDocument();
+    });
+  });
+
+  it("a MODULE_DISABLED from any training read asks the rights again, and the tab goes", async () => {
+    const requests = recordRequests();
+    await openTraining();
+    expect(trainingTab()).toBeInTheDocument();
+    const moduleOff = () =>
+      HttpResponse.json(
+        {
+          code: "MODULE_DISABLED",
+          details: {},
+          message: "Module disabled",
+          traceId: "trace-module-off",
+        },
+        { status: 404 },
+      );
+    server.use(
+      http.get("*/api/v1/me/training-summary", moduleOff),
+      http.get("*/api/v1/training-slots", moduleOff),
+    );
+    const before = requests.list.filter((line) => line === "GET /me/training-summary").length;
+    // Another day: the counter of its week is a training read, and it is refused.
+    fireEvent.click(within(group("Dia")).getByRole("button", { name: "dt 4" }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
+    await waitFor(() => {
+      expect(trainingTab()).not.toBeInTheDocument();
+    });
+    // The shell asked the eligibility again after the refusal (no focus, no remount).
+    expect(
+      requests.list.filter((line) => line === "GET /me/training-summary").length,
+    ).toBeGreaterThan(before);
+  });
+});
+
+describe("E5-W02 round 2 · review #4: a failed counter (S09 §2 states)", () => {
+  it("shows its error and retry, and [Confirma] stays disabled until the summary is there", async () => {
+    server.use(
+      http.get("*/api/v1/me/training-summary", ({ request }) =>
+        new URL(request.url).searchParams.has("date")
+          ? HttpResponse.json(
+              {
+                code: "INTERNAL_ERROR",
+                details: {},
+                message: "Internal error",
+                traceId: "trace-counter",
+              },
+              { status: 500 },
+            )
+          : undefined,
+      ),
+    );
+    await openTraining();
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("No s'han pogut carregar els entrenaments.");
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "7:30, lliure" }));
+    fireEvent.click(
+      within(screen.getAllByRole("group", { name: "Pista" })[1] ?? document.body).getByRole(
+        "button",
+        { name: "Muntanya" },
+      ),
+    );
+    expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:30–8:00 · Muntanya");
+    expect(confirmButton()).toBeDisabled();
+    server.resetHandlers();
+    fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
+    expect(confirmButton()).toBeEnabled();
   });
 });
