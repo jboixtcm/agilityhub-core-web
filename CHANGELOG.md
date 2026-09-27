@@ -79,6 +79,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- S09 free training, round 2 of E5-W02:
+  - 08's offline copy is kept per club, account, member and impersonation. It is dropped on logout, on another account and at the start or end of an impersonation.
+  - The «Entrenaments» tab and 08 share one eligibility query. It is read again on focus and after a `MODULE_DISABLED` or rights refusal from any training read; a new app instance reads it again.
+  - A failed counter shows its error and retry, and [Confirma] waits for the summary.
+  - D12's ADMIN keeps the refused range and its confirmation after the grid is read again, and may pick half hours held by live trainings (`RingBlockSlot.forceable`). The instructor never can.
+  - Without a grid, the time selects of 24 and D12 offer the band's or the day's last half hour (`ringBlockFallbackTimes`, `ringBlockLocalDateTime`).
+  - The MSW `POST /ring-blocks` refuses a member (`403 FORBIDDEN`) and an impersonation (`403 IMPERSONATION_DENIED`) on every day, before writing.
+- E5 back office, round 2 of E5-W03:
+  - D11's run drawer pages through `GET /jobs/{name}/runs` and filters it by result, origin, simulations and the club-local `scheduledFor` range.
+  - D11 labels the counters the api names for P1 (`opened`) and P8 (`swept`, `finished`, `activitiesFinished`); the mock sends them.
+  - D10's «Classes» table pages with «Mostra'n més» instead of asking for 1000 rows.
+  - The ring-usage register names the ring of every block: an ADMIN reads the deactivated rings too (`useClubRings`, `includeInactive`), and an instructor reads «pista desactivada» instead of an id. Its date and relation filters offer only operators that take one value.
+  - The MSW world: on the S15 example day (10-08-2026) the calendar holds the risk review's classes, so D1's rows open D4 on them, and their registrants are the members D1 names. The staff-read waiting-list removal checks WAITLIST, the ADMIN role and the entry's owner. `cleanup` has a month of runs.
 - Adopt the api snapshot `d770f84` as `openapi.json` (api E5-T25: `Booking.dog`, `lateCancelThresholdMinutes`, `cancellableInTimeUntil`, `WaitlistEntry.dog`, `ReservationRow.ringColor` and `activityId`, `BookedBy.self`) and regenerate the client types (E5-W04 step 0).
   - Screen 07 names another booker only when `bookedBy.self` is false (never by comparing first names), and its late-cancellation warning follows the api's `cancellableInTimeUntil`.
   - 03 paints each row's ring dot with `ringColor`; the MSW 03 rows carry `ringColor` and `activityId` as the api sends them (`null` on activity rows).

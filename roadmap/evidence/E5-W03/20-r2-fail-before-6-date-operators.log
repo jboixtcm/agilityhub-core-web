@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/TrainingRegisterPage.test.tsx (8 tests | 1 failed | 7 skipped) 300ms
+   ❯ E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) (8)
+     × E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so 297ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so
+AssertionError: expected [ 'eq', 'ne', 'lt', 'lte', 'gt', …(3) ] to deeply equal [ Array(6) ]
+
+- Expected
++ Received
+
+@@ -3,6 +3,8 @@
+    "ne",
+    "lt",
+    "lte",
+    "gt",
+    "gte",
++   "between",
++   "exists",
+  ]
+
+ ❯ src/training/TrainingRegisterPage.test.tsx:253:25
+    251|         .map((option) => option.getAttribute("value"));
+    252|     fireEvent.change(field, { target: { value: "date" } });
+    253|     expect(operators()).toEqual(["eq", "ne", "lt", "lte", "gt", "gte"]…
+       |                         ^
+    254|     for (const key of ["ringId", "memberId", "dogId"]) {
+    255|       fireEvent.change(field, { target: { value: key } });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  21:39:11
+   Duration  1.66s (transform 35%, environment 26%, tests 19%, import 15%, setup 5%)
+

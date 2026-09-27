@@ -1,0 +1,179 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > lists every booking as the api orders it, with its state, and the D12 «En espera: …» line 189ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > renders the four statuses with the mockup's exact literals and «4 avisos» 141ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > WILL_REVIEW (`autoCancelSameDay = false`) reads «el club decidirà» 24ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > opens D4 on the class's week with the class selected (a cancelled one under «Anul·lades») 54ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > offers [Treu de la llista] only to an ADMIN; an INSTRUCTOR reads the same panel 92ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment 233ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > renders the server aggregate, all risk rows, pending signups, and accessible chart 290ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > hides nullable module blocks and refetches when the window regains the focus 66ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run 247ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > paints a failed last run in the danger tone 61ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > says «Cap classe en risc» when the api lists none 37ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > an error shows its message and a retry 43ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-16 removes a waiting entry after the confirmation, reads the list again and tells the host 123ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip 64ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a DNI is labelled by its type 48ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a NIE is labelled by its type 34ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note 258ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > S14 R-14-06: a null `riskReview` block shows no risk card and never asks for GET /risk-review 35ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > uses the same ICU day plural as D2 in the pending signups card 37ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > gives each VALIDA its own accessible name 36ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN) 324ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula]) 43ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in ca the identity row of a PASSPORT is labelled by its type 36ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a PASSPORT is labelled by its type 55ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA 327ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE shows why inside the panel and reads the list again 91ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > another error stays inside the confirmation, where the admin is 85ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > marks an add-dog row «(nou gos)» 39ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-14-05 paints the submission date red only when pendingDays > warnDays 37ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 3 as «+3 aquest mes» 39ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation 152ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-14 shows each waiting entry's position in a FIFO club (`waitlist.mode = FIFO`) 62ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > S08 §9: without WAITLIST there is no waiting line and no waiting request 56ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a PASSPORT is labelled by its type 68ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in es the identity row of a DNI is labelled by its type 29ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a NIE is labelled by its type 39ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Cadells · avui 9:30 · Cadells» → D4 «anul·lades», that week, that class selected 234ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta -2 as «−2 aquest mes» 35ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 0 as «0 aquest mes» 41ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 1 risk alert(s) with an ICU plural 45ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > offers the api's values with their counts in the universal filter (no filter-values route: counted from the list) 230ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied 75ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000 400ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: in en the identity row of a DNI is labelled by its type 28ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2: the edit drawer labels a passport «Passaport» too 94ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > offers only the free half hours of the ring and their runs, and posts the block 301ms
+Not implemented: navigation to another Document
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 4 risk alert(s) with an ICU plural 45ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again 103ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > «Mostra'n més» is busy while its page is read 129ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > S09 §9: without FREE_TRAINING the training table is absent and never asked for 91ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet 55ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 0 days 38ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > writes times as «7:30» and links each risk row to D4 on its class 80ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > shows at most 6 risk rows, then «+{n} més» to D4 on the first hidden one 68ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Nivell D · avui 17:40 · Petita» → D4 «anul·lades», that week, that class selected 242ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it 149ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 1 days 41ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows the pending badge as an ICU plural for 5 days 33ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > R-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view 57ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR 279ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > puts the warning icon on the risk card title 42ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > E35 paints one column per progression level with the level name as tooltip, never `others` 55ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 1 in the chart legend 29ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again 78ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (404: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 67ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 2 in the chart legend 29ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 3 in the chart legend 30ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-04-23 keeps the refund notice after a rejection with a collected payment 31ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > step 0 renders each review warning by its code, so a new api value needs only its key 33ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message 105ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an instructor with live bookings in the way is told to ask the administration 355ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > tolerates null optional fields (INC-08) and never sends null back 92ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > T-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group) 96ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (422: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 75ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «F i G · demà 20:00 · Carretera» → D4 «actives», that week, that class selected 245ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Cadells · dc 9:30 · Cadells» → D4 «actives», that week, that class selected 207ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > validates a signup with a null payment method, upfront and family claim without sending null 90ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in es 22ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in en 17ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > reads `reviewAt` in the club's zone (Europe/Madrid), not the device's (America/Bogota) 20ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others 243ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > opens a process's run history and a run's sheet (effects and errors) 105ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > shows signup warnings as compact header badges 28ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13) 381ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > requires explicit confirmation when a manual upfront payment is zero 123ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it 319ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · E68: P1's and P8's counters read with their own labels 69ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 an impersonation token cannot manage the processes: the card says why and lists none 25ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action 298ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > edits the member and the dog in one save: the dog PATCH carries the dog's version, not the member's 175ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden 14ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in es 39ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in en 33ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > shows the cadence in club-local time whatever the device's time zone 34ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13) 307ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > add-dog: the person is read-only and the new dog is saved with its version 0 while the member is at 7 (R-04-25) 103ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > FREE_TRAINING off: «Bloqueig» only, and the times without a grid 111ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) > after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog 181ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included 191ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 async drawer: nothing typed during a save is lost > locks the fields while the save is in flight 122ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > LEVEL_REQUIRED (422, bare as the api sends it) is shown on its field 56ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so 552ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > LEVEL_NOT_ACTIVE (422, bare as the api sends it) is shown on its field 52ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > NEXT_INVOICE_DATE_REQUIRED (422, bare as the api sends it) is shown on its field 55ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > E5-W03 round 2 · review #8: a past block on a deactivated ring names its ring, never its id 194ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > VALIDATION_ERROR (400, bare as the api sends it) is shown on its field 51ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > UPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field 53ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > PLAN_NOT_AVAILABLE (422, bare as the api sends it) is shown on its field 48ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > INVALID_STATE (409, bare as the api sends it) is shown on its field 46ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > MEMBERSHIP_EXISTS (409, bare as the api sends it) is shown on its field 52ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > MEMBER_ERASED (409, bare as the api sends it) is shown on its field 52ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > caps the amount input at the amount due 22ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > maps the mock's own answers too: a missing level and a missing date 93ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > editing the first email keeps the second, and the untouched phones are not sent 94ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > editing the second phone sends both phones, each with its label 79ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > offers gender (three values), the notes, holderTaxId and the requested plan read-only 116ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) > adds a dog document forwarding the signed upload headers, and removes one 164ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > lists planOptions with their periodicity and runs dryRun on a change to Pack 6: lines, date and body updated 90ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > renders the dry run's warnings on the plan card (PAID_EXCEEDS_QUOTE on a cheaper plan) 34ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group 542ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) > a NOT_FOUND_PENDING claim is resolved with an explicit «Sense grup»: no familyGroupId 90ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > after VALIDA navigates to /tauler and refreshes the menu counters 73ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > a signup with nothing pending (409 INVALID_STATE NOT_PENDING) says it is resolved and links to D10 10ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01) > a VALIDA on a signup another admin already resolved shows the resolved state 30ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 7 · the refund warning (R-04-23) > warns before rejecting a signup with a collected payment and keeps the refund flag for D1 88ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 7 · the refund warning (R-04-23) > rejects a signup with nothing collected without the warning 87ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > STALE_VERSION offers a reload that keeps the admin's own choices 51ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > shows a rejection error inside the modal, with the reload action 41ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > names the first month and its portion from upfront.firstMonth: a full month has no «(mitja quota)» 18ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > E3-W08 step 0: a first month frozen without its portion (null, api E3-T12) names the month, never «(mitja quota)» 17ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > en: gender OTHER → «them» 14ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 8 · the D2 minors > gates the plan, payment and upfront blocks on BILLING and the group row on FAMILY_GROUP 18ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 1 the invoice date is canonical (R-04-15, S04 §10) > 10/11/2026 typed in ca still sends 2026-11-10 after a switch to en, shown in the en format 86ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > Pack 6 is quoted, then the Pack 10 quote fails: no 135 € breakdown or max remains, and VALIDA is disabled 63ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > a reload after a full payment shows no editable amount (the old quote is discarded) 92ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) > drops a Pack 6 answer that lands after the change to Pack 10 139ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > a delayed reload after STALE_VERSION: no upfront block and VALIDA disabled until the reload and the new quote both land 132ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > a failed reload shows its error with a retry, never the old quote (its «Data del proper rebut» included), and the retry brings a fresh one 84ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, S04 §2 D2, R-04-15) > the reload after a drawer save drops the quote too, until the fresh view lands 68ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method 39ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the applicant's card, not assignable any more, is shown preselected but cannot be chosen again 76ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > the preselected method is the view's `current` one (a readmission's submitted method) 27ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > a PENDING applicant with no assignable method sees the current one read-only 28ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > add-dog (R-04-19, R-04-25): the member's method is shown read-only, as the view lists it 27ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) > an empty list (an ACTIVE member without a method) shows no method row 26ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > moves a cash applicant to direct debit with IBAN and holder, among the view's methods 115ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > moves a direct-debit applicant to cash: only the type is sent, and D2 reads «Efectiu» 84ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > offers the card too when the club has Stripe enabled 43ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) > without BILLING the drawer has no payment method 28ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > shows the «Readmissió» badge and, for each changed field only, the LEFT record's value and the submitted one 28ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > an edit of the submitted phone updates the «Ara» value; the LEFT record's value stays 84ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: the person card, its WhatsApp and the drawer carry the submitted values, not the LEFT record's 55ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: a submitted SEPA method without an account (the core's `maskedAccount: null`) is «Compte no informat» on the card 21ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2 #1: during a readmission, editing phone 2 keeps the submitted phone 1 in the PATCH 93ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > the DNI/NIE is read-only while the readmission waits, and says how to correct it 79ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > a 409 INVALID_STATE READMISSION_PENDING shows «rebutja la readmissió» inside the drawer 53ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > a signup that is not a readmission has no readmission block and an editable DNI/NIE 32ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member` 34ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 1: the reused dog's card lists each changed field with «Abans» (its record) and «Ara» (the view), its documents too 31ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 1: an ordinary signup's dog, or a dog with `readmission: null` (as the core writes it), has no block 16ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view 47ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename 106ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: the last file of a submitted type withdraws it (files: []); a second change before the view reload lands carries the version the PATCH answered 58ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: a 409 READMISSION_PENDING that still arrives shows the new literal inside the drawer, for a field save and for a file 85ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 2: a removed file's key (400 FILE_NOT_FOUND, api E5-T21) shows the error in the drawer and re-reads the view 67ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 3: the reused dog's chip is read-only while the readmission waits, with the literal as its hint, and never sent 108ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > step 3: an ordinary signup's chip stays editable 45ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change 138ms
+ ✓ src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > round 2 (review nit #5): a document type without files reads as pending, not as absent 30ms
+
+ Test Files  8 passed (8)
+      Tests  169 passed (169)
+   Start at  21:43:49
+   Duration  8.65s (tests 52%, transform 19%, environment 17%, import 8%, setup 4%)
+

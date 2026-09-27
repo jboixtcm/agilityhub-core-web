@@ -1,0 +1,23 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN) 212ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA 228ms
+Not implemented: navigation to another Document
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > offers the api's values with their counts in the universal filter (no filter-values route: counted from the list) 132ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > offers only the free half hours of the ring and their runs, and posts the block 179ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR 152ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message 65ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an instructor with live bookings in the way is told to ask the administration 213ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others 141ms
+ ✓ src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action 172ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13) 234ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13) 176ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > FREE_TRAINING off: «Bloqueig» only, and the times without a grid 63ms
+ ✓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included 109ms
+
+ Test Files  2 passed (2)
+      Tests  13 passed (13)
+   Start at  21:10:55
+   Duration  2.26s (tests 52%, transform 21%, environment 15%, import 9%, setup 3%)
+

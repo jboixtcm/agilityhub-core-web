@@ -397,6 +397,8 @@
     "noClasses": "No class bookings.",
     "noTrainings": "No training bookings.",
     "seeAll": "See them all ›",
+    "showMore": "Show more",
+    "loadingMore": "Loading more bookings",
     "loading": "Loading the bookings…",
     "error": "The bookings could not be loaded.",
     "retry": "Try again"

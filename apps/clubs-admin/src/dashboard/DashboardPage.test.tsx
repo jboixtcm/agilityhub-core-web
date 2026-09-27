@@ -244,7 +244,7 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     expect(screen.getByText(/s'anul·larà dc a les 7:30/u)).toBeVisible();
     const row = screen.getByRole("link", { name: "Cadells · avui 9:30 · Cadells" });
     const expected =
-      "/calendari?classe=41000000-0000-4000-8000-000000000001&estat=anul%C2%B7lades&setmana=2026-08-10";
+      "/calendari?classe=cls-2026-08-10-0930-7&estat=anul%C2%B7lades&setmana=2026-08-10";
     expect(row).toHaveAttribute("href", expected);
     fireEvent.click(row);
     expect(navigate).toHaveBeenCalledWith(expected);

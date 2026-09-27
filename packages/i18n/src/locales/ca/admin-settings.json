@@ -771,7 +771,11 @@
       "notices": "{count, plural, one {# avís} other {# avisos}}",
       "late": "{count, plural, one {# amb retard} other {# amb retard}}",
       "classReminders": "{count, plural, one {# recordatori de classe} other {# recordatoris de classe}}",
-      "trainingReminders": "{count, plural, one {# recordatori d'entrenament} other {# recordatoris d'entrenament}}"
+      "trainingReminders": "{count, plural, one {# recordatori d'entrenament} other {# recordatoris d'entrenament}}",
+      "opened": "{count, plural, one {# setmana oberta} other {# setmanes obertes}}",
+      "swept": "{count, plural, one {# entrada d'espera tancada} other {# entrades d'espera tancades}}",
+      "finished": "{count, plural, one {# classe tancada} other {# classes tancades}}",
+      "activitiesFinished": "{count, plural, one {# activitat tancada} other {# activitats tancades}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} activat",
@@ -804,7 +808,20 @@
       "effects": "Efectes",
       "errors": "Errors",
       "empty": "Encara no hi ha execucions.",
-      "detail": "Fitxa de l'execució"
+      "detail": "Fitxa de l'execució",
+      "filters": "Filtra les execucions",
+      "all": "Tots",
+      "dryRun": "Simulacions",
+      "dryRunOnly": "només simulacions",
+      "realOnly": "sense simulacions",
+      "from": "Des del",
+      "to": "Fins al",
+      "clear": "Treu els filtres",
+      "emptyFiltered": "Cap execució amb aquests filtres.",
+      "pages": "Pàgines de l'historial",
+      "page": "Pàgina {page} de {totalPages}",
+      "previousPage": "Pàgina anterior",
+      "nextPage": "Pàgina següent"
     }
   }
 }

@@ -771,7 +771,11 @@
       "notices": "{count, plural, one {# aviso} other {# avisos}}",
       "late": "{count, plural, one {# con retraso} other {# con retraso}}",
       "classReminders": "{count, plural, one {# recordatorio de clase} other {# recordatorios de clase}}",
-      "trainingReminders": "{count, plural, one {# recordatorio de entrenamiento} other {# recordatorios de entrenamiento}}"
+      "trainingReminders": "{count, plural, one {# recordatorio de entrenamiento} other {# recordatorios de entrenamiento}}",
+      "opened": "{count, plural, one {# semana abierta} other {# semanas abiertas}}",
+      "swept": "{count, plural, one {# entrada de espera cerrada} other {# entradas de espera cerradas}}",
+      "finished": "{count, plural, one {# clase cerrada} other {# clases cerradas}}",
+      "activitiesFinished": "{count, plural, one {# actividad cerrada} other {# actividades cerradas}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} activado",
@@ -804,7 +808,20 @@
       "effects": "Efectos",
       "errors": "Errores",
       "empty": "Todavía no hay ejecuciones.",
-      "detail": "Ficha de la ejecución"
+      "detail": "Ficha de la ejecución",
+      "filters": "Filtra las ejecuciones",
+      "all": "Todos",
+      "dryRun": "Simulaciones",
+      "dryRunOnly": "solo simulaciones",
+      "realOnly": "sin simulaciones",
+      "from": "Desde el",
+      "to": "Hasta el",
+      "clear": "Quita los filtros",
+      "emptyFiltered": "Ninguna ejecución con estos filtros.",
+      "pages": "Páginas del historial",
+      "page": "Página {page} de {totalPages}",
+      "previousPage": "Página anterior",
+      "nextPage": "Página siguiente"
     }
   }
 }

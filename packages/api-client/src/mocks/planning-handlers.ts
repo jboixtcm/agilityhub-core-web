@@ -9,6 +9,8 @@ import {
   initialRingBlocks,
   initialTrainingBookings,
   type MockTrainingBooking,
+  RISK_REVIEW_DAY,
+  riskReviewSessions,
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
@@ -59,18 +61,29 @@ export const planningState: {
 } = {
   blocks: initialRingBlocks(mondayOf(clubLocalDate())),
   sequence: 1,
-  sessions: initialClassSessions(mondayOf(clubLocalDate())),
+  sessions: calendarSessions(clubLocalDate()),
   templates: structuredClone([...initialWeekTemplates]),
   trainingBookings: initialTrainingBookings(mondayOf(clubLocalDate())),
   weeks: initialWeeks(),
 };
+
+/**
+ * The calendar world's classes for the club-local `today`; on the S15 §6 example day it also holds
+ * the classes of that day's risk review (D1 → D4, T-15-33).
+ */
+function calendarSessions(today: string): ClassSession[] {
+  return [
+    ...initialClassSessions(mondayOf(today)),
+    ...(today === RISK_REVIEW_DAY ? riskReviewSessions(today) : []),
+  ];
+}
 
 /** Rebuilds the planning state relative to the club-local date of now (tests may fake `Date`). */
 export function resetPlanningState(): void {
   const monday = mondayOf(clubLocalDate());
   planningState.blocks = initialRingBlocks(monday);
   planningState.sequence = 1;
-  planningState.sessions = initialClassSessions(monday);
+  planningState.sessions = calendarSessions(clubLocalDate());
   planningState.templates = structuredClone([...initialWeekTemplates]);
   planningState.trainingBookings = initialTrainingBookings(monday);
   planningState.weeks = initialWeeks();

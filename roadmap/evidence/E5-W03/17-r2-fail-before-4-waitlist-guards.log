@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (11 tests | 1 failed | 10 skipped) 56ms
+   ❯ E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /bookings) (3)
+     × E5-W03 round 2 · review #7: a removal checks WAITLIST, the role and the entry's owner; an impersonation never reaches another member's entry 54ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /bookings) > E5-W03 round 2 · review #7: a removal checks WAITLIST, the role and the entry's owner; an impersonation never reaches another member's entry
+AssertionError: expected [ 403, 'FORBIDDEN' ] to deeply equal [ 404, 'NOT_FOUND' ]
+
+- Expected
++ Received
+
+  [
+-   404,
+-   "NOT_FOUND",
++   403,
++   "FORBIDDEN",
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:283:47
+    281|     // S08 §6 «MEMBER (pròpia) · ADMIN»: Kira's entry is Júlia's, neve…
+    282|     const member = await as<ApiError>("member", "POST", path);
+    283|     expect([member.status, member.body.code]).toEqual([404, "NOT_FOUND…
+       |                                               ^
+    284|     const impersonated = await as<ApiError>("impersonated", "POST", pa…
+    285|     expect([impersonated.status, impersonated.body.code]).toEqual([404…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  21:38:33
+   Duration  903ms (transform 52%, import 41%, tests 7%)
+

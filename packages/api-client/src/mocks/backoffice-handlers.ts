@@ -470,18 +470,32 @@ export const backofficeHandlers = [
     return HttpResponse.json({ items: classWaitlistEntries(session, fifo()) });
   }),
   // R-08-16 for the staff-read entries (the member world's are answered by `bookingHandlers`).
+  // S08 §6: MEMBER (own entry) · ADMIN, with WAITLIST; the club's own classes only (the tenant
+  // comes from the JWT). An impersonation token acts as the member: only the member's own entry.
   http.post("*/api/v1/waitlist-entries/:id/cancellation", ({ params }) => {
     const entry = findRegistrantEntry(String(params.id));
     if (entry === undefined) return undefined;
     const scenario = currentMockScenario();
-    if (!isImpersonation(scenario) && !hasRole(scenario, ["ADMIN"])) {
-      return apiError("FORBIDDEN", "Forbidden", 403);
+    const disabled = moduleOff(scenario, "WAITLIST");
+    if (disabled !== undefined) return disabled;
+    if (findSession(entry.classSessionId) === undefined) {
+      return apiError("NOT_FOUND", "Waitlist entry not found", 404);
+    }
+    const memberId = scenario.me.membership?.memberId;
+    const own = memberId !== undefined && censusMemberId(memberId) === entry.memberId;
+    const admin = !isImpersonation(scenario) && hasRole(scenario, ["ADMIN"]);
+    if (!admin && !own) {
+      // A member (or an impersonation) only reaches its own entries; other staff roles are refused.
+      return isImpersonation(scenario) || !hasRole(scenario, ["INSTRUCTOR", "ADMIN"])
+        ? apiError("NOT_FOUND", "Waitlist entry not found", 404)
+        : apiError("FORBIDDEN", "Forbidden", 403);
     }
     if (entry.state !== "ACTIVE" && entry.state !== "NOTIFIED") {
       return apiError("WAITLIST_ENTRY_NOT_LIVE", "The entry is no longer live", 422);
     }
     entry.state = "CANCELLED";
-    entry.cancelReason = "ADMIN";
+    // As the member world records it (E5-W01): the admin acting as the member is `ADMIN`.
+    entry.cancelReason = admin || isImpersonation(scenario) ? "ADMIN" : "MEMBER";
     entry.cancelledAt = new Date(nowMs()).toISOString();
     const session = planningState.sessions.find((item) => item.id === entry.classSessionId);
     if (session !== undefined) {

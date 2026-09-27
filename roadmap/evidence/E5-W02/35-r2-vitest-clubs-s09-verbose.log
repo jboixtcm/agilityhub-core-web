@@ -1,0 +1,85 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > has no forbidden term nor requirement code in training, instructor and enums (ca/es/en) 94ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name 123ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles 42ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile 21ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled 12ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan 1ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > the three locales carry the same training and instructor keys, none empty 50ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > keeps the exact ca literals of mockups 08 and 24 and the S09 §10 keys 52ms
+ ✓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup 78ms
+ ✓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests 28ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > a future booking: title, state, line, who booked it, and the cancellation back to 03 298ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 272ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none 65ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two 283ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > every active ring (also those closed to training), the route's ring preselected 96ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03 311ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > past cancellableUntil the button gives way to the notice; «Reservada pel club» for BACKOFFICE 79ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > cancelled by the club: its state, and nothing to do 83ms
+ ✓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants 87ms
+ ✓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice 27ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30» 294ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back 87ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip 142ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog 102ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff 75ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me 27ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04 74ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still 65ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch 55ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma 58ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module 102ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere) 125ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > es and en: the same page in the reader's language 95ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a contiguous selection writes the summary and posts the block, then 23 with its toast 306ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row 54ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article 66ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English 66ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 85ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed 205ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call 423ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > a member session opens the detail 68ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu» 60ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice 51ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > «Qualsevol» with two free rings asks which one, Muntanya first, and books with it 334ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again 397ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement 103ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it 181ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > the counter card reads the selected day's week and follows the dog 160ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it 57ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > a closed day says so and draws no grid 113ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English 109ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS 120ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions 47ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > with cancellable sessions: no button, the message and a link to each 181ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates) 190ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read 76ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: the labels are the reader's (es), as GET /me/dogs resolves them 40ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00) 201ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > without any cancellable session: the short message 144ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters 64ms
+ ✓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing 104ms
+ ✓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile 1ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > while the block is sent the button is busy and the grid, kinds and rings are inert 214ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key 215ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered 237ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details 196ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 422 codes show their message by code, never the api's text 144ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert 198ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > a lost answer keeps its Idempotency-Key for the retry; an answer drops it 238ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 without network (S09 §2 «sense connexió») > keeps the last grid marked «pot no estar al dia» and blocks the booking 157ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > A's answers never show for B after a network failure, and B's session drops A's copy 121ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > an impersonated session never reads the answers the account's own session kept 119ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights granted while away: the tab appears when the app regains focus 147ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights revoked while away: the tab goes when the app regains focus 101ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > a MODULE_DISABLED from any training read asks the rights again, and the tab goes 115ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there 164ms
+
+ Test Files  6 passed (6)
+      Tests  76 passed (76)
+   Start at  21:10:43
+   Duration  5.21s (tests 53%, transform 18%, environment 17%, import 9%, setup 4%)
+

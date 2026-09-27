@@ -1,0 +1,5 @@
+heavy.sh: 21:07 waiting for the host lock, held by: 21:07 agilityhub-core-api: python3 roadmap/evidence/E6-T03/manual-run.py
+heavy.sh: 21:09 got the host lock after 1 min 30 s
+undefined
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with EACCES: /Users/jordib/dev/agilityhub/agilityhub-core-web turbo run lint typecheck test build --force
+spawn /Users/jordib/dev/agilityhub/agilityhub-core-web EACCES

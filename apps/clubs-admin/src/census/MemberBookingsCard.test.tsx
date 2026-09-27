@@ -112,9 +112,9 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     expect(within(card).queryByRole("button", { name: /anul·la|reserva/iu })).toBeNull();
   });
 
-  it("«Veure'ls tots ›» reads every class booking of the member (the first page is 20)", async () => {
-    // A member with 25 class bookings: the api's pages of 20 and 1000 (CONVENCIONS_API §4).
-    const all = Array.from({ length: 25 }, (_, index) => ({
+  it("E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000", async () => {
+    // A member with 45 class bookings, paged by the api (CONVENCIONS_API §4): 20 + 20 + 5.
+    const all = Array.from({ length: 45 }, (_, index) => ({
       classStartsAt: new Date(Date.UTC(2026, 7, 15, 16, 50) - index * 86_400_000).toISOString(),
       dogName: "Duna",
       id: `booking-${String(index)}`,
@@ -122,13 +122,23 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
       origin: "APP",
       state: "ACTIVE",
     }));
+    let failThirdPage = true;
     server.use(
       http.get("*/api/v1/bookings", ({ request }) => {
-        const size = Number(new URL(request.url).searchParams.get("size"));
+        const url = new URL(request.url);
+        const size = Number(url.searchParams.get("size"));
+        const page = Number(url.searchParams.get("page"));
+        if (page === 2 && failThirdPage) {
+          failThirdPage = false;
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t" },
+            { status: 500 },
+          );
+        }
         return HttpResponse.json({
           appliedFilters: [{ field: "memberId", op: "eq", value: "member-laura" }],
-          items: all.slice(0, size),
-          page: 0,
+          items: all.slice(page * size, (page + 1) * size),
+          page,
           size,
           totalItems: all.length,
           totalPages: Math.ceil(all.length / size),
@@ -137,23 +147,76 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     );
     const requests = recordRequests();
     const { card } = await renderCard();
-    const classes = within(card).getByRole("table", { name: "Classes" });
-    expect(within(classes).getAllByRole("row")).toHaveLength(1 + 20);
-    fireEvent.click(within(card).getByRole("button", { name: "Veure'ls tots ›" }));
-    await waitFor(() => {
-      expect(
-        requests.some(
-          (url) =>
-            url.pathname.endsWith("/api/v1/bookings") && url.searchParams.get("size") === "1000",
-        ),
-      ).toBe(true);
-    });
-    await waitFor(() => {
-      expect(
-        within(within(card).getByRole("table", { name: "Classes" })).getAllByRole("row"),
-      ).toHaveLength(1 + 25);
-    });
+    const rows = () =>
+      within(within(card).getByRole("table", { name: "Classes" })).getAllByRole("row");
+    expect(rows()).toHaveLength(1 + 20);
     expect(within(card).queryByRole("button", { name: "Veure'ls tots ›" })).toBeNull();
+
+    fireEvent.click(within(card).getByRole("button", { name: "Mostra'n més" }));
+    await waitFor(() => {
+      expect(rows()).toHaveLength(1 + 40);
+    });
+    // The third page fails once: the forty rows stay, the button asks it again.
+    fireEvent.click(within(card).getByRole("button", { name: "Mostra'n més" }));
+    expect(await within(card).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    expect(rows()).toHaveLength(1 + 40);
+    fireEvent.click(within(card).getByRole("button", { name: "Mostra'n més" }));
+    await waitFor(() => {
+      expect(rows()).toHaveLength(1 + 45);
+    });
+    // The last page: no «Mostra'n més» (nor any alert) any more.
+    expect(within(card).queryByRole("button", { name: "Mostra'n més" })).toBeNull();
+    expect(within(card).queryByRole("alert")).toBeNull();
+    const pages = requests
+      .filter((url) => url.pathname.endsWith("/api/v1/bookings"))
+      .map((url) => `${url.searchParams.get("page") ?? ""}/${url.searchParams.get("size") ?? ""}`);
+    expect(pages).toEqual(["0/20", "1/20", "2/20", "2/20"]);
+  });
+
+  it("«Mostra'n més» is busy while its page is read", async () => {
+    let release: () => void = () => undefined;
+    server.use(
+      http.get("*/api/v1/bookings", async ({ request }) => {
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get("page"));
+        if (page === 1) {
+          await new Promise<void>((resolve) => {
+            release = resolve;
+          });
+        }
+        return HttpResponse.json({
+          appliedFilters: [],
+          items: Array.from({ length: 20 }, (_, index) => ({
+            classStartsAt: new Date(
+              Date.UTC(2026, 7, 15, 16, 50) - (page * 20 + index) * 86_400_000,
+            ).toISOString(),
+            dogName: "Duna",
+            id: `booking-${String(page * 20 + index)}`,
+            late: null,
+            origin: "APP",
+            state: "ACTIVE",
+          })),
+          page,
+          size: 20,
+          totalItems: 40,
+          totalPages: 2,
+        });
+      }),
+    );
+    const { card } = await renderCard();
+    fireEvent.click(within(card).getByRole("button", { name: "Mostra'n més" }));
+    await waitFor(() => {
+      expect(within(card).getByRole("button", { name: /Mostra'n més/u })).toHaveAttribute(
+        "aria-busy",
+        "true",
+      );
+    });
+    release();
+    await waitFor(() => {
+      expect(within(card).queryByRole("button", { name: /Mostra'n més/u })).toBeNull();
+    });
   });
 
   it("S09 §9: without FREE_TRAINING the training table is absent and never asked for", async () => {

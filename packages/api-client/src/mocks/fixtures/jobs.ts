@@ -1,6 +1,6 @@
 import type { components } from "../../generated/schema";
 
-import { clubInstant } from "./calendar";
+import { clubInstant, RISK_REVIEW_DAY, riskReviewClassIds } from "./calendar";
 import { addDays } from "./planning";
 
 type JobSummary = components["schemas"]["JobSummary"];
@@ -131,15 +131,14 @@ const NEXT_LOCAL: Readonly<Record<string, string>> = {
   "week-opening": "2026-08-16T20:00",
 };
 
-/** The class ids of the risk review (fictional, as in the D1 fixture). */
-export const RISK_CLASS_IDS = {
-  c1: "41000000-0000-4000-8000-000000000001",
-  c2: "41000000-0000-4000-8000-000000000002",
-  c3: "41000000-0000-4000-8000-000000000003",
-  c4: "41000000-0000-4000-8000-000000000004",
-  /** A class of today that fell below the minimum after 7:30: what a manual run would cancel. */
-  c5: "41000000-0000-4000-8000-000000000005",
-} as const;
+/**
+ * The classes of the example day's risk review, as the calendar world holds them on that day
+ * (`riskReviewSessions`), so D1's rows and the run's items open real D4 classes (T-15-33).
+ */
+export const RISK_CLASS_IDS = riskReviewClassIds(RISK_REVIEW_DAY);
+
+/** The staff-read booking of a class's first registrant (`classBookingItems`). */
+const firstBooking = (classId: string) => `cb-${classId}-0`;
 
 interface RunInput {
   counters?: Record<string, number>;
@@ -149,6 +148,8 @@ interface RunInput {
   items?: JobEffectItem[];
   /** Club-local `YYYY-MM-DDTHH:mm` of the occurrence. */
   local: string;
+  /** Its instant when the caller already has it (`clubInstant` is costly at import time). */
+  scheduledFor?: string;
   skipReason?: JobRun["skipReason"];
   status: JobRun["status"];
   trigger?: JobRun["trigger"];
@@ -159,7 +160,8 @@ function plusMs(instant: string, ms: number): string {
 }
 
 function run(entry: CatalogEntry, index: number, input: RunInput): JobRun {
-  const scheduledFor = clubInstant(input.local.slice(0, 10), input.local.slice(11, 16));
+  const scheduledFor =
+    input.scheduledFor ?? clubInstant(input.local.slice(0, 10), input.local.slice(11, 16));
   const durationMs = input.status === "RUNNING" ? null : (input.durationMs ?? 1_200);
   return {
     actorAccountId: input.trigger === "MANUAL" ? "10000000-0000-4000-8000-000000000001" : null,
@@ -195,24 +197,62 @@ const classItem = (id: string, action: string, detail: Record<string, unknown>):
   entityType: "ClassSession",
 });
 
-/** Three runs per process, newest first (the last one is `lastRun`). */
+/**
+ * `cleanup`'s history: a month of daily runs, one failed on 14 July, and a manual dry run on
+ * 5 August, so the run drawer pages through them and its filters narrow them.
+ */
+function cleanupRuns(at: (index: number, input: RunInput) => JobRun): JobRun[] {
+  // 11 July – 10 August keeps one offset in Madrid (CEST): each 6:00 is the last one minus days.
+  const last = Date.parse(clubInstant("2026-08-10", "06:00"));
+  const daily = Array.from({ length: 30 }, (_, back) => {
+    const local = `${addDays("2026-08-10", -back)}T06:00`;
+    const scheduledFor = new Date(last - back * 86_400_000).toISOString().replace(".000Z", "Z");
+    return back === 27
+      ? at(30 - back, {
+          errors: [
+            {
+              code: "INTERNAL_ERROR",
+              entityId: null,
+              message: "Storage cleanup timed out",
+              traceId: "mock-trace-cleanup",
+            },
+          ],
+          local,
+          scheduledFor,
+          status: "FAILED",
+        })
+      : at(30 - back, { local, scheduledFor, status: "SUCCEEDED" });
+  });
+  const dryRun = at(100, {
+    dryRun: true,
+    local: "2026-08-05T10:15",
+    status: "SUCCEEDED",
+    trigger: "MANUAL",
+  });
+  return [...daily, dryRun].sort((left, right) =>
+    right.scheduledFor.localeCompare(left.scheduledFor),
+  );
+}
+
+/** Three runs per process (a month of `cleanup`), newest first (the first one is `lastRun`). */
 function initialRuns(entry: CatalogEntry): JobRun[] {
   const at = (index: number, input: RunInput) => run(entry, index, input);
   switch (entry.name) {
     case "week-opening":
+      // S15 R-15-11 counters as the api sends them (`opened`, E68).
       return [
         at(3, {
-          counters: { activeClasses: 28, notified: 184 },
+          counters: { activeClasses: 28, notified: 184, opened: 1 },
           local: "2026-08-09T20:00",
           status: "SUCCEEDED",
         }),
         at(2, {
-          counters: { activeClasses: 27, notified: 181 },
+          counters: { activeClasses: 27, notified: 181, opened: 1 },
           local: "2026-08-02T20:00",
           status: "SUCCEEDED",
         }),
         at(1, {
-          counters: { activeClasses: 28, notified: 180 },
+          counters: { activeClasses: 28, notified: 180, opened: 1 },
           local: "2026-07-26T20:00",
           status: "SUCCEEDED",
         }),
@@ -238,11 +278,11 @@ function initialRuns(entry: CatalogEntry): JobRun[] {
             classItem(RISK_CLASS_IDS.c2, "CANCEL", {
               classId: RISK_CLASS_IDS.c2,
               dogsCount: 1,
-              affected: ["booking-laura-duna"],
+              affected: [firstBooking(RISK_CLASS_IDS.c2)],
             }),
             classItem(RISK_CLASS_IDS.c3, "NOTIFY", {
               classId: RISK_CLASS_IDS.c3,
-              newBookingIds: ["booking-pau-blat"],
+              newBookingIds: [firstBooking(RISK_CLASS_IDS.c3)],
             }),
           ],
           local: "2026-08-10T07:30",
@@ -336,10 +376,28 @@ function initialRuns(entry: CatalogEntry): JobRun[] {
         at(1, { local: "2026-05-22T06:00", status: "SUCCEEDED" }),
       ];
     case "cleanup":
+      return cleanupRuns(at);
+    case "class-finishing":
+      // P8 (every minute), with the counters the api sends (R-15-18, E68).
       return [
-        at(3, { local: "2026-08-10T06:00", status: "SUCCEEDED" }),
-        at(2, { local: "2026-08-09T06:00", status: "SUCCEEDED" }),
-        at(1, { local: "2026-08-08T06:00", status: "SUCCEEDED" }),
+        at(3, {
+          counters: { activitiesFinished: 0, finished: 2, swept: 1 },
+          durationMs: 150,
+          local: "2026-08-10T08:11",
+          status: "SUCCEEDED",
+        }),
+        at(2, {
+          counters: { activitiesFinished: 0, finished: 0, swept: 0 },
+          durationMs: 150,
+          local: "2026-08-10T08:10",
+          status: "SUCCEEDED",
+        }),
+        at(1, {
+          counters: { activitiesFinished: 1, finished: 0, swept: 0 },
+          durationMs: 150,
+          local: "2026-08-10T08:09",
+          status: "SUCCEEDED",
+        }),
       ];
     default:
       return [
@@ -362,7 +420,7 @@ export function jobEffects(name: string, dryRun: boolean): JobRun["effects"] {
         counters: { atRisk: 1, cancelled: 1, notifiedMembers: 0, reviewed: 3 },
         items: [
           classItem(RISK_CLASS_IDS.c5, action("CANCEL"), {
-            affected: ["booking-marc-chunli"],
+            affected: [firstBooking(RISK_CLASS_IDS.c5)],
             classId: RISK_CLASS_IDS.c5,
             dogsCount: 1,
           }),
@@ -374,7 +432,7 @@ export function jobEffects(name: string, dryRun: boolean): JobRun["effects"] {
       };
     case "week-opening":
       return {
-        counters: { activeClasses: 0, notified: 0 },
+        counters: { activeClasses: 0, notified: 0, opened: 1 },
         items: [
           {
             action: action("OPEN"),
@@ -493,11 +551,13 @@ export function riskReviewForm(date: string, empty: boolean): RiskReviewForm {
   const tomorrow = addDays(date, 1);
   const after = addDays(date, 2);
   const reviewAt = (day: string) => clubInstant(day, "07:30");
+  // On the example day these are the calendar world's classes (`riskReviewSessions`).
+  const ids = riskReviewClassIds(date);
   const items: RiskReviewItem[] = [
     {
       bookedCount: 0,
       cancelledAt: plusMs(reviewAt(date), 2_000),
-      classId: RISK_CLASS_IDS.c1,
+      classId: ids.c1,
       date,
       dayLabel: "TODAY",
       displayDescription: "Cadells",
@@ -510,7 +570,7 @@ export function riskReviewForm(date: string, empty: boolean): RiskReviewForm {
     {
       bookedCount: 1,
       cancelledAt: plusMs(reviewAt(date), 3_000),
-      classId: RISK_CLASS_IDS.c2,
+      classId: ids.c2,
       date,
       dayLabel: "TODAY",
       displayDescription: "Nivell D",
@@ -523,7 +583,7 @@ export function riskReviewForm(date: string, empty: boolean): RiskReviewForm {
     {
       bookedCount: 1,
       cancelledAt: null,
-      classId: RISK_CLASS_IDS.c3,
+      classId: ids.c3,
       date: tomorrow,
       dayLabel: "TOMORROW",
       displayDescription: "F i G",
@@ -536,7 +596,7 @@ export function riskReviewForm(date: string, empty: boolean): RiskReviewForm {
     {
       bookedCount: 0,
       cancelledAt: null,
-      classId: RISK_CLASS_IDS.c4,
+      classId: ids.c4,
       date: after,
       dayLabel: "OTHER",
       displayDescription: "Cadells",

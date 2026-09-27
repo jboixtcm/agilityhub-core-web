@@ -46,6 +46,7 @@
     "cancelLabel": "Cancel the block of {when}",
     "cancelling": "Cancelling the block…",
     "cancelled": "Block cancelled.",
+    "inactiveRing": "deactivated ring",
     "columns": {
       "from": "Day and time",
       "ring": "Ring",

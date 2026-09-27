@@ -221,12 +221,26 @@ test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", (
     const row = card.getByRole("link", { name: "Cadells · dc 9:30 · Cadells" });
     await expect(row).toHaveAttribute(
       "href",
-      "/calendari?classe=41000000-0000-4000-8000-000000000004&estat=actives&setmana=2026-08-10",
+      "/calendari?classe=cls-2026-08-12-0930-0&estat=actives&setmana=2026-08-10",
     );
     await row.click();
-    // The admin app navigates in place (`history.pushState`): D4 opens on the class's week. The
-    // S15 example's class ids are not in the mock calendar world, so D4 drops `classe` there.
+    // The admin app navigates in place (`history.pushState`): D4 opens on the class's week with
+    // that class selected (on the example day the calendar world holds the review's classes).
     await expect(page).toHaveURL(/\/calendari\?.*setmana=2026-08-10/u);
-    await expect(page.getByRole("heading", { name: "Calendari de classes" })).toBeVisible();
+    const selected = page.getByRole("region", { name: /^Classe seleccionada/u });
+    await expect(selected).toContainText("dc 12 · 9:30 · Cadells");
+
+    // A class the review cancelled opens under «Anul·lades», selected too.
+    await page.goto(`${baseUrl}/tauler`);
+    await page
+      .locator(".dashboard-risk")
+      .getByRole("link", { name: "Nivell D · avui 17:40 · Petita" })
+      .click();
+    await expect(page.getByRole("button", { name: "Anul·lades" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(selected).toContainText("dl 10 · 17:40 · Nivell D");
+    await expect(selected).toContainText("Laura + Duna");
   });
 });

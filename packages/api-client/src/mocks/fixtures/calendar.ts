@@ -1,6 +1,6 @@
 import type { components } from "../../generated/schema";
 
-import { addDays } from "./planning";
+import { addDays, mondayOf } from "./planning";
 
 export type ClassSession = components["schemas"]["ClassSession"];
 export type RingBlock = components["schemas"]["RingBlock"];
@@ -334,6 +334,118 @@ export function initialClassSessions(currentMonday: string): ClassSession[] {
     ...sessionsOf(currentMonday, activeSpecs(currentMonday), "ACTIVE"),
     ...sessionsOf(addDays(currentMonday, 7), draftSpecs(), "DRAFT"),
     ...sessionsOf(addDays(currentMonday, 14), inconsistentSpecs(), "DRAFT"),
+  ];
+}
+
+/**
+ * The S15 §6 form A example day (Monday 10 August 2026, the jobs world's `JOBS_MOCK_NOW`): on it
+ * the calendar world also holds the classes of the 7:30 risk review, so D1's rows open D4 on them.
+ */
+export const RISK_REVIEW_DAY = "2026-08-10";
+
+/**
+ * The classes the risk review of `date` names, in the calendar's id scheme. The slot suffixes
+ * give each class the registrants the review notified (the staff reads take a slice of the pool
+ * by start time and slot): c2 is Laura + Duna, c3 Pau + Blat. c4, two days later at 9:30 on
+ * Cadells, is the calendar's own Wednesday class (the one the Wednesday review cancels).
+ */
+export function riskReviewClassIds(date: string) {
+  return {
+    /** Today 9:30 «Cadells» on Cadells: cancelled by the review, nobody booked. */
+    c1: `cls-${date}-0930-7`,
+    /** Today 17:40 «Nivell D» on Petita: cancelled, Laura + Duna notified. */
+    c2: `cls-${date}-1740-9`,
+    /** Tomorrow 20:00 «F i G» on Carretera: at risk, Pau + Blat notified. */
+    c3: `cls-${addDays(date, 1)}-2000-10`,
+    c4: `cls-${addDays(date, 2)}-0930-0`,
+    /** Today 20:00 «B+C» on Muntanya: fell below the minimum after 7:30 (a manual run's plan). */
+    c5: `cls-${date}-2000-11`,
+  };
+}
+
+/** The review's own classes (c1, c2, c3, c5) as the calendar world holds them on `date`. */
+export function riskReviewSessions(date: string): ClassSession[] {
+  const ids = riskReviewClassIds(date);
+  const tomorrow = addDays(date, 1);
+  const week = (day: string) => `week-${mondayOf(day)}`;
+  const cancelled = (affectedBookings: number, seconds: number) => ({
+    adminText: null,
+    affectedBookings,
+    affectedWaitlist: 0,
+    at: new Date(Date.parse(clubInstant(date, "07:30")) + seconds * 1_000)
+      .toISOString()
+      .replace(".000Z", "Z"),
+    byAccountId: "system",
+    reason: "RISK_REVIEW" as const,
+  });
+  return [
+    classSession({
+      capacity: 5,
+      capacityMode: "AUTO",
+      cancellation: cancelled(0, 2),
+      date,
+      description: null,
+      displayDescription: "Cadells",
+      endTime: "10:30",
+      id: ids.c1,
+      instructorIds: [ANNA],
+      levelIds: [P],
+      ringId: CAD,
+      startTime: "09:30",
+      state: "CANCELLED",
+      weekId: week(date),
+    }),
+    classSession({
+      capacity: 5,
+      capacityMode: "MANUAL",
+      cancellation: cancelled(1, 3),
+      date,
+      description: "Nivell D",
+      displayDescription: "Nivell D",
+      endTime: "18:40",
+      id: ids.c2,
+      instructorIds: [LAURA],
+      levelIds: [D],
+      ringId: PET,
+      startTime: "17:40",
+      state: "CANCELLED",
+      weekId: week(date),
+    }),
+    {
+      ...classSession({
+        booked: 1,
+        capacity: 4,
+        capacityMode: "MANUAL",
+        date: tomorrow,
+        description: "F i G",
+        displayDescription: "F i G",
+        endTime: "21:00",
+        id: ids.c3,
+        instructorIds: [MARC],
+        levelIds: [F, G],
+        ringId: CAR,
+        startTime: "20:00",
+        state: "ACTIVE",
+        weekId: week(tomorrow),
+      }),
+      atRisk: true,
+    },
+    classSession({
+      booked: 1,
+      capacity: 5,
+      capacityMode: "AUTO",
+      date,
+      description: null,
+      displayDescription: "B+C",
+      endTime: "21:00",
+      id: ids.c5,
+      instructorIds: [MARC],
+      levelIds: [B, C],
+      ringId: MUN,
+      startTime: "20:00",
+      state: "ACTIVE",
+      weekId: week(date),
+    }),
   ];
 }
 

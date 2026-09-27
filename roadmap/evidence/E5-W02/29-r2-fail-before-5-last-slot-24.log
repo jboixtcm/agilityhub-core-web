@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/RingBlockPage.test.tsx (9 tests | 1 failed | 8 skipped) 247ms
+   ❯ screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) (9)
+     × E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00) 245ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)
+AssertionError: expected '23:00' to be '23:30' // Object.is equality
+
+Expected: "23:30"
+Received: "23:00"
+
+ ❯ src/instructor/RingBlockPage.test.tsx:229:33
+    227|     });
+    228|     expect(values("De")[0]).toBe("14:00");
+    229|     expect(values("De").at(-1)).toBe("23:30");
+       |                                 ^
+    230|     fireEvent.change(screen.getByRole("combobox", { name: "De" }), { t…
+    231|     expect(values("A")).toEqual(["24:00"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  21:06:07
+   Duration  1.69s (transform 42%, environment 22%, tests 16%, import 15%, setup 5%)
+

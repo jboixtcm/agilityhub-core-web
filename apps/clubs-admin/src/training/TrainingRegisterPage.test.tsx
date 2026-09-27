@@ -1,11 +1,14 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
+  catalogState,
   mockScenario,
   type MockScenario,
   resetBackofficeMockState,
+  resetCatalogState,
   resetPlanningState,
   resetTrainingMockState,
   TRAINING_MOCK_NOW,
+  trainingState,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -39,6 +42,7 @@ afterEach(() => {
   server.events.removeAllListeners();
   vi.useRealTimers();
   localStorage.clear();
+  resetCatalogState();
   mockScenario("admin");
 });
 afterAll(() => {
@@ -232,5 +236,133 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
     await renderPage("instructor", "?vista=bloquejos");
     await screen.findByText("Reg de la sorra");
     expect(screen.queryByRole("button", { name: /Anul·la el bloqueig/u })).toBeNull();
+  });
+
+  it("E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so", async () => {
+    const requests = recordRequests();
+    await renderPage();
+    await screen.findAllByText("dl 3 · 7:00");
+    fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+    const field = screen.getByRole("combobox", { name: "Columna" });
+    const operator = screen.getByRole("combobox", { name: "Operador" });
+    const operators = () =>
+      within(operator)
+        .getAllByRole("option")
+        .map((option) => option.getAttribute("value"));
+    fireEvent.change(field, { target: { value: "date" } });
+    expect(operators()).toEqual(["eq", "ne", "lt", "lte", "gt", "gte"]);
+    for (const key of ["ringId", "memberId", "dogId"]) {
+      fireEvent.change(field, { target: { value: key } });
+      expect(operators()).toEqual(["eq", "ne", "in", "nin"]);
+    }
+    fireEvent.change(field, { target: { value: "date" } });
+    fireEvent.change(operator, { target: { value: "gte" } });
+    const value = screen.getByRole("combobox", { name: "Valor" });
+    await waitFor(() => {
+      expect(
+        within(value)
+          .getAllByRole("option")
+          .map((option) => option.getAttribute("value")),
+      ).toContain("2026-08-04");
+    });
+    fireEvent.change(value, { target: { value: "2026-08-04" } });
+    fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
+    await waitFor(() => {
+      const last = requests
+        .filter(
+          (url) =>
+            url.pathname.endsWith("/training-bookings") && url.searchParams.get("size") === "50",
+        )
+        .at(-1);
+      expect(last?.searchParams.getAll("filter")).toEqual(["date:gte:2026-08-04"]);
+    });
+
+    // The blocks' day: a whole club-local day, so only `between`, with both ends.
+    fireEvent.click(screen.getByRole("tab", { name: "Bloquejos i reserves de pista" }));
+    await screen.findByText("Reg de la sorra");
+    fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+    const blockField = screen.getByRole("combobox", { name: "Columna" });
+    fireEvent.change(blockField, { target: { value: "ringId" } });
+    expect(
+      within(screen.getByRole("combobox", { name: "Operador" }))
+        .getAllByRole("option")
+        .map((option) => option.getAttribute("value")),
+    ).toEqual(["eq", "ne", "in", "nin"]);
+    fireEvent.change(blockField, { target: { value: "from" } });
+    expect(
+      within(screen.getByRole("combobox", { name: "Operador" }))
+        .getAllByRole("option")
+        .map((option) => option.getAttribute("value")),
+    ).toEqual(["between"]);
+    const day = screen.getByRole("combobox", { name: "Valor" });
+    await waitFor(() => {
+      expect(day).not.toBeDisabled();
+    });
+    fireEvent.change(day, { target: { value: "2026-08-02T22:00:00Z,2026-08-03T22:00:00Z" } });
+    fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
+    await waitFor(() => {
+      const last = requests.filter((url) => url.pathname.endsWith("/ring-blocks")).at(-1);
+      expect(last?.searchParams.getAll("filter")).toEqual([
+        "from:between:2026-08-02T22:00:00Z,2026-08-03T22:00:00Z",
+      ]);
+    });
+  });
+
+  it("E5-W03 round 2 · review #8: a past block on a deactivated ring names its ring, never its id", async () => {
+    // «Antiga» was deactivated after its Monday-morning block (S05: the catalog keeps it).
+    const template = catalogState.rings[0];
+    if (template === undefined) throw new TypeError("No ring in the catalog");
+    catalogState.rings.push({
+      ...template,
+      active: false,
+      id: "ring-antiga",
+      name: "Antiga",
+      order: 90,
+      shortName: "ANT",
+    });
+    trainingState.blocks.push({
+      activityId: null,
+      activityTitle: null,
+      createdByName: "Marc",
+      date: "2026-08-03",
+      from: "2026-08-03T04:00:00Z",
+      fromLocal: "06:00",
+      id: "rb-2026-08-03-0600-antiga",
+      kind: "BLOCK",
+      note: "Retirada de la tanca",
+      reason: "MAINTENANCE",
+      ringId: "ring-antiga",
+      state: "ACTIVE",
+      to: "2026-08-03T05:00:00Z",
+      toLocal: "07:00",
+      version: 1,
+    });
+    const requests = recordRequests();
+    await renderPage("admin", "?vista=bloquejos");
+    await screen.findByText("Retirada de la tanca");
+    await waitFor(() => {
+      expect(within(rowOf("Retirada de la tanca")).getByText("Antiga")).toBeVisible();
+    });
+    expect(screen.queryByText("ring-antiga")).toBeNull();
+    // Only the ADMIN may ask for the deactivated rings (S05 §6 `includeInactive`).
+    expect(
+      requests.some(
+        (url) =>
+          url.pathname.endsWith("/rings") && url.searchParams.get("includeInactive") === "true",
+      ),
+    ).toBe(true);
+
+    cleanup();
+    const instructorRequests = recordRequests();
+    await renderPage("instructor", "?vista=bloquejos");
+    await screen.findByText("Retirada de la tanca");
+    await screen.findAllByText("Carretera");
+    expect(within(rowOf("Retirada de la tanca")).getByText("pista desactivada")).toBeVisible();
+    expect(screen.queryByText("ring-antiga")).toBeNull();
+    expect(
+      instructorRequests.some(
+        (url) => url.pathname.endsWith("/rings") && url.searchParams.has("includeInactive"),
+      ),
+    ).toBe(false);
   });
 });

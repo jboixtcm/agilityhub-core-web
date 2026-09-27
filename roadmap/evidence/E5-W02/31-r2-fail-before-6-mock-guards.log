@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/training-handlers.test.ts (11 tests | 2 failed | 9 skipped) 113ms
+   ❯ E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS) (2)
+     × a MEMBER token → 403 FORBIDDEN, on a mockup day and on a calendar day, and nothing is written 64ms
+     × an impersonation token → 403 IMPERSONATION_DENIED, on both days, and nothing is written 47ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/training-handlers.test.ts > E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS) > a MEMBER token → 403 FORBIDDEN, on a mockup day and on a calendar day, and nothing is written
+AssertionError: expected [ 201, undefined ] to deeply equal [ 403, 'FORBIDDEN' ]
+
+- Expected
++ Received
+
+  [
+-   403,
+-   "FORBIDDEN",
++   201,
++   undefined,
+  ]
+
+ ❯ src/mocks/training-handlers.test.ts:576:53
+    574|     const before = JSON.stringify(trainingState.blocks);
+    575|     const mockupDay = await as<ApiError>("member", "POST", "/ring-bloc…
+    576|     expect([mockupDay.status, mockupDay.body.code]).toEqual([403, "FOR…
+       |                                                     ^
+    577|     const otherDay = await as<ApiError>("member", "POST", "/ring-block…
+    578|     expect([otherDay.status, otherDay.body.code]).toEqual([403, "FORBI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/training-handlers.test.ts > E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS) > an impersonation token → 403 IMPERSONATION_DENIED, on both days, and nothing is written
+AssertionError: expected [ 201, undefined ] to deeply equal [ 403, 'IMPERSONATION_DENIED' ]
+
+- Expected
++ Received
+
+  [
+-   403,
+-   "IMPERSONATION_DENIED",
++   201,
++   undefined,
+  ]
+
+ ❯ src/mocks/training-handlers.test.ts:592:53
+    590|     const before = JSON.stringify(trainingState.blocks);
+    591|     const mockupDay = await as<ApiError>("impersonated", "POST", "/rin…
+    592|     expect([mockupDay.status, mockupDay.body.code]).toEqual([403, "IMP…
+       |                                                     ^
+    593|     const otherDay = await as<ApiError>("impersonated", "POST", "/ring…
+    594|     expect([otherDay.status, otherDay.body.code]).toEqual([403, "IMPER…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 skipped (11)
+   Start at  21:06:17
+   Duration  911ms (transform 48%, import 38%, tests 14%)
+

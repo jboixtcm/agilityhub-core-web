@@ -3,7 +3,7 @@ import {
   type components,
   isApiError,
   listFields,
-  useActiveRings,
+  useClubRings,
 } from "@agilityhub/api-client";
 import { useSession } from "@agilityhub/auth";
 import { useClubFormats } from "@agilityhub/i18n";
@@ -75,6 +75,18 @@ const BLOCK_COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   state: ["state"],
 };
 const BLOCK_DEFAULT_COLUMNS = ["from", "ringId", "kind", "reason", "note", "createdByName"];
+
+/** A single date of the list (`date:gte:2026-08-04`). */
+const SINGLE_VALUE_DATE: readonly UniversalFilterOperator[] = [
+  "eq",
+  "ne",
+  "lt",
+  "lte",
+  "gt",
+  "gte",
+];
+/** One id of the list (`in`/`nin` with one id are a list of one). */
+const SINGLE_VALUE_RELATION: readonly UniversalFilterOperator[] = ["eq", "ne", "in", "nin"];
 
 const TRAINING_STATE_TONES: Readonly<Record<NonNullable<TrainingRow["state"]>, Tone>> = {
   ACTIVE: "success",
@@ -288,7 +300,7 @@ function TrainingBookingsList({
   const branding = useBranding();
   const formats = useClubFormats();
   const { t } = useTranslation(["admin-training", "census", "enums", "errors"]);
-  const rings = useActiveRings(client);
+  const rings = useClubRings(client, admin);
   const week = currentWeek(branding.timeZone);
   const [state, setState, applySavedView] = useUrlListState("bookings", {
     columns: TRAINING_DEFAULT_COLUMNS,
@@ -401,11 +413,33 @@ function TrainingBookingsList({
     [admin, empty, formats, onNavigate, rings, t],
   );
 
+  // The value control offers one value of the list: only the operators that take one (never
+  // `between`, which needs two dates, nor `exists`, which takes yes or no; CONVENCIONS_API §4).
   const filterColumns: UniversalListFilterColumn[] = [
-    { key: "ringId", label: t("admin-training:bookings.columns.ring"), type: "relation" },
-    { key: "date", label: t("admin-training:bookings.columns.date"), type: "date" },
-    { key: "memberId", label: t("admin-training:bookings.columns.member"), type: "relation" },
-    { key: "dogId", label: t("admin-training:bookings.columns.dog"), type: "relation" },
+    {
+      key: "ringId",
+      label: t("admin-training:bookings.columns.ring"),
+      operators: SINGLE_VALUE_RELATION,
+      type: "relation",
+    },
+    {
+      key: "date",
+      label: t("admin-training:bookings.columns.date"),
+      operators: SINGLE_VALUE_DATE,
+      type: "date",
+    },
+    {
+      key: "memberId",
+      label: t("admin-training:bookings.columns.member"),
+      operators: SINGLE_VALUE_RELATION,
+      type: "relation",
+    },
+    {
+      key: "dogId",
+      label: t("admin-training:bookings.columns.dog"),
+      operators: SINGLE_VALUE_RELATION,
+      type: "relation",
+    },
     { key: "state", label: t("admin-training:bookings.columns.state"), type: "enum" },
     { key: "origin", label: t("admin-training:bookings.columns.origin"), type: "enum" },
   ];
@@ -547,7 +581,7 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   const branding = useBranding();
   const formats = useClubFormats();
   const { t } = useTranslation(["admin-training", "census", "enums", "errors"]);
-  const rings = useActiveRings(client);
+  const rings = useClubRings(client, admin);
   const week = currentWeek(branding.timeZone);
   const weekFilter = `${clubInstant(week.start, "00:00", branding.timeZone)},${clubInstant(addDays(week.end, 1), "00:00", branding.timeZone)}`;
   const [state, setState, applySavedView] = useUrlListState("blocks", {
@@ -624,8 +658,14 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
       label: t("admin-training:blocks.columns.ring"),
       render: (row) => {
         const found = ring(row.ringId);
+        // An ADMIN reads every ring (`includeInactive`); an instructor only the active ones, so a
+        // ring it cannot see is a deactivated one (never its id).
         return found === undefined ? (
-          (row.ringId ?? empty)
+          row.ringId === undefined ? (
+            empty
+          ) : (
+            t("admin-training:blocks.inactiveRing")
+          )
         ) : (
           <RingName color={found.color} name={found.name} />
         );
@@ -698,8 +738,14 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   ];
 
   const filterColumns: UniversalListFilterColumn[] = [
-    { key: "ringId", label: t("admin-training:blocks.columns.ring"), type: "relation" },
     {
+      key: "ringId",
+      label: t("admin-training:blocks.columns.ring"),
+      operators: SINGLE_VALUE_RELATION,
+      type: "relation",
+    },
+    {
+      // Each value is a whole day (its two club-local ends): only `between` takes it.
       key: "from",
       label: t("admin-training:blocks.columns.from"),
       operators: ["between"],
@@ -718,7 +764,7 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
     if (field === "kind") return t(`enums:ringBlockKind.${value}`, { defaultValue: value });
     if (field === "reason") return t(`enums:ringBlockReason.${value}`, { defaultValue: value });
     if (field === "state") return t(`enums:ringBlockState.${value}`, { defaultValue: value });
-    if (field === "ringId") return ring(value)?.name ?? value;
+    if (field === "ringId") return ring(value)?.name ?? t("admin-training:blocks.inactiveRing");
     if (field === "from") {
       const [start = "", end = ""] = value.split(",");
       if (start === "" || end === "") return value;

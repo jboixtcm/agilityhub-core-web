@@ -1,0 +1,1605 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (18 tests | 1 failed | 17 skipped) 10210ms
+   ❯ T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) (14)
+     × E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it 10208ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it
+TestingLibraryElementError: Unable to find role="button" and name "14/07/2026 6:00"
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mExecucions · Neteja tècnica[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"Filtra les execucions"[39m
+      [33mclass[39m=[32m"jobs-card__run-filters"[39m
+      [33mrole[39m=[32m"group"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-status"[39m
+        [36m>[39m
+          [0mResultat[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-status"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SUCCEEDED"[39m
+          [36m>[39m
+            [0mcorrecta[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"PARTIAL"[39m
+          [36m>[39m
+            [0mparcial[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"FAILED"[39m
+          [36m>[39m
+            [0mfallida[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SKIPPED"[39m
+          [36m>[39m
+            [0momesa[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"RUNNING"[39m
+          [36m>[39m
+            [0men curs[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-trigger"[39m
+        [36m>[39m
+          [0mOrigen[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-trigger"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SCHEDULE"[39m
+          [36m>[39m
+            [0mprogramada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"CATCH_UP"[39m
+          [36m>[39m
+            [0mrecuperada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"MANUAL"[39m
+          [36m>[39m
+            [0mmanual[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-dry-run"[39m
+        [36m>[39m
+          [0mSimulacions[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-dry-run"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"true"[39m
+          [36m>[39m
+            [0mnomés simulacions[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"false"[39m
+          [36m>[39m
+            [0msense simulacions[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-from"[39m
+        [36m>[39m
+          [0mDes del[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"jobs-runs-from"[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-to"[39m
+        [36m>[39m
+          [0mFins al[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"jobs-runs-to"[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTreu els filtres[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-data-table__scroll"[39m
+    [36m>[39m
+      [36m<table[39m
+        [33mclass[39m=[32m"ah-data-table"[39m
+      [36m>[39m
+        [36m<caption[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDarreres execucions[0m
+        [36m</caption>[39m
+        [36m<thead>[39m
+          [36m<tr>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mOcurrència[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mOrigen[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mResultat[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mEfectes[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mErrors[0m
+            [36m</th>[39m
+          [36m</tr>[39m
+        [36m</thead>[39m
+        [36m<tbody>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m10/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m09/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m08/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m07/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m06/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m05/08/2026 10:15[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mmanual[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+                [0m · simulació[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m05/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m04/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m03/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m02/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m01/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m31/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m30/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m29/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m28/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m27/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m26/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m25/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m24/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m23/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+        [36m</tbody>[39m
+      [36m</table>[39m
+    [36m</div>[39m
+    [36m<nav[39m
+      [33maria-label[39m=[32m"Pàgines de l'historial"[39m
+      [33mclass[39m=[32m"jobs-card__pager"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mPàgina anterior[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<span>[39m
+        [0mPàgina 2 de 2[0m
+      [36m</span>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mPàgina següent[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</nav>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mExecucions · Neteja tècnica[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"Filtra les execucions"[39m
+      [33mclass[39m=[32m"jobs-card__run-filters"[39m
+      [33mrole[39m=[32m"group"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-status"[39m
+        [36m>[39m
+          [0mResultat[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-status"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SUCCEEDED"[39m
+          [36m>[39m
+            [0mcorrecta[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"PARTIAL"[39m
+          [36m>[39m
+            [0mparcial[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"FAILED"[39m
+          [36m>[39m
+            [0mfallida[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SKIPPED"[39m
+          [36m>[39m
+            [0momesa[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"RUNNING"[39m
+          [36m>[39m
+            [0men curs[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-trigger"[39m
+        [36m>[39m
+          [0mOrigen[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-trigger"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SCHEDULE"[39m
+          [36m>[39m
+            [0mprogramada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"CATCH_UP"[39m
+          [36m>[39m
+            [0mrecuperada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"MANUAL"[39m
+          [36m>[39m
+            [0mmanual[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-dry-run"[39m
+        [36m>[39m
+          [0mSimulacions[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"jobs-runs-dry-run"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTots[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"true"[39m
+          [36m>[39m
+            [0mnomés simulacions[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"false"[39m
+          [36m>[39m
+            [0msense simulacions[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-from"[39m
+        [36m>[39m
+          [0mDes del[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"jobs-runs-from"[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"jobs-runs-to"[39m
+        [36m>[39m
+          [0mFins al[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"jobs-runs-to"[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTreu els filtres[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-data-table__scroll"[39m
+    [36m>[39m
+      [36m<table[39m
+        [33mclass[39m=[32m"ah-data-table"[39m
+      [36m>[39m
+        [36m<caption[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDarreres execucions[0m
+        [36m</caption>[39m
+        [36m<thead>[39m
+          [36m<tr>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mOcurrència[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mOrigen[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mResultat[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mEfectes[0m
+            [36m</th>[39m
+            [36m<th[39m
+              [33mscope[39m=[32m"col"[39m
+            [36m>[39m
+              [0mErrors[0m
+            [36m</th>[39m
+          [36m</tr>[39m
+        [36m</thead>[39m
+        [36m<tbody>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m10/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m09/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m08/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m07/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m06/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m05/08/2026 10:15[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mmanual[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+                [0m · simulació[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m05/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m04/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m03/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m02/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m01/08/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m31/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m30/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m29/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m28/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m27/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m26/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m25/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m24/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+          [36m<tr>[39m
+            [36m<td>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"jobs-card__link"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m23/07/2026 6:00[0m
+              [36m</button>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0mprogramada[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcorrecta[0m
+              [36m</span>[39m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m—[0m
+            [36m</td>[39m
+            [36m<td>[39m
+              [0m0[0m
+            [36m</td>[39m
+          [36m</tr>[39m
+        [36m</tbody>[39m
+      [36m</table>[39m
+    [36m</div>[39m
+    [36m<nav[39m
+      [33maria-label[39m=[32m"Pàgines de l'historial"[39m
+      [33mclass[39m=[32m"jobs-card__pager"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mPàgina anterior[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<span>[39m
+        [0mPàgina 2 de 2[0m
+      [36m</span>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mPàgina següent[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</nav>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCard.test.tsx:370:33
+    368|     expect(within(table()).queryByRole("button", { name: "14/07/2026 6…
+    369|     fireEvent.click(within(drawer).getByRole("button", { name: "Pàgina…
+    370|     expect(await within(drawer).findByRole("button", { name: "14/07/20…
+       |                                 ^
+    371|     expect(within(drawer).getByText("Pàgina 2 de 2")).toBeVisible();
+    372|     expect(within(table()).getAllByRole("row")).toHaveLength(1 + 11);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  21:37:22
+   Duration  11.25s (tests 92%, transform 3%, environment 3%, import 2%, setup 1%)
+

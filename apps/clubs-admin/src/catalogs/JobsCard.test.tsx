@@ -211,8 +211,9 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
         .getAllByRole("listitem")
         .map((item) => item.textContent),
     ).toEqual([
-      "ClassSession 41000000-0000-4000-8000-000000000005 · WOULD_CANCEL",
-      "ClassSession 41000000-0000-4000-8000-000000000004 · WOULD_NOTIFY",
+      // The calendar world's classes of the example day (T-15-33 round 2).
+      "ClassSession cls-2026-08-10-2000-11 · WOULD_CANCEL",
+      "ClassSession cls-2026-08-12-0930-0 · WOULD_NOTIFY",
     ]);
     expect(
       within(dialog).getByText(/1 en risc · 1 anul·lada · 3 classes revisades/u),
@@ -349,6 +350,79 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
         "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
       ),
     ).toBeVisible();
+  });
+
+  it("E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it", async () => {
+    const requests = recordRequests();
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Neteja tècnica")).getByRole("button", { name: /correcta/u }),
+    );
+    const drawer = await screen.findByRole("dialog", { name: "Execucions · Neteja tècnica" });
+    const table = () => within(drawer).getByRole("table", { name: "Darreres execucions" });
+    await waitFor(() => {
+      expect(within(table()).getAllByRole("row")).toHaveLength(1 + 20);
+    });
+    expect(within(drawer).getByText("Pàgina 1 de 2")).toBeVisible();
+    // 14 July's failed run is older than the first page: the next page reaches it.
+    expect(within(table()).queryByRole("button", { name: "14/07/2026 6:00" })).toBeNull();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Pàgina següent" }));
+    expect(await within(drawer).findByRole("button", { name: "14/07/2026 6:00" })).toBeVisible();
+    expect(within(drawer).getByText("Pàgina 2 de 2")).toBeVisible();
+    expect(within(table()).getAllByRole("row")).toHaveLength(1 + 11);
+
+    // A filter narrows the list, from its first page.
+    fireEvent.change(within(drawer).getByLabelText("Resultat"), { target: { value: "FAILED" } });
+    await waitFor(() => {
+      expect(within(table()).getAllByRole("row")).toHaveLength(1 + 1);
+    });
+    expect(within(table()).getByRole("button", { name: "14/07/2026 6:00" })).toBeVisible();
+    expect(within(drawer).queryByText(/^Pàgina \d/u)).toBeNull();
+
+    // The origin, the simulations and the club-local range of `scheduledFor`.
+    fireEvent.change(within(drawer).getByLabelText("Resultat"), { target: { value: "" } });
+    fireEvent.change(within(drawer).getByLabelText("Origen"), { target: { value: "MANUAL" } });
+    fireEvent.change(within(drawer).getByLabelText("Simulacions"), { target: { value: "true" } });
+    fireEvent.change(within(drawer).getByLabelText("Des del"), {
+      target: { value: "2026-08-01" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Fins al"), {
+      target: { value: "2026-08-10" },
+    });
+    expect(await within(drawer).findByRole("button", { name: "05/08/2026 10:15" })).toBeVisible();
+    await waitFor(() => {
+      expect(within(table()).getAllByRole("row")).toHaveLength(1 + 1);
+    });
+    const runReads = requests.filter((request) => request.url.pathname.endsWith("/runs"));
+    expect(runReads.at(-1)?.url.searchParams.getAll("filter")).toEqual([
+      "trigger:eq:MANUAL",
+      "dryRun:eq:true",
+      "scheduledFor:between:2026-07-31T22:00:00Z,2026-08-10T21:59:59Z",
+    ]);
+    expect(runReads.at(-1)?.url.searchParams.get("page")).toBe("0");
+    expect(runReads.map((request) => request.url.searchParams.get("page"))).toContain("1");
+
+    fireEvent.click(within(drawer).getByRole("button", { name: "Treu els filtres" }));
+    expect(await within(drawer).findByText("Pàgina 1 de 2")).toBeVisible();
+  });
+
+  it("E5-W03 round 2 · E68: P1's and P8's counters read with their own labels", async () => {
+    const card = await renderCard();
+    expect(
+      within(await waitForRow(card, "Obertura de la setmana")).getByRole("button", {
+        name: /· 28 classes actives · 184 avisos enviats · 1 setmana oberta$/u,
+      }),
+    ).toBeVisible();
+    const finishing = rowOf(card, "Tancament de classes");
+    expect(
+      within(finishing).getByRole("button", {
+        name: /· 2 classes tancades · 1 entrada d'espera tancada$/u,
+      }),
+    ).toBeVisible();
+    fireEvent.click(within(finishing).getByRole("button", { name: /classes tancades/u }));
+    const drawer = await screen.findByRole("dialog", { name: "Execucions · Tancament de classes" });
+    expect(await within(drawer).findByText("1 activitat tancada")).toBeVisible();
+    expect(within(drawer).queryByText(/activitiesFinished|swept|finished|opened/u)).toBeNull();
   });
 
   it("R-15-09 an impersonation token cannot manage the processes: the card says why and lists none", async () => {

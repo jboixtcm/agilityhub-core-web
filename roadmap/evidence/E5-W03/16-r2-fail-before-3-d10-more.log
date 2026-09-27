@@ -1,0 +1,2110 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberBookingsCard.test.tsx (4 tests | 2 failed) 590ms
+   ❯ E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) (4)
+     × E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000 183ms
+     × «Mostra'n més» is busy while its page is read 139ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Reserves":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+    [33mid[39m=[32m"member-bookings-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"member-bookings__note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Classes":
+  [36m<h3 />[39m
+
+  --------------------------------------------------table:
+
+  Name "Classes":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Classes":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Dia i hora Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "ds 15/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 14/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 13/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 12/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 11/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 10/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dg 09/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "ds 08/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 07/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 06/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 05/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 04/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dg 02/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "ds 01/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 31/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 30/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 29/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 28/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 27/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "ds 15/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 14/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 13/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 12/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 11/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 10/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dg 09/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "ds 08/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 07/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 06/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 05/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 04/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dg 02/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "ds 01/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 31/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 30/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 29/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 28/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 27/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  --------------------------------------------------heading:
+
+  Name "Entrenaments":
+  [36m<h3 />[39m
+
+  --------------------------------------------------table:
+
+  Name "Entrenaments":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Entrenaments":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Dia i hora Pista Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "dt 04/08 · 8:00 Muntanya Rock confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 16:30 Carretera Rock cancel·lada pel club app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 7:00 Muntanya Rock confirmada club":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "dt 04/08 · 8:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 16:30":
+  [36m<td />[39m
+
+  Name "Carretera":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "cancel·lada pel club":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 7:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "club":
+  [36m<td />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"member-bookings-title"[39m
+  [33mclass[39m=[32m"ah-card member-bookings"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+    [33mid[39m=[32m"member-bookings-title"[39m
+  [36m>[39m
+    [0mReserves[0m
+  [36m</h2>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"member-bookings__note"[39m
+  [36m>[39m
+    [0mPer reservar o anul·lar en nom seu, fes servir «Entra com l'abonat».[0m
+  [36m</p>[39m
+  [36m<h3>[39m
+    [0mClasses[0m
+  [36m</h3>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-data-table__scroll"[39m
+  [36m>[39m
+    [36m<table[39m
+      [33mclass[39m=[32m"ah-data-table"[39m
+    [36m>[39m
+      [36m<caption[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mClasses[0m
+      [36m</caption>[39m
+      [36m<thead>[39m
+        [36m<tr>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mDia i hora[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mGos[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mEstat[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mOrigen[0m
+          [36m</th>[39m
+        [36m</tr>[39m
+      [36m</thead>[39m
+      [36m<tbody>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 15/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 14/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 13/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 12/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 11/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 10/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdg 09/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 08/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 07/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 06/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 05/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 04/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdg 02/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 01/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 31/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 30/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 29/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 28/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 27/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+      [36m</tbody>[39m
+    [36m</table>[39m
+  [36m</div>[39m
+  [36m<h3>[39m
+    [0mEntrenaments[0m
+  [36m</h3>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-data-table__scroll"[39m
+  [36m>[39m
+    [36m<table[39m
+      [33mclass[39m=[32m"ah-data-table"[39m
+    [36m>[39m
+      [36m<caption[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mEntrenaments[0m
+      [36m</caption>[39m
+      [36m<thead>[39m
+        [36m<tr>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mDia i hora[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mPista[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mGos[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mEstat[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mOrigen[0m
+          [36m</th>[39m
+        [36m</tr>[39m
+      [36m</thead>[39m
+      [36m<tbody>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 04/08 · 8:00[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mMuntanya[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 16:30[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mCarretera[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mcancel·lada pel club[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 7:00[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mMuntanya[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mclub[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+      [36m</tbody>[39m
+    [36m</table>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberBookingsCard.test.tsx:155:34
+    153|     expect(within(card).queryByRole("button", { name: "Veure'ls tots ›…
+    154|
+    155|     fireEvent.click(within(card).getByRole("button", { name: "Mostra'n…
+       |                                  ^
+    156|     await waitFor(() => {
+    157|       expect(rows()).toHaveLength(1 + 40);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > «Mostra'n més» is busy while its page is read
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Reserves":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+    [33mid[39m=[32m"member-bookings-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"member-bookings__note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Classes":
+  [36m<h3 />[39m
+
+  --------------------------------------------------table:
+
+  Name "Classes":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Classes":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Dia i hora Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "ds 15/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 14/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 13/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 12/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 11/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 10/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dg 09/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "ds 08/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 07/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 06/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 05/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 04/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dg 02/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "ds 01/08 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dv 31/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dj 30/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dc 29/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dt 28/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 27/07 · 18:50 Duna confirmada app":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "ds 15/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 14/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 13/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 12/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 11/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 10/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dg 09/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "ds 08/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 07/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 06/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 05/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 04/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dg 02/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "ds 01/08 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dv 31/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dj 30/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dc 29/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 28/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 27/07 · 18:50":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  --------------------------------------------------heading:
+
+  Name "Entrenaments":
+  [36m<h3 />[39m
+
+  --------------------------------------------------table:
+
+  Name "Entrenaments":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Entrenaments":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Dia i hora Pista Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "dt 04/08 · 8:00 Muntanya Rock confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 16:30 Carretera Rock cancel·lada pel club app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 7:00 Muntanya Rock confirmada club":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "dt 04/08 · 8:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 16:30":
+  [36m<td />[39m
+
+  Name "Carretera":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "cancel·lada pel club":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 7:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "club":
+  [36m<td />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"member-bookings-title"[39m
+  [33mclass[39m=[32m"ah-card member-bookings"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+    [33mid[39m=[32m"member-bookings-title"[39m
+  [36m>[39m
+    [0mReserves[0m
+  [36m</h2>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"member-bookings__note"[39m
+  [36m>[39m
+    [0mPer reservar o anul·lar en nom seu, fes servir «Entra com l'abonat».[0m
+  [36m</p>[39m
+  [36m<h3>[39m
+    [0mClasses[0m
+  [36m</h3>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-data-table__scroll"[39m
+  [36m>[39m
+    [36m<table[39m
+      [33mclass[39m=[32m"ah-data-table"[39m
+    [36m>[39m
+      [36m<caption[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mClasses[0m
+      [36m</caption>[39m
+      [36m<thead>[39m
+        [36m<tr>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mDia i hora[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mGos[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mEstat[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mOrigen[0m
+          [36m</th>[39m
+        [36m</tr>[39m
+      [36m</thead>[39m
+      [36m<tbody>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 15/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 14/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 13/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 12/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 11/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 10/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdg 09/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 08/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 07/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 06/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 05/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 04/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdg 02/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mds 01/08 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdv 31/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdj 30/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdc 29/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 28/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 27/07 · 18:50[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mDuna[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+      [36m</tbody>[39m
+    [36m</table>[39m
+  [36m</div>[39m
+  [36m<h3>[39m
+    [0mEntrenaments[0m
+  [36m</h3>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-data-table__scroll"[39m
+  [36m>[39m
+    [36m<table[39m
+      [33mclass[39m=[32m"ah-data-table"[39m
+    [36m>[39m
+      [36m<caption[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mEntrenaments[0m
+      [36m</caption>[39m
+      [36m<thead>[39m
+        [36m<tr>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mDia i hora[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mPista[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mGos[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mEstat[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0mOrigen[0m
+          [36m</th>[39m
+        [36m</tr>[39m
+      [36m</thead>[39m
+      [36m<tbody>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdt 04/08 · 8:00[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mMuntanya[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 16:30[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mCarretera[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mcancel·lada pel club[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mapp[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0mdl 03/08 · 7:00[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mMuntanya[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mRock[0m
+          [36m</td>[39m
+          [36m<td>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mconfirmada[0m
+            [36m</span>[39m
+          [36m</td>[39m
+          [36m<td>[39m
+            [0mclub[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+      [36m</tbody>[39m
+    [36m</table>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberBookingsCard.test.tsx:209:34
+    207|     );
+    208|     const { card } = await renderCard();
+    209|     fireEvent.click(within(card).getByRole("button", { name: "Mostra'n…
+       |                                  ^
+    210|     await waitFor(() => {
+    211|       expect(within(card).getByRole("button", { name: /Mostra'n més/u …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  21:38:22
+   Duration  1.79s (tests 35%, transform 26%, environment 22%, import 13%, setup 4%)
+

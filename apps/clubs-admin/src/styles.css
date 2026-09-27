@@ -1166,6 +1166,23 @@ select {
   color: var(--ah-color-danger);
 }
 
+.jobs-card__run-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--ah-space-2);
+  align-items: end;
+  margin-bottom: var(--ah-space-3);
+}
+
+.jobs-card__pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+  margin-top: var(--ah-space-2);
+  font-size: 0.82rem;
+}
+
 /* D10 «Reserves» (E5-W03): the member's class and training bookings, read-only. */
 .member-bookings {
   display: grid;

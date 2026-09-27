@@ -1,0 +1,375 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (21 tests | 1 failed | 20 skipped) 10283ms
+   ❯ E5-W02 round 2 · review #4: a failed counter (S09 §2 states) (1)
+     × shows its error and retry, and [Confirma] stays disabled until the summary is there 10281ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen training-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mEntrenaments[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Gossos"[39m
+            [33mclass[39m=[32m"dog-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip dog-chip dog-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRock · D[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip dog-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mToby · B (Joan Antoni)[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Dia"[39m
+            [33mclass[39m=[32m"training-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mAvui dl 3[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdt 4[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdc 5[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdj 6[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Pista"[39m
+            [33mclass[39m=[32m"training-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mQualsevol[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"training-setup-ring-muntanya"[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+              [36m/>[39m
+              [0mMuntanya[0m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon training-chip__setup"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+              [36m/>[39m
+              [0mCentral[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+              [36m/>[39m
+              [0mCarretera[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mhidden[39m=[32m""[39m
+              [33mid[39m=[32m"training-setup-ring-muntanya"[39m
+            [36m>[39m
+              [0mMuntanya: recorregut muntat[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"booking-section"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"booking-section__title"[39m
+            [36m>[39m
+              [0mMatí[0m
+            [36m</h2>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"training-fieldset"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Matí"[39m
+      ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen training-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mEntrenaments[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Gossos"[39m
+            [33mclass[39m=[32m"dog-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip dog-chip dog-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRock · D[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip dog-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mToby · B (Joan Antoni)[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Dia"[39m
+            [33mclass[39m=[32m"training-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mAvui dl 3[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdt 4[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdc 5[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mdj 6[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Pista"[39m
+            [33mclass[39m=[32m"training-chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mQualsevol[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"training-setup-ring-muntanya"[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+              [36m/>[39m
+              [0mMuntanya[0m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon training-chip__setup"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+              [36m/>[39m
+              [0mCentral[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-chip training-chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"training-ring-dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+              [36m/>[39m
+              [0mCarretera[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mhidden[39m=[32m""[39m
+              [33mid[39m=[32m"training-setup-ring-muntanya"[39m
+            [36m>[39m
+              [0mMuntanya: recorregut muntat[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"booking-section"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"booking-section__title"[39m
+            [36m>[39m
+              [0mMatí[0m
+            [36m</h2>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"training-fieldset"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Matí"[39m
+      ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/training/TrainingPage.test.tsx:521:32
+    519|     );
+    520|     await openTraining();
+    521|     const alert = await screen.findByRole("alert");
+       |                                ^
+    522|     expect(alert).toHaveTextContent("No s'han pogut carregar els entre…
+    523|     fireEvent.click(within(group("Matí")).getByRole("button", { name: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  21:04:26
+   Duration  11.62s (tests 89%, transform 5%, environment 3%, import 2%)
+

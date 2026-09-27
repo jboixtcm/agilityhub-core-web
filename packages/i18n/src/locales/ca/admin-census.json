@@ -412,6 +412,8 @@
     "noClasses": "Cap reserva de classe.",
     "noTrainings": "Cap reserva d'entrenament.",
     "seeAll": "Veure'ls tots ›",
+    "showMore": "Mostra'n més",
+    "loadingMore": "Carregant més reserves",
     "loading": "Carregant les reserves…",
     "error": "No s'han pogut carregar les reserves.",
     "retry": "Torna-ho a provar"

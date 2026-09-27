@@ -242,6 +242,8 @@ export function useCachedLoad<Data>(key: string | null, load: () => Promise<Data
 }
 
 interface EligibilitySnapshot {
+  /** The app instance's api client the answer belongs to (a remount brings its own). */
+  client: ApiClient | undefined;
   scope: string | null;
   state: CachedLoad<TrainingSummary>;
 }
@@ -251,7 +253,6 @@ interface EligibilitySnapshot {
  * dog for the shell's tab and for 08, read again on focus and after a rights refusal.
  */
 const eligibility: {
-  client: ApiClient | undefined;
   /** The newest request: an older answer is dropped. */
   generation: number;
   inflight: boolean;
@@ -260,32 +261,33 @@ const eligibility: {
   requested: boolean;
   snapshot: EligibilitySnapshot;
 } = {
-  client: undefined,
   generation: 0,
   inflight: false,
   queued: false,
   requested: false,
-  snapshot: { scope: null, state: LOADING },
+  snapshot: { client: undefined, scope: null, state: LOADING },
 };
 const eligibilityListeners = new Set<() => void>();
 
 function publishEligibility(state: CachedLoad<TrainingSummary>): void {
-  eligibility.snapshot = { scope: eligibility.snapshot.scope, state };
+  eligibility.snapshot = { ...eligibility.snapshot, state };
   for (const listener of eligibilityListeners) listener();
 }
 
-function resetEligibility(scope: string | null): void {
+function resetEligibility(
+  scope: string | null,
+  client: ApiClient | undefined = eligibility.snapshot.client,
+): void {
   eligibility.generation += 1;
   eligibility.inflight = false;
   eligibility.queued = false;
   eligibility.requested = false;
-  eligibility.snapshot = { scope, state: LOADING };
+  eligibility.snapshot = { client, scope, state: LOADING };
   for (const listener of eligibilityListeners) listener();
 }
 
 function loadEligibility(force: boolean): void {
-  const { client } = eligibility;
-  const { scope } = eligibility.snapshot;
+  const { client, scope } = eligibility.snapshot;
   if (client === undefined || scope === null) return;
   if (eligibility.inflight) {
     // A focus while a read is out shares it; a refusal needs an answer given after it.
@@ -356,15 +358,18 @@ export function useTrainingEligibility(client: ApiClient, enabled = true) {
   useEffect(() => {
     if (!active) return;
     syncTrainingCacheScope(scope);
-    eligibility.client = client;
+    // Another app instance (its own api client) asks again: it never shows the previous
+    // instance's answer (the offline copy of the same scope is kept).
+    if (eligibility.snapshot.client !== client) resetEligibility(scope, client);
     if (!eligibility.requested) loadEligibility(false);
   }, [active, client, scope]);
   const refetch = useCallback(() => {
-    if (active && eligibility.snapshot.scope === scope) loadEligibility(false);
-  }, [active, scope]);
+    const current = eligibility.snapshot;
+    if (active && current.scope === scope && current.client === client) loadEligibility(false);
+  }, [active, client, scope]);
   useWindowFocus(refetch);
   const view: CachedLoad<TrainingSummary> =
-    active && snapshot.scope === scope ? snapshot.state : LOADING;
+    active && snapshot.scope === scope && snapshot.client === client ? snapshot.state : LOADING;
   return { ...view, refetch };
 }
 

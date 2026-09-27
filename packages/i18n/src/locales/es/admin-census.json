@@ -397,6 +397,8 @@
     "noClasses": "Ninguna reserva de clase.",
     "noTrainings": "Ninguna reserva de entrenamiento.",
     "seeAll": "Verlas todas ›",
+    "showMore": "Muestra más",
+    "loadingMore": "Cargando más reservas",
     "loading": "Cargando las reservas…",
     "error": "No se han podido cargar las reservas.",
     "retry": "Vuelve a intentarlo"

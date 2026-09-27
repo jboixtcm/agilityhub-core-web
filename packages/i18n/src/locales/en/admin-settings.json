@@ -771,7 +771,11 @@
       "notices": "{count, plural, one {# notice} other {# notices}}",
       "late": "{count, plural, one {# late} other {# late}}",
       "classReminders": "{count, plural, one {# class reminder} other {# class reminders}}",
-      "trainingReminders": "{count, plural, one {# training reminder} other {# training reminders}}"
+      "trainingReminders": "{count, plural, one {# training reminder} other {# training reminders}}",
+      "opened": "{count, plural, one {# week opened} other {# weeks opened}}",
+      "swept": "{count, plural, one {# waiting entry closed} other {# waiting entries closed}}",
+      "finished": "{count, plural, one {# class closed} other {# classes closed}}",
+      "activitiesFinished": "{count, plural, one {# activity closed} other {# activities closed}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} on",
@@ -804,7 +808,20 @@
       "effects": "Effects",
       "errors": "Errors",
       "empty": "There are no runs yet.",
-      "detail": "Run sheet"
+      "detail": "Run sheet",
+      "filters": "Filter the runs",
+      "all": "All",
+      "dryRun": "Simulations",
+      "dryRunOnly": "simulations only",
+      "realOnly": "without simulations",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear the filters",
+      "emptyFiltered": "No run matches these filters.",
+      "pages": "History pages",
+      "page": "Page {page} of {totalPages}",
+      "previousPage": "Previous page",
+      "nextPage": "Next page"
     }
   }
 }

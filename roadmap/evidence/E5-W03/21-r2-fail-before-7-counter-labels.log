@@ -1,0 +1,138 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (18 tests | 1 failed | 17 skipped) 152ms
+   ❯ T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) (14)
+     × E5-W03 round 2 · E68: P1's and P8's counters read with their own labels 149ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · E68: P1's and P8's counters read with their own labels
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/· 28 classes actives · 184 avisos enviats · 1 setmana oberta$/u`
+
+Here are the accessible roles:
+
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "fa 12 h · correcta · 28 classes actives · 184 avisos enviats · opened: 1":
+  [36m<button[39m
+    [33mclass[39m=[32m"jobs-card__last"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------switch:
+
+  Name "Obertura de la setmana activat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Obertura de la setmana activat"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Simula Obertura de la setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Simula Obertura de la setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Executa ara Obertura de la setmana":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Executa ara Obertura de la setmana"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"week-opening"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mObertura de la setmana[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mdiumenge a les 20:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 12 h · correcta · 28 classes actives · 184 avisos enviats · opened: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Obertura de la setmana activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Obertura de la setmana"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Obertura de la setmana"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/JobsCard.test.tsx:412:64
+    410|     const card = await renderCard();
+    411|     expect(
+    412|       within(await waitForRow(card, "Obertura de la setmana")).getByRo…
+       |                                                                ^
+    413|         name: /· 28 classes actives · 184 avisos enviats · 1 setmana o…
+    414|       }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  21:39:21
+   Duration  1.61s (environment 38%, transform 31%, import 15%, tests 10%, setup 6%)
+

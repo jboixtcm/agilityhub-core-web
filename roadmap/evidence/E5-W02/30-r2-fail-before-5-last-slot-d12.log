@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/RingBlockCard.test.tsx (7 tests | 1 failed | 6 skipped) 187ms
+   ❯ D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) (7)
+     × E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included 185ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included
+AssertionError: expected [ '0:00', '0:30', '1:00', …(44) ] to have a length of 48 but got 47
+
+- Expected
++ Received
+
+- 48
++ 47
+
+ ❯ src/training/RingBlockCard.test.tsx:300:27
+    298|     );
+    299|     fireEvent.change(select("Dia"), { target: { value: "2026-08-11" } …
+    300|     expect(options("De")).toHaveLength(48);
+       |                           ^
+    301|     expect(options("De").at(-1)).toBe("23:30");
+    302|     fireEvent.change(select("De"), { target: { value: "23:30" } });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  21:06:09
+   Duration  1.28s (transform 38%, environment 26%, tests 16%, import 15%, setup 5%)
+

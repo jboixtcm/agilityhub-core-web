@@ -558,3 +558,47 @@ describe("E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATAL
     expect(row(grid.body, "2026-08-11", "17:30")).toBe("PET:FREE");
   });
 });
+
+describe("E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS)", () => {
+  const block = {
+    from: "2026-08-06T16:00:00Z",
+    kind: "RESERVATION",
+    note: null,
+    reason: "PRIVATE_CLASS",
+    ringId: "ring-petita",
+    to: "2026-08-06T17:00:00Z",
+  };
+  const calendarDay = { ...block, from: "2026-08-11T16:00:00Z", to: "2026-08-11T17:00:00Z" };
+
+  it("a MEMBER token → 403 FORBIDDEN, on a mockup day and on a calendar day, and nothing is written", async () => {
+    const before = JSON.stringify(trainingState.blocks);
+    const mockupDay = await as<ApiError>("member", "POST", "/ring-blocks", block);
+    expect([mockupDay.status, mockupDay.body.code]).toEqual([403, "FORBIDDEN"]);
+    const otherDay = await as<ApiError>("member", "POST", "/ring-blocks", calendarDay);
+    expect([otherDay.status, otherDay.body.code]).toEqual([403, "FORBIDDEN"]);
+    expect(JSON.stringify(trainingState.blocks)).toBe(before);
+    const grid = await as<TrainingSlots>(
+      "instructor",
+      "GET",
+      "/training-slots?from=2026-08-06&to=2026-08-11&ringId=ring-petita",
+    );
+    expect(row(grid.body, "2026-08-06", "18:00")).toBe("PET:FREE");
+    expect(row(grid.body, "2026-08-11", "18:00")).toBe("PET:FREE");
+  });
+
+  it("an impersonation token → 403 IMPERSONATION_DENIED, on both days, and nothing is written", async () => {
+    const before = JSON.stringify(trainingState.blocks);
+    const mockupDay = await as<ApiError>("impersonated", "POST", "/ring-blocks", block);
+    expect([mockupDay.status, mockupDay.body.code]).toEqual([403, "IMPERSONATION_DENIED"]);
+    const otherDay = await as<ApiError>("impersonated", "POST", "/ring-blocks", calendarDay);
+    expect([otherDay.status, otherDay.body.code]).toEqual([403, "IMPERSONATION_DENIED"]);
+    expect(JSON.stringify(trainingState.blocks)).toBe(before);
+    const grid = await as<TrainingSlots>(
+      "instructor",
+      "GET",
+      "/training-slots?from=2026-08-06&to=2026-08-11&ringId=ring-petita",
+    );
+    expect(row(grid.body, "2026-08-06", "18:00")).toBe("PET:FREE");
+    expect(row(grid.body, "2026-08-11", "18:00")).toBe("PET:FREE");
+  });
+});

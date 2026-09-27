@@ -190,6 +190,33 @@ describe("E5-W03 step 8 · S15 §6 form A (GET /risk-review)", () => {
     );
     expect((await as<ApiError>("member", "GET", "/risk-review")).status).toBe(403);
   });
+
+  it("E5-W03 round 2 · review #5: on the example day each item is a calendar class of its day, and its registrants are the notified ones", async () => {
+    const review = await as<RiskReviewForm>("admin", "GET", "/risk-review");
+    const seen: string[] = [];
+    for (const item of review.body.items) {
+      const registrants = await as<components["schemas"]["ClassBookings"]>(
+        "admin",
+        "GET",
+        `/class-sessions/${item.classId}/bookings`,
+      );
+      expect(registrants.status).toBe(200);
+      const bookings = registrants.body.items;
+      expect(bookings.every((booking) => booking.classStartsAt.startsWith(item.date))).toBe(true);
+      seen.push(
+        `${item.status}: ${bookings.map((booking) => `${booking.memberName} + ${booking.dogName} ${booking.state}`).join(", ")}`,
+      );
+    }
+    // The notified members are the registrants of the classes the review cancelled or flagged.
+    // c4 is the calendar's own Wednesday class, which that world (drawn on the Wednesday) already
+    // shows cancelled by that day's review.
+    expect(seen).toEqual([
+      "AUTO_CANCELLED: ",
+      "AUTO_CANCELLED: Laura + Duna CANCELLED_BY_CLUB",
+      "AT_RISK: Pau + Blat ACTIVE",
+      "WILL_CANCEL: Irene + Kai CANCELLED_BY_CLUB",
+    ]);
+  });
 });
 
 describe("E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /bookings)", () => {
@@ -240,6 +267,31 @@ describe("E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /book
     expect((await as<ApiError>("admin", "GET", "/class-sessions/unknown/bookings")).status).toBe(
       404,
     );
+  });
+
+  it("E5-W03 round 2 · review #7: a removal checks WAITLIST, the role and the entry's owner; an impersonation never reaches another member's entry", async () => {
+    const list = () =>
+      as<components["schemas"]["ClassWaitlist"]>(
+        "admin",
+        "GET",
+        `/class-sessions/${D4_CLASS}/waitlist-entries`,
+      );
+    const entryId = (await list()).body.items[0]?.id ?? "";
+    const path = `/waitlist-entries/${entryId}/cancellation`;
+    // S08 §6 «MEMBER (pròpia) · ADMIN»: Kira's entry is Júlia's, never these members'.
+    const member = await as<ApiError>("member", "POST", path);
+    expect([member.status, member.body.code]).toEqual([404, "NOT_FOUND"]);
+    const impersonated = await as<ApiError>("impersonated", "POST", path);
+    expect([impersonated.status, impersonated.body.code]).toEqual([404, "NOT_FOUND"]);
+    const instructor = await as<ApiError>("instructor", "POST", path);
+    expect([instructor.status, instructor.body.code]).toEqual([403, "FORBIDDEN"]);
+    // An ADMIN of a club without WAITLIST.
+    const moduleOff = await as<ApiError>("activitiesNoWaitlist", "POST", path);
+    expect([moduleOff.status, moduleOff.body.code]).toEqual([404, "MODULE_DISABLED"]);
+    // Nothing was written by any refusal.
+    expect((await list()).body.items.find((item) => item.id === entryId)?.state).toBe("ACTIVE");
+    const removed = await as<components["schemas"]["WaitlistEntry"]>("admin", "POST", path);
+    expect(removed.body).toMatchObject({ cancelReason: "ADMIN", state: "CANCELLED" });
   });
 
   it("T-08-47 GET /bookings filters by member, refuses an undeclared filter (400 INVALID_FILTER) and a MEMBER (403)", async () => {

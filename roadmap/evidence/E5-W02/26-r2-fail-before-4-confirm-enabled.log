@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (21 tests | 1 failed | 20 skipped) 311ms
+   ❯ E5-W02 round 2 · review #4: a failed counter (S09 §2 states) (1)
+     × shows its error and retry, and [Confirma] stays disabled until the summary is there 309ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--primary training-confirm"
+  type="button"
+/>[39m
+ ❯ src/training/TrainingPage.test.tsx:531:29
+    529|     );
+    530|     expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:…
+    531|     expect(confirmButton()).toBeDisabled();
+       |                             ^
+    532|     server.resetHandlers();
+    533|     fireEvent.click(within(alert).getByRole("button", { name: "Torna-h…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  21:04:44
+   Duration  1.54s (transform 40%, tests 21%, environment 20%, import 14%, setup 5%)
+

@@ -1,5 +1,10 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { JOBS_MOCK_NOW, mockScenario, type MockScenario } from "@agilityhub/api-client/mocks";
+import {
+  JOBS_MOCK_NOW,
+  mockScenario,
+  type MockScenario,
+  resetPlanningState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -8,6 +13,8 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { CalendarPage } from "../planning/CalendarPage";
 
 import { RiskReviewCard } from "./RiskReviewCard";
 
@@ -112,14 +119,15 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
   it("opens D4 on the class's week with the class selected (a cancelled one under «Anul·lades»)", async () => {
     const onNavigate = await renderCard();
     const cancelled = screen.getByRole("link", { name: "Cadells · avui 9:30 · Cadells" });
+    // The calendar world's classes of the example day (round 2: D4 finds and selects them).
     const target =
-      "/calendari?classe=41000000-0000-4000-8000-000000000001&estat=anul%C2%B7lades&setmana=2026-08-10";
+      "/calendari?classe=cls-2026-08-10-0930-7&estat=anul%C2%B7lades&setmana=2026-08-10";
     expect(cancelled).toHaveAttribute("href", target);
     fireEvent.click(cancelled);
     expect(onNavigate).toHaveBeenLastCalledWith(target);
     fireEvent.click(screen.getByRole("link", { name: "Cadells · dc 9:30 · Cadells" }));
     expect(onNavigate).toHaveBeenLastCalledWith(
-      "/calendari?classe=41000000-0000-4000-8000-000000000004&estat=actives&setmana=2026-08-10",
+      "/calendari?classe=cls-2026-08-12-0930-0&estat=actives&setmana=2026-08-10",
     );
   });
 
@@ -160,6 +168,57 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
     server.resetHandlers();
     fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
     expect(await screen.findByText("4 avisos")).toBeVisible();
+  });
+});
+
+describe("T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world)", () => {
+  beforeEach(() => {
+    // The calendar world drawn on the example day holds the review's classes.
+    resetPlanningState();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    resetPlanningState();
+  });
+
+  it.each([
+    ["Cadells · avui 9:30 · Cadells", "anul·lades", /dl 10 · 9:30 · Cadells/u, null],
+    ["Nivell D · avui 17:40 · Petita", "anul·lades", /dl 10 · 17:40 · Nivell D/u, "Laura + Duna"],
+    ["F i G · demà 20:00 · Carretera", "actives", /dt 11 · 20:00 · F i G/u, "Pau + Blat"],
+    ["Cadells · dc 9:30 · Cadells", "actives", /dc 12 · 9:30 · Cadells/u, null],
+  ])("«%s» → D4 «%s», that week, that class selected", async (row, filter, card, notified) => {
+    const onNavigate = await renderCard();
+    fireEvent.click(screen.getByRole("link", { name: row }));
+    const path: unknown = onNavigate.mock.lastCall?.[0];
+    if (typeof path !== "string") throw new TypeError("No navigation");
+    cleanup();
+
+    window.history.replaceState(null, "", path);
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-scheduling", "enums", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <CalendarPage
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            onNavigate={vi.fn()}
+            readOnly={false}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    await screen.findByRole("table", { name: /del 10 al 16 d.agost$/u });
+    expect(
+      screen.getByRole("button", { name: filter === "actives" ? "Actives" : "Anul·lades" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    const selected = await screen.findByRole("region", { name: /^Classe seleccionada/u });
+    expect(selected).toHaveTextContent(card);
+    // The members D1 says were notified are that class's registrants in D4.
+    if (notified !== null) expect(await within(selected).findByText(notified)).toBeVisible();
   });
 });
 

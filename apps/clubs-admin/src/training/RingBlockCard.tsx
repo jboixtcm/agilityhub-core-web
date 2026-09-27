@@ -2,9 +2,11 @@ import {
   type ApiClient,
   RING_BLOCK_HORIZON_DAYS,
   RING_BLOCK_REASONS_BY_KIND,
+  ringBlockFallbackTimes,
   type RingBlockFailure,
   type RingBlockKind,
   ringBlockKinds,
+  ringBlockLocalDateTime,
   type RingBlockReason,
   type RingBlockSlot,
   useActiveRings,
@@ -57,30 +59,43 @@ function reasonLabel(t: Translate, reason: RingBlockReason): string {
   }
 }
 
-/** Every half-hour boundary of the day, for a ring without a grid (the api validates them). */
-const DAY_TIMES = Array.from(
-  { length: 48 },
-  (_, index) =>
-    `${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`,
-);
+/** Every half hour of the day, up to midnight, for a ring without a grid (the api validates). */
+const DAY_TIMES = ringBlockFallbackTimes();
 
 /**
- * The starts a block may take and, for a start, the ends of its run of free cells: the same
- * contiguous rule as screen 24's grid (R-09-11), without drawing it.
+ * The starts a block may take and, for a start, the ends of its run of cells it `takes`: the
+ * same contiguous rule as screen 24's grid (R-09-11), without drawing it.
  */
-function timeOptions(slots: readonly RingBlockSlot[] | undefined, from: string) {
+function timeOptions(
+  slots: readonly RingBlockSlot[] | undefined,
+  from: string,
+  takes: (slot: RingBlockSlot) => boolean,
+) {
   if (slots === undefined) {
-    return { ends: DAY_TIMES.filter((time) => time > from), starts: DAY_TIMES.slice(0, -1) };
+    return { ends: DAY_TIMES.ends.filter((time) => time > from), starts: DAY_TIMES.starts };
   }
-  const starts = slots.filter((slot) => slot.bookable).map((slot) => slot.start);
+  const starts = slots.filter(takes).map((slot) => slot.start);
   const ends: string[] = [];
   const index = slots.findIndex((slot) => slot.start === from);
   for (let position = index; position >= 0 && position < slots.length; position += 1) {
     const slot = slots[position];
-    if (slot?.bookable !== true) break;
+    if (slot === undefined || !takes(slot)) break;
     ends.push(slot.end);
   }
   return { ends, starts };
+}
+
+/** The options of a select, with the value it must keep showing (a pinned range). */
+function including(times: readonly string[], time: string): string[] {
+  return time === "" || times.includes(time) ? [...times] : [...times, time].sort();
+}
+
+/** The range a `RING_HAS_BOOKINGS` answered for (R-09-13). */
+interface AskedRange {
+  date: string;
+  end: string;
+  ringId: string;
+  start: string;
 }
 
 /**
@@ -112,30 +127,40 @@ export function RingBlockCard({ client }: { client: ApiClient }) {
   });
   const slots =
     grid.status === "ready" ? grid.slots : grid.status === "unavailable" ? undefined : [];
+  // R-09-13: an ADMIN may also take half hours held only by live training bookings (the api asks
+  // to confirm their cancellation); an instructor only free ones.
+  const takes = (slot: RingBlockSlot) => slot.bookable || (admin && slot.forceable);
+  /**
+   * The range a `RING_HAS_BOOKINGS` answered for stays on screen, and is what the ADMIN's
+   * confirmation sends, even after the grid read again marks it taken; any change drops it.
+   */
+  const [asked, setAsked] = useState<AskedRange>();
+  const pinned = asked?.date === date && asked.ringId === ring?.id ? asked : undefined;
   const [from, setFrom] = useState("");
-  const starts = timeOptions(slots, "").starts;
-  const start = starts.includes(from) ? from : (starts[0] ?? "");
-  const ends = timeOptions(slots, start).ends;
+  const freeStarts = timeOptions(slots, "", takes).starts;
+  const start = pinned?.start ?? (freeStarts.includes(from) ? from : (freeStarts[0] ?? ""));
+  const starts = including(freeStarts, start);
   const [to, setTo] = useState("");
-  const end = ends.includes(to) ? to : (ends[0] ?? "");
+  const freeEnds = timeOptions(slots, start, takes).ends;
+  const end = pinned?.end ?? (freeEnds.includes(to) ? to : (freeEnds[0] ?? ""));
+  const ends = including(freeEnds, end);
   const [failure, setFailure] = useState<RingBlockFailure>();
   const [saved, setSaved] = useState<RingBlockKind>();
   const { pending, submit } = useRingBlockSubmit(client);
-  /** The fields a `RING_HAS_BOOKINGS` answered for: a change drops the confirmation. */
-  const placement = `${ring?.id ?? ""}|${date}|${start}|${end}`;
-  const [answeredFor, setAnsweredFor] = useState<string>();
 
   const changed = () => {
     setFailure(undefined);
     setSaved(undefined);
-    setAnsweredFor(undefined);
+    setAsked(undefined);
   };
 
   const send = async (cancelBookings = false) => {
     if (ring === undefined || start === "" || end === "") return;
-    const sent = placement;
+    const sent: AskedRange = { date, end, ringId: ring.id, start };
     const instant = (time: string) =>
-      new Date(clubLocalInstant(`${date}T${time}`, branding.timeZone)).toISOString();
+      new Date(
+        clubLocalInstant(ringBlockLocalDateTime(date, time), branding.timeZone),
+      ).toISOString();
     setFailure(undefined);
     setSaved(undefined);
     const result = await submit(
@@ -144,12 +169,12 @@ export function RingBlockCard({ client }: { client: ApiClient }) {
     );
     if (result.status === "created") {
       setSaved(kind);
-      setAnsweredFor(undefined);
+      setAsked(undefined);
       grid.refetch();
       return;
     }
     setFailure(result.failure);
-    setAnsweredFor(result.failure.kind === "bookings" ? sent : undefined);
+    setAsked(result.failure.kind === "bookings" ? sent : undefined);
     if (result.failure.kind === "conflict" || result.failure.kind === "bookings") grid.refetch();
   };
 
@@ -157,7 +182,7 @@ export function RingBlockCard({ client }: { client: ApiClient }) {
     failure === undefined
       ? undefined
       : t(`errors:${failure.code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
-  const confirmBookings = failure?.kind === "bookings" && admin && answeredFor === placement;
+  const confirmBookings = failure?.kind === "bookings" && admin && pinned !== undefined;
 
   return (
     <Card className="ring-block-card">

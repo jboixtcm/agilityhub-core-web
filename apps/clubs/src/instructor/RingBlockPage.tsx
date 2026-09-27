@@ -1,11 +1,14 @@
 import {
   type ApiClient,
+  RING_BLOCK_DAY_END,
   RING_BLOCK_HORIZON_DAYS,
   RING_BLOCK_REASONS_BY_KIND,
   type RingBlockConflict,
+  ringBlockFallbackTimes,
   type RingBlockFailure,
   type RingBlockKind,
   ringBlockKinds,
+  ringBlockLocalDateTime,
   type RingBlockReason,
   type RingBlockSlot,
   useActiveRings,
@@ -32,7 +35,14 @@ import { useTranslation } from "react-i18next";
 import "../booking/booking.css";
 import { navigateInApp, type Translate } from "../booking/shared";
 import "../training/training.css";
-import { addDays, type Band, bandOf, clubToday, shortTime } from "../training/shared";
+import {
+  addDays,
+  AFTERNOON_STARTS_AT,
+  type Band,
+  bandOf,
+  clubToday,
+  shortTime,
+} from "../training/shared";
 
 const NOTE_MAX_LENGTH = 200;
 
@@ -92,14 +102,15 @@ function overlapsConflict(
   return Date.parse(conflict.from) < end && Date.parse(conflict.to) > start;
 }
 
-/** The half-hour boundaries of a band when there is no grid (the api validates the times). */
+/**
+ * The band's half hours when there is no grid (the api validates the times): every start of the
+ * band and every end up to its closing boundary included (14:00 for the morning, midnight for the
+ * afternoon), so the band's last half hour can be taken.
+ */
 function fallbackTimes(band: Band): { ends: string[]; starts: string[] } {
-  const times = Array.from(
-    { length: 48 },
-    (_, index) =>
-      `${String(Math.floor(index / 2)).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`,
-  ).filter((time) => bandOf(time) === band);
-  return { ends: times.slice(1), starts: times.slice(0, -1) };
+  return band === "morning"
+    ? ringBlockFallbackTimes("00:00", AFTERNOON_STARTS_AT)
+    : ringBlockFallbackTimes(AFTERNOON_STARTS_AT, RING_BLOCK_DAY_END);
 }
 
 /**
@@ -202,7 +213,9 @@ export function RingBlockPage({
     setFailure(undefined);
     setConflicts([]);
     const instant = (time: string) =>
-      new Date(clubLocalInstant(`${date}T${time}`, branding.timeZone)).toISOString();
+      new Date(
+        clubLocalInstant(ringBlockLocalDateTime(date, time), branding.timeZone),
+      ).toISOString();
     const result = await submit({
       from: instant(range.from),
       kind,

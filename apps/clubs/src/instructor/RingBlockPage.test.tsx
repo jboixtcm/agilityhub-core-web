@@ -206,6 +206,47 @@ describe("screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11)", (
     ]);
   });
 
+  it("E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)", async () => {
+    const requests = recordRequests();
+    await openRingBlock("ring-petita", {
+      branding: { ...canic, modules: without("FREE_TRAINING") },
+      scenario: "trainingModuleOffInstructor",
+    });
+    const values = (name: string) => {
+      const element = screen.getByRole("combobox", { name });
+      if (!(element instanceof HTMLSelectElement)) throw new TypeError(`${name} is not a select`);
+      return [...element.options]
+        .filter((option) => option.value !== "")
+        .map((option) => option.textContent);
+    };
+    fireEvent.change(screen.getByRole("combobox", { name: "Dia" }), {
+      target: { value: "2026-08-11" },
+    });
+    fireEvent.change(screen.getByRole("combobox", { name: "Franja" }), {
+      target: { value: "afternoon" },
+    });
+    expect(values("De")[0]).toBe("14:00");
+    expect(values("De").at(-1)).toBe("23:30");
+    fireEvent.change(screen.getByRole("combobox", { name: "De" }), { target: { value: "23:30" } });
+    expect(values("A")).toEqual(["24:00"]);
+    fireEvent.change(screen.getByRole("combobox", { name: "Franja" }), {
+      target: { value: "morning" },
+    });
+    expect(values("De")[0]).toBe("0:00");
+    expect(values("De").at(-1)).toBe("13:30");
+    fireEvent.change(screen.getByRole("combobox", { name: "De" }), { target: { value: "13:30" } });
+    expect(values("A")).toEqual(["14:00"]);
+    expect(screen.getByText(/^Ocupa la pista Petita de 13:30 a 14:00/u)).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja la pista" }));
+    await waitFor(() => {
+      expect(requests.bodies.get("/ring-blocks")).toHaveLength(1);
+    });
+    expect(requests.bodies.get("/ring-blocks")?.[0]).toMatchObject({
+      from: "2026-08-11T11:30:00.000Z",
+      to: "2026-08-11T12:00:00.000Z",
+    });
+  });
+
   it("while the block is sent the button is busy and the grid, kinds and rings are inert", async () => {
     let release: () => void = () => undefined;
     server.use(

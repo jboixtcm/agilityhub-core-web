@@ -1287,3 +1287,29 @@ Blocking: no.
 - **E5-W05** gains steps 9 (07's ring dot) and 10 («plaça alliberada» on `/espera/:id` for a `NOTIFIED` entry). **E4-W17** step 10 notes that E5-W04's round 2 already writes the image's revision.
 - **Spec amendments, synced:** S09 (`RING_HAS_BOOKINGS` is 422), S15 (the counters), `CONVENCIONS_API.md` §7, `DECISIONS_PENDENTS.md` (E68).
 Blocking: no.
+
+## 2026-09-27 · executor → organizer · E5-W02
+@organizer **E5-W02 round 2 is awaiting verification.** The six points are done, each with a test I saw fail on the unfixed code (logs `23`–`31`).
+- **Why `ef0825e` was red:** the shared eligibility store kept the first app instance's answer, so a new instance never read it again and 08 stayed on its skeleton (17 tests). The store now carries the api client its answer belongs to.
+- **D12:** the refused range stays pinned after the grid is read again, and the ADMIN's confirmation sends it with `cancelBookings: true`. An ADMIN may also pick half hours held by live trainings (`RingBlockSlot.forceable`).
+- **Fallback selects of 24 and D12:** every start and every end up to the boundary (13:30–14:00; 23:30–24:00).
+- **Mock:** `POST /ring-blocks` refuses a member (`403 FORBIDDEN`) and an impersonation (`403 IMPERSONATION_DENIED`) on every day, before writing.
+- **Green:** turbo `--force` 34/34 (`33`), `i18n:check` (`34`), clubs S09 76/76 (`35`), SlotGrid 6/6 (`36`), D12 13/13 (`37`), Ajv and handlers 114/114 (`38`), Docker e2e 49 + 1 + 56 (`39`).
+- **Question 8:** without a grid, 24:00 is the last end of the afternoon band and of the day, sent as the next day's 00:00 club-local. Which code does the api answer for a block reaching midnight, `INVALID_TIME_RANGE` or `OUTSIDE_OPENING_HOURS`? The form shows either by code.
+Blocking: no.
+
+## 2026-09-27 · executor → organizer · E5-W03
+@organizer **E5-W03 round 2 is awaiting verification.** The seven points are done, each with a test I saw fail on the unfixed code (logs `13`–`21`).
+- **D11:** the run drawer pages and filters `GET /jobs/{name}/runs` (result, origin, simulations, club-local range).
+- **D11 counters:** `opened`, `swept`, `finished` and `activitiesFinished` are labelled (E68), and the mock sends them.
+- **D1 → D4:** on the S15 example day (10-08-2026) the calendar world holds the risk review's classes. D1's rows open D4 with the class selected (a cancelled one under «Anul·lades»), and D4's registrants are the members D1 names (Vitest and e2e).
+- **D10:** «Mostra'n més» pages the member's class bookings.
+- **Register:** it names the ring of a block on a deactivated ring (the ADMIN asks `includeInactive`; an instructor reads «pista desactivada»), and its filters offer only operators that take one value.
+- **Mock:** the waiting-list removal checks WAITLIST, the role and the entry's owner.
+- **Green on the final tree (both round 2s):** turbo `--force` 34/34 (`23`), `i18n:check` (`24`), Vitest 169/169 (`25`), api-client + Ajv 121/121 (`26`), Docker e2e 56 + 1 + 49 (`27`).
+- **Earlier attempt `22`:** E3-W10's mock-world budget failed (27.8×). The month of `cleanup` runs called `clubInstant` at import; they now derive from one instant.
+- **Assumptions to confirm:**
+  - a member or an impersonation token on another member's waiting entry gets `404 NOT_FOUND` (as the member world answers);
+  - the review's classes exist in the calendar world on the example day only, so D4's Wednesday world and its counts stay as they are.
+- **Proposed literals:** «Mostra'n més», «pista desactivada», and the run drawer's filter and pager labels (listed in the report).
+Blocking: no.

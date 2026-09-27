@@ -6,14 +6,20 @@ import {
   Card,
   DataTable,
   Drawer,
+  FormField,
+  Input,
   Modal,
+  Select,
   Skeleton,
   Switch,
   Toast,
   type Tone,
+  useBranding,
 } from "@agilityhub/ui";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { clubInstant } from "../planning/calendar-shared";
 
 type JobSummary = components["schemas"]["JobSummary"];
 type JobRun = components["schemas"]["JobRun"];
@@ -69,9 +75,64 @@ function errorText(t: Translate, cause: unknown): string {
     : t("errors:INTERNAL_ERROR");
 }
 
+/** The run history's page size (CONVENCIONS_API §4 sizes). */
+const RUNS_PAGE_SIZE = 20;
+const RUN_STATUSES: readonly RunStatus[] = ["SUCCEEDED", "PARTIAL", "FAILED", "SKIPPED", "RUNNING"];
+const RUN_TRIGGERS: readonly NonNullable<JobRunListItem["trigger"]>[] = [
+  "SCHEDULE",
+  "CATCH_UP",
+  "MANUAL",
+];
+
+/** The drawer's filters over the api's `x-filterable` fields of the run list. */
+interface RunFilters {
+  dryRun: "" | "false" | "true";
+  /** Club-local `YYYY-MM-DD` bounds of `scheduledFor`, both included. */
+  from: string;
+  status: "" | RunStatus;
+  to: string;
+  trigger: "" | NonNullable<JobRunListItem["trigger"]>;
+}
+
+const NO_RUN_FILTERS: RunFilters = { dryRun: "", from: "", status: "", to: "", trigger: "" };
+
+function nextDay(date: string): string {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + 1);
+  return value.toISOString().slice(0, 10);
+}
+
 /**
- * The run history of a process (S15 §6 `GET /jobs/{name}/runs`, newest first) and one run's sheet
- * (`GET /jobs/{name}/runs/{runId}`: effects and errors, R-15-21). Minimal: the full browser is S17.
+ * `filter=field:op:value` (CONVENCIONS_API §4) for the drawer's filters: the `scheduledFor` range
+ * runs from the club-local start of `from` to the last second of `to`, in the club's zone.
+ */
+export function runFilterParams(filters: RunFilters, timeZone: string): string[] {
+  const start = filters.from === "" ? undefined : clubInstant(filters.from, "00:00", timeZone);
+  const end =
+    filters.to === ""
+      ? undefined
+      : new Date(Date.parse(clubInstant(nextDay(filters.to), "00:00", timeZone)) - 1_000)
+          .toISOString()
+          .replace(".000Z", "Z");
+  return [
+    ...(filters.status === "" ? [] : [`status:eq:${filters.status}`]),
+    ...(filters.trigger === "" ? [] : [`trigger:eq:${filters.trigger}`]),
+    ...(filters.dryRun === "" ? [] : [`dryRun:eq:${filters.dryRun}`]),
+    ...(start !== undefined && end !== undefined
+      ? [`scheduledFor:between:${start},${end}`]
+      : start !== undefined
+        ? [`scheduledFor:gte:${start}`]
+        : end !== undefined
+          ? [`scheduledFor:lte:${end}`]
+          : []),
+  ];
+}
+
+/**
+ * The run history of a process (S15 §6 `GET /jobs/{name}/runs`, newest first) page by page, with
+ * the universal list's filters on `status`, `trigger`, `dryRun` and the `scheduledFor` range, and
+ * one run's sheet (`GET /jobs/{name}/runs/{runId}`: effects and errors, R-15-21). The full run
+ * browser is S17's.
  */
 function RunsDrawer({
   client,
@@ -83,8 +144,19 @@ function RunsDrawer({
   onClose: () => void;
 }) {
   const formats = useClubFormats();
+  const branding = useBranding();
   const { t } = useTranslation(["admin-settings", "enums", "errors"]);
-  const [runs, setRuns] = useState<{ error?: string; items?: JobRunListItem[] }>({});
+  const [filters, setFilters] = useState<RunFilters>(NO_RUN_FILTERS);
+  const [page, setPage] = useState(0);
+  const timeZone = branding.timeZone;
+  // An answer for other filters or another page than the ones shown now is dropped.
+  const queryKey = JSON.stringify([runFilterParams(filters, timeZone), page]);
+  const [runs, setRuns] = useState<{
+    error?: string;
+    items?: JobRunListItem[];
+    key: string;
+    totalPages?: number;
+  }>({ key: "" });
   const [detail, setDetail] = useState<{ error?: string; run?: JobRun; runId: string }>();
 
   useEffect(() => {
@@ -93,21 +165,36 @@ function RunsDrawer({
       .GET("/jobs/{name}/runs", {
         params: {
           path: { name: job.name },
-          query: { page: 0, size: 20, sort: ["scheduledFor,desc"] },
+          query: {
+            filter: runFilterParams(filters, timeZone),
+            page,
+            size: RUNS_PAGE_SIZE,
+            sort: ["scheduledFor,desc"],
+          },
         },
       })
       .then(
         ({ data }) => {
-          if (current) setRuns({ items: data?.items ?? [] });
+          if (current) {
+            setRuns({ items: data?.items ?? [], key: queryKey, totalPages: data?.totalPages ?? 0 });
+          }
         },
         (cause: unknown) => {
-          if (current) setRuns({ error: errorText(t, cause) });
+          if (current) setRuns({ error: errorText(t, cause), key: queryKey });
         },
       );
     return () => {
       current = false;
     };
-  }, [client, job.name, t]);
+  }, [client, filters, job.name, page, queryKey, t, timeZone]);
+
+  const loading = runs.key !== queryKey;
+  const totalPages = runs.totalPages ?? 0;
+  const filtered = Object.values(filters).some((value) => value !== "");
+  const change = (next: Partial<RunFilters>) => {
+    setFilters((current) => ({ ...current, ...next }));
+    setPage(0);
+  };
 
   const open = (runId: string) => {
     setDetail({ runId });
@@ -139,10 +226,92 @@ function RunsDrawer({
         name: t(`admin-settings:jobs.name.${job.jobName}`),
       })}
     >
-      {runs.error === undefined ? null : <p role="alert">{runs.error}</p>}
-      {runs.items === undefined && runs.error === undefined ? (
-        <Skeleton label={t("admin-settings:common.loading")} />
-      ) : (
+      <div
+        aria-label={t("admin-settings:jobs.runs.filters")}
+        className="jobs-card__run-filters"
+        role="group"
+      >
+        <FormField id="jobs-runs-status" label={t("admin-settings:jobs.runs.status")}>
+          <Select
+            id="jobs-runs-status"
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              change({ status: RUN_STATUSES.find((status) => status === value) ?? "" });
+            }}
+            value={filters.status}
+          >
+            <option value="">{t("admin-settings:jobs.runs.all")}</option>
+            {RUN_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {t(`enums:jobRunStatus.${status}`)}
+              </option>
+            ))}
+          </Select>
+        </FormField>
+        <FormField id="jobs-runs-trigger" label={t("admin-settings:jobs.runs.trigger")}>
+          <Select
+            id="jobs-runs-trigger"
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              change({ trigger: RUN_TRIGGERS.find((trigger) => trigger === value) ?? "" });
+            }}
+            value={filters.trigger}
+          >
+            <option value="">{t("admin-settings:jobs.runs.all")}</option>
+            {RUN_TRIGGERS.map((trigger) => (
+              <option key={trigger} value={trigger}>
+                {t(`enums:jobTrigger.${trigger}`)}
+              </option>
+            ))}
+          </Select>
+        </FormField>
+        <FormField id="jobs-runs-dry-run" label={t("admin-settings:jobs.runs.dryRun")}>
+          <Select
+            id="jobs-runs-dry-run"
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              change({ dryRun: value === "true" || value === "false" ? value : "" });
+            }}
+            value={filters.dryRun}
+          >
+            <option value="">{t("admin-settings:jobs.runs.all")}</option>
+            <option value="true">{t("admin-settings:jobs.runs.dryRunOnly")}</option>
+            <option value="false">{t("admin-settings:jobs.runs.realOnly")}</option>
+          </Select>
+        </FormField>
+        <FormField id="jobs-runs-from" label={t("admin-settings:jobs.runs.from")}>
+          <Input
+            id="jobs-runs-from"
+            onChange={(event) => {
+              change({ from: event.currentTarget.value });
+            }}
+            type="date"
+            value={filters.from}
+          />
+        </FormField>
+        <FormField id="jobs-runs-to" label={t("admin-settings:jobs.runs.to")}>
+          <Input
+            id="jobs-runs-to"
+            onChange={(event) => {
+              change({ to: event.currentTarget.value });
+            }}
+            type="date"
+            value={filters.to}
+          />
+        </FormField>
+        <Button
+          disabled={!filtered}
+          onClick={() => {
+            setFilters(NO_RUN_FILTERS);
+            setPage(0);
+          }}
+          variant="ghost"
+        >
+          {t("admin-settings:jobs.runs.clear")}
+        </Button>
+      </div>
+      {loading || runs.error === undefined ? null : <p role="alert">{runs.error}</p>}
+      {!loading && runs.error !== undefined ? null : (
         <DataTable<JobRunListItem>
           caption={t("admin-settings:jobs.runs.caption")}
           columns={[
@@ -192,12 +361,40 @@ function RunsDrawer({
               render: (run) => String(run.errorCount ?? 0),
             },
           ]}
-          empty={t("admin-settings:jobs.runs.empty")}
+          empty={
+            filtered
+              ? t("admin-settings:jobs.runs.emptyFiltered")
+              : t("admin-settings:jobs.runs.empty")
+          }
+          loading={loading}
           loadingLabel={t("admin-settings:common.loading")}
           rowKey={(run) => run.runId}
           rows={runs.items ?? []}
         />
       )}
+      {totalPages > 1 ? (
+        <nav aria-label={t("admin-settings:jobs.runs.pages")} className="jobs-card__pager">
+          <Button
+            disabled={loading || page === 0}
+            onClick={() => {
+              setPage((value) => Math.max(0, value - 1));
+            }}
+            variant="ghost"
+          >
+            {t("admin-settings:jobs.runs.previousPage")}
+          </Button>
+          <span>{t("admin-settings:jobs.runs.page", { page: page + 1, totalPages })}</span>
+          <Button
+            disabled={loading || page + 1 >= totalPages}
+            onClick={() => {
+              setPage((value) => value + 1);
+            }}
+            variant="ghost"
+          >
+            {t("admin-settings:jobs.runs.nextPage")}
+          </Button>
+        </nav>
+      ) : null}
       {detail === undefined ? null : (
         <section aria-label={t("admin-settings:jobs.runs.detail")} className="jobs-card__run">
           <h3>{t("admin-settings:jobs.runs.detail")}</h3>

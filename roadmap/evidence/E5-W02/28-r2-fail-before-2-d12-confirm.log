@@ -1,0 +1,660 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/RingBlockCard.test.tsx (7 tests | 3 failed) 11195ms
+   ❯ D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) (7)
+     × an instructor with live bookings in the way is told to ask the administration 205ms
+     × E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13) 215ms
+     × E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13) 10120ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an instructor with live bookings in the way is told to ask the administration
+AssertionError: expected '07:30' to be '17:30' // Object.is equality
+
+Expected: "17:30"
+Received: "07:30"
+
+ ❯ src/training/RingBlockCard.test.tsx:221:32
+    219|     // The refused range stays on screen with its refusal, even once t…
+    220|     await refreshedGrid(reads, before + 1);
+    221|     expect(select("De").value).toBe("17:30");
+       |                                ^
+    222|     expect(select("A").value).toBe("18:00");
+    223|     // An instructor can never pick a half hour held by a live trainin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13)
+AssertionError: expected '07:30' to be '17:30' // Object.is equality
+
+Expected: "17:30"
+Received: "07:30"
+
+ ❯ src/training/RingBlockCard.test.tsx:238:32
+    236|     // The grid is read again after the refusal: 17:30 is now a live t…
+    237|     await refreshedGrid(reads, before + 1);
+    238|     expect(select("De").value).toBe("17:30");
+       |                                ^
+    239|     expect(select("A").value).toBe("18:00");
+    240|     const alert = screen.getByRole("alert");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13)
+AssertionError: expected false to be true // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page agenda-page"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mEntrenaments[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card ring-block-card"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ring-block-card__title"[39m
+          [36m>[39m
+            [0mReservar o bloquejar pista (sense alumne)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ring-block-card__row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Tipus"[39m
+              [33mclass[39m=[32m"ring-block-card__kinds"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-chip ring-block-card__chip ring-block-card__chip--on"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mReserva de pista[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-chip ring-block-card__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mBloqueig[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Motiu"[39m
+              [33mclass[39m=[32m"ring-block-card__select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"PRIVATE_CLASS"[39m
+              [36m>[39m
+                [0mmotiu: classe particular[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"THERAPY"[39m
+              [36m>[39m
+                [0mmotiu: teràpia[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"PREPARATION"[39m
+              [36m>[39m
+                [0mmotiu: preparació[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"OTHER"[39m
+              [36m>[39m
+                [0mmotiu: altres[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ring-block-card__row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Dia i hores"[39m
+              [33mclass[39m=[32m"ring-block-card__when"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Dia"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-03"[39m
+                [36m>[39m
+                  [0mdl 3[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-04"[39m
+                [36m>[39m
+                  [0mdt 4[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-05"[39m
+                [36m>[39m
+                  [0mdc 5[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-06"[39m
+                [36m>[39m
+                  [0mdj 6[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-07"[39m
+                [36m>[39m
+                  [0mdv 7[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-08"[39m
+                [36m>[39m
+                  [0mds 8[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-09"[39m
+                [36m>[39m
+                  [0mdg 9[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-10"[39m
+                [36m>[39m
+                  [0mdl 10[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-11"[39m
+                [36m>[39m
+                  [0mdt 11[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-12"[39m
+                [36m>[39m
+                  [0mdc 12[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-13"[39m
+                [36m>[39m
+                  [0mdj 13[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-14"[39m
+                [36m>[39m
+                  [0mdv 14[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-15"[39m
+                [36m>[39m
+                  [0mds 15[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-16"[39m
+                [36m>[39m
+                  [0mdg 16[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-17"[39m
+                [36m>[39m
+                  [0mdl 17[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-18"[39m
+                [36m>[39m
+                  [0mdt 18[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-19"[39m
+                [36m>[39m
+                  [0mdc 19[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-20"[39m
+                [36m>[39m
+                  [0mdj 20[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-21"[39m
+                [36m>[39m
+                  [0mdv 21[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-22"[39m
+                [36m>[39m
+                  [0mds 22[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-23"[39m
+                [36m>[39m
+                  [0mdg 23[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-24"[39m
+                [36m>[39m
+                  [0mdl 24[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-25"[39m
+                [36m>[39m
+                  [0mdt 25[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-26"[39m
+                [36m>[39m
+                  [0mdc 26[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-27"[39m
+                [36m>[39m
+                  [0mdj 27[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-28"[39m
+                [36m>[39m
+                  [0mdv 28[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-29"[39m
+                [36m>[39m
+                  [0mds 29[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-30"[39m
+                [36m>[39m
+                  [0mdg 30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-08-31"[39m
+                [36m>[39m
+                  [0mdl 31[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-01"[39m
+                [36m>[39m
+                  [0mdt 1[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-02"[39m
+                [36m>[39m
+                  [0mdc 2[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-03"[39m
+                [36m>[39m
+                  [0mdj 3[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-04"[39m
+                [36m>[39m
+                  [0mdv 4[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-05"[39m
+                [36m>[39m
+                  [0mds 5[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-06"[39m
+                [36m>[39m
+                  [0mdg 6[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-07"[39m
+                [36m>[39m
+                  [0mdl 7[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-08"[39m
+                [36m>[39m
+                  [0mdt 8[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-09"[39m
+                [36m>[39m
+                  [0mdc 9[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-10"[39m
+                [36m>[39m
+                  [0mdj 10[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-11"[39m
+                [36m>[39m
+                  [0mdv 11[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-12"[39m
+                [36m>[39m
+                  [0mds 12[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-13"[39m
+                [36m>[39m
+                  [0mdg 13[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-14"[39m
+                [36m>[39m
+                  [0mdl 14[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-15"[39m
+                [36m>[39m
+                  [0mdt 15[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-16"[39m
+                [36m>[39m
+                  [0mdc 16[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-17"[39m
+                [36m>[39m
+                  [0mdj 17[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-18"[39m
+                [36m>[39m
+                  [0mdv 18[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-19"[39m
+                [36m>[39m
+                  [0mds 19[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-20"[39m
+                [36m>[39m
+                  [0mdg 20[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-21"[39m
+                [36m>[39m
+                  [0mdl 21[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-22"[39m
+                [36m>[39m
+                  [0mdt 22[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-23"[39m
+                [36m>[39m
+                  [0mdc 23[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-24"[39m
+                [36m>[39m
+                  [0mdj 24[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-25"[39m
+                [36m>[39m
+                  [0mdv 25[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-26"[39m
+                [36m>[39m
+                  [0mds 26[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-27"[39m
+                [36m>[39m
+                  [0mdg 27[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-28"[39m
+                [36m>[39m
+                  [0mdl 28[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-29"[39m
+                [36m>[39m
+                  [0mdt 29[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-09-30"[39m
+                [36m>[39m
+                  [0mdc 30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-10-01"[39m
+                [36m>[39m
+                  [0mdj 1[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"2026-10-02"[39m
+                [36m>[39m
+                  [0mdv 2[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m·[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"De"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"07:30"[39m
+                [36m>[39m
+                  [0m7:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"08:00"[39m
+                [36m>[39m
+                  [0m8:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"09:30"[39m
+                [36m>[39m
+                  [0m9:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"10:00"[39m
+                [36m>[39m
+                  [0m10:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"10:30"[39m
+                [36m>[39m
+                  [0m10:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"11:00"[39m
+                [36m>[39m
+                  [0m11:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"11:30"[39m
+                [36m>[39m
+                  [0m11:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"12:00"[39m
+                [36m>[39m
+                  [0m12:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"12:30"[39m
+                [36m>[39m
+                  [0m12:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"13:00"[39m
+                [36m>[39m
+                  [0m13:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"13:30"[39m
+                [36m>[39m
+                  [0m13:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"14:00"[39m
+                [36m>[39m
+                  [0m14:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"14:30"[39m
+                [36m>[39m
+                  [0m14:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"15:00"[39m
+                [36m>[39m
+                  [0m15:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"15:30"[39m
+                [36m>[39m
+                  [0m15:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"16:00"[39m
+                [36m>[39m
+                  [0m16:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"17:00"[39m
+                [36m>[39m
+                  [0m17:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"17:30"[39m
+                [36m>[39m
+                  [0m17:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"18:00"[39m
+                [36m>[39m
+                  [0m18:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"20:00"[39m
+                [36m>[39m
+                  [0m20:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"20:30"[39m
+                [36m>[39m
+                  [0m20:30[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"21:00"[39m
+                [36m>[39m
+                  [0m21:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"21:30"[39m
+                [36m>[39m
+                  [0m21:30[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m–[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"A"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"08:00"[39m
+                [36m>[39m
+                  [0m8:00[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"08:30"[39m
+                [36m>[39m
+                  [0m8:30[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ring-block-card__ring"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ring-block-card__dot"[39m
+                [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+              [36m/>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Pista"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-muntanya"[39m
+                [36m>[39m
+                  [0mMuntanya[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-central"[39m
+                [36m>[39m
+                  [0mCentral[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-carretera"[39m
+                [36m>[39m
+                  [0mCarretera[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-cadells"[39m
+                [36m>[39m
+                  [0mCadells[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-petita"[39m
+                [36m>[39m
+                  [0mPetita[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary ring-block-card__submit"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mReserva[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/training/RingBlockCard.test.tsx:149:79
+    147|   fireEvent.change(select("Pista"), { target: { value: ring } });
+    148|   await waitFor(() => {
+    149|     expect([...select("De").options].some((option) => option.value ===…
+       |                                                                               ^
+    150|   });
+    151|   fireEvent.change(select("De"), { target: { value: from } });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  21:05:38
+   Duration  12.69s (tests 89%, transform 4%, environment 4%, import 2%, setup 1%)
+

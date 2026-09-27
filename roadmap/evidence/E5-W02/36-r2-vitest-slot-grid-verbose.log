@@ -1,0 +1,15 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > draws each variant of the api's state and reason, and only a bookable FREE cell is pressable 70ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > names why a taken cell is taken when the page gives the reasons 5ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > fills the selected cell 4ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > contiguous selection extends a run, shrinks it from an end and never keeps a gap 1ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > in contiguous mode the grid hands the next run to the page 13ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > several rings make a time × ring table with identical columns 5ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  21:10:54
+   Duration  552ms (environment 57%, tests 21%, setup 12%, transform 8%, import 1%)
+

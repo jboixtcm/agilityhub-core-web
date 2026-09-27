@@ -131,6 +131,44 @@ export async function createRingBlock(
  */
 export const RING_BLOCK_HORIZON_DAYS = 60;
 
+/** The end of the club-local day: a block may end at midnight (the next day's `00:00`). */
+export const RING_BLOCK_DAY_END = "24:00";
+
+function minutesOfTime(time: string): number {
+  const [hours = 0, minutes = 0] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function timeOfMinutes(minutes: number): string {
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+/**
+ * The times of a form without a grid (`FREE_TRAINING` off, or a ring the api leaves out): every
+ * half-hour start in `[from, to)` and every end up to `to` included, so the last half hour can be
+ * taken (13:30–14:00 in the morning band). The api validates them (R-09-11).
+ */
+export function ringBlockFallbackTimes(
+  from = "00:00",
+  to: string = RING_BLOCK_DAY_END,
+): { ends: string[]; starts: string[] } {
+  const starts: string[] = [];
+  const ends: string[] = [];
+  for (let minute = minutesOfTime(from); minute + 30 <= minutesOfTime(to); minute += 30) {
+    starts.push(timeOfMinutes(minute));
+    ends.push(timeOfMinutes(minute + 30));
+  }
+  return { ends, starts };
+}
+
+/** `{date}T{time}` club-local for a form's time; the day's end (`24:00`) is the next day's `00:00`. */
+export function ringBlockLocalDateTime(date: string, time: string): string {
+  if (time !== RING_BLOCK_DAY_END) return `${date}T${time}`;
+  const next = new Date(`${date}T12:00:00Z`);
+  next.setUTCDate(next.getUTCDate() + 1);
+  return `${next.toISOString().slice(0, 10)}T00:00`;
+}
+
 /** A ring of the forms: every active ring (R-09-02, blocks go to any active ring). */
 export interface RingBlockRing {
   color: string;
@@ -144,42 +182,69 @@ type Load<Data> =
   | { data?: undefined; error: unknown; status: "error" }
   | { data?: undefined; error?: undefined; status: "loading" };
 
-/** `GET /rings` (S05): the active rings in catalog order (`order`, then the name). */
-export function useActiveRings(client: ApiClient) {
-  const [state, setState] = useState<Load<RingBlockRing[]>>({ status: "loading" });
+/** A ring of the club's catalog, active or not (a list names the ring of a past block). */
+export interface ClubRing extends RingBlockRing {
+  active: boolean;
+}
+
+/**
+ * `GET /rings` (S05) in catalog order (`order`, then the name). `includeInactive` asks for the
+ * deactivated rings too (ADMIN only, S05 §6); `activeOnly` keeps the active ones.
+ */
+function useRingCatalog(client: ApiClient, includeInactive: boolean, activeOnly: boolean) {
+  const [state, setState] = useState<Load<ClubRing[]>>({ status: "loading" });
   const [reload, setReload] = useState(0);
   useEffect(() => {
     let current = true;
-    client.GET("/rings").then(
-      ({ data }) => {
-        if (!current) return;
-        const items: readonly RingReader[] = data?.items ?? [];
-        setState({
-          data: items
-            .filter((ring) => ring.active)
-            .sort((left, right) => left.order - right.order || left.name.localeCompare(right.name))
-            .map((ring) => ({
-              color: ring.color,
-              id: ring.id,
-              name: ring.name,
-              order: ring.order,
-            })),
-          status: "ready",
-        });
-      },
-      (error: unknown) => {
-        if (current) setState({ error, status: "error" });
-      },
-    );
+    client
+      .GET("/rings", includeInactive ? { params: { query: { includeInactive: true } } } : {})
+      .then(
+        ({ data }) => {
+          if (!current) return;
+          const items: readonly RingReader[] = data?.items ?? [];
+          setState({
+            data: items
+              .filter((ring) => !activeOnly || ring.active)
+              .sort(
+                (left, right) => left.order - right.order || left.name.localeCompare(right.name),
+              )
+              .map((ring) => ({
+                active: ring.active,
+                color: ring.color,
+                id: ring.id,
+                name: ring.name,
+                order: ring.order,
+              })),
+            status: "ready",
+          });
+        },
+        (error: unknown) => {
+          if (current) setState({ error, status: "error" });
+        },
+      );
     return () => {
       current = false;
     };
-  }, [client, reload]);
+  }, [activeOnly, client, includeInactive, reload]);
   const refetch = useCallback(() => {
     setState({ status: "loading" });
     setReload((value) => value + 1);
   }, []);
   return { ...state, refetch };
+}
+
+/** `GET /rings` (S05): the active rings in catalog order (`order`, then the name). */
+export function useActiveRings(client: ApiClient) {
+  return useRingCatalog(client, false, true);
+}
+
+/**
+ * Every ring of the club, a deactivated one included, to name the ring of any block or booking of
+ * a list (S09 §13-8). Only an ADMIN may ask for the inactive ones (`includeInactive`, S05 §6); an
+ * instructor gets the active ones.
+ */
+export function useClubRings(client: ApiClient, includeInactive: boolean) {
+  return useRingCatalog(client, includeInactive, false);
 }
 
 /** One 30-min cell of a ring as the api computed it (INSTRUCTOR projection, R-09-03/R-09-12). */
@@ -189,6 +254,11 @@ export interface RingBlockSlot {
   cell: components["schemas"]["SlotCell"] | undefined;
   /** Club-local `HH:mm`. */
   end: string;
+  /**
+   * Taken only by live training bookings and not started: the api answers `RING_HAS_BOOKINGS`,
+   * which an ADMIN may force with `cancelBookings` (R-09-13); classes and blocks never.
+   */
+  forceable: boolean;
   start: string;
   startsAt: string;
 }
@@ -206,10 +276,15 @@ export type RingBlockGrid =
 
 function slotOf(slot: TrainingSlot, ringId: string): RingBlockSlot {
   const cell = slot.rings[ringId];
+  const future = Date.parse(slot.startsAt) > Date.now();
   return {
-    bookable: cell?.state === "FREE" && Date.parse(slot.startsAt) > Date.now(),
+    bookable: cell?.state === "FREE" && future,
     cell,
     end: slot.endsAtLocal,
+    forceable:
+      future &&
+      cell?.state === "BOOKED" &&
+      (cell.reason === "TRAINING" || cell.reason === "OWN_TRAINING"),
     start: slot.startsAtLocal,
     startsAt: slot.startsAt,
   };

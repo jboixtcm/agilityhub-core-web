@@ -46,6 +46,7 @@
     "cancelLabel": "Anul·la el bloqueig de {when}",
     "cancelling": "Anul·lant el bloqueig…",
     "cancelled": "Bloqueig anul·lat.",
+    "inactiveRing": "pista desactivada",
     "columns": {
       "from": "Dia i hora",
       "ring": "Pista",

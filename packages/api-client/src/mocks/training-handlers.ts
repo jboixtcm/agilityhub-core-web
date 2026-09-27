@@ -87,6 +87,17 @@ function isStaff(current: MockScenarioDefinition): boolean {
   );
 }
 
+/**
+ * `POST /ring-blocks` is staff's (S09 §6, MATRIU_PERMISOS «Bloquejos de pista»), whatever the day:
+ * an impersonation token → `IMPERSONATION_DENIED`, any other role → `FORBIDDEN`.
+ */
+function ringBlockWriteRefusal(current: MockScenarioDefinition) {
+  if (isImpersonation(current)) {
+    return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
+  }
+  return isStaff(current) ? undefined : apiError("FORBIDDEN", "Forbidden", 403);
+}
+
 function isMember(current: MockScenarioDefinition): boolean {
   return isImpersonation(current) || (current.me.membership?.roles.includes("MEMBER") ?? false);
 }
@@ -461,6 +472,9 @@ export const trainingHandlers = [
     return HttpResponse.json(trainingBookingResource(booking, now));
   }),
   http.post("*/api/v1/ring-blocks", async ({ request }) => {
+    // The role guards come first, on every day: nothing is validated or written for a refusal.
+    const refusal = ringBlockWriteRefusal(currentMockScenario());
+    if (refusal !== undefined) return refusal;
     const body = (await request.clone().json()) as RingBlockCreateRequest;
     const from = Date.parse(body.from);
     if (Number.isNaN(from) || !isMockupDay(clubLocalDateOf(body.from))) return undefined;

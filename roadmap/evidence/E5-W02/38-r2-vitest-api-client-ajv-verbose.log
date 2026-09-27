@@ -1,0 +1,123 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home: the mockup rows in order, «amb {dog}» only with «Tots», counters from what counts (R-08-02) 39ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3) 11ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants 10ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > module variants: WAITLIST off reads FULL without counts; SINGLE_CLASS prices every row and drops the pack 15ms
+ ✓ src/index.test.ts > typed API client > uses the configured base URL and injects locale and authorization headers 13ms
+ ✓ src/index.test.ts > typed API client > maps every non-2xx response to ApiError 3ms
+ ✓ src/index.test.ts > typed API client > maps a fetch failure to the NETWORK ApiError 1ms
+ ✓ src/index.test.ts > typed API client > adds a UUID idempotency key to configured POST operations 5ms
+ ✓ src/index.test.ts > typed API client > R-06-07 sends an Idempotency-Key on POST /weeks/{id}/generation by default 3ms
+ ✓ src/index.test.ts > typed API client > R-06-10 / R-06-11 sends an Idempotency-Key on class cancellations and ring blocks by default 5ms
+ ✓ src/index.test.ts > typed API client > E5-W01 step 0 (S08 §6) sends an Idempotency-Key on the seat hold, the booking, the waitlist entry and the claim 8ms
+ ✓ src/index.test.ts > typed API client > E5-W03 step 0 (R-15-09) sends an Idempotency-Key on a job trigger, never on its switch 2ms
+ ✓ src/index.test.ts > TanStack Query defaults > uses a 30 second stale time and retries only network and 5xx failures 1ms
+ ✓ src/index.test.ts > TanStack Query defaults > namespaces query keys by host 2ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers 9ms
+ ✓ src/index.test.ts > MSW bootstrap handlers > serves branding, current account, club settings, token, and health fixtures 16ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the D4 week (form B) with the Thursday warning and the Carretera block 88ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > GET /me/training-summary: two eligible dogs, Rock by default at 2/3 with one cancellable session 97ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details 30ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED 20ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one 12ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt 9ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /bookings/{id} and the cancellation: late by R-08-10 (4 h, the edge in time), displayState, then 409 13ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry 29ms
+ ✓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > WAITLIST off: every waitlist route is 404 MODULE_DISABLED 4ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-08 validates the draft week and refuses the inconsistent one 78ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > maps every JSON fixture to an authoritative component schema 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates audit-entries.json 24ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-canic.json 24ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-minim.json 24ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates club-pages.json 22ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates dashboard.json 30ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > summary variants: no right, at the limit with and without cancellable sessions, group and levels off 101ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > paginates members, reports applied filters, and resolves facet labels 127ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not 71ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-10 cancels with the notice text and R-06-09 checks the version 65ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > GET /training-slots (member): the window of four days, the holiday, and the 08 mockup cells 82ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates export-jobs.json 19ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-admin.json 21ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-impersonated.json 20ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-instructor.json 19ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-member.json 20ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates me-multi-profile.json 19ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > GET /training-slots (instructor): any active ring on request, with occupants, block and class 72ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-11 refuses a block over a class with the conflict list 55ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking 59ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates member-signup-review.json 39ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates sessions.json 19ms
+ ✓ src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates signup-config-canic.json 29ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana A template 5ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Setmana B template 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the Dissabtes template 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the E29 level catalog (Level.progression overlay of pending.json) 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > keeps every fixture description equal to the mock resolver, so an edit never flips «D i sup.» 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W01 planning fixtures follow the S06 contract (WeekTemplate, Coverage, WeekListItem) > validates the coverage table and the week list items 4ms
+ ✓ src/index.test.ts > R-03-22 census list handlers > serves 242 dogs and rejects unknown filter fields 251ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > POST /training-bookings: 201 with the counter, the key replays, then DOG_ALREADY_BOOKED, SLOT_TAKEN and the limit 110ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the instructor day grid (form D) of the Wednesday 54ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) > R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS 57ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates every class session of the D4, D4b and inconsistent weeks 6ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > keeps every calendar fixture description equal to the mock resolver (E29: {F,G} = «F i sup.») 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > validates the ring block and the cancellation preview of the Wednesday 18:50 class 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W02 calendar fixtures follow the S06 contract (ClassSession, RingBlock, CancellationPreview) > R-06-14 derives UTC instants from the club-local time across the DST change 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 member grid 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-03 instructor grid 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 member grid 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-04 instructor grid 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 member grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-05 instructor grid 1ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 member grid 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the 2026-08-06 instructor grid 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > projects the member view as the api does (R-06-12): no counts, names, notes nor staff kinds 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > carries the screen 23 counts, trainings, block and cancelled class in the instructor view 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the class sessions and ring blocks behind the screen 23 drawers 14ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > sends the «Sense» column last, translated, only when a class has no ring 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, ClassSession, RingBlock) > validates the member projections of the class and the block (S06 §6 «Altres formes») 26ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront > validates GET /signup on 2026-08-05 (add-dog: false) and each submission upfront 12ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront > validates GET /signup on 2026-08-17 (add-dog: false) and each submission upfront 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront > validates GET /signup on 2026-12-31 (add-dog: false) and each submission upfront 5ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront > validates GET /signup on 2026-08-17 (add-dog: true) and each submission upfront 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W08 the computed signup configuration and results follow SignupConfig and SignupUpfront > validates GET /signup on 2026-08-26 (add-dog: true) and each submission upfront 4ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the the mockup view, each dog with its own version 18ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) > S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start 56ms
+ ✓ src/mocks/calendar-handlers.test.ts > E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) > R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them 56ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > POST /training-bookings refusals carry the api's status and details 81ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > GET /training-bookings/{id} and the cancellation until the threshold (R-09-10) 76ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the manual view, each dog with its own version 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the family pending view, each dog with its own version 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the add-dog view, each dog with its own version 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the a derived D1 row view, each dog with its own version 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates the readmission (E38) view, each dog with its own version 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > validates every plan's dry run and deducts what was paid (S04 §5, E39) 3ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > E39b: a plan change closes a PARTIAL line (S04 §5) > a 60 € quote leaves 10 € to pay: the PARTIAL line is CANCELLED and a PAID line records the 50 € 2ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > E39b: a plan change closes a PARTIAL line (S04 §5) > a 40 € quote adds no line to pay and warns PAID_EXCEEDS_QUOTE for the 10 € to refund 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun) > E39b: a plan change closes a PARTIAL line (S04 §5) > the requested plan keeps the PARTIAL line open (no plan change) 0ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the 03 and 04 aggregates of every dog (canic) 19ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the 03 and 04 aggregates of every dog (limit) 12ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the 03 and 04 aggregates of every dog (no waitlist) 10ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the 03 and 04 aggregates of every dog (single class) 11ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the 03 and 04 aggregates of every dog (no modules) 9ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the holds, bookings, waitlist entries and the limit details (canic) 20ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > POST /ring-blocks on a mockup day: 201, the class conflict, the live bookings and the admin's cancelBookings 77ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) > any other day is the calendar world's: the block is created there and the grid shows it 59ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS) > a MEMBER token → 403 FORBIDDEN, on a mockup day and on a calendar day, and nothing is written 83ms
+ ✓ src/mocks/training-handlers.test.ts > E5-W02 round 2 · review #6: POST /ring-blocks is staff's on every day (S09 §6, MATRIU_PERMISOS) > an impersonation token → 403 IMPERSONATION_DENIED, on both days, and nothing is written 79ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the holds, bookings, waitlist entries and the limit details (limit) 15ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the holds, bookings, waitlist entries and the limit details (no waitlist) 14ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the holds, bookings, waitlist entries and the limit details (single class) 13ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W01 step 10 · the booking world follows the S08 contract (MeHome, BookableClasses, SeatHoldResponse, Booking, WaitlistEntry) > validates the holds, bookings, waitlist entries and the limit details (no modules) 12ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) > validates the member and staff grids, the summaries and every booking (default) 336ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) > validates the member and staff grids, the summaries and every booking (atLimit) 311ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) > validates the member and staff grids, the summaries and every booking (atLimitNone) 295ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) > validates the member and staff grids, the summaries and every booking (noRight) 275ms
+ ✓ src/mocks/fixtures.contract.test.ts > E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) > R-09-03/R-09-05 derive the instants and the training week in the club zone across the DST change 2ms
+
+ Test Files  5 passed (5)
+      Tests  114 passed (114)
+   Start at  21:10:58
+   Duration  2.63s (tests 58%, import 23%, transform 19%)
+
