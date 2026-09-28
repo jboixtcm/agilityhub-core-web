@@ -82,37 +82,47 @@ run_core_suite() {
 check_n37_notification() {
   docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
     mongodb://localhost:27017/agilityhub_e1_web --eval '
+      // E4-W16 round 2 (organizer 28-09): since api E7-T02 an engine notification has the S11
+      // shape: recipient.accountId, deliveries[{channel, status}] (APP is born DELIVERED) and
+      // action{type, params}; the dog name is one of its variables.
       const account = db.accounts.findOne({email: "nora.e3@example.test"});
-      const notification = account === null ? null : db.notifications.findOne({
-        accountId: account._id,
-        channel: "APP",
-        code: "N-37",
-        status: "SENT",
-        "variables.action": "OPEN_DOG",
-        "variables.dog_name": "Neret E3"
-      });
+      const dogName = "Neret E3";
+      const appDelivered = (item) =>
+        (item.deliveries ?? []).some((delivery) => delivery.channel === "APP" && delivery.status === "DELIVERED");
+      const notification = account === null ? null : db.notifications
+        .find({
+          "recipient.accountId": account._id,
+          code: "N-37",
+          "action.type": "OPEN_DOG",
+          deliveries: {$elemMatch: {channel: "APP", status: "DELIVERED"}}
+        })
+        .toArray()
+        .find((item) => EJSON.stringify(item.variables ?? {}).includes(dogName)) ?? null;
       if (notification === null) {
-        // E4-W16: say what the core stored for the account (codes, channels, statuses and the
-        // variable names only), so a changed notification model shows in the evidence.
+        // Say what the core stored for the account in S11 terms (codes, deliveries, action types
+        // and the variable names only), and the flat SYSTEM rows too.
         const stored = account === null ? [] : db.notifications
-          .find({accountId: account._id})
+          .find({$or: [{"recipient.accountId": account._id}, {accountId: account._id}]})
           .toArray()
           .map((item) => ({
-            action: item.action ?? null,
-            channel: item.channel ?? null,
+            action: item.action?.type ?? null,
+            appDelivered: appDelivered(item),
             code: item.code ?? null,
-            status: item.status ?? null,
+            deliveries: (item.deliveries ?? []).map((delivery) => ({channel: delivery.channel ?? null, status: delivery.status ?? null})),
+            flat: item.recipient === undefined ? {channel: item.channel ?? null, status: item.status ?? null} : null,
+            recipient: Object.keys(item.recipient ?? {}).sort(),
             variables: Object.keys(item.variables ?? {}).sort()
           }));
-        print(EJSON.stringify({account: account !== null, missing: "N-37 APP SENT OPEN_DOG Neret E3", stored}));
+        print(EJSON.stringify({account: account !== null, missing: "N-37 recipient.accountId, APP DELIVERED, OPEN_DOG, Neret E3", stored}));
         quit(1);
       }
       print(EJSON.stringify({
-        action: notification.variables.action,
-        channel: notification.channel,
+        action: notification.action.type,
         code: notification.code,
-        dogName: notification.variables.dog_name,
-        status: notification.status
+        deliveries: notification.deliveries.map((delivery) => ({channel: delivery.channel, status: delivery.status})),
+        dogName,
+        recipient: Object.keys(notification.recipient).sort(),
+        variables: Object.keys(notification.variables ?? {}).sort()
       }));
     ' | tee "$evidence_directory/n37-notification.json"
 }

@@ -1,0 +1,50 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/auth-handoff.test.ts (2 tests | 2 failed) 569ms
+   ❯ T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads (2)
+     × redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent) 428ms
+     × the back office never issues again a code it issued before its own reload, and each one opens the club app once 141ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/auth-handoff.test.ts > T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads > redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ src/mocks/auth-handoff.test.ts:88:45
+     86|     const memberAgain = await pageLoad(clubApp);
+     87|     expect(await memberAgain.redeem(second)).toBe(200);
+     88|     expect(await memberAgain.redeem(first)).toBe(400);
+       |                                             ^
+     89|     expect(await memberAgain.redeem(second)).toBe(400);
+     90|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/auth-handoff.test.ts > T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads > the back office never issues again a code it issued before its own reload, and each one opens the club app once
+AssertionError: expected 'mock-impersonation-handoff-1' not to be 'mock-impersonation-handoff-1' // Object.is equality
+ ❯ src/mocks/auth-handoff.test.ts:108:24
+    106|     const adminAgain = await pageLoad(backOffice);
+    107|     const second = await adminAgain.issue();
+    108|     expect(second).not.toBe(first);
+       |                        ^
+    109|     const member = await pageLoad(clubApp);
+    110|     expect(await member.redeem(second)).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  15:29:20
+   Duration  769ms (tests 85%, import 13%, transform 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/auth-handoff.test.ts

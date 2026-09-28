@@ -1,0 +1,135 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (27 tests | 3 failed | 24 skipped) 125ms
+   ❯ T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie (3)
+     × handoff → /me 503 → no refresh_token call; the retry succeeds and the impersonated session (the banner's /me) is entered 64ms
+     × /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it 54ms
+     × a refused /me (401) after a redeemed handoff ends it anonymous: no cookie now, nor after a reload, until the user signs in 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > handoff → /me 503 → no refresh_token call; the retry succeeds and the impersonated session (the banner's /me) is entered
+ApiError: Unavailable
+ ❯ Function.fromResponse ../api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse ../api-client/src/client.ts:105:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ AuthClient.loadMe src/auth-client.ts:769:20
+ ❯ AuthClient.performExchange src/auth-client.ts:869:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ src/auth-client.test.ts:728:22
+    726|
+    727|     // Three tries (the first and two retries), then the page offers a…
+    728|     expect(calls.me).toBe(3);
+       |                      ^
+    729|     expect(exchangeError).toMatchObject({ status: 503 });
+    730|     expect(restoreError).toMatchObject({ status: 503 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > a refused /me (401) after a redeemed handoff ends it anonymous: no cookie now, nor after a reload, until the user signs in
+AssertionError: expected { Object (status, value) } to deeply equal { status: 'fulfilled', value: null }
+
+- Expected
++ Received
+
+  {
+    "status": "fulfilled",
+-   "value": null,
++   "value": {
++     "account": {
++       "email": "biel.roca@example.test",
++       "emailVerifiedAt": "2026-08-01T08:00:00Z",
++       "hasPassword": true,
++       "id": "10000000-0000-4000-8000-000000000002",
++       "locale": "ca",
++       "name": "Biel Roca",
++       "onboardingPending": false,
++       "platformRoles": [],
++     },
++     "features": [
++       "FREE_TRAINING",
++       "COURSES",
++     ],
++     "membership": {
++       "activeProfile": "MEMBER",
++       "clubId": "50000000-0000-4000-8000-000000000001",
++       "defaultProfile": "MEMBER",
++       "gender": "MALE",
++       "memberId": "20000000-0000-4000-8000-000000000002",
++       "profiles": [
++         "MEMBER",
++       ],
++       "rememberProfile": true,
++       "roles": [
++         "MEMBER",
++       ],
++     },
++   },
+  }
+
+ ❯ src/auth-client.test.ts:782:22
+    780|
+    781|     expect(exchanged).toMatchObject({ reason: { status: 401 }, status:…
+    782|     expect(restored).toEqual({ status: "fulfilled", value: null });
+       |                      ^
+    783|     expect(client.hasPendingHandoff()).toBe(false);
+    784|     expect(calls.me).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: Unavailable
+ ❯ Function.fromResponse ../api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+ ❯ Object.onResponse ../api-client/src/client.ts:105:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:161:28
+ ❯ AuthClient.loadMe src/auth-client.ts:769:20
+ ❯ AuthClient.performExchange src/auth-client.ts:869:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'INTERNAL_ERROR', details: {}, status: 503, traceId: 't', retryAfter: undefined }
+This error originated in "src/auth-client.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "handoff → /me 503 → no refresh_token call; the retry succeeds and the impersonated session (the banner's /me) is entered". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 24 skipped (27)
+     Errors  1 error
+   Start at  15:28:37
+   Duration  772ms (environment 54%, tests 19%, import 15%, transform 12%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts -t round 2

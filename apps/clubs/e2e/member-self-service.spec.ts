@@ -71,7 +71,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     });
     await expect(page.getByText("Nota de Duna desada")).toBeVisible();
 
-    await expect(page.getByText("2 pendents · 1 fetes")).toBeVisible();
+    await expect(page.getByText("2 pendents · 1 feta")).toBeVisible();
 
     const photoRequest = page.waitForRequest(
       (request) =>
@@ -129,7 +129,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     await page.goto(`${baseUrl}/gossos`);
     const duna = page.locator(".dog-card").filter({ has: page.getByRole("heading", { name: "Duna" }) });
     const tasks = duna.getByRole("region", { name: "Tasques" });
-    await expect(tasks.getByText("2 pendents · 1 fetes")).toBeVisible();
+    await expect(tasks.getByText("2 pendents · 1 feta")).toBeVisible();
     await expect(tasks.getByRole("listitem")).toHaveText([
       "Treballar l'entrada al balancí10-08 · Laura",
       "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
@@ -145,6 +145,48 @@ test.describe("T-03-40 mobile own dogs", () => {
       "text-decoration-line",
       "none",
     );
+    // E4-W16 round 2 #3 (AGENTS rule 6): the done row is not dimmed; its text and «feta el …»
+    // keep 4.5:1 on the card, from the computed styles.
+    const readability = await tasks
+      .getByRole("listitem")
+      .nth(2)
+      .evaluate((row) => {
+        const channels = (value: string) => (value.match(/[\d.]+/gu) ?? []).map(Number);
+        const luminance = (rgb: number[]) => {
+          const [red = 0, green = 0, blue = 0] = rgb.map((channel) => {
+            const normalized = channel / 255;
+            return normalized <= 0.04045
+              ? normalized / 12.92
+              : ((normalized + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+        };
+        const measure = (element: Element | null) => {
+          let opacity = 1;
+          let background: number[] | undefined;
+          for (let node = element; node !== null; node = node.parentElement) {
+            const style = getComputedStyle(node);
+            opacity *= Number(style.opacity);
+            const fill = channels(style.backgroundColor);
+            if (background === undefined && (fill[3] ?? 1) > 0) background = fill.slice(0, 3);
+          }
+          const base = background ?? [0, 0, 0];
+          const color = channels(element === null ? "" : getComputedStyle(element).color);
+          const shown = base.map(
+            (channel, index) => (color[index] ?? 0) * opacity + channel * (1 - opacity),
+          );
+          const [lighter, darker] = [luminance(shown), luminance(base)].sort((a, b) => b - a);
+          return { opacity, ratio: ((lighter ?? 0) + 0.05) / ((darker ?? 0) + 0.05) };
+        };
+        return {
+          meta: measure(row.querySelector("small")),
+          text: measure(row.querySelector("p")),
+        };
+      });
+    expect(readability.text.opacity).toBe(1);
+    expect(readability.meta.opacity).toBe(1);
+    expect(readability.text.ratio).toBeGreaterThanOrEqual(4.5);
+    expect(readability.meta.ratio).toBeGreaterThanOrEqual(4.5);
     await page.screenshot({
       fullPage: true,
       path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W16/13-els-meus-gossos-375.png"),

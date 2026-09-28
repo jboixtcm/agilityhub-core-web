@@ -540,6 +540,61 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
     token.stop();
   });
 
+  it("round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner", async () => {
+    const token = recordTokenGrants();
+    let unavailable = true;
+    server.use(
+      http.get("*/api/v1/me", ({ request }) =>
+        unavailable && request.headers.get("Authorization") === "Bearer mock-impersonation-token"
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+              { status: 503 },
+            )
+          : undefined,
+      ),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-1");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    // The client retries /me with backoff (woken here by `online`), then the page offers a retry.
+    const retry = await waitFor(
+      () => {
+        const button = screen.queryByRole("button", { name: "Torna-ho a provar" });
+        if (button === null) {
+          window.dispatchEvent(new Event("online"));
+          throw new Error("still retrying");
+        }
+        return button;
+      },
+      { timeout: 3000 },
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "No s'ha pogut completar l'accés. Torna-ho a provar.",
+    );
+    expect(screen.queryByText("Aquest enllaç ja no és vàlid")).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(client.getMe()).toBeNull();
+    expect(client.hasPendingHandoff()).toBe(true);
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+
+    unavailable = false;
+    fireEvent.click(retry);
+    expect(screen.getByRole("status")).toHaveTextContent("Validant l'enllaç…");
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/inici", false);
+    });
+    expect(client.isImpersonated()).toBe(true);
+
+    cleanup();
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(authClient());
+    expect(await screen.findByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    token.stop();
+  });
+
   it("step 1: a code already redeemed shows «Aquest enllaç ja no és vàlid» on 01 and opens no impersonated session", async () => {
     await authClient().exchangeHandoff("mock-impersonation-handoff-7");
     sessionStorage.clear();
@@ -987,7 +1042,7 @@ describe("T-03-40 mobile own dogs", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "DESA" })[0] as HTMLButtonElement);
     expect(await screen.findByRole("status")).toHaveTextContent("Nota de Duna desada");
 
-    expect(screen.getByText("2 pendents · 1 fetes")).toBeVisible();
+    expect(screen.getByText("2 pendents · 1 feta")).toBeVisible();
     fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
     expect(screen.getByRole("dialog", { name: "Afegeix un document de Duna" })).toBeVisible();
     expect(screen.getByLabelText("Tipus")).toBeVisible();
@@ -1087,7 +1142,7 @@ describe("T-03-40 mobile own dogs", () => {
     );
     if (card === null) throw new TypeError("Missing Duna's card");
     const tasks = within(card).getByRole("region", { name: "Tasques" });
-    expect(within(tasks).getByText("2 pendents · 1 fetes")).toBeVisible();
+    expect(within(tasks).getByText("2 pendents · 1 feta")).toBeVisible();
     const rows = within(tasks).getAllByRole("listitem");
     expect(rows.map((row) => row.textContent)).toEqual([
       "Treballar l'entrada al balancí10-08 · Laura",
@@ -1107,6 +1162,27 @@ describe("T-03-40 mobile own dogs", () => {
       "href",
       "/historic",
     );
+  });
+
+  it("E4-W16 round 2 #5 (R-03-18): the task counter agrees in number with 1 and 2 — ICU plurals in ca, es and en", async () => {
+    const expected = {
+      ca: ["1 pendent · 2 fetes", "2 pendents · 1 feta"],
+      en: ["1 pending · 2 completed", "2 pending · 1 completed"],
+      es: ["1 pendiente · 2 hechas", "2 pendientes · 1 hecha"],
+    } as const;
+    for (const locale of ["ca", "es", "en"] as const) {
+      const i18n = await createI18n({
+        branding: minimalBranding,
+        browserLanguages: [locale],
+        initialNamespaces: ["census"],
+        storage: undefined,
+      });
+      expect(i18n.resolvedLanguage).toBe(locale);
+      expect([
+        i18n.t("census:myDogs.tasksSummary", { completed: 2, open: 1 }),
+        i18n.t("census:myDogs.tasksSummary", { completed: 1, open: 2 }),
+      ]).toEqual(expected[locale]);
+    }
   });
 
   it("E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields", async () => {

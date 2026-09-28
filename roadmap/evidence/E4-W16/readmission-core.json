@@ -24,5 +24,9 @@
   "leftMemberWithDocument": true,
   "phonesKeptAfterRejection": true,
   "statusAfterRejection": "LEFT",
+  "submittedCardAtRejection": [
+    "demo-document.pdf",
+    "cartilla_retorn_2.jpg"
+  ],
   "submittedDogName": "Retorn E3"
 }

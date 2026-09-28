@@ -1,1 +1,1 @@
-{"account":true,"missing":"N-37 APP SENT OPEN_DOG Neret E3","stored":[{"action":null,"channel":"EMAIL","code":"N-02","status":"SENT","variables":[]}]}
+{"account":false,"missing":"N-37 recipient.accountId, APP DELIVERED, OPEN_DOG, Neret E3","stored":[]}

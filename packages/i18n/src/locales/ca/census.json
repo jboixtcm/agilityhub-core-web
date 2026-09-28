@@ -189,7 +189,7 @@
     "taskAttachments": "{count, plural, one {# adjunt} other {# adjunts}}",
     "taskDone": "feta el {date}",
     "taskMeta": "{date} · {instructor}",
-    "tasksSummary": "{open} pendents · {completed} fetes",
+    "tasksSummary": "{open, plural, one {# pendent} other {# pendents}} · {completed, plural, one {# feta} other {# fetes}}",
     "tasksTitle": "Tasques",
     "title": "Els meus gossos",
     "uploadDocument": "PUJA EL DOCUMENT"

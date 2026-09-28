@@ -189,7 +189,7 @@
     "taskAttachments": "{count, plural, one {# attachment} other {# attachments}}",
     "taskDone": "done on {date}",
     "taskMeta": "{date} · {instructor}",
-    "tasksSummary": "{open} pending · {completed} completed",
+    "tasksSummary": "{open, plural, one {# pending} other {# pending}} · {completed, plural, one {# completed} other {# completed}}",
     "tasksTitle": "Tasks",
     "title": "My dogs",
     "uploadDocument": "UPLOAD DOCUMENT"

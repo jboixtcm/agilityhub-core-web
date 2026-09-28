@@ -183,11 +183,12 @@ describe("T-01-21 AuthClient session flow", () => {
       }),
       http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
     );
+    const refreshStore = new MemoryRefreshTokenStore();
     const client = new AuthClient({
       apiBaseUrl: API_BASE_URL,
       identityBaseUrl: IDENTITY_BASE_URL,
       mockMode: true,
-      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+      mockRefreshTokenStore: refreshStore,
     });
 
     await expect(client.exchangeHandoff("handoff-code")).resolves.toEqual(memberMe);
@@ -195,6 +196,12 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(handoffForm?.get("grant_type")).toBe("urn:agilityhub:grant:handoff");
     expect(handoffForm?.get("token")).toBe("handoff-code");
     expect(handoffForm?.has("code")).toBe(false);
+    // E4-W16 round 2: a handoff that is not an impersonation is a usual sliding session once /me
+    // answers (a BODY client keeps its refresh token in memory), and the tab's mark is gone.
+    expect(client.getAccessToken()).toBe("access-handoff");
+    expect(refreshStore.get()).toBe("refresh-handoff");
+    expect(client.hasPendingHandoff()).toBe(false);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
   });
 
   it("T-01-04 refreshes via the cookie and coalesces concurrent 401 responses", async () => {
@@ -621,6 +628,180 @@ describe("T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never ref
     await expect(client.logout()).resolves.toBeUndefined();
     expect(revokes).toEqual(["Bearer impersonation-access"]);
     expect(tokenRequests).toBe(0);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie", () => {
+  const unavailable = () =>
+    HttpResponse.json(
+      { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+      { status: 503 },
+    );
+
+  /** The handoff grant answers the impersonation token; any other grant is the admin's cookie. */
+  function handoffHandlers(me: () => Response) {
+    const calls = { grants: [] as string[], me: 0 };
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = new URLSearchParams(await request.text()).get("grant_type") ?? "";
+        calls.grants.push(grant);
+        if (grant === "urn:agilityhub:grant:handoff") {
+          return HttpResponse.json({
+            access_token: "impersonation-access",
+            expires_in: 3600,
+            scope: "",
+            token_type: "Bearer",
+          });
+        }
+        return HttpResponse.json(tokens("access-of-the-admin-as-member"));
+      }),
+      http.get(`${API_BASE_URL}/me`, ({ request }) => {
+        calls.me += 1;
+        if (request.headers.get("Authorization") !== "Bearer impersonation-access") {
+          return HttpResponse.json(memberMe);
+        }
+        return me();
+      }),
+    );
+    return calls;
+  }
+
+  /** Wakes the client's backoff at once (`online`) until `done` holds. */
+  async function whileRetrying(done: () => boolean) {
+    await vi.waitFor(() => {
+      if (done()) return;
+      window.dispatchEvent(new Event("online"));
+      throw new Error("still retrying");
+    });
+  }
+
+  it("handoff → /me 503 → no refresh_token call; the retry succeeds and the impersonated session (the banner's /me) is entered", async () => {
+    let failures = 1;
+    const calls = handoffHandlers(() => {
+      if (failures > 0) {
+        failures -= 1;
+        return unavailable();
+      }
+      return HttpResponse.json(impersonatedMe);
+    });
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const stop = client.startSlidingRefresh();
+
+    // The provider's restore starts while `/entrar?handoff=` redeems the code.
+    let settled = false;
+    const both = Promise.all([
+      client.exchangeHandoff("impersonation-code"),
+      client.restoreSession(),
+    ]);
+    void both.finally(() => {
+      settled = true;
+    });
+    await whileRetrying(() => settled);
+    const [exchanged, restored] = await both;
+    stop();
+
+    expect(exchanged).toEqual(impersonatedMe);
+    expect(restored).toEqual(impersonatedMe);
+    expect(calls.me).toBe(2);
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    expect(client.isImpersonated()).toBe(true);
+    expect(client.getAccessToken()).toBe("impersonation-access");
+    expect(client.hasPendingHandoff()).toBe(false);
+  });
+
+  it("/me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it", async () => {
+    let available = false;
+    const calls = handoffHandlers(() =>
+      available ? HttpResponse.json(impersonatedMe) : unavailable(),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const stop = client.startSlidingRefresh();
+    const signedIn = vi.fn();
+    client.addEventListener("signedIn", signedIn);
+
+    let exchangeError: unknown;
+    let restoreError: unknown;
+    let settled = 0;
+    const exchange = client.exchangeHandoff("impersonation-code").catch((error: unknown) => {
+      exchangeError = error;
+    });
+    const restore = client.restoreSession().catch((error: unknown) => {
+      restoreError = error;
+    });
+    void Promise.all([exchange, restore]).then(() => {
+      settled = 1;
+    });
+    await whileRetrying(() => settled === 1);
+
+    // Three tries (the first and two retries), then the page offers a retry.
+    expect(calls.me).toBe(3);
+    expect(exchangeError).toMatchObject({ status: 503 });
+    expect(restoreError).toMatchObject({ status: 503 });
+    expect(client.hasPendingHandoff()).toBe(true);
+    expect(client.getMe()).toBeNull();
+    expect(signedIn).not.toHaveBeenCalled();
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    // No refresh from the 401 path or the interceptor either.
+    await expect(client.recoverFromUnauthorized()).resolves.toBe(false);
+    await expect(client.refresh()).rejects.toThrow("never refreshed");
+
+    // A reload of the tab (a new client; the old page's retries stop) asks /me with that token,
+    // never the cookie.
+    stop();
+    const reloaded = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+    const stopReloaded = reloaded.startSlidingRefresh();
+    let reloadError: unknown;
+    let reloadSettled = false;
+    void reloaded
+      .restoreSession()
+      .catch((error: unknown) => {
+        reloadError = error;
+      })
+      .finally(() => {
+        reloadSettled = true;
+      });
+    await whileRetrying(() => reloadSettled);
+    expect(reloadError).toMatchObject({ status: 503 });
+    expect(reloaded.hasPendingHandoff()).toBe(true);
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    stopReloaded();
+
+    available = true;
+    await expect(client.retryHandoff()).resolves.toEqual(impersonatedMe);
+    expect(signedIn).toHaveBeenCalledOnce();
+    expect(client.isImpersonated()).toBe(true);
+    expect(client.hasPendingHandoff()).toBe(false);
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    expect(localStorage).toHaveLength(0);
+  });
+
+  it("a refused /me (401) after a redeemed handoff ends it anonymous: no cookie now, nor after a reload, until the user signs in", async () => {
+    const calls = handoffHandlers(unauthenticated);
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+
+    const [exchanged, restored] = await Promise.allSettled([
+      client.exchangeHandoff("impersonation-code"),
+      client.restoreSession(),
+    ]);
+
+    expect(exchanged).toMatchObject({ reason: { status: 401 }, status: "rejected" });
+    expect(restored).toEqual({ status: "fulfilled", value: null });
+    expect(client.hasPendingHandoff()).toBe(false);
+    expect(calls.me).toBe(1);
+    const reloaded = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+    await expect(reloaded.restoreSession()).resolves.toBeNull();
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+
+    // Signing in on 01 is the user's choice: the tab then holds that session.
+    await reloaded.login("biel.roca@example.test", "secret");
+    expect(calls.grants).toEqual(["urn:agilityhub:grant:handoff", "password"]);
     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
   });
 });

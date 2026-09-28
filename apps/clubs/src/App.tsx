@@ -28,7 +28,14 @@ import {
   type TabBarItem,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  type SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { ActivityDetailPage } from "./activities/ActivityDetailPage";
@@ -528,7 +535,26 @@ export function AccessPage({
   );
   const [message, setMessage] = useState<string>();
   const [error, setError] = useState<string>();
+  // The code was redeemed but `/me` keeps failing: the tab holds that session (never another
+  // one) and offers a retry (E47).
+  const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
   const countdown = useCountdown();
+
+  const enterHandoff = useCallback(
+    async (me: Me) => {
+      navigate(me.impersonation === undefined ? await routeAfterLogin(me, authClient) : "/inici");
+    },
+    [authClient, navigate],
+  );
+  const failHandoff = useCallback(() => {
+    if (authClient.hasPendingHandoff()) {
+      setHandoffUnconfirmed(true);
+    } else {
+      setHandoffUnconfirmed(false);
+      setError(t("auth:activation.invalidTitle"));
+    }
+    setPending(null);
+  }, [authClient, t]);
 
   useEffect(() => {
     if (handoff === null || handoff === "" || handoffStarted.current) {
@@ -539,21 +565,47 @@ export function AccessPage({
     const address = new URL(window.location.href);
     address.searchParams.delete("handoff");
     window.history.replaceState(null, "", `${address.pathname}${address.search}${address.hash}`);
-    void authClient.exchangeHandoff(handoff).then(
-      async (me) => {
-        navigate(me.impersonation === undefined ? await routeAfterLogin(me, authClient) : "/inici");
-      },
-      () => {
-        setError(t("auth:activation.invalidTitle"));
-        setPending(null);
-      },
-    );
-  }, [authClient, handoff, navigate, t]);
+    void authClient.exchangeHandoff(handoff).then(enterHandoff, failHandoff);
+  }, [authClient, enterHandoff, failHandoff, handoff]);
+
+  // The client keeps asking `/me` in the background: its answer enters the session as well.
+  useEffect(() => {
+    if (!handoffUnconfirmed) {
+      return;
+    }
+    const signedIn = () => {
+      const me = authClient.getMe();
+      if (me !== null) {
+        void enterHandoff(me);
+      }
+    };
+    authClient.addEventListener("signedIn", signedIn);
+    return () => {
+      authClient.removeEventListener("signedIn", signedIn);
+    };
+  }, [authClient, enterHandoff, handoffUnconfirmed]);
 
   if (pending === "handoff") {
     return (
       <main className="auth-page auth-page--loading">
         <p role="status">{t("auth:activation.loading")}</p>
+      </main>
+    );
+  }
+
+  if (handoffUnconfirmed) {
+    return (
+      <main className="auth-page auth-page--loading">
+        <p role="alert">{t("auth:access.genericError")}</p>
+        <Button
+          onClick={() => {
+            setPending("handoff");
+            void authClient.retryHandoff().then(enterHandoff, failHandoff);
+          }}
+          type="button"
+        >
+          {t("auth:activation.retry")}
+        </Button>
       </main>
     );
   }

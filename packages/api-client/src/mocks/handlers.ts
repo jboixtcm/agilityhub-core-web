@@ -1146,25 +1146,34 @@ function replaceDog(dog: DogDetail): DogDetail {
  */
 const IMPERSONATION_HANDOFF_PREFIX = "mock-impersonation-handoff-";
 const CLUBS_APP_ORIGIN = "http://127.0.0.1:4173";
-// The browser mock world restarts on every page load: the redeemed codes outlive it in the
-// origin's storage, so a code stays spent after the app's full-page navigation, as on the api.
+// The browser mock world restarts on every page load: the redeemed codes and the issuing counter
+// outlive it in the origin's storage, so a code stays spent after the app's full-page navigation
+// and a code issued before a reload is never issued again, as on the api.
 const REDEEMED_HANDOFFS_STORAGE_KEY = "agilityhub.mock.redeemedHandoffs";
+const ISSUED_HANDOFFS_STORAGE_KEY = "agilityhub.mock.issuedHandoffs";
 let impersonationHandoffs = 0;
 const redeemedImpersonationHandoffs = new Set<string>();
 
-function handoffRedeemed(code: string): boolean {
-  if (redeemedImpersonationHandoffs.has(code)) return true;
+function storedRedeemedHandoffs(): string[] {
   try {
     const stored: unknown = JSON.parse(
       mockStorage()?.getItem(REDEEMED_HANDOFFS_STORAGE_KEY) ?? "[]",
     );
-    return Array.isArray(stored) && stored.includes(code);
+    return Array.isArray(stored)
+      ? stored.filter((code): code is string => typeof code === "string")
+      : [];
   } catch {
-    return false;
+    return [];
   }
 }
 
+function handoffRedeemed(code: string): boolean {
+  return redeemedImpersonationHandoffs.has(code) || storedRedeemedHandoffs().includes(code);
+}
+
 function redeemHandoff(code: string): void {
+  // The whole history: the codes of earlier page loads and of this one.
+  for (const stored of storedRedeemedHandoffs()) redeemedImpersonationHandoffs.add(stored);
   redeemedImpersonationHandoffs.add(code);
   try {
     mockStorage()?.setItem(
@@ -1174,6 +1183,23 @@ function redeemHandoff(code: string): void {
   } catch {
     // Node tests can run without local storage.
   }
+}
+
+function issueImpersonationHandoff(): string {
+  let issued = impersonationHandoffs;
+  try {
+    const stored = Number(mockStorage()?.getItem(ISSUED_HANDOFFS_STORAGE_KEY) ?? "0");
+    if (Number.isInteger(stored) && stored > issued) issued = stored;
+  } catch {
+    // Node tests can run without local storage.
+  }
+  impersonationHandoffs = issued + 1;
+  try {
+    mockStorage()?.setItem(ISSUED_HANDOFFS_STORAGE_KEY, String(impersonationHandoffs));
+  } catch {
+    // Node tests can run without local storage.
+  }
+  return `${IMPERSONATION_HANDOFF_PREFIX}${String(impersonationHandoffs)}`;
 }
 
 /**
@@ -1189,6 +1215,7 @@ function resetAuthMockState(): void {
   redeemedImpersonationHandoffs.clear();
   try {
     mockStorage()?.removeItem(REDEEMED_HANDOFFS_STORAGE_KEY);
+    mockStorage()?.removeItem(ISSUED_HANDOFFS_STORAGE_KEY);
   } catch {
     // Node tests can run without local storage.
   }
@@ -2580,11 +2607,10 @@ export const handlers = [
       return apiError("NOT_FOUND", "Member not found", 404);
     }
     await request.json();
-    impersonationHandoffs += 1;
     return HttpResponse.json(
       {
         expiresAt: "2026-09-06T16:00:00Z",
-        launchUrl: `${CLUBS_APP_ORIGIN}/entrar?handoff=${IMPERSONATION_HANDOFF_PREFIX}${String(impersonationHandoffs)}`,
+        launchUrl: `${CLUBS_APP_ORIGIN}/entrar?handoff=${issueImpersonationHandoff()}`,
         token: "mock-impersonation-token",
       },
       { status: 201 },

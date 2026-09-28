@@ -287,6 +287,15 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
       .filter({ has: member.getByRole("heading", { name: dog.name }) });
     const region = card.getByRole("region", { name: "Tasques" });
     const items = dog.tasks?.items ?? [];
+    // Round 2 #5: the counter agrees in number with the api's counts («1 pendent · 1 feta»).
+    const open = dog.tasks?.open ?? 0;
+    const completed = dog.tasks?.completed ?? 0;
+    await expect(
+      region.getByText(
+        `${String(open)} ${open === 1 ? "pendent" : "pendents"} · ${String(completed)} ${completed === 1 ? "feta" : "fetes"}`,
+        { exact: true },
+      ),
+    ).toBeVisible();
     await expect(region.getByRole("listitem")).toHaveCount(items.length);
     for (const task of items) {
       const done = task.doneAt !== undefined && task.doneAt !== null;
@@ -297,6 +306,11 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
       await expect(region.getByText(task.text, { exact: true })).toHaveCSS(
         "text-decoration-line",
         done ? "line-through" : "none",
+      );
+      // Round 2 #3: a done row is never dimmed (AGENTS rule 6).
+      await expect(region.getByRole("listitem").filter({ hasText: task.text })).toHaveCSS(
+        "opacity",
+        "1",
       );
     }
   }
@@ -433,6 +447,26 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       /\/api\/v1\/members\/[^/]+\/impersonation-token$/u.test(new URL(response.url()).pathname),
   );
   const popup = admin.waitForEvent("popup", { timeout: 15_000 }).catch(() => undefined);
+  // Round 2 #1: the club app's first `/me` after the handoff answers 503 once. The tab keeps the
+  // redeemed session and asks again; it never reads the refresh cookie meanwhile.
+  let failedMe = 0;
+  await admin.context().route("**/api/v1/me", async (route) => {
+    if (failedMe === 0 && route.request().frame().page() !== admin) {
+      failedMe += 1;
+      await route.fulfill({
+        body: JSON.stringify({
+          code: "INTERNAL_ERROR",
+          details: {},
+          message: "Unavailable (E4-W16 round 2)",
+          traceId: "e2e",
+        }),
+        contentType: "application/json",
+        status: 503,
+      });
+      return;
+    }
+    await route.fallback();
+  });
   await dialog.getByRole("button", { name: "Entra com l'abonat" }).click();
   const answer = await tokenAnswer;
   expect(answer.status()).toBe(201);
@@ -445,6 +479,7 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
     typeof body.launchUrl === "string" && body.launchUrl !== "" ? body.launchUrl : undefined;
 
   if (launchUrl === undefined) {
+    await admin.context().unroute("**/api/v1/me");
     // api E5-T27 is not in this image: D10 shows its error in the dialog and opens nothing.
     await expect(dialog.getByRole("alert")).toHaveText("No s'ha pogut completar l'acció.");
     expect(await popup).toBeUndefined();
@@ -479,6 +514,8 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   });
   await clubs.waitForURL((url) => url.pathname === "/inici", { timeout: 30_000 });
   await expect(clubs.getByText(`Estàs veient l'app com ${memberName}`)).toBeVisible();
+  expect(failedMe).toBe(1);
+  await admin.context().unroute("**/api/v1/me");
 
   // One member action, as the member (the api audits it with both ids, origin BACKOFFICE).
   await clubs.goto(`${clubsUrl}/gossos`);
@@ -511,6 +548,8 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   // The impersonated tab never refreshed (no refresh_token grant, before or after the reload).
   expect(clubsGrants.filter((grant) => grant === "refresh_token")).toEqual([]);
   writeEvidence("impersonation-core.json", {
+    clubsRefreshGrants: clubsGrants.filter((grant) => grant === "refresh_token").length,
+    firstMeAnswered503: failedMe === 1,
     launchUrl: `${launch.origin}${launch.pathname}?handoff=<redacted>`,
     memberAction: "PUT /me/dogs/{id}/instructor-note 200",
     opened: true,

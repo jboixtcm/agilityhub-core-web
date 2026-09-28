@@ -16,17 +16,29 @@ const REFRESH_MARGIN_MS = 60_000;
 const FOCUS_REFRESH_SLACK_MS = 30_000;
 /** Retries of a refresh or restore that failed without an answer from the api (offline, 5xx). */
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
+/** `/me` after a handoff: the first try and two retries (2 s, 5 s) before the page offers a retry. */
+const HANDOFF_ME_ATTEMPTS = 3;
 /**
  * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
  * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
  * It holds the impersonation access token (never refreshed) or the mark that it has expired.
+ * A handoff code redeemed in the tab holds its token as `pending` until `/me` says whose session
+ * it is, and `ended` when the api refused it afterwards: in either state the tab never reads the
+ * refresh cookie, which may be the admin's own session.
  */
 export const IMPERSONATION_STORAGE_KEY = "agilityhub.impersonation";
 
 interface StoredImpersonation {
   expiresAt?: number;
-  state: "active" | "expired";
+  state: "active" | "ended" | "expired" | "pending";
   token?: string;
+}
+
+interface PendingHandoff {
+  expiresAt: number;
+  /** BODY (mock) clients only, kept in memory: never in session storage. */
+  refreshToken?: string;
+  token: string;
 }
 
 export type Me = components["schemas"]["Me"];
@@ -73,10 +85,14 @@ function readStoredImpersonation(): StoredImpersonation | undefined {
     const raw = tabStorage()?.getItem(IMPERSONATION_STORAGE_KEY);
     if (raw === null || raw === undefined) return undefined;
     const value = JSON.parse(raw) as Partial<StoredImpersonation>;
-    if (value.state === "expired") return { state: "expired" };
-    if (value.state === "active" && typeof value.token === "string" && value.token !== "") {
+    if (value.state === "expired" || value.state === "ended") return { state: value.state };
+    if (
+      (value.state === "active" || value.state === "pending") &&
+      typeof value.token === "string" &&
+      value.token !== ""
+    ) {
       return {
-        state: "active",
+        state: value.state,
         token: value.token,
         ...(typeof value.expiresAt === "number" ? { expiresAt: value.expiresAt } : {}),
       };
@@ -108,6 +124,24 @@ function endsSession(error: unknown): boolean {
   return isApiError(error) && (error.status === 400 || error.status === 401);
 }
 
+/** No answer from the api (status 0) or a 5xx: worth another try. */
+function isTransient(error: unknown): boolean {
+  return isApiError(error) && (error.status === 0 || error.status >= 500);
+}
+
+/** The next retry: after `delayMs`, or as soon as the device is back online. */
+function waitForRetry(delayMs: number): Promise<void> {
+  return new Promise((resolve) => {
+    const done = () => {
+      clearTimeout(timer);
+      if (typeof window !== "undefined") window.removeEventListener("online", done);
+      resolve();
+    };
+    const timer = setTimeout(done, delayMs);
+    if (typeof window !== "undefined") window.addEventListener("online", done);
+  });
+}
+
 function isAccountLocale(locale: string): locale is AccountLocale {
   return locale === "ca" || locale === "es" || locale === "en";
 }
@@ -134,9 +168,14 @@ export class AuthClient extends EventTarget {
   private currentMe: Me | null = null;
   private exchangeInFlight: Promise<Me> | null = null;
   private readonly fetcher: typeof globalThis.fetch;
+  private handoffConfirmation: Promise<Me> | null = null;
+  /** A handoff redeemed in this tab whose session the api refused afterwards: no cookie either. */
+  private handoffEnded = false;
   private readonly identityBaseUrl: string;
   /** `active`: an impersonated session (never refreshed); `expired`: it ended in this tab. */
   private impersonation: "active" | "expired" | null = null;
+  /** A handoff code redeemed in this tab whose `/me` has not answered yet (E47). */
+  private pendingHandoff: PendingHandoff | null = null;
   private readonly mockRefreshTokenStore: MockRefreshTokenStore | undefined;
   private readonly navigate: (path: string) => void;
   private refreshAt: number | null = null;
@@ -185,6 +224,23 @@ export class AuthClient extends EventTarget {
   /** The impersonated session of this tab has expired («La sessió com l'abonat ha caducat»). */
   isImpersonationExpired(): boolean {
     return this.impersonation === "expired";
+  }
+
+  /**
+   * A handoff code was redeemed but `/me` keeps failing (offline, 5xx): the tab still holds that
+   * session, and `retryHandoff()` asks again. The cookie is never read meanwhile.
+   */
+  hasPendingHandoff(): boolean {
+    return this.pendingHandoff !== null;
+  }
+
+  /** Asks `/me` again for the session a handoff code opened in this tab (with the same backoff). */
+  async retryHandoff(): Promise<Me> {
+    if (this.pendingHandoff === null && this.currentMe !== null) {
+      // A background retry entered it meanwhile.
+      return this.currentMe;
+    }
+    return this.confirmHandoff();
   }
 
   /**
@@ -272,6 +328,7 @@ export class AuthClient extends EventTarget {
         grant_type: "urn:agilityhub:grant:magic-link",
         token,
       }),
+      false,
     );
   }
 
@@ -282,6 +339,7 @@ export class AuthClient extends EventTarget {
         grant_type: "urn:agilityhub:grant:handoff",
         token,
       }),
+      true,
     );
   }
 
@@ -323,6 +381,9 @@ export class AuthClient extends EventTarget {
   async recoverFromUnauthorized(): Promise<boolean> {
     if (this.impersonation !== null) {
       this.handleImpersonationExpired();
+      return false;
+    }
+    if (this.holdsHandoffSession()) {
       return false;
     }
     try {
@@ -471,6 +532,9 @@ export class AuthClient extends EventTarget {
     if (this.impersonation !== null) {
       throw new TypeError("An impersonated session is never refreshed");
     }
+    if (this.holdsHandoffSession()) {
+      throw new TypeError("A handoff session is never refreshed before /me answers");
+    }
     if (this.refreshInFlight !== null) {
       return this.refreshInFlight;
     }
@@ -495,9 +559,21 @@ export class AuthClient extends EventTarget {
     if (this.exchangeInFlight !== null) {
       try {
         return await this.exchangeInFlight;
-      } catch {
+      } catch (error) {
+        // A redeemed handoff whose `/me` keeps failing is still this tab's session (unknown yet):
+        // the provider stays `loading` while it is asked again later.
+        if (this.pendingHandoff !== null) {
+          this.scheduleRetry(() => {
+            this.retryRestore();
+          });
+          throw error;
+        }
         // A refused code leaves the tab as it was: the usual restore follows.
       }
+    }
+    // A handoff redeemed in this tab and refused afterwards: never the cookie instead.
+    if (this.handoffEnded) {
+      return null;
     }
     if (this.restoreInFlight !== null) {
       return this.restoreInFlight;
@@ -515,7 +591,22 @@ export class AuthClient extends EventTarget {
   }
 
   private async performRestoreSession(): Promise<Me | null> {
+    if (this.pendingHandoff !== null) {
+      return this.restorePendingHandoff();
+    }
     const stored = readStoredImpersonation();
+    if (stored?.state === "ended") {
+      this.handoffEnded = true;
+      return null;
+    }
+    if (stored?.state === "pending" && stored.token !== undefined) {
+      if (stored.expiresAt !== undefined && Date.now() >= stored.expiresAt) {
+        this.endHandoff();
+        return null;
+      }
+      this.pendingHandoff = { expiresAt: stored.expiresAt ?? Date.now(), token: stored.token };
+      return this.restorePendingHandoff();
+    }
     if (stored !== undefined) {
       return this.restoreImpersonation(stored);
     }
@@ -571,6 +662,23 @@ export class AuthClient extends EventTarget {
     }
   }
 
+  /** The tab's redeemed handoff after a page load, or again after `/me` failed: never the cookie. */
+  private async restorePendingHandoff(): Promise<Me | null> {
+    try {
+      return await this.confirmHandoff();
+    } catch (error) {
+      if (this.pendingHandoff === null) {
+        // Refused (the tab ends anonymous), or another sign-in replaced it meanwhile.
+        return this.currentMe;
+      }
+      // Still that session, still unknown: the provider stays `loading` and tries again later.
+      this.scheduleRetry(() => {
+        this.retryRestore();
+      });
+      throw error;
+    }
+  }
+
   private retryRestore(): void {
     void this.restoreSession().then(
       (me) => {
@@ -590,7 +698,7 @@ export class AuthClient extends EventTarget {
    */
   async logout(): Promise<void> {
     let failure: Error | undefined;
-    const impersonated = this.impersonation !== null;
+    const impersonated = this.impersonation !== null || this.holdsHandoffSession();
 
     try {
       if (this.accessToken !== null) {
@@ -651,6 +759,8 @@ export class AuthClient extends EventTarget {
     this.accessToken = token;
     this.refreshAt = null;
     this.impersonation = "active";
+    this.pendingHandoff = null;
+    this.handoffEnded = false;
     writeStoredImpersonation({
       state: "active",
       token,
@@ -658,9 +768,24 @@ export class AuthClient extends EventTarget {
     });
   }
 
+  /** Leaves any one-time session of the tab (impersonation, pending or ended handoff). */
   private leaveImpersonation(): void {
     this.impersonation = null;
+    this.pendingHandoff = null;
+    this.handoffEnded = false;
     writeStoredImpersonation(undefined);
+  }
+
+  private holdsHandoffSession(): boolean {
+    return this.pendingHandoff !== null || this.handoffEnded;
+  }
+
+  /** The api refused the session a handoff opened in this tab: anonymous, and never the cookie. */
+  private endHandoff(): void {
+    this.clearLocalSession();
+    this.pendingHandoff = null;
+    this.handoffEnded = true;
+    writeStoredImpersonation({ state: "ended" });
   }
 
   private acceptTokens(tokens: TokenResponse): void {
@@ -844,8 +969,8 @@ export class AuthClient extends EventTarget {
     return response;
   }
 
-  private exchangeOneTimeCode(form: URLSearchParams): Promise<Me> {
-    const operation = this.performExchange(form);
+  private exchangeOneTimeCode(form: URLSearchParams, handoff: boolean): Promise<Me> {
+    const operation = this.performExchange(form, handoff);
     this.exchangeInFlight = operation;
     const settle = () => {
       if (this.exchangeInFlight === operation) {
@@ -857,26 +982,109 @@ export class AuthClient extends EventTarget {
   }
 
   /**
-   * A one-time code for this client (`urn:agilityhub:grant:magic-link` or `…:handoff`). A code
-   * that opens an impersonated session (`/me` carries `impersonation`, «Entra com l'abonat»,
-   * E47) enters the no-refresh mode with its token's expiry.
+   * A one-time code for this client (`urn:agilityhub:grant:magic-link` or `…:handoff`). A handoff
+   * code holds its session until `/me` says whose it is (`confirmHandoff`).
    */
-  private async performExchange(form: URLSearchParams): Promise<Me> {
+  private async performExchange(form: URLSearchParams, handoff: boolean): Promise<Me> {
     const tokens = await this.issueToken(form);
     this.leaveImpersonation();
+    if (handoff) {
+      this.clearLocalSession();
+      this.holdHandoff({
+        expiresAt: Date.now() + tokens.expires_in * 1_000,
+        ...(tokens.refresh_token === undefined ? {} : { refreshToken: tokens.refresh_token }),
+        token: tokens.access_token,
+      });
+      return this.confirmHandoff();
+    }
     this.acceptTokens(tokens);
     try {
       const me = await this.loadMe();
-      if (me.impersonation !== undefined) {
-        this.enterImpersonation(tokens.access_token, Date.now() + tokens.expires_in * 1_000);
-      }
       this.currentMe = me;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      this.leaveImpersonation();
       this.clearLocalSession();
       throw error;
+    }
+  }
+
+  private holdHandoff(pending: PendingHandoff): void {
+    this.pendingHandoff = pending;
+    this.accessToken = pending.token;
+    writeStoredImpersonation({
+      expiresAt: pending.expiresAt,
+      state: "pending",
+      token: pending.token,
+    });
+  }
+
+  /**
+   * S01 R-01-09 (E47): the session a handoff code opened. `/me` is retried on a network error or
+   * a 5xx (after 2 s and 5 s, or at once when the device is online) while the tab keeps that
+   * token; it never falls back to the cookie. An impersonation (`/me` carries `impersonation`)
+   * enters the no-refresh mode with its token's expiry; any other session slides as usual. A
+   * refusal (`401`, or any other 4xx) ends it. One confirmation at a time.
+   */
+  private confirmHandoff(): Promise<Me> {
+    if (this.handoffConfirmation !== null) {
+      return this.handoffConfirmation;
+    }
+    const operation = this.performConfirmHandoff();
+    this.handoffConfirmation = operation;
+    const settle = () => {
+      if (this.handoffConfirmation === operation) {
+        this.handoffConfirmation = null;
+      }
+    };
+    operation.then(settle, settle);
+    return operation;
+  }
+
+  private async performConfirmHandoff(): Promise<Me> {
+    for (let attempt = 1; ; attempt += 1) {
+      const pending = this.pendingHandoff;
+      if (pending === null) {
+        throw new TypeError("No handoff session to confirm");
+      }
+      this.accessToken = pending.token;
+      try {
+        const me = await this.loadMe();
+        if (this.pendingHandoff !== pending) {
+          throw new TypeError("The handoff session changed while /me was answering");
+        }
+        this.pendingHandoff = null;
+        this.cancelRetry();
+        this.retryAttempt = 0;
+        if (me.impersonation === undefined) {
+          writeStoredImpersonation(undefined);
+          this.acceptTokens({
+            access_token: pending.token,
+            expires_in: Math.max(1, Math.round((pending.expiresAt - Date.now()) / 1_000)),
+            ...(pending.refreshToken === undefined ? {} : { refresh_token: pending.refreshToken }),
+            scope: "",
+            token_type: "Bearer",
+          });
+        } else {
+          this.enterImpersonation(pending.token, pending.expiresAt);
+        }
+        this.currentMe = me;
+        this.signedOutNotified = false;
+        this.dispatchEvent(new Event("signedIn"));
+        return me;
+      } catch (error) {
+        if (this.pendingHandoff !== pending) {
+          throw error;
+        }
+        if (!isTransient(error)) {
+          this.endHandoff();
+          throw error;
+        }
+        if (attempt >= HANDOFF_ME_ATTEMPTS) {
+          throw error;
+        }
+        await waitForRetry(RETRY_DELAYS_MS[attempt - 1] ?? RETRY_DELAYS_MS[0]);
+      }
     }
   }
 }

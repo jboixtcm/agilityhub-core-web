@@ -1506,10 +1506,7 @@ select {
   gap: var(--ah-space-2);
 }
 
-.dog-task[data-done] {
-  opacity: 0.62;
-}
-
+/* R-03-18: the check mark and the strike-through mark a done task; its text keeps full contrast. */
 .dog-task[data-done] p {
   text-decoration: line-through;
 }

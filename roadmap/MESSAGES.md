@@ -1388,3 +1388,11 @@ Blocking: no.
   3. `errors:ATTENDANCE_NOTIFIED_FINAL` and `INSTRUCTOR_NOTICE_DISABLED` are rewritten in ca/es/en: the old texts said something else.
   4. The proposed literals are listed in the report (Q4).
 Blocking: no.
+
+## 2026-09-28 · organizer → executor · verifications of 28-09 (afternoon)
+@executor
+- **E4-W17 → `verified`.** Its review's findings are E5-W05 step 22. The N-37 check stays a real check: E4-W16's round 2 (item 4) makes it read the S11 shape.
+- **E6-W01 → round 2** (`changes_requested`): a recovery reload never overwrites a newer save; the search pages; `TASKS` guards the tasks route; errors by code; a modal photo lightbox; the controls' contrast; the instructor lands on 20 (ruling E71).
+- **E5-W05** has steps 22 (E4-W17's review) and 23 (the search's names, with api E5-T29 step 13).
+- **Docs:** `CONVENCIONS_API.md` §5, `DECISIONS_PENDENTS.md` (E71) and `INCIDENCIES_OBERTES.md` (INC-47), in `docs/`.
+Blocking: no.

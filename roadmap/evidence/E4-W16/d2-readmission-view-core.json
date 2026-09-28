@@ -7,20 +7,21 @@
     "address",
     "paymentMethod"
   ],
-  "dogAfterCardWithdrawn": {
+  "dogBeforeRejection": {
     "changedFields": [
       "name",
       "sex",
       "breed",
-      "birthMonth"
+      "birthMonth",
+      "documents"
     ],
     "documents": [
-      "VACCINATION_CARD: demo-document.pdf"
+      "VACCINATION_CARD: demo-document.pdf, cartilla_retorn_2.jpg"
     ]
   },
   "memberContact": {
     "emails": [
-      "demo.8a881ed4-aa31-4187-8099-b80f9ac5d8e9.192@example.test"
+      "demo.c83d6bad-602e-454f-9b58-9bc0f8ee3183.192@example.test"
     ],
     "phones": [
       "600000192"
