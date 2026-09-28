@@ -152,5 +152,18 @@
     "SCHEDULE": "scheduled",
     "CATCH_UP": "catch-up",
     "MANUAL": "manual"
+  },
+  "attendanceState": {
+    "PENDING": "pending",
+    "PRESENT": "present",
+    "NOTIFIED": "notified",
+    "NO_SHOW": "no-show"
+  },
+  "attendanceStateShort": {
+    "PRESENT": "present",
+    "NOTIFIED": "notified",
+    "NO_SHOW": "no-show",
+    "CANCELLED_LATE": "cancelled late",
+    "PENDING": "not marked"
   }
 }

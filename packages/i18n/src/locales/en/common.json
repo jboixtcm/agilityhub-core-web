@@ -15,6 +15,28 @@
     "duration": {
       "before": "{duration} before"
     },
+    "dayRelative": {
+      "minutes": "{count} min ago",
+      "hours": "{count} h ago",
+      "today": "today {time}",
+      "yesterday": "yesterday {time}",
+      "date": "{date} · {time}"
+    },
+    "since": {
+      "today": "today",
+      "days": {
+        "one": "{count} day ago",
+        "other": "{count} days ago"
+      },
+      "months": {
+        "one": "{count} month ago",
+        "other": "{count} months ago"
+      },
+      "years": {
+        "one": "{count} year ago",
+        "other": "{count} years ago"
+      }
+    },
     "weekRange": {
       "sameMonth": "{start}–{endDay}",
       "differentMonth": "{start} – {end}"

@@ -40,7 +40,11 @@ import { ConfirmPage } from "./booking/ConfirmPage";
 import { HomePage } from "./booking/HomePage";
 import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
 import { InfoPage } from "./InfoPage";
+import { AttendancePage } from "./instructor/AttendancePage";
+import { DayPage } from "./instructor/DayPage";
 import { RingBlockPage } from "./instructor/RingBlockPage";
+import { StudentCardPage } from "./instructor/StudentCardPage";
+import { StudentSearchPage } from "./instructor/StudentSearchPage";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -88,10 +92,16 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // Screens 16–19.
   { path: "/apuntat-hi/*", public: true },
   { path: "/gossos/nou*" },
-  // Screens 20, 21, 22, 24 and 26 (S09 §2 writes 24 as `/instructor/ring-blocks/new`).
+  // Screens 20, 21, 22 and the student search (S10 §2, E6-W01; R-10-01: instructors and admins).
+  { path: "/instructor/dia", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/classes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/alumnes", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR", "ADMIN"] },
+  // Screen 24 (S09 §2 writes it as `/instructor/ring-blocks/new`).
   { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/tasques", roles: ["INSTRUCTOR"] },
-  { path: "/instructor/*", roles: ["INSTRUCTOR"] },
+  // Screen 26 (`/instructor/alumnes/:dogId/tasques`, E6-W02) is a placeholder of this wildcard
+  // until then; E0-W06's `/instructor/tasques` is gone.
+  { path: "/instructor/*", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
   { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 25.
@@ -231,12 +241,15 @@ function LanguageSelector() {
 
 export function MobileNavigation({
   activeProfile = null,
+  impersonated = false,
   modules,
   pathname,
   roles,
   trainingTab = true,
 }: {
   activeProfile?: Role | null;
+  /** An impersonated session never shows the instructor's tabs (S10 §6: the api refuses it). */
+  impersonated?: boolean;
   modules: readonly string[];
   pathname: string;
   roles: readonly Role[];
@@ -244,6 +257,40 @@ export function MobileNavigation({
   trainingTab?: boolean;
 }) {
   const { t } = useTranslation("shell");
+  if (activeProfile === "INSTRUCTOR" && !impersonated && roles.includes("INSTRUCTOR")) {
+    // Mockups 20, 21 and 22 (E6-W01): «El meu dia · Visió global · Alumnes · Perfil».
+    const tabs: TabBarItem[] = [
+      {
+        active: ["/instructor/dia", "/instructor/classes/:id"].some((path) =>
+          matchesPath(pathname, path),
+        ),
+        href: "/instructor/dia",
+        icon: "day",
+        label: t("shell:nav.myDay"),
+      },
+      {
+        active: matchesPath(pathname, "/instructor/avui"),
+        href: "/instructor/avui",
+        icon: "globe",
+        label: t("shell:nav.globalView"),
+      },
+      {
+        active: ["/instructor/alumnes", "/instructor/alumnes/*"].some((path) =>
+          matchesPath(pathname, path),
+        ),
+        href: "/instructor/alumnes",
+        icon: "list",
+        label: t("shell:nav.students"),
+      },
+      {
+        active: ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path)),
+        href: "/perfil",
+        icon: "user",
+        label: t("shell:nav.profile"),
+      },
+    ];
+    return <TabBar items={tabs} label={t("shell:nav.main")} />;
+  }
   const staffProfile = activeProfile === "INSTRUCTOR" || activeProfile === "ADMIN";
   const definitions: (TabBarItem & { id: string; roles?: readonly Role[] })[] = [
     { href: "/inici", icon: "home", id: "home", label: t("shell:nav.home") },
@@ -398,6 +445,7 @@ function MobileShell({
       <main className="clubs-shell__content">{children}</main>
       <MobileNavigation
         activeProfile={session.activeProfile}
+        impersonated={session.me?.impersonation !== undefined}
         modules={branding.modules}
         pathname={window.location.pathname}
         roles={session.roles}
@@ -823,7 +871,8 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
           {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
           {resetLinkUsed ? (
             <p role="alert">
-              {t("auth:activation.resetLinkUsed")} <a href="/entrar">{t("auth:activation.recover")}</a>
+              {t("auth:activation.resetLinkUsed")}{" "}
+              <a href="/entrar">{t("auth:activation.recover")}</a>
             </p>
           ) : null}
           {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
@@ -1234,6 +1283,26 @@ function MemberActivityRoute({ activityId, client }: { activityId: string; clien
   );
 }
 
+/**
+ * S10's instructor screens (20, 21, 22, the student search): INSTRUCTOR or ADMIN, never an
+ * impersonated session (the api answers `403 IMPERSONATION_DENIED`, E6-T01), which reads that
+ * refusal where it lands.
+ */
+function InstructorRoute({ children }: { children: ReactNode }) {
+  const { me } = useSession();
+  const { t } = useTranslation("errors");
+  if (me?.impersonation !== undefined) {
+    return (
+      <RequireAuth>
+        <Card role="alert">
+          <p>{t("errors:IMPERSONATION_DENIED")}</p>
+        </Card>
+      </RequireAuth>
+    );
+  }
+  return <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>{children}</RequireRole>;
+}
+
 function LegacyAccessRedirect() {
   useEffect(() => {
     window.location.replace("/entrar");
@@ -1390,6 +1459,33 @@ export function App({
       <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
         <OverviewPage client={apiClient} />
       </RequireRole>
+    ) : pathname === "/instructor/dia" ? (
+      // Screen 20 (S10 §2).
+      <InstructorRoute>
+        <DayPage client={apiClient} />
+      </InstructorRoute>
+    ) : route.path === "/instructor/classes/:id" ? (
+      // Screen 21 (S10 §2).
+      <InstructorRoute>
+        <AttendancePage
+          classId={safeDecode(pathname.split("/")[3] ?? "")}
+          client={apiClient}
+          key={pathname}
+        />
+      </InstructorRoute>
+    ) : pathname === "/instructor/alumnes" ? (
+      <InstructorRoute>
+        <StudentSearchPage client={apiClient} />
+      </InstructorRoute>
+    ) : route.path === "/instructor/alumnes/:dogId" ? (
+      // Screen 22 (S10 §2).
+      <InstructorRoute>
+        <StudentCardPage
+          client={apiClient}
+          dogId={safeDecode(pathname.split("/")[3] ?? "")}
+          key={pathname}
+        />
+      </InstructorRoute>
     ) : route.path === "/activitats/:id" ? (
       <MemberActivityRoute
         activityId={safeDecode(pathname.split("/")[2] ?? "")}
@@ -1484,6 +1580,8 @@ export function App({
             "/info",
             "/avui",
             "/instructor/avui",
+            "/instructor/dia",
+            "/instructor/alumnes",
             "/inici",
             "/reservar",
             "/reservar/confirmar",
@@ -1495,6 +1593,8 @@ export function App({
             "/espera/:id",
             "/entrenaments/:id",
             "/instructor/pistes/:ringId/reservar",
+            "/instructor/classes/:id",
+            "/instructor/alumnes/:dogId",
           ].includes(route.path)
         }
       >

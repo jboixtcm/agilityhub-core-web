@@ -1,0 +1,669 @@
+# E4-W17 before-fix run: fixes of steps 2 (mock), 4, 5 and 9 reverted to their pre-fix code (clubs-admin + api-client mock); restored afterwards
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (13 tests | 1 failed | 12 skipped) 131ms
+   ❯ T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method (1)
+     × reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL 129ms
+ ❯ src/activities/ActivitiesPage.test.tsx (48 tests | 1 failed | 47 skipped) 10269ms
+   ❯ T-07-29 D7 activities (list, maintenance, publication, cancellation) (23)
+     × E4-W17 step 5 (R-07-04): [DESA] on the published Torneig with both times cleared marks both «Cal per publicar», with «Falten dades…» 10267ms
+ ❯ src/dashboard/SignupReviewPage.test.tsx (95 tests | 2 failed | 93 skipped) 20246ms
+   ❯ T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) (13)
+     × E4-W17 step 4 (AGENTS rule 1): when census.dogDocumentTypes cannot be read, each per-type row keeps «Documents», never a raw code 10130ms
+     × E4-W17 step 2 R-04-06: when the reused dog's record has no card, withdrawing the submitted card leaves the automatic card pending, and D2 warns «Document pendent» 10113ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > T-07-29 D7 activities (list, maintenance, publication, cancellation) > E4-W17 step 5 (R-07-04): [DESA] on the published Torneig with both times cleared marks both «Cal per publicar», with «Falten dades…»
+TestingLibraryElementError: Unable to find an element with the text: Falten dades per publicar l'activitat: revisa els camps marcats.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"activities-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activities-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mActivitats[0m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mNova activitat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'activitats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca una activitat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca una activitat"[39m
+              [33mplaceholder[39m=[32m"Cerca una activitat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Mostra"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"false"[39m
+            [36m>[39m
+              [0mSense les eliminades[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTotes[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"state"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"type"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"date"[39m
+                  [36m>[39m
+                    [0mData[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ringId"[39m
+                  [36m>[39m
+                    [0mPista[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registrationOpen"[39m
+                  [36m>[39m
+                    [0mInscripció oberta[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"PUBLISHED"[39m
+                  [36m>[39m
+                    [0mpublicada (4)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"DRAFT"[39m
+                  [36m>[39m
+                    [0mesborrany (1)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/ActivitiesPage.test.tsx:630:20
+    628|
+    629|     expect(
+    630|       await screen.findByText("Falten dades per publicar l'activitat: …
+       |                    ^
+    631|     ).toBeVisible();
+    632|     expect(within(card).getAllByText("Cal per publicar")).toHaveLength…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method > reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Efectiu/u[39m
+Received:
+[31m  MANUAL canvi només admin Edita[39m
+ ❯ src/census/CensusRecordPage.test.tsx:213:36
+    211|     await renderRecord("member");
+    212|     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    213|     expect(paymentRow("Pagament")).toHaveTextContent(/^Efectiu/u);
+       |                                    ^
+    214|     expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
+    215|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > E4-W17 step 4 (AGENTS rule 1): when census.dogDocumentTypes cannot be read, each per-type row keeps «Documents», never a raw code
+AssertionError: expected [ 'Nom', 'Raça', …(2) ] to deeply equal [ 'Nom', 'Raça', 'Documents', …(1) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"signup-review-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"signup-review-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPreinscripció #1042 — Marta Roca Pujol + Kiwi[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mpendent des de fa 2 dies[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mReadmissió[0m
+          [36m</span>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-review-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPersona[0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"signup-review-data"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mNom[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0mMarta Roca Pujol[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mDNI/NIE[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<strong>[39m
+                  [0m47123456K[0m
+                [36m</strong>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mContacte[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<span>[39m
+                  [0mmarta.roca@example.test · +34 655123123[0m
+                [36m</span>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral signup-review-whatsapp"[39m
+                  [33mhref[39m=[32m"https://wa.me/34655123123"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mWhatsApp[0m
+                [36m</a>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mGrup familiar[0m
+              [36m</dt>[39m
+              [36m<dd[39m
+                [33mclass[39m=[32m"signup-review-family"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mSí — titular: Marta Roca + gos Kiwi[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                [36m>[39m
+                  [0mtarifa familiar en validar[0m
+                [36m</span>[39m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mPagament[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mDomiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa[0m
+              [36m</dd>[39m
+            [36m</dl>[39m
+            [36m<section[39m
+              [33maria-labelledby[39m=[32m"signup-readmission-title"[39m
+              [33mclass[39m=[32m"signup-review-readmission"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mid[39m=[32m"signup-readmission-title"[39m
+              [36m>[39m
+                [0mCanvis respecte de la fitxa de baixa[0m
+              [36m</h3>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"signup-review-data"[39m
+              [36m>[39m
+                [36m<dt>[39m
+                  [0mCorreus electrònics[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"signup-review-readmission__previous"[39m
+                  [36m>[39m
+                    [0mAbans: marta.antic@example.test[0m
+                  [36m</span>[39m
+                  [36m<strong[39m
+                    [33mclass[39m=[32m"signup-review-readmission__submitted"[39m
+                  [36m>[39m
+                    [0mAra: marta.roca@example.test[0m
+                  [36m</strong>[39m
+                [36m</dd>[39m
+                [36m<dt>[39m
+                  [0mTelèfons[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"signup-review-readmission__previous"[39m
+                  [36m>[39m
+                    [0mAbans: +34 655000111[0m
+                  [36m</span>[39m
+                  [36m<strong[39m
+                    [33mclass[39m=[32m"signup-review-readmission__submitted"[39m
+                  [36m>[39m
+                    [0mAra: +34 655123123[0m
+                  [36m</strong>[39m
+                [36m</dd>[39m
+                [36m<dt>[39m
+                  [0mAdreça[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"signup-review-readmission__previous"[39m
+                  [36m>[39m
+                    [0mAbans: Carrer del Mar, 7, 08349 Cabrera de Mar[0m
+                  [36m</span>[39m
+                  [36m<strong[39m
+                    [33mclass[39m=[32m"signup-review-readmission__submitted"[39m
+                  [36m>[39m
+                    [0mAra: Carrer de la Riera, 12, 08349 Cabrera de Mar[0m
+                  [36m</strong>[39m
+                [36m</dd>[39m
+                [36m<dt>[39m
+               ...
+
+- Expected
++ Received
+
+  [
+    "Nom",
+    "Raça",
+-   "Documents",
+-   "Documents",
++   "VACCINATION_CARD",
++   "INSURANCE",
+  ]
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1352:82
+    1350|     const block = screen.getByRole("region", { name: "Canvis respecte …
+    1351|     await waitFor(() => {
+    1352|       expect(within(block).getAllByRole("term").map((term) => term.tex…
+       |                                                                                  ^
+    1353|     });
+    1354|     return block;
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) > E4-W17 step 2 R-04-06: when the reused dog's record has no card, withdrawing the submitted card leaves the automatic card pending, and D2 warns «Document pendent»
+TestingLibraryElementError: Unable to find an element with the text: Document pendent. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<header[39m
+  [33mclass[39m=[32m"signup-review-page__header"[39m
+[36m>[39m
+  [36m<h1>[39m
+    [0mPreinscripció #1042 — Marta Roca Pujol + Kiwi[0m
+  [36m</h1>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+  [36m>[39m
+    [0mpendent des de fa 2 dies[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+  [36m>[39m
+    [0mReadmissió[0m
+  [36m</span>[39m
+[36m</header>[39m
+
+Ignored nodes: comments, script, style
+[36m<header[39m
+  [33mclass[39m=[32m"signup-review-page__header"[39m
+[36m>[39m
+  [36m<h1>[39m
+    [0mPreinscripció #1042 — Marta Roca Pujol + Kiwi[0m
+  [36m</h1>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+  [36m>[39m
+    [0mpendent des de fa 2 dies[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+  [36m>[39m
+    [0mReadmissió[0m
+  [36m</span>[39m
+[36m</header>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1608:33
+    1606|     // As the api's `readmissionDocuments`: the card row is back, empt…
+    1607|     // warns DOCUMENT_PENDING and D2's header shows it.
+    1608|     expect(await within(header).findByText("Document pendent")).toHave…
+       |                                 ^
+    1609|     expect(within(drawer).queryByText(/cartilla_/u)).toBeNull();
+    1610|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  4 failed | 152 skipped (156)
+   Start at  13:24:36
+   Duration  21.21s (tests 92%, transform 4%, environment 3%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dashboard/SignupReviewPage.test.tsx src/activities/ActivitiesPage.test.tsx src/census/CensusRecordPage.test.tsx -t E4-W17
+exit 1

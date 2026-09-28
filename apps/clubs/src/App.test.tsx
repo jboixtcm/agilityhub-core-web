@@ -169,7 +169,48 @@ describe("T-02-14 clubs shell", () => {
       "/instructor/avui",
     );
     expect(screen.queryByRole("link", { name: "Avui" })).not.toBeInTheDocument();
-    expect(screen.getAllByRole("link")).toHaveLength(6);
+    // E6-W01: the instructor profile's bar is mockups 20–22's four tabs.
+    expect(screen.getAllByRole("link").map((link) => link.textContent)).toEqual([
+      "El meu dia",
+      "Visió global",
+      "Alumnes",
+      "Perfil",
+    ]);
+  });
+
+  it("E6-W01 step 1: «El meu dia» and «Alumnes» lead to 20 and the student search; never while impersonating", async () => {
+    await renderNavigation(["FREE_TRAINING", "FAQ"], ["INSTRUCTOR"], "INSTRUCTOR");
+    expect(screen.getByRole("link", { name: "El meu dia" })).toHaveAttribute(
+      "href",
+      "/instructor/dia",
+    );
+    expect(screen.getByRole("link", { name: "Alumnes" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes",
+    );
+    cleanup();
+
+    const i18n = await createI18n({
+      branding: canicBranding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["shell"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canicBranding}>
+          <MobileNavigation
+            activeProfile="INSTRUCTOR"
+            impersonated
+            modules={canicBranding.modules}
+            pathname="/inici"
+            roles={["INSTRUCTOR"]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(screen.queryByRole("link", { name: "El meu dia" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Alumnes" })).not.toBeInTheDocument();
   });
 
   it("omits Entrenaments when FREE_TRAINING is disabled", async () => {
@@ -200,8 +241,11 @@ describe("T-02-14 clubs shell", () => {
         "/baixa",
         "/apuntat-hi/*",
         "/gossos/nou*",
+        "/instructor/dia",
+        "/instructor/classes/:id",
+        "/instructor/alumnes",
+        "/instructor/alumnes/:dogId",
         "/instructor/pistes/:ringId/reservar",
-        "/instructor/tasques",
         "/instructor/*",
         "/instructor/avui",
         "/historic",

@@ -1,0 +1,200 @@
++ theme added
+  null -> {"colors":{"primary":"#E26A2A","onPrimary":"#0B0B0B","background":"#0B0B0B","surface":"#161616","surfaceAlt":"#1E1E1E","text":"#FFFFFF","textMuted":"#B5B5B5","border":"#2B2B2B","success":"#4CAF7D","warning":"#E5B93C","danger":"#E05B5B","info":"#85B8E8"},"fontFamily":"Montserrat","radius":"4px","ringPalette":["#F2B58C","#8FCE8F","#C9CDD3","#F5D67A","#85B8E8"],"mode":"dark"}
++ modules added
+  null -> ["ACTIVITIES","BILLING","COURSES","FAMILY_GROUP","FAQ","FREE_TRAINING","INACTIVITY","LEARN_LINK","PACKS","PUSH","SMS","TASKS","WAITLIST"]
++ paymentProviders added
+  null -> {"SEPA_XML":{"enabled":true},"MANUAL":{"enabled":true,"instructions":{"ca":"El pagament de l'entrada i el mes en curs (o el proper) és necessari per a la validació de l'alta. Pot fer-se per transferència al compte ES08 2100 0416 5702 0016 4955 (Club d'Agility Cànic) o per Bizum al 607 475 945.","es":"El pago de la entrada y del mes en curso (o del siguiente) es necesario para la validación del alta. Puede hacerse por transferencia a la cuenta ES08 2100 0416 5702 0016 4955 (Club d'Agility Cànic) o por Bizum al 607 475 945."}}}
++ legal added
+  null -> {"privacyPolicyUrl":"https://agilitycanic.cat/ca/politica-de-privacidad/","imageConsentText":{"ca":"Autoritzo la publicació de fotos meves i del meu gos dins l'àmbit de les activitats del club","es":"Autorizo la publicación de fotos mías y de mi perro en el ámbito de las actividades del club","en":"I authorize publication of photos of me and my dog within club activities"},"legalTextsVersion":"1"}
++ pwa added
+  null -> {"name":"Club Agility Cànic","shortName":"Club Agility Cànic","icons":[]}
++ parameters.signup.enabled added
+  null -> true
++ parameters.signup.pendingExpiryDays added
+  null -> 30
++ parameters.signup.requireDogDocumentAtSignup added
+  null -> false
++ parameters.signup.firstMonthSplitDay added
+  null -> 16
++ parameters.signup.allowFamilyGroupPending added
+  null -> true
++ admins: 0 to provision
++ accounts: 15 to provision
++ catalogs.levels.CAD
++ catalogs.levels.A
++ catalogs.levels.B
++ catalogs.levels.C
++ catalogs.levels.D
++ catalogs.levels.E
++ catalogs.levels.F
++ catalogs.levels.G
++ catalogs.levels.TER
++ catalogs.levels.PENDENT
++ catalogs.rings.MUN
++ catalogs.rings.CEN
++ catalogs.rings.CAR
++ catalogs.rings.CAD
++ catalogs.rings.PET
++ catalogs.plans.ABONAT
++ catalogs.plans.ABONAT_FAMILIAR
++ catalogs.plans.PACK6
++ catalogs.plans.PACK10
++ catalogs.plans.TERAPIA
++ catalogs.plans.COMPETICIO_1
++ catalogs.prices.ABONAT:MONTHLY_FEE:2026-01-01
++ catalogs.prices.ABONAT_FAMILIAR:MONTHLY_FEE:2026-01-01
++ catalogs.prices.PACK6:PACK:2026-01-01
++ catalogs.prices.PACK10:PACK:2026-01-01
++ catalogs.prices.TERAPIA:MAINTENANCE_FEE:2026-01-01
++ catalogs.prices.COMPETICIO_1:MONTHLY_FEE:2026-01-01
++ catalogs.faq.FAQ_1
++ catalogs.faq.FAQ_2
++ catalogs.faq.FAQ_3
++ catalogs.faq.FAQ_4
++ catalogs.faq.FAQ_5
++ catalogs.faq.FAQ_6
++ catalogs.faq.FAQ_7
++ catalogs: 34 catalog changes
++ messageTemplates: schema accepted; application deferred to E7
++ pages: 3 page changes
+15 changes (applied)
++ club added
+  null -> {"slug":"minim","name":"Club Mínim","contactEmail":"minim@example.test","locales":["en"],"defaultLocale":"en","timeZone":"UTC","currency":"EUR","countryProfile":"GENERIC","status":"ONBOARDING","template":false}
++ domains added
+  null -> [{"host":"minim.example.test","app":"clubs","primary":true}]
++ theme added
+  null -> {"colors":{"primary":"#2563EB","onPrimary":"#FFFFFF","background":"#F8FAFC","surface":"#FFFFFF","surfaceAlt":"#F1F5F9","text":"#0F172A","textMuted":"#475569","border":"#CBD5E1","success":"#15803D","warning":"#A16207","danger":"#B91C1C","info":"#0369A1"},"fontFamily":"system-ui","radius":"8px","ringPalette":[],"mode":"light"}
++ modules added
+  null -> ["FAQ","PUSH","WAITLIST"]
++ paymentProviders added
+  null -> {"STRIPE":{"enabled":true},"MANUAL":{"enabled":true}}
++ legal added
+  null -> {"privacyPolicyUrl":"https://minim.example.test/privacy","imageConsentText":{"en":"I authorize publication of photos of me and my dog within club activities."},"legalTextsVersion":"2026-09"}
++ pwa added
+  null -> {"name":"Club Mínim","shortName":"Club Mínim","icons":[]}
++ parameters.messaging.email.fromName added
+  null -> "Club Mínim"
++ parameters.signup.enabled added
+  null -> true
++ parameters.signup.requireDogDocumentAtSignup added
+  null -> false
++ parameters.signup.allowFamilyGroupPending added
+  null -> false
++ parameters.levels.enabled added
+  null -> false
++ admins: 0 to provision
++ accounts: 3 to provision
+= catalogs: 0 catalog changes
++ messageTemplates: schema accepted; application deferred to E7
+= pages: 0 page changes
+13 changes (applied)
+2026-09-28T11:30:57.010Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.082Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.094Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.103Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.112Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.122Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:30:57.131Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+{activeMembers=184, pendingMembers=3, inactiveMembers=4, leftMembers=3, members=194, dogs=246, familyGroups=12, activeDogs=242, pendingDogs=3, inactiveDogs=1, instructors=3, administrators=2, receivedDocuments=7, pendingDocuments=239}
+452 changes (demo seed)
+2026-09-28T11:30:59.012Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-28T11:31:00.081Z ERROR 118 --- [agilityhub-core-api] [scheduled-job-1] c.a.c.p.application.jobs.JobRunner       : Job item failed jobRunId=d0a20409-fe28-4d37-89e1-badc2ca09c44 job=WEEK_OPENING clubId=b7d15e3d-f939-432f-afa5-a6df1eaa436a entityId=2026-10-04 traceId=2ad591f3-12fb-454b-91ed-739bc5062192
+
+org.springframework.dao.DataIntegrityViolationException: Command failed with error 112 (WriteConflict): 'Caused by ::  :: Please retry your operation or multi-document transaction.' on server mongo:27017. The full response is {"errorLabels": ["TransientTransactionError"], "ok": 0.0, "errmsg": "Caused by ::  :: Please retry your operation or multi-document transaction.", "code": 112, "codeName": "WriteConflict", "$clusterTime": {"clusterTime": {"$timestamp": {"t": 1790595060, "i": 36}}, "signature": {"hash": {"$binary": {"base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=", "subType": "00"}}, "keyId": 0}}, "operationTime": {"$timestamp": {"t": 1790595060, "i": 36}}}
+	at org.springframework.data.mongodb.core.MongoExceptionTranslator.doTranslateException(MongoExceptionTranslator.java:141) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoExceptionTranslator.translateExceptionIfPossible(MongoExceptionTranslator.java:74) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.potentiallyConvertRuntimeException(MongoTemplate.java:3037) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2915) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.doFindAndModify(MongoTemplate.java:2770) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.findAndModify(MongoTemplate.java:1120) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.findAndModify(MongoTemplate.java:1095) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at com.agilityhub.core.clubs.scheduling.persistence.WeekRepository.getOrCreate(WeekRepository.java:33) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138) ~[spring-tx-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at com.agilityhub.core.clubs.scheduling.persistence.WeekRepository$$SpringCGLIB$$0.getOrCreate(<generated>) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.clubs.scheduling.application.WeekOpenings.lambda$open$1(WeekOpenings.java:40) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/java.util.Optional.orElseGet(Unknown Source) ~[na:na]
+	at com.agilityhub.core.clubs.scheduling.application.WeekOpenings.open(WeekOpenings.java:40) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380) ~[spring-tx-6.2.19.jar!/:6.2.19]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at com.agilityhub.core.clubs.scheduling.application.WeekOpenings$$SpringCGLIB$$0.open(<generated>) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.clubs.common.application.WeekOpeningJob.apply(WeekOpeningJob.java:79) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.lambda$run$5(JobRunner.java:198) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.lambda$write$9(JobRunner.java:306) ~[!/:0.1.0-SNAPSHOT]
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140) ~[spring-tx-6.2.19.jar!/:6.2.19]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.write(JobRunner.java:306) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.run(JobRunner.java:198) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.execute(JobRunner.java:165) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.JobRunner.scheduled(JobRunner.java:100) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.SchedulerTick.run(SchedulerTick.java:58) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.SchedulerTick.scheduled(SchedulerTick.java:46) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.15.12.jar!/:1.15.12]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:87) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) ~[na:na]
+	at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
+Caused by: com.mongodb.MongoCommandException: Command failed with error 112 (WriteConflict): 'Caused by ::  :: Please retry your operation or multi-document transaction.' on server mongo:27017. The full response is {"errorLabels": ["TransientTransactionError"], "ok": 0.0, "errmsg": "Caused by ::  :: Please retry your operation or multi-document transaction.", "code": 112, "codeName": "WriteConflict", "$clusterTime": {"clusterTime": {"$timestamp": {"t": 1790595060, "i": 36}}, "signature": {"hash": {"$binary": {"base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=", "subType": "00"}}, "keyId": 0}}, "operationTime": {"$timestamp": {"t": 1790595060, "i": 36}}}
+	at com.mongodb.internal.connection.ProtocolHelper.getCommandFailureException(ProtocolHelper.java:210) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:520) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceiveInternal(InternalStreamConnection.java:448) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.lambda$sendAndReceive$0(InternalStreamConnection.java:375) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:378) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.UsageTrackingInternalConnection.sendAndReceive(UsageTrackingInternalConnection.java:111) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultConnectionPool$PooledConnection.sendAndReceive(DefaultConnectionPool.java:747) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.CommandProtocolImpl.execute(CommandProtocolImpl.java:61) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServer$DefaultServerProtocolExecutor.execute(DefaultServer.java:208) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.executeProtocol(DefaultServerConnection.java:112) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.command(DefaultServerConnection.java:82) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.command(DefaultServerConnection.java:74) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServer$OperationCountTrackingConnection.command(DefaultServer.java:298) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$executeRetryableWrite$10(SyncOperationHelper.java:267) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$withSourceAndConnection$0(SyncOperationHelper.java:131) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSuppliedResource(SyncOperationHelper.java:156) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$withSourceAndConnection$1(SyncOperationHelper.java:130) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSuppliedResource(SyncOperationHelper.java:156) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSourceAndConnection(SyncOperationHelper.java:129) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$executeRetryableWrite$11(SyncOperationHelper.java:252) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$decorateWriteWithRetries$12(SyncOperationHelper.java:308) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.async.function.RetryingSyncSupplier.get(RetryingSyncSupplier.java:67) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.executeRetryableWrite(SyncOperationHelper.java:279) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.BaseFindAndModifyOperation.execute(BaseFindAndModifyOperation.java:73) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoClusterImpl$OperationExecutorImpl.execute(MongoClusterImpl.java:446) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoCollectionImpl.executeFindOneAndUpdate(MongoCollectionImpl.java:786) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoCollectionImpl.findOneAndUpdate(MongoCollectionImpl.java:779) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:281) ~[spring-core-6.2.19.jar!/:6.2.19]
+	at org.springframework.data.mongodb.SessionAwareMethodInterceptor.invoke(SessionAwareMethodInterceptor.java:119) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at jdk.proxy2/jdk.proxy2.$Proxy143.findOneAndUpdate(Unknown Source) ~[na:na]
+	at org.springframework.data.mongodb.core.MongoTemplate$FindAndModifyCallback.doInCollection(MongoTemplate.java:3227) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate$FindAndModifyCallback.doInCollection(MongoTemplate.java:3185) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2912) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	... 51 common frames omitted
+
+{templateClasses=39, templates=3, weeks=3, generatedClasses=114, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=1, attendanceHistoryClasses=10, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=1, scenarioClassBookings=18, scenarioCancellations=3, scenarioWaitlist=5, scenarioOffers=0, scenarioRiskExempt=1, scenarioBookingBlocks=1, attendanceRenamed=6, attendanceLevelChanges=1, followupNotes=1, attendanceBookings=34, attendanceWaitlist=1, attendanceMarks=26, attendanceCancellations=2, attendanceNoShowBatches=1, followupTasks=2, followupTaskAttachments=1, followupObservations=1, scenarioTrainingOverrides=1, scenarioTrainingBookings=3, trainingHistoryOverrides=1, trainingHistoryBookings=10}
+376 changes (demo planning, week start 2026-09-28)

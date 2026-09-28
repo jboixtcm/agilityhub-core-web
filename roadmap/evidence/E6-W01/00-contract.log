@@ -1,0 +1,19 @@
+{
+  "instructorDay": "instructorDay",
+  "attendanceGet": "attendanceSheet",
+  "attendancePut": "saveAttendance",
+  "attendancePutKey": true,
+  "instructorCard": "instructorCard",
+  "dogs": [
+    "page",
+    "size",
+    "sort",
+    "q",
+    "filter",
+    "fields"
+  ]
+}
+exit 0
+7c1693450e7c679b3979f322596ba363a90c2a70a1bb5a7b946814dc0faf0a92  packages/api-client/openapi/openapi.json
+0f8bcb0f5dc103e38d82fdf4f471cf17ee66d3553b0c72896368126bb9763c40  packages/api-client/openapi/openapi.next.json
+2c9bc39

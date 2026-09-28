@@ -1,0 +1,182 @@
+# E6-W01 mutation run: useAttendanceSheet's reload back to the first version's filter (no rebase); restored afterwards
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/instructor.test.tsx (29 tests | 1 failed | 28 skipped) 10147ms
+   ❯ T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) (13)
+     × after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs 10145ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-checked"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-checked") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-checked="true"[39m
+Received:
+[31m  aria-checked="false"[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-sheet"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mdl 3 · 8:30 · A+B · Central[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"instructor-sheet__meta"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0m3/5[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning instructor-sheet__waiting"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-hour"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0m1 en espera[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"instructor-sheet__instructor"[39m
+          [36m>[39m
+            [0mEstel[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mEncara no es pot passar llista.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card instructor-sheet__card"[39m
+        [36m>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"instructor-sheet__rows"[39m
+          [36m>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"instructor-sheet__row"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-sheet__main"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Mostra la foto de Duna a pantalla completa"[39m
+                  [33mclass[39m=[32m"instructor-sheet__photo"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+                  [36m/>[39m
+                [36m</button>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-sheet__who"[39m
+                [36m>[39m
+                  [36m<strong>[39m
+                    [0mLaura + Duna[0m
+                  [36m</strong>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mC[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33maria-label[39m=[32m"Assistència de Laura + Duna"[39m
+                  [33mclass[39m=[32m"ah-attendance"[39m
+                  [33mrole[39m=[32m"radiogroup"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-checked[39m=[32m"false"[39m
+                    [33maria-label[39m=[32m"pendent"[39m
+                    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+                    [33mrole[39m=[32m"radio"[39m
+                    [33mtabindex[39m=[32m"-1"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m/>[39m
+                  [36m<button[...
+ ❯ src/instructor/instructor.test.tsx:504:9
+    502|       expect(
+    503|         within(await sheetRow("Eva + Fish")).getByRole("radio", { name…
+    504|       ).toHaveAttribute("aria-checked", "true");
+       |         ^
+    505|     });
+    506|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  14:56:39
+   Duration  11.26s (tests 91%, transform 4%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/instructor.test.tsx -t rebased
+exit 1

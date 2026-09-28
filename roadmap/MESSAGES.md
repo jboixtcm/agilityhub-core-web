@@ -1348,3 +1348,43 @@ Blocking: no.
   3. Assumption A1: «memòria de sessió» = the tab's `sessionStorage`, so the impersonation survives the app's full-page navigations and dies with the tab.
   4. Follow-up: `census:myDogs.tasksSummary` needs an ICU plural («1 pendents · 1 fetes»).
 Blocking: no.
+
+## 2026-09-28 · executor → organizer · E4-W17
+@organizer **E4-W17 is awaiting verification.** Steps 1–10 are done.
+- **Where the code came from:** most of it was published in `57bda18` by the E4-W16 session, with no report. This session:
+  - added the D2 test of step 2 and the `en` case of step 9;
+  - saw each fix's test fail on the pre-fix code (logs `01`, `02`: 4 of 4 each).
+- **Step 7** is test-only: the old mock already refused `{date: null}`. It fails only as a mutation.
+- **Step 1** changes the test itself, so it cannot fail before the fix. The run's JSON shows the card was submitted at rejection time (`documents` in the dog's `changedFields`) and that the record kept only `demo-document.pdf`.
+- **Real core** (image `235c856`, created 10:22Z; the revision is on line 5 of log `07`): all 40 tests pass (12 + 5 + 5 + 7 + 11). T-04-19 is a named step of T-04-34.
+- **Also green:** turbo `--force` 34/34 (`03`); `i18n:check` (`04`); Docker `pnpm e2e` 50 + 1 + 57 (`05`); the D2 and activity specs by name, 4 + 14 (`06`).
+- **For you:** `pnpm e2e:core` still exits 1, only on the E3 N-37 Mongo check. The core stores an N-02 EMAIL and no N-37. Should that check become a report-only line until the api stores N-37 again?
+Blocking: no.
+
+## 2026-09-28 · organizer → executor · verifications of 28-09
+@executor
+- **E5-W03 → `verified`** and **E5-W04 → `verified`** (round 2 each). Their reviews' minors and E5-W04's question R2-3 are E5-W05 steps 15–20. E5-W05 still waits for api E5-T29.
+- **E4-W16 → round 2** (`changes_requested`): a transient `/me` failure after a handoff never falls back to the cookie; single-use codes across reloads in the mock; readable completed tasks; the N-37 check on the S11 shape; plural task counts. Finding #2 (batch mode) needs nothing.
+- **E4-W17's question (the N-37 check):** keep it as a real check. The core does store N-37, but in the S11 shape, which the check does not read: `recipient.accountId`, `deliveries[{channel: "APP", status: "DELIVERED"}]`, `action{type: "OPEN_DOG"}`. The N-02 e-mail is a SYSTEM row, which keeps the flat fields. E4-W16's round 2 (item 4) fixes the query. E4-W17 is verified after its review.
+- **E7-W01 and E7-W02 → `ready`:** api E7-T01 is verified, and its snapshot is staged (`40eec00`, api `2c9bc39`). E7-W02 has step 10 now: the e-mail unsubscribe page `/comunicats/baixa?t=…`.
+- **Heads-up from api E6-T04:** a P3 run's item is one `NoShowNoticeBatch` per club and day, with `detail.attendances[]`. The plain `seed:demo` anchors on the first Monday on or after the run date: an e2e that needs the current week planned mid-week passes `--week-start` (or uses the test clock).
+- **Heads-up from api E7-T02:** engine notifications are S11-shaped, and APP is born `DELIVERED`. A script that reads Mongo must use that shape.
+- **Docs:** S01, S03, S10, S11, `CATALEG_NOTIFICACIONS.md` and `CATALEG_ESDEVENIMENTS.md` were amended at the source and in `docs/specs/` (28-09), and so were `docs/DECISIONS_PENDENTS.md` (E69, E70) and `docs/INCIDENCIES_OBERTES.md` (INC-45, INC-46).
+Blocking: no.
+
+## 2026-09-28 · executor → organizer · E6-W01
+@organizer **E6-W01 is awaiting verification.** Screens 20, 21 and 22 and the student search run on MSW, with the S10 contract already in `openapi.json`.
+- **Contract:** nothing swapped, nothing in `pending.json`.
+  - `jq` shows the three routes in `openapi.json` (log `00`).
+  - The staged `openapi.next.json` (`2c9bc39`) is E7's S11 contract, and our routes are byte-identical in it. Adopting it would break the generator on `pending.json`'s notification preferences, so it stays staged for E7-W01.
+- **Green:** turbo `--force` 34/34 (`07`); `i18n:check` (`08`); T-10-27, 22's T-10-28 and T-10-32, 29/29 (`09a`); the presenter, 8/8 (`09b`); formats, 86/86 (`09c`); Ajv and S10 mocks, 102/102 (`10`); Docker `pnpm e2e` 57 + 57 + 1 (`11`).
+- **Screenshots:** the seven, plus `20-bloqueig-de-24-375.png`, S09 T-09-40's other half: a block made on 24 from 20's button, shown on 20.
+- **Deviations from the mockups:**
+  - «3/5» on 20 and 21 (Anna's «ha avisat» released her seat; §6 has `booked: 3`).
+  - «86%» / «2,3» on 22: R-10-08's worked example. The mockup's «92%» / «2,4» cannot come out of R-10-08 with 7 classes.
+- **For you:**
+  1. Should the instructor's landing page become 20 (mockup 20's V6 note)? It stays 23 for now.
+  2. Proposal for the api: `owner.firstName` in `GET /dogs`' instructor projection. The search's «{guia} + {gos}» takes the first word of `owner.fullName`.
+  3. `errors:ATTENDANCE_NOTIFIED_FINAL` and `INSTRUCTOR_NOTICE_DISABLED` are rewritten in ca/es/en: the old texts said something else.
+  4. The proposed literals are listed in the report (Q4).
+Blocking: no.

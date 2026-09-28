@@ -58,7 +58,8 @@ export const moduleUi = {
   WAITLIST: { menuEntries: [], routes: ["/espera/:id"], tabs: [] },
   TASKS: {
     menuEntries: ["student-follow-up"],
-    routes: ["/seguiment", "/instructor/tasques"],
+    // S10 §2: screen 26 (E6-W02) replaces E0-W06's `/instructor/tasques` placeholder.
+    routes: ["/seguiment", "/instructor/alumnes/:dogId/tasques"],
     tabs: [],
   },
   FAQ: { menuEntries: [], routes: [], tabs: [] },

@@ -407,6 +407,136 @@ export function dogArticle(
   return sex === "FEMALE" ? "la " : "en ";
 }
 
+/**
+ * The personal article before a person's name in Catalan (S10 §10, sibling of `dogArticle`):
+ * «l'» before a vowel or an «h» («l'Anna», «l'Hug»), otherwise «la » for a woman and «en » for a
+ * man («la Laura», «en Marc»). Spanish and English take none, nor a person of another or unknown
+ * gender.
+ */
+export function personArticle(
+  name: string,
+  gender: "FEMALE" | "MALE" | "OTHER" | null | undefined,
+  locale: Locale,
+): string {
+  return gender === "FEMALE" || gender === "MALE" ? dogArticle(name, gender, locale) : "";
+}
+
+function instantOf(value: DateInput): number {
+  const date = toDate(value);
+  return typeof date === "number" ? date : date.getTime();
+}
+
+/** «07:10» → «7:10», as the mockups print club times. */
+function shortTime(value: DateInput, locale: Locale, timeZone: string): string {
+  return formatTime(value, locale, timeZone).replace(/^0(?=\d:)/u, "");
+}
+
+function previousPlainDate(date: string): string {
+  const day = parsePlainDate(date);
+  if (day === undefined) return date;
+  day.setUTCDate(day.getUTCDate() - 1);
+  return day.toISOString().slice(0, 10);
+}
+
+export type DayRelativeKind = "date" | "hours" | "minutes" | "today" | "yesterday";
+
+/** The parts of `formatDayRelative`, for a message that frames them («des d'ahir 21:04»). */
+export interface DayRelativeParts {
+  /** Minutes or hours ago (`minutes`, `hours`). */
+  count: number;
+  /** «02/08», the club-local day. */
+  date: string;
+  kind: DayRelativeKind;
+  /** «21:04», the club-local time. */
+  time: string;
+}
+
+/**
+ * How long ago an instant was, in the club's zone (S10 R-10-05, «des d'ahir 21:04» on 21): under
+ * an hour in minutes, under six hours in hours, then «today», «yesterday» (club-local days, never
+ * the device's) or the day and time. An instant ahead of `now` counts as 0 minutes.
+ */
+export function dayRelativeParts(
+  value: DateInput,
+  locale: Locale,
+  timeZone: string,
+  now: DateInput = new Date(),
+): DayRelativeParts {
+  const minutes = Math.max(0, Math.floor((instantOf(now) - instantOf(value)) / 60_000));
+  const base = {
+    date: formatDate(value, locale, timeZone, "dayMonthNumeric"),
+    time: shortTime(value, locale, timeZone),
+  };
+  if (minutes < 60) return { ...base, count: minutes, kind: "minutes" };
+  if (minutes < 360) return { ...base, count: Math.floor(minutes / 60), kind: "hours" };
+  const day = clubLocalDate(value, timeZone);
+  const today = clubLocalDate(now, timeZone);
+  if (day === today) return { ...base, count: 0, kind: "today" };
+  if (day === previousPlainDate(today)) return { ...base, count: 0, kind: "yesterday" };
+  return { ...base, count: 0, kind: "date" };
+}
+
+/** «fa 5 min», «fa 3 h», «avui 9:15», «ahir 21:04», «02/08 · 21:04» (see `dayRelativeParts`). */
+export function formatDayRelative(
+  value: DateInput,
+  locale: Locale,
+  timeZone: string,
+  now: DateInput = new Date(),
+): string {
+  const parts = dayRelativeParts(value, locale, timeZone, now);
+  const values = { count: parts.count, date: parts.date, time: parts.time };
+  switch (parts.kind) {
+    case "minutes":
+      return translateStatic("common:format.dayRelative.minutes", locale, values);
+    case "hours":
+      return translateStatic("common:format.dayRelative.hours", locale, values);
+    case "today":
+      return translateStatic("common:format.dayRelative.today", locale, values);
+    case "yesterday":
+      return translateStatic("common:format.dayRelative.yesterday", locale, values);
+    case "date":
+      return translateStatic("common:format.dayRelative.date", locale, values);
+  }
+}
+
+/**
+ * «fa 8 mesos» (S10 R-10-09): whole months between an instant and `now`, both read as club-local
+ * days; under a month in days («avui» the same day), from 24 months in whole years.
+ */
+export function formatMonthsSince(
+  value: DateInput,
+  locale: Locale,
+  timeZone: string,
+  now: DateInput = new Date(),
+): string {
+  const since = clubLocalDate(value, timeZone);
+  const today = clubLocalDate(now, timeZone);
+  const [fromYear, fromMonth, fromDay] = since.split("-").map(Number);
+  const [toYear, toMonth, toDay] = today.split("-").map(Number);
+  const months =
+    ((toYear ?? 0) - (fromYear ?? 0)) * 12 +
+    ((toMonth ?? 0) - (fromMonth ?? 0)) -
+    ((toDay ?? 0) < (fromDay ?? 0) ? 1 : 0);
+  if (months >= 24) {
+    const count = Math.floor(months / 12);
+    return count === 1
+      ? translateStatic("common:format.since.years.one", locale, { count })
+      : translateStatic("common:format.since.years.other", locale, { count });
+  }
+  if (months >= 1) {
+    return months === 1
+      ? translateStatic("common:format.since.months.one", locale, { count: months })
+      : translateStatic("common:format.since.months.other", locale, { count: months });
+  }
+  const from = parsePlainDate(since)?.getTime() ?? 0;
+  const to = parsePlainDate(today)?.getTime() ?? 0;
+  const days = Math.max(0, Math.round((to - from) / 86_400_000));
+  if (days === 0) return translateStatic("common:format.since.today", locale);
+  return days === 1
+    ? translateStatic("common:format.since.days.one", locale, { count: days })
+    : translateStatic("common:format.since.days.other", locale, { count: days });
+}
+
 export interface ClubFormats {
   /** R-07-13 activity dates in the club zone (see `formatActivityDate`). */
   formatActivityDate: (
@@ -421,11 +551,17 @@ export interface ClubFormats {
   formatDateTime: (value: DateInput) => string;
   /** «diumenge 9 a les 20 h» in the club zone (S08 §10). */
   formatDayAtTime: (value: DateInput) => string;
+  /** «fa 5 min», «avui 9:15», «ahir 21:04» in the club zone (S10 R-10-05). */
+  formatDayRelative: (value: DateInput, now?: DateInput) => string;
+  /** The parts of `formatDayRelative`, for a message that frames them. */
+  dayRelativeParts: (value: DateInput, now?: DateInput) => DayRelativeParts;
   formatDuration: (totalMinutes: number, options?: DurationOptions) => string;
   /** A conjunction list in the reader's language («dilluns i dimarts»). */
   formatList: (values: readonly string[]) => string;
   formatMoney: (amount: number) => string;
   formatMonth: (value: DateInput) => string;
+  /** «fa 8 mesos» from an instant, in club-local days (S10 R-10-09). */
+  formatMonthsSince: (value: DateInput, now?: DateInput) => string;
   /** A `YYYY-MM-DD` business date, never shifted by the club's zone (R-06-14). */
   formatPlainDate: (value: string, presentation?: DatePresentation) => string;
   formatTime: (value: DateInput) => string;
@@ -441,11 +577,14 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatDateRange: (start, end, presentation) =>
       formatDateRange(start, end, locale, timeZone, presentation),
     formatDateTime: (value) => formatDateTime(value, locale, timeZone),
+    dayRelativeParts: (value, now) => dayRelativeParts(value, locale, timeZone, now),
     formatDayAtTime: (value) => formatDayAtTime(value, locale, timeZone),
+    formatDayRelative: (value, now) => formatDayRelative(value, locale, timeZone, now),
     formatDuration: (totalMinutes, options) => formatDuration(totalMinutes, locale, options),
     formatList: (values) => formatList(values, locale),
     formatMoney: (amount) => formatMoney(amount, locale, currency),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
+    formatMonthsSince: (value, now) => formatMonthsSince(value, locale, timeZone, now),
     formatPlainDate: (value, presentation) => formatPlainDate(value, locale, presentation),
     formatTime: (value) => formatTime(value, locale, timeZone),
     formatWeekRange: (start, end) => formatWeekRange(start, end, locale, timeZone),
@@ -466,8 +605,10 @@ export function useClubFormats(): ClubFormats {
 
 export const fmtDate = formatDate;
 export const fmtDateTime = formatDateTime;
+export const fmtDayRelative = formatDayRelative;
 export const fmtMoney = formatMoney;
 export const fmtMonth = formatMonth;
+export const fmtMonthsSince = formatMonthsSince;
 export const fmtPlainDate = formatPlainDate;
 export const fmtRelative = formatDuration;
 export const fmtTime = formatTime;

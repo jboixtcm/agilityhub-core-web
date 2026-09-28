@@ -1,5 +1,6 @@
 import type { components } from "../generated/schema";
 
+import type { AttendanceVariant } from "./fixtures/attendance";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
 import meAdmin from "./fixtures/me-admin.json";
@@ -17,6 +18,8 @@ type SessionList = components["schemas"]["Session"][];
 type OnboardingState = components["schemas"]["OnboardingState"];
 
 export interface MockScenarioDefinition {
+  /** The S10 world's club-wide variant (`fixtures/attendance.ts`, screens 20–22). */
+  attendance?: AttendanceVariant;
   branding: Branding;
   /** S08 (mockup 06): Duna has two cancellable bookings this week, so a hold proposes the swap. */
   bookingLimit?: boolean;
@@ -180,6 +183,46 @@ const scenarios = {
   },
   instructor: {
     branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-04: another instructor saves the 8:30 sheet just before the caller (409). */
+  attendanceStale: {
+    attendance: "stale",
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-03: the sheets read after T1 (circles inert, `ATTENDANCE_WINDOW_CLOSED`). */
+  attendanceClosed: {
+    attendance: "closed",
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-03: `bookings.instructorLastMinuteNotice = false` (no yellow circle). */
+  attendanceNoticeDisabled: {
+    attendance: "noticeDisabled",
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-05: `waitlist.mode = FIFO` (21's rule sentence with `fifoConfirmMinutes`). */
+  attendanceFifo: {
+    attendance: "fifo",
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 §9: an instructor of a club without TASKS (no task lines, no blocks on 22). */
+  instructorNoTasks: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "TASKS") },
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 §9: an instructor of a club without WAITLIST (no hourglass, no waiting list on 21). */
+  instructorNoWaitlist: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "WAITLIST") },
     me: meInstructor as Me,
     sessions: accountSessions,
   },

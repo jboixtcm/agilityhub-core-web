@@ -152,5 +152,18 @@
     "SCHEDULE": "programada",
     "CATCH_UP": "recuperada",
     "MANUAL": "manual"
+  },
+  "attendanceState": {
+    "PENDING": "pendent",
+    "PRESENT": "present",
+    "NOTIFIED": "ha avisat",
+    "NO_SHOW": "no presentat"
+  },
+  "attendanceStateShort": {
+    "PRESENT": "present",
+    "NOTIFIED": "avisat",
+    "NO_SHOW": "no presentat",
+    "CANCELLED_LATE": "anul·lada tard",
+    "PENDING": "sense marcar"
   }
 }

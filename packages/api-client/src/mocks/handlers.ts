@@ -4,6 +4,7 @@ import type { components } from "../generated/schema";
 import type { ListItemWith } from "../list-fields";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
+import { attendanceHandlers, resetAttendanceMockState } from "./attendance-handlers";
 import {
   backofficeHandlers,
   JOBS_MOCK_NOW,
@@ -14,6 +15,7 @@ import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
+import { ATTENDANCE_MOCK_NOW } from "./fixtures/attendance";
 import auditEntriesFixture from "./fixtures/audit-entries.json";
 import {
   catalogState,
@@ -3667,6 +3669,8 @@ export const handlers = [
   ...calendarHandlers,
   ...activityHandlers,
   ...bookingHandlers,
+  // S10 (E6-W01): screens 20, 21 and 22.
+  ...attendanceHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
       status: "UP",
@@ -3678,6 +3682,7 @@ export const handlers = [
 
 export {
   activityState,
+  ATTENDANCE_MOCK_NOW,
   bookingState,
   catalogState,
   JOBS_MOCK_NOW,
@@ -3685,6 +3690,7 @@ export {
   mockScenario,
   planningState,
   resetActivityState,
+  resetAttendanceMockState,
   resetAuditMockState,
   resetAuthMockState,
   resetBackofficeMockState,

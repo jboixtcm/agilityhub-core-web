@@ -1,3 +1,4 @@
+import "./attendance.css";
 import "./components.css";
 import "./day-grid.css";
 import "./limited-markdown.css";
@@ -7,6 +8,7 @@ import "./schedule-grid.css";
 import "./slot-grid.css";
 import "./universal-list.css";
 
+export * from "./attendance";
 export * from "./branding";
 export * from "./components";
 export * from "./day-grid";

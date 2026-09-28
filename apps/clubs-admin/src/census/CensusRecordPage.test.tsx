@@ -206,34 +206,41 @@ describe("T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a 
     return value;
   }
 
-  it("reads «Efectiu» in ca and «Efectivo» in es, never the raw MANUAL", async () => {
+  it("reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL", async () => {
     await serveCashMember();
     await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
     expect(paymentRow("Pagament")).toHaveTextContent(/^Efectiu/u);
     expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
-    cleanup();
 
-    await serveCashMember();
-    const i18n = await createI18n({
-      branding,
-      browserLanguages: ["es"],
-      initialNamespaces: ["admin-census", "errors"],
-      storage: undefined,
-    });
-    render(
-      <I18nextProvider i18n={i18n}>
-        <BrandingProvider branding={branding}>
-          <MemberRecordPage
-            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
-            id="member-laura"
-          />
-        </BrandingProvider>
-      </I18nextProvider>,
-    );
-    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
-    expect(paymentRow("Pago")).toHaveTextContent(/^Efectivo/u);
-    expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
+    // A club that offers the three locales (the Cànic's fixture offers ca and es).
+    const trilingual: Branding = { ...branding, locales: ["ca", "es", "en"] };
+    for (const [language, rowLabel, method] of [
+      ["es", "Pago", /^Efectivo/u],
+      ["en", "Payment", /^Cash/u],
+    ] as const) {
+      cleanup();
+      await serveCashMember();
+      const i18n = await createI18n({
+        branding: trilingual,
+        browserLanguages: [language],
+        initialNamespaces: ["admin-census", "errors"],
+        storage: undefined,
+      });
+      render(
+        <I18nextProvider i18n={i18n}>
+          <BrandingProvider branding={trilingual}>
+            <MemberRecordPage
+              client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+              id="member-laura"
+            />
+          </BrandingProvider>
+        </I18nextProvider>,
+      );
+      await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+      expect(paymentRow(rowLabel)).toHaveTextContent(method);
+      expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
+    }
   });
 });
 

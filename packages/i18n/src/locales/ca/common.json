@@ -15,6 +15,28 @@
     "duration": {
       "before": "{duration} abans"
     },
+    "dayRelative": {
+      "minutes": "fa {count} min",
+      "hours": "fa {count} h",
+      "today": "avui {time}",
+      "yesterday": "ahir {time}",
+      "date": "{date} · {time}"
+    },
+    "since": {
+      "today": "avui",
+      "days": {
+        "one": "fa {count} dia",
+        "other": "fa {count} dies"
+      },
+      "months": {
+        "one": "fa {count} mes",
+        "other": "fa {count} mesos"
+      },
+      "years": {
+        "one": "fa {count} any",
+        "other": "fa {count} anys"
+      }
+    },
     "weekRange": {
       "sameMonth": "{startDay} al {end}",
       "differentMonth": "{start} al {end}"

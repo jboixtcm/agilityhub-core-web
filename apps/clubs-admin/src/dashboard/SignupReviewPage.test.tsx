@@ -1587,6 +1587,28 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     expect(frozenCalls(requests)).toEqual([]);
   });
 
+  it("E4-W17 step 2 R-04-06: when the reused dog's record has no card, withdrawing the submitted card leaves the automatic card pending, and D2 warns «Document pendent»", async () => {
+    mockScenario("adminSignupReviewReadmissionNoCard");
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const header = screen.getByRole("heading", { level: 1 }).closest("header");
+    if (header === null) throw new TypeError("Missing D2's header");
+    expect(within(header).queryByText("Document pendent")).toBeNull();
+    const drawer = openDrawer();
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull(); });
+    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
+    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[1]?.body).toEqual({
+      documents: [{ files: [], type: "VACCINATION_CARD" }],
+      version: 2,
+    });
+    // As the api's `readmissionDocuments`: the card row is back, empty and pending, so the view
+    // warns DOCUMENT_PENDING and D2's header shows it.
+    expect(await within(header).findByText("Document pendent")).toHaveClass("ah-badge");
+    expect(within(drawer).queryByText(/cartilla_/u)).toBeNull();
+  });
+
   it("round 2 (review nit #5): a document type without files reads as pending, not as absent", async () => {
     mockScenario("adminSignupReviewReadmission");
     // The record's card was never received (a PENDING row without files, as the core keeps it).

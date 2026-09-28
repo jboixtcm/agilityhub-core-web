@@ -1,0 +1,70 @@
+/* S10 screen 21's four circles (also D12's sheet). Theme tokens only. */
+.ah-attendance {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* 24 px circles: the WCAG 2.2 AA minimum target, and the four fit a 375 px row with the name. */
+.ah-attendance__circle {
+  --ah-attendance-color: var(--ah-color-text-muted);
+  --ah-attendance-mark: var(--ah-color-text-muted);
+
+  display: inline-grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  color: var(--ah-attendance-mark);
+  background: transparent;
+  border: 1.5px solid var(--ah-attendance-color);
+  border-radius: var(--ah-radius-full);
+  cursor: pointer;
+  opacity: 0.22;
+  place-items: center;
+  transition: opacity var(--ah-transition-fast);
+}
+
+.ah-attendance__circle svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.ah-attendance__circle--present {
+  --ah-attendance-color: var(--ah-color-success);
+  --ah-attendance-mark: var(--ah-color-on-success);
+
+  background: var(--ah-color-success);
+}
+
+.ah-attendance__circle--notified {
+  --ah-attendance-color: var(--ah-color-warning);
+  --ah-attendance-mark: var(--ah-color-on-warning);
+
+  background: var(--ah-color-warning);
+}
+
+.ah-attendance__circle--no-show {
+  --ah-attendance-color: var(--ah-color-danger);
+  --ah-attendance-mark: var(--ah-color-on-danger);
+
+  background: var(--ah-color-danger);
+}
+
+.ah-attendance__circle[aria-checked="true"] {
+  opacity: 1;
+}
+
+.ah-attendance__circle--pending[aria-checked="true"] {
+  border-color: var(--ah-color-text);
+}
+
+.ah-attendance__circle:disabled {
+  cursor: default;
+}
+
+.ah-attendance__circle:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+  opacity: 1;
+}

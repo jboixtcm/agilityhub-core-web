@@ -4,7 +4,17 @@ import { ApiError, isApiError } from "./api-error";
 import type { paths } from "./generated/schema";
 
 const DEFAULT_API_URL = "https://core.agilitydoghub.com/api/v1";
-const DEFAULT_IDEMPOTENT_PATHS: readonly (string | RegExp)[] = [
+
+/** A route that takes an `Idempotency-Key`, by method (ruling E46, INC-23). */
+export interface IdempotentRoute {
+  method: "DELETE" | "POST" | "PUT";
+  path: string | RegExp;
+}
+
+/** A bare path or pattern is a `POST` route (the matchers written before E6-W01). */
+export type IdempotentMatcher = string | RegExp | IdempotentRoute;
+
+const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   "/bookings",
   "/seat-holds",
   "/waitlist-entries",
@@ -20,6 +30,8 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly (string | RegExp)[] = [
   "/activity-registrations",
   // S15 [Simula] / [Executa ara] (R-15-09).
   /^\/jobs\/[^/]+\/trigger$/,
+  // S10 [DESA] of screens 21 and D12 (R-10-04).
+  { method: "PUT", path: /^\/class-sessions\/[^/]+\/attendance$/ },
 ];
 
 type MaybePromise<T> = Promise<T> | T;
@@ -31,7 +43,7 @@ export interface ApiClientOptions {
   fetch?: typeof globalThis.fetch;
   getAccessToken?: () => MaybePromise<null | string | undefined>;
   getLocale?: () => MaybePromise<string>;
-  idempotentPaths?: readonly (string | RegExp)[];
+  idempotentPaths?: readonly IdempotentMatcher[];
   middleware?: readonly Middleware[];
 }
 
@@ -48,8 +60,15 @@ function currentLocale(): string {
   return typeof navigator === "undefined" ? "ca" : navigator.language;
 }
 
-function matchesPath(schemaPath: string, matcher: string | RegExp): boolean {
-  return typeof matcher === "string" ? schemaPath === matcher : matcher.test(schemaPath);
+function matchesPath(schemaPath: string, path: string | RegExp): boolean {
+  return typeof path === "string" ? schemaPath === path : path.test(schemaPath);
+}
+
+function matchesRoute(method: string, schemaPath: string, matcher: IdempotentMatcher): boolean {
+  if (typeof matcher === "string" || matcher instanceof RegExp) {
+    return method === "POST" && matchesPath(schemaPath, matcher);
+  }
+  return method === matcher.method && matchesPath(schemaPath, matcher.path);
 }
 
 function requestMiddleware(options: ApiClientOptions): Middleware {
@@ -69,9 +88,8 @@ function requestMiddleware(options: ApiClientOptions): Middleware {
       }
 
       if (
-        request.method === "POST" &&
         !request.headers.has("Idempotency-Key") &&
-        matchers.some((matcher) => matchesPath(schemaPath, matcher))
+        matchers.some((matcher) => matchesRoute(request.method, schemaPath, matcher))
       ) {
         request.headers.set("Idempotency-Key", createIdempotencyKey());
       }

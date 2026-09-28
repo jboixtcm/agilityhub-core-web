@@ -74,6 +74,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - free training at 3/week in the day+3 window, the instructor's «Bloqueig» on 24 seen on 23, D4 and the ring-usage register, and `RING_HAS_BOOKINGS` over a live training;
   - the processes: D11 [Simula] (nothing written) and [Executa ara] on `risk-review` reported by D1, the `cleanup` run, and P1 `week-opening` with the core's test clock advanced (a `NOT_YET_OPEN` row of 04 becomes `BOOKABLE`);
   - the core's statuses for `JOB_UNKNOWN`, `SLOT_NOT_ON_GRID`, `DOG_ALREADY_BOOKED` and `OVERRIDE_NOT_ALLOWED`, and the cancellation of everything the run created.
+- Add the instructor's day, attendance sheet and student card (E6-W01, S10 screens 20, 21 and 22 and the student search), mocks-first on the published api E6-T01 contract:
+  - 20 «Grups del dia» (`/instructor/dia`): the instructor chip without «Tot el club», seven day chips from the club-local today, each class with «n/n», the hourglass and «passar llista pendent» / «individual», every ring block of the day, and the way to 24;
+  - 21 «Detall de classe i passar llista» (`/instructor/classes/:id`): four circles per dog as the api allows them, the photo full screen, the status lines from the api's fields, [DESA] with only the changed rows (one `Idempotency-Key` per payload), the `409 STALE_VERSION` merge, the waiting list with its rule sentence, and the cancelled-class banner;
+  - 22 «Fitxa d'alumne» (`/instructor/alumnes/:dogId`): the 30-day metrics («—» when null), «C · fa 8 mesos», the five last classes and the three TASKS blocks; the student search `/instructor/alumnes` over `GET /dogs`;
+  - the instructor profile's tab bar «El meu dia · Visió global · Alumnes · Perfil»; no instructor screen for an impersonated session.
+
+  `packages/ui` exports `AttendanceCircles`, `attendanceTone`, `diffSheet` and `mergeSheet` for D12. `packages/i18n` gains `personArticle`, `fmtDayRelative` and `fmtMonthsSince`. `packages/api-client` matches idempotent routes by method (`PUT /class-sessions/{id}/attendance`), and its MSW world serves the three S10 routes with their guards and codes.
 
   `pnpm e2e:core` gains the E5 stage on its own fresh seed (`seed:demo --week-start` = the club-local Monday after the run's day, `E5_WEEK_START`); the core's clock goes to the scenario's `demoNow` before any login and back at the end. The 04 rows carry `data-class-id`/`data-bookable-state` and the `SlotGrid` cells `data-slot-state`/`data-ring` for that spec.
 
@@ -90,6 +97,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Password recovery: a used RESET link answers «L'enllaç ja s'ha fet servir: demana'n un altre» with «Recupera-la», and the mock lets only a fresh RESET session skip `current`.
   - The add-dog «enviada» page is titled «Afegeix un gos» with «TORNA ALS MEUS GOSSOS»; «Canviar de perfil · {perfil}» follows the membership's gender; the onboarding offers only the club's languages.
   - `pnpm e2e:core` gains an E4-W16 stage (impersonation fallback, the drawer download, D10's actions, 13's task rows, the RESET link), and the E3 N-37 check prints what the core stored when it fails.
+
+- Follow-ups of the E4-W13 and E4-W14 round-2 reviews (E4-W17):
+  - The real-core T-04-34 proves T-04-19's card: the submitted card is withdrawn, then a file is added to the record's card (200), and after the rejection the record keeps exactly its own card, name and breed. The lookup takes the seed's «Demo Boira»; the dead `400` branch and two redundant asserts are gone.
+  - The readmission mock puts back the automatic empty, pending card when the reused dog's record has none (R-04-06), and D2 then warns «Document pendent»; the mock's dog `PATCH` writes nothing and keeps the `version` when step 17's fields equal the current ones and the documents do not change.
+  - D2's per-type rows keep «Documents» when the club's document types cannot be read, never a raw code; D10's «Pagament» row names a cash or card member's method in ca, es and en.
+  - D7's [DESA] on a published activity marks every `ACTIVITY_INCOMPLETE` field «Cal per publicar», with «Falten dades…»; the mock's «Lliga social» ends at 14:00, as the core's seed, and a `{date: null}` edit of a published activity with rings is pinned as `422 ACTIVITY_INCOMPLETE`.
 
 - S09 free training, round 2 of E5-W02:
   - 08's offline copy is kept per club, account, member and impersonation. It is dropped on logout, on another account and at the start or end of an impersonation.

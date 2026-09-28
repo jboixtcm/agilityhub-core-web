@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   clubLocalInstant,
   createClubFormats,
+  dayRelativeParts,
   dogArticle,
+  fmtDayRelative,
+  fmtMonthsSince,
   formatActivityDate,
   formatDate,
   formatDayAtTime,
@@ -16,7 +19,97 @@ import {
   formatWeekRange,
   isPlainDate,
   parsePlainDate,
+  personArticle,
 } from "./format";
+
+describe("E6-W01 S10 §10 the Catalan personal article of a person (personArticle)", () => {
+  it.each([
+    ["Laura", "FEMALE", "ca", "la "],
+    ["Marc", "MALE", "ca", "en "],
+    ["Anna", "FEMALE", "ca", "l'"],
+    ["Eva", "FEMALE", "ca", "l'"],
+    ["Hug", "MALE", "ca", "l'"],
+    ["Laura", "OTHER", "ca", ""],
+    ["Laura", null, "ca", ""],
+    ["Laura", "FEMALE", "es", ""],
+    ["Marc", "MALE", "en", ""],
+  ] as const)("%s (%s) in %s → «%s»", (name, gender, locale, article) => {
+    expect(personArticle(name, gender, locale)).toBe(article);
+  });
+});
+
+describe("E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative)", () => {
+  // Pau joined the waiting list on Sunday 2 August at 21:04 in Madrid (19:04 UTC).
+  const joined = "2026-08-02T19:04:00Z";
+  it.each([
+    ["2026-08-02T19:09:00Z", "ca", "fa 5 min"],
+    ["2026-08-02T22:05:00Z", "ca", "fa 3 h"],
+    // Monday 3 August 07:10 in Madrid: the club-local yesterday.
+    ["2026-08-03T05:10:00Z", "ca", "ahir 21:04"],
+    ["2026-08-03T05:10:00Z", "es", "ayer 21:04"],
+    ["2026-08-03T05:10:00Z", "en", "yesterday 21:04"],
+    ["2026-08-05T05:10:00Z", "ca", "02/08 · 21:04"],
+  ] as const)("now %s in %s → «%s»", (now, locale, text) => {
+    expect(fmtDayRelative(joined, locale, "Europe/Madrid", now)).toBe(text);
+  });
+
+  it("uses the club's days, never the device's: the same instants read differently in Buenos Aires", () => {
+    // 19:04 UTC is 16:04 in Buenos Aires; at 03:30 UTC it is 00:30 of the next day there.
+    expect(
+      fmtDayRelative(joined, "ca", "America/Argentina/Buenos_Aires", "2026-08-03T03:30:00Z"),
+    ).toBe("ahir 16:04");
+    // At 23:30 UTC it is still Sunday in Buenos Aires (20:30), already Monday in Madrid (01:30).
+    expect(
+      fmtDayRelative(
+        "2026-08-02T10:00:00Z",
+        "ca",
+        "America/Argentina/Buenos_Aires",
+        "2026-08-02T23:30:00Z",
+      ),
+    ).toBe("avui 7:00");
+    expect(
+      fmtDayRelative("2026-08-02T10:00:00Z", "ca", "Europe/Madrid", "2026-08-02T23:30:00Z"),
+    ).toBe("ahir 12:00");
+    expect(dayRelativeParts(joined, "ca", "Europe/Madrid", "2026-08-03T05:10:00Z")).toEqual({
+      count: 0,
+      date: "02/08",
+      kind: "yesterday",
+      time: "21:04",
+    });
+  });
+});
+
+describe("E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince)", () => {
+  it.each([
+    ["2025-12-03T09:00:00Z", "2026-08-03T05:10:00Z", "ca", "fa 8 mesos"],
+    ["2025-12-03T09:00:00Z", "2026-08-03T05:10:00Z", "es", "hace 8 meses"],
+    ["2025-12-03T09:00:00Z", "2026-08-03T05:10:00Z", "en", "8 months ago"],
+    ["2026-07-03T09:00:00Z", "2026-08-03T05:10:00Z", "ca", "fa 1 mes"],
+    // Under a month: days; the same club day: «avui»; from 24 months: whole years.
+    ["2026-07-09T09:00:00Z", "2026-08-03T05:10:00Z", "ca", "fa 25 dies"],
+    ["2026-08-02T09:00:00Z", "2026-08-03T05:10:00Z", "ca", "fa 1 dia"],
+    ["2026-08-03T04:00:00Z", "2026-08-03T05:10:00Z", "ca", "avui"],
+    ["2024-06-03T09:00:00Z", "2026-08-03T05:10:00Z", "ca", "fa 2 anys"],
+    ["2024-06-03T09:00:00Z", "2026-08-03T05:10:00Z", "en", "2 years ago"],
+  ] as const)("%s → now %s in %s → «%s»", (since, now, locale, text) => {
+    expect(fmtMonthsSince(since, locale, "Europe/Madrid", now)).toBe(text);
+  });
+
+  it("counts whole months between club-local days: Madrid and Buenos Aires differ at midnight", () => {
+    // 3 December 2025 at 01:00 in Madrid is still 2 December (21:00) in Buenos Aires.
+    const since = "2025-12-03T00:00:00Z";
+    const now = "2026-08-02T23:30:00Z"; // 3 August 01:30 in Madrid, 2 August 20:30 in Buenos Aires.
+    expect(fmtMonthsSince(since, "ca", "Europe/Madrid", now)).toBe("fa 8 mesos");
+    expect(fmtMonthsSince(since, "ca", "America/Argentina/Buenos_Aires", now)).toBe("fa 8 mesos");
+    // 3 December 02:00 UTC: the 3rd in Madrid, still the 2nd in Buenos Aires; now is the 2nd in
+    // both zones, so only Buenos Aires has reached a whole eighth month.
+    const noon = "2026-08-02T12:00:00Z";
+    expect(fmtMonthsSince("2025-12-03T02:00:00Z", "ca", "Europe/Madrid", noon)).toBe("fa 7 mesos");
+    expect(
+      fmtMonthsSince("2025-12-03T02:00:00Z", "ca", "America/Argentina/Buenos_Aires", noon),
+    ).toBe("fa 8 mesos");
+  });
+});
 
 describe("E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle)", () => {
   it.each([

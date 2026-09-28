@@ -15,6 +15,28 @@
     "duration": {
       "before": "{duration} antes"
     },
+    "dayRelative": {
+      "minutes": "hace {count} min",
+      "hours": "hace {count} h",
+      "today": "hoy {time}",
+      "yesterday": "ayer {time}",
+      "date": "{date} · {time}"
+    },
+    "since": {
+      "today": "hoy",
+      "days": {
+        "one": "hace {count} día",
+        "other": "hace {count} días"
+      },
+      "months": {
+        "one": "hace {count} mes",
+        "other": "hace {count} meses"
+      },
+      "years": {
+        "one": "hace {count} año",
+        "other": "hace {count} años"
+      }
+    },
     "weekRange": {
       "sameMonth": "{startDay} al {end}",
       "differentMonth": "{start} al {end}"

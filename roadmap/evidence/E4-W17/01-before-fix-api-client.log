@@ -1,0 +1,127 @@
+# E4-W17 before-fix run: fixes of steps 2, 3 and 6 reverted to their pre-fix code and step 7's date check removed (mutation), in packages/api-client; restored afterwards
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (30 tests | 2 failed | 28 skipped) 22ms
+   ❯ T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) (7)
+     × E4-W17 step 2 R-04-06: a reused dog whose record has no card gets the automatic empty card back, pending, when the submitted card is withdrawn, and the view warns DOCUMENT_PENDING 15ms
+     × E4-W17 step 3 (DogService.edit): step 17's fields equal to the current values, with unchanged documents, write nothing and keep the version; a real change writes 6ms
+ ❯ src/mocks/activity-handlers.test.ts (27 tests | 2 failed | 25 skipped) 33ms
+   ❯ E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers (7)
+     × E4-W17 step 6 (T-07-03): «Lliga social» has both hours, as the core's seed (9:00–14:00), so any edit of it saves 16ms
+     × E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W17 step 6 (T-07-03): «Lliga social» has both hours, as the core's seed (9:00–14:00), so any edit of it saves
+AssertionError: expected { allRings: true, …(43) } to match object { endTime: '14:00', …(2) }
+(49 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "endTime": "14:00",
++   "endTime": null,
+    "startTime": "09:00",
+    "state": "PUBLISHED",
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:932:20
+    930|       .data;
+    931|     if (league === undefined) throw new TypeError("Missing the Lliga s…
+    932|     expect(league).toMatchObject({ endTime: "14:00", startTime: "09:00…
+       |                    ^
+    933|     const saved = await client.PATCH("/activities/{id}", {
+    934|       body: { internalNotes: "Portar les taules de puntuació", version…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/activity-handlers.test.ts > E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers > E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing
+AssertionError: expected { code: 'INVALID_TIME_RANGE', …(2) } to deeply equal { code: 'ACTIVITY_INCOMPLETE', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "ACTIVITY_INCOMPLETE",
+-   "details": {
+-     "fieldErrors": [
+-       {
+-         "code": "REQUIRED",
+-         "field": "date",
+-       },
+-     ],
+-   },
+-   "status": 422,
++   "code": "INVALID_TIME_RANGE",
++   "details": {},
++   "status": 400,
+  }
+
+ ❯ src/mocks/activity-handlers.test.ts:975:65
+    973|     });
+    974|     // E4-W17 step 7: clearing the date is refused the same way.
+    975|     await expect(failure(patch({ date: null }, before.version))).resol…
+       |                                                                 ^
+    976|       code: "ACTIVITY_INCOMPLETE",
+    977|       details: { fieldErrors: [{ code: "REQUIRED", field: "date" }] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > E4-W17 step 2 R-04-06: a reused dog whose record has no card gets the automatic empty card back, pending, when the submitted card is withdrawn, and the view warns DOCUMENT_PENDING
+AssertionError: expected [ 'INSURANCE RECEIVED 1' ] to deeply equal [ 'VACCINATION_CARD PENDING 0', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "VACCINATION_CARD PENDING 0",
+    "INSURANCE RECEIVED 1",
+  ]
+
+ ❯ src/mocks/signup-handlers.test.ts:583:116
+    581|     expect((await patchDog({ documents: [{ files: [], type: "VACCINATI…
+    582|     const dog = await view("adminSignupReviewReadmissionNoCard");
+    583|     expect(dog.documents.map((document) => `${document.type} ${documen…
+       |                                                                                                                    ^
+    584|       "VACCINATION_CARD PENDING 0",
+    585|       "INSURANCE RECEIVED 1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > E4-W17 step 3 (DogService.edit): step 17's fields equal to the current values, with unchanged documents, write nothing and keep the version; a real change writes
+AssertionError: expected { body: { …(11) }, status: 200 } to match object { body: { version: 1 }, status: 200 }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "version": 1,
++     "version": 2,
+    },
+    "status": 200,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:610:34
+    608|       version: dog.version,
+    609|     };
+    610|     expect(await patchDog(same)).toMatchObject({ body: { version: dog.…
+       |                                  ^
+    611|     expect(await patchDog({ name: dog.name, version: dog.version })).t…
+    612|       body: { version: dog.version },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 53 skipped (57)
+   Start at  13:24:28
+   Duration  516ms (transform 49%, import 44%, tests 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts src/mocks/activity-handlers.test.ts -t E4-W17|E4-W14 round 2 R-07-04 a published activity with rings
+exit 1

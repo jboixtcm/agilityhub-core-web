@@ -1,0 +1,18 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > renders the four circles white · green · yellow · red as one radio group 46ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a tap chooses a state; the arrow keys move to the next circle that can be chosen 14ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a final (saved NOTIFIED) row is inert: no circle can be chosen or focused 4ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canMarkPresence gates white, green and red; canMarkNotice gates yellow 7ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canChooseAttendance and attendanceTone follow R-10-03 and the badge tones 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > diffSheet sends only the rows whose local state differs, in the sheet's order 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet keeps the caller's edits on the rows only the caller touched and takes the rest from details.current 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet drops an edit the server now holds, and any edit on a row that became final 0ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  15:00:36
+   Duration  512ms (environment 54%, tests 16%, transform 16%, setup 11%, import 2%)
+
+exit 0

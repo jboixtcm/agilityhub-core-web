@@ -309,6 +309,65 @@ describe("typed API client", () => {
       "waitlist-removal:",
     ]);
   });
+
+  it("E6-W01 step 0 (R-10-04, ruling E46) sends a UUID Idempotency-Key on PUT /class-sessions/{id}/attendance, never on its GET", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({});
+      };
+    server.use(
+      http.get("https://core.example.test/api/v1/class-sessions/:id/attendance", record("get")),
+      http.put("https://core.example.test/api/v1/class-sessions/:id/attendance", record("put")),
+    );
+    const client = createApiClient({ baseUrl: "https://core.example.test/api/v1" });
+
+    await client.GET("/class-sessions/{id}/attendance", { params: { path: { id: "c1" } } });
+    await client.PUT("/class-sessions/{id}/attendance", {
+      body: { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
+      // @ts-expect-error The contract types the header as required; the default matcher covers callers that omit it.
+      params: { path: { id: "c1" } },
+    });
+
+    expect(keys[0]).toBe("get:");
+    expect(keys[1]).toMatch(
+      /^put:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u,
+    );
+    expect(keys).toHaveLength(2);
+  });
+
+  it("E6-W01 step 0 keeps a bare path a POST route and matches a route by method", async () => {
+    const keys: string[] = [];
+    server.use(
+      http.put("https://core.example.test/api/v1/ring-blocks/:id", ({ request }) => {
+        keys.push(`put:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json({});
+      }),
+      http.delete("https://core.example.test/api/v1/ring-blocks/:id", ({ request }) => {
+        keys.push(`delete:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174005",
+      idempotentPaths: [
+        /^\/ring-blocks\/[^/]+$/,
+        { method: "DELETE", path: /^\/ring-blocks\/[^/]+$/ },
+      ],
+    });
+    const raw = client as unknown as {
+      DELETE: (path: string, init: unknown) => Promise<unknown>;
+      PUT: (path: string, init: unknown) => Promise<unknown>;
+    };
+
+    await raw.PUT("/ring-blocks/{id}", { body: {}, params: { path: { id: "rb1" } } });
+    await raw.DELETE("/ring-blocks/{id}", { params: { path: { id: "rb1" } } });
+
+    expect(keys).toEqual(["put:", "delete:123e4567-e89b-42d3-a456-426614174005"]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -346,7 +405,8 @@ describe("MSW bootstrap handlers", () => {
   it("exports the bootstrap, identity continuation, onboarding, and dynamic manifest handlers", async () => {
     // E5-W02: + the seven S09 handlers of `training-handlers.ts`.
     // E5-W03: + the 13 back-office handlers of `backoffice-handlers.ts` and the register export.
-    expect(handlers).toHaveLength(214);
+    // E6-W01: + the four S10 handlers of `attendance-handlers.ts` (20, 21 GET and PUT, 22).
+    expect(handlers).toHaveLength(218);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
