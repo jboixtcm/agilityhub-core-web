@@ -92,15 +92,15 @@
 + messageTemplates: schema accepted; application deferred to E7
 = pages: 0 page changes
 13 changes (applied)
-2026-09-27T14:32:01.177Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.250Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.261Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.270Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.279Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.288Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-27T14:32:01.298Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.759Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.833Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.842Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.851Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.859Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.871Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:23.880Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
 {activeMembers=184, pendingMembers=3, inactiveMembers=4, leftMembers=3, members=194, dogs=246, familyGroups=12, activeDogs=242, pendingDogs=3, inactiveDogs=1, instructors=3, administrators=2, receivedDocuments=7, pendingDocuments=239}
 452 changes (demo seed)
-2026-09-27T14:32:03.361Z  WARN 117 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-27T23:04:25.708Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
 {templateClasses=39, templates=3, weeks=3, generatedClasses=114, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=1, attendanceHistoryClasses=10, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=1, scenarioClassBookings=18, scenarioCancellations=3, scenarioWaitlist=5, scenarioOffers=0, scenarioRiskExempt=1, scenarioBookingBlocks=1, attendanceRenamed=6, attendanceLevelChanges=1, followupNotes=1, attendanceBookings=34, attendanceWaitlist=1, attendanceMarks=26, attendanceCancellations=2, attendanceNoShowBatches=1, followupTasks=2, followupTaskAttachments=1, followupObservations=1, scenarioTrainingOverrides=1, scenarioTrainingBookings=3, trainingHistoryOverrides=1, trainingHistoryBookings=10}
-376 changes (demo planning, week start 2026-09-28)
+376 changes (demo planning, week start 2026-10-05)

@@ -1,0 +1,43 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E5-W04 'e5-core.spec.ts -g "step 2 |R-15-11"'
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=c25e6b48434cd1fa0246dce86e08a3bab98cbb2b created=2026-09-27T12:49:04.174297884Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+ Volume agilityhub-e5-w04_export-files Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Network agilityhub-e5-w04_default Created 
+ Network agilityhub-e5-w04_default Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Error service "seed" didn't complete successfully: exit 1
+service "seed" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W04/seed-files.log (104 lines)
+ ELIFECYCLE  Command failed with exit code 1.

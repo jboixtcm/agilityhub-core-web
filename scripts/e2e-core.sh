@@ -14,10 +14,16 @@ core_project_name="${CORE_PROJECT_NAME:-${E1_CORE_PROJECT_NAME:-$default_project
 # Core URL visible from the Playwright container; defaults to the local stack.
 export CORE_URL="${CORE_URL:-http://core:8080}"
 
-if ! docker image inspect ghcr.io/jboixtcm/agilityhub-core-api:main >/dev/null 2>&1; then
-  echo "The published core image is not available locally: ghcr.io/jboixtcm/agilityhub-core-api:main" >&2
+core_image="ghcr.io/jboixtcm/agilityhub-core-api:main"
+if ! docker image inspect "$core_image" >/dev/null 2>&1; then
+  echo "The published core image is not available locally: $core_image" >&2
   exit 1
 fi
+# E5-W04 review #5: the run's log names the core image it ran on (its revision label and creation
+# date) and the seed files it carries, so the evidence of each run proves both.
+echo "core image: $core_image $(docker image inspect "$core_image" \
+  --format '{{.Architecture}} revision={{index .Config.Labels "org.opencontainers.image.revision"}} created={{.Created}}')"
+echo "core image seeds (/app/seeds): $(docker run --rm --entrypoint /bin/ls "$core_image" /app/seeds | tr '\n' ' ')"
 
 # E4-W05: the demo seed anchors its planning on the club-local Monday of the current week
 # (`seed:demo --week-start`, api E4-T05); the E4 spec reads the same date. The Cànic's zone.

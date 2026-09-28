@@ -1,0 +1,179 @@
+{
+  "created": {},
+  "demoNow": "2026-10-05T05:00:00.000Z",
+  "runId": "kenr1r",
+  "steps": {
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-10-05T05:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T05:00:00.000024167Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "answer": {
+        "body": {
+          "now": "2026-10-05T05:00:00.000024167Z"
+        },
+        "status": 200
+      },
+      "coreUrl": "http://core:8080",
+      "demoNow": "2026-10-05T05:00:00.000Z"
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "bookings.weekOpensAt": {
+        "dayOfWeek": "SUNDAY",
+        "time": "20:00"
+      },
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "training.maxPerWeek": 3,
+      "training.bookingWindowDays": 3,
+      "classes.riskReviewTime": "07:30"
+    },
+    "jobs": [
+      {
+        "enabled": false,
+        "name": "week-opening"
+      },
+      {
+        "enabled": false,
+        "name": "risk-review"
+      },
+      {
+        "enabled": false,
+        "name": "no-show-notices"
+      },
+      {
+        "enabled": false,
+        "name": "class-finishing"
+      },
+      {
+        "enabled": false,
+        "name": "cleanup"
+      }
+    ],
+    "clock-anonymous-2026-10-11T17:55:00.000Z": {
+      "body": {
+        "now": "2026-10-11T17:55:00.000004Z"
+      },
+      "status": 200
+    },
+    "clock-anonymous-2026-10-11T18:01:00.000Z": {
+      "body": {
+        "now": "2026-10-11T18:01:00.000003917Z"
+      },
+      "status": 200
+    },
+    "mutation-p1-already-ran": {
+      "body": {
+        "runId": "6b0c1983-061a-43d9-a7df-f2abb5c160c7",
+        "job": "WEEK_OPENING",
+        "scheduledFor": "2026-10-11T18:01:00Z",
+        "scheduledForLocal": "2026-10-11T20:01",
+        "timeZone": "Europe/Madrid",
+        "trigger": "MANUAL",
+        "dryRun": false,
+        "status": "SUCCEEDED",
+        "skipReason": null,
+        "startedAt": "2026-10-11T18:01:01.198432209Z",
+        "finishedAt": "2026-10-11T18:01:01.230392709Z",
+        "durationMs": 32,
+        "effects": {
+          "counters": {
+            "notified": 0,
+            "opened": 1,
+            "activeClasses": 37
+          },
+          "items": [
+            {
+              "entityType": "Week",
+              "entityId": "2026-10-18",
+              "action": "OPEN",
+              "detail": {
+                "recipients": 0,
+                "weekKey": "2026-10-18",
+                "activeClasses": 37
+              }
+            }
+          ]
+        },
+        "errors": [],
+        "actorAccountId": "38c4e927-7322-4e4b-8b49-768eead18509",
+        "parametersSnapshot": {
+          "jobs.weekOpening.enabled": false,
+          "bookings.weekOpensAt": {
+            "dayOfWeek": "SUNDAY",
+            "time": "20:00"
+          },
+          "messaging.notifyWeekOpening": false
+        }
+      },
+      "status": 200
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-09-27T22:43:53.116Z": {
+      "body": {
+        "now": "2026-09-27T22:43:53.116014Z"
+      },
+      "status": 200
+    },
+    "clock-restored": {
+      "body": {
+        "now": "2026-09-27T22:43:53.116014Z"
+      },
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-05"
+}

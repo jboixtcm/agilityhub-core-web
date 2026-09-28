@@ -1,0 +1,226 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E5-W04
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=c25e6b48434cd1fa0246dce86e08a3bab98cbb2b created=2026-09-27T12:49:04.174297884Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Network agilityhub-e5-w04_default Created 
+ Network agilityhub-e5-w04_default Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Error service "seed" didn't complete successfully: exit 1
+service "seed" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W04/seed-e1-e2.log (105 lines)
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Network agilityhub-e5-w04_default Created 
+ Network agilityhub-e5-w04_default Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Error service "seed" didn't complete successfully: exit 1
+service "seed" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W04/seed-e3.log (105 lines)
+ Network agilityhub-e5-w04_default Creating 
+ Network agilityhub-e5-w04_default Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mailbox Creating 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Volume agilityhub-e5-w04_mailbox Created 
+ Network agilityhub-e5-w04_default Created 
+ Network agilityhub-e5-w04_default Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Started 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Starting 
+ Container agilityhub-e5-w04-core-1 Started 
+ Container agilityhub-e5-w04-core-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W04/seed-e4.log (106 lines)
+ Container agilityhub-e5-w04-core-1 Running 
+ Container agilityhub-e5-w04-mongo-1 Running 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-seed-1 Starting 
+ Container agilityhub-e5-w04-seed-1 Started 
+ Container agilityhub-e5-w04-seed-1 Waiting 
+ Container agilityhub-e5-w04-seed-1 Exited 
+ Container agilityhub-e5-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w04-mongo-1 Healthy 
+ Container agilityhub-e5-w04-core-1 Waiting 
+ Container agilityhub-e5-w04-core-1 Healthy 
+ Container agilityhub-e5-w04-playwright-run-765d8f59f1d4 Creating 
+ Container agilityhub-e5-w04-playwright-run-765d8f59f1d4 Created 
+tar: ./roadmap/evidence/E5-W04/46-r2-e2e-core-final-A.log: time stamp 2026-09-28 05:42:32 is 14.685902445 s in the future
+tar: ./.roadmap-executor.raw.jsonl: time stamp 2026-09-28 05:55:19 is 758.253913997 s in the future
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 95, added 95
+Progress: resolved 851, reused 0, downloaded 299, added 298
+Progress: resolved 851, reused 0, downloaded 492, added 492
+Progress: resolved 851, reused 0, downloaded 549, added 549
+Progress: resolved 851, reused 0, downloaded 571, added 571
+Progress: resolved 851, reused 0, downloaded 641, added 641
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-nullish-coalescing-operator/-/plugin-transform-nullish-coalescing-operator-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-object-rest-spread/-/plugin-transform-object-rest-spread-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-named-capturing-groups-regex/-/plugin-transform-named-capturing-groups-regex-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-optional-catch-binding/-/plugin-transform-optional-catch-binding-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-property-literals/-/plugin-transform-property-literals-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-numeric-separator/-/plugin-transform-numeric-separator-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-private-property-in-object/-/plugin-transform-private-property-in-object-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-private-methods/-/plugin-transform-private-methods-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-object-super/-/plugin-transform-object-super-7.29.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 685, added 685
+ WARN  GET https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 687, added 687
+Progress: resolved 851, reused 0, downloaded 692, added 692
+Progress: resolved 851, reused 0, downloaded 698, added 698
+Progress: resolved 851, reused 0, downloaded 709, added 709
+Progress: resolved 851, reused 0, downloaded 711, added 711
+ WARN  GET https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-16.0.3.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-object-super/-/plugin-transform-object-super-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-nullish-coalescing-operator/-/plugin-transform-nullish-coalescing-operator-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-optional-catch-binding/-/plugin-transform-optional-catch-binding-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-object-rest-spread/-/plugin-transform-object-rest-spread-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-numeric-separator/-/plugin-transform-numeric-separator-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-property-literals/-/plugin-transform-property-literals-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-named-capturing-groups-regex/-/plugin-transform-named-capturing-groups-regex-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-private-methods/-/plugin-transform-private-methods-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-private-property-in-object/-/plugin-transform-private-property-in-object-7.29.7.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+Progress: resolved 851, reused 0, downloaded 712, added 711
+Progress: resolved 851, reused 0, downloaded 719, added 719
+Progress: resolved 851, reused 0, downloaded 736, added 736
+Progress: resolved 851, reused 0, downloaded 757, added 757
+Progress: resolved 851, reused 0, downloaded 766, added 766
+ WARN  GET https://registry.npmjs.org/react-dom/-/react-dom-19.2.8.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@turbo/linux-arm64/-/linux-arm64-2.10.12.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 772, added 772
+ WARN  GET https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.2.7.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/js-levenshtein/-/js-levenshtein-1.1.6.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 851, reused 0, downloaded 773, added 773
+Progress: resolved 851, reused 0, downloaded 774, added 773
+Progress: resolved 851, reused 0, downloaded 791, added 791
+Progress: resolved 851, reused 0, downloaded 813, added 813
+Progress: resolved 851, reused 0, downloaded 839, added 839
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-exponentiation-operator/-/plugin-transform-exponentiation-operator-7.29.7.tgz error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.29.8.tgz error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
+ WARN  GET https://registry.npmjs.org/@babel/plugin-transform-new-target/-/plugin-transform-new-target-7.29.7.tgz error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
+
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_export-files Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Creating 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Volume agilityhub-e5-w04_mongo-data Created 
+ Container agilityhub-e5-w04-mongo-1 Creating 
+ Volume agilityhub-e5-w04_export-files Created 
+ Volume agilityhub-e5-w04_export-files Created 
+ Container agilityhub-e5-w04-mongo-1 Created 
+ Container agilityhub-e5-w04-seed-1 Creating 
+ Container agilityhub-e5-w04-seed-1 Created 
+ Container agilityhub-e5-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w04-activate-demo-club-1 Created 
+ Container agilityhub-e5-w04-core-1 Creating 
+ Container agilityhub-e5-w04-core-1 Created 
+ Container agilityhub-e5-w04-mongo-1 Starting 
+ Container agilityhub-e5-w04-mongo-1 Started 
+ Container agilityhub-e5-w04-mongo-1 Waiting 

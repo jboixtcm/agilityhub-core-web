@@ -1,17 +1,17 @@
 {
-  "runId": "jxiwwb",
-  "weekStart": "2026-09-21",
+  "runId": "kyiokq",
+  "weekStart": "2026-09-28",
   "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
   "generation": {
     "body": {
-      "saturdayTemplateId": "6ac4e30a-4c71-4d54-964e-b527b9ad1cde",
-      "weekdayTemplateId": "90a75d0c-3f96-403d-9d16-c9e66721e878"
+      "saturdayTemplateId": "3b866e1c-5a9d-482f-96d9-5922ad0f0563",
+      "weekdayTemplateId": "d393d154-3437-422d-bc4c-d9c664c2a440"
     },
     "status": 200,
-    "weekId": "5f268f38-c89f-44ab-8007-cfc76d5dfed0",
+    "weekId": "e6fc90a8-5227-4d6b-80e9-6528dab92206",
     "classCount": 38,
     "skipped": [],
-    "week": "2026-10-12"
+    "week": "2026-10-19"
   },
   "d3bMondayColumns": [
     "Muntanya",
@@ -21,14 +21,14 @@
   ],
   "validation": {
     "draftCount": 38,
-    "week": "2026-09-28"
+    "week": "2026-10-05"
   },
   "classCancellation": {
     "status": 200,
     "reason": "DELETED",
-    "adminText": "Integració E4 jxiwwb: la classe s'elimina del calendari. Disculpeu les molèsties!",
-    "byAccountId": "b1d08449-c060-4934-9e30-5f6a2294c075",
-    "at": "2026-09-27T14:44:10.907Z",
+    "adminText": "Integració E4 kyiokq: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "3bb53bac-d79e-448a-8683-4546cea4fa1c",
+    "at": "2026-09-28T07:59:45.685Z",
     "affectedBookings": 4,
     "affectedWaitlist": 2
   },
@@ -39,36 +39,36 @@
     "details": {
       "conflicts": [
         {
-          "ringId": "5b23ed88-7630-4195-8f3a-33dc83a659c4",
+          "ringId": "9cadbb86-e84d-4cdc-990c-a93271307f1e",
           "type": "CLASS",
-          "id": "5c65d639-86c0-4918-8ee0-f778a61a74be",
-          "from": "2026-10-07T18:00:00Z",
-          "to": "2026-10-07T19:00:00Z",
+          "id": "43b27dcf-4cbe-4162-8602-1e64a6b0f21a",
+          "from": "2026-10-14T18:00:00Z",
+          "to": "2026-10-14T19:00:00Z",
           "label": "Obed. urbana",
           "bookedCount": 0
         }
       ]
     },
-    "traceId": "fb57c5d1-60c0-4204-8479-1ce91b0e455f"
+    "traceId": "54e3c786-8151-4043-90eb-fa2a3e4a21a4"
   },
   "ringBlock": {
-    "id": "1f13acc7-5594-4199-a53f-440d29ec9a1f",
+    "id": "6f8248dd-1a43-4f7b-833b-8d872b673a43",
     "status": 201
   },
   "activitiesExport": {
     "bytes": 4064,
-    "contentDisposition": "attachment; filename=\"canic_activities_20260927-1644.xlsx\"",
+    "contentDisposition": "attachment; filename=\"canic_activities_20260928-0959.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
     "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
     "status": 200,
-    "suggestedFilename": "canic_activities_20260927-1644.xlsx"
+    "suggestedFilename": "canic_activities_20260928-0959.xlsx"
   },
   "tournamentSaturday": {
     "cellsByColumn": {
-      "ds 10": 1
+      "ds 17": 1
     },
-    "date": "2026-10-10"
+    "date": "2026-10-17"
   },
   "windowlessDraft": {
     "created": {
@@ -81,7 +81,7 @@
         "code": "INVALID_TIME_RANGE",
         "message": "L'interval de temps no és vàlid.",
         "details": {},
-        "traceId": "906e5a30-2e9f-4720-9c52-0afe838d0442"
+        "traceId": "24ac071b-fe17-43c1-ba16-4fbe66cdb02e"
       },
       "status": 400
     },
@@ -113,7 +113,7 @@
             }
           ]
         },
-        "traceId": "c1b7aacf-b2b7-4d29-aedd-39b506fb0e12"
+        "traceId": "ba7a2599-5bec-4878-925f-64cc92fe62c2"
       },
       "status": 422
     }
@@ -129,7 +129,7 @@
         "code": "INVALID_TIME_RANGE",
         "message": "L'interval de temps no és vàlid.",
         "details": {},
-        "traceId": "f364d86d-821f-414f-94ce-fcc1d4940c9c"
+        "traceId": "8d9996e7-50ed-45da-ae8c-3e5d2744ccc0"
       },
       "status": 400
     }
@@ -137,18 +137,18 @@
   "seminarConflicts": {
     "conflicts": [
       {
-        "ringId": "5b23ed88-7630-4195-8f3a-33dc83a659c4",
+        "ringId": "9cadbb86-e84d-4cdc-990c-a93271307f1e",
         "type": "CLASS",
-        "id": "793b1358-8f8b-448d-9902-647321d45390",
-        "from": "2026-10-17T16:30:00Z",
-        "to": "2026-10-17T17:30:00Z",
+        "id": "cec6d850-759d-4df4-a568-a6ea9d52da34",
+        "from": "2026-10-24T16:30:00Z",
+        "to": "2026-10-24T17:30:00Z",
         "label": "A+B",
         "bookedCount": 0
       }
     ],
     "trainingBookings": []
   },
-  "row03Ca": "Seminari E4 jxiwwbinscritaDissabte 17 d’octubre · 18:30–20:30 · Central",
+  "row03Ca": "Seminari E4 kyiokqinscritaDissabte 24 d’octubre · 18:30–20:30 · Central",
   "mine03AfterCancelCa": [],
   "waitlistCa": {
     "member": {
@@ -162,15 +162,15 @@
     }
   },
   "registrantsExport": {
-    "bytes": 4656,
-    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260927-1644.xlsx\"",
+    "bytes": 4657,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20260928-0959.xlsx\"",
     "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "magic": "504b0304",
-    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Afedb6cea-12b4-4df2-ab5f-a4072c445cee&format=xlsx&sort=registeredAt%2Casc",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Af14338a3-0005-4a11-8406-b4c877cd21a0&format=xlsx&sort=registeredAt%2Casc",
     "status": 200,
-    "suggestedFilename": "canic_activity-registrations_20260927-1644.xlsx"
+    "suggestedFilename": "canic_activity-registrations_20260928-0959.xlsx"
   },
-  "row03Es": "Seminari E4 jxiwwbinscritaSábado 17 de octubre · 18:30–20:30 · Central",
+  "row03Es": "Seminari E4 kyiokqinscritaSábado 24 de octubre · 18:30–20:30 · Central",
   "mine03AfterCancelEs": [],
   "waitlistChipEs": "en lista de espera (3)",
   "waitlistEs": {

@@ -1,0 +1,816 @@
+{
+  "created": {
+    "bookerBooking": "f6079896-4176-47ac-aed7-3ecf58f1abe0",
+    "swapBooking": "cf5bc6ea-2bd1-4fb7-8938-085981422f8d",
+    "waiterEntry": "e469dfbb-c386-4966-be94-45ac153156de",
+    "waiterClaim": "e6d54042-e0a4-4970-9e93-c18c53eb386f",
+    "esBooking": "773e946d-d3a0-49f0-82e2-fc3b5d594dc7",
+    "esEntry": "99d6824c-35f2-4698-a7cc-7753efea17a9",
+    "esClaim": "6e5db5ca-4e99-4792-a63d-af63e74884d9",
+    "training": "5c8c46c5-4eed-4fd5-9b6e-0c6919b5f786",
+    "ringBlock": "77f8c7ff-afa9-4192-af6b-5f5327ff7b5c"
+  },
+  "demoNow": "2026-10-05T05:00:00.000Z",
+  "runId": "kyc9vv",
+  "steps": {
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-10-05T05:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T05:00:00.000030542Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "answer": {
+        "body": {
+          "now": "2026-10-05T05:00:00.000030542Z"
+        },
+        "status": 200
+      },
+      "coreUrl": "http://core:8080",
+      "demoNow": "2026-10-05T05:00:00.000Z"
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "bookings.weekOpensAt": {
+        "dayOfWeek": "SUNDAY",
+        "time": "20:00"
+      },
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "training.maxPerWeek": 3,
+      "training.bookingWindowDays": 3,
+      "classes.riskReviewTime": "07:30"
+    },
+    "jobs": [
+      {
+        "enabled": false,
+        "name": "week-opening"
+      },
+      {
+        "enabled": false,
+        "name": "risk-review"
+      },
+      {
+        "enabled": false,
+        "name": "no-show-notices"
+      },
+      {
+        "enabled": false,
+        "name": "class-finishing"
+      },
+      {
+        "enabled": false,
+        "name": "cleanup"
+      }
+    ],
+    "a-b-booker": {
+      "booked": {
+        "classStartsAtLocal": "2026-10-08T08:30",
+        "heldMs": 121,
+        "holdTtlMs": 30000,
+        "status": 201
+      },
+      "cancelledInTime": {
+        "late": false,
+        "state": "CANCELLED"
+      },
+      "home": {
+        "counters": {
+          "unit": "DOG",
+          "currentWeek": {
+            "count": 1,
+            "max": 2,
+            "weekKey": "2026-10-04"
+          },
+          "nextWeek": {
+            "count": 0,
+            "max": 1,
+            "weekKey": "2026-10-11"
+          }
+        },
+        "types": [
+          "CLASS",
+          "TRAINING",
+          "TRAINING",
+          "CLASS_WAITLIST",
+          "ACTIVITY"
+        ]
+      },
+      "rowStates": [
+        "BOOKABLE",
+        "WAITLIST_FULL",
+        "NOT_YET_OPEN"
+      ]
+    },
+    "b-late": {
+      "late": true,
+      "state": "CANCELLED_LATE"
+    },
+    "c-swap": {
+      "newClass": "2026-10-10T16:30",
+      "notSelectable": 1,
+      "notSelectableItems": [
+        {
+          "bookingId": "bd69a636-99e4-4efa-ab3f-53129bbde03a",
+          "startsAtLocal": "2026-10-05T08:30",
+          "description": "C+D+E",
+          "reason": "DONE",
+          "bookingState": "CANCELLED_LATE"
+        }
+      ],
+      "oldClass": "2026-10-07T08:30",
+      "status": 201,
+      "swappable": 1
+    },
+    "c-29": {
+      "code": "BOOKING_LIMIT_REACHED",
+      "details": {
+        "notSelectable": [
+          {
+            "bookingId": "b83c359b-5564-46d2-b2ab-e818245faf8f",
+            "startsAtLocal": "2026-10-05T08:30",
+            "description": "C+D+E",
+            "reason": "DONE"
+          },
+          {
+            "bookingId": "2c29711b-b35b-495b-9fdd-1a7ace87e69a",
+            "startsAtLocal": "2026-10-05T09:30",
+            "description": "D i sup.",
+            "reason": "DONE"
+          }
+        ],
+        "swappable": [],
+        "limit": 2,
+        "unit": "DOG",
+        "current": 2,
+        "week": "CURRENT",
+        "nextBookableAt": "2026-10-11T18:00:00Z"
+      },
+      "status": 409
+    },
+    "d-entry": {
+      "id": "e469dfbb-c386-4966-be94-45ac153156de",
+      "state": "ACTIVE",
+      "classSessionId": "65b50286-2914-48ba-b673-b89db1d40308",
+      "dogId": "0576d247-7f71-35ce-b5d0-153183338783",
+      "dogName": "Suro 193",
+      "dog": {
+        "id": "0576d247-7f71-35ce-b5d0-153183338783",
+        "name": "Suro 193",
+        "sex": "FEMALE"
+      },
+      "memberId": "6d37df56-f137-3e73-a3f0-7d480f09a6d3",
+      "position": null,
+      "joinedAt": "2026-10-05T05:00:05.529Z",
+      "classSession": {
+        "startsAtLocal": "2026-10-08T17:40",
+        "endsAtLocal": "2026-10-08T18:40",
+        "description": "D+E",
+        "ringName": "Carretera",
+        "instructorName": null,
+        "instructorVisibleAt": "2026-10-07T15:40:00Z"
+      },
+      "notifiedAt": null,
+      "confirmBy": null,
+      "bookingId": null,
+      "cancelledAt": null,
+      "cancelReason": null
+    },
+    "d-waitlist": {
+      "bookerEntryAfterRelease": "NOTIFIED",
+      "claim": {
+        "bookingState": "ACTIVE",
+        "entryState": "CONSOLIDATED",
+        "status": 201
+      },
+      "join": {
+        "status": 201
+      },
+      "notified": {
+        "confirmBy": null,
+        "notifiedAt": "2026-10-05T05:00:07.545Z"
+      },
+      "release": {
+        "state": "CANCELLED"
+      }
+    },
+    "g-es": {
+      "booking": 201,
+      "claim": 201,
+      "join": 201,
+      "release": "CANCELLED"
+    },
+    "e-training": {
+      "anyRing": {
+        "cancelled": 200,
+        "expectedRing": "Muntanya",
+        "ringId": "326524d3-7400-4bf4-b3cc-3b77afc7ad81",
+        "status": 201
+      },
+      "booked": 201,
+      "fourth": {
+        "code": "TRAINING_LIMIT_REACHED",
+        "status": 409
+      },
+      "posted": {
+        "ring": "Muntanya",
+        "withRingId": true
+      },
+      "ringOrder": [
+        "Muntanya",
+        "Central",
+        "Carretera"
+      ],
+      "window": [
+        "2026-10-05",
+        "2026-10-06",
+        "2026-10-07",
+        "2026-10-08"
+      ]
+    },
+    "e-ring-block": {
+      "blocked": 201,
+      "over": {
+        "code": "RING_HAS_BOOKINGS",
+        "status": 422
+      }
+    },
+    "step5-statuses": {
+      "slotNotOnGrid": {
+        "code": "SLOT_NOT_ON_GRID",
+        "status": 400
+      },
+      "dogAlreadyBooked": {
+        "code": "DOG_ALREADY_BOOKED",
+        "status": 422
+      },
+      "overrideNotAllowed": {
+        "code": "OVERRIDE_NOT_ALLOWED",
+        "status": 403
+      },
+      "jobUnknown": {
+        "code": "JOB_UNKNOWN",
+        "status": 404
+      }
+    },
+    "f-risk": {
+      "after": [
+        "AUTO_CANCELLED",
+        "AUTO_CANCELLED",
+        "AUTO_CANCELLED",
+        "AUTO_CANCELLED",
+        "AUTO_CANCELLED",
+        "AUTO_CANCELLED",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK"
+      ],
+      "before": [
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK",
+        "AT_RISK"
+      ],
+      "cleanupRun": {
+        "runId": "0ed6d154-d862-4e9c-8bb5-3e72f4cc11c8",
+        "job": "CLEANUP",
+        "scheduledFor": "2026-10-05T05:00:00Z",
+        "scheduledForLocal": "2026-10-05T07:00",
+        "timeZone": "Europe/Madrid",
+        "trigger": "MANUAL",
+        "dryRun": false,
+        "status": "FAILED",
+        "skipReason": null,
+        "startedAt": "2026-10-05T05:00:15.694903216Z",
+        "finishedAt": "2026-10-05T05:00:15.710137174Z",
+        "durationMs": 16,
+        "effects": {
+          "counters": {
+            "ttlPendingSeatHolds": 0,
+            "ttlPendingMagicLinkTokens": 0,
+            "ttlPendingIdempotencyRecords": 0,
+            "ttlPendingJobLocks": 0,
+            "ttlPendingSignupNotificationAdmissions": 0,
+            "ttlPendingRingSlotLocks": 5
+          },
+          "items": []
+        },
+        "errors": [
+          {
+            "entityId": null,
+            "code": "INTERNAL_ERROR",
+            "message": "ClientSessionException",
+            "traceId": "21e4106e-828d-42a6-8b0c-af3b41b0bf56"
+          }
+        ],
+        "actorAccountId": "dea5494a-61cc-4488-91f1-ee7cf46e4eb7",
+        "parametersSnapshot": {
+          "jobs.cleanup.enabled": false,
+          "jobs.dailyTime": "06:00",
+          "jobs.retention.orphanUploadsHours": 48,
+          "jobs.retention.exportFilesDays": 7,
+          "jobs.retention.domainEventsDays": 90,
+          "jobs.retention.stripeEventsDays": 400,
+          "jobs.retention.jobRunsDays": 90
+        }
+      },
+      "dryRun": {
+        "actions": [
+          "WOULD_CANCEL",
+          "WOULD_NOTIFY"
+        ],
+        "planItems": 18,
+        "status": 200
+      },
+      "run": {
+        "body": {
+          "runId": "70825181-cc04-40cc-ba94-af421bd42b70",
+          "job": "RISK_REVIEW",
+          "scheduledFor": "2026-10-05T05:00:00Z",
+          "scheduledForLocal": "2026-10-05T07:00",
+          "timeZone": "Europe/Madrid",
+          "trigger": "MANUAL",
+          "dryRun": false,
+          "status": "SUCCEEDED",
+          "skipReason": null,
+          "startedAt": "2026-10-05T05:00:14.964062924Z",
+          "finishedAt": "2026-10-05T05:00:15.012259924Z",
+          "durationMs": 48,
+          "effects": {
+            "counters": {
+              "reviewed": 21,
+              "exempt": 1,
+              "cancelled": 6,
+              "cancelledSilent": 5,
+              "atRisk": 12,
+              "notifiedMembers": 1
+            },
+            "items": [
+              {
+                "entityType": "ClassSession",
+                "entityId": "9ff75f1e-2909-456c-83ba-4aa43e665be3",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 1,
+                  "classId": "9ff75f1e-2909-456c-83ba-4aa43e665be3",
+                  "affected": [
+                    "676f6e0c-7c4b-43de-9522-bde555a22bc3"
+                  ]
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "7cd597cd-0f58-472f-8f1b-bbcc13241748",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 0,
+                  "classId": "7cd597cd-0f58-472f-8f1b-bbcc13241748",
+                  "affected": []
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "a784be07-bb4b-4e75-b6eb-eec444a8c66d",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 0,
+                  "classId": "a784be07-bb4b-4e75-b6eb-eec444a8c66d",
+                  "affected": []
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "a7142a93-69fd-4b74-9dcf-a27f74e8f778",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 0,
+                  "classId": "a7142a93-69fd-4b74-9dcf-a27f74e8f778",
+                  "affected": []
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "ecd1bde1-148c-4449-a3f9-bde4c1ae3329",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 0,
+                  "classId": "ecd1bde1-148c-4449-a3f9-bde4c1ae3329",
+                  "affected": []
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "0fe8e3a2-be4f-472b-a7ec-b9f72dd37dd2",
+                "action": "CANCEL",
+                "detail": {
+                  "dogsCount": 0,
+                  "classId": "0fe8e3a2-be4f-472b-a7ec-b9f72dd37dd2",
+                  "affected": []
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "a0861e1a-1cad-4daa-84f5-70223203a147",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "a0861e1a-1cad-4daa-84f5-70223203a147",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "57dfbb95-78a1-4d8e-bee1-b6541479c72f",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [
+                    "22f3195b-2335-417f-b91f-f7f46998abaa"
+                  ],
+                  "classId": "57dfbb95-78a1-4d8e-bee1-b6541479c72f",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "e413d126-afc3-4f7f-8155-ff005263ff4c",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "e413d126-afc3-4f7f-8155-ff005263ff4c",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "0003d640-41e3-49ca-b0c7-1062021c4522",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "0003d640-41e3-49ca-b0c7-1062021c4522",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "111fd932-28ea-4581-9cb4-ccfa4cd61e8e",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "111fd932-28ea-4581-9cb4-ccfa4cd61e8e",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "8d115244-3732-4c6c-8152-6edcf72cde07",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "8d115244-3732-4c6c-8152-6edcf72cde07",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "c790c2dc-021e-4a33-920d-3443d2b04569",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "c790c2dc-021e-4a33-920d-3443d2b04569",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "ff6a41df-4537-4ace-8be7-b7c9565784ec",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "ff6a41df-4537-4ace-8be7-b7c9565784ec",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "83ca0a49-f60f-4ee9-9ffb-f91c89f2e1c6",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "83ca0a49-f60f-4ee9-9ffb-f91c89f2e1c6",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "f60463fd-5d3b-4c3f-ad2f-46cbd077aee1",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "f60463fd-5d3b-4c3f-ad2f-46cbd077aee1",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "1d058a90-c8d4-48e3-8570-8b2a8f52e063",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "1d058a90-c8d4-48e3-8570-8b2a8f52e063",
+                  "notifyAdmins": true
+                }
+              },
+              {
+                "entityType": "ClassSession",
+                "entityId": "b97bb7d7-b392-4da2-9f05-8b3138734b12",
+                "action": "NOTIFY",
+                "detail": {
+                  "newBookingIds": [],
+                  "classId": "b97bb7d7-b392-4da2-9f05-8b3138734b12",
+                  "notifyAdmins": true
+                }
+              }
+            ]
+          },
+          "errors": [],
+          "actorAccountId": "dea5494a-61cc-4488-91f1-ee7cf46e4eb7",
+          "parametersSnapshot": {
+            "jobs.riskReview.enabled": false,
+            "classes.riskReviewTime": "07:30",
+            "classes.minDogs": 2,
+            "classes.riskLookaheadDays": 2,
+            "classes.riskAutoCancelSameDay": true
+          }
+        },
+        "status": 200
+      }
+    },
+    "h-cleanup": {
+      "swapBooking": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      },
+      "waiterClaim": {
+        "cancellation": 422,
+        "state": "CANCELLED"
+      },
+      "esBooking": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      },
+      "esClaim": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      },
+      "waiterEntry": {
+        "cancellation": null,
+        "state": "CONSOLIDATED"
+      },
+      "esEntry": {
+        "cancellation": null,
+        "state": "CONSOLIDATED"
+      },
+      "bookerBooking": {
+        "cancellation": 422,
+        "state": "CANCELLED"
+      },
+      "training": {
+        "cancellation": 409,
+        "state": "CANCELLED"
+      },
+      "ringBlock": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      }
+    },
+    "clock-anonymous-2026-10-11T17:50:00.000Z": {
+      "body": {
+        "now": "2026-10-11T17:50:00.000004708Z"
+      },
+      "status": 200
+    },
+    "r-09-05": {
+      "after": {
+        "monday": 1,
+        "sunday": 2
+      },
+      "before": {
+        "monday": 0,
+        "sunday": 2
+      },
+      "booked": {
+        "date": "2026-10-12",
+        "status": 201
+      },
+      "cancelled": 200,
+      "window": [
+        "2026-10-11",
+        "2026-10-12",
+        "2026-10-13",
+        "2026-10-14"
+      ]
+    },
+    "clock-anonymous-2026-10-11T17:55:00.000Z": {
+      "body": {
+        "now": "2026-10-11T17:55:00.000004416Z"
+      },
+      "status": 200
+    },
+    "clock-anonymous-2026-10-11T18:01:00.000Z": {
+      "body": {
+        "now": "2026-10-11T18:01:00.000005541Z"
+      },
+      "status": 200
+    },
+    "f-p1": {
+      "before": {
+        "details": {
+          "opensAt": "2026-10-11T18:00:00Z"
+        },
+        "status": 422
+      },
+      "byClock": {
+        "state": "BOOKABLE"
+      },
+      "row": {
+        "opensAt": "2026-10-11T18:00:00Z",
+        "startsAtLocal": "2026-10-19T08:30"
+      },
+      "runs": [
+        {
+          "runId": "568b5bb8-89a4-4feb-8280-641169e8e711",
+          "scheduledFor": "2026-10-11T18:01:00Z",
+          "scheduledForLocal": "2026-10-11T20:01",
+          "trigger": "MANUAL",
+          "dryRun": false,
+          "status": "SUCCEEDED",
+          "skipReason": null,
+          "startedAt": "2026-10-11T18:01:01.633Z",
+          "finishedAt": "2026-10-11T18:01:01.640Z",
+          "durationMs": 7,
+          "counters": {
+            "opened": 1,
+            "activeClasses": 37,
+            "notified": 0
+          },
+          "errorCount": 0
+        },
+        {
+          "runId": "64d27b52-676b-454f-91ea-e03ca62d8e6e",
+          "scheduledFor": "2026-10-04T18:00:00Z",
+          "scheduledForLocal": "2026-10-04T20:00",
+          "trigger": "CATCH_UP",
+          "dryRun": false,
+          "status": "SKIPPED",
+          "skipReason": "DISABLED",
+          "startedAt": "2026-10-05T05:00:00Z",
+          "finishedAt": "2026-10-05T05:00:00Z",
+          "durationMs": 0,
+          "counters": {},
+          "errorCount": 0
+        }
+      ],
+      "runsBeforeTrigger": [
+        {
+          "scheduledFor": "2026-10-04T18:00:00Z",
+          "skipReason": "DISABLED",
+          "status": "SKIPPED",
+          "trigger": "CATCH_UP"
+        }
+      ],
+      "trigger": {
+        "body": {
+          "runId": "568b5bb8-89a4-4feb-8280-641169e8e711",
+          "job": "WEEK_OPENING",
+          "scheduledFor": "2026-10-11T18:01:00Z",
+          "scheduledForLocal": "2026-10-11T20:01",
+          "timeZone": "Europe/Madrid",
+          "trigger": "MANUAL",
+          "dryRun": false,
+          "status": "SUCCEEDED",
+          "skipReason": null,
+          "startedAt": "2026-10-11T18:01:01.633308667Z",
+          "finishedAt": "2026-10-11T18:01:01.640387084Z",
+          "durationMs": 7,
+          "effects": {
+            "counters": {
+              "opened": 1,
+              "activeClasses": 37,
+              "notified": 0
+            },
+            "items": [
+              {
+                "entityType": "Week",
+                "entityId": "2026-10-18",
+                "action": "OPEN",
+                "detail": {
+                  "weekKey": "2026-10-18",
+                  "activeClasses": 37,
+                  "recipients": 0
+                }
+              }
+            ]
+          },
+          "errors": [],
+          "actorAccountId": "dea5494a-61cc-4488-91f1-ee7cf46e4eb7",
+          "parametersSnapshot": {
+            "jobs.weekOpening.enabled": false,
+            "bookings.weekOpensAt": {
+              "dayOfWeek": "SUNDAY",
+              "time": "20:00"
+            },
+            "messaging.notifyWeekOpening": false
+          }
+        },
+        "status": 200
+      }
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-09-28T07:55:06.471Z": {
+      "body": {
+        "now": "2026-09-28T07:55:06.471005500Z"
+      },
+      "status": 200
+    },
+    "clock-restored": {
+      "body": {
+        "now": "2026-09-28T07:55:06.471005500Z"
+      },
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-05"
+}

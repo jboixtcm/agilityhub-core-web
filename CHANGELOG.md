@@ -96,6 +96,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Screen 07 names another booker only when `bookedBy.self` is false (never by comparing first names), and its late-cancellation warning follows the api's `cancellableInTimeUntil`.
   - 03 paints each row's ring dot with `ringColor`; the MSW 03 rows carry `ringColor` and `activityId` as the api sends them (`null` on activity rows).
   - The E4 real-core D4 check accepts the current week's empty state: since api E5-T06 the seed skips that week's past days, so on a Sunday no class is left.
+- E5 real-core spec, round 2 of the E5-W04 review:
+  - P1 is proven by its own effects: at 20:01 the spec records that 04's row is already `BOOKABLE` (the clock opens the week, S08 R-08-01), then asserts that [Executa ara]'s run carries `{Week, OPEN, <next Sunday>}` and `activeClasses > 0`, and that no scheduled run opened the week first.
+  - The scheduler's processes are switched off (`PUT /jobs/{name}/switch`) before the first clock move and back on in `afterAll`, which also restores the clock and asserts both answers.
+  - R-09-05 «by session date» has its own test. (e) asserts «Qualsevol» (the pressed chip, the first free ring of the slot in the api's ring order, and the core's own choice for a `POST` without `ringId`) and fails when no slot is left for the fourth booking.
+  - 03's «row gone» reads the page's own `GET /me/home` answer and waits for a rendered row. The claim asserts `ACTIVE` and `CONSOLIDATED`, and (h) checks both waiting entries. The risk plan's item count equals the real run's, item by item.
+  - The E4 D4 week-0 check accepts the empty state only on a club-local Sunday or when the api lists no class of week 0 still ahead.
+  - `scripts/e2e-core.sh` prints the core image's revision label, creation date and `/app/seeds` listing at the start of each run.
 
 - D1's risk card reads S15's form A (`GET /risk-review`, S14 R-14-06 single source) instead of the `/dashboard` embed; `riskReview: null` still hides it. Form A has no gender, so the notified names read with the mockup's literals («avisada Laura + Duna», «avisats Pau + Blat») (E5-W03).
 - Adopt the api snapshot `8117f37` as `packages/api-client/openapi/openapi.json` (E5 booking, waitlist, training and job contracts; `AuditAction` reordered) and regenerate the client types (E4-W01).

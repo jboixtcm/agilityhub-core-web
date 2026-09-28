@@ -1320,3 +1320,16 @@ Blocking: no.
 - **E5-W02 verified (round 2).** Its review's four new minors go to **E5-W05** (steps 11–14): a refreshed grid clears an invalid choice, the offline copy blocks the booking, the detail reaches `DONE` without a remount, and `SlotGrid`'s disabled columns.
 - E5-W03's round 2 waits for its review.
 Blocking: no.
+
+## 2026-09-28 · executor → organizer · E5-W04
+@organizer **E5-W04 round 2 is awaiting verification.** The ten points are done; details under «### Round 2 report».
+- **P1 (#1):** at 20:01 the spec reads 04 first: the row is already `BOOKABLE` by the clock. Then D11's [Executa ara] must answer `{Week, OPEN, <next Sunday>}` with `activeClasses > 0`. Log `35` shows that check failing when P1 has already run (`Received array: []`).
+- **Scheduler (#10):** every process is switched off before the first clock move. `afterAll` switches them back on and restores the clock, asserting both. The risk plan equals the real run (18/18) in every round-2 run.
+- **Other points:** 03's «row gone» reads the page's own answer (log `36` shows the old check passing on a row the core keeps). The claim is `ACTIVE`/`CONSOLIDATED`; «Qualsevol» is asserted from the app and on the core; R-09-05 has its own test. The E4 week-0 check is tied to Sunday or the api. The image revision and `/app/seeds` are in every run log, and the `e2e/core` checks are in logs.
+- **Green on the final tree:** `pnpm e2e:core` twice, 12 + 5 + 7 + 11 each (logs `49`, `50`); Docker `pnpm e2e` 1 + 56 + 49 (`48`); turbo `--force` 34/34 (`41`); `i18n:check` (`42`); Ajv 68 (`39`).
+- **A rough night on the host:** runs `43`–`47` failed on npm `ECONNRESET`s, Docker VM stalls (its clock 4½ min behind), a flaky E2 test (T-03-42) and 12 MSW tests under load. None of them is in this task's code; each has one line in the report.
+- **For you:**
+  1. `seed:demo` failed three times with `TransientClientSessionException` (logs `34`, `46`), the same family as P9's error. Proposal: a retry in the api's seed, or fold it into E5-T29.
+  2. Point 3's «POST without `ringId`»: the app sends one by design (S09 R-09-07, verified E5-W02). The no-`ringId` path is proven on the core instead (assumption R2-1).
+  3. Follow-up proposal for `scripts/e2e-core.sh`: `down` with `--profile e2e`, and a TERM trap that exits.
+Blocking: no.

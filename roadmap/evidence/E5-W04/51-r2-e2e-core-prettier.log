@@ -1,0 +1,3 @@
+Checking formatting...
+All matched files use Prettier code style!
+pnpm exec prettier --check e2e/core/e5-core.spec.ts e2e/core/e4-core.spec.ts → exit 0

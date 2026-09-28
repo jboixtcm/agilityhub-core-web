@@ -84,9 +84,13 @@ function saturdayOn03(date: string, locale: "ca" | "es"): string {
   return `${weekday} ${dayMonth} · `;
 }
 
+/** 0 = Monday … 6 = Sunday, for a plain date. */
+function weekdayIndexOf(date: string): number {
+  return (new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7;
+}
+
 function caShortDay(date: string): string {
-  const index = (new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7;
-  return caShortDays[index] ?? "";
+  return caShortDays[weekdayIndexOf(date)] ?? "";
 }
 
 /** «dd/mm/aaaa», the masked date inputs of D4 and D7. */
@@ -618,13 +622,43 @@ test("T-06-28 E2E (b) D4: «Esborrany» opens the seeded draft week, [VALIDAR LA
   test.setTimeout(240_000);
   const page = admin();
 
+  const weeksRequest = page.waitForRequest(
+    (request) =>
+      request.method() === "GET" && new URL(request.url()).pathname.endsWith("/api/v1/weeks"),
+  );
   await navigateSpa(page, "/calendari");
   await page.waitForURL(`**/calendari?estat=actives&setmana=${weekStart}`);
   // Since api E5-T06 the seed skips the current week's past days: on a Sunday that week has no
-  // class left and D4 shows its empty state instead of the grid (E5-W04).
-  await expect(
-    calendarGrid(page).or(page.getByText("Cap classe aquesta setmana", { exact: true })),
-  ).toBeVisible();
+  // class left and D4 shows its empty state instead of the grid (E5-W04). E5-W04 review #6: the
+  // empty state passes only on a club-local Sunday or when the api lists no class of week 0 still
+  // ahead; any other day with classes ahead needs the grid.
+  const emptyWeek = page.getByText("Cap classe aquesta setmana", { exact: true });
+  await expect(calendarGrid(page).or(emptyWeek)).toBeVisible();
+  if (await emptyWeek.isVisible()) {
+    const authorization = (await (await weeksRequest).allHeaders()).authorization;
+    const weekRead = (await coreCall(
+      page,
+      `/api/v1/weeks?filter=${encodeURIComponent(`startDate:eq:${weekStart}`)}`,
+      authorization,
+    )) as unknown as { body: { items?: { id: string }[] }; status: number };
+    expect(weekRead.status).toBe(200);
+    const weekId = weekRead.body.items?.[0]?.id;
+    let classesAhead = 0;
+    if (weekId !== undefined) {
+      const calendar = (await coreCall(
+        page,
+        `/api/v1/weeks/${weekId}/calendar?filter=ACTIVE`,
+        authorization,
+      )) as unknown as { body: { classes?: { startsAt: string }[] }; status: number };
+      expect(calendar.status).toBe(200);
+      classesAhead = (calendar.body.classes ?? []).filter(
+        (session) => Date.parse(session.startsAt) > Date.now(),
+      ).length;
+    }
+    const clubSunday = weekdayIndexOf(clubToday()) === 6;
+    evidence.weekZeroEmpty = { classesAhead, clubSunday, clubToday: clubToday() };
+    expect(clubSunday || classesAhead === 0).toBe(true);
+  }
   await page.getByRole("button", { exact: true, name: "Esborrany" }).click();
   // R-06-07: the first week with drafts is the seeded week +1.
   await page.waitForURL(`**/calendari?estat=esborrany&setmana=${draftWeek}`);

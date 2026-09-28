@@ -9,7 +9,8 @@ import { expect, test } from "./oauth-token-log";
 // E5-T06, `scenario:` of the image's `seeds/demo-canic.yaml`). The seed anchors week 0 on
 // `E5_WEEK_START` (the club-local Monday after the run's day, `scripts/e2e-core.sh`) and is
 // consistent at its `demoNow` (Monday 07:00 club-local), where the first test sets the core's test
-// clock (`POST /test/clock`) before any login: moving the clock expires the sessions issued before.
+// clock (`POST /test/clock`) once it has switched the scheduler's processes off; moving the clock
+// expires the sessions issued before, so every session is opened after each move.
 // Accounts are the seed's login members by census ordinal (5 = `member@` … 14 = `member.10@`,
 // `demo-canic.yaml`); rows are chosen by state, time and data attributes, and the rows' dogs by what
 // the api answers — never by the mockups' names. The browsers keep their own clock (never faked).
@@ -202,6 +203,20 @@ interface TrainingBookingItem {
 interface RiskReviewItem {
   classId: string;
   notified: { dogName: string; memberName: string }[];
+  status: string;
+}
+
+interface JobEffectItem {
+  action: string;
+  entityId: string;
+  entityType: string;
+}
+
+/** `JobRun` (S15 §3): what `POST /jobs/{name}/trigger` answers. */
+interface JobRunAnswer {
+  dryRun: boolean;
+  effects: { counters: Record<string, number>; items: JobEffectItem[] };
+  runId: string;
   status: string;
 }
 
@@ -754,19 +769,68 @@ async function entryState(session: Session, entryId: string): Promise<string> {
   return answer.status === 200 ? answer.body.state : `HTTP ${String(answer.status)}`;
 }
 
+/** The processes the first test switched off (`e5-core-run.json`), for `afterAll`. */
+const JOBS_SWITCHED_OFF = "jobs-switched-off";
+
+/** `PUT /jobs/{name}/switch {enabled}` for each process: the api's answers, by name. */
+async function switchJobs(
+  admin: Session,
+  names: readonly string[],
+  enabled: boolean,
+): Promise<Record<string, { enabled: boolean | null; status: number }>> {
+  const answers: Record<string, { enabled: boolean | null; status: number }> = {};
+  for (const name of names) {
+    const answer = await call<{ enabled?: boolean }>(admin, `/jobs/${name}/switch`, "PUT", {
+      enabled,
+    });
+    answers[name] = { enabled: answer.body.enabled ?? null, status: answer.status };
+  }
+  return answers;
+}
+
 test.describe.configure({ mode: "serial" });
 
-test.afterAll(async () => {
+// Review #10 and #7: the processes go back on and the core's clock back to the real instant, even
+// when a test failed (the stack is removed after the run anyway, but a failure must not hide either).
+test.afterAll(async ({ browser }) => {
   await closeSessions();
+  const switchedOff = (readRecord().steps[JOBS_SWITCHED_OFF] as string[] | undefined) ?? [];
+  let switchedOn: Record<string, { enabled: boolean | null; status: number }> = {};
+  if (switchedOff.length > 0) {
+    switchedOn = await switchJobs(await adminSession(browser), switchedOff, true);
+    note("jobs-switched-on", switchedOn);
+    await closeSessions();
+  }
+  const restored = await setCoreClock(browser, new Date().toISOString());
+  note("clock-restored", restored);
+  expect(restored.status).toBe(200);
+  for (const answer of Object.values(switchedOn)) {
+    expect(answer).toEqual({ enabled: true, status: 200 });
+  }
 });
 
-test("E5-W04 step 2 · POST /test/clock to demoNow, and the parameters the flows read", async ({
+test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
   writeRecord({ created: {}, demoNow, runId, steps: {}, weekStart });
-  // The scenario is consistent at `demoNow`: the core's test clock goes there first. (The per-account
-  // views of the seed were recorded once in `e5-seed-discovery.json`; the flows below read theirs.)
+  // Review #10: the scheduler's own runs (catch-ups after each clock move) raced with the scenario,
+  // so its processes are switched off first, at the real instant and before any clock move; the
+  // manual [Executa ara] still runs them (S15 R-15-09). `afterAll` switches them back on.
+  const before = await adminSession(browser);
+  const listed = await call<{ items: { enabled: boolean; name: string }[] }>(before, "/jobs");
+  expect(listed.status).toBe(200);
+  const enabledJobs = listed.body.items.filter((job) => job.enabled).map((job) => job.name);
+  note(JOBS_SWITCHED_OFF, enabledJobs);
+  const switchedOff = await switchJobs(before, enabledJobs, false);
+  note("jobs-switch-off-answers", switchedOff);
+  for (const answer of Object.values(switchedOff)) {
+    expect(answer).toEqual({ enabled: false, status: 200 });
+  }
+  await closeSessions();
+  // The scenario is consistent at `demoNow`: the core's test clock goes there before any other login.
+  // (The per-account views of the seed were recorded once in `e5-seed-discovery.json`; the flows
+  // below read theirs.) There is no fallback without `POST /test/clock`: every test needs `demoNow`.
   const clock = await setCoreClock(browser, demoNow);
   note("clock", { answer: clock, coreUrl, demoNow });
   expect(clock.status).toBe(200);
@@ -799,6 +863,8 @@ test("E5-W04 step 2 · POST /test/clock to demoNow, and the parameters the flows
     "jobs",
     jobs.body.items.map((job) => ({ enabled: job.enabled, name: job.name })),
   );
+  // Still off after the clock move (the switch is a club parameter, not a session's).
+  expect(jobs.body.items.filter((job) => job.enabled).map((job) => job.name)).toEqual([]);
 });
 
 test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation", async ({
@@ -863,11 +929,23 @@ test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold,
   await navigateClubRoute(page, "/inici");
   await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
 
-  // (b) In time: the green note, then the row is gone from 03.
+  // (b) In time: the green note, then the row is gone from 03. Review #2: 03 shows a skeleton until
+  // its own `GET /me/home` answers, so the check reads that answer and waits for a rendered row
+  // before it counts the cancelled one.
   const inTime = await cancelFrom07(page, booking.id);
   expect(inTime.state).toBe("CANCELLED");
   await expect(page.getByText(text.ca.inTime)).toBeVisible();
+  const homeAfterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
   await navigateClubRoute(page, "/inici");
+  const homeAfterResponse = await homeAfterRead;
+  expect(homeAfterResponse.status()).toBe(200);
+  const homeAfter = (await homeAfterResponse.json()) as MeHome;
+  expect(homeAfter.reservations.map((row) => row.id)).not.toContain(booking.id);
+  const stillListed = homeAfter.reservations.find((row) => row.type in links);
+  if (stillListed === undefined) throw new Error("03 lists no other row after the cancellation");
+  await expect(
+    page.locator(`a[href="${links[stillListed.type as keyof typeof links]}${stillListed.id}"]`),
+  ).toBeVisible();
   await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toHaveCount(0);
   note("a-b-booker", {
     booked: {
@@ -941,8 +1019,18 @@ test("T-08-40 (c) · 06 swaps the week's booking in one step; without a swappabl
     page.getByText(/^Ja tens \d+ classes aquesta setmana amb .+ \(límit per gos\)\.$/u),
   ).toBeVisible();
   await expect(page.getByText("Tria quina anul·les per fer-li lloc")).toBeVisible();
-  await expect(page.getByRole("radio")).toHaveCount(hold.limit.swappable.length);
+  const radios = page.getByRole("radio");
+  await expect(radios).toHaveCount(hold.limit.swappable.length);
+  // Review #2: the seed gives this member an inert card (its Monday 08:30 cancelled late: `DONE`,
+  // R-08-09), so the count below cannot pass on an empty list.
+  expect(hold.limit.notSelectable.length).toBeGreaterThan(0);
   await expect(page.locator(".confirm-option--inert")).toHaveCount(hold.limit.notSelectable.length);
+  // Review #11: the swap card is chosen by tapping its radio (the first one is preselected).
+  const oldRadio = radios.nth(
+    hold.limit.swappable.findIndex((option) => option.bookingId === old.id),
+  );
+  await oldRadio.click();
+  await expect(oldRadio).toHaveAttribute("aria-checked", "true");
   const oldDay = old.startsAtLocal.slice(0, 10);
   const newDay = target.startsAtLocal.slice(0, 10);
   const swapButton = page.getByRole("button", {
@@ -970,6 +1058,13 @@ test("T-08-40 (c) · 06 swaps the week's booking in one step; without a swappabl
   note("c-swap", {
     newClass: target.startsAtLocal,
     notSelectable: hold.limit.notSelectable.length,
+    // R-08-09: `DONE` for a past or CANCELLED_LATE booking, `LATE_WINDOW` inside the threshold.
+    notSelectableItems: await Promise.all(
+      hold.limit.notSelectable.map(async (item) => ({
+        ...item,
+        bookingState: (await call<Booking>(swapper, `/bookings/${item.bookingId}`)).body.state,
+      })),
+    ),
     oldClass: old.startsAtLocal,
     status: swapResponse.status(),
     swappable: hold.limit.swappable.length,
@@ -1063,7 +1158,10 @@ test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 3
     .click();
   const card = admin.page.getByRole("region", { name: /^Classe seleccionada/u });
   const panel = card.getByRole("region", { name: /^Inscrits \(/u });
-  await expect(panel).toContainText(seat.dogName ?? "");
+  // Review #2: an empty name would make the check below pass on any panel.
+  const seatDog = seat.dogName ?? "";
+  expect(seatDog).not.toBe("");
+  await expect(panel).toContainText(seatDog);
   await expect(panel.getByText(/^En espera: /u)).toContainText(open.dog.name);
   await shotOf(card, admin.page, "D4-inscrits-core-1280.png");
 
@@ -1114,7 +1212,10 @@ test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 3
   const claimedBooking = (await claimed.json()) as Booking;
   remember("waiterClaim", claimedBooking.id);
   await expect(waiter.page.getByText(text.ca.done)).toBeVisible();
+  // R-08-15: the claim books the seat and consolidates the entry (gate line 2).
+  expect(claimedBooking.state).toBe("ACTIVE");
   const consolidated = await entryState(waiter, entry.id);
+  expect(consolidated).toBe("CONSOLIDATED");
   await navigateClubRoute(waiter.page, "/inici");
   await expect(waiter.page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
   note("d-waitlist", {
@@ -1183,8 +1284,11 @@ test("T-08-40 (g) · the same flows in es: a booking inside the hold, and a wait
   await page.getByRole("button", { name: text.es.submit }).click();
   const claimed = await claiming;
   expect(claimed.status()).toBe(201);
-  remember("esClaim", ((await claimed.json()) as Booking).id);
+  const claimedBooking = (await claimed.json()) as Booking;
+  remember("esClaim", claimedBooking.id);
   await expect(page.getByText(text.es.done)).toBeVisible();
+  expect(claimedBooking.state).toBe("ACTIVE");
+  expect(await entryState(member, entry.id)).toBe("CONSOLIDATED");
   note("g-es", {
     booking: 201,
     claim: claimed.status(),
@@ -1193,7 +1297,7 @@ test("T-08-40 (g) · the same flows in es: a booking inside the hold, and a wait
   });
 });
 
-test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 blocks a ring, never over bookings", async ({
+test("T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -1218,10 +1322,15 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
   await shot(page, "08-entrenaments-core-375.png");
 
-  // Wednesday (day +2), «Qualsevol», the first free morning cell.
+  // Wednesday (day +2), «Qualsevol» (the default ring chip), the first free morning cell.
   const counterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
   await days.getByRole("button").nth(2).click();
   expect((await counterRead).status()).toBe(200);
+  await expect(
+    page
+      .getByRole("group", { name: "Pista" })
+      .getByRole("button", { exact: true, name: "Qualsevol" }),
+  ).toHaveAttribute("aria-pressed", "true");
   const morning = page.getByRole("group", { name: "Matí" });
   const cell = morning.locator('[data-slot-state="free"]').first();
   const label = (await cell.getAttribute("aria-label")) ?? "";
@@ -1233,6 +1342,23 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   expect(posted.status()).toBe(201);
   const training = (await posted.json()) as { id: string; ringId: string; startsAt: string };
   remember("training", training.id);
+  // R-09-07 on 08: under «Qualsevol» the app sends the first FREE ring of the slot in the api's ring
+  // order (S09 §2 row 08: «la preseleccionada»; R-09-07: «La UI … envia `ringId`»).
+  const wednesday = slots.days[2];
+  const postedBody = posted.request().postDataJSON() as {
+    dogId: string;
+    ringId?: string;
+    startsAt: string;
+  };
+  const tapped = wednesday?.slots.find((slot) => slot.startsAt === postedBody.startsAt);
+  if (tapped === undefined) throw new Error("The booked cell is not a slot of Wednesday's grid");
+  const firstFree = slots.rings.find((ring) => tapped.rings[ring.id]?.state === "FREE");
+  expect(postedBody).toEqual({
+    dogId: eligibility.defaultDogId,
+    ringId: firstFree?.id,
+    startsAt: tapped.startsAt,
+  });
+  expect(training.ringId).toBe(firstFree?.id);
   await expect(page.getByText("Entrenament reservat")).toBeVisible();
   await expect(page.getByText("Portes 3/3 entrenaments aquesta setmana")).toBeVisible();
   await expect(
@@ -1242,19 +1368,17 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /^Confirma/u })).toHaveCount(0);
   // A fourth, straight to the api: `409 TRAINING_LIMIT_REACHED` with the cancellable bookings.
-  const wednesday = slots.days[2];
+  // Review #3: the seed's Wednesday has more free slots, so a missing one fails the test.
   const other = wednesday?.slots.find(
     (slot) => slot.anyFree && slot.bookable && slot.startsAt !== training.startsAt,
   );
-  let fourth: CoreAnswer<ApiProblem> | undefined;
-  if (other !== undefined) {
-    fourth = await call(member, "/training-bookings", "POST", {
-      dogId: eligibility.defaultDogId,
-      startsAt: other.startsAt,
-    });
-    expect(fourth.status).toBe(409);
-    expect(fourth.body.code).toBe("TRAINING_LIMIT_REACHED");
-  }
+  if (other === undefined) throw new Error("Wednesday has no other free slot for a fourth booking");
+  const fourth = await call(member, "/training-bookings", "POST", {
+    dogId: eligibility.defaultDogId,
+    startsAt: other.startsAt,
+  });
+  expect(fourth.status).toBe(409);
+  expect(fourth.body.code).toBe("TRAINING_LIMIT_REACHED");
   // The new booking's link in the limit message → its detail → cancel: back to 2/3 and FREE.
   await page.locator(`a[href="/entrenaments/${training.id}"]`).click();
   await page.waitForURL(`**/entrenaments/${training.id}`);
@@ -1272,15 +1396,36 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   await expect(
     page.getByRole("group", { name: "Matí" }).getByRole("button", { name: `${time}, lliure` }),
   ).toHaveAttribute("data-slot-state", "free");
+  // R-09-07 on the core: a `POST` without `ringId` takes the first FREE ring in catalog order,
+  // which is the order the api lists its rings in. Cancelled at once (h).
+  const anyRing = await call<{ id?: string; ringId?: string }>(
+    member,
+    "/training-bookings",
+    "POST",
+    { dogId: eligibility.defaultDogId, startsAt: other.startsAt },
+  );
+  const anyRingCancelled =
+    anyRing.body.id === undefined
+      ? undefined
+      : await call(member, `/training-bookings/${anyRing.body.id}/cancellation`, "POST", {});
+  const otherFirstFree = slots.rings.find((ring) => other.rings[ring.id]?.state === "FREE");
+  expect(anyRing.status).toBe(201);
+  expect(anyRing.body.ringId).toBe(otherFirstFree?.id);
+  expect(anyRingCancelled?.status).toBe(200);
   const trainings = await call<{ items: TrainingBookingItem[] }>(member, "/me/training-bookings");
   const seeded = trainings.body.items.find((item) => item.date === addDays(weekStart, 1));
   if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
   note("e-training", {
+    anyRing: {
+      cancelled: anyRingCancelled?.status ?? null,
+      expectedRing: otherFirstFree?.name ?? null,
+      ringId: anyRing.body.ringId ?? null,
+      status: anyRing.status,
+    },
     booked: posted.status(),
-    fourth:
-      fourth === undefined
-        ? "no other free slot"
-        : { code: fourth.body.code, status: fourth.status },
+    fourth: { code: fourth.body.code, status: fourth.status },
+    posted: { ring: firstFree?.name ?? null, withRingId: postedBody.ringId !== undefined },
+    ringOrder: slots.rings.map((ring) => ring.name),
     window: slots.days.map((day) => day.date),
   });
 
@@ -1348,9 +1493,9 @@ test("T-09-40 (e) · 08 counts 3/week by session date in the day+3 window; 24 bl
   const taken = ip.getByRole("group", { name: "Hores de la franja" }).getByRole("button", {
     name: new RegExp(`^${escapeRegExp(shortTime(seeded.startsAtLocal))}, `, "u"),
   });
+  // No force option: the taken cell cannot be picked (R-09-11, the instructor cannot force).
   await expect(taken).toBeDisabled();
   await expect(taken).not.toHaveAttribute("data-slot-state", "free");
-  await expect(ip.getByRole("button", { name: /forç|cancelBookings/iu })).toHaveCount(0);
   note("e-ring-block", {
     blocked: blocked.status(),
     over: { code: over.body.code, status: over.status },
@@ -1491,11 +1636,17 @@ test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk r
   await card.getByRole("button", { name: "Simula Revisió de classes en risc" }).click();
   const simulated = await simulating;
   expect(simulated.status()).toBe(200);
+  const simulatedRun = (await simulated.json()) as JobRunAnswer;
+  expect(simulatedRun.dryRun).toBe(true);
   const plan = page.getByRole("dialog", {
     name: "Simulació: què faria ara · Revisió de classes en risc",
   });
   await expect(plan.getByText("Simulació: no s'ha aplicat cap canvi.")).toBeVisible();
-  const planItems = await plan.getByRole("listitem").count();
+  // Review #3: the modal lists every planned item (it waits for the list, never counts early).
+  expect(simulatedRun.effects.items.length).toBeGreaterThan(0);
+  const planList = plan.locator(".jobs-card__effects > ul:not(.jobs-card__errors) > li");
+  await expect(planList).toHaveCount(simulatedRun.effects.items.length);
+  const planItems = await planList.count();
   await plan.getByRole("button", { name: "Tanca" }).click();
   // R-15-08: a dry run writes nothing.
   expect(await statuses()).toEqual(before);
@@ -1508,7 +1659,17 @@ test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk r
     .click();
   const ran = await running;
   expect(ran.status()).toBe(200);
+  const ranRun = (await ran.json()) as JobRunAnswer;
   await expect(card.getByText(/^Revisió de classes en risc: /u)).toBeVisible();
+  // R-15-08 (T-15-06): the plan is what the real run then does, on the same data (the scheduler is
+  // off, so nothing ran in between): as many items, the same ones without the `WOULD_` prefix.
+  const itemKey = (item: JobEffectItem) =>
+    `${item.entityType}:${item.entityId}:${item.action.replace(/^WOULD_/u, "")}`;
+  expect(ranRun).toMatchObject({ dryRun: false, status: "SUCCEEDED" });
+  expect(ranRun.effects.items).toHaveLength(planItems);
+  expect(ranRun.effects.items.map(itemKey).sort()).toEqual(
+    simulatedRun.effects.items.map(itemKey).sort(),
+  );
   const after = await call<{ items: RiskReviewItem[] }>(admin, "/risk-review");
 
   // D1 (T-15-33): the card's first six rows, each with the status of the api's form A item.
@@ -1576,8 +1737,12 @@ test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk r
     after: after.body.items.map((item) => item.status),
     before: before.map((value) => value.split(":")[1]),
     cleanupRun,
-    dryRun: { planItems, status: simulated.status() },
-    run: { body: (await ran.json()) as unknown, status: ran.status() },
+    dryRun: {
+      actions: [...new Set(simulatedRun.effects.items.map((item) => item.action))],
+      planItems,
+      status: simulated.status(),
+    },
+    run: { body: ranRun, status: ran.status() },
   });
 });
 
@@ -1600,6 +1765,24 @@ test("E5-W04 (h) · cleanup: every booking, entry, training booking and block th
   await cancelBooking(WAITER, "waiterClaim");
   await cancelBooking(ES_MEMBER, "esBooking", "es");
   await cancelBooking(ES_MEMBER, "esClaim", "es");
+  // Review #3: the run's two waiting entries end consolidated by their claim; one left live by a
+  // failed flow is cancelled here instead (never deleted), so no entry of the run stays waiting.
+  const closeEntry = async (email: string, key: string, claimKey: string, locale: Locale) => {
+    const id = created[key];
+    if (id === undefined) return;
+    const session = await clubsSession(browser, email, "/inici", locale);
+    let state = await entryState(session, id);
+    let cancellation: number | undefined;
+    if (state === "ACTIVE" || state === "NOTIFIED") {
+      cancellation = (await call(session, `/waitlist-entries/${id}/cancellation`, "POST", {}))
+        .status;
+      state = await entryState(session, id);
+    }
+    outcome[key] = { cancellation: cancellation ?? null, state };
+    expect(state).toBe(created[claimKey] === undefined ? "CANCELLED" : "CONSOLIDATED");
+  };
+  await closeEntry(WAITER, "waiterEntry", "waiterClaim", "ca");
+  await closeEntry(ES_MEMBER, "esEntry", "esClaim", "es");
   const bookerBooking = created.bookerBooking;
   if (bookerBooking !== undefined) await cancelBooking(BOOKER, "bookerBooking");
   const training = created.training;
@@ -1625,38 +1808,18 @@ test("E5-W04 (h) · cleanup: every booking, entry, training booking and block th
   note("h-cleanup", outcome);
 });
 
-test("R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before Sunday 20:00, BOOKABLE after week-opening", async ({
+test("R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter", async ({
   browser,
 }) => {
-  test.setTimeout(420_000);
+  test.setTimeout(300_000);
   const opening = addDays(weekStart, 6);
-  const beforeOpening = clubInstant(opening, "19:55");
-  const afterOpening = clubInstant(opening, "20:01");
   await closeSessions();
-  expect((await setCoreClock(browser, beforeOpening)).status).toBe(200);
-  let member = await clubsSession(browser, BOOKER);
-  let bookable = await open04(member);
-  const row =
-    bookable.classes.find(
-      (item) =>
-        item.state === "NOT_YET_OPEN" &&
-        item.opensAt === clubInstant(opening, "20:00").replace(".000Z", "Z"),
-    ) ?? bookable.classes.find((item) => item.state === "NOT_YET_OPEN");
-  if (row === undefined) throw new Error("No NOT_YET_OPEN row before the opening");
-  await expect(classRow(member.page, row.id)).toContainText("Properament");
-  const refused = member.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-  await classRow(member.page, row.id).getByRole("button").click();
-  const refusal = await refused;
-  // CATALEG_ERRORS rule 0: NOT_YET_OPEN has no explicit status in §1, so 422.
-  expect(refusal.status()).toBe(422);
-  const notYetOpen = (await refusal.json()) as ApiProblem;
-  expect(notYetOpen.code).toBe("NOT_YET_OPEN");
-  await expect(
-    member.page.getByText(/^Disponible a partir de diumenge .+ a les 20 h\.$/u),
-  ).toBeVisible();
+  // Sunday 19:50 club-local of week 0: before the week opens (the P1 test goes on at 19:55).
+  expect((await setCoreClock(browser, clubInstant(opening, "19:50"))).status).toBe(200);
+  const member = await clubsSession(browser, BOOKER);
 
-  // R-09-05 by session date: on Sunday the day+3 window reaches the next week. Sunday counts the
-  // week of the seed's two trainings, Monday the next one; a Monday booking moves only Monday's.
+  // Sunday counts the week of the seed's two trainings, Monday the next one; a booking made on
+  // Sunday for Monday moves only Monday's counter (by booking date it would move Sunday's).
   const eligibility = await call<TrainingSummary>(member, "/me/training-summary");
   const trainingDog = eligibility.body.defaultDogId;
   if (trainingDog === null || trainingDog === undefined) throw new Error("No default training dog");
@@ -1709,17 +1872,76 @@ test("R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before
   );
   expect(mondayCancelled.status).toBe(200);
   expect(await usedOn(monday)).toBe(0);
-  note("f-r0905", {
+  note("r-09-05", {
     after: sessionDate,
     before: { monday: 0, sunday: sundayBefore },
     booked: { date: mondayTraining.date, status: mondayPosted.status() },
     cancelled: mondayCancelled.status,
     window: trainingWindow.days.map((day) => day.date),
   });
+});
 
+test("R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week", async ({
+  browser,
+}) => {
+  test.setTimeout(420_000);
+  const opening = addDays(weekStart, 6);
+  const opensAt = clubInstant(opening, "20:00").replace(".000Z", "Z");
   await closeSessions();
-  expect((await setCoreClock(browser, afterOpening)).status).toBe(200);
+  expect((await setCoreClock(browser, clubInstant(opening, "19:55"))).status).toBe(200);
+  let member = await clubsSession(browser, BOOKER);
+  const before = await open04(member);
+  const row = before.classes.find(
+    (item) => item.state === "NOT_YET_OPEN" && item.opensAt === opensAt,
+  );
+  if (row === undefined) throw new Error("No NOT_YET_OPEN row that opens on Sunday 20:00");
+  await expect(classRow(member.page, row.id)).toContainText("Properament");
+  const refused = member.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+  await classRow(member.page, row.id).getByRole("button").click();
+  const refusal = await refused;
+  // CATALEG_ERRORS §1 lists NOT_YET_OPEN in its 422 row.
+  expect(refusal.status()).toBe(422);
+  const notYetOpen = (await refusal.json()) as ApiProblem;
+  expect(notYetOpen.code).toBe("NOT_YET_OPEN");
+  expect(notYetOpen.details?.opensAt).toBe(opensAt);
+  await expect(
+    member.page.getByText(/^Disponible a partir de diumenge .+ a les 20 h\.$/u),
+  ).toBeVisible();
+
+  // Review #1: at 20:01 the row is BOOKABLE before P1 runs — the clock opens the week (S08 R-08-01;
+  // S15 R-15-11: «W0/W1 són funcions del temps»), and the scheduler is off since the first test.
+  await closeSessions();
+  expect((await setCoreClock(browser, clubInstant(opening, "20:01"))).status).toBe(200);
+  member = await clubsSession(browser, BOOKER);
+  const byClock = await open04(member);
+  const rowByClock = byClock.classes.find((item) => item.id === row.id);
+  expect(rowByClock?.state).toBe("BOOKABLE");
+  await expect(classRow(member.page, row.id)).toHaveAttribute("data-bookable-state", "BOOKABLE");
+
+  // No scheduled run opened the week before [Executa ara] (they are all SKIPPED while it is off).
+  interface RunItem {
+    counters?: Record<string, number>;
+    dryRun: boolean;
+    scheduledFor: string;
+    skipReason?: string | null;
+    status: string;
+    trigger: string;
+  }
   const admin = await adminSession(browser);
+  const runsBefore = await call<{ items: RunItem[] }>(admin, "/jobs/week-opening/runs");
+  expect(runsBefore.status).toBe(200);
+  expect(
+    runsBefore.body.items.filter(
+      (run) =>
+        run.trigger !== "MANUAL" &&
+        !run.dryRun &&
+        run.status === "SUCCEEDED" &&
+        Date.parse(run.scheduledFor) >= Date.parse(opensAt),
+    ),
+  ).toEqual([]);
+
+  // P1's own effects (R-15-11, T-15-11): the run from D11 opens the week keyed by the next Sunday
+  // (`WeekOpened.openedWeekKey`), over the active classes of that week.
   await navigateSpa(admin.page, "/parametres#processos");
   const card = admin.page.getByRole("region", { name: "Processos automàtics" });
   const triggering = admin.page.waitForResponse(
@@ -1732,22 +1954,25 @@ test("R-15-11 (f) · P1 with the clock advanced: a NOT_YET_OPEN row of 04 before
     .click();
   const triggered = await triggering;
   expect(triggered.status()).toBe(200);
-  const triggerBody = (await triggered.json()) as { dryRun: boolean; status: string };
+  const triggerBody = (await triggered.json()) as JobRunAnswer;
   expect(triggerBody).toMatchObject({ dryRun: false, status: "SUCCEEDED" });
+  expect(triggerBody.effects.items).toContainEqual(
+    expect.objectContaining({ action: "OPEN", entityId: addDays(opening, 7), entityType: "Week" }),
+  );
+  expect(triggerBody.effects.counters.activeClasses).toBeGreaterThan(0);
   await expect(card.getByText(/^Obertura de la setmana: /u)).toBeVisible();
-  const runs = await call<{ items: unknown[] }>(admin, "/jobs/week-opening/runs");
-
-  member = await clubsSession(browser, BOOKER);
-  bookable = await open04(member);
-  await expect(classRow(member.page, row.id)).toHaveAttribute("data-bookable-state", "BOOKABLE");
+  const runs = await call<{ items: RunItem[] }>(admin, "/jobs/week-opening/runs");
   note("f-p1", {
     before: { details: notYetOpen.details, status: refusal.status() },
+    byClock: { state: rowByClock?.state ?? null },
     row: { opensAt: row.opensAt, startsAtLocal: row.startsAtLocal },
     runs: runs.body.items.slice(0, 3),
+    runsBeforeTrigger: runsBefore.body.items.slice(0, 3).map((run) => ({
+      scheduledFor: run.scheduledFor,
+      skipReason: run.skipReason ?? null,
+      status: run.status,
+      trigger: run.trigger,
+    })),
     trigger: { body: triggerBody, status: triggered.status() },
   });
-
-  // Back to the real time (the stack is removed after the run anyway).
-  await closeSessions();
-  note("clock-restored", await setCoreClock(browser, new Date().toISOString()));
 });

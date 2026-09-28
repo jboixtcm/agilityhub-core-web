@@ -1,9 +1,9 @@
 {
   "plan": "Pack 6",
-  "today": "2026-09-27",
+  "today": "2026-09-28",
   "planQuotes": [
     {
-      "planId": "0c6da874-5585-44bf-8b5a-fc603c00ad96",
+      "planId": "5a5f8d7a-c6bb-4123-811d-30dccc9a3a75",
       "lines": [
         {
           "concept": "ENTRY_FEE",
@@ -21,7 +21,7 @@
         {
           "option": "TODAY",
           "portion": "HALF",
-          "startDate": "2026-09-27",
+          "startDate": "2026-09-28",
           "amountDue": {
             "amountMinor": 3000,
             "currency": "EUR"
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "planId": "bfd8d335-7327-48b7-8dbd-a0137c369e73",
+      "planId": "bac6ede7-6c0d-4102-9cab-d772c453294f",
       "lines": [
         {
           "concept": "PACK",
@@ -64,7 +64,7 @@
       "options": []
     },
     {
-      "planId": "0e1cdda5-84ba-48e2-95d2-59153d180474",
+      "planId": "d60765c5-abec-4d45-9c6a-163e857923e5",
       "lines": [
         {
           "concept": "PACK",
@@ -81,7 +81,7 @@
       "options": []
     },
     {
-      "planId": "a0b48939-0a37-495c-ba04-50360b6e0137",
+      "planId": "34bcab1e-f98d-4c14-8f27-86b00cf374b8",
       "lines": [
         {
           "concept": "ENTRY_FEE",
