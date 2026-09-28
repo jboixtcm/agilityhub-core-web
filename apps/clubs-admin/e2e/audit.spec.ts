@@ -79,11 +79,14 @@ test("T-14-26 shows member/global audit, masked diffs, LastChange and queued exp
   await page.getByRole("button", { name: "Excel" }).click();
   const exportsDrawer = page.getByRole("dialog", { name: "Exportacions" });
   await expect(exportsDrawer).toContainText("Preparant l'exportació…");
-  await expect(
-    exportsDrawer.getByRole("link", {
-      name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
-    }),
-  ).toBeVisible();
+  const readyDownload = exportsDrawer.getByRole("button", {
+    name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
+  });
+  await expect(readyDownload).toBeVisible();
+  // E4-W16 step 5 (INC-21): the READY file downloads through GET /exports/{id} and the bearer.
+  const download = page.waitForEvent("download");
+  await readyDownload.click();
+  expect((await download).suggestedFilename()).toBe("canic_audit-entries_20260803-1225.xlsx");
   await page.screenshot({
     fullPage: true,
     path: resolve(evidenceDirectory, "exports-drawer-1280.png"),
@@ -125,7 +128,7 @@ test("T-14-27 renders the audit and PDF export state in ca/es/en without missing
     await page.getByText("Excel · PDF").click();
     await page.getByRole("button", { name: "PDF" }).click();
     const drawer = page.getByRole("dialog");
-    await expect(drawer.getByRole("link", { name: /\.pdf$/u })).toBeVisible();
+    await expect(drawer.getByRole("button", { name: /\.pdf$/u })).toBeVisible();
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, `audit-${item.locale}-1280.png`),

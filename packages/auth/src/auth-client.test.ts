@@ -6,6 +6,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 
 import {
   AuthClient,
+  IMPERSONATION_STORAGE_KEY,
   type Me,
   type OnboardingRequest,
   type OnboardingState,
@@ -63,6 +64,7 @@ afterEach(() => {
   server.resetHandlers();
   localStorage.clear();
   sessionStorage.clear();
+  vi.useRealTimers();
 });
 
 afterAll(() => {
@@ -442,6 +444,382 @@ describe("T-01-21 AuthClient session flow", () => {
           mockRefreshTokenStore: new MemoryRefreshTokenStore(),
         }),
     ).toThrow("only available in mock mode");
+  });
+});
+
+const impersonatedMe: Me = { ...memberMe, impersonation: { actorName: "Aina Serra" } };
+
+function unauthenticated() {
+  return HttpResponse.json(
+    { code: "UNAUTHENTICATED", message: "Authentication required" },
+    { status: 401 },
+  );
+}
+
+/** Lets the event handlers' promises run (a refresh that was about to start, or not). */
+async function settle() {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 20);
+  });
+}
+
+describe("T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes", () => {
+  it("after acceptImpersonation, focus, pageshow and visibilitychange never call /oauth2/token", async () => {
+    let tokenRequests = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        tokenRequests += 1;
+        return HttpResponse.json(tokens("access-of-the-admin-as-member", "refresh"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(impersonatedMe)),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const stop = client.startSlidingRefresh();
+
+    await client.acceptImpersonation("impersonation-token");
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    document.dispatchEvent(new Event("visibilitychange"));
+    await settle();
+
+    expect(tokenRequests).toBe(0);
+    expect(client.isImpersonated()).toBe(true);
+    expect(client.getAccessToken()).toBe("impersonation-token");
+    await expect(client.refresh()).rejects.toThrow("never refreshed");
+    expect(tokenRequests).toBe(0);
+    stop();
+  });
+
+  it("a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again", async () => {
+    let tokenRequests = 0;
+    let meRequests = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        tokenRequests += 1;
+        return HttpResponse.json(tokens("access-of-the-admin-as-member"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => {
+        meRequests += 1;
+        return meRequests === 1 ? HttpResponse.json(impersonatedMe) : unauthenticated();
+      }),
+    );
+    const navigate = vi.fn();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      navigate,
+    });
+    await client.acceptImpersonation("impersonation-token");
+    const expired = vi.fn();
+    const signedOut = vi.fn();
+    client.addEventListener("impersonationExpired", expired);
+    client.addEventListener("signedOut", signedOut);
+    const apiClient = createAuthenticatedApiClient(client, { baseUrl: API_BASE_URL });
+
+    await expect(apiClient.GET("/me")).rejects.toMatchObject({ status: 401 });
+
+    expect(tokenRequests).toBe(0);
+    expect(expired).toHaveBeenCalledOnce();
+    expect(signedOut).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(client.isImpersonationExpired()).toBe(true);
+    expect(client.getAccessToken()).toBeNull();
+    // The tab's next page load stays expired: never a silent switch to the admin's own session.
+    const reloaded = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+    await expect(reloaded.restoreSession()).resolves.toBeNull();
+    expect(reloaded.isImpersonationExpired()).toBe(true);
+    expect(tokenRequests).toBe(0);
+    expect(localStorage).toHaveLength(0);
+  });
+
+  it("step 1: a handoff code whose /me carries `impersonation` enters the mode, wins over the cookie and survives a full-page load of the tab", async () => {
+    const grants: string[] = [];
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = new URLSearchParams(await request.text()).get("grant_type") ?? "";
+        grants.push(grant);
+        if (grant === "urn:agilityhub:grant:handoff") {
+          await delay(20);
+          // The api issues no refresh token for an impersonation (R-01-09).
+          return HttpResponse.json({
+            access_token: "impersonation-access",
+            expires_in: 3600,
+            scope: "",
+            token_type: "Bearer",
+          });
+        }
+        return HttpResponse.json(tokens("access-of-the-admin-as-member"));
+      }),
+      http.get(`${API_BASE_URL}/me`, ({ request }) =>
+        HttpResponse.json(
+          request.headers.get("Authorization") === "Bearer impersonation-access"
+            ? impersonatedMe
+            : memberMe,
+        ),
+      ),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const stop = client.startSlidingRefresh();
+
+    // The provider's restore starts while `/entrar?handoff=` redeems the code: it waits for it.
+    const [exchanged, restored] = await Promise.all([
+      client.exchangeHandoff("impersonation-code"),
+      client.restoreSession(),
+    ]);
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await settle();
+    stop();
+
+    expect(exchanged).toEqual(impersonatedMe);
+    expect(restored).toEqual(impersonatedMe);
+    expect(grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    expect(client.isImpersonated()).toBe(true);
+    const next = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await expect(next.restoreSession()).resolves.toEqual(impersonatedMe);
+    expect(next.getAccessToken()).toBe("impersonation-access");
+    expect(next.isImpersonated()).toBe(true);
+    expect(grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    expect(localStorage).toHaveLength(0);
+  });
+
+  it("an impersonation whose expiry has passed is not restored, and «Surt» revokes it with its own token without refreshing", async () => {
+    vi.useFakeTimers({ now: new Date("2026-09-28T10:00:00Z"), toFake: ["Date"] });
+    let tokenRequests = 0;
+    const revokes: string[] = [];
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = (await request.formData()).get("grant_type");
+        if (grant !== "urn:agilityhub:grant:handoff") tokenRequests += 1;
+        return HttpResponse.json({
+          access_token: "impersonation-access",
+          expires_in: 3600,
+          scope: "",
+          token_type: "Bearer",
+        });
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(impersonatedMe)),
+      http.post(REVOKE_ENDPOINT, ({ request }) => {
+        revokes.push(request.headers.get("Authorization") ?? "");
+        return unauthenticated();
+      }),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.exchangeHandoff("impersonation-code");
+
+    vi.setSystemTime(new Date("2026-09-28T11:00:01Z"));
+    const reloaded = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+    });
+    await expect(reloaded.restoreSession()).resolves.toBeNull();
+    expect(reloaded.isImpersonationExpired()).toBe(true);
+
+    await expect(client.logout()).resolves.toBeUndefined();
+    expect(revokes).toEqual(["Bearer impersonation-access"]);
+    expect(tokenRequests).toBe(0);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session", () => {
+  const LOGIN_AT = new Date("2026-09-28T10:00:00Z");
+
+  function loginAndRefreshHandlers(refresh: () => Response | Promise<Response>) {
+    const counts = { refresh: 0 };
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = (await request.formData()).get("grant_type");
+        if (grant === "password") return HttpResponse.json(tokens("access-login"));
+        counts.refresh += 1;
+        return refresh();
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    return counts;
+  }
+
+  it("a focus or pageshow refreshes only near refreshAt, and visibilitychange too", async () => {
+    vi.useFakeTimers({ now: LOGIN_AT, toFake: ["Date"] });
+    const counts = loginAndRefreshHandlers(() => HttpResponse.json(tokens("access-rotated")));
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.login("biel.roca@example.test", "secret-password");
+    const stop = client.startSlidingRefresh();
+
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await settle();
+    expect(counts.refresh).toBe(0);
+    // expires_in 900 s → refreshAt at +840 s; a focus refreshes from 30 s before it.
+    vi.setSystemTime(new Date("2026-09-28T10:13:00Z"));
+    window.dispatchEvent(new Event("focus"));
+    await settle();
+    expect(counts.refresh).toBe(0);
+
+    vi.setSystemTime(new Date("2026-09-28T10:13:40Z"));
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
+    document.dispatchEvent(new Event("visibilitychange"));
+    await vi.waitFor(() => {
+      expect(client.getAccessToken()).toBe("access-rotated");
+    });
+    expect(counts.refresh).toBe(1);
+    stop();
+    Reflect.deleteProperty(document, "visibilityState");
+  });
+
+  it("offline, then a 5xx: the background refresh keeps the token and retries when the device is back online", async () => {
+    vi.useFakeTimers({ now: LOGIN_AT, toFake: ["Date"] });
+    const counts = loginAndRefreshHandlers(() => {
+      if (counts.refresh === 1) return HttpResponse.error();
+      if (counts.refresh === 2) {
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", message: "Unavailable" },
+          { status: 503 },
+        );
+      }
+      return HttpResponse.json(tokens("access-rotated"));
+    });
+    const navigate = vi.fn();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      navigate,
+    });
+    await client.login("biel.roca@example.test", "secret-password");
+    const signedOut = vi.fn();
+    client.addEventListener("signedOut", signedOut);
+    const stop = client.startSlidingRefresh();
+
+    vi.setSystemTime(new Date("2026-09-28T10:14:00Z"));
+    window.dispatchEvent(new Event("pageshow"));
+    await vi.waitFor(() => {
+      expect(counts.refresh).toBe(1);
+    });
+    await settle();
+    expect(client.getAccessToken()).toBe("access-login");
+    expect(client.getMe()).toEqual(memberMe);
+
+    window.dispatchEvent(new Event("online"));
+    await vi.waitFor(() => {
+      expect(counts.refresh).toBe(2);
+    });
+    await settle();
+    expect(client.getAccessToken()).toBe("access-login");
+
+    window.dispatchEvent(new Event("online"));
+    await vi.waitFor(() => {
+      expect(client.getAccessToken()).toBe("access-rotated");
+    });
+    expect(signedOut).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    stop();
+  });
+
+  it("a 400 of the token endpoint ends the session and lands on the app's sign-in path (/login in apps/id)", async () => {
+    vi.useFakeTimers({ now: LOGIN_AT, toFake: ["Date"] });
+    loginAndRefreshHandlers(() =>
+      HttpResponse.json({ code: "REFRESH_EXPIRED", message: "Refresh expired" }, { status: 400 }),
+    );
+    const navigate = vi.fn();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      clientId: "id-web",
+      identityBaseUrl: IDENTITY_BASE_URL,
+      navigate,
+      signInPath: "/login",
+    });
+    await client.login("biel.roca@example.test", "secret-password");
+    const stop = client.startSlidingRefresh();
+
+    vi.setSystemTime(new Date("2026-09-28T10:14:00Z"));
+    window.dispatchEvent(new Event("focus"));
+    await vi.waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/login");
+    });
+    expect(client.getAccessToken()).toBeNull();
+    stop();
+  });
+
+  it("restoreSession on a 5xx rejects (the session stays unknown) and signs in when the retry succeeds", async () => {
+    let refreshes = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        refreshes += 1;
+        return refreshes === 1
+          ? HttpResponse.json({ code: "INTERNAL_ERROR", message: "Unavailable" }, { status: 502 })
+          : HttpResponse.json(tokens("access-restored"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const signedIn = vi.fn();
+    const signedOut = vi.fn();
+    client.addEventListener("signedIn", signedIn);
+    client.addEventListener("signedOut", signedOut);
+
+    await expect(client.restoreSession()).rejects.toMatchObject({ status: 502 });
+    expect(client.getAccessToken()).toBeNull();
+
+    window.dispatchEvent(new Event("online"));
+    await vi.waitFor(() => {
+      expect(signedIn).toHaveBeenCalledOnce();
+    });
+    expect(client.getMe()).toEqual(memberMe);
+    expect(signedOut).not.toHaveBeenCalled();
+  });
+
+  it("the 401 interceptor keeps the session when the refresh fails offline", async () => {
+    let loginComplete = false;
+    const counts = loginAndRefreshHandlers(() => HttpResponse.error());
+    server.use(
+      http.get(`${API_BASE_URL}/me`, () =>
+        loginComplete ? unauthenticated() : HttpResponse.json(memberMe),
+      ),
+    );
+    const navigate = vi.fn();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      navigate,
+    });
+    await client.login("biel.roca@example.test", "secret-password");
+    loginComplete = true;
+    const signedOut = vi.fn();
+    client.addEventListener("signedOut", signedOut);
+    const apiClient = createAuthenticatedApiClient(client, { baseUrl: API_BASE_URL });
+
+    await expect(apiClient.GET("/me")).rejects.toMatchObject({ status: 401 });
+
+    expect(counts.refresh).toBe(1);
+    expect(signedOut).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(client.getAccessToken()).toBe("access-login");
+    expect(client.getMe()).toEqual(memberMe);
+  });
+
+  it("logout with a rejected bearer refreshes once and retries the revoke, so the cookie is revoked", async () => {
+    const counts = loginAndRefreshHandlers(() => HttpResponse.json(tokens("access-rotated")));
+    const revokes: string[] = [];
+    server.use(
+      http.post(REVOKE_ENDPOINT, ({ request }) => {
+        const authorization = request.headers.get("Authorization") ?? "";
+        revokes.push(authorization);
+        return authorization === "Bearer access-rotated"
+          ? new HttpResponse(null, { status: 200 })
+          : unauthenticated();
+      }),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.login("biel.roca@example.test", "secret-password");
+
+    await expect(client.logout()).resolves.toBeUndefined();
+
+    expect(revokes).toEqual(["Bearer access-login", "Bearer access-rotated"]);
+    expect(counts.refresh).toBe(1);
+    expect(client.getAccessToken()).toBeNull();
   });
 });
 

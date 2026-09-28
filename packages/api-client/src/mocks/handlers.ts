@@ -901,6 +901,14 @@ function listExport(request: Request, listKey: string, rows: number, jobId: stri
   return HttpResponse.json({ jobId, statusUrl: `/api/v1/exports/${jobId}` }, { status: 202 });
 }
 
+/** A READY file expires seven days after it is built (R-14-12); the signed route carries it. */
+const EXPORT_DOWNLOAD_EXPIRES_AT = "2026-08-10T10:25:00Z";
+const EXPORT_DOWNLOAD_EXPIRES = Date.parse(EXPORT_DOWNLOAD_EXPIRES_AT) / 1000;
+
+function exportDownloadSignature(jobId: string): string {
+  return `mock-signature-${jobId.slice(-4)}`;
+}
+
 function exportJobFileName(job: ExportJob): string {
   return exportFileName(
     job.listKey ?? "export",
@@ -1128,6 +1136,79 @@ function replaceDog(dog: DogDetail): DogDetail {
   return dog;
 }
 
+/**
+ * S01 R-01-09 and D10 (E47): «Entra com l'abonat» answers `launchUrl` with a one-time code (60 s)
+ * on the club app's host, which the app redeems at `/entrar?handoff=` (`grant_type=…:handoff`)
+ * for the impersonation token, never refreshed. The mock world of each tab redeems a code once.
+ * The e2e servers put the club app on 127.0.0.1:4173 (the back office is on :4174).
+ */
+const IMPERSONATION_HANDOFF_PREFIX = "mock-impersonation-handoff-";
+const CLUBS_APP_ORIGIN = "http://127.0.0.1:4173";
+// The browser mock world restarts on every page load: the redeemed codes outlive it in the
+// origin's storage, so a code stays spent after the app's full-page navigation, as on the api.
+const REDEEMED_HANDOFFS_STORAGE_KEY = "agilityhub.mock.redeemedHandoffs";
+let impersonationHandoffs = 0;
+const redeemedImpersonationHandoffs = new Set<string>();
+
+function handoffRedeemed(code: string): boolean {
+  if (redeemedImpersonationHandoffs.has(code)) return true;
+  try {
+    const stored: unknown = JSON.parse(
+      mockStorage()?.getItem(REDEEMED_HANDOFFS_STORAGE_KEY) ?? "[]",
+    );
+    return Array.isArray(stored) && stored.includes(code);
+  } catch {
+    return false;
+  }
+}
+
+function redeemHandoff(code: string): void {
+  redeemedImpersonationHandoffs.add(code);
+  try {
+    mockStorage()?.setItem(
+      REDEEMED_HANDOFFS_STORAGE_KEY,
+      JSON.stringify([...redeemedImpersonationHandoffs]),
+    );
+  } catch {
+    // Node tests can run without local storage.
+  }
+}
+
+/**
+ * R-01-05 (E49): a magic link with `purpose = RESET` lets its session set a new password once
+ * without `current` (a one-time mark of 15 minutes); a LOGIN link does not. The mock reads the
+ * purpose from the token, as the api does from the link it issued: tokens `reset…` are RESET.
+ */
+const RESET_PASSWORD_MARK_MS = 15 * 60 * 1000;
+let resetPasswordMarkUntil: number | undefined;
+
+function resetAuthMockState(): void {
+  impersonationHandoffs = 0;
+  redeemedImpersonationHandoffs.clear();
+  try {
+    mockStorage()?.removeItem(REDEEMED_HANDOFFS_STORAGE_KEY);
+  } catch {
+    // Node tests can run without local storage.
+  }
+  resetPasswordMarkUntil = undefined;
+}
+
+function consumeResetPasswordMark(): boolean {
+  const valid = resetPasswordMarkUntil !== undefined && Date.now() < resetPasswordMarkUntil;
+  resetPasswordMarkUntil = undefined;
+  return valid;
+}
+
+function mockImpersonationTokens() {
+  // R-01-09: the impersonation JWT, `auth.impersonationMinutes` = 60, and no refresh token.
+  return {
+    access_token: "mock-impersonation-token",
+    expires_in: 3600,
+    scope: "openid profile",
+    token_type: "Bearer",
+  };
+}
+
 function mockTokens() {
   // MSW cannot issue the production HttpOnly cookie. Browser mock builds keep this
   // token only in the AuthClient's guarded, memory-only mock store.
@@ -1251,7 +1332,19 @@ export const handlers = [
     if (pending === undefined) return apiError("NOT_FOUND", "Signup not found", 404);
     const current = currentSignupReview();
     const view = id === current.member.id ? current : derivedSignupReview(current, pending);
-    const body: MemberSignupView = { ...view, paymentMethods: signupReviewMethods(request, view) };
+    // As the api's view: a pending document row of any dog raises DOCUMENT_PENDING.
+    const documentPending = view.dogs.some((dog) =>
+      dog.documents.some((document) => document.state === "PENDING"),
+    );
+    const warnings: MemberSignupView["warnings"] = [
+      ...view.warnings.filter((warning) => warning !== "DOCUMENT_PENDING"),
+      ...(documentPending ? (["DOCUMENT_PENDING"] as const) : []),
+    ];
+    const body: MemberSignupView = {
+      ...view,
+      paymentMethods: signupReviewMethods(request, view),
+      warnings,
+    };
     return HttpResponse.json(body);
   }),
   http.post("*/api/v1/members/:id/validation", async ({ params, request }) => {
@@ -1395,8 +1488,12 @@ export const handlers = [
     if (body.new.length < 8) {
       return apiError("PASSWORD_TOO_SHORT", "Password is too short", 400);
     }
-    if (currentMockScenario().me.account.hasPassword && body.current !== "secret-password") {
-      return apiError("INVALID_CREDENTIALS", "Invalid current password", 401);
+    // R-01-05: `current` is required when the account has a password, except once in the
+    // session of a RESET link (E49); a LOGIN link's session still sends it.
+    if (currentMockScenario().me.account.hasPassword) {
+      const allowed =
+        body.current === undefined ? consumeResetPasswordMark() : body.current === "secret-password";
+      if (!allowed) return apiError("INVALID_CREDENTIALS", "Invalid current password", 401);
     }
     return new HttpResponse(null, { status: 200 });
   }),
@@ -2021,15 +2118,26 @@ export const handlers = [
     const grant = form.get("grant_type");
     const scenario = currentMockScenario();
     if (grant === "urn:agilityhub:grant:magic-link") {
-      if (scenario.invalidMagicLink === true || form.get("token") === "invalid") {
+      const token = form.get("token") ?? "";
+      if (scenario.invalidMagicLink === true || token === "invalid") {
         return apiError("MAGIC_LINK_INVALID", "Magic link invalid", 400);
       }
+      resetPasswordMarkUntil = token.startsWith("reset")
+        ? Date.now() + RESET_PASSWORD_MARK_MS
+        : undefined;
       return HttpResponse.json(mockTokens());
     }
     if (grant === "urn:agilityhub:grant:handoff") {
-      return form.get("token") === "invalid"
-        ? apiError("HANDOFF_INVALID", "Handoff invalid", 400)
-        : HttpResponse.json(mockTokens());
+      const token = form.get("token") ?? "";
+      if (token === "invalid" || handoffRedeemed(token)) {
+        // T-01-12: a code is redeemed once; a second use is `400 HANDOFF_INVALID`.
+        return apiError("HANDOFF_INVALID", "Handoff invalid", 400);
+      }
+      if (token.startsWith(IMPERSONATION_HANDOFF_PREFIX)) {
+        redeemHandoff(token);
+        return HttpResponse.json(mockImpersonationTokens());
+      }
+      return HttpResponse.json(mockTokens());
     }
     if (grant === "password") {
       if (scenario.rateLimited === true) {
@@ -2116,6 +2224,9 @@ export const handlers = [
       ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
       : HttpResponse.json(page);
   }),
+  // S14 T-14-26 (INC-21): the list carries no `downloadUrl` (api `ExportQueries`); only
+  // `GET /exports/{id}` does, and on local storage it is the api's own signed route, which also
+  // needs the bearer.
   http.get("*/api/v1/exports", () => {
     exportPolls += 1;
     if (exportPolls >= 2) {
@@ -2123,8 +2234,7 @@ export const handlers = [
         job.status === "QUEUED" || job.status === "RUNNING"
           ? {
               ...job,
-              downloadUrl: `/api/v1/exports/${job.id}/download`,
-              expiresAt: "2026-08-10T10:25:00Z",
+              expiresAt: EXPORT_DOWNLOAD_EXPIRES_AT,
               fileName: exportJobFileName(job),
               progressPct: 100,
               rows: queuedExportRows.get(job.id) ?? 0,
@@ -2135,9 +2245,19 @@ export const handlers = [
     }
     return HttpResponse.json(exportJobsState);
   }),
-  http.get("*/api/v1/exports/:id/download", ({ params }) => {
+  http.get("*/api/v1/exports/:id/download", ({ params, request }) => {
     const job = exportJobsState.find((item) => item.id === String(params.id));
     if (job?.status !== "READY") return apiError("NOT_FOUND", "Export not found", 404);
+    if (!/^Bearer \S+$/u.test(request.headers.get("Authorization") ?? "")) {
+      return apiError("UNAUTHENTICATED", "Authentication required", 401);
+    }
+    const query = new URL(request.url).searchParams;
+    if (
+      query.get("signature") !== exportDownloadSignature(job.id) ||
+      query.get("expires") !== String(EXPORT_DOWNLOAD_EXPIRES)
+    ) {
+      return apiError("FORBIDDEN", "Invalid download signature", 403);
+    }
     const pdf = job.format === "PDF";
     return new HttpResponse(mockExportBody(pdf ? "pdf" : "xlsx"), {
       headers: {
@@ -2150,9 +2270,15 @@ export const handlers = [
   }),
   http.get("*/api/v1/exports/:id", ({ params }) => {
     const job = exportJobsState.find((item) => item.id === String(params.id));
-    return job === undefined
-      ? apiError("NOT_FOUND", "Export not found", 404)
-      : HttpResponse.json(job);
+    if (job === undefined) return apiError("NOT_FOUND", "Export not found", 404);
+    return HttpResponse.json(
+      job.status === "READY"
+        ? {
+            ...job,
+            downloadUrl: `/api/v1/exports/${job.id}/download?expires=${String(EXPORT_DOWNLOAD_EXPIRES)}&signature=${exportDownloadSignature(job.id)}`,
+          }
+        : job,
+    );
   }),
   http.get("*/api/v1/members", async ({ request }) => {
     await delay(120);
@@ -2222,11 +2348,22 @@ export const handlers = [
       ? apiError("INVALID_FILTER", "Invalid member filter", 400)
       : listExport(request, "members", filtered.length, "00000000-0000-4000-8000-000000000403");
   }),
-  http.get("*/api/v1/members/:id/overview", ({ params }) =>
-    String(params.id) === censusRecordState.memberOverview.member.id
-      ? HttpResponse.json(censusRecordState.memberOverview)
-      : apiError("NOT_FOUND", "Member not found", 404),
-  ),
+  http.get("*/api/v1/members/:id/overview", ({ params }) => {
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    // S03 T-03-34 (R-03-30): with BILLING off the api sends no invoices, next invoice or
+    // payment method.
+    const overview = censusRecordState.memberOverview;
+    if (currentMockScenario().branding.modules.includes("BILLING")) {
+      return HttpResponse.json(overview);
+    }
+    const withoutBilling = { ...overview, member: { ...overview.member } };
+    delete withoutBilling.recentInvoices;
+    delete withoutBilling.nextInvoice;
+    delete withoutBilling.member.paymentMethod;
+    return HttpResponse.json(withoutBilling);
+  }),
   http.get("*/api/v1/members/:id", ({ params }) => {
     const id = String(params.id);
     const signupView = currentSignupReview();
@@ -2441,10 +2578,11 @@ export const handlers = [
       return apiError("NOT_FOUND", "Member not found", 404);
     }
     await request.json();
+    impersonationHandoffs += 1;
     return HttpResponse.json(
       {
         expiresAt: "2026-09-06T16:00:00Z",
-        launchUrl: "http://127.0.0.1:4173/perfil",
+        launchUrl: `${CLUBS_APP_ORIGIN}/entrar?handoff=${IMPERSONATION_HANDOFF_PREFIX}${String(impersonationHandoffs)}`,
         token: "mock-impersonation-token",
       },
       { status: 201 },
@@ -2576,12 +2714,21 @@ export const handlers = [
           ? undefined
           : patchSignupDogDocuments(signupDog, body.documents, removedSignupFileKeys);
       if (documents === "FILE_NOT_FOUND") return apiError("FILE_NOT_FOUND", "File not found", 400);
-      // As the api (E5-T21, `saveDocuments`): documents alone that change no file key write nothing
-      // and keep the version, e.g. `files: []` for the record's own row of the reused dog.
+      // As the api (`DogService.edit` returns on an empty diff; E5-T21 `saveDocuments`): step 17's
+      // fields equal to the current values, with documents that change no file key (e.g.
+      // `files: []` for the record's own row of the reused dog), write nothing and keep the version.
+      const sentBirthMonth = body.birthMonth ?? body.birthDate?.slice(0, 7);
+      const stepFields = ["birthDate", "birthMonth", "breed", "chip", "name", "sex"];
       const unchanged =
-        documents !== undefined &&
-        Object.keys(body).every((key) => key === "version" || key === "documents") &&
-        documentKeys(documents) === documentKeys(signupDog.documents);
+        Object.keys(body).every(
+          (key) => key === "version" || key === "documents" || stepFields.includes(key),
+        ) &&
+        (body.name === undefined || body.name === signupDog.name) &&
+        (body.breed === undefined || body.breed === signupDog.breed) &&
+        (body.sex === undefined || body.sex === signupDog.sex) &&
+        (body.chip === undefined || body.chip === signupDog.chip) &&
+        (sentBirthMonth === undefined || sentBirthMonth === signupDog.birthMonth) &&
+        (documents === undefined || documentKeys(documents) === documentKeys(signupDog.documents));
       // With signup.requireDogDocumentAtSignup a card sent without files is refused, unless the
       // reused dog has its own card with a file (api E5-T19).
       const cardRequired = findParameter("signup.requireDogDocumentAtSignup")?.value === true;
@@ -3539,6 +3686,7 @@ export {
   planningState,
   resetActivityState,
   resetAuditMockState,
+  resetAuthMockState,
   resetBackofficeMockState,
   resetBookingMockState,
   resetCatalogState,

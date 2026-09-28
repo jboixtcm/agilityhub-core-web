@@ -1,0 +1,72 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ✓ src/session.test.tsx > T-01-21 session and guards > redirects anonymous users to /entrar without rendering protected content 68ms
+ ✓ src/session.test.tsx > T-01-21 session and guards > exposes /me roles and active profile and renders only an allowed role 7ms
+ × src/session.test.tsx > T-01-21 session and guards > E4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry 38ms
+   → Unable to find an element with the text: loading:none. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<output>[39m
+      [0manonymous:none[0m
+    [36m</output>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ × src/session.test.tsx > T-01-21 session and guards > E4-W16 step 2 (INC-18): an expired impersonation is its own state: no redirect to /entrar, no protected content 3ms
+   → client.handleImpersonationExpired is not a function
+ ✓ src/session.test.tsx > T-01-21 session and guards > renders the translated unavailable page and omits disabled module items 34ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/session.test.tsx > T-01-21 session and guards > E4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry
+TestingLibraryElementError: Unable to find an element with the text: loading:none. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<output>[39m
+      [0manonymous:none[0m
+    [36m</output>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/session.test.tsx:200:19
+    198|       setTimeout(resolve, 30);
+    199|     });
+    200|     expect(screen.getByText("loading:none")).toBeInTheDocument();
+       |                   ^
+    201|     expect(navigate).not.toHaveBeenCalled();
+    202|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/session.test.tsx > T-01-21 session and guards > E4-W16 step 2 (INC-18): an expired impersonation is its own state: no redirect to /entrar, no protected content
+TypeError: client.handleImpersonationExpired is not a function
+ ❯ src/session.test.tsx:229:14
+    227|     expect(screen.getByText("signedIn:MEMBER")).toBeInTheDocument();
+    228|     act(() => {
+    229|       client.handleImpersonationExpired();
+       |              ^
+    230|     });
+    231|
+ ❯ ../../node_modules/.pnpm/@testing-library+react@16.3.3_@testing-library+dom@10.4.1_@types+react-dom@19.2.7_@types+reac_oabqrio4ednjixbejn2rnqqrcq/node_modules/@testing-library/react/dist/act-compat.js:47:24
+ ❯ process.env.NODE_ENV.exports.act ../../node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:814:22
+ ❯ Proxy.<anonymous> ../../node_modules/.pnpm/@testing-library+react@16.3.3_@testing-library+dom@10.4.1_@types+react-dom@19.2.7_@types+reac_oabqrio4ednjixbejn2rnqqrcq/node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ src/session.test.tsx:228:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  10:27:22
+   Duration  647ms (environment 39%, tests 27%, import 17%, transform 17%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/session.test.tsx --reporter=verbose

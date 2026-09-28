@@ -203,11 +203,16 @@ describe("T-14-26 member audit and exports", () => {
 
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
     expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    // E4-W16 step 5 (INC-21): a button, not a link: the file needs GET /exports/{id} and the
+    // bearer (the download itself is asserted in list-exports.test.tsx).
     expect(
-      await screen.findByRole("link", {
+      await screen.findByRole("button", {
         name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
       }),
-    ).toHaveAttribute("href", "/api/v1/exports/00000000-0000-4000-8000-000000000402/download");
+    ).toBeEnabled();
+    expect(
+      screen.queryByRole("link", { name: /^Descarrega canic_audit-entries/u }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows the catalogued EXPORT_LIMIT explanation in the exports drawer", async () => {

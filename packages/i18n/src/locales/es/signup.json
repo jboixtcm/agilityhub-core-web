@@ -141,7 +141,9 @@
   },
   "success": {
     "title": "Solicitud enviada",
-    "checkout": "Recibirás la confirmación del pago por correo"
+    "checkout": "Recibirás la confirmación del pago por correo",
+    "addDogTitle": "Añade un perro",
+    "backToDogs": "VUELVE A MIS PERROS"
   },
   "honeypot": "Sitio web"
 }

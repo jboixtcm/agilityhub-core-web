@@ -21,13 +21,11 @@ if (rootElement === null) {
 }
 
 async function bootstrap(root: HTMLElement) {
-  const env = (
-    import.meta as unknown as {
-      readonly env: Record<string, string | undefined>;
-    }
-  ).env;
-  const mockEnabled = env.VITE_MOCK === "1";
-  if (mockEnabled) {
+  const env = import.meta.env as Record<string, string | undefined>;
+  const mockEnabled = import.meta.env.VITE_MOCK === "1";
+  // INC-20: the literal `import.meta.env.VITE_MOCK` lets Vite drop the mock world (MSW, fixtures)
+  // from a production build; a variable would keep its chunk in the bundle and the precache.
+  if (import.meta.env.VITE_MOCK === "1") {
     const { startMockWorker } = await import("@agilityhub/api-client/mocks/browser");
     await startMockWorker();
   }
@@ -61,14 +59,6 @@ async function bootstrap(root: HTMLElement) {
     credentials: "omit",
     getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,
   });
-  if (window.location.hash.startsWith("#impersonation=")) {
-    const token = new URLSearchParams(window.location.hash.slice(1)).get("impersonation");
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    if (token !== null && token !== "") {
-      await authClient.acceptImpersonation(token);
-    }
-  }
-
   createRoot(root).render(
     <StrictMode>
       <I18nextProvider i18n={i18n}>

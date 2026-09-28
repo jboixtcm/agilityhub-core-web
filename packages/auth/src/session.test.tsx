@@ -3,7 +3,7 @@
 import "@testing-library/jest-dom/vitest";
 
 import { BrandingProvider, filterEnabledModuleItems, type Branding } from "@agilityhub/ui";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -163,6 +163,76 @@ describe("T-01-21 session and guards", () => {
     expect(screen.getByText("Denied admin")).toBeInTheDocument();
     expect(screen.queryByText("Admin content")).not.toBeInTheDocument();
     expect(screen.getByText("Member content")).toBeInTheDocument();
+  });
+
+  it("E4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry", async () => {
+    let refreshes = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        refreshes += 1;
+        return refreshes === 1
+          ? HttpResponse.error()
+          : HttpResponse.json({
+              access_token: "access-restored",
+              expires_in: 900,
+              scope: "openid profile",
+              token_type: "Bearer",
+            });
+      }),
+    );
+    const navigate = vi.fn();
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+
+    render(
+      <SessionProvider client={client}>
+        <SessionDetails />
+        <RequireAuth navigate={navigate}>
+          <p>Protected content</p>
+        </RequireAuth>
+      </SessionProvider>,
+    );
+    await waitFor(() => {
+      expect(refreshes).toBe(1);
+    });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 30);
+    });
+    expect(screen.getByText("loading:none")).toBeInTheDocument();
+    expect(navigate).not.toHaveBeenCalled();
+
+    window.dispatchEvent(new Event("online"));
+    expect(await screen.findByText("signedIn:MEMBER")).toBeInTheDocument();
+    expect(screen.getByText("Protected content")).toBeInTheDocument();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("E4-W16 step 2 (INC-18): an expired impersonation is its own state: no redirect to /entrar, no protected content", async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/me`, () =>
+        HttpResponse.json({ ...memberMe, impersonation: { actorName: "Aina Serra" } }),
+      ),
+    );
+    const navigate = vi.fn();
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.acceptImpersonation("impersonation-token");
+
+    render(
+      <SessionProvider client={client}>
+        <SessionDetails />
+        <RequireAuth navigate={navigate}>
+          <p>Protected content</p>
+        </RequireAuth>
+      </SessionProvider>,
+    );
+    expect(screen.getByText("signedIn:MEMBER")).toBeInTheDocument();
+    act(() => {
+      client.handleImpersonationExpired();
+    });
+
+    expect(await screen.findByText("impersonationExpired:none")).toBeInTheDocument();
+    expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
+    expect(navigate).not.toHaveBeenCalled();
+    sessionStorage.clear();
   });
 
   it("renders the translated unavailable page and omits disabled module items", () => {

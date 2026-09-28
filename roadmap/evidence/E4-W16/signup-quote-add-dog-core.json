@@ -1,0 +1,86 @@
+{
+  "additionalDogOptions": [
+    {
+      "option": "TODAY",
+      "startDate": "2026-09-28",
+      "amount": {
+        "amountMinor": 4500,
+        "currency": "EUR"
+      }
+    }
+  ],
+  "memberPlanQuote": {
+    "planId": "9ca05ae7-6ea1-4af7-890e-cb77e565c0a5",
+    "lines": [
+      {
+        "concept": "ENTRY_FEE",
+        "amount": {
+          "amountMinor": 10000,
+          "currency": "EUR"
+        }
+      }
+    ],
+    "totalDue": {
+      "amountMinor": 10000,
+      "currency": "EUR"
+    },
+    "options": [
+      {
+        "option": "TODAY",
+        "portion": "FULL",
+        "startDate": "2026-09-28",
+        "amountDue": {
+          "amountMinor": 4500,
+          "currency": "EUR"
+        },
+        "totalDue": {
+          "amountMinor": 14500,
+          "currency": "EUR"
+        }
+      }
+    ]
+  },
+  "submittedUpfront": {
+    "lines": [
+      {
+        "id": "3126970e-2236-42f2-9bc7-480c6f60c1da",
+        "concept": "ENTRY_FEE",
+        "amount": {
+          "amountMinor": 10000,
+          "currency": "EUR"
+        },
+        "status": "DUE",
+        "paidAmount": {
+          "amountMinor": 0,
+          "currency": "EUR"
+        }
+      },
+      {
+        "id": "9a1caf67-cc9e-4b71-85a4-c005a6825a01",
+        "concept": "ADDITIONAL_DOG_FEE",
+        "amount": {
+          "amountMinor": 4500,
+          "currency": "EUR"
+        },
+        "status": "DUE",
+        "paidAmount": {
+          "amountMinor": 0,
+          "currency": "EUR"
+        }
+      }
+    ],
+    "totalDue": {
+      "amountMinor": 14500,
+      "currency": "EUR"
+    },
+    "additionalDog": {
+      "option": "TODAY",
+      "startDate": "2026-09-28",
+      "amountDue": {
+        "amountMinor": 4500,
+        "currency": "EUR"
+      }
+    }
+  },
+  "today": "2026-09-28"
+}

@@ -293,12 +293,18 @@ select {
   display: block;
 }
 
-.exports-drawer__list a {
+.exports-drawer__list a,
+.exports-drawer__list .exports-drawer__download {
   display: inline-flex;
   align-items: center;
   gap: var(--ah-space-2);
   color: var(--ah-color-primary);
   font-weight: 700;
+}
+
+.exports-drawer__list .exports-drawer__download {
+  justify-self: start;
+  padding-inline: 0;
 }
 
 .exports-drawer__notice,

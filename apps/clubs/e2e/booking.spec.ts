@@ -223,10 +223,12 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
   }) => {
     await page.clock.setFixedTime(bookingNow);
     await prepare(page, "impersonated");
-    await page.goto(`${baseUrl}/inici#impersonation=mock-impersonation-token`);
+    // E4-W16 step 1 (E47): «Entra com l'abonat» lands on /entrar?handoff=<one-time code>.
+    await page.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
+    await page.waitForURL((url) => url.pathname === "/inici");
     await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: "Hola, Laura!" })).toBeVisible();
-    await page.goto(`${baseUrl}/reservar#impersonation=mock-impersonation-token`);
+    await page.goto(`${baseUrl}/reservar`);
     await expect(page.getByRole("heading", { name: "Classes" })).toBeVisible();
     await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     await tapRow(page, "dc 5 · 18:50");

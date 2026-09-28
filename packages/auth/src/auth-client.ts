@@ -10,7 +10,24 @@ import type { MockRefreshTokenStore } from "./mock-refresh-token";
 
 const DEFAULT_API_BASE_URL = "/api/v1";
 const DEFAULT_IDENTITY_BASE_URL = "";
+const DEFAULT_SIGN_IN_PATH = "/entrar";
 const REFRESH_MARGIN_MS = 60_000;
+/** A focus, `visibilitychange` or `pageshow` refreshes only this close to `refreshAt` (INC-19). */
+const FOCUS_REFRESH_SLACK_MS = 30_000;
+/** Retries of a refresh or restore that failed without an answer from the api (offline, 5xx). */
+const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
+/**
+ * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
+ * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
+ * It holds the impersonation access token (never refreshed) or the mark that it has expired.
+ */
+export const IMPERSONATION_STORAGE_KEY = "agilityhub.impersonation";
+
+interface StoredImpersonation {
+  expiresAt?: number;
+  state: "active" | "expired";
+  token?: string;
+}
 
 export type Me = components["schemas"]["Me"];
 export type Role = components["schemas"]["Profile"];
@@ -33,12 +50,62 @@ export interface AuthClientOptions {
   mockMode?: boolean;
   mockRefreshTokenStore?: MockRefreshTokenStore;
   navigate?: (path: string) => void;
+  /** Where a session that cannot be refreshed lands: `/entrar` (clubs apps), `/login` (id). */
+  signInPath?: string;
 }
 
 function defaultNavigate(path: string): void {
   if (typeof window !== "undefined") {
     window.location.assign(path);
   }
+}
+
+function tabStorage(): Storage | undefined {
+  try {
+    return typeof window === "undefined" ? undefined : window.sessionStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+function readStoredImpersonation(): StoredImpersonation | undefined {
+  try {
+    const raw = tabStorage()?.getItem(IMPERSONATION_STORAGE_KEY);
+    if (raw === null || raw === undefined) return undefined;
+    const value = JSON.parse(raw) as Partial<StoredImpersonation>;
+    if (value.state === "expired") return { state: "expired" };
+    if (value.state === "active" && typeof value.token === "string" && value.token !== "") {
+      return {
+        state: "active",
+        token: value.token,
+        ...(typeof value.expiresAt === "number" ? { expiresAt: value.expiresAt } : {}),
+      };
+    }
+  } catch {
+    // An unreadable entry is no impersonation.
+  }
+  return undefined;
+}
+
+function writeStoredImpersonation(value: StoredImpersonation | undefined): void {
+  try {
+    const storage = tabStorage();
+    if (value === undefined) {
+      storage?.removeItem(IMPERSONATION_STORAGE_KEY);
+    } else {
+      storage?.setItem(IMPERSONATION_STORAGE_KEY, JSON.stringify(value));
+    }
+  } catch {
+    // Without session storage the impersonation lasts until the next full-page load.
+  }
+}
+
+/**
+ * INC-19: only an answer of the token endpoint that refuses the session (`400`/`401`) ends it; a
+ * network failure (status 0), a 5xx or any other hiccup keeps the current token until it expires.
+ */
+function endsSession(error: unknown): boolean {
+  return isApiError(error) && (error.status === 400 || error.status === 401);
 }
 
 function isAccountLocale(locale: string): locale is AccountLocale {
@@ -65,14 +132,20 @@ export class AuthClient extends EventTarget {
   private readonly apiClient: ApiClient;
   private readonly clientId: string;
   private currentMe: Me | null = null;
+  private exchangeInFlight: Promise<Me> | null = null;
   private readonly fetcher: typeof globalThis.fetch;
   private readonly identityBaseUrl: string;
+  /** `active`: an impersonated session (never refreshed); `expired`: it ended in this tab. */
+  private impersonation: "active" | "expired" | null = null;
   private readonly mockRefreshTokenStore: MockRefreshTokenStore | undefined;
   private readonly navigate: (path: string) => void;
   private refreshAt: number | null = null;
   private refreshInFlight: Promise<TokenResponse> | null = null;
   private refreshTimer: ReturnType<typeof setTimeout> | undefined;
   private restoreInFlight: Promise<Me | null> | null = null;
+  private retryAttempt = 0;
+  private retryCancel: (() => void) | undefined;
+  private readonly signInPath: string;
   private signedOutNotified = false;
   private slidingRefreshActive = false;
 
@@ -87,6 +160,7 @@ export class AuthClient extends EventTarget {
     }
     this.mockRefreshTokenStore = options.mockRefreshTokenStore;
     this.navigate = options.navigate ?? defaultNavigate;
+    this.signInPath = options.signInPath ?? DEFAULT_SIGN_IN_PATH;
     this.apiClient = createApiClient({
       baseUrl: this.apiBaseUrl,
       credentials: "include",
@@ -103,25 +177,52 @@ export class AuthClient extends EventTarget {
     return this.currentMe;
   }
 
-  /** Keeps the cookie-backed session sliding while a SessionProvider is mounted. */
+  /** An impersonated session (R-01-09): it is never refreshed and ends when its token expires. */
+  isImpersonated(): boolean {
+    return this.impersonation === "active";
+  }
+
+  /** The impersonated session of this tab has expired («La sessió com l'abonat ha caducat»). */
+  isImpersonationExpired(): boolean {
+    return this.impersonation === "expired";
+  }
+
+  /**
+   * Keeps the cookie-backed session sliding while a SessionProvider is mounted: the timer, and a
+   * check when the page comes back (`focus`, `visibilitychange`, `pageshow` — an iOS standalone
+   * PWA only fires the last two), which refreshes only when the token is about to expire.
+   */
   startSlidingRefresh(): () => void {
     this.slidingRefreshActive = true;
-    const refreshOnFocus = () => {
-      if (this.accessToken !== null) {
+    const refreshWhenDue = () => {
+      if (
+        this.accessToken !== null &&
+        this.impersonation === null &&
+        this.refreshAt !== null &&
+        Date.now() >= this.refreshAt - FOCUS_REFRESH_SLACK_MS
+      ) {
         this.refreshInBackground();
       }
     };
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") refreshWhenDue();
+    };
     if (typeof window !== "undefined") {
-      window.addEventListener("focus", refreshOnFocus);
+      window.addEventListener("focus", refreshWhenDue);
+      window.addEventListener("pageshow", refreshWhenDue);
+      document.addEventListener("visibilitychange", refreshWhenVisible);
     }
     this.scheduleRefresh();
 
     return () => {
       if (typeof window !== "undefined") {
-        window.removeEventListener("focus", refreshOnFocus);
+        window.removeEventListener("focus", refreshWhenDue);
+        window.removeEventListener("pageshow", refreshWhenDue);
+        document.removeEventListener("visibilitychange", refreshWhenVisible);
       }
       this.slidingRefreshActive = false;
       this.cancelScheduledRefresh();
+      this.cancelRetry();
     };
   }
 
@@ -133,6 +234,7 @@ export class AuthClient extends EventTarget {
       username: email,
     });
     const tokens = await this.issueToken(form);
+    this.leaveImpersonation();
     this.acceptTokens(tokens);
 
     try {
@@ -183,9 +285,10 @@ export class AuthClient extends EventTarget {
     );
   }
 
+  /** Enters an impersonated session from its access token (R-01-09): no refresh, ever. */
   async acceptImpersonation(token: string): Promise<Me> {
-    this.mockRefreshTokenStore?.clear();
-    this.accessToken = token;
+    this.clearLocalSession();
+    this.enterImpersonation(token, undefined);
     try {
       const me = await this.loadMe();
       this.currentMe = me;
@@ -193,8 +296,47 @@ export class AuthClient extends EventTarget {
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
+      this.leaveImpersonation();
       this.clearLocalSession();
       throw error;
+    }
+  }
+
+  /**
+   * INC-18: the impersonated session has expired (a `401`, or its expiry passed). The tab keeps
+   * the mark and says so; it never refreshes, so it never becomes the admin's own session.
+   */
+  handleImpersonationExpired(): void {
+    if (this.impersonation === null) {
+      return;
+    }
+    this.clearLocalSession();
+    this.impersonation = "expired";
+    writeStoredImpersonation({ state: "expired" });
+    this.dispatchEvent(new Event("impersonationExpired"));
+  }
+
+  /**
+   * The interceptor's `401` path: an impersonated session ends; any other refreshes once. Returns
+   * whether a fresh access token is there to retry the request with.
+   */
+  async recoverFromUnauthorized(): Promise<boolean> {
+    if (this.impersonation !== null) {
+      this.handleImpersonationExpired();
+      return false;
+    }
+    try {
+      await this.refresh();
+      return true;
+    } catch (error) {
+      if (endsSession(error)) {
+        this.handleRefreshFailure();
+      } else {
+        this.scheduleRetry(() => {
+          this.refreshInBackground();
+        });
+      }
+      return false;
     }
   }
 
@@ -326,6 +468,9 @@ export class AuthClient extends EventTarget {
   }
 
   async refresh(): Promise<TokenResponse> {
+    if (this.impersonation !== null) {
+      throw new TypeError("An impersonated session is never refreshed");
+    }
     if (this.refreshInFlight !== null) {
       return this.refreshInFlight;
     }
@@ -345,6 +490,15 @@ export class AuthClient extends EventTarget {
     if (this.currentMe !== null && this.accessToken !== null) {
       return this.currentMe;
     }
+    // A one-time code (`/entrar?handoff=`, a magic link) is being redeemed in this tab: its
+    // session wins, and the cookie is not read meanwhile (it may be another account's).
+    if (this.exchangeInFlight !== null) {
+      try {
+        return await this.exchangeInFlight;
+      } catch {
+        // A refused code leaves the tab as it was: the usual restore follows.
+      }
+    }
     if (this.restoreInFlight !== null) {
       return this.restoreInFlight;
     }
@@ -361,40 +515,98 @@ export class AuthClient extends EventTarget {
   }
 
   private async performRestoreSession(): Promise<Me | null> {
+    const stored = readStoredImpersonation();
+    if (stored !== undefined) {
+      return this.restoreImpersonation(stored);
+    }
     try {
       await this.refresh();
       const me = await this.loadMe();
       this.currentMe = me;
+      this.retryAttempt = 0;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      if (isApiError(error) && (error.status === 400 || error.status === 401)) {
+      if (endsSession(error)) {
         this.clearLocalSession();
         return null;
       }
+      // INC-19: offline or a 5xx: the session is still unknown (the provider stays `loading`);
+      // try again later and as soon as the device is back online.
+      this.scheduleRetry(() => {
+        this.retryRestore();
+      });
       throw error;
     }
   }
 
+  /** The tab's impersonated session after a full-page load: its token, never the cookie. */
+  private async restoreImpersonation(stored: StoredImpersonation): Promise<Me | null> {
+    if (
+      stored.state === "expired" ||
+      stored.token === undefined ||
+      (stored.expiresAt !== undefined && Date.now() >= stored.expiresAt)
+    ) {
+      this.impersonation = "active";
+      this.handleImpersonationExpired();
+      return null;
+    }
+    this.enterImpersonation(stored.token, stored.expiresAt);
+    try {
+      const me = await this.loadMe();
+      this.currentMe = me;
+      this.signedOutNotified = false;
+      this.dispatchEvent(new Event("signedIn"));
+      return me;
+    } catch (error) {
+      if (isApiError(error) && error.status === 401) {
+        this.handleImpersonationExpired();
+        return null;
+      }
+      this.accessToken = null;
+      this.scheduleRetry(() => {
+        this.retryRestore();
+      });
+      throw error;
+    }
+  }
+
+  private retryRestore(): void {
+    void this.restoreSession().then(
+      (me) => {
+        if (me === null && this.impersonation === null) {
+          this.emitSignedOut();
+        }
+      },
+      () => undefined,
+    );
+  }
+
+  /**
+   * Revokes the session (`POST /oauth2/revoke` with the bearer; the api clears the HttpOnly
+   * cookie). A bearer the api rejects (`401`, the access token expired meanwhile) is refreshed once
+   * and the revoke retried, so the cookie really is revoked. An impersonated session is revoked
+   * with its own token and never refreshed.
+   */
   async logout(): Promise<void> {
     let failure: Error | undefined;
+    const impersonated = this.impersonation !== null;
 
     try {
       if (this.accessToken !== null) {
-        const headers = new Headers({ "Content-Type": "application/json" });
-        headers.set("Authorization", `Bearer ${this.accessToken}`);
-        const response = await this.routedRequest("/oauth2/revoke", {
-          body: JSON.stringify({}),
-          headers,
-          method: "POST",
-        });
-        if (!response.ok) {
+        let response = await this.revoke();
+        if (response.status === 401 && !impersonated) {
+          await this.refresh();
+          response = await this.revoke();
+        }
+        if (!response.ok && !(impersonated && response.status === 401)) {
           failure = await ApiError.fromResponse(response);
         }
       }
     } catch (error) {
       failure = isApiError(error) ? error : ApiError.network(error);
     } finally {
+      this.leaveImpersonation();
       this.clearLocalSession();
       this.emitSignedOut();
     }
@@ -405,12 +617,50 @@ export class AuthClient extends EventTarget {
   }
 
   handleRefreshFailure(): void {
+    if (this.impersonation !== null) {
+      this.handleImpersonationExpired();
+      return;
+    }
     if (this.signedOutNotified) {
       return;
     }
     this.clearLocalSession();
     this.emitSignedOut();
-    this.navigate("/entrar");
+    this.navigate(this.signInPath);
+  }
+
+  private async revoke(): Promise<Response> {
+    const headers = new Headers({ "Content-Type": "application/json" });
+    headers.set("Authorization", `Bearer ${this.accessToken ?? ""}`);
+    try {
+      return await this.fetcher(this.endpointFor("/oauth2/revoke"), {
+        body: JSON.stringify({}),
+        credentials: "include",
+        headers,
+        method: "POST",
+      });
+    } catch (error) {
+      throw ApiError.network(error);
+    }
+  }
+
+  private enterImpersonation(token: string, expiresAt: number | undefined): void {
+    this.cancelScheduledRefresh();
+    this.cancelRetry();
+    this.mockRefreshTokenStore?.clear();
+    this.accessToken = token;
+    this.refreshAt = null;
+    this.impersonation = "active";
+    writeStoredImpersonation({
+      state: "active",
+      token,
+      ...(expiresAt === undefined ? {} : { expiresAt }),
+    });
+  }
+
+  private leaveImpersonation(): void {
+    this.impersonation = null;
+    writeStoredImpersonation(undefined);
   }
 
   private acceptTokens(tokens: TokenResponse): void {
@@ -446,7 +696,34 @@ export class AuthClient extends EventTarget {
     this.currentMe = null;
     this.refreshAt = null;
     this.cancelScheduledRefresh();
+    this.cancelRetry();
     this.mockRefreshTokenStore?.clear();
+  }
+
+  /** One retry at a time: after the next backoff delay, or as soon as the device is online. */
+  private scheduleRetry(action: () => void): void {
+    this.cancelRetry();
+    const delay = RETRY_DELAYS_MS[Math.min(this.retryAttempt, RETRY_DELAYS_MS.length - 1)];
+    this.retryAttempt += 1;
+    const run = () => {
+      this.cancelRetry();
+      action();
+    };
+    const timer = setTimeout(run, delay);
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", run);
+    }
+    this.retryCancel = () => {
+      clearTimeout(timer);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("online", run);
+      }
+    };
+  }
+
+  private cancelRetry(): void {
+    this.retryCancel?.();
+    this.retryCancel = undefined;
   }
 
   private cancelScheduledRefresh(): void {
@@ -508,14 +785,28 @@ export class AuthClient extends EventTarget {
   }
 
   private refreshInBackground(): void {
-    void this.refresh().catch(() => {
-      this.handleRefreshFailure();
-    });
+    if (this.impersonation !== null) {
+      return;
+    }
+    void this.refresh().then(
+      () => {
+        this.retryAttempt = 0;
+      },
+      (error: unknown) => {
+        if (endsSession(error)) {
+          this.handleRefreshFailure();
+        } else if (this.accessToken !== null) {
+          this.scheduleRetry(() => {
+            this.refreshInBackground();
+          });
+        }
+      },
+    );
   }
 
   private scheduleRefresh(): void {
     this.cancelScheduledRefresh();
-    if (!this.slidingRefreshActive || this.refreshAt === null) {
+    if (!this.slidingRefreshActive || this.refreshAt === null || this.impersonation !== null) {
       return;
     }
     this.refreshTimer = setTimeout(
@@ -553,15 +844,37 @@ export class AuthClient extends EventTarget {
     return response;
   }
 
-  private async exchangeOneTimeCode(form: URLSearchParams): Promise<Me> {
+  private exchangeOneTimeCode(form: URLSearchParams): Promise<Me> {
+    const operation = this.performExchange(form);
+    this.exchangeInFlight = operation;
+    const settle = () => {
+      if (this.exchangeInFlight === operation) {
+        this.exchangeInFlight = null;
+      }
+    };
+    operation.then(settle, settle);
+    return operation;
+  }
+
+  /**
+   * A one-time code for this client (`urn:agilityhub:grant:magic-link` or `…:handoff`). A code
+   * that opens an impersonated session (`/me` carries `impersonation`, «Entra com l'abonat»,
+   * E47) enters the no-refresh mode with its token's expiry.
+   */
+  private async performExchange(form: URLSearchParams): Promise<Me> {
     const tokens = await this.issueToken(form);
+    this.leaveImpersonation();
     this.acceptTokens(tokens);
     try {
       const me = await this.loadMe();
+      if (me.impersonation !== undefined) {
+        this.enterImpersonation(tokens.access_token, Date.now() + tokens.expires_in * 1_000);
+      }
       this.currentMe = me;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
+      this.leaveImpersonation();
       this.clearLocalSession();
       throw error;
     }

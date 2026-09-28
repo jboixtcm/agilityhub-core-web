@@ -1,5 +1,12 @@
-import type { ApiClient, components } from "@agilityhub/api-client";
-import { Badge, Drawer, Icon, useBranding } from "@agilityhub/ui";
+import {
+  type ApiClient,
+  type components,
+  downloadExportJob,
+  isApiError,
+  openDownloadUrl,
+  saveFile,
+} from "@agilityhub/api-client";
+import { Badge, Button, Drawer, Icon, useBranding } from "@agilityhub/ui";
 import {
   createContext,
   type ReactNode,
@@ -53,14 +60,41 @@ export function ExportJobsProvider({
   client: ApiClient;
 }) {
   const branding = useBranding();
-  const { i18n, t } = useTranslation("admin-audit");
+  const { i18n, t } = useTranslation(["admin-audit", "errors"]);
   const [open, setOpen] = useState(false);
   const [jobs, setJobs] = useState<ExportJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
   const [notice, setNotice] = useState<"EXPORT_LIMIT" | "queued">();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [downloading, setDownloading] = useState<string>();
+  const [downloadError, setDownloadError] = useState<string>();
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
+
+  /**
+   * INC-21 (T-14-26): a READY job's file. `GET /exports/{id}` names it (the list does not); the
+   * api's signed route is fetched with the bearer and saved, a signed S3 url is opened as is.
+   */
+  const download = async (job: ExportJob) => {
+    setDownloading(job.id);
+    setDownloadError(undefined);
+    try {
+      const file = await downloadExportJob(client, job.id, job.fileName ?? job.id);
+      if (file.kind === "file") {
+        saveFile(file.blob, file.fileName);
+      } else {
+        openDownloadUrl(file.url);
+      }
+    } catch (cause) {
+      setDownloadError(
+        isApiError(cause)
+          ? t(`errors:${cause.code}`, { defaultValue: t("admin-audit:exports.error") })
+          : t("admin-audit:exports.error"),
+      );
+    } finally {
+      setDownloading(undefined);
+    }
+  };
 
   const openExports = useCallback((options?: OpenExportsOptions) => {
     setNotice(
@@ -134,6 +168,11 @@ export function ExportJobsProvider({
               {t("admin-audit:exports.error")}
             </p>
           ) : null}
+          {downloadError === undefined ? null : (
+            <p className="exports-drawer__error" role="alert">
+              {downloadError}
+            </p>
+          )}
           {loading && jobs.length === 0 ? (
             <p role="status">{t("admin-audit:exports.loading")}</p>
           ) : jobs.length === 0 ? (
@@ -163,11 +202,17 @@ export function ExportJobsProvider({
                       {t("admin-audit:exports.progress", { progress: job.progressPct })}
                     </small>
                   ) : null}
-                  {job.status === "READY" && job.downloadUrl !== undefined ? (
-                    <a download href={job.downloadUrl}>
+                  {job.status === "READY" ? (
+                    <Button
+                      className="exports-drawer__download"
+                      disabled={downloading !== undefined}
+                      loading={downloading === job.id}
+                      onClick={() => void download(job)}
+                      variant="ghost"
+                    >
                       <Icon aria-hidden="true" name="export" />
                       {t("admin-audit:exports.download", { fileName: job.fileName ?? job.id })}
-                    </a>
+                    </Button>
                   ) : null}
                   {job.status === "FAILED" ? (
                     <small className="exports-drawer__error">

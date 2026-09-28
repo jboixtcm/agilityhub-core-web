@@ -148,7 +148,8 @@ function PriceForm({
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [amount, setAmount] = useState("");
-  const [taxPercent, setTaxPercent] = useState("21");
+  // INC-28 (S05 §12, §13-5): the plan's current price's tax, else 0; never a country constant.
+  const [taxPercent, setTaxPercent] = useState(() => String(currentPrice(plan)?.taxPercent ?? 0));
   const [validFrom, setValidFrom] = useState(nextMonthStart());
   const [validTo, setValidTo] = useState("");
   const [pending, setPending] = useState(false);

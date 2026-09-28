@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { type AuthClient, type Me, type Role } from "./auth-client";
 
-export type SessionStatus = "anonymous" | "loading" | "signedIn";
+/**
+ * `impersonationExpired`: this tab's impersonated session has ended (INC-18); the app says so and
+ * never falls back to another session.
+ */
+export type SessionStatus = "anonymous" | "impersonationExpired" | "loading" | "signedIn";
 
 export interface SessionSnapshot {
   activeProfile: Role | null;
@@ -47,6 +51,13 @@ const loadingSession: SessionSnapshot = {
   status: "loading",
 };
 
+const impersonationExpiredSession: SessionSnapshot = {
+  activeProfile: null,
+  me: null,
+  roles: [],
+  status: "impersonationExpired",
+};
+
 const SessionContext = createContext<SessionSnapshot | undefined>(undefined);
 
 function sessionFromMe(me: Me): SessionSnapshot {
@@ -54,6 +65,10 @@ function sessionFromMe(me: Me): SessionSnapshot {
   const preferredProfile = me.membership?.activeProfile ?? me.membership?.defaultProfile;
   const activeProfile = roles.find((role) => role === preferredProfile) ?? roles[0] ?? null;
   return { activeProfile, me, roles, status: "signedIn" };
+}
+
+function sessionWithoutMe(client: AuthClient, pending: SessionSnapshot): SessionSnapshot {
+  return client.isImpersonationExpired() ? impersonationExpiredSession : pending;
 }
 
 function navigateToAccess(): void {
@@ -65,7 +80,7 @@ function navigateToAccess(): void {
 export function SessionProvider({ children, client }: SessionProviderProps) {
   const [session, setSession] = useState<SessionSnapshot>(() => {
     const me = client.getMe();
-    return me === null ? loadingSession : sessionFromMe(me);
+    return me === null ? sessionWithoutMe(client, loadingSession) : sessionFromMe(me);
   });
 
   useEffect(() => {
@@ -81,22 +96,28 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
         setSession(anonymousSession);
       }
     };
+    const impersonationExpired = () => {
+      if (mounted) {
+        setSession(impersonationExpiredSession);
+      }
+    };
     const stopSlidingRefresh = client.startSlidingRefresh();
 
     client.addEventListener("signedIn", signedIn);
     client.addEventListener("signedOut", signedOut);
+    client.addEventListener("impersonationExpired", impersonationExpired);
     if (client.getMe() === null) {
       void client.restoreSession().then(
         (me) => {
           if (mounted) {
-            setSession(me === null ? anonymousSession : sessionFromMe(me));
+            setSession(
+              me === null ? sessionWithoutMe(client, anonymousSession) : sessionFromMe(me),
+            );
           }
         },
-        () => {
-          if (mounted) {
-            setSession(anonymousSession);
-          }
-        },
+        // INC-19: offline or a 5xx: the session is unknown, not gone. It stays `loading` while
+        // AuthClient retries; the retry's `signedIn`/`signedOut` event settles it.
+        () => undefined,
       );
     }
 
@@ -104,6 +125,7 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
       mounted = false;
       client.removeEventListener("signedIn", signedIn);
       client.removeEventListener("signedOut", signedOut);
+      client.removeEventListener("impersonationExpired", impersonationExpired);
       stopSlidingRefresh();
     };
   }, [client]);

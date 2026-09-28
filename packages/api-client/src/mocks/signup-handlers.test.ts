@@ -566,6 +566,60 @@ describe("T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup 
     expect(dog.version).toBe(3);
   });
 
+  it("E4-W17 step 2 R-04-06: a reused dog whose record has no card gets the automatic empty card back, pending, when the submitted card is withdrawn, and the view warns DOCUMENT_PENDING", async () => {
+    const before = await view("adminSignupReviewReadmissionNoCard");
+    expect(before.readmission?.current.documents).toEqual([]);
+    expect(before.documents.map((document) => `${document.type} ${document.state}`)).toEqual([
+      "VACCINATION_CARD RECEIVED",
+      "INSURANCE RECEIVED",
+    ]);
+    const warningsOf = async () =>
+      ((await (await fetch(`${origin}/api/v1/members/${marta}/signup`)).json()) as MemberSignupView)
+        .warnings;
+    expect(await warningsOf()).not.toContain("DOCUMENT_PENDING");
+
+    expect((await patchDog({ documents: [{ files: [], type: "VACCINATION_CARD" }], version: 1 })).status).toBe(200);
+    const dog = await view("adminSignupReviewReadmissionNoCard");
+    expect(dog.documents.map((document) => `${document.type} ${document.state} ${String(document.files.length)}`)).toEqual([
+      "VACCINATION_CARD PENDING 0",
+      "INSURANCE RECEIVED 1",
+    ]);
+    expect(await warningsOf()).toContain("DOCUMENT_PENDING");
+
+    // Any other type without a record row leaves the view (only the card has the automatic row).
+    expect((await patchDog({ documents: [{ files: [], type: "INSURANCE" }], version: 2 })).status).toBe(200);
+    expect((await view("adminSignupReviewReadmissionNoCard")).documents.map((document) => document.type)).toEqual([
+      "VACCINATION_CARD",
+    ]);
+  });
+
+  it("E4-W17 step 3 (DogService.edit): step 17's fields equal to the current values, with unchanged documents, write nothing and keep the version; a real change writes", async () => {
+    const dog = await view("admin");
+    const same = {
+      birthMonth: dog.birthMonth,
+      breed: dog.breed,
+      chip: dog.chip,
+      documents: dog.documents.map((document) => ({
+        files: document.files.map((file) => ({ fileKey: file.fileKey, name: file.name })),
+        type: document.type,
+      })),
+      name: dog.name,
+      sex: dog.sex,
+      version: dog.version,
+    };
+    expect(await patchDog(same)).toMatchObject({ body: { version: dog.version }, status: 200 });
+    expect(await patchDog({ name: dog.name, version: dog.version })).toMatchObject({
+      body: { version: dog.version },
+      status: 200,
+    });
+    expect((await view("admin")).version).toBe(dog.version);
+
+    expect(await patchDog({ name: `${dog.name} Blanca`, version: dog.version })).toMatchObject({
+      body: { name: `${dog.name} Blanca`, version: dog.version + 1 },
+      status: 200,
+    });
+  });
+
   it("an ordinary pending dog: a type sent without files stays pending; a key removed through DELETE answers 400 FILE_NOT_FOUND", async () => {
     await view("admin");
     expect((await patchDog({ documents: [{ files: [], type: "INSURANCE" }], version: 1 })).status).toBe(200);

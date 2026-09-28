@@ -274,7 +274,8 @@ function initialActivities(): StoredActivity[] {
       createdAt: "2026-07-01T09:00:00Z",
       date: "2026-09-19",
       documents: [],
-      endTime: null,
+      // As the core's seed (9:00–14:00): a published activity with rings has both hours (T-07-03).
+      endTime: "14:00",
       id: ACTIVITY_IDS.league,
       image: null,
       internalNotes: null,

@@ -1,0 +1,12 @@
+[
+  {
+    "instructionsLength": null,
+    "label": "Domiciliació",
+    "type": "SEPA_DD"
+  },
+  {
+    "instructionsLength": 218,
+    "label": "Efectiu",
+    "type": "MANUAL"
+  }
+]

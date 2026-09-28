@@ -533,14 +533,38 @@ describe("E4-W04 activity MSW handlers follow the S07 contract (forms A, B and t
   });
 
   it("S07 §3 an activity without an end time has endsAtLocal null, as the api (S07 «Canvis» 24-09, E3-T16 round-2 snapshot)", async () => {
-    mockScenario("member");
+    // Since E4-W17 step 6 the league ends at 14:00 (the core's seed): the Demostració, away from
+    // the club and without an end time, is published for this check.
     vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
+    const draft = (
+      await client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.demonstration } } })
+    ).data;
+    if (draft === undefined) throw new TypeError("Missing the Demostració");
+    const patched = await client.PATCH("/activities/{id}", {
+      body: {
+        registrationFrom: "2026-09-01",
+        registrationTo: "2026-10-01",
+        startTime: "11:00",
+        version: draft.version,
+      },
+      params: { path: { id: ACTIVITY_IDS.demonstration } },
+    });
+    expect(patched.data).toMatchObject({ endTime: null, startTime: "11:00" });
+    const published = await client.POST("/activities/{id}/publication", {
+      body: { notifyEmail: false },
+      params: {
+        header: { "Idempotency-Key": crypto.randomUUID() },
+        path: { id: ACTIVITY_IDS.demonstration },
+      },
+    });
+    expect(published.data?.state).toBe("PUBLISHED");
+    mockScenario("member");
     const { data } = await client.GET("/me/activities");
     expectValid("MeActivities", data);
-    const league = data?.bookable.find((row) => row.id === ACTIVITY_IDS.league);
-    expect(league).toMatchObject({
+    const demonstration = data?.bookable.find((row) => row.id === ACTIVITY_IDS.demonstration);
+    expect(demonstration).toMatchObject({
       endsAtLocal: null,
-      startsAtLocal: "2026-09-19T09:00",
+      startsAtLocal: "2026-10-04T11:00",
     });
   });
 });
@@ -901,6 +925,21 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
     expect(listed.data?.items.find((item) => item.id === id)).toMatchObject({ date: null });
   });
 
+  it("E4-W17 step 6 (T-07-03): «Lliga social» has both hours, as the core's seed (9:00–14:00), so any edit of it saves", async () => {
+    const league = (await client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.league } } }))
+      .data;
+    if (league === undefined) throw new TypeError("Missing the Lliga social");
+    expect(league).toMatchObject({ endTime: "14:00", startTime: "09:00", state: "PUBLISHED" });
+    const saved = await client.PATCH("/activities/{id}", {
+      body: { internalNotes: "Portar les taules de puntuació", version: league.version },
+      params: { path: { id: ACTIVITY_IDS.league } },
+    });
+    expect(saved.data).toMatchObject({
+      internalNotes: "Portar les taules de puntuació",
+      version: league.version + 1,
+    });
+  });
+
   it("E4-W14 round 2 R-07-04 a published activity with rings stays publishable: a PATCH that clears a time or the registration period is 422 ACTIVITY_INCOMPLETE and changes nothing", async () => {
     const workshop = () =>
       client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.workshop } } });
@@ -932,7 +971,14 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
       details: { fieldErrors: [{ code: "REQUIRED", field: "registrationFrom" }] },
       status: 422,
     });
+    // E4-W17 step 7: clearing the date is refused the same way.
+    await expect(failure(patch({ date: null }, before.version))).resolves.toEqual({
+      code: "ACTIVITY_INCOMPLETE",
+      details: { fieldErrors: [{ code: "REQUIRED", field: "date" }] },
+      status: 422,
+    });
     expect((await workshop()).data).toMatchObject({
+      date: before.date,
       endTime: "12:00",
       startTime: "10:00",
       version: before.version,

@@ -259,7 +259,24 @@ function DogPhoto({
   );
 }
 
+/** «dd-mm» of an instant in the club's time zone (mockup 13: «12-08 · Estel», «feta el 02-08»). */
+function clubDayMonth(instant: string, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+  }).formatToParts(new Date(instant));
+  const part = (type: "day" | "month") => parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("day")}-${part("month")}`;
+}
+
+/**
+ * R-03-18 (INC-26): the dog's tasks from `GET /me/dogs` — the pending ones and those done in the
+ * last 30 days — under the counter. The checkbox is inert until completion arrives (S10, E6-W02);
+ * a done task is struck through with «feta el {dd-mm}».
+ */
 function DogTasks({ dog }: { dog: MeDog }) {
+  const branding = useBranding();
   const { t } = useTranslation("census");
 
   if (dog.tasks === undefined) {
@@ -270,6 +287,48 @@ function DogTasks({ dog }: { dog: MeDog }) {
     <section className="dog-card__section dog-tasks" aria-label={t("census:myDogs.tasksTitle")}>
       <h3>{t("census:myDogs.tasksTitle")}</h3>
       <p>{t("census:myDogs.tasksSummary", dog.tasks)}</p>
+      {dog.tasks.items.length === 0 ? null : (
+        <ul className="dog-tasks__list">
+          {dog.tasks.items.map((task) => {
+            const doneAt = task.doneAt ?? undefined;
+            const textId = `dog-task-${task.id}`;
+            return (
+              <li className="dog-task" data-done={doneAt === undefined ? undefined : ""} key={task.id}>
+                <span
+                  aria-checked={doneAt !== undefined}
+                  aria-disabled="true"
+                  aria-labelledby={textId}
+                  className="dog-task__check"
+                  role="checkbox"
+                >
+                  {doneAt === undefined ? null : <Icon aria-hidden="true" name="check" />}
+                </span>
+                <div>
+                  <p id={textId}>{task.text}</p>
+                  <small>
+                    {t("census:myDogs.taskMeta", {
+                      date: clubDayMonth(task.createdAt, branding.timeZone),
+                      instructor: task.instructorName,
+                    })}
+                    {doneAt === undefined
+                      ? null
+                      : ` · ${t("census:myDogs.taskDone", {
+                          date: clubDayMonth(doneAt, branding.timeZone),
+                        })}`}
+                    {task.attachmentsCount > 0 ? (
+                      <>
+                        {" · "}
+                        <Icon aria-hidden="true" name="clip" />
+                        {t("census:myDogs.taskAttachments", { count: task.attachmentsCount })}
+                      </>
+                    ) : null}
+                  </small>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
       <a className="self-link" href="/historic">
         {t("census:myDogs.history")}
       </a>
@@ -499,18 +558,20 @@ function DogCard({
   );
 }
 
+/**
+ * «＋ DOC.» (R-03-15). The page mounts one dialog per opening (`key`), so each upload starts
+ * with empty fields (INC-22); an error stays inside the dialog, where the member is.
+ */
 function DocumentModal({
   client,
   documentTypes,
   onClose,
-  onError,
   onUploaded,
   upload,
 }: {
   client: ApiClient;
   documentTypes: readonly DogDocumentType[];
   onClose: () => void;
-  onError: (message: string) => void;
   onUploaded: () => void;
   upload: DocumentUpload | null;
 }) {
@@ -519,6 +580,7 @@ function DocumentModal({
   const [chosenType, setChosenType] = useState<string>();
   const [file, setFile] = useState<File>();
   const [working, setWorking] = useState(false);
+  const [failure, setFailure] = useState<string>();
   // The first type of the club's catalog until the member picks another (R-03-15).
   const type = documentTypes.some((option) => option.key === chosenType)
     ? (chosenType ?? "")
@@ -530,6 +592,7 @@ function DocumentModal({
       return;
     }
     setWorking(true);
+    setFailure(undefined);
     try {
       const fileKey = await uploadFile(client, file, "DOG_DOCUMENT");
       const result = await client.POST("/me/dogs/{id}/documents", {
@@ -544,7 +607,9 @@ function DocumentModal({
       onUploaded();
       onClose();
     } catch (error) {
-      onError(apiMessage(error, t));
+      setFailure(apiMessage(error, t));
+    } finally {
+      // INC-22: the button is enabled again whatever happened (after a success too).
       setWorking(false);
     }
   };
@@ -598,7 +663,16 @@ function DocumentModal({
             type="file"
           />
         </FormField>
-        <Button disabled={working || file === undefined || name.trim() === "" || type === ""} type="submit">
+        {failure === undefined ? null : (
+          <p className="self-modal-form__error" role="alert">
+            {failure}
+          </p>
+        )}
+        <Button
+          disabled={working || file === undefined || name.trim() === "" || type === ""}
+          loading={working}
+          type="submit"
+        >
           {t("census:myDogs.uploadDocument")}
         </Button>
       </form>
@@ -719,11 +793,10 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
       <DocumentModal
         client={client}
         documentTypes={data?.documentTypes ?? []}
+        // One dialog per opening: a second upload (same dog or another) starts empty (INC-22).
+        key={documentUpload === null ? "closed" : documentUpload.dogId}
         onClose={() => {
           setDocumentUpload(null);
-        }}
-        onError={(text) => {
-          setMessage({ error: true, text });
         }}
         onUploaded={() => {
           setMessage({ text: t("census:myDogs.documentSaved") });

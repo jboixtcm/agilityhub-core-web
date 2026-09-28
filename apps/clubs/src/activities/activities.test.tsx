@@ -112,7 +112,8 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     const september = await screen.findByRole("region", { name: "Activitats" });
     expect(rowTexts(september)).toEqual([
       "Seminari de handling · ds 12 · 9:00–13:006 places",
-      "Lliga social — 3a jornada · ds 19 · 9:00Obertes",
+      // E4-W17 step 6: the league ends at 14:00, as the core's seed.
+      "Lliga social — 3a jornada · ds 19 · 9:00–14:00Obertes",
     ]);
   });
 
@@ -234,7 +235,20 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       body: { activityId: LEAGUE },
       params: { header: { "Idempotency-Key": crypto.randomUUID() } },
     });
-    expect(registered.data?.activity.endsAtLocal).toBeNull();
+    expect(registered.response.status).toBe(201);
+    // Since E4-W17 step 6 the league ends at 14:00, as the core's seed: this start-only activity
+    // (one away from the club may have no end) is its registration as the api answers one.
+    const answer = (await client().GET("/me/activities")).data;
+    if (answer === undefined) throw new TypeError("Missing GET /me/activities");
+    const startOnly = {
+      ...answer,
+      mine: answer.mine.map((registration) =>
+        registration.activityId === LEAGUE
+          ? { ...registration, activity: { ...registration.activity, endTime: null, endsAtLocal: null } }
+          : registration,
+      ),
+    };
+    server.use(http.get("*/api/v1/me/activities", () => HttpResponse.json(startOnly)));
     // Saturday 19 September at 23:50 in the club (21:50Z): hours after the start, still that day.
     vi.setSystemTime(new Date("2026-09-19T21:50:00Z"));
     await renderWith(<HomeActivityReservations client={client()} fallback={<p>buit</p>} />);

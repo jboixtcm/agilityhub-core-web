@@ -6,7 +6,11 @@ export type AuthenticatedApiClientOptions = Omit<ApiClientOptions, "fetch" | "ge
   fetch?: typeof globalThis.fetch;
 };
 
-/** Retries a 401 once after AuthClient's single-flight refresh rotation. */
+/**
+ * Retries a 401 once after AuthClient's single-flight refresh rotation. An impersonated session
+ * is never refreshed: its 401 ends the impersonation (INC-18). A refresh that fails without the
+ * api refusing the session (offline, 5xx) keeps it and returns the original 401 (INC-19).
+ */
 export function createRefreshInterceptor(
   authClient: AuthClient,
   requestFetch: typeof globalThis.fetch = globalThis.fetch,
@@ -30,10 +34,7 @@ export function createRefreshInterceptor(
       return response;
     }
 
-    try {
-      await authClient.refresh();
-    } catch {
-      authClient.handleRefreshFailure();
+    if (!(await authClient.recoverFromUnauthorized())) {
       return response;
     }
 

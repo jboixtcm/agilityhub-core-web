@@ -2,15 +2,22 @@ import { createApiClient } from "@agilityhub/api-client";
 import {
   mockScenario,
   resetActivityState,
+  resetAuthMockState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
+import {
+  AuthClient,
+  createAuthenticatedApiClient,
+  MemoryRefreshTokenStore,
+  SessionProvider,
+} from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -434,6 +441,246 @@ describe("T-01-21 profile access rows and impersonation", () => {
   });
 });
 
+/** The grants the page sends to `/oauth2/token`, in order. */
+function recordTokenGrants() {
+  const grants: string[] = [];
+  const listener = ({ request }: { request: Request }) => {
+    if (new URL(request.url).pathname !== "/oauth2/token") return;
+    void request
+      .clone()
+      .text()
+      .then((body) => {
+        grants.push(new URLSearchParams(body).get("grant_type") ?? "");
+      });
+  };
+  server.events.on("request:start", listener);
+  return {
+    grants,
+    stop: () => {
+      server.events.removeListener("request:start", listener);
+    },
+  };
+}
+
+describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app", () => {
+  afterEach(() => {
+    sessionStorage.clear();
+    resetAuthMockState();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("step 1: /entrar?handoff= takes the code out of the address, redeems it once, enters the session without refresh and opens 03 with the banner", async () => {
+    const token = recordTokenGrants();
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-1");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    expect(screen.getByRole("status")).toHaveTextContent("Validant l'enllaç…");
+    expect(window.location.pathname).toBe("/entrar");
+    expect(window.location.search).toBe("");
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/inici", false);
+    });
+    expect(client.isImpersonated()).toBe(true);
+    expect(client.getMe()?.impersonation).toEqual({ actorName: "Jordi Soler" });
+    // The provider's restore waited for the code: the admin's own cookie was never read.
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+
+    // The full-page load to /inici (a new client in the same tab) keeps the impersonated session.
+    cleanup();
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(authClient());
+    expect(await screen.findByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    token.stop();
+  });
+
+  it("step 1: a code already redeemed shows «Aquest enllaç ja no és vàlid» on 01 and opens no impersonated session", async () => {
+    await authClient().exchangeHandoff("mock-impersonation-handoff-7");
+    sessionStorage.clear();
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-7");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Aquest enllaç ja no és vàlid");
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+    expect(client.isImpersonated()).toBe(false);
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab", async () => {
+    mockScenario("impersonated");
+    const client = authClient();
+    await client.acceptImpersonation("mock-impersonation-token");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    const token = recordTokenGrants();
+
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json(
+          { code: "UNAUTHENTICATED", details: {}, message: "Expired", traceId: "t" },
+          { status: 401 },
+        ),
+      ),
+    );
+    await expect(
+      createAuthenticatedApiClient(client, { baseUrl: `${window.location.origin}/api/v1` }).GET(
+        "/me",
+      ),
+    ).rejects.toMatchObject({ status: 401 });
+
+    expect(
+      await screen.findByRole("heading", { name: "La sessió com l'abonat ha caducat" }),
+    ).toBeVisible();
+    expect(screen.queryByText("Estàs veient l'app com Laura Serra Vidal")).toBeNull();
+    const close = vi.spyOn(window, "close").mockImplementation(() => undefined);
+    fireEvent.click(screen.getByRole("button", { name: "Tanca" }));
+    expect(close).toHaveBeenCalledOnce();
+
+    cleanup();
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(authClient());
+    expect(
+      await screen.findByRole("heading", { name: "La sessió com l'abonat ha caducat" }),
+    ).toBeVisible();
+    expect(token.grants).toEqual([]);
+    token.stop();
+    close.mockRestore();
+  });
+});
+
+describe("T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link", () => {
+  afterEach(() => {
+    resetAuthMockState();
+    window.history.pushState(null, "", "/");
+  });
+
+  function recordPasswordBodies() {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "PUT" && new URL(request.url).pathname === "/api/v1/me/password") {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    return {
+      bodies,
+      stop: () => {
+        server.events.removeListener("request:start", listener);
+      },
+    };
+  }
+
+  function submitNewPassword(value: string) {
+    fireEvent.change(screen.getByLabelText("nova contrasenya"), { target: { value } });
+    fireEvent.change(screen.getByLabelText("repeteix-la"), { target: { value } });
+    fireEvent.click(screen.getByRole("button", { name: "DESA LA CONTRASENYA" }));
+  }
+
+  it("the reset screen sends {new, repeat} without `current` once; a second use says the link was used and offers «Recupera-la»", async () => {
+    mockScenario("activationReset");
+    const password = recordPasswordBodies();
+    window.history.pushState(null, "", "/activacio?token=reset-link&purpose=RESET");
+    await renderApplication(authClient());
+
+    expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
+    expect(screen.queryByLabelText("contrasenya actual")).not.toBeInTheDocument();
+    submitNewPassword("duna2026!");
+    expect(await screen.findByText("Contrasenya desada")).toBeVisible();
+    await waitFor(() => {
+      expect(password.bodies).toEqual([{ new: "duna2026!", repeat: "duna2026!" }]);
+    });
+
+    submitNewPassword("rock2026!");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "L'enllaç ja s'ha fet servir: demana'n un altre",
+    );
+    expect(screen.getByRole("link", { name: "Recupera-la" })).toHaveAttribute("href", "/entrar");
+    password.stop();
+  });
+
+  it("the session of a LOGIN link still needs `current` for an account with a password (the mock refuses it like the api)", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.exchangeMagicLink("login-link");
+
+    await expect(
+      client.updatePassword({ new: "duna2026!", repeat: "duna2026!" }),
+    ).rejects.toMatchObject({
+      code: "INVALID_CREDENTIALS",
+      status: 401,
+    });
+  });
+});
+
+describe("E4-W16 step 12 member-app fixes", () => {
+  it("(b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b)", async () => {
+    mockScenario("multiProfile");
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    expect(screen.getByRole("link", { name: /Canviar de perfil/u })).toHaveTextContent("alumna");
+
+    cleanup();
+    const me = client.getMe();
+    if (me?.membership === undefined) throw new TypeError("Expected the membership");
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({ ...me, membership: { ...me.membership, gender: "MALE" } }),
+      ),
+    );
+    const male = authClient();
+    await male.login("marc.puig@example.test", "secret-password");
+    await renderApplication(male);
+    const row = screen.getByRole("link", { name: /Canviar de perfil/u });
+    expect(row).toHaveTextContent("alumne");
+    expect(row).not.toHaveTextContent("alumna");
+  });
+
+  it("(c) the onboarding offers only the club's languages and starts on the club's default when the account's is not offered", async () => {
+    mockScenario("onboarding");
+    server.use(
+      http.get("*/api/v1/me/onboarding", () =>
+        HttpResponse.json({
+          fields: [
+            { key: "name", required: true, value: "Biel Roca" },
+            { key: "locale", required: true, value: "en" },
+          ],
+          pending: true,
+          postponeRemaining: 0,
+          requiredConsent: {
+            policy: "PLATFORM",
+            url: "https://club.example.test/legal/privacy",
+            version: "2026-09-01",
+          },
+        }),
+      ),
+    );
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+
+    const locale = await screen.findByRole("combobox", { name: "Idioma (obligatori)" });
+    expect(
+      within(locale)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["Català", "Castellà"]);
+    expect(locale).toHaveValue("ca");
+  });
+});
+
 describe("T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3)", () => {
   const TOURNAMENT_PATH = "/activitats/activity-torneig-estiu-2026";
 
@@ -535,7 +782,12 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
     expect(await screen.findByRole("heading", { name: "Completa el teu perfil" })).toBeVisible();
     expect(screen.getByLabelText("Nom (obligatori)")).toHaveValue("Biel Roca");
     const locale = screen.getByRole("combobox", { name: "Idioma (obligatori)" });
-    expect(within(locale).getAllByRole("option")).toHaveLength(3);
+    // E4-W16 step 12c (ADR-011): only the club's languages (the Cànic offers ca and es).
+    expect(
+      within(locale)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["Català", "Castellà"]);
     expect(screen.getByLabelText("Telèfon")).toHaveValue("");
     expect(screen.getByRole("link", { name: "la política de privacitat" })).toHaveAttribute(
       "href",
@@ -716,7 +968,13 @@ describe("T-03-40 mobile own dogs", () => {
     const submitted = await fetch(`${window.location.origin}/api/v1/me/dogs/signup`, {
       body: JSON.stringify({
         additionalDogOption: "TODAY",
-        dog: { birthMonth: "2025-03", breed: "Mestís", chip: "941000012340036", name: "Neret", sex: "MALE" },
+        dog: {
+          birthMonth: "2025-03",
+          breed: "Mestís",
+          chip: "941000012340036",
+          name: "Neret",
+          sex: "MALE",
+        },
         documents: [],
       }),
       headers: {
@@ -730,7 +988,9 @@ describe("T-03-40 mobile own dogs", () => {
     window.history.pushState(null, "", "/gossos");
     await renderApplication(client);
 
-    const card = (await screen.findByRole("heading", { name: "Neret" })).closest<HTMLElement>(".dog-card");
+    const card = (await screen.findByRole("heading", { name: "Neret" })).closest<HTMLElement>(
+      ".dog-card",
+    );
     if (card === null) throw new TypeError("Missing the pending dog card");
     expect(within(card).getByText("pendent de validació")).toBeVisible();
     expect(within(card).getByText(/Mestís · mascle · 1 any/u)).toBeVisible();
@@ -741,6 +1001,117 @@ describe("T-03-40 mobile own dogs", () => {
     // The ACTIVE dogs keep their actions.
     expect(screen.getAllByRole("button", { name: "＋ DOC." })).toHaveLength(2);
     expect(screen.getAllByLabelText(/Notes als instructors/u)).toHaveLength(2);
+  });
+
+  it("E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with an inert checkbox and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    const { data } = await createApiClient({
+      baseUrl: `${window.location.origin}/api/v1`,
+      getAccessToken: () => client.getAccessToken(),
+    }).GET("/me/dogs");
+    if (data === undefined) throw new TypeError("The mock dogs did not answer");
+    // 20:00 UTC on 11-08 is already 12-08 at a club in Auckland (UTC+12): the club's day, never
+    // the device's (UTC in CI, Europe/Madrid here).
+    server.use(
+      http.get("*/api/v1/me/dogs", () =>
+        HttpResponse.json({
+          ...data,
+          dogs: data.dogs.map((dog) =>
+            dog.tasks === undefined
+              ? dog
+              : {
+                  ...dog,
+                  tasks: {
+                    ...dog.tasks,
+                    items: dog.tasks.items.map((task) =>
+                      task.id === "task-duna-weave"
+                        ? { ...task, createdAt: "2026-08-11T20:00:00Z" }
+                        : task,
+                    ),
+                  },
+                },
+          ),
+        }),
+      ),
+    );
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client, { ...canicBranding, timeZone: "Pacific/Auckland" });
+
+    const card = (await screen.findByRole("heading", { name: "Duna" })).closest<HTMLElement>(
+      ".dog-card",
+    );
+    if (card === null) throw new TypeError("Missing Duna's card");
+    const tasks = within(card).getByRole("region", { name: "Tasques" });
+    expect(within(tasks).getByText("2 pendents · 1 fetes")).toBeVisible();
+    const rows = within(tasks).getAllByRole("listitem");
+    expect(rows.map((row) => row.textContent)).toEqual([
+      "Treballar l'entrada al balancí10-08 · Laura",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
+    ]);
+    const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    expect(pending).not.toBeChecked();
+    expect(pending).toHaveAttribute("aria-disabled", "true");
+    const done = within(tasks).getByRole("checkbox", { name: "Consolidar la sortida quieta" });
+    expect(done).toBeChecked();
+    // The struck-through row: `.dog-task[data-done] p { text-decoration: line-through }`.
+    expect(rows[2]).toHaveAttribute("data-done");
+    expect(rows[0]).not.toHaveAttribute("data-done");
+    expect(rows[1]?.querySelector("svg use")?.getAttribute("href")).toContain("clip");
+    expect(within(tasks).getByRole("link", { name: "Veure l'historial ›" })).toHaveAttribute(
+      "href",
+      "/historic",
+    );
+  });
+
+  it("E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields", async () => {
+    const uploads: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const path = new URL(request.url).pathname;
+      if (request.method === "POST" && /^\/api\/v1\/me\/dogs\/[^/]+\/documents$/u.test(path)) {
+        uploads.push(path);
+      }
+    };
+    server.events.on("request:start", listener);
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+    await screen.findByRole("heading", { name: "Els meus gossos" });
+
+    async function upload(dog: "Duna" | "Rock", index: number, name: string) {
+      fireEvent.click(
+        screen.getAllByRole("button", { name: "＋ DOC." })[index] as HTMLButtonElement,
+      );
+      const dialog = screen.getByRole("dialog", { name: `Afegeix un document de ${dog}` });
+      expect(within(dialog).getByLabelText("Nom del document")).toHaveValue("");
+      fireEvent.change(within(dialog).getByLabelText("Nom del document"), {
+        target: { value: name },
+      });
+      fireEvent.change(within(dialog).getByLabelText("Fitxer"), {
+        target: { files: [new File(["%PDF"], `${name}.pdf`, { type: "application/pdf" })] },
+      });
+      const submit = within(dialog).getByRole("button", { name: "PUJA EL DOCUMENT" });
+      expect(submit).toBeEnabled();
+      const form = submit.closest("form");
+      if (form === null) throw new TypeError("No document form");
+      fireEvent.submit(form);
+      await waitFor(() => {
+        expect(screen.queryByRole("dialog")).toBeNull();
+      });
+    }
+
+    await upload("Duna", 0, "Cartilla Duna");
+    expect(await screen.findByText("Document desat")).toBeVisible();
+    await upload("Rock", 1, "Assegurança Rock");
+    await waitFor(() => {
+      expect(uploads).toEqual([
+        "/api/v1/me/dogs/dog-duna/documents",
+        "/api/v1/me/dogs/dog-rock/documents",
+      ]);
+    });
+    server.events.removeListener("request:start", listener);
   });
 });
 
@@ -757,7 +1128,10 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     const listener = ({ request }: { request: Request }) => {
       const url = new URL(request.url);
       if (!url.pathname.startsWith("/api/v1/")) return;
-      const entry: RecordedApiRequest = { method: request.method, path: url.pathname.slice("/api/v1".length) };
+      const entry: RecordedApiRequest = {
+        method: request.method,
+        path: url.pathname.slice("/api/v1".length),
+      };
       recorded.push(entry);
       if (request.method === "POST") {
         void request
@@ -783,13 +1157,17 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     await client.login("laura@example.test", "secret-password");
     window.history.pushState(null, "", "/gossos");
     await renderApplication(client, canicBranding, locale);
-    await screen.findByRole("heading", { name: locale === "ca" ? "Els meus gossos" : "Mis perros" });
+    await screen.findByRole("heading", {
+      name: locale === "ca" ? "Els meus gossos" : "Mis perros",
+    });
   }
 
   function documentTypeOptions() {
     const select = document.getElementById("dog-document-type");
     if (select === null) throw new TypeError("No document type select");
-    return within(select).getAllByRole("option").map((option) => option.textContent);
+    return within(select)
+      .getAllByRole("option")
+      .map((option) => option.textContent);
   }
 
   it("step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read", async () => {
@@ -801,7 +1179,9 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
       expect(documentTypeOptions()).toEqual(["Cartilla de vacunes", "Assegurança", "Altres"]);
     });
     fireEvent.change(within(dialog).getByLabelText("Tipus"), { target: { value: "INSURANCE" } });
-    fireEvent.change(within(dialog).getByLabelText("Nom del document"), { target: { value: "Assegurança 2026" } });
+    fireEvent.change(within(dialog).getByLabelText("Nom del document"), {
+      target: { value: "Assegurança 2026" },
+    });
     fireEvent.change(within(dialog).getByLabelText("Fitxer"), {
       target: { files: [new File(["%PDF"], "asseguranca.pdf", { type: "application/pdf" })] },
     });
@@ -810,7 +1190,10 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     if (form === null) throw new TypeError("No document form");
     fireEvent.submit(form);
     expect(await screen.findByText("Document desat")).toBeVisible();
-    const upload = api.recorded.find((request) => request.method === "POST" && /^\/me\/dogs\/[^/]+\/documents$/u.test(request.path));
+    const upload = api.recorded.find(
+      (request) =>
+        request.method === "POST" && /^\/me\/dogs\/[^/]+\/documents$/u.test(request.path),
+    );
     expect(upload?.body).toMatchObject({ name: "Assegurança 2026", type: "INSURANCE" });
     // S03 25-09: a MEMBER cannot read /parameters (the api answers 403).
     expect(api.parameterReads()).toEqual([]);
@@ -829,7 +1212,9 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     const api = recordApi();
     mockScenario("memberNoLevels");
     await openMyDogs();
-    expect(screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual(["Duna", "Rock"]);
+    expect(
+      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual(["Duna", "Rock"]);
     expect(screen.queryByText(/^Nivell /u)).toBeNull();
 
     cleanup();

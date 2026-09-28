@@ -1,7 +1,6 @@
 [
   {
     "createdAt": "2026-08-03T10:20:00Z",
-    "downloadUrl": "/api/v1/exports/00000000-0000-4000-8000-000000000401/download",
     "expiresAt": "2026-08-10T10:20:00Z",
     "fileName": "canic_audit-entries_20260803-1220.xlsx",
     "format": "XLSX",

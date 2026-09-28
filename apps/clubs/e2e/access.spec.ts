@@ -164,9 +164,30 @@ test.describe("T-01-19 activation screen", () => {
   test("renders reset and invalid-link variants", async ({ browser }) => {
     const resetPage = await browser.newPage();
     await prepareScenario(resetPage, "activationReset");
-    await resetPage.goto(`${baseUrl}/activacio?token=valid&purpose=RESET`);
+    // E4-W16 step 10 (E49): the RESET link's session sets the new password once, without `current`.
+    await resetPage.goto(`${baseUrl}/activacio?token=reset-link&purpose=RESET`);
     await expect(resetPage.getByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     await expect(resetPage.getByText("Compte activat")).toHaveCount(0);
+    await expect(resetPage.getByLabel("contrasenya actual")).toHaveCount(0);
+    const passwordRequest = resetPage.waitForRequest(
+      (request) => request.url().endsWith("/api/v1/me/password") && request.method() === "PUT",
+    );
+    await resetPage.getByLabel("nova contrasenya").fill("duna2026!");
+    await resetPage.getByLabel("repeteix-la").fill("duna2026!");
+    await resetPage.getByRole("button", { name: "DESA LA CONTRASENYA" }).click();
+    expect((await passwordRequest).postDataJSON()).toEqual({
+      new: "duna2026!",
+      repeat: "duna2026!",
+    });
+    await expect(resetPage.getByText("Contrasenya desada")).toBeVisible();
+    await resetPage.getByRole("button", { name: "DESA LA CONTRASENYA" }).click();
+    await expect(resetPage.getByRole("alert")).toHaveText(
+      "L'enllaç ja s'ha fet servir: demana'n un altre Recupera-la",
+    );
+    await expect(resetPage.getByRole("link", { name: "Recupera-la" })).toHaveAttribute(
+      "href",
+      "/entrar",
+    );
     await resetPage.close();
 
     const invalidPage = await browser.newPage();
@@ -259,7 +280,11 @@ test.describe("T-01-21 profile rows and impersonation", () => {
 
   test("keeps the impersonation banner and revokes on exit", async ({ page }) => {
     await prepareScenario(page, "impersonated");
-    await page.goto(`${baseUrl}/perfil#impersonation=mock-impersonation-token`);
+    // E4-W16 step 1 (E47): the one-time code of the launchUrl, redeemed at /entrar?handoff=.
+    await page.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
+    await page.waitForURL((url) => url.pathname === "/inici");
+    // The app's full-page navigation keeps the impersonated session of the tab.
+    await page.goto(`${baseUrl}/perfil`);
     await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     await page.getByRole("button", { name: "Surt" }).click();
     await page.waitForURL("**/entrar");

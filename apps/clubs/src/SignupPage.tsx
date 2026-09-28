@@ -650,7 +650,7 @@ function StepMessage({ message }: { message: string | undefined }) {
   );
 }
 
-function Layout({ children }: { children: ReactNode }) {
+function Layout({ children, title }: { children: ReactNode; title?: string }) {
   const branding = useBranding();
   const { i18n, t } = useTranslation("signup");
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
@@ -666,7 +666,7 @@ function Layout({ children }: { children: ReactNode }) {
         ) : (
           <img alt="" className="signup-header__logo" src={logo.src} />
         )}
-        <h1>{t("signup:common.title")}</h1>
+        <h1>{title ?? t("signup:common.title")}</h1>
         <label className="signup-language">
           <Icon aria-hidden="true" name="globe" />
           <span className="ah-sr-only">{t("signup:common.language")}</span>
@@ -2511,6 +2511,12 @@ function SuccessStep({ addDog }: { addDog: boolean }) {
       <h2>{t("signup:success.title")}</h2>
       <p>{addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}</p>
       {checkout ? <p>{t("signup:success.checkout")}</p> : null}
+      {/* A member who added a dog goes back to 13, where it waits «pendent de validació». */}
+      {addDog ? (
+        <a className="signup-success__action" href="/gossos">
+          {t("signup:success.backToDogs")}
+        </a>
+      ) : null}
     </section>
   );
 }
@@ -2715,7 +2721,7 @@ export function SignupPage({
 
   if (sent) {
     return (
-      <Layout>
+      <Layout {...(addDog ? { title: t("signup:success.addDogTitle") } : {})}>
         <SuccessStep addDog={addDog} />
       </Layout>
     );

@@ -1,5 +1,5 @@
 import { isApiError } from "@agilityhub/api-client";
-import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
+import { LOCALE_STORAGE_KEY, normalizeLocale, productLocales, type Locale } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -37,7 +37,11 @@ function isOnboardingFieldKey(value: string): value is OnboardingFieldKey {
   return value === "name" || value === "locale" || value === "phone";
 }
 
-function initialFields(state: OnboardingState, accountLocale: Locale): OnboardingFields {
+function initialFields(
+  state: OnboardingState,
+  accountLocale: Locale,
+  locales: readonly Locale[],
+): OnboardingFields {
   const values: OnboardingFields = {};
   for (const field of state.fields) {
     if (field.key === "name" && typeof field.value === "string") {
@@ -45,7 +49,8 @@ function initialFields(state: OnboardingState, accountLocale: Locale): Onboardin
     } else if (field.key === "phone" && typeof field.value === "string") {
       values.phone = field.value;
     } else if (field.key === "locale") {
-      values.locale = isLocale(field.value) ? field.value : accountLocale;
+      values.locale =
+        isLocale(field.value) && locales.includes(field.value) ? field.value : accountLocale;
     }
   }
   return values;
@@ -104,6 +109,7 @@ function OnboardingStatus({ error, retry }: { error?: boolean; retry?: () => voi
 function OnboardingForm({
   accountLocale,
   authClient,
+  locales,
   onAccepted,
   onPostponed,
   presentation,
@@ -111,13 +117,17 @@ function OnboardingForm({
 }: {
   accountLocale: Locale;
   authClient: AuthClient;
+  /** The club's languages (`branding.locales`, ADR-011): the only ones offered. */
+  locales: readonly Locale[];
   onAccepted: (state: OnboardingState) => void;
   onPostponed: (state: OnboardingState) => void;
   presentation: "modal" | "page";
   state: OnboardingState;
 }) {
   const { i18n, t } = useTranslation(["auth", "errors"]);
-  const [fields, setFields] = useState<OnboardingFields>(() => initialFields(state, accountLocale));
+  const [fields, setFields] = useState<OnboardingFields>(() =>
+    initialFields(state, accountLocale, locales),
+  );
   const [consentAccepted, setConsentAccepted] = useState(false);
   const [imageConsent, setImageConsent] = useState(false);
   const [working, setWorking] = useState<"complete" | "postpone" | "skip" | null>(null);
@@ -239,7 +249,7 @@ function OnboardingForm({
                   required={field.required}
                   value={fields.locale ?? accountLocale}
                 >
-                  {productLocales.map((locale) => (
+                  {locales.map((locale) => (
                     <option key={locale} value={locale}>
                       {localeLabel(locale)}
                     </option>
@@ -346,6 +356,7 @@ export function OnboardingExperience({
   onBlockingRequired,
   presentation,
 }: OnboardingExperienceProps) {
+  const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("auth");
   const [state, setState] = useState<OnboardingState>();
@@ -436,12 +447,19 @@ export function OnboardingExperience({
     return <OnboardingStatus />;
   }
 
+  // ADR-011: only the club's languages; an account locale the club does not offer starts on the
+  // club's default one.
+  const locales = productLocales.filter((locale) => branding.locales.includes(locale));
   const sessionLocale = session.me?.account.locale;
-  const accountLocale = isLocale(sessionLocale) ? sessionLocale : "ca";
+  const accountLocale =
+    isLocale(sessionLocale) && locales.includes(sessionLocale)
+      ? sessionLocale
+      : normalizeLocale(branding.defaultLocale);
   const form = (
     <OnboardingForm
       accountLocale={accountLocale}
       authClient={authClient}
+      locales={locales}
       onAccepted={(updated) => {
         setState(updated.pending ? updated : undefined);
         if (!updated.pending) {

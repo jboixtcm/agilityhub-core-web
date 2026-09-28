@@ -150,7 +150,10 @@ test.describe("T-06-29 screen 10 «Classes del dia» (/avui)", () => {
     page.on("request", (request) => {
       if (request.url().includes("/api/v1/day-grid")) requests.push(request.url());
     });
-    await page.goto(`${baseUrl}/avui?date=2026-08-04#impersonation=mock-impersonation-token`);
+    // E4-W16 step 1 (E47): the one-time code first, then the tab keeps the impersonated session.
+    await page.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
+    await page.waitForURL((url) => url.pathname === "/inici");
+    await page.goto(`${baseUrl}/avui?date=2026-08-04`);
 
     await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     const grid = page.getByRole("table", { name: "Quadre del dia" });

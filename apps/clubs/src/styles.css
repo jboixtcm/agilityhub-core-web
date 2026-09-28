@@ -1413,6 +1413,19 @@ select {
   margin: 0;
 }
 
+.signup-success__action {
+  display: grid;
+  min-height: 3.25rem;
+  padding: var(--ah-space-3) var(--ah-space-5);
+  color: var(--ah-color-primary-fg);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-sm);
+  place-items: center;
+}
+
 @media (max-width: 26rem) {
   .signup-form .ah-input,
   .signup-form .ah-select {
@@ -1532,6 +1545,30 @@ select {
   color: var(--ah-color-primary-fg);
   background: var(--ah-color-success);
   border-color: var(--ah-color-success);
+}
+
+/* R-03-18: inert until the completion arrives with S10 (E6-W02). */
+.dog-task__check[aria-disabled="true"] {
+  cursor: default;
+}
+
+.dog-tasks__list {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dog-task p {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.self-modal-form__error {
+  margin: 0;
+  color: var(--ah-color-danger);
+  font-size: 0.8125rem;
 }
 
 .self-link {

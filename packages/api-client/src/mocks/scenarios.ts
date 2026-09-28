@@ -77,6 +77,16 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
+  /** S03 R-03-30 (INC-27): a club without BILLING, read by its ADMIN (D10 without invoices). */
+  adminNoBilling: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "BILLING"),
+    },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
   adminDashboardNulls: {
     branding: canic,
     dashboardNulls: true,
@@ -107,6 +117,13 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
     signupReview: "readmission",
+  },
+  /** R-04-06: the same readmission, and the reused dog's record has no card (E4-W17 step 2). */
+  adminSignupReviewReadmissionNoCard: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReview: "readmissionNoCard",
   },
   member: {
     branding: canic,

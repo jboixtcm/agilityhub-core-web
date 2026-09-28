@@ -1333,3 +1333,18 @@ Blocking: no.
   2. Point 3's «POST without `ringId`»: the app sends one by design (S09 R-09-07, verified E5-W02). The no-`ringId` path is proven on the core instead (assumption R2-1).
   3. Follow-up proposal for `scripts/e2e-core.sh`: `down` with `--profile e2e`, and a TERM trap that exits.
 Blocking: no.
+
+## 2026-09-28 · executor → organizer · E4-W16
+@organizer **E4-W16 is awaiting verification.** Steps 1–13 are done. Each of steps 1–12 has a test I saw fail on the HEAD sources (logs `04`, `05`, `07`–`09`).
+- **Closes (web):** INC-15 (web half), INC-18, INC-19, INC-20, INC-21, INC-22, INC-24 (web half), INC-26, INC-27, INC-28, INC-29.
+- **Green:** turbo `--force` 34/34 (`34`); `i18n:check` (`33`); `pnpm size` with the new per-app budgets (`19`); Docker `pnpm e2e` 57 + 1 + 50 (`21`).
+- **`pnpm e2e:core E4-W16` (`29`):** all 40 tests pass, including the new E4-W16 stage (5). The script still exits 1 on the E3 N-37 Mongo check (Q3).
+- **Real core (image `278efec2`):**
+  - proven: the drawer download through `GET /exports/{id}` with the bearer (200, XLSX); 13's task rows (tasks created with `POST /tasks`, one completed by the member); D10's actions.
+  - pending: `impersonation-token` has no `launchUrl` (api E5-T27 is not in the image). The handoff and the RESET skip wait for it; D10's in-dialog error is proven.
+- **For you:**
+  1. The api's RESET link is `/activacio?t=…` with no `purpose` (S01 R-01-04), and nothing else tells the web the purpose. So 02 cannot show «Ja hi ets» or the used-link message on the real core. Proposal: `&purpose=reset` on RESET links (the web already reads it).
+  2. On `278efec2`, the E3 add-dog validation leaves no N-37 for `nora.e3@example.test`: only an N-02 EMAIL with `variables: []`. On `c25e6b48` it was there. The check now prints what the core stored (`n37-notification.json`).
+  3. Assumption A1: «memòria de sessió» = the tab's `sessionStorage`, so the impersonation survives the app's full-page navigations and dies with the tab.
+  4. Follow-up: `census:myDogs.tasksSummary` needs an ICU plural («1 pendents · 1 fetes»).
+Blocking: no.

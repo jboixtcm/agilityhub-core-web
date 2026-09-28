@@ -1,0 +1,322 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > logs in with the password grant, keeps access in memory, and loads /me 15ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > normalizes the core's omitted empty scope before loading /me 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > routes OAuth2 requests to identity and application auth requests to core 4ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-12 exchanges the R-01-13 handoff code through the contract token field 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 refreshes via the cookie and coalesces concurrent 401 responses 23ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > preserves mutation bodies while adding cookie credentials and 401 retry support 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > emits signedOut and redirects to /entrar when refresh fails 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > revokes the cookie session with an empty body and bearer access token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 restores a session from the HttpOnly cookie without a body token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 coalesces restore calls until both refresh and /me complete 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 treats a 400 cookie refresh response as an anonymous session 0ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 treats a 401 cookie refresh response as an anonymous session 0ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > rejects a mock refresh store unless the build-time mock flag is enabled 0ms
+ × src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > after acceptImpersonation, focus, pageshow and visibilitychange never call /oauth2/token 23ms
+   → expected 1 to be +0 // Object.is equality
+ × src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again 2ms
+   → expected 1 to be +0 // Object.is equality
+ ✓ src/session.test.tsx > T-01-21 session and guards > redirects anonymous users to /entrar without rendering protected content 71ms
+ ✓ src/session.test.tsx > T-01-21 session and guards > exposes /me roles and active profile and renders only an allowed role 8ms
+ ✓ src/session.test.tsx > T-01-21 session and guards > renders the translated unavailable page and omits disabled module items 39ms
+ × src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > step 1: a handoff code whose /me carries `impersonation` enters the mode, wins over the cookie and survives a full-page load of the tab 45ms
+   → expected { account: { …(8) }, …(2) } to deeply equal { account: { …(8) }, …(3) }
+ × src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > an impersonation whose expiry has passed is not restored, and «Surt» revokes it with its own token without refreshing 3ms
+   → expected { account: { …(8) }, …(3) } to be null
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a focus or pageshow refreshes only near refreshAt, and visibilitychange too 23ms
+   → expected 2 to be +0 // Object.is equality
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > offline, then a 5xx: the background refresh keeps the token and retries when the device is back online 1004ms
+   → expected +0 to be 1 // Object.is equality
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a 400 of the token endpoint ends the session and lands on the app's sign-in path (/login in apps/id) 1006ms
+   → expected "vi.fn()" to be called with arguments: [ '/login' ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "/login",
++   "/entrar",
+  ]
+
+
+Number of calls: 1
+
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > restoreSession on a 5xx rejects (the session stays unknown) and signs in when the retry succeeds 1005ms
+   → expected "vi.fn()" to be called once, but got 0 times
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > the 401 interceptor keeps the session when the refresh fails offline 6ms
+   → expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Event {
+        "isTrusted": false,
+      },
+    ]
+
+
+Number of calls: 1
+
+ × src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > logout with a rejected bearer refreshes once and retries the revoke, so the cookie is revoked 4ms
+   → promise rejected "ApiError: Authentication required { …(5) }" instead of resolving
+ ✓ src/auth-client.test.ts > T-01-26 onboarding contract > loads, postpones and completes onboarding through the generated operations 6ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > after acceptImpersonation, focus, pageshow and visibilitychange never call /oauth2/token
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/auth-client.test.ts:485:27
+    483|     await settle();
+    484|
+    485|     expect(tokenRequests).toBe(0);
+       |                           ^
+    486|     expect(client.isImpersonated()).toBe(true);
+    487|     expect(client.getAccessToken()).toBe("impersonation-token");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/auth-client.test.ts:521:27
+    519|     await expect(apiClient.GET("/me")).rejects.toMatchObject({ status:…
+    520|
+    521|     expect(tokenRequests).toBe(0);
+       |                           ^
+    522|     expect(expired).toHaveBeenCalledOnce();
+    523|     expect(signedOut).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > step 1: a handoff code whose /me carries `impersonation` enters the mode, wins over the cookie and survives a full-page load of the tab
+AssertionError: expected { account: { …(8) }, …(2) } to deeply equal { account: { …(8) }, …(3) }
+
+- Expected
++ Received
+
+@@ -11,13 +11,10 @@
+    },
+    "features": [
+      "FREE_TRAINING",
+      "COURSES",
+    ],
+-   "impersonation": {
+-     "actorName": "Aina Serra",
+-   },
+    "membership": {
+      "activeProfile": "MEMBER",
+      "clubId": "50000000-0000-4000-8000-000000000001",
+      "defaultProfile": "MEMBER",
+      "gender": "MALE",
+
+ ❯ src/auth-client.test.ts:578:22
+    576|
+    577|     expect(exchanged).toEqual(impersonatedMe);
+    578|     expect(restored).toEqual(impersonatedMe);
+       |                      ^
+    579|     expect(grants).toEqual(["urn:agilityhub:grant:handoff"]);
+    580|     expect(client.isImpersonated()).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > an impersonation whose expiry has passed is not restored, and «Surt» revokes it with its own token without refreshing
+AssertionError: expected { account: { …(8) }, …(3) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "account": {
+    "email": "biel.roca@example.test",
+    "emailVerifiedAt": "2026-08-01T08:00:00Z",
+    "hasPassword": true,
+    "id": "10000000-0000-4000-8000-000000000002",
+    "locale": "ca",
+    "name": "Biel Roca",
+    "onboardingPending": false,
+    "platformRoles": [],
+  },
+  "features": [
+    "FREE_TRAINING",
+    "COURSES",
+  ],
+  "impersonation": {
+    "actorName": "Aina Serra",
+  },
+  "membership": {
+    "activeProfile": "MEMBER",
+    "clubId": "50000000-0000-4000-8000-000000000001",
+    "defaultProfile": "MEMBER",
+    "gender": "MALE",
+    "memberId": "20000000-0000-4000-8000-000000000002",
+    "profiles": [
+      "MEMBER",
+    ],
+    "rememberProfile": true,
+    "roles": [
+      "MEMBER",
+    ],
+  },
+}
+
+ ❯ src/auth-client.test.ts:618:44
+    616|       identityBaseUrl: IDENTITY_BASE_URL,
+    617|     });
+    618|     await expect(reloaded.restoreSession()).resolves.toBeNull();
+       |                                            ^
+    619|     expect(reloaded.isImpersonationExpired()).toBe(true);
+    620|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a focus or pageshow refreshes only near refreshAt, and visibilitychange too
+AssertionError: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ src/auth-client.test.ts:655:28
+    653|     window.dispatchEvent(new Event("pageshow"));
+    654|     await settle();
+    655|     expect(counts.refresh).toBe(0);
+       |                            ^
+    656|     // expires_in 900 s → refreshAt at +840 s; a focus refreshes from …
+    657|     vi.setSystemTime(new Date("2026-09-28T10:13:00Z"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > offline, then a 5xx: the background refresh keeps the token and retries when the device is back online
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/auth-client.test.ts:699:30
+    697|     window.dispatchEvent(new Event("pageshow"));
+    698|     await vi.waitFor(() => {
+    699|       expect(counts.refresh).toBe(1);
+       |                              ^
+    700|     });
+    701|     await settle();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a 400 of the token endpoint ends the session and lands on the app's sign-in path (/login in apps/id)
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/login' ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "/login",
++   "/entrar",
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/auth-client.test.ts:740:24
+    738|     window.dispatchEvent(new Event("focus"));
+    739|     await vi.waitFor(() => {
+    740|       expect(navigate).toHaveBeenCalledWith("/login");
+       |                        ^
+    741|     });
+    742|     expect(client.getAccessToken()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > restoreSession on a 5xx rejects (the session stays unknown) and signs in when the retry succeeds
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/auth-client.test.ts:768:24
+    766|     window.dispatchEvent(new Event("online"));
+    767|     await vi.waitFor(() => {
+    768|       expect(signedIn).toHaveBeenCalledOnce();
+       |                        ^
+    769|     });
+    770|     expect(client.getMe()).toEqual(memberMe);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > the 401 interceptor keeps the session when the refresh fails offline
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Event {
+        "isTrusted": false,
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/auth-client.test.ts:797:27
+    795|
+    796|     expect(counts.refresh).toBe(1);
+    797|     expect(signedOut).not.toHaveBeenCalled();
+       |                           ^
+    798|     expect(navigate).not.toHaveBeenCalled();
+    799|     expect(client.getAccessToken()).toBe("access-login");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > logout with a rejected bearer refreshes once and retries the revoke, so the cookie is revoked
+AssertionError: promise rejected "ApiError: Authentication required { …(5) }" instead of resolving
+ ❯ src/auth-client.test.ts:818:34
+    816|     await client.login("biel.roca@example.test", "secret-password");
+    817|
+    818|     await expect(client.logout()).resolves.toBeUndefined();
+       |                                  ^
+    819|
+    820|     expect(revokes).toEqual(["Bearer access-login", "Bearer access-rot…
+
+Caused by: ApiError: Authentication required
+ ❯ Function.fromResponse ../api-client/src/api-error.ts:52:12
+ ❯ AuthClient.routedRequest src/auth-client.ts:551:13
+ ❯ AuthClient.logout src/auth-client.ts:386:26
+ ❯ src/auth-client.test.ts:818:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'UNAUTHENTICATED', details: undefined, status: 401, traceId: undefined, retryAfter: undefined }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  10 failed | 17 passed (27)
+   Start at  10:26:52
+   Duration  3.65s (tests 79%, environment 12%, transform 4%, import 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --reporter=verbose

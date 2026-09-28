@@ -122,6 +122,58 @@ test.describe("T-03-40 mobile own dogs", () => {
     });
   });
 
+  test("E4-W16 steps 6 and 11 (INC-22, INC-26): the task rows with the done one struck through, and a second «＋ DOC.» after the first upload", async ({
+    page,
+  }) => {
+    await login(page);
+    await page.goto(`${baseUrl}/gossos`);
+    const duna = page.locator(".dog-card").filter({ has: page.getByRole("heading", { name: "Duna" }) });
+    const tasks = duna.getByRole("region", { name: "Tasques" });
+    await expect(tasks.getByText("2 pendents · 1 fetes")).toBeVisible();
+    await expect(tasks.getByRole("listitem")).toHaveText([
+      "Treballar l'entrada al balancí10-08 · Laura",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
+    ]);
+    await expect(tasks.getByRole("checkbox", { name: "Treballar l'entrada al balancí" })).not.toBeChecked();
+    await expect(tasks.getByRole("checkbox", { name: "Consolidar la sortida quieta" })).toBeChecked();
+    await expect(tasks.getByText("Consolidar la sortida quieta")).toHaveCSS(
+      "text-decoration-line",
+      "line-through",
+    );
+    await expect(tasks.getByText("Treballar l'entrada al balancí")).toHaveCSS(
+      "text-decoration-line",
+      "none",
+    );
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W16/13-els-meus-gossos-375.png"),
+    });
+
+    for (const [index, dog, name] of [
+      [0, "Duna", "cartilla_Duna_3.jpg"],
+      [1, "Rock", "asseguranca_Rock.pdf"],
+    ] as const) {
+      await page.getByRole("button", { name: "＋ DOC." }).nth(index).click();
+      const dialog = page.getByRole("dialog", { name: `Afegeix un document de ${dog}` });
+      await expect(dialog.getByLabel("Nom del document")).toHaveValue("");
+      await dialog.getByLabel("Nom del document").fill(name);
+      await dialog.getByLabel("Fitxer").setInputFiles({
+        buffer: Buffer.from("mock-document"),
+        mimeType: name.endsWith(".pdf") ? "application/pdf" : "image/jpeg",
+        name,
+      });
+      const upload = page.waitForRequest(
+        (request) =>
+          request.url().includes(`/api/v1/me/dogs/dog-${dog.toLowerCase()}/documents`) &&
+          request.method() === "POST",
+      );
+      await dialog.getByRole("button", { name: "PUJA EL DOCUMENT" }).click();
+      expect((await upload).postDataJSON()).toMatchObject({ name });
+      await expect(dialog).toHaveCount(0);
+    }
+  });
+
   test("hides instructor notes and tasks when TASKS is disabled", async ({ page }) => {
     await login(page, "minimal", brandingMinim);
     await page.goto(`${baseUrl}/gossos`);

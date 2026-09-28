@@ -149,7 +149,8 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     ]);
     expect((await listRow("Lliga social — 3a jornada")).slice(0, 5)).toEqual([
       "Lliga social — 3a jornada · lliga social",
-      "ds 19/09 · 9:00",
+      // E4-W17 step 6: the league ends at 14:00, as the core's seed.
+      "ds 19/09 · 9:00–14:00",
       "totes — bloquejades",
       "obertes · socis",
       "publicada",
@@ -613,6 +614,76 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     await waitFor(() => {
       expect(within(card).getByLabelText("Notes internes")).toHaveValue("Revisat");
     });
+  });
+
+  it("E4-W17 step 5 (R-07-04): [DESA] on the published Torneig with both times cleared marks both «Cal per publicar», with «Falten dades…»", async () => {
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    await waitFor(() => {
+      expect(optionValues(within(card).getByLabelText("Hora de final"))).toContain("20:00");
+    });
+    fireEvent.change(within(card).getByLabelText("Hora d'inici"), { target: { value: "" } });
+    fireEvent.change(within(card).getByLabelText("Hora de final"), { target: { value: "" } });
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+
+    expect(
+      await screen.findByText("Falten dades per publicar l'activitat: revisa els camps marcats."),
+    ).toBeVisible();
+    expect(within(card).getAllByText("Cal per publicar")).toHaveLength(2);
+    expect(within(card).queryByText("Completeu l'activitat abans de continuar.")).toBeNull();
+    expect(patchBodies.at(-1)).toMatchObject({ endTime: null, startTime: null });
+  });
+
+  it("E4-W16 step 9 (INC-29, R-07-04): [DESA] on STALE_VERSION keeps the admin's edits, rich text included, on the fresh copy and saves them with the fresh version", async () => {
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    const editor = within(card).getByRole("textbox", { name: "Descripció llarga (text ric)" });
+    await waitFor(() => {
+      expect(editor.innerHTML).toContain("<h3>Horaris</h3>");
+    });
+    editor.innerHTML = "<p>Text escrit per l'administrador</p>";
+    fireEvent.input(editor);
+    fireEvent.change(within(card).getByLabelText("Places"), { target: { value: "25" } });
+    // Another administrator saves meanwhile: this [DESA] is stale.
+    await client().PATCH("/activities/{id}", {
+      body: { internalNotes: "Revisat per l'altre administrador", version: 7 },
+      params: { path: { id: TOURNAMENT } },
+    });
+    patchBodies.length = 0;
+
+    fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
+    expect(
+      await screen.findByText(
+        "Algú altre ha modificat l'activitat: s'han carregat les dades actuals. Revisa-les i torna a desar.",
+      ),
+    ).toBeVisible();
+    await waitFor(() => {
+      expect(within(card).getByLabelText("Notes internes")).toHaveValue(
+        "Revisat per l'altre administrador",
+      );
+    });
+    expect(
+      within(card).getByRole("textbox", { name: "Descripció llarga (text ric)" }).innerHTML,
+    ).toBe("<p>Text escrit per l'administrador</p>");
+    expect(within(card).getByLabelText("Places")).toHaveValue("25");
+    const save = within(card).getByRole("button", { name: "DESA" });
+    await waitFor(() => {
+      expect(save).toBeEnabled();
+    });
+
+    fireEvent.click(save);
+    expect(await screen.findByText("Canvis desats")).toBeVisible();
+    expect(patchBodies).toHaveLength(2);
+    expect(patchBodies[0]).toMatchObject({ version: 7 });
+    expect(patchBodies[1]).toMatchObject({
+      longDescription: { ca: "<p>Text escrit per l'administrador</p>" },
+      maxPlaces: 25,
+      version: 8,
+    });
+    expect(patchBodies[1]).not.toHaveProperty("internalNotes");
+    expect(within(card).getByLabelText("Notes internes")).toHaveValue(
+      "Revisat per l'altre administrador",
+    );
   });
 
   it("the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text", async () => {

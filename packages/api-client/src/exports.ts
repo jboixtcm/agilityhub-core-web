@@ -100,6 +100,64 @@ export async function requestExport(
   };
 }
 
+const EXPORT_DOWNLOAD_PATH = /\/exports\/([^/]+)\/download$/u;
+
+/**
+ * The file of a READY export job (S14 R-14-12, T-14-26, CONVENCIONS_API §4). The list carries no
+ * `downloadUrl`: `GET /exports/{id}` does. The api's own route (`…/exports/{id}/download?expires=…
+ * &signature=…`, local storage) needs the bearer, so it goes through the client and comes back as
+ * a Blob; any other address (a signed S3 url) is returned to be opened as it is.
+ */
+export async function downloadExportJob(
+  client: ApiClient,
+  jobId: string,
+  fallbackFileName: string,
+): Promise<{ blob: Blob; fileName: string; kind: "file" } | { kind: "url"; url: string }> {
+  const { data: job } = await client.GET("/exports/{id}", { params: { path: { id: jobId } } });
+  if (job?.downloadUrl === undefined || job.downloadUrl === "") {
+    throw new TypeError("The export job has no download URL");
+  }
+  const address = new URL(job.downloadUrl, window.location.href);
+  const id = EXPORT_DOWNLOAD_PATH.exec(address.pathname)?.[1];
+  const expires = address.searchParams.get("expires");
+  const signature = address.searchParams.get("signature");
+  if (id === undefined || expires === null || signature === null) {
+    return { kind: "url", url: job.downloadUrl };
+  }
+  const { data, response } = await client.GET("/exports/{id}/download", {
+    params: {
+      path: { id: decodeURIComponent(id) },
+      query: { expires: Number(expires), signature },
+    },
+    parseAs: "blob",
+  });
+  if (data === undefined) throw new TypeError("The export download has no file");
+  const type = response.headers.get("Content-Type") ?? data.type;
+  return {
+    blob: data.type === type ? data : new Blob([await data.arrayBuffer()], { type }),
+    fileName:
+      contentDispositionFileName(response.headers.get("Content-Disposition")) ??
+      job.fileName ??
+      fallbackFileName,
+    kind: "file",
+  };
+}
+
+/** Opens a signed address the api returned (an S3 url): a hidden link, like the drawer's anchor. */
+export function openDownloadUrl(url: string): void {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "";
+  link.rel = "noopener";
+  link.hidden = true;
+  document.body.append(link);
+  try {
+    link.click();
+  } finally {
+    link.remove();
+  }
+}
+
 /** Saves a downloaded file: object URL, hidden link, click, revoke. */
 export function saveFile(blob: Blob, fileName: string): void {
   const url = URL.createObjectURL(blob);

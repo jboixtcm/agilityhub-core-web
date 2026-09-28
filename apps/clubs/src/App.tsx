@@ -291,6 +291,31 @@ export function MobileNavigation({
   return <TabBar items={items} label={t("shell:nav.main")} />;
 }
 
+/**
+ * INC-18 (R-01-09, E47): this tab's impersonated session has expired. It says so and offers to
+ * close the tab; it never becomes another session (not even the admin's own as a member).
+ */
+function ImpersonationExpiredPage() {
+  const { t } = useTranslation("auth");
+  return (
+    <main className="auth-page">
+      <section className="auth-panel auth-panel--centered">
+        <LogoMark compact />
+        <Icon aria-hidden="true" className="activation-error__icon" name="warn" />
+        <h1>{t("auth:impersonation.expired")}</h1>
+        <Button
+          onClick={() => {
+            window.close();
+          }}
+          type="button"
+        >
+          {t("auth:impersonation.close")}
+        </Button>
+      </section>
+    </main>
+  );
+}
+
 function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   const { me } = useSession();
   const { t } = useTranslation("auth");
@@ -431,17 +456,59 @@ function accessError(
   return t("auth:access.genericError");
 }
 
-export function AccessPage({ authClient }: { authClient: AuthClient }) {
+export function AccessPage({
+  authClient,
+  navigate = (path) => {
+    window.location.assign(path);
+  },
+}: {
+  authClient: AuthClient;
+  navigate?: (path: string) => void;
+}) {
   const branding = useBranding();
   const { t } = useTranslation("auth");
   const [email, setEmail] = useState(
     () => new URLSearchParams(window.location.search).get("email") ?? "",
   );
+  // R-01-13 and «Entra com l'abonat» (S01 D10, E47): a one-time code for this app. The back
+  // office's consumer is the model (`clubs-admin` AccessPage).
+  const [handoff] = useState(() => new URLSearchParams(window.location.search).get("handoff"));
+  const handoffStarted = useRef(false);
   const [password, setPassword] = useState("");
-  const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
+  const [pending, setPending] = useState<"handoff" | "login" | "magic" | "reset" | null>(
+    handoff === null || handoff === "" ? null : "handoff",
+  );
   const [message, setMessage] = useState<string>();
   const [error, setError] = useState<string>();
   const countdown = useCountdown();
+
+  useEffect(() => {
+    if (handoff === null || handoff === "" || handoffStarted.current) {
+      return;
+    }
+    handoffStarted.current = true;
+    // The code is single-use: it leaves the address (and the history) before it is redeemed.
+    const address = new URL(window.location.href);
+    address.searchParams.delete("handoff");
+    window.history.replaceState(null, "", `${address.pathname}${address.search}${address.hash}`);
+    void authClient.exchangeHandoff(handoff).then(
+      async (me) => {
+        navigate(me.impersonation === undefined ? await routeAfterLogin(me, authClient) : "/inici");
+      },
+      () => {
+        setError(t("auth:activation.invalidTitle"));
+        setPending(null);
+      },
+    );
+  }, [authClient, handoff, navigate, t]);
+
+  if (pending === "handoff") {
+    return (
+      <main className="auth-page auth-page--loading">
+        <p role="status">{t("auth:activation.loading")}</p>
+      </main>
+    );
+  }
 
   const requireEmail = (): boolean => {
     if (email.trim() !== "") {
@@ -612,6 +679,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const [passwordPending, setPasswordPending] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState<string>();
   const [passwordFailure, setPasswordFailure] = useState<string>();
+  const [resetLinkUsed, setResetLinkUsed] = useState(false);
 
   useEffect(() => {
     if (started.current) {
@@ -668,12 +736,19 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     event.preventDefault();
     setPasswordPending(true);
     setPasswordFailure(undefined);
+    setResetLinkUsed(false);
     setPasswordMessage(undefined);
     try {
+      // R-01-05 (E49): the session of a RESET link sets the new password once, without `current`.
       await authClient.updatePassword({ new: newPassword, repeat: repeatPassword });
       setPasswordMessage(t("auth:activation.passwordSaved"));
     } catch (error) {
-      setPasswordFailure(passwordError(error, t));
+      if (purpose === "RESET" && isApiError(error, "INVALID_CREDENTIALS")) {
+        // The one-time mark of the link has been used (or has expired): ask for another link.
+        setResetLinkUsed(true);
+      } else {
+        setPasswordFailure(passwordError(error, t));
+      }
     } finally {
       setPasswordPending(false);
     }
@@ -746,6 +821,11 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
             {t("auth:activation.savePassword")}
           </Button>
           {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
+          {resetLinkUsed ? (
+            <p role="alert">
+              {t("auth:activation.resetLinkUsed")} <a href="/entrar">{t("auth:activation.recover")}</a>
+            </p>
+          ) : null}
           {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
         </form>
         <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
@@ -950,17 +1030,19 @@ function PasswordModal({
   );
 }
 
+/** «Canviar de perfil · {perfil}», with the ICU gender of the membership as on 03b (R-01-07). */
 function activeProfileLabel(
   role: Role | undefined,
+  gender: "female" | "other",
   t: ReturnType<typeof useTranslation>["t"],
 ): string {
   if (role === "INSTRUCTOR") {
-    return t("auth:profile.instructorProfile");
+    return t("auth:profile.instructorProfile", { gender });
   }
   if (role === "ADMIN") {
-    return t("auth:profile.adminProfile");
+    return t("auth:profile.adminProfile", { gender });
   }
-  return t("auth:profile.memberProfile");
+  return t("auth:profile.memberProfile", { gender });
 }
 
 function ProfilePage({ authClient }: { authClient: AuthClient }) {
@@ -1006,7 +1088,13 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
           <a href="/perfil-acces">
             <Icon aria-hidden="true" name="user" />
             <span>{t("auth:profile.changeProfile")}</span>
-            <small>{activeProfileLabel(me.membership.activeProfile, t)}</small>
+            <small>
+              {activeProfileLabel(
+                me.membership.activeProfile,
+                me.membership.gender === "FEMALE" ? "female" : "other",
+                t,
+              )}
+            </small>
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
@@ -1184,12 +1272,27 @@ export function App({
   }, []);
   // The offline copy of 08 belongs to one club and person: a change of identity drops it.
   useTrainingCacheIdentity();
-  const pathname = new URL(location, window.location.origin).pathname;
+  const session = useSession();
+  const address = new URL(location, window.location.origin);
+  const pathname = address.pathname;
+  if (
+    session.status === "impersonationExpired" &&
+    !(pathname === "/entrar" && address.searchParams.has("handoff"))
+  ) {
+    return <ImpersonationExpiredPage />;
+  }
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;
   }
   if (pathname === "/entrar") {
-    return <AccessPage authClient={authClient} />;
+    return (
+      <AccessPage
+        authClient={authClient}
+        navigate={(path) => {
+          navigate(path, false);
+        }}
+      />
+    );
   }
   if (pathname === "/activacio") {
     return <ActivationPage authClient={authClient} />;

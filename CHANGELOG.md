@@ -79,6 +79,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Corrections of the global audit of 26-09 (E4-W16; INC-15 web half, INC-18…INC-22, INC-24 web half, INC-26…INC-29):
+  - «Entra com l'abonat» opens only the api's `launchUrl` (a missing one is an error in the dialog); the member app redeems `/entrar?handoff=<code>` once, keeps the code out of the address and the history, and the `#impersonation=` fragment is gone. The MSW world answers a one-time code and refuses a second redemption.
+  - An impersonated session lives in the tab's session storage only, is never refreshed (timer, focus, `visibilitychange`, `pageshow` or 401), and ends on a 401 or at its expiry with «La sessió com l'abonat ha caducat» and a close button, never falling back to another session.
+  - Only a `400`/`401` of the token endpoint ends a session: offline or a 5xx keeps the token, retries with backoff and on `online`, and the provider stays `loading`. A focus refreshes only near expiry; `apps/id` lands on `/login`; `logout()` refreshes once and retries a rejected revoke.
+  - Production bundles no longer carry the mock world: the MSW import is guarded by the literal `import.meta.env.VITE_MOCK`, the PWA precache ignores it and the proxy routes skip the app shell, and `.size-limit.json` budgets every app's entry and total JavaScript (`pnpm size`).
+  - The exports drawer downloads a READY job through `GET /exports/{id}` and the api's signed route with the bearer (a signed S3 url opens as it is); the mock list carries no `downloadUrl` and the mock download needs the bearer and the signature.
+  - Screen 13 lists each dog's tasks under the counter (inert checkbox, «dd-mm · instructor» in the club's zone, the clip with the attachments, done rows struck through «feta el dd-mm»), and «＋ DOC.» works again after a first upload.
+  - D10 keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)» and the audit without BILLING; D8's «Nou preu» proposes the current price's tax (else 0); D7 keeps the admin's edits on `STALE_VERSION`, rebased on the fresh copy.
+  - Password recovery: a used RESET link answers «L'enllaç ja s'ha fet servir: demana'n un altre» with «Recupera-la», and the mock lets only a fresh RESET session skip `current`.
+  - The add-dog «enviada» page is titled «Afegeix un gos» with «TORNA ALS MEUS GOSSOS»; «Canviar de perfil · {perfil}» follows the membership's gender; the onboarding offers only the club's languages.
+  - `pnpm e2e:core` gains an E4-W16 stage (impersonation fallback, the drawer download, D10's actions, 13's task rows, the RESET link), and the E3 N-37 check prints what the core stored when it fails.
+
 - S09 free training, round 2 of E5-W02:
   - 08's offline copy is kept per club, account, member and impersonation. It is dropped on logout, on another account and at the start or end of an impersonation.
   - The «Entrenaments» tab and 08 share one eligibility query. It is read again on focus and after a `MODULE_DISABLED` or rights refusal from any training read; a new app instance reads it again.

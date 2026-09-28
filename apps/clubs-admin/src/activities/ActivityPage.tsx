@@ -537,7 +537,7 @@ export function ActivityPage({
     return [fields[0] ?? "general"];
   };
 
-  const failSave = (cause: unknown) => {
+  const failSave = async (cause: unknown) => {
     if (isConflict(cause)) {
       setConflictDialog((current) => ({
         initial: {},
@@ -547,11 +547,29 @@ export function ActivityPage({
       return;
     }
     if (errorCode(cause) === "STALE_VERSION") {
+      // R-07-04 (INC-29): another admin saved meanwhile. Read the fresh copy and rebase only this
+      // admin's edits on it (the typed rich text included), as D2's drawer does; [DESA] stays
+      // disabled until the fresh `version` is in, then sends the edits with it.
       setFeedback({ message: t("admin-activities:form.stale"), tone: "danger" });
-      setReload((value) => value + 1);
+      await refreshVersion().catch(() => undefined);
+      return;
+    }
+    if (errorCode(cause) === "ACTIVITY_INCOMPLETE") {
+      // R-07-04 (E4-W17 step 5): a published activity's [DESA] that empties required fields marks
+      // every one of them, as the publication does.
+      markIncomplete(cause);
       return;
     }
     showOnFields(cause);
+  };
+
+  /** `422 ACTIVITY_INCOMPLETE`: every `fieldErrors` entry gets «Cal per publicar» (R-07-04). */
+  const markIncomplete = (cause: unknown) => {
+    const fields = errorFields(cause).map(fieldKey);
+    setErrors(
+      Object.fromEntries(fields.map((key) => [key, t("admin-activities:form.requiredToPublish")])),
+    );
+    setFeedback({ message: t("admin-activities:publishDialog.incomplete"), tone: "danger" });
   };
 
   /** An error on the fields it belongs to (`saveErrorTargets`), else as the page message. */
@@ -604,7 +622,7 @@ export function ActivityPage({
         }
         setConflictDialog(undefined);
       }
-      failSave(cause);
+      await failSave(cause);
       return undefined;
     } finally {
       setPending(undefined);
@@ -647,13 +665,7 @@ export function ActivityPage({
       if (errorCode(cause) === "ACTIVITY_INCOMPLETE") {
         setConfirmPublish(false);
         setConflictDialog(undefined);
-        const fields = errorFields(cause).map(fieldKey);
-        setErrors(
-          Object.fromEntries(
-            fields.map((key) => [key, t("admin-activities:form.requiredToPublish")]),
-          ),
-        );
-        setFeedback({ message: t("admin-activities:publishDialog.incomplete"), tone: "danger" });
+        markIncomplete(cause);
         return;
       }
       if (errorCode(cause) === "ADMIN_TEXT_REQUIRED" && source === "confirm") {
@@ -706,6 +718,9 @@ export function ActivityPage({
       saved.ringIds.length > 0 &&
       [saved.date, saved.startTime, saved.endTime].some((value) => value == null);
     if (windowless) {
+      // Sending the publication without its confirmation is safe here: R-07-04 and T-07-03 make
+      // the api refuse an activity with rings but no date or hours (`422 ACTIVITY_INCOMPLETE`,
+      // «pistes sense `endTime` → ACTIVITY_INCOMPLETE»), so this call can only mark the fields.
       publicationKeys.reset();
       try {
         await publishWith({ notifyEmail: false }, "confirm");

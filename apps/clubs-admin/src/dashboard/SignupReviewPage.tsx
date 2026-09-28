@@ -196,7 +196,7 @@ export function SignupReviewPage({
   useEffect(() => { load(); }, [load, reload]);
 
   // R-04-06 (E38): the reused dog's «Abans / Ara» names each document type after the club's list
-  // (`undefined` while it loads; a type it lacks, or a failed read, shows the key).
+  // (`undefined` while it loads; a failed read is an empty map).
   const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>();
   const documentsChanged = signup?.dogs.some((dog) => dog.readmission?.changedFields.includes("documents") === true) === true;
   const labelLanguage = i18n.resolvedLanguage ?? i18n.language;
@@ -623,10 +623,10 @@ export function SignupReviewPage({
       ? t("admin-census:dog.documents.pending")
       : row.files.map((file) => file.name).join(" · ");
   };
+  // AGENTS rule 1 (E4-W17 step 4): while the list loads, after a failed read, or for a type the
+  // list lacks, the row keeps the generic «Documents» label, never the raw key.
   const documentTypeLabel = (type: string): string =>
-    documentTypeLabels === undefined
-      ? t("admin-census:signupReview.fields.documents")
-      : (documentTypeLabels.get(type) ?? type);
+    documentTypeLabels?.get(type) ?? t("admin-census:signupReview.fields.documents");
 
   return (
     <section className="signup-review-page">

@@ -122,7 +122,11 @@ async function renderSignup({
       </BrandingProvider>
     </I18nextProvider>,
   );
-  await screen.findByRole("heading", { name: "Apunta-t'hi" });
+  // The header's title: «Apunta-t'hi», or «Afegeix un gos» on the add-dog «enviada» page (E4-W16).
+  await screen.findByRole("heading", {
+    level: 1,
+    name: addDog && path.endsWith("/enviada") ? "Afegeix un gos" : "Apunta-t'hi",
+  });
   if (!path.endsWith("/enviada")) await screen.findByText(/Pas \d de \d/u);
   return { i18n, navigate };
 }
@@ -782,6 +786,20 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     expect(screen.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
     expect(screen.getByText(/t'avisarem a l'app quan l'hagi validat/u)).toBeVisible();
     expect(screen.queryByText(/benvinguda/u)).not.toBeInTheDocument();
+  });
+
+  it("E4-W16 step 12a: the add-dog success page is titled «Afegeix un gos» and goes back to 13; the public one keeps «Apunta-t'hi»", async () => {
+    await renderSignup({ addDog: true, path: "/gossos/nou/enviada" });
+    expect(screen.getByRole("heading", { level: 1, name: "Afegeix un gos" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "TORNA ALS MEUS GOSSOS" })).toHaveAttribute(
+      "href",
+      "/gossos",
+    );
+
+    cleanup();
+    await renderSignup({ path: "/apuntat-hi/enviada" });
+    expect(screen.getByRole("heading", { level: 1, name: "Apunta-t'hi" })).toBeVisible();
+    expect(screen.queryByRole("link", { name: "TORNA ALS MEUS GOSSOS" })).toBeNull();
   });
 
   it("sends notesToInstructors from 17 and holderTaxId from 19 (§2, §3)", async () => {

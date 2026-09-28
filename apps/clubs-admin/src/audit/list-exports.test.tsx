@@ -184,7 +184,7 @@ afterAll(() => {
   server.close();
 });
 
-async function renderButton(button: ExportButton) {
+async function renderButton(button: ExportButton, accessToken?: string) {
   window.history.replaceState(null, "", button.location);
   server.use(
     http.get("*/api/v1/dashboard/counters", () => HttpResponse.json({ pendingSignups: 0 })),
@@ -205,6 +205,7 @@ async function renderButton(button: ExportButton) {
   });
   const client = createApiClient({
     baseUrl: `${window.location.origin}/api/v1`,
+    ...(accessToken === undefined ? {} : { getAccessToken: () => accessToken }),
     getLocale: () => "ca",
   });
   render(
@@ -396,5 +397,115 @@ describe("T-14-26 R-14-12 E4-W07 one export at a time", () => {
     const blob = savedBlobs[0];
     if (blob === undefined) throw new TypeError("Expected the saved file");
     expect(new Uint8Array(await blob.arrayBuffer())).toEqual(mockExportBody("xlsx"));
+  });
+});
+
+describe("T-14-26 R-14-12 E4-W16 step 5 (INC-21): a queued export is downloaded from the drawer", () => {
+  function membersButton(): ExportButton {
+    const [button] = BUTTONS;
+    if (button === undefined) throw new TypeError("Expected the D5 members button");
+    return button;
+  }
+
+  /** Every `/exports…` request with the bearer it carried. */
+  function recordExportJobRequests() {
+    const requests: { authorization: string | null; url: URL }[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.startsWith("/api/v1/exports")) {
+        requests.push({ authorization: request.headers.get("Authorization"), url });
+      }
+    };
+    server.events.on("request:start", listener);
+    return {
+      requests,
+      stop: () => {
+        server.events.removeListener("request:start", listener);
+      },
+    };
+  }
+
+  async function queueAndOpenReadyJob() {
+    mockScenario("adminExportsQueued");
+    const members = membersButton();
+    await renderButton(members, "mock-access-token");
+    await members.click();
+    const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
+    const download = await within(drawer).findByRole(
+      "button",
+      { name: /^Descarrega canic_members_\d{8}-\d{4}\.xlsx$/u },
+      { timeout: 4_000 },
+    );
+    return { download, drawer };
+  }
+
+  it("the READY row reads GET /exports/{id} and fetches the api's signed route with the bearer, saved byte for byte", async () => {
+    const jobs = recordExportJobRequests();
+    const { download } = await queueAndOpenReadyJob();
+    // By contract the list carries no `downloadUrl`.
+    const list = await createApiClient({ baseUrl: `${window.location.origin}/api/v1` }).GET(
+      "/exports",
+    );
+    expect(list.data?.every((job) => job.downloadUrl === undefined)).toBe(true);
+
+    fireEvent.click(download);
+
+    await waitFor(() => {
+      expect(clickedLinks).toHaveLength(1);
+    });
+    expect(clickedLinks[0]).toMatchObject({ hidden: true });
+    expect(clickedLinks[0]?.download).toMatch(/^canic_members_\d{8}-\d{4}\.xlsx$/u);
+    const blob = savedBlobs[0];
+    if (blob === undefined) throw new TypeError("Expected the saved file");
+    expect(blob.type).toBe(XLSX);
+    expect(new Uint8Array(await blob.arrayBuffer())).toEqual(mockExportBody("xlsx"));
+    const detail = jobs.requests.find((request) =>
+      /^\/api\/v1\/exports\/[^/]+$/u.test(request.url.pathname),
+    );
+    const file = jobs.requests.find((request) => request.url.pathname.endsWith("/download"));
+    expect(detail?.url.pathname).toMatch(/^\/api\/v1\/exports\/[0-9a-f-]{36}$/u);
+    expect(file?.authorization).toBe("Bearer mock-access-token");
+    expect(file?.url.searchParams.get("signature")).not.toBeNull();
+    expect(file?.url.searchParams.get("expires")).not.toBeNull();
+    jobs.stop();
+  });
+
+  it("a signed S3 url opens as it is, and a failed download is shown inside the drawer", async () => {
+    const { download, drawer } = await queueAndOpenReadyJob();
+    server.use(
+      http.get("*/api/v1/exports/:id", ({ params }) =>
+        HttpResponse.json({
+          createdAt: "2026-08-03T10:25:00Z",
+          downloadUrl: "https://exports.s3.example.test/canic/members.xlsx?X-Amz-Signature=abc",
+          fileName: "canic_members_20260803-1225.xlsx",
+          format: "XLSX",
+          id: String(params.id),
+          kind: "LIST",
+          status: "READY",
+        }),
+      ),
+    );
+    fireEvent.click(download);
+    await waitFor(() => {
+      expect(clickedLinks).toHaveLength(1);
+    });
+    expect(clickedLinks[0]?.href).toBe(
+      "https://exports.s3.example.test/canic/members.xlsx?X-Amz-Signature=abc",
+    );
+    expect(savedBlobs).toHaveLength(0);
+
+    server.use(
+      http.get("*/api/v1/exports/:id", () =>
+        HttpResponse.json(
+          { code: "EXPORT_EXPIRED", details: {}, message: "Export expired", traceId: "t" },
+          { status: 422 },
+        ),
+      ),
+    );
+    fireEvent.click(download);
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent(
+      "Aquesta exportació ha caducat.",
+    );
+    expect(download).toBeEnabled();
   });
 });

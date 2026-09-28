@@ -1,0 +1,826 @@
+
+> agilityhub-core-web@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web
+> turbo run test
+
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running test in 10 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:typecheck: cache miss, executing 99daac01938cbf2e
+@agilityhub/api-client:test: cache miss, executing 1f83e02b79d93ecb
+@agilityhub/ui:test: cache hit, replaying logs 5b89d300c562fb98
+@agilityhub/course-core:test: cache hit, replaying logs 1c26edab867f42c5
+@agilityhub/course-core:typecheck: cache hit, replaying logs 671f426b6643ad21
+@agilityhub/ui:typecheck: cache hit, replaying logs edbfe844eb97a665
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/ui:test:  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 62[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 93[2mms[22m[39m
+@agilityhub/ui:test: [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/slot-grid.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 195[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 310[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m76 passed[39m[22m[90m (76)[39m
+@agilityhub/ui:test: [2m   Start at [22m 01:43:32
+@agilityhub/ui:test: [2m   Duration [22m 2.43s[2m (environment 66%, setup 19%, transform 7%, tests 6%, import 1%, worker 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m18 passed[39m[22m[90m (18)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m342 passed[39m[22m[90m (342)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 01:43:32
+@agilityhub/course-core:test: [2m   Duration [22m 645ms[2m (transform 77%, import 16%, tests 5%, worker 3%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 2.29s[39m[2m · 77% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:test: cache hit, replaying logs 30c0e8b7888e66b3
+@agilityhub/i18n:test: cache hit, replaying logs 2e6e773ef0abfec1
+@agilityhub/i18n:typecheck: cache hit, replaying logs 09f0c074069dc265
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n[39m
+@agilityhub/i18n:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/i18n:test:  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/format.test.ts [2m([22m[2m60 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+@agilityhub/i18n:test: [2m      Tests [22m [1m[32m80 passed[39m[22m[90m (80)[39m
+@agilityhub/i18n:test: [2m   Start at [22m 10:58:03
+@agilityhub/i18n:test: [2m   Duration [22m 513ms[2m (transform 67%, import 18%, tests 13%, worker 2%)[22m
+@agilityhub/i18n:test: 
+@agilityhub/shared-types:test: [2m   Start at [22m 01:43:37
+@agilityhub/shared-types:test: [2m   Duration [22m 670ms[2m (transform 85%, import 10%, tests 5%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  [32m✓[39m src/api-error.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-fields.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/club-settings-handlers.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 24[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/booking-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 439[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m26 tests[22m[2m)[22m[33m 623[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/backoffice-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 693[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 767[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 953[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/training-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1010[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 1363[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E3-W10 build-time budget of the MSW mock worlds [2m(18)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m imports the mock modules afresh within the start-up budget[33m 442[2mms[22m[39m
+@agilityhub/auth:test: cache miss, executing db3bf37013002c9a
+@agilityhub/auth:typecheck: cache miss, executing bf52ef0961a19a0d
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m68 tests[22m[2m)[22m[33m 1854[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (default)[33m 314[2mms[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[32m262 passed[39m[22m[90m (262)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 10:58:33
+@agilityhub/api-client:test: [2m   Duration [22m 2.98s[2m (tests 40%, import 32%, transform 28%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 5.82s[39m[2m · 28% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  [32m✓[39m src/session.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 215[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/auth-client.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 536[2mms[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/auth:test: [2m      Tests [22m [1m[32m29 passed[39m[22m[90m (29)[39m
+@agilityhub/auth:test: [2m   Start at [22m 10:58:36
+@agilityhub/auth:test: [2m   Duration [22m 1.21s[2m (environment 41%, tests 37%, import 11%, transform 10%)[22m
+@agilityhub/auth:test: 
+clubs-admin:test: cache miss, executing fc0d880c05d658a4
+id:test: cache miss, executing 6bfc5924d61732ff
+clubs:test: cache miss, executing 1e26a96404738ad1
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+id:test: 
+id:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id[39m
+id:test: 
+clubs-admin:test: 
+clubs-admin:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin[39m
+clubs-admin:test: 
+clubs:test: 
+clubs:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs[39m
+clubs:test: 
+clubs:test:  [32m✓[39m src/today/literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+clubs:test:  [32m✓[39m src/InfoPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 246[2mms[22m[39m
+id:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 491[2mms[22m[39m
+id:test: 
+id:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+id:test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+id:test: [2m   Start at [22m 10:58:38
+id:test: [2m   Duration [22m 3.81s[2m (environment 55%, transform 16%, tests 14%, setup 12%, import 2%)[22m
+id:test: 
+clubs:test:  [32m✓[39m src/training/i18n.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 901[2mms[22m[39m
+clubs:test:    [32m✓[39m T-09-41 training and instructor vocabulary, locales and club time zone [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30»[33m 601[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/PlansPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 681[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E4-W16 step 8 (INC-28, S05 §12, §13-5): D8 «Nou preu» proposes the plan's tax, never a country constant [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m proposes the current price's taxPercent — 0 at a club without VAT — and sends the value shown[33m 378[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a plan whose current price carries 10 % proposes 10, and a plan without prices proposes 0[32m 300[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/book.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1390[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/home.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1391[2mms[22m[39m
+clubs:test:    [32m✓[39m screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) [2m(8)[22m
+clubs:test:      [33m[2m✓[22m[39m the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them[33m 328[2mms[22m[39m
+clubs:test:  [32m✓[39m src/training/TrainingDetailPage.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1540[2mms[22m[39m
+clubs:test:    [32m✓[39m S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m a future booking: title, state, line, who booked it, and the cancellation back to 03[33m 367[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog[33m 358[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere)[33m 317[2mms[22m[39m
+clubs:test:  [32m✓[39m src/activities/activities.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 2002[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/dashboard/DashboardPage.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 1941[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-25 D1 dashboard [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the server aggregate, all risk rows, pending signups, and accessible chart[33m 394[2mms[22m[39m
+clubs-admin:test: Not implemented: navigation to another Document
+clubs:test:  [32m✓[39m src/today/TodayPage.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 2521[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/detail.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 2422[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) [2m(14)[22m
+clubs:test:      [33m[2m✓[22m[39m shows the mockup card, and a cancellation in time asks first and leaves the green note[33m 310[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)[33m 324[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/MemberBookingsCard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2106[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note[33m 700[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000[33m 997[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1534[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-14 clubs-admin shell [2m(6)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m uses the compact mark with the runtime club name[33m 318[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 9 menu counters (S14 R-14-08) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m reads the counters once for an ADMIN, again on focus, and not on every navigation[33m 463[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/OverviewPage.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3320[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell[33m 321[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row[33m 370[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»[33m 1209[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/dashboard/RiskReviewCard.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 2541[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m «Cadells · avui 9:30 · Cadells» → D4 «anul·lades», that week, that class selected[33m 614[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «Nivell D · avui 17:40 · Petita» → D4 «anul·lades», that week, that class selected[33m 404[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «F i G · demà 20:00 · Carretera» → D4 «actives», that week, that class selected[33m 483[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «Cadells · dc 9:30 · Cadells» → D4 «actives», that week, that class selected[33m 362[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/confirm.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 3534[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04[33m 305[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the back gesture leaves the page and releases the hold too[33m 367[2mms[22m[39m
+clubs:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m34 tests[22m[2m)[22m[33m 3965[2mms[22m[39m
+clubs:test:    [32m✓[39m T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m an instructor-only session gets the usual no-access path: no detail, no /me/activities call[33m 437[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/JobsCard.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 3252[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) [2m(14)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run[33m 428[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation[33m 419[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it[33m 585[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/CensusRecordPage.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 3814[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 D10 member record [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL[33m 797[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m blocks and unblocks new bookings with the required reason[33m 648[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m maps STALE_VERSION when another administrator edited the member[33m 487[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/TemplateDayPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1318[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-27 D3b day view per ring / per instructor [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows only the rings used that day in catalog order, plus «Sense» when a class has no ring[33m 561[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/CensusListPage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 4025[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-38 D5 universal member list [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders applied filters and preserves selection when page size changes[33m 979[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members[33m 343[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m toggles visible columns and synchronizes the ordered fields to the URL[33m 818[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-42 D15 translated dog list [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved columns and dog record links[33m 1881[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/training/RingBlockCard.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 3643[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA[33m 719[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m offers only the free half hours of the ring and their runs, and posts the block[33m 745[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m an instructor with live bookings in the way is told to ask the administration[33m 572[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13)[33m 572[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13)[33m 554[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/ParameterSettings.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 643[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 D11 parameter rows [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m keeps module-less parameters that the core sends with module null[33m 436[2mms[22m[39m
+clubs:test:  [32m✓[39m src/instructor/RingBlockPage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 4602[2mms[22m[39m
+clubs:test:    [32m✓[39m screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) [2m(9)[22m
+clubs:test:      [33m[2m✓[22m[39m «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two[33m 351[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a contiguous selection writes the summary and posts the block, then 23 with its toast[33m 894[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again[33m 1128[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it[33m 436[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates)[33m 405[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)[33m 434[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m while the block is sent the button is busy and the grid, kinds and rings are inert[33m 410[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key[33m 369[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/ClubPagesCard.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 517[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-05-CP-07 club page editor [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m warns about provisional text and confirms the next consent version before publishing[33m 400[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/training/TrainingRegisterPage.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 4017[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) [2m(8)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN)[33m 610[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m offers the api's values with their counts in the universal filter (no filter-values route: counted from the list)[33m 542[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR[33m 563[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others[33m 404[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action[33m 555[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so[33m 884[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/ClassRegistrantsPanel.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 900[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m lists every booking as the api orders it, with its state, and the D12 «En espera: …» line[33m 323[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/description.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/CalendarDayPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 387[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/calendar-literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/derived-settings.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/calendar-shared.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/plain-dates.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/SettingsPage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 4661[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows one switch per level with the help text: Teràpia is off, the progression levels on[33m 782[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m saves a toggle with PATCH /levels/{id} {progression, version} and keeps the saved level[33m 903[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m shows a refused toggle by its code next to the table and keeps the switch as saved; STALE_VERSION reloads the levels[33m 562[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value[33m 1018[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review [2m(5)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m S05 §2 the «Progressió» help names no club level, in ca, es and en[33m 443[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error[33m 541[2mms[22m[39m
+clubs:test:  [32m✓[39m src/SignupPage.test.tsx [2m([22m[2m99 tests[22m[2m)[22m[33m 8181[2mms[22m[39m
+clubs:test:    [32m✓[39m T-04-29 signup person and draft [2m(7)[22m
+clubs:test:      [33m[2m✓[22m[39m persists a current draft, expires it after 24 hours and maps identity states[33m 532[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m GENERIC profile: the first document type of the profile and an editable prefix[33m 341[2mms[22m[39m
+clubs:test:    [32m✓[39m T-04-30 signup dog, uploads, plans and module gates [2m(5)[22m
+clubs:test:      [33m[2m✓[22m[39m validates and normalises the chip per country profile and the birth month[33m 385[2mms[22m[39m
+clubs:test:    [32m✓[39m E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review [2m(5)[22m
+clubs:test:      [33m[2m✓[22m[39m #1 a slow full page load: the departing page never renders nor consumes the destination's error[33m 396[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/dashboard/SignupReviewPage.test.tsx [2m([22m[2m93 tests[22m[2m)[22m[33m 8899[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-04-33 D2 signup validation [2m(22)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment[33m 490[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog[33m 366[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group[33m 545[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/audit/list-exports.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 9309[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 D5 members «Excel · PDF» → Excel [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters[33m 734[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 202: opens the exports drawer with the queued job and saves nothing[33m 563[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 422 EXPORT_LIMIT: shows the drawer's notice[33m 503[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button[33m 304[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters[33m 569[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 202: opens the exports drawer with the queued job and saves nothing[33m 509[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 422 EXPORT_LIMIT: shows the drawer's notice[33m 400[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button[33m 319[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 D15 dogs «Excel · PDF» → PDF [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters[33m 363[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W07 one export at a time [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them[33m 570[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-26 R-14-12 E4-W16 step 5 (INC-21): a queued export is downloaded from the drawer [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m the READY row reads GET /exports/{id} and fetches the api's signed route with the bearer, saved byte for byte[33m 1245[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a signed S3 url opens as it is, and a failed download is shown inside the drawer[33m 1257[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/TemplatesPage.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 11047[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 D3 weekly templates [2m(13)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band[33m 2200[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m saves every change of a full cell at once with the template version[33m 1315[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m queues two quick changes of a full cell and sends each PATCH with the latest version[33m 685[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m reloads the template and remounts the card on STALE_VERSION[33m 599[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 «Esborra la franja» (removeBand) waits in the queue for the level PATCH before it; then the drawer closes[33m 361[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers[33m 364[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent[33m 336[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version[33m 470[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone[33m 496[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists[33m 309[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one[33m 430[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/activities/ActivitiesPage.test.tsx [2m([22m[2m47 tests[22m[2m)[22m[33m 10794[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 D7 activities (list, maintenance, publication, cancellation) [2m(22)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips[33m 615[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «Nova activitat» creates a draft with title and type and opens its maintenance[33m 930[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips[33m 452[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m disables the ring chips of an activity outside the club («— (fora del club)»)[33m 352[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST[33m 522[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version[33m 435[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text[33m 427[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields[33m 369[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E4-W16 step 9 (INC-29, R-07-04): [DESA] on STALE_VERSION keeps the admin's edits, rich text included, on the fresh copy and saves them with the fresh version[33m 319[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review [2m(6)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00[33m 483[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected[33m 823[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them[33m 302[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/planning/CalendarPage.test.tsx [2m([22m[2m44 tests[22m[2m)[22m[33m 11568[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E3-W07 step 9 a D1 risk row opens D4 on its class [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m selects the class of `?classe=` in the week of `?setmana=`[33m 650[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-28 D4 / D4b / D4c class calendar (front half, MSW) [2m(24)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m opens «Esborrany» on the first week with drafts, with the validation card and its count[33m 1014[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [VALIDAR LA SETMANA] turns every draft of the week active at once[33m 614[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»[33m 783[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [ELIMINA] of an active class goes through the same D4c modal[33m 652[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card[33m 676[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation[33m 335[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped[33m 330[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review [2m(7)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries[33m 389[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost[33m 368[2mms[22m[39m
+clubs-admin:test:  [31m❯[39m src/audit/AuditPage.test.tsx [2m([22m[2m8 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 12114[2mms[22m[39m
+clubs-admin:test:    [31m❯[39m T-14-26 member audit and exports [2m(8)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m filters by action and opens the masked before/after change drawer[33m 663[2mms[22m[39m
+clubs-admin:test:      [32m✓[39m E3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC)[32m 214[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole[33m 336[2mms[22m[39m
+clubs-admin:test: [31m     [31m×[31m opens the exports drawer for a queued job and exposes its READY download[39m[33m 10533[2mms[22m[39m
+clubs-admin:test:      [32m✓[39m shows the catalogued EXPORT_LIMIT explanation in the exports drawer[32m 190[2mms[22m[39m
+clubs-admin:test:      [32m✓[39m routes a queued members list export into the global drawer[32m 86[2mms[22m[39m
+clubs-admin:test:      [32m✓[39m routes a queued dogs list export into the global drawer[32m 83[2mms[22m[39m
+clubs-admin:test:      [32m✓[39m links LastChange to the entity-scoped audit trail[32m 5[2mms[22m[39m
+clubs-admin:test: 
+clubs-admin:test: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+clubs-admin:test: 
+clubs-admin:test: [41m[1m FAIL [22m[49m src/audit/AuditPage.test.tsx[2m > [22mT-14-26 member audit and exports[2m > [22mopens the exports drawer for a queued job and exposes its READY download
+clubs-admin:test: [31m[1mTestingLibraryElementError[22m[39m: Unable to find role="link" and name "Descarrega canic_audit-entries_20260803-1225.xlsx"
+clubs-admin:test: 
+clubs-admin:test: Ignored nodes: comments, script, style
+clubs-admin:test: [36m<body>[39m
+clubs-admin:test:   [36m<div>[39m
+clubs-admin:test:     [36m<section[39m
+clubs-admin:test:       [33mclass[39m=[32m"audit-page"[39m
+clubs-admin:test:     [36m>[39m
+clubs-admin:test:       [36m<header>[39m
+clubs-admin:test:         [36m<h1>[39m
+clubs-admin:test:           [36m<a[39m
+clubs-admin:test:             [33mhref[39m=[32m"/abonats/member-laura"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<svg[39m
+clubs-admin:test:               [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<use[39m
+clubs-admin:test:                 [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+clubs-admin:test:               [36m/>[39m
+clubs-admin:test:             [36m</svg>[39m
+clubs-admin:test:             [0mAuditoria de l'abonat[0m
+clubs-admin:test:           [36m</a>[39m
+clubs-admin:test:         [36m</h1>[39m
+clubs-admin:test:       [36m</header>[39m
+clubs-admin:test:       [36m<section[39m
+clubs-admin:test:         [33maria-label[39m=[32m"Entrades d'auditoria de l'abonat"[39m
+clubs-admin:test:         [33mclass[39m=[32m"ah-universal-list"[39m
+clubs-admin:test:       [36m>[39m
+clubs-admin:test:         [36m<div[39m
+clubs-admin:test:           [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+clubs-admin:test:         [36m>[39m
+clubs-admin:test:           [36m<label[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__search"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<span[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-sr-only"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mCerca per acció, actor o entitat[0m
+clubs-admin:test:             [36m</span>[39m
+clubs-admin:test:             [36m<svg[39m
+clubs-admin:test:               [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<use[39m
+clubs-admin:test:                 [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+clubs-admin:test:               [36m/>[39m
+clubs-admin:test:             [36m</svg>[39m
+clubs-admin:test:             [36m<input[39m
+clubs-admin:test:               [33maria-label[39m=[32m"Cerca per acció, actor o entitat"[39m
+clubs-admin:test:               [33mplaceholder[39m=[32m"Cerca per acció, actor o entitat"[39m
+clubs-admin:test:               [33mtype[39m=[32m"search"[39m
+clubs-admin:test:               [33mvalue[39m=[32m""[39m
+clubs-admin:test:             [36m/>[39m
+clubs-admin:test:           [36m</label>[39m
+clubs-admin:test:           [36m<select[39m
+clubs-admin:test:             [33maria-label[39m=[32m"Acció"[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__status"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m""[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mTotes les accions[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_UPDATED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mDades de l'abonat modificades[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_PAYMENT_METHOD_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mMètode de pagament modificat[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_PLAN_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mModalitat modificada[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"DOG_LEVEL_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mNivell del gos modificat[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"PARAMETER_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mConfiguració modificada[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"DATA_EXPORTED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mDades exportades[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:           [36m</select>[39m
+clubs-admin:test:           [36m<details[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<summary[39m
+clubs-admin:test:               [33mclass[39m=[32m""[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<svg[39m
+clubs-admin:test:                 [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:                 [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:               [36m>[39m
+clubs-admin:test:                 [36m<use[39m
+clubs-admin:test:                   [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+clubs-admin:test:                 [36m/>[39m
+clubs-admin:test:               [36m</svg>[39m
+clubs-admin:test:               [0mFiltre[0m
+clubs-admin:test:               [36m<span[39m
+clubs-admin:test:                 [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [36m>[39m
+clubs-admin:test:                 [0m▾[0m
+clubs-admin:test:               [36m</span>[39m
+clubs-admin:test:             [36m</summary>[39m
+clubs-admin:test:             [36m<div[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<label>[39m
+clubs-admin:test:                 [36m<span>[39m
+clubs-admin:test:                   [0mColumna[0m
+clubs-admin:test:                 [36m</span>[39m
+clubs-admin:test:                 [36m<select>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"action"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mAcció[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"at"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mData[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"entityType"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mTipus d'entitat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"entityId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mIdentificador de l'entitat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"actorAccountId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mActor[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"actorRole"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mRol de l'actor[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"impersonatedMemberId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mAbonat suplantat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"origin"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mOrigen[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                 [36m</select>[39m
+clubs-admin:test:               [36m</label>[39m
+clubs-admin:test:               [36m<label>[39m
+clubs-admin:test:                 [36m<span>[39m
+clubs-admin:test:                   [0mOperador[0m
+clubs-admin:test:                 [36m</span>[39m
+clubs-admin:test:                 [36m<select>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"eq"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0més igual a[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"ne"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                    ...
+clubs-admin:test: 
+clubs-admin:test: Ignored nodes: comments, script, style
+clubs-admin:test: [36m<body>[39m
+clubs-admin:test:   [36m<div>[39m
+clubs-admin:test:     [36m<section[39m
+clubs-admin:test:       [33mclass[39m=[32m"audit-page"[39m
+clubs-admin:test:     [36m>[39m
+clubs-admin:test:       [36m<header>[39m
+clubs-admin:test:         [36m<h1>[39m
+clubs-admin:test:           [36m<a[39m
+clubs-admin:test:             [33mhref[39m=[32m"/abonats/member-laura"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<svg[39m
+clubs-admin:test:               [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<use[39m
+clubs-admin:test:                 [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+clubs-admin:test:               [36m/>[39m
+clubs-admin:test:             [36m</svg>[39m
+clubs-admin:test:             [0mAuditoria de l'abonat[0m
+clubs-admin:test:           [36m</a>[39m
+clubs-admin:test:         [36m</h1>[39m
+clubs-admin:test:       [36m</header>[39m
+clubs-admin:test:       [36m<section[39m
+clubs-admin:test:         [33maria-label[39m=[32m"Entrades d'auditoria de l'abonat"[39m
+clubs-admin:test:         [33mclass[39m=[32m"ah-universal-list"[39m
+clubs-admin:test:       [36m>[39m
+clubs-admin:test:         [36m<div[39m
+clubs-admin:test:           [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+clubs-admin:test:         [36m>[39m
+clubs-admin:test:           [36m<label[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__search"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<span[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-sr-only"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mCerca per acció, actor o entitat[0m
+clubs-admin:test:             [36m</span>[39m
+clubs-admin:test:             [36m<svg[39m
+clubs-admin:test:               [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<use[39m
+clubs-admin:test:                 [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+clubs-admin:test:               [36m/>[39m
+clubs-admin:test:             [36m</svg>[39m
+clubs-admin:test:             [36m<input[39m
+clubs-admin:test:               [33maria-label[39m=[32m"Cerca per acció, actor o entitat"[39m
+clubs-admin:test:               [33mplaceholder[39m=[32m"Cerca per acció, actor o entitat"[39m
+clubs-admin:test:               [33mtype[39m=[32m"search"[39m
+clubs-admin:test:               [33mvalue[39m=[32m""[39m
+clubs-admin:test:             [36m/>[39m
+clubs-admin:test:           [36m</label>[39m
+clubs-admin:test:           [36m<select[39m
+clubs-admin:test:             [33maria-label[39m=[32m"Acció"[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__status"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m""[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mTotes les accions[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_UPDATED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mDades de l'abonat modificades[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_PAYMENT_METHOD_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mMètode de pagament modificat[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"MEMBER_PLAN_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mModalitat modificada[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"DOG_LEVEL_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mNivell del gos modificat[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"PARAMETER_CHANGED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mConfiguració modificada[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:             [36m<option[39m
+clubs-admin:test:               [33mvalue[39m=[32m"DATA_EXPORTED"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [0mDades exportades[0m
+clubs-admin:test:             [36m</option>[39m
+clubs-admin:test:           [36m</select>[39m
+clubs-admin:test:           [36m<details[39m
+clubs-admin:test:             [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+clubs-admin:test:           [36m>[39m
+clubs-admin:test:             [36m<summary[39m
+clubs-admin:test:               [33mclass[39m=[32m""[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<svg[39m
+clubs-admin:test:                 [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:                 [33mclass[39m=[32m"ah-icon"[39m
+clubs-admin:test:               [36m>[39m
+clubs-admin:test:                 [36m<use[39m
+clubs-admin:test:                   [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+clubs-admin:test:                 [36m/>[39m
+clubs-admin:test:               [36m</svg>[39m
+clubs-admin:test:               [0mFiltre[0m
+clubs-admin:test:               [36m<span[39m
+clubs-admin:test:                 [33maria-hidden[39m=[32m"true"[39m
+clubs-admin:test:               [36m>[39m
+clubs-admin:test:                 [0m▾[0m
+clubs-admin:test:               [36m</span>[39m
+clubs-admin:test:             [36m</summary>[39m
+clubs-admin:test:             [36m<div[39m
+clubs-admin:test:               [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+clubs-admin:test:             [36m>[39m
+clubs-admin:test:               [36m<label>[39m
+clubs-admin:test:                 [36m<span>[39m
+clubs-admin:test:                   [0mColumna[0m
+clubs-admin:test:                 [36m</span>[39m
+clubs-admin:test:                 [36m<select>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"action"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mAcció[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"at"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mData[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"entityType"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mTipus d'entitat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"entityId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mIdentificador de l'entitat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"actorAccountId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mActor[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"actorRole"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mRol de l'actor[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"impersonatedMemberId"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mAbonat suplantat[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"origin"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0mOrigen[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                 [36m</select>[39m
+clubs-admin:test:               [36m</label>[39m
+clubs-admin:test:               [36m<label>[39m
+clubs-admin:test:                 [36m<span>[39m
+clubs-admin:test:                   [0mOperador[0m
+clubs-admin:test:                 [36m</span>[39m
+clubs-admin:test:                 [36m<select>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"eq"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                     [0més igual a[0m
+clubs-admin:test:                   [36m</option>[39m
+clubs-admin:test:                   [36m<option[39m
+clubs-admin:test:                     [33mvalue[39m=[32m"ne"[39m
+clubs-admin:test:                   [36m>[39m
+clubs-admin:test:                    ...
+clubs-admin:test: [90m [2m❯[22m waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+clubs-admin:test: [90m [2m❯[22m ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+clubs-admin:test: [36m [2m❯[22m src/audit/AuditPage.test.tsx:[2m207:20[22m[39m
+clubs-admin:test:     [90m205|[39m     expect(drawer).toHaveTextContent("Preparant l'exportació…");
+clubs-admin:test:     [90m206|[39m     expect(
+clubs-admin:test:     [90m207|[39m       await screen.findByRole("link", {
+clubs-admin:test:     [90m   |[39m                    [31m^[39m
+clubs-admin:test:     [90m208|[39m         name: "Descarrega canic_audit-entries_20260803-1225.xlsx",
+clubs-admin:test:     [90m209|[39m       }),
+clubs-admin:test: 
+clubs-admin:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+clubs-admin:test: 
+clubs-admin:test: 
+clubs-admin:test: [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m26 passed[39m[22m[90m (27)[39m
+clubs-admin:test: [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m406 passed[39m[22m[90m (407)[39m
+clubs-admin:test: [2m   Start at [22m 10:58:38
+clubs-admin:test: [2m   Duration [22m 16.32s[2m (tests 55%, environment 22%, transform 13%, import 6%, setup 5%)[22m
+clubs-admin:test: 
+clubs-admin:test: [2m    Isolate [22m [33m27 workers spawned[39m[2m · ~1.65s startup each (spawn + environment, per file)[22m
+clubs-admin:test: [2m            [22m [2mat least ~971ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+clubs-admin:test: 
+clubs-admin:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs-admin#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    12 successful, 14 total
+Cached:    7 cached, 14 total
+  Time:    21.91s 
+Failed:    clubs-admin#test
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Test failed. See above for more details.

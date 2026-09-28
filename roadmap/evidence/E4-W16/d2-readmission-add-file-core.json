@@ -1,0 +1,36 @@
+{
+  "answer": null,
+  "sent": [
+    {
+      "files": [
+        {
+          "fileKey": "signup/8a881ed4-aa31-4187-8099-b80f9ac5d8e9/202609/b4b84ca5-5a60-48b0-9cc7-09b69b60e091/cartilla_Retorn_E3_1.jpg",
+          "name": "cartilla_Retorn_E3_1.jpg"
+        },
+        {
+          "fileKey": "df09c1d2-6aab-4db3-a7b6-77c66f2664b0",
+          "name": "cartilla_retorn_2.jpg"
+        }
+      ],
+      "type": "VACCINATION_CARD"
+    }
+  ],
+  "status": 200,
+  "timings": {
+    "patch": {
+      "responseEndMs": 19,
+      "sentAfterClickMs": 62,
+      "status": 200
+    },
+    "put": {
+      "responseEndMs": 6,
+      "sentAfterClickMs": 53,
+      "status": 204
+    },
+    "signed": {
+      "responseEndMs": 11,
+      "sentAfterClickMs": 42,
+      "status": 201
+    }
+  }
+}

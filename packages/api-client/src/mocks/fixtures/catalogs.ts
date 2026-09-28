@@ -209,7 +209,7 @@ const price = (
   periodicity: concept === "MONTHLY_FEE" || concept === "MAINTENANCE_FEE" ? "MONTHLY" : "ONE_OFF",
   planId,
   status,
-  taxPercent: 21,
+  taxPercent: 0,
   validFrom,
   ...(validTo === undefined ? {} : { validTo }),
   version: 1,

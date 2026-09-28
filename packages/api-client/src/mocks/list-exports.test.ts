@@ -94,8 +94,26 @@ describe("E4-W07 MSW list exports answer like the api (R-14-12, CONVENCIONS_API 
         status: "READY",
       });
       expect(ready?.rows).toBeGreaterThanOrEqual(0);
+      // E4-W16 step 5 (INC-21, api `ExportQueries`): the list carries no `downloadUrl`; the job's
+      // detail does, the api's signed route, which also needs the bearer.
+      expect(ready).not.toHaveProperty("downloadUrl");
+      const detail = (await (
+        await fetch(`https://core.example.test/api/v1/exports/${jobId}`)
+      ).json()) as { downloadUrl?: string };
+      const signed = new URL(detail.downloadUrl ?? "", "https://core.example.test");
+      expect(signed.pathname).toBe(`/api/v1/exports/${jobId}/download`);
+      expect(signed.searchParams.get("signature")).not.toBeNull();
+      expect(signed.searchParams.get("expires")).toMatch(/^\d+$/u);
 
-      const download = await fetch(`https://core.example.test/api/v1/exports/${jobId}/download`);
+      const anonymous = await fetch(signed);
+      expect(anonymous.status).toBe(401);
+      const unsigned = await fetch(`https://core.example.test/api/v1/exports/${jobId}/download`, {
+        headers: { Authorization: "Bearer mock-access-token" },
+      });
+      expect(unsigned.status).toBe(403);
+      const download = await fetch(signed, {
+        headers: { Authorization: "Bearer mock-access-token" },
+      });
       expect(download.headers.get("Content-Disposition")).toBe(
         `attachment; filename="canic_${listKey}_20260803-1225.pdf"`,
       );

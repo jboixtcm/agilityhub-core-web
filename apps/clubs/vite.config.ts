@@ -29,7 +29,18 @@ export default defineConfig(({ mode }) => {
         devOptions: { enabled: false },
         manifest: false,
         registerType: "autoUpdate",
-        workbox: { navigateFallback: "/index.html" },
+        workbox: {
+          // INC-20: the mock world (and its worker) never goes into the production precache.
+          globIgnores: ["**/browser-*.js", "**/mockServiceWorker.js"],
+          navigateFallback: "/index.html",
+          // The same-site proxy routes (api, OAuth2, OIDC) are never answered by the app shell.
+          navigateFallbackDenylist: [
+            /^\/api\//,
+            /^\/oauth2\//,
+            /^\/connect\//,
+            /^\/\.well-known\//,
+          ],
+        },
       }),
     ],
     server: mockEnabled

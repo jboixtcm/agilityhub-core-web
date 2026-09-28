@@ -7,7 +7,7 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { DogRecordPage, MemberRecordPage } from "./CensusRecordPage";
 
@@ -31,9 +31,9 @@ afterAll(() => {
   server.close();
 });
 
-async function renderRecord(kind: "dog" | "member") {
+async function renderRecord(kind: "dog" | "member", recordBranding: Branding = branding) {
   const i18n = await createI18n({
-    branding,
+    branding: recordBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["admin-census", "errors"],
     storage: undefined,
@@ -41,7 +41,7 @@ async function renderRecord(kind: "dog" | "member") {
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={branding}>
+      <BrandingProvider branding={recordBranding}>
         {kind === "member" ? (
           <MemberRecordPage client={client} id="member-laura" />
         ) : (
@@ -120,6 +120,162 @@ describe("T-03-39 D10 member record", () => {
         "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
       ),
     ).toBeVisible();
+  });
+});
+
+describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl", () => {
+  function recordOpens() {
+    const spy = vi.spyOn(window, "open").mockImplementation(() => null);
+    return {
+      get opened() {
+        return spy.mock.calls;
+      },
+      restore: () => {
+        spy.mockRestore();
+      },
+    };
+  }
+
+  async function impersonate() {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    fireEvent.click(screen.getByRole("button", { name: "Entra com l'abonat" }));
+    const dialog = screen.getByRole("dialog", { name: "Entra com l'abonat" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Entra com l'abonat" }));
+    return dialog;
+  }
+
+  it("opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL", async () => {
+    const opens = recordOpens();
+    await impersonate();
+
+    await waitFor(() => {
+      expect(opens.opened).toHaveLength(1);
+    });
+    expect(opens.opened[0]).toEqual([
+      "http://127.0.0.1:4173/entrar?handoff=mock-impersonation-handoff-1",
+      "_blank",
+      "noopener,noreferrer",
+    ]);
+    expect(String(opens.opened[0]?.[0])).not.toContain("mock-impersonation-token");
+    expect(window.location.hash).toBe("");
+    opens.restore();
+  });
+
+  it("a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess)", async () => {
+    server.use(
+      http.post("*/api/v1/members/:id/impersonation-token", () =>
+        HttpResponse.json(
+          { expiresAt: "2026-09-06T16:00:00Z", token: "mock-impersonation-token" },
+          { status: 201 },
+        ),
+      ),
+    );
+    const opens = recordOpens();
+    const dialog = await impersonate();
+
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut completar l'acció.",
+    );
+    expect(opens.opened).toEqual([]);
+    opens.restore();
+  });
+});
+
+describe("T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method", () => {
+  async function serveCashMember() {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (data === undefined) throw new TypeError("The mock overview did not answer");
+    const overview = {
+      ...data,
+      member: {
+        ...data.member,
+        paymentMethod: { channel: "Efectiu", holderName: null, maskedAccount: null, type: "MANUAL" },
+      },
+    };
+    server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+  }
+
+  function paymentRow(label: string): HTMLElement {
+    const term = screen.getByText(label, { selector: "dt" });
+    const value = term.nextElementSibling;
+    if (!(value instanceof HTMLElement)) throw new TypeError("Missing the payment value");
+    return value;
+  }
+
+  it("reads «Efectiu» in ca and «Efectivo» in es, never the raw MANUAL", async () => {
+    await serveCashMember();
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(paymentRow("Pagament")).toHaveTextContent(/^Efectiu/u);
+    expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
+    cleanup();
+
+    await serveCashMember();
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["es"],
+      initialNamespaces: ["admin-census", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <MemberRecordPage
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            id="member-laura"
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(paymentRow("Pago")).toHaveTextContent(/^Efectivo/u);
+    expect(screen.queryByText(/MANUAL/u)).not.toBeInTheDocument();
+  });
+});
+
+describe("T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions", () => {
+  const noBilling: Branding = {
+    ...branding,
+    modules: branding.modules.filter((module) => module !== "BILLING"),
+  };
+
+  it("keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)», «Tota l'auditoria ›» and the recent changes; only the invoice rows and «Tots els rebuts» go", async () => {
+    mockScenario("adminNoBilling");
+    await renderRecord("member", noBilling);
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    expect(screen.getByRole("heading", { name: "Auditoria" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Inactivitat" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Baixa (amb data)" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Tota l'auditoria ›" })).toHaveAttribute(
+      "href",
+      "/abonats/member-laura/auditoria",
+    );
+    expect(screen.getByText(/Darrers canvis:/u)).toBeVisible();
+    expect(screen.queryByRole("link", { name: /Tots els rebuts/u })).not.toBeInTheDocument();
+    expect(screen.queryByText("cobrat")).not.toBeInTheDocument();
+    expect(screen.queryByText("remesat")).not.toBeInTheDocument();
+    expect(screen.queryByText("Rebuts recents i auditoria")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja les reserves" }));
+    expect(screen.getByRole("dialog", { name: "Bloqueja les reserves" })).toBeVisible();
+  });
+
+  it("with BILLING the card keeps its invoice rows and «Tots els rebuts»", async () => {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    expect(screen.getByRole("heading", { name: "Rebuts recents i auditoria" })).toBeVisible();
+    expect(screen.getByRole("link", { name: /Tots els rebuts/u })).toHaveAttribute(
+      "href",
+      "/facturacio",
+    );
+    expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
   });
 });
 

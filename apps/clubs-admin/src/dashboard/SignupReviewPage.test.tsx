@@ -1392,6 +1392,27 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     expect(screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).not.toBe(block);
   });
 
+  it("E4-W17 step 4 (AGENTS rule 1): when census.dogDocumentTypes cannot be read, each per-type row keeps «Documents», never a raw code", async () => {
+    let typeReads = 0;
+    server.use(
+      http.get("*/api/v1/parameters/census.dogDocumentTypes", () => {
+        typeReads += 1;
+        return HttpResponse.json(
+          { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "test" },
+          { status: 403 },
+        );
+      }),
+    );
+    mockScenario("adminSignupReviewReadmission");
+    await renderReview();
+    await waitFor(() => {
+      expect(typeReads).toBe(1);
+    });
+    const block = await kiwiChanges(["Nom", "Raça", "Documents", "Documents"]);
+    expect(within(block).queryByText(/VACCINATION_CARD|INSURANCE/u)).toBeNull();
+    expect(within(block).getByText("Abans: cartilla_Kivi_2025.pdf")).toBeVisible();
+  });
+
   it("step 1: an ordinary signup's dog, or a dog with `readmission: null` (as the core writes it), has no block", async () => {
     const { fetch: over } = recordingFetch((body) => {
       for (const dog of body.dogs) dog.readmission = null;

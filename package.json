@@ -21,6 +21,7 @@
     "e2e": "turbo run e2e --concurrency=1",
     "e2e:core": "bash scripts/e2e-core.sh",
     "e2e:docker": "bash scripts/e2e-docker.sh",
+    "size": "size-limit",
     "size-limit": "size-limit",
     "prepare": "node packages/config/scripts/prepare-husky.mjs"
   },

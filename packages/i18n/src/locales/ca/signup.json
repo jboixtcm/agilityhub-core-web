@@ -141,7 +141,9 @@
   },
   "success": {
     "title": "Sol·licitud enviada",
-    "checkout": "Rebràs la confirmació del pagament per correu"
+    "checkout": "Rebràs la confirmació del pagament per correu",
+    "addDogTitle": "Afegeix un gos",
+    "backToDogs": "TORNA ALS MEUS GOSSOS"
   },
   "honeypot": "Lloc web"
 }

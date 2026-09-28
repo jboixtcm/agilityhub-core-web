@@ -20,10 +20,12 @@ export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } fro
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {
   contentDispositionFileName,
+  downloadExportJob,
   type ExportResult,
   type ListExportFormat,
   type ListExportPath,
   type ListExportQuery,
+  openDownloadUrl,
   requestExport,
   saveFile,
 } from "./exports";

@@ -14,9 +14,15 @@ type Warning = components["schemas"]["SignupWarning"];
  * The D2 variants of the Marta Roca signup (S04 §2 D2): the default is the mockup (a FOUND family
  * claim and a Stripe payment); `manual` has nothing paid yet; `addDog` is an ACTIVE member whose
  * new dog waits (R-04-25); `familyPending` is a family claim the applicant could not match
- * (`NOT_FOUND_PENDING`, R-04-13); `readmission` is a LEFT member who applies again (R-04-06, E38).
+ * (`NOT_FOUND_PENDING`, R-04-13); `readmission` is a LEFT member who applies again (R-04-06, E38);
+ * `readmissionNoCard` is the same readmission whose reused dog's record has no card document.
  */
-export type SignupReviewVariant = "addDog" | "familyPending" | "manual" | "readmission";
+export type SignupReviewVariant =
+  | "addDog"
+  | "familyPending"
+  | "manual"
+  | "readmission"
+  | "readmissionNoCard";
 
 export const signupReviewBaseline = memberSignupReviewFixture as MemberSignupView;
 
@@ -61,7 +67,7 @@ export function signupReviewVariant(
     delete view.proposals.familyGroupId;
     view.warnings = [...view.warnings, "FAMILY_HOLDER_NOT_FOUND"];
   }
-  if (variant === "readmission") {
+  if (variant === "readmission" || variant === "readmissionNoCard") {
     // Marta left in 2025 and applies again with the same DNI, a new e-mail, phone and address.
     view.signup = { ...view.signup, readmission: true };
     view.warnings = [...view.warnings, "READMISSION"];
@@ -93,19 +99,22 @@ export function signupReviewVariant(
       const current: SignupDogValues = {
         birthMonth: kiwi.birthMonth,
         breed: "Llebrer",
-        documents: [
-          {
-            files: [
-              {
-                downloadUrl: "https://files.example.test/cartilla_Kivi_2025.pdf",
-                fileKey: "dogs/44000000/cartilla_Kivi_2025.pdf",
-                name: "cartilla_Kivi_2025.pdf",
-              },
-            ],
-            state: "RECEIVED",
-            type: "VACCINATION_CARD",
-          },
-        ],
+        documents:
+          variant === "readmissionNoCard"
+            ? []
+            : [
+                {
+                  files: [
+                    {
+                      downloadUrl: "https://files.example.test/cartilla_Kivi_2025.pdf",
+                      fileKey: "dogs/44000000/cartilla_Kivi_2025.pdf",
+                      name: "cartilla_Kivi_2025.pdf",
+                    },
+                  ],
+                  state: "RECEIVED",
+                  type: "VACCINATION_CARD",
+                },
+              ],
         name: "Kivi",
         sex: kiwi.sex,
         ...(kiwi.notesToInstructors === undefined ? {} : { notesToInstructors: kiwi.notesToInstructors }),
@@ -555,9 +564,11 @@ type SignupDocument = components["schemas"]["SignupDocument"];
  * (the name sent is not applied); any other key is a new signup upload. A type sent without files
  * leaves an ordinary dog's row pending. For the reused dog of a pending readmission it withdraws
  * the submitted type, and the view shows the record's own row for it again (E38, R-04-06: «un
- * tipus … enviat sense fitxers conserva el del gos»), or no row when the record has none. The
- * types not sent stay. A key removed from the dog through `DELETE …/files/{fileId}` answers
- * `FILE_NOT_FOUND`.
+ * tipus … enviat sense fitxers conserva el del gos»). When the record has no row of that type,
+ * the type leaves the view, except the card: as the api's `readmissionDocuments`, a dog with no
+ * card gets the automatic empty `VACCINATION_CARD` row back, pending (R-04-06: «la fila buida
+ * automàtica de la cartilla només s'afegeix si el gos no en té cap»). The types not sent stay. A
+ * key removed from the dog through `DELETE …/files/{fileId}` answers `FILE_NOT_FOUND`.
  */
 export function patchSignupDogDocuments(
   dog: SignupDog,
@@ -578,7 +589,12 @@ export function patchSignupDogDocuments(
     );
     if (files.length === 0 && dog.readmission != null) {
       const own = dog.readmission.current.documents.find((candidate) => candidate.type === document.type);
-      const ownRow = own === undefined ? undefined : { ...own, files: own.files.map((file) => ({ ...file })) };
+      const ownRow: SignupDocumentView | undefined =
+        own !== undefined
+          ? { ...own, files: own.files.map((file) => ({ ...file })) }
+          : document.type === "VACCINATION_CARD"
+            ? { files: [], state: "PENDING", type: document.type }
+            : undefined;
       documents =
         ownRow === undefined
           ? documents.filter((candidate) => candidate.type !== document.type)

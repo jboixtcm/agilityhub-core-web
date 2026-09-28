@@ -627,9 +627,14 @@ function MemberSummary({
             ) : null}
             {modules.includes("BILLING") ? (
               <DataRow label={t("admin-census:member.fields.payment")}>
+                {/* AGENTS rule 1 (E4-W17 step 9): the method's label, never the raw enum. */}
                 {member.paymentMethod?.type === "SEPA_DD"
                   ? t("admin-census:member.payment.sepa")
-                  : (member.paymentMethod?.type ?? t("admin-census:values.empty"))}
+                  : member.paymentMethod?.type === "CARD"
+                    ? t("admin-census:signupReview.paymentMethod.CARD")
+                    : member.paymentMethod?.type === "MANUAL"
+                      ? t("admin-census:signupReview.paymentMethod.MANUAL")
+                      : t("admin-census:values.empty")}
                 {maskedIban === null ? null : <strong> · {maskedIban}</strong>}{" "}
                 <Badge>{t("admin-census:member.payment.adminOnly")}</Badge>{" "}
                 <Button
@@ -808,9 +813,15 @@ function MemberSummary({
           ) : null}
         </Card>
 
-        {modules.includes("BILLING") ? (
-          <Card>
-            <SectionTitle>{t("admin-census:member.sections.invoicesAudit")}</SectionTitle>
+        {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
+            audit, the booking block, «Inactivitat» (INACTIVITY) and «Baixa» stay without it. */}
+        <Card>
+          <SectionTitle>
+            {modules.includes("BILLING")
+              ? t("admin-census:member.sections.invoicesAudit")
+              : t("admin-census:member.tabs.audit")}
+          </SectionTitle>
+          {modules.includes("BILLING") ? (
             <ul className="census-record__invoice-list">
               {(overview.recentInvoices ?? []).map((invoice) => (
                 <li key={invoice.id}>
@@ -826,65 +837,67 @@ function MemberSummary({
                 </li>
               ))}
             </ul>
-            <div className="census-record__links census-record__links--horizontal">
+          ) : null}
+          <div className="census-record__links census-record__links--horizontal">
+            {modules.includes("BILLING") ? (
               <a href="/facturacio">
                 <Icon aria-hidden="true" name="doc" />
                 {t("admin-census:member.invoice.all", { count: overview.invoicesCount })}
               </a>
-              <a href={`/abonats/${member.id}/auditoria`}>
-                <Icon aria-hidden="true" name="lock" />
-                {t("admin-census:member.audit.all")}
-              </a>
-            </div>
-            <p className="census-record__muted">
-              <Icon aria-hidden="true" name="lock" /> {t("admin-census:member.audit.recent")}:{" "}
-              {overview.recentAudit
-                .map(
-                  (audit) =>
-                    `${formatDate(audit.at, locale, false)} ${audit.action} (${audit.actorRole})`,
-                )
-                .join(" · ")}
-            </p>
-            <div className="census-record__footer-actions">
-              {modules.includes("INACTIVITY") ? (
-                <a className="census-record__action-link" href="/inactivitats">
-                  <Icon aria-hidden="true" name="palm" />
-                  {t("admin-census:member.actions.inactivity")}
-                </a>
-              ) : null}
-              <Button
-                onClick={() => {
-                  if (member.bookingBlock.active) {
-                    void run(async () => {
-                      await client.DELETE("/members/{id}/booking-block", {
-                        params: { path: { id: member.id } },
-                      });
-                      onChange({
-                        ...overview,
-                        member: { ...member, bookingBlock: { active: false } },
-                      });
-                      onFeedback({
-                        message: t("admin-census:member.feedback.unblocked"),
-                        tone: "success",
-                      });
-                    });
-                  } else {
-                    setDialog("block");
-                  }
-                }}
-                variant="ghost"
-              >
-                <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
-                {member.bookingBlock.active
-                  ? t("admin-census:member.actions.unblock")
-                  : t("admin-census:member.actions.block")}
-              </Button>
+            ) : null}
+            <a href={`/abonats/${member.id}/auditoria`}>
+              <Icon aria-hidden="true" name="lock" />
+              {t("admin-census:member.audit.all")}
+            </a>
+          </div>
+          <p className="census-record__muted">
+            <Icon aria-hidden="true" name="lock" /> {t("admin-census:member.audit.recent")}:{" "}
+            {overview.recentAudit
+              .map(
+                (audit) =>
+                  `${formatDate(audit.at, locale, false)} ${audit.action} (${audit.actorRole})`,
+              )
+              .join(" · ")}
+          </p>
+          <div className="census-record__footer-actions">
+            {modules.includes("INACTIVITY") ? (
               <a className="census-record__action-link" href="/inactivitats">
-                {t("admin-census:member.actions.leave")}
+                <Icon aria-hidden="true" name="palm" />
+                {t("admin-census:member.actions.inactivity")}
               </a>
-            </div>
-          </Card>
-        ) : null}
+            ) : null}
+            <Button
+              onClick={() => {
+                if (member.bookingBlock.active) {
+                  void run(async () => {
+                    await client.DELETE("/members/{id}/booking-block", {
+                      params: { path: { id: member.id } },
+                    });
+                    onChange({
+                      ...overview,
+                      member: { ...member, bookingBlock: { active: false } },
+                    });
+                    onFeedback({
+                      message: t("admin-census:member.feedback.unblocked"),
+                      tone: "success",
+                    });
+                  });
+                } else {
+                  setDialog("block");
+                }
+              }}
+              variant="ghost"
+            >
+              <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
+              {member.bookingBlock.active
+                ? t("admin-census:member.actions.unblock")
+                : t("admin-census:member.actions.block")}
+            </Button>
+            <a className="census-record__action-link" href="/inactivitats">
+              {t("admin-census:member.actions.leave")}
+            </a>
+          </div>
+        </Card>
       </div>
 
       {/* S08/S09 (E5-W03): the member's class and training bookings, read-only (R-08-19). */}
@@ -982,16 +995,14 @@ function MemberSummary({
                   body: reason.trim() === "" ? {} : { reason },
                   params: { path: { id: member.id } },
                 });
-                if (result.data === undefined) {
-                  throw new TypeError("Impersonation response did not contain data");
+                // S01 D10 (E47): only the api's `launchUrl` opens: the club app's host with a
+                // one-time code (`/entrar?handoff=`). The token never goes into a URL, and a
+                // missing `launchUrl` is an error in this dialog, never a guessed address.
+                const launchUrl = result.data?.launchUrl;
+                if (typeof launchUrl !== "string" || launchUrl === "") {
+                  throw new TypeError("Impersonation response did not contain launchUrl");
                 }
-                const launchUrl =
-                  "launchUrl" in result.data && typeof result.data.launchUrl === "string"
-                    ? result.data.launchUrl
-                    : "/";
-                const destination = new URL(launchUrl, window.location.origin);
-                destination.hash = `impersonation=${encodeURIComponent(result.data.token)}`;
-                window.open(destination, "_blank", "noopener,noreferrer");
+                window.open(launchUrl, "_blank", "noopener,noreferrer");
               })
             }
           >

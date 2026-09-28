@@ -91,7 +91,22 @@ check_n37_notification() {
         "variables.action": "OPEN_DOG",
         "variables.dog_name": "Neret E3"
       });
-      if (notification === null) { quit(1); }
+      if (notification === null) {
+        // E4-W16: say what the core stored for the account (codes, channels, statuses and the
+        // variable names only), so a changed notification model shows in the evidence.
+        const stored = account === null ? [] : db.notifications
+          .find({accountId: account._id})
+          .toArray()
+          .map((item) => ({
+            action: item.action ?? null,
+            channel: item.channel ?? null,
+            code: item.code ?? null,
+            status: item.status ?? null,
+            variables: Object.keys(item.variables ?? {}).sort()
+          }));
+        print(EJSON.stringify({account: account !== null, missing: "N-37 APP SENT OPEN_DOG Neret E3", stored}));
+        quit(1);
+      }
       print(EJSON.stringify({
         action: notification.variables.action,
         channel: notification.channel,
@@ -121,6 +136,11 @@ status=0
 if [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
   run_core_suite e1-e2 || status=$?
+  cleanup
+  # E4-W16: the audit corrections (impersonation handoff, export drawer, D10, 13, recovery) on a
+  # fresh core and seed: after E1/E2 the api's authentication quota per IP is spent (429).
+  export CORE_TEST_FILES="e4w16-core.spec.ts"
+  run_core_suite e4w16 || status=$?
   cleanup
   export CORE_TEST_FILES="e3-signup.spec.ts"
   run_core_suite e3 || status=$?

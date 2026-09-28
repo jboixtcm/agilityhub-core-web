@@ -104,9 +104,10 @@ test.describe("E4-W04 activities in the app", () => {
         bodies.push(request.postDataJSON());
       }
     });
-    await page.goto(
-      `${baseUrl}/activitats/activity-torneig-estiu-2026#impersonation=mock-impersonation-token`,
-    );
+    // E4-W16 step 1 (E47): the one-time code first, then the tab keeps the impersonated session.
+    await page.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
+    await page.waitForURL((url) => url.pathname === "/inici");
+    await page.goto(`${baseUrl}/activitats/activity-torneig-estiu-2026`);
     await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     await page.getByRole("button", { name: "INSCRIU-M'HI" }).click();
     await expect(page.getByText("T'hi has inscrit")).toBeVisible();
