@@ -82,6 +82,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
   `packages/ui` exports `AttendanceCircles`, `attendanceTone`, `diffSheet` and `mergeSheet` for D12. `packages/i18n` gains `personArticle`, `fmtDayRelative` and `fmtMonthsSince`. `packages/api-client` matches idempotent routes by method (`PUT /class-sessions/{id}/attendance`), and its MSW world serves the three S10 routes with their guards and codes.
 
+  Round 2:
+  - 21 holds the sheet (circles and [DESA]) from a save through the read that follows a refused save, and shows answers in request order, never below the version on screen: a late read can no longer bring back an older list.
+  - The student search reads `GET /dogs` page by page with «Mostra'n més».
+  - Screen 26's route has its own entry, so TASKS off makes it unavailable.
+  - The read errors of 20, 21, 22 and the search say why, by the answer's code.
+  - The photo on 21 is a modal (focus kept inside, the page behind inert and still).
+  - Every attendance circle that can be chosen keeps 3:1: an outlined ring when not chosen, filled with a mark (the ✓ on green is dark) when chosen.
+  - An instructor lands on 20 after 01 and 03b (ruling E71).
+
   `pnpm e2e:core` gains the E5 stage on its own fresh seed (`seed:demo --week-start` = the club-local Monday after the run's day, `E5_WEEK_START`); the core's clock goes to the scenario's `demoNow` before any login and back at the end. The 04 rows carry `data-class-id`/`data-bookable-state` and the `SlotGrid` cells `data-slot-state`/`data-ring` for that spec.
 
 ### Changed
@@ -97,7 +106,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Password recovery: a used RESET link answers «L'enllaç ja s'ha fet servir: demana'n un altre» with «Recupera-la», and the mock lets only a fresh RESET session skip `current`.
   - The add-dog «enviada» page is titled «Afegeix un gos» with «TORNA ALS MEUS GOSSOS»; «Canviar de perfil · {perfil}» follows the membership's gender; the onboarding offers only the club's languages.
   - `pnpm e2e:core` gains an E4-W16 stage (impersonation fallback, the drawer download, D10's actions, 13's task rows, the RESET link), and the E3 N-37 check prints what the core stored when it fails.
-  - Round 2: a redeemed handoff keeps its session while `/me` is retried (network errors and 5xx, with backoff); the tab never reads the refresh cookie meanwhile, nor after a refused `/me`, and 01 shows «No s'ha pogut completar l'accés» with «Torna-ho a provar». The mock keeps every redeemed code spent and never issues a code twice across page loads. Done tasks on 13 keep full contrast (no dimming), and the counter uses ICU plurals («1 pendent · 1 feta»). The E3 N-37 check reads the S11 notification shape (`recipient.accountId`, an APP `DELIVERED` delivery, `action.type`).
+  - Round 2: a redeemed handoff keeps its session while `/me` is retried (network errors and 5xx, with backoff); the tab never reads the refresh cookie meanwhile, nor after a refused `/me`, and 01 shows «No s'ha pogut completar l'accés» with «Torna-ho a provar». The mock keeps every redeemed code spent and never issues a code twice across page loads. Done tasks on 13 keep full contrast (no dimming), and the counter uses ICU plurals («1 pendent · 1 feta»). The E3 N-37 check reads the S11 notification shape (`recipient.accountId`, an APP `DELIVERED` delivery, `action.type`). On the api image with E5-T27, the real-core step 1 runs the whole handoff: the first `/me` answers 503 and is retried, the banner shows the name `/me` carries, and the code is refused a second time. `scripts/e2e-core.sh` runs the Playwright container with `--no-deps`, so a stage no longer re-runs the seed next to the running core.
 
 - Follow-ups of the E4-W13 and E4-W14 round-2 reviews (E4-W17):
   - The real-core T-04-34 proves T-04-19's card: the submitted card is withdrawn, then a file is added to the record's card (200), and after the rejection the record keeps exactly its own card, name and breed. The lookup takes the seed's «Demo Boira»; the dead `400` branch and two redundant asserts are gone.

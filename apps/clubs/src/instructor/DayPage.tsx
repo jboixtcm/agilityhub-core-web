@@ -14,6 +14,7 @@ import {
   dateParam,
   type DayRingBlock,
   type InstructorDayClass,
+  readErrorText,
   writeParam,
 } from "./shared";
 
@@ -223,7 +224,7 @@ export function DayPage({ client }: { client: ApiClient }) {
       {day.status === "error" ? (
         <Toast tone="danger">
           <span className="instructor-screen__error">
-            {t("instructor:day.loadError")}
+            {readErrorText(t, day.error, t("instructor:day.loadError"))}
             <Button
               onClick={() => {
                 day.refetch();

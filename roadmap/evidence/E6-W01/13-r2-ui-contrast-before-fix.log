@@ -1,0 +1,112 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/attendance-contrast.test.ts (17 tests | 11 failed) 7ms
+   ❯ E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast (17)
+     × nothing that can be chosen is faded: the only opacity is on a disabled circle that is not the state 4ms
+     × light theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+     × light theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+     × light theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+     × light theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+     × light theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+     × dark theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+     × dark theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+     × dark theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+     × light theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+     × dark theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > nothing that can be chosen is faded: the only opacity is on a disabled circle that is not the state
+AssertionError: expected [ '.ah-attendance__circle', …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   ".ah-attendance__circle:disabled:not([aria-checked=\"true\"])",
++   ".ah-attendance__circle",
++   ".ah-attendance__circle[aria-checked=\"true\"]",
++   ".ah-attendance__circle:focus-visible",
+  ]
+
+ ❯ src/attendance-contrast.test.ts:120:19
+    118|       .filter(({ declarations: block }) => /(?:^|;)\s*opacity\s*:/u.te…
+    119|       .flatMap(({ selectors }) => selectors);
+    120|     expect(faded).toEqual(['.ah-attendance__circle:disabled:not([aria-…
+       |                   ^
+    121|   });
+    122|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface
+AssertionError: expected 2.7147838514101412 to be greater than or equal to 3
+ ❯ src/attendance-contrast.test.ts:127:62
+    125|     ({ state, variables }) => {
+    126|       const surface = color("var(--ah-color-surface)", variables);
+    127|       expect(ratio(ring(circle(variables, state)), surface)).toBeGreat…
+       |                                                              ^
+    128|     },
+    129|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface
+AssertionError: expected 1.8524339945467332 to be greater than or equal to 3
+ ❯ src/attendance-contrast.test.ts:127:62
+    125|     ({ state, variables }) => {
+    126|       const surface = color("var(--ah-color-surface)", variables);
+    127|       expect(ratio(ring(circle(variables, state)), surface)).toBeGreat…
+       |                                                              ^
+    128|     },
+    129|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen present circle keeps its ring and its mark at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen notified circle keeps its ring and its mark at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen present circle keeps its ring and its mark at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen notified circle keeps its ring and its mark at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more
+AssertionError: expected undefined to be 'var(--ah-attendance-color)' // Object.is equality
+
+- Expected:
+"var(--ah-attendance-color)"
+
++ Received:
+undefined
+
+ ❯ src/attendance-contrast.test.ts:140:9
+    138|       expect(
+    139|         rule(attendanceCss, '.ah-attendance__circle[aria-checked="true…
+    140|       ).toBe("var(--ah-attendance-color)");
+       |         ^
+    141|       expect(ratio(ring(chosen), surface)).toBeGreaterThanOrEqual(3);
+    142|       expect(ratio(mark, fill)).toBeGreaterThanOrEqual(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more
+AssertionError: expected 0 to be greater than or equal to 3
+ ❯ src/attendance-contrast.test.ts:153:61
+    151|       const dot = /radial-gradient\(circle,\s*(var\([^)]+\))/u.exec(ch…
+    152|       expect(ratio(ring(chosen), surface)).toBeGreaterThanOrEqual(3);
+    153|       expect(ratio(color(dot?.[1] ?? "", chosen), surface)).toBeGreate…
+       |                                                             ^
+    154|     },
+    155|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 6 passed (17)
+   Start at  11:55:50
+   Duration  545ms (environment 76%, setup 16%, transform 5%, tests 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance-contrast.test.ts

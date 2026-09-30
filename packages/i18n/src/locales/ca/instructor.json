@@ -94,7 +94,8 @@
     "empty": "Cap alumne amb aquesta cerca",
     "loading": "Carregant els alumnes",
     "loadError": "No s'han pogut carregar els alumnes.",
-    "retry": "Torna-ho a provar"
+    "retry": "Torna-ho a provar",
+    "more": "Mostra'n més"
   },
   "overview": {
     "title": "Visió global",

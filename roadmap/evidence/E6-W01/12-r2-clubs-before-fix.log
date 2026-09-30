@@ -1,0 +1,1623 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/App.test.tsx (39 tests | 2 failed | 35 skipped) 20427ms
+   ❯ E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 (2)
+     × a password login takes an instructor to /instructor/dia and a member-only account to /inici 10111ms
+     × 03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03 10047ms
+ ❯ src/instructor/instructor.test.tsx (38 tests | 8 failed | 29 skipped) 21019ms
+   ❯ T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) (14)
+     × round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything 126ms
+   ❯ E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save (3)
+     × after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing 62ms
+     × the hook refuses a save captured before the refusal while that read is in flight 110ms
+     × a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada» 227ms
+   ❯ E6-W01 step 6 the instructor's student search (S10 §2, §13-9) (3)
+     × round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page 246ms
+     × round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again 163ms
+   ❯ E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code (2)
+     × 20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN 10011ms
+   ❯ E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation (4)
+     × round 2 #3 (review #4, S10 §9): with TASKS off, screen 26's route opened directly is unavailable 10025ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > a password login takes an instructor to /instructor/dia and a member-only account to /inici
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/instructor/dia', false ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"auth-page"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"access-title"[39m
+          [33mclass[39m=[32m"auth-panel"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"access-title"[39m
+          [36m>[39m
+            [0mAccés[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"auth-logo"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Club Agility Cànic"[39m
+              [33mclass[39m=[32m"auth-logo__full"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+ ❯ src/App.test.tsx:433:26
+    431|       fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    432|       await waitFor(() => {
+    433|         expect(navigate).toHaveBeenCalledWith(landing, false);
+       |                          ^
+    434|       });
+    435|       expect(navigate).toHaveBeenCalledOnce();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > 03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/instructor/dia', false ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"auth-page"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"auth-panel profile-choice"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"auth-logo auth-logo--compact"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Club Agility Cànic"[39m
+              [33mclass[39m=[32m"auth-logo__full"[39m
+              [33msrc[39m=[32m"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAF2CAYAAAC260vLAAD7U0lEQVR42uz9Wahl2brfif2+Meacq9ld7IjI6LJvTn/OvVf3WKqSLPtSGFSu0qMRfjEFxsIgMFYhDH7QgxDWgzG4wMLGGASGAmFbmKJklwuMXBJHKt3m3HOO7r2ny3NONpGZkdHuvlnNnGN8nx/GmGutHU1mRubJyMiM8U9W7h27WWuuOece//F1/z8UFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUfGpIOQXlHnjUN6ycm2fij9oe47nKPfFbuxblVBYUFBQUFBQUlAi44Inj+9///vjmzZvcunWLq8D3r8L//PtX+f73gVvpZ64BN/t/cLWctC8I6To8DLfuuy63Vj7PX796DbjKrVv5+1fzd27dXDz3w37v5uJHbsG1q3z/aj6KW2eP4Ga5PPedw6vp3F29xv/7xzf5r358i5u38pW6epXt7e3wi1/8oi1n7dlGVU7BM7vxsu9///vj6Wz63rybjyswVzmpq5qDoWMyGTFsJgw6uCdTajdGnaBMAAdmOLScyScBA0G4i1BhmKTspWKoGWbreH+KCBhKsBGKAo5oU4Keoz6oaWXGnJbTVtk8bth1J/g6smFTps6obMQsRlpXoczArzOfwCwe0rZrXDwy7g2P8TIkVkc4ZjgvBHVUPLs5VQNE4B6G1xEVEJhi1Xnqg4rR6YDhrGEuLTVi41EjWxvD//zff+GFv/fHN25M+7/HcqMXAi549qh4Q0QGq8zsBSoHlaTPRQSTtMgIskicuJJAeYLoz7ZgooAhCF56hjYEw1CcGIgjGIg4al8x7eZcv3PKu7cOCT7wsp7jhUtDRuNtmChRWzyKd57KeYKCacewrrl8aQNVGA4bxCIhzHGmOOfwkl5bEewZvR8MQ0RwpL8ZB/h8bZwTxAnegc9/Oc57XFUN4wsvwI0b5dYuBFzwDEdXAWj6jbwBahANgoGzvD239HVd2fa7cvaeYMJikbhALF+s1a/GgJqCKOIc4gSLAk6gEg6Pjvn19V3+7Df7aOXYmc7p7DKvX9rE+cDJ/IBaI+IFE0enilqHeMf6VtqfmRrzMEXDjEoUNQhmqAn9vuxZDOPMQMRwYpgm8g1Ap9CJEfLfjeTckRMR55zGWMi3EHBBWd3PruUPfEMe8oMP/HDB57hHuu9KWM5DiPWLOkrEUDCjMjAVvLoUMWsHDpo1Rz2uuX0YOf7NPm0U/Lev8M1LW4S6w9qAt5g2XSI4Z0CLakBVMVMEqCuQXIYwzakRwCxFgs/udVp+TPkIh5lHTYgmOVUtgImZAS8AhYQLARcUFDzlS/tyG2R9IcAsfzd9RXBIpgExocER1OhszsULW3x3sEY7HHP6s3vc3Zvz67cPGKmy9d3nePV8Q9OMIM4BQTWAU7x3iFOcT+UHMbAoxBDx4qmrhmgxRd/PehkzZybMwEQwESJCMIhmKOljCJGu6xC5W27tZxwli1hQ8GVKVFgf87ocYQmqYFSIqxFXY1ZDECoVBiiVznHxhPOb8K03LvH733uZ5y9tM58pt24es7d3TNdFEEllBkspbOcN8QGRFictkB8SwCS9NovmgGebe80w01SqwaE4gjlmXeR40jGZK8ESKa+vb/Lchcu8yAvlti4RcEFBwVMfAJ+JgvsUp0fyYi84cGk/HaMiFvFq1ETMlNl0hnWRS2sv8PvfeB5p4V2B7UbYGNWItcTYpShOUqOQOAUCWJfSzQZm6bXEJwKOmpsEEJ7h7POyQS5fG00tbbTBmMwC004Xm5WLFy/wyqsvcWdtHf74j8v9XQi4oKDgaSVfyUu75VYeJUVSZi5FrV4QPFE8Jg7F8HFK0Bm1dDQCIwmE7hhf7XNpPOZbL2xwdew5N/K8esUz4C4SA95XBAQxQ9RSU5clWnH9kZjhXHp9RXCZdp7tBIXkFjmHKWglmKuI4gk5NY2vEGdsbm1y6fIlqZvxInp+lmvnhYALCgqe4uiqj6tcX+HFqAg4TCpwAzqDWRsx1zAar+HtGB/3GaCIKo0Ia15pu2OC3ebl8yNePrdGRWBgJzREnBOiWY61e9aQxejZsuWrP6LVtqNneY+U2+REwDuiAuLAeU5nHbM2cKZCLmJVVcVyZxcUAi4oeMqX99WGKyVFvWYOlYaOhtMZfHj3hN2jGePNTV58+RKbgwG1KdMu4LoWE6F2hnMzurDPsJqivsJCh3QzxMck5CH9wEye+bYKWTCHS6lvyboRYmdiX3l2LxGqhniovU91dOeZB+XuzgH7J1Nm0cxAvG+6O3fv/XPvq//76elpSHwsRYSjEHBBQcEXvZA/nMkMb4phmKSIVPGYHzGPFR/unfCjNw+4tTfh3HPGcX3C157fph6dQ6RF5hOczqmJNBJw1hG6k9yxa4hzqFUpfSqJ5lPZOdeWzS0ObJEOl5wS74fEn+UMRW5C67vTMVCEoMrx6SmztiMoqBPqehD/7M/f/K/+8L/9w/+GMslXCLicgoKCL4pp70/eypmvymLu13LlV5L0pOQ6sKsJ0XM0V24fKu/vGjdnJxzJTZyvGF1pqAfn8Fbju1OczJN8pM7wYrhKEOcxrbBAVrMyVDSNR5hDNNWX+6NLs6xp6jhFyyvE86xdxbzxECc45xEzQjS6YEQnmHjIoihOBHEOX1U0TVNNjvcK+RYUAi4oeLJQIK4Qbn6sjPKY3UdpBmo1Iin9jAacb4EpTT3k4vkRL7845rgL3DrseOf9fUZe2AgbjC83bFbDJE+JAQGHRwnEqFgUKg/ee6IK0fS+qaK+7nt/iF6ypqunSPMYkhfBVRWI42QWuHs452gWiYD3MGgqqtr3F6OQcCHggoKCz7wCPwYBiwQQzdVdn+u6Kd0bo2ExUjmPz2NFahWBAZU4zDoszqmYg2/xfoRsjfHfusBoMOAnvz7gxs6MD97Z4fZgxtfWtvDnhpiHeZci27puEBWcaopyTXAS6Xute241DHW6qD/3FGzpiBeZZ3nGr7qpEVDUFOc9vvJQ1UxOPXePO45mkWCKOGFzfchoNCwS0AWFgAsKfjvL8CeloJ6xIkt14JUoV9ND8BhVGjNCUO+JDIgong7vImiLCy01LeIi40sXGdSD5FKlLXWMjAlU1qJRcC4SLRI0It4hVuGziYCoAAERh5c0WtS/NVtxX3rwXT/jAdyKBKf15yuJQWPO04lnphBFsoa6MhzWbGwMyp9NQSHggoInDcsjRKCIJU1lZ4nONBiVeJwfgDmCJsUrKo85iKFDCNRNjXUBp0JsI8aERk65em6d77y6hrdTGow3rq2xvlYRujl+KFSVIwZHjClVmhqsVmO5khH9tETsXMpiaOxAlaBKFyM48F5wAuaEZlAxHA7LOSsoBFxQ8OThMgEnKhYzvKUZW4/gXAMyoFMHVhFM6LqADCNWgQXBushQBhCT2tXQK938gMpPeeGcZ/u764gaW02Nd0bsAhoMcYavK5xGeuFiWx05KvhMwfBiKEugbTsOjlpOTlvmXXKOGjcDXnnxRbl2+RL/v3/1R+WkFRQCLih40hGwWjZNsFRLdZaIGBNM02ou0gADTqdzdk6n+DVh69yAYdPQzWbUAl46vHQ4IrFrqeIJm6OG7e0BIYAEw6nDfCRqoBJJdWVnmPa6WrISma+QSMFjXdXEu8l30NcVsVOOjyacTjrmnRkgYT6/53D/j8tXn/9xOWcFhYALCp78Up3DpSRkIdniz2Xq0xhRNCkqmXBvf86bHxzBes2rr425dmGNYbNGFyeICN4M4hxHl2QyugDMUw1Za7A6pT/RJPJ8hl9XOrDPdDYXAv40F7bfzHjnMRPaLtCFNLIlIpxOprf/2T//r/+P/+yf/9e/orSSFxQCLih4suSbuC6lg00V1UTAaiDOIwgmhiLMw5zdwylvvdtxUgUOu2P06yNevLiZmq0k4iwizJMZYf792GZFJkAJie9dWvFV+y5ntxL95uPrzZYKHhtihoguNJ0NAVelWWsR1JJ8SQ11V05XQSHggoIvYKEmka94IAkRomaoGZV3mKsIwWjDnIjQjKBZg53dyMlvDjHzVDiubtd4V6FRqZzgpQJzyYpQq+Rc5ELuuL6/yephndsGJf38Ka8pS1WxvMnR7BKlJIvHaGn6W8oJLigEXFDwRS3UKfI1jYBDRZKHrAjqB4hriFRodNR1zZWr53ht4rjVnXLnYMov3tpjYMbwe1sMtsA5T7DsD2wV2ACswQiYRRBdSkou/ISXka/JKukWbvh013WZTZYzGxyfa/6yqLGXBENBIeCCgi+KgpVEwMl0N9nVqQdf01qF0CDVAHOCryrOD2u+IevshSP0nXsc7x3z3nt7fONlx5WtBuc9FiQ3VHkwT+9YJIt4S1b4ddVTONWhWXj1yAqBFDzu5mp1DyPOI+LThmvlfJb0c0Eh4IKCLzBa8laD1HTmCVbTURO04mTa4bywvjZAMGKnVJVxcXuN739rzLhqef/dKWu1Y+T77mlyhJsarcR1SQxCNOtHZ45lGYUtDyb5/S4IONeGCwF/iusqgthSRjTJhjoMh4qlkkA5TQWFgAsKvjh4qfFSJSvBKFCN6GLDrZ0Jb793hPeOr70x4NL5DZrKsNAidspz5zzNN8a8dP4cPnZcPtfQWBo18uYRiYhEjC41NsN9Sc8V3enVUC23aqVaMUBdmOKxyXd5Zq0nY/GkQv/CPyqd3bqWruvKDqegEHBBwW8HKzVUe1j8aCvxr8NE0hxuBFdXRPXcuDvlp9cnTDrj9sTzzVc7Xru6xdagwsVTBtpxeVO5PB5C8Iy84mKAaIvoC7GkM90TrzlSHdI9/FixHPHqCklD8Ql4/MufSNhhFlFS7V1EEc1ZilTrt67r2nKCC3q4cgoKCj5jBJRjHFnYBkaEkB/dyucBpSNai8oMsSk1M7xLbjmzquL6ceRf/2KHf/nnH/Jn79xj52SOCNRhwrA7YcNFNhuHC7MUHWdnJcNlSq0An4m3WhHYWBXZUFYcFxJRW5X24/Y42tYFkE0pcqOVYkTtsDilinNqjEYEh1A3o42/8Tf/o3//X/wX/8WFctYKSgRcUPAZ496VfmL6JVhWiM5Wol/rU5EevKuotUPslPVBzauvbrHva2aDQ27cPebNmzPi/EOq+TEbX99iuwEJHRY7nPNobPHe4ZzLvrSSCXQ1yl0NbB8cMVo2XLkyAPxZoGAiyxlu68Dm1BIYiTGsvLigtnFu68WXXnr5f/vH77zZAf83MxMRKQn/QsAFBQWfloR5IGa0h8XHqSEndyZXKI03uu4UIlxa2+Yvfe0qG+cv8Mt37/Dh9R3ayZzptAOLWboyPbdZTPVGs4Up/MOO4pMXcwv5ftYUiJpldTPBe8dwOGRrCzbXJvhJaoxr27l///r1C8eTozGwEO0oKARcUFDwGQi4j3HP1lhd/syl2Fh8+q6CWqBGwQIxwqYf0mxtMh5vsD2EG2sGkxOuXhwyqD3QLqeJDMSl+WEzKwv508DA+Vo4l6Q9m7piY23AcFjjaDEioZtz69bNMJ2cxnLOCgoBFxT8lkj4YRFw+r9PNnVIsrEXh6DE2FElyQ2GtFScUIUGqbYYPFdxbbyNdSO2GmgaICynSfuot/DuU7L9ym3QYoI4T9Q0X107wS9+LgmwdKGTk3Zarlx...
+ ❯ src/App.test.tsx:455:26
+    453|       fireEvent.click(await screen.findByRole("button", { name: choice…
+    454|       await waitFor(() => {
+    455|         expect(navigate).toHaveBeenCalledWith(landing, false);
+       |                          ^
+    456|       });
+    457|       expect(updateProfile).toHaveBeenCalledWith(profile, true);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"inert"[32m[39m[2m) // element.hasAttribute("inert")[22m
+
+Expected the element to have attribute:
+[32m  inert[39m
+Received:
+[31m  null[39m
+ ❯ src/instructor/instructor.test.tsx:445:23
+    443|     expect(close).toHaveFocus();
+    444|     // The page behind leaves the focus order and the accessibility tr…
+    445|     expect(container).toHaveAttribute("inert");
+       |                       ^
+    446|     expect(dialog.closest("[inert]")).toBeNull();
+    447|     expect(document.body.style.overflow).toBe("hidden");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  aria-checked="false"
+  aria-label="pendent"
+  class="ah-attendance__circle ah-attendance__circle--pending"
+  role="radio"
+  tabindex="-1"
+  type="button"
+/>[39m
+ ❯ src/instructor/instructor.test.tsx:682:69
+    680|     });
+    681|     // The recovery read is in flight.
+    682|     for (const radio of screen.getAllByRole("radio")) expect(radio).to…
+       |                                                                     ^
+    683|     const save = screen.getByRole("button", { name: /^Desa/u });
+    684|     expect(save).toBeDisabled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > the hook refuses a save captured before the refusal while that read is in flight
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/instructor/instructor.test.tsx:740:35
+    738|       expect(read.reads()).toBe(2);
+    739|     });
+    740|     expect(result.current.saving).toBe(true);
+       |                                   ^
+    741|     await act(async () => {
+    742|       await earlierSave();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada»
+AssertionError: expected 4 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 4
+
+ ❯ src/instructor/instructor.test.tsx:796:36
+    794|       await new Promise((resolve) => setTimeout(resolve, 50));
+    795|     });
+    796|     expect(shown()?.sheet.version).toBe(5);
+       |                                    ^
+    797|     expect(shown()?.rows.find((row) => row.bookingId === "b2")?.state)…
+    798|     expect(result.current.draft).toEqual({});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Alumnes":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  searchbox:
+
+  Name "Cerca un alumne":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+    [33mtype[39m=[32m"search"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul />[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Clara + Gos 01 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000001"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 02 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000002"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 03 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000003"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 04 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000004"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 05 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000005"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 06 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000006"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 07 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000007"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 08 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000008"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 09 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000009"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 10 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000010"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 11 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000011"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 12 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000012"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 13 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000013"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 14 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000014"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 15 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000015"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 16 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000016"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 17 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000017"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 18 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000018"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 19 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000019"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 20 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000020"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 21 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000021"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 22 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000022"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 23 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000023"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 24 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000024"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 25 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000025"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 26 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000026"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 27 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000027"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 28 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000028"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 29 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000029"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 30 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000030"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 31 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000031"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 32 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000032"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 33 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000033"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 34 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000034"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 35 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000035"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 36 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000036"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 37 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000037"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 38 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000038"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 39 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000039"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 40 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000040"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 41 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000041"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 42 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000042"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 43 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000043"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 44 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000044"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 45 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000045"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 46 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000046"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 47 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000047"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 48 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000048"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 49 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000049"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 50 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000050"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 01 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000002"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 02 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000003"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 03 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000004"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 04 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000005"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 05 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000006"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 06 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000007"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 07 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/instructor.test.tsx:977:28
+    975|     expect(list()).toHaveLength(50);
+    976|     expect(screen.queryByRole("link", { name: "Clara + Gos 51 · C" }))…
+    977|     fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" …
+       |                            ^
+    978|     expect(await screen.findByRole("link", { name: "Clara + Gos 51 · C…
+    979|     expect(list()).toHaveLength(51);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Alumnes":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  searchbox:
+
+  Name "Cerca un alumne":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+    [33mtype[39m=[32m"search"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul />[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Clara + Gos 01 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000001"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 02 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000002"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 03 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000003"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 04 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000004"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 05 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000005"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 06 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000006"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 07 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000007"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 08 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000008"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 09 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000009"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 10 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000010"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 11 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000011"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 12 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000012"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 13 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000013"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 14 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000014"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 15 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000015"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 16 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000016"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 17 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000017"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 18 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000018"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 19 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000019"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 20 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000020"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 21 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000021"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 22 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000022"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 23 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000023"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 24 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000024"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 25 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000025"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 26 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000026"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 27 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000027"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 28 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000028"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 29 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000029"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 30 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000030"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 31 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000031"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 32 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000032"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 33 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000033"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 34 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000034"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 35 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000035"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 36 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000036"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 37 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000037"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 38 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000038"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 39 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000039"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 40 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000040"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 41 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000041"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 42 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000042"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 43 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000043"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 44 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000044"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 45 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000045"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 46 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000046"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 47 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000047"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 48 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000048"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 49 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000049"[39m
+  [36m/>[39m
+
+  Name "Clara + Gos 50 · C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000050"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 01 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000002"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 02 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000003"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 03 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000004"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 04 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000005"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 05 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000006"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 06 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-000000000007"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mClara + Gos 07 · C[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/instructor.test.tsx:995:28
+    993|     await renderScreen(<StudentSearchPage client={client()} />, { path…
+    994|     expect(await screen.findByRole("link", { name: "Clara + Gos 50 · C…
+    995|     fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" …
+       |                            ^
+    996|     expect(await screen.findByRole("alert")).toHaveTextContent(
+    997|       "S'ha produït un error inesperat. Torneu-ho a provar; si persist…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > 20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN
+TestingLibraryElementError: Unable to find an element with the text: No teniu permís per fer aquesta acció.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-day"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mGrups del dia[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"instructor-screen__error"[39m
+          [36m>[39m
+            [0mNo s'ha pogut carregar el dia.[0m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-day"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mGrups del dia[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"instructor-screen__error"[39m
+          [36m>[39m
+            [0mNo s'ha pogut carregar el dia.[0m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/instructor.test.tsx:1019:25
+    1017|     );
+    1018|     await dayPage();
+    1019|     expect(await screen.findByText("No teniu permís per fer aquesta ac…
+       |                         ^
+    1020|     expect(screen.queryByText("No s'ha pogut carregar el dia.")).toBeN…
+    1021|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > round 2 #3 (review #4, S10 §9): with TASKS off, screen 26's route opened directly is unavailable
+TestingLibraryElementError: Unable to find role="heading" and name "No disponible"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar clubs-shell__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m""[39m
+              [33mclass[39m=[32m"clubs-shell__logo"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar clubs-shell__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m""[39m
+              [33mclass[39m=[32m"clubs-shell__logo"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/instructor.test.tsx:1132:25
+    1130|       scenario: "instructorNoTasks",
+    1131|     });
+    1132|     expect(await screen.findByRole("heading", { level: 1, name: "No di…
+       |                         ^
+    1133|     cleanup();
+    1134|     await renderApp("/instructor/alumnes/dog-duna/tasques", { scenario…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  10 failed | 3 passed | 64 skipped (77)
+   Start at  11:55:28
+   Duration  22.12s (tests 95%, transform 2%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/instructor.test.tsx src/App.test.tsx -t round 2

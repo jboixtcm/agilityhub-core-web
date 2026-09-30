@@ -94,7 +94,8 @@
     "empty": "Ningún alumno con esta búsqueda",
     "loading": "Cargando los alumnos",
     "loadError": "No se han podido cargar los alumnos.",
-    "retry": "Vuelve a intentarlo"
+    "retry": "Vuelve a intentarlo",
+    "more": "Muestra más"
   },
   "overview": {
     "title": "Visión global",

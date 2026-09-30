@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > nothing that can be chosen is faded: the only opacity is on a disabled circle that is not the state 1ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the pending circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the no-show circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the pending circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the no-show circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > renders the four circles white · green · yellow · red as one radio group 53ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a tap chooses a state; the arrow keys move to the next circle that can be chosen 17ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a final (saved NOTIFIED) row is inert: no circle can be chosen or focused 5ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canMarkPresence gates white, green and red; canMarkNotice gates yellow 7ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canChooseAttendance and attendanceTone follow R-10-03 and the badge tones 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > diffSheet sends only the rows whose local state differs, in the sheet's order 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet keeps the caller's edits on the rows only the caller touched and takes the rest from details.current 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet drops an edit the server now holds, and any edit on a row that became final 0ms
+
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
+   Start at  11:57:54
+   Duration  617ms (environment 62%, setup 13%, transform 13%, tests 9%, import 2%, worker 1%)
+

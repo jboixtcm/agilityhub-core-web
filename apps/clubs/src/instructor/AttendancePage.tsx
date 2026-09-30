@@ -16,13 +16,14 @@ import {
   useBranding,
 } from "@agilityhub/ui";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
 import { navigateInApp, type Translate } from "../booking/shared";
 import { shortTime } from "../training/shared";
 
 import "./instructor.css";
-import { bareWeekday, studentName } from "./shared";
+import { bareWeekday, readErrorText, studentName } from "./shared";
 import { type AttendanceRow, type SheetNotice, useAttendanceSheet } from "./useAttendanceSheet";
 
 const STATES: readonly AttendanceState[] = ["PENDING", "PRESENT", "NOTIFIED", "NO_SHOW"];
@@ -33,27 +34,65 @@ function stateLabels(t: Translate): Record<AttendanceState, string> {
   ) as Record<AttendanceState, string>;
 }
 
+const FOCUSABLE = "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])";
+
 /**
- * The dog's photo full screen (mockup 21, V6): a tap anywhere, or Escape, closes it and the page
- * is as it was (same scroll, focus back on the photo).
+ * The dog's photo full screen (mockup 21, V6), a modal dialog (AGENTS rule 6). While it is open,
+ * the rest of the page is inert and does not scroll, and Tab and Shift+Tab stay inside it. A tap
+ * anywhere, or Escape, closes it; the page is then as it was (same scroll, focus back on the photo).
  */
 function PhotoLightbox({ alt, onClose, src }: { alt: string; onClose: () => void; src: string }) {
+  const dialog = useRef<HTMLDivElement>(null);
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const opener =
       document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    const scroll = { x: window.scrollX, y: window.scrollY };
+    const overflow = document.body.style.overflow;
+    // Everything but the dialog (rendered on `body`) leaves the focus order and the accessibility
+    // tree; what was inert already stays so.
+    const outside = [...document.body.children].filter(
+      (element) => element !== dialog.current && !element.hasAttribute("inert"),
+    );
+    for (const element of outside) element.setAttribute("inert", "");
+    document.body.style.overflow = "hidden";
     close.current?.focus({ preventScroll: true });
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab" || dialog.current === null) return;
+      const focusable = [...dialog.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (first === undefined || last === undefined) return;
+      const active = document.activeElement;
+      const inside = active instanceof Node && dialog.current.contains(active);
+      if (event.shiftKey ? !inside || active === first : !inside || active === last) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
+      for (const element of outside) element.removeAttribute("inert");
+      document.body.style.overflow = overflow;
       opener?.focus({ preventScroll: true });
+      if (window.scrollX !== scroll.x || window.scrollY !== scroll.y) {
+        window.scrollTo(scroll.x, scroll.y);
+      }
     };
   }, [onClose]);
-  return (
-    <div aria-label={alt} aria-modal="true" className="instructor-lightbox" role="dialog">
+  return createPortal(
+    <div
+      aria-label={alt}
+      aria-modal="true"
+      className="instructor-lightbox"
+      ref={dialog}
+      role="dialog"
+    >
       <button
         aria-label={alt}
         className="instructor-lightbox__close"
@@ -63,7 +102,8 @@ function PhotoLightbox({ alt, onClose, src }: { alt: string; onClose: () => void
       >
         <img alt="" src={src} />
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -244,7 +284,7 @@ export function AttendancePage({ classId, client }: { classId: string; client: A
       {sheet.status === "error" ? (
         <Toast tone="danger">
           <span className="instructor-screen__error">
-            {t("instructor:attendance.loadError")}
+            {readErrorText(t, sheet.error, t("instructor:attendance.loadError"))}
             <Button onClick={sheet.refetch} variant="secondary">
               {t("instructor:attendance.retry")}
             </Button>

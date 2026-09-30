@@ -38,7 +38,8 @@ async function login(page: Page, scenario: string) {
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
   await page.getByLabel("Contrasenya").fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
-  await page.waitForURL("**/instructor/avui");
+  // Round 2 #7 (ruling E71): an instructor lands on 20.
+  await page.waitForURL((url) => url.pathname === "/instructor/dia");
 }
 
 // Icons are `<use>` references to the external sprite: a capture waits until every rendered
@@ -121,12 +122,87 @@ test.describe("E6-W01 S10 screens 20, 21 and 22 against MSW", () => {
     ).toBeVisible();
     await shot(page, "21-passar-llista-375.png");
 
-    // The photo full screen, and back to the same screen.
+    // Round 2 #6 (AGENTS rule 6): Marc's four circles can be chosen; none is faded, and each ring
+    // keeps 3:1 or more against the card (computed styles).
+    const rings = await row(page, "Marc + Chun-li")
+      .getByRole("radio")
+      .evaluateAll((circles) => {
+        const channels = (value: string): number[] => {
+          const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/u.exec(value);
+          if (srgb !== null) return srgb.slice(1, 4).map((part) => Number(part) * 255);
+          return (value.match(/[\d.]+/gu) ?? []).slice(0, 4).map(Number);
+        };
+        const luminance = (rgb: number[]) => {
+          const [red = 0, green = 0, blue = 0] = rgb.map((channel) => {
+            const normalized = channel / 255;
+            return normalized <= 0.04045
+              ? normalized / 12.92
+              : ((normalized + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+        };
+        const contrast = (a: number[], b: number[]) => {
+          const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+          return ((lighter ?? 0) + 0.05) / ((darker ?? 0) + 0.05);
+        };
+        return circles.map((circle) => {
+          let background: number[] = [0, 0, 0];
+          for (let node = circle.parentElement; node !== null; node = node.parentElement) {
+            const fill = channels(getComputedStyle(node).backgroundColor);
+            if ((fill[3] ?? 1) > 0) {
+              background = fill.slice(0, 3);
+              break;
+            }
+          }
+          const style = getComputedStyle(circle);
+          return {
+            label: circle.getAttribute("aria-label"),
+            opacity: Number(style.opacity),
+            ratio: contrast(channels(style.borderTopColor).slice(0, 3), background),
+          };
+        });
+      });
+    expect(rings.map((ring) => ring.label)).toEqual([
+      "pendent",
+      "present",
+      "ha avisat",
+      "no presentat",
+    ]);
+    for (const ring of rings) {
+      expect(ring.opacity).toBe(1);
+      expect(ring.ratio).toBeGreaterThanOrEqual(3);
+    }
+
+    // The photo full screen, and back to the same screen. Round 2 #5 (AGENTS rule 6): a modal;
+    // Tab and Shift+Tab stay on it, the page behind is inert and does not scroll, and Escape (or
+    // a tap) closes it with the focus back on the photo.
     const scroll = await page.evaluate(() => window.scrollY);
-    await page.getByRole("button", { name: "Mostra la foto de Duna a pantalla completa" }).click();
+    const opener = page.getByRole("button", { name: "Mostra la foto de Duna a pantalla completa" });
+    await opener.click();
     await expect(page.getByRole("dialog", { name: "Tanca la foto de Duna" })).toBeVisible();
+    const close = page.getByRole("button", { name: "Tanca la foto de Duna" });
+    await expect(close).toBeFocused();
     await shot(page, "21-foto-375.png");
-    await page.getByRole("button", { name: "Tanca la foto de Duna" }).click();
+    await page.keyboard.press("Tab");
+    await expect(close).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    await expect(close).toBeFocused();
+    expect(
+      await page.evaluate(() => ({
+        inert: document.getElementById("root")?.hasAttribute("inert") ?? false,
+        overflow: document.body.style.overflow,
+      })),
+    ).toEqual({ inert: true, overflow: "hidden" });
+    await page.mouse.wheel(0, 600);
+    expect(await page.evaluate(() => window.scrollY)).toBe(scroll);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(opener).toBeFocused();
+    expect(await page.evaluate(() => document.getElementById("root")?.hasAttribute("inert"))).toBe(
+      false,
+    );
+    await opener.click();
+    await close.click();
     await expect(page.getByRole("dialog")).toHaveCount(0);
     expect(await page.evaluate(() => window.scrollY)).toBe(scroll);
 

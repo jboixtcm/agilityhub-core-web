@@ -94,7 +94,8 @@
     "empty": "No student matches this search",
     "loading": "Loading the students",
     "loadError": "The students could not be loaded.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "more": "Show more"
   },
   "overview": {
     "title": "Overview",

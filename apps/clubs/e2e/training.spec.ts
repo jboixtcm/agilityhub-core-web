@@ -153,7 +153,7 @@ test.describe("E5-W02 S09 screens 08, the training detail and 24 against MSW", (
   test("T-09-40 24: «Bloqueig» hides the reservation reasons; 18:00 + 18:30 on Petita, then 23 shows the block", async ({
     page,
   }) => {
-    await login(page, "instructor", "/instructor/avui");
+    await login(page, "instructor", "/instructor/dia");
     await page.goto(`${baseUrl}/instructor/pistes/ring-petita/reservar`);
     await expect(page.getByRole("heading", { name: "Reservar o bloquejar pista" })).toBeVisible();
     await page.getByRole("combobox", { name: "Dia" }).selectOption("2026-08-06");

@@ -452,10 +452,11 @@ async function loginAdmin(page: Page): Promise<void> {
   await settle(page, "/tauler");
 }
 
+// E6-W01 round 2 #7 (ruling E71): an instructor lands on 20 (`/instructor/dia`).
 async function loginClubs(
   page: Page,
   email: string,
-  landing: "/inici" | "/instructor/avui",
+  landing: "/inici" | "/instructor/dia",
   locale: Locale,
 ): Promise<void> {
   await page.goto(`${clubsUrl}/entrar`);
@@ -477,7 +478,7 @@ const sessions = new Map<string, Session>();
 async function clubsSession(
   browser: Browser,
   email: string,
-  landing: "/inici" | "/instructor/avui" = "/inici",
+  landing: "/inici" | "/instructor/dia" = "/inici",
   locale: Locale = "ca",
 ): Promise<Session> {
   const key = `${email}|${locale}`;
@@ -1430,7 +1431,7 @@ test("T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24
   });
 
   // 24 (instructor, 375): «Bloqueig» on the seeded training's ring, two contiguous cells.
-  const instructor = await clubsSession(browser, INSTRUCTOR, "/instructor/avui");
+  const instructor = await clubsSession(browser, INSTRUCTOR, "/instructor/dia");
   const ip = instructor.page;
   const blockDay = addDays(weekStart, 2);
   await navigateClubRoute(ip, `/instructor/pistes/${seeded.ringId}/reservar`);
@@ -1795,7 +1796,7 @@ test("E5-W04 (h) · cleanup: every booking, entry, training booking and block th
   }
   const blockId = created.ringBlock;
   if (blockId !== undefined) {
-    const session = await clubsSession(browser, INSTRUCTOR, "/instructor/avui");
+    const session = await clubsSession(browser, INSTRUCTOR, "/instructor/dia");
     const answer = await call<{ state?: string }>(
       session,
       `/ring-blocks/${blockId}/cancellation`,

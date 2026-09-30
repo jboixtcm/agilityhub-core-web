@@ -1,6 +1,44 @@
 {
-  "launchUrl": "absent",
-  "opened": false,
-  "pending": "real-core proof of step 1 waits for the api E5-T27 image",
+  "clubsMe": [
+    {
+      "accountName": null,
+      "impersonation": null,
+      "page": "/entrar",
+      "status": 503
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
+      "page": "/entrar",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
+      "page": "/inici",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
+      "page": "/gossos",
+      "status": 200
+    }
+  ],
+  "clubsRefreshGrants": 0,
+  "firstMeAnswered503": true,
+  "launchUrl": "https://app.example.test/entrar?handoff=<redacted>",
+  "memberAction": "PUT /me/dogs/{id}/instructor-note 200",
+  "opened": true,
+  "secondRedemption": {
+    "code": "HANDOFF_INVALID",
+    "status": 400
+  },
   "status": 201
 }

@@ -1,7 +1,7 @@
-import type { components } from "@agilityhub/api-client";
+import { type components, isApiError } from "@agilityhub/api-client";
 import { parsePlainDate } from "@agilityhub/i18n";
 
-import type { Translate } from "../booking/shared";
+import { errorText, type Translate } from "../booking/shared";
 
 export type InstructorDay = components["schemas"]["InstructorDay"];
 export type InstructorDayClass = components["schemas"]["InstructorDayClass"];
@@ -17,6 +17,15 @@ export function studentName(
     dog: student.dogName,
     handler: student.handlerName ?? student.memberFirstName,
   });
+}
+
+/**
+ * A failed read (AGENTS rule 4): the catalog message of the api's `code` (`errors:NOT_FOUND`,
+ * `errors:FORBIDDEN`…); without an answer from the api (offline) or on a failure that is not an
+ * api error, the screen's own `fallback` («No s'ha pogut carregar…»).
+ */
+export function readErrorText(t: Translate, error: unknown, fallback: string): string {
+  return isApiError(error) && error.status !== 0 ? errorText(t, error) : fallback;
 }
 
 /** «dt.» → «dt»: the bare short weekday of the mockups («dl 3», «dl 28/07»). */

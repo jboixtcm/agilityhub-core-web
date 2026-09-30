@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { navigateInApp, useLoader } from "../booking/shared";
 
 import "./instructor.css";
-import { bareWeekday, studentName } from "./shared";
+import { bareWeekday, readErrorText, studentName } from "./shared";
 
 type LastClass = components["schemas"]["LastClass"];
 
@@ -43,7 +43,7 @@ function openInApp(event: MouseEvent<HTMLAnchorElement>, path: string) {
  * `displayState`, and the three TASKS blocks when the club has the module.
  */
 export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: string }) {
-  const { t } = useTranslation(["instructor", "enums"]);
+  const { t } = useTranslation(["instructor", "enums", "errors"]);
   const branding = useBranding();
   const formats = useClubFormats();
   const load = useCallback(async () => {
@@ -102,7 +102,7 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
         ) : (
           <Toast tone="danger">
             <span className="instructor-screen__error">
-              {t("instructor:card.loadError")}
+              {readErrorText(t, card.error, t("instructor:card.loadError"))}
               <Button
                 onClick={() => {
                   card.refetch();

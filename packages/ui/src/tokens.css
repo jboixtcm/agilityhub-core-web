@@ -38,8 +38,9 @@
   --ah-color-warning: #e5b93c;
   --ah-color-danger: #e05b5b;
   --ah-color-info: #85b8e8;
-  /* Marks drawn on a status fill (screen 21's circles: ✓ on green and yellow, ✕ on red). */
-  --ah-color-on-success: #ffffff;
+  /* Marks drawn on a status fill (screen 21's circles: ✓ on green and yellow, ✕ on red), each
+     at least 3:1 on its fill: white on the green is 2.7:1, so the ✓ is dark there. */
+  --ah-color-on-success: #141414;
   --ah-color-on-warning: #141414;
   --ah-color-on-danger: #ffffff;
   --ah-color-overlay: color-mix(in srgb, #000000 58%, transparent);

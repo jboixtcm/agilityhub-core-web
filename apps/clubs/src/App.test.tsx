@@ -411,6 +411,55 @@ describe("T-01-20 profile choice", () => {
   });
 });
 
+describe("E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20", () => {
+  it("a password login takes an instructor to /instructor/dia and a member-only account to /inici", async () => {
+    const cases = [
+      ["instructor", "ivet.puig@example.test", "/instructor/dia"],
+      ["member", "biel.roca@example.test", "/inici"],
+    ] as const;
+    for (const [scenario, email, landing] of cases) {
+      mockScenario(scenario);
+      window.history.pushState(null, "", "/entrar");
+      const navigate = vi.fn();
+      await renderApplication(authClient(), canicBranding, "ca", navigate);
+      fireEvent.change(screen.getByPlaceholderText("correu@exemple.cat"), {
+        target: { value: email },
+      });
+      fireEvent.change(screen.getByPlaceholderText("contrasenya"), {
+        target: { value: "secret-password" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+      await waitFor(() => {
+        expect(navigate).toHaveBeenCalledWith(landing, false);
+      });
+      expect(navigate).toHaveBeenCalledOnce();
+      cleanup();
+    }
+  });
+
+  it("03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03", async () => {
+    const cases = [
+      [/Com a instructora/u, "INSTRUCTOR", "/instructor/dia"],
+      [/Com a alumna/u, "MEMBER", "/inici"],
+    ] as const;
+    for (const [choice, profile, landing] of cases) {
+      mockScenario("multiProfile");
+      const client = authClient();
+      await client.login("estel.rius@example.test", "secret-password");
+      const updateProfile = vi.spyOn(client, "updateProfile");
+      window.history.pushState(null, "", "/perfil-acces");
+      const navigate = vi.fn();
+      await renderApplication(client, canicBranding, "ca", navigate);
+      fireEvent.click(await screen.findByRole("button", { name: choice }));
+      await waitFor(() => {
+        expect(navigate).toHaveBeenCalledWith(landing, false);
+      });
+      expect(updateProfile).toHaveBeenCalledWith(profile, true);
+      cleanup();
+    }
+  });
+});
+
 describe("T-01-21 profile access rows and impersonation", () => {
   it("renders the mockup rows in order without account sessions or backoffice handoff", async () => {
     mockScenario("multiProfile");

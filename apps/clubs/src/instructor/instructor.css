@@ -631,3 +631,13 @@
   height: 1rem;
   color: var(--ah-color-text-muted);
 }
+
+.instructor-students__error {
+  margin: var(--ah-space-2) 0 0;
+  color: var(--ah-color-danger);
+}
+
+.instructor-students__more {
+  width: 100%;
+  margin-top: var(--ah-space-2);
+}

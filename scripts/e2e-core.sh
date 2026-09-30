@@ -76,7 +76,10 @@ run_core_suite() {
   if [[ "$up_status" -ne 0 ]]; then
     return "$up_status"
   fi
-  docker compose -f "$compose_file" --profile e2e run --rm playwright
+  # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
+  # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the
+  # running core, and that second `seed:demo` fails now and then (runs 91 and 94 of E4-W16).
+  docker compose -f "$compose_file" --profile e2e run --rm --no-deps playwright
 }
 
 check_n37_notification() {

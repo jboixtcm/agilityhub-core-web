@@ -1,6 +1,3 @@
-+ club added
-  null -> {"slug":"canic","name":"Club Agility Cànic","legalName":"Club Agility Cànic","taxId":"G63189617","address":{"street":"Carrer Sant Pere, 10","postalCode":"08392","city":"Sant Andreu de Llavaneres","region":"Barcelona","country":"ES"},"displayCity":"Cabrera de Mar","contactEmail":"canic@example.test","locales":["ca","es"],"defaultLocale":"ca","timeZone":"Europe/Madrid","currency":"EUR","countryProfile":"ES","status":"ONBOARDING","template":false}
-+ domains added
   null -> [{"host":"app.example.test","app":"clubs","primary":true},{"host":"admin.example.test","app":"clubs-admin","primary":false}]
 + theme added
   null -> {"colors":{"primary":"#E26A2A","onPrimary":"#0B0B0B","background":"#0B0B0B","surface":"#161616","surfaceAlt":"#1E1E1E","text":"#FFFFFF","textMuted":"#B5B5B5","border":"#2B2B2B","success":"#4CAF7D","warning":"#E5B93C","danger":"#E05B5B","info":"#85B8E8"},"fontFamily":"Montserrat","radius":"4px","ringPalette":["#F2B58C","#8FCE8F","#C9CDD3","#F5D67A","#85B8E8"],"mode":"dark"}
@@ -92,15 +89,112 @@
 + messageTemplates: schema accepted; application deferred to E7
 = pages: 0 page changes
 13 changes (applied)
-2026-09-28T15:01:45.790Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:45.904Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:45.924Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:45.946Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:45.964Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:45.989Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-2026-09-28T15:01:46.008Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:00.115Z ERROR 63 --- [agilityhub-core-api] [scheduled-job-1] o.s.s.s.TaskUtils$LoggingErrorHandler    : Unexpected error occurred in scheduled task
+
+org.springframework.data.mongodb.UncategorizedMongoDbException: Interrupted waiting for lock
+	at org.springframework.data.mongodb.core.MongoExceptionTranslator.doTranslateException(MongoExceptionTranslator.java:151) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoExceptionTranslator.translateExceptionIfPossible(MongoExceptionTranslator.java:74) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.potentiallyConvertRuntimeException(MongoTemplate.java:3037) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2915) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.doFindAndModify(MongoTemplate.java:2770) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.findAndModify(MongoTemplate.java:1120) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.findAndModify(MongoTemplate.java:1095) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at com.agilityhub.core.platform.persistence.jobs.JobLockRepository.acquire(JobLockRepository.java:30) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138) ~[spring-tx-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar!/:6.2.19]
+	at com.agilityhub.core.platform.persistence.jobs.JobLockRepository$$SpringCGLIB$$0.acquire(<generated>) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.SchedulerTick.run(SchedulerTick.java:51) ~[!/:0.1.0-SNAPSHOT]
+	at com.agilityhub.core.platform.application.jobs.SchedulerTick.scheduled(SchedulerTick.java:46) ~[!/:0.1.0-SNAPSHOT]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.15.12.jar!/:1.15.12]
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:87) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96) ~[spring-context-6.2.19.jar!/:6.2.19]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) ~[na:na]
+	at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
+Caused by: com.mongodb.MongoInterruptedException: Interrupted waiting for lock
+	at com.mongodb.internal.thread.InterruptionUtil.interruptAndCreateMongoInterruptedException(InterruptionUtil.java:41) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.Locks.lockInterruptibly(Locks.java:92) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.Locks.checkedWithInterruptibleLock(Locks.java:80) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.Locks.withInterruptibleLock(Locks.java:75) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.ClusterClock.advance(ClusterClock.java:44) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.ClusterClockAdvancingSessionContext.advanceClusterTime(ClusterClockAdvancingSessionContext.java:91) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.updateSessionContext(InternalStreamConnection.java:763) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:518) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceiveInternal(InternalStreamConnection.java:448) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.lambda$sendAndReceive$0(InternalStreamConnection.java:375) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:378) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.UsageTrackingInternalConnection.sendAndReceive(UsageTrackingInternalConnection.java:111) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultConnectionPool$PooledConnection.sendAndReceive(DefaultConnectionPool.java:747) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.CommandProtocolImpl.execute(CommandProtocolImpl.java:61) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServer$DefaultServerProtocolExecutor.execute(DefaultServer.java:208) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.executeProtocol(DefaultServerConnection.java:112) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.command(DefaultServerConnection.java:82) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServerConnection.command(DefaultServerConnection.java:74) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.connection.DefaultServer$OperationCountTrackingConnection.command(DefaultServer.java:298) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$executeRetryableWrite$10(SyncOperationHelper.java:267) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$withSourceAndConnection$0(SyncOperationHelper.java:131) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSuppliedResource(SyncOperationHelper.java:156) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$withSourceAndConnection$1(SyncOperationHelper.java:130) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSuppliedResource(SyncOperationHelper.java:156) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.withSourceAndConnection(SyncOperationHelper.java:129) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$executeRetryableWrite$11(SyncOperationHelper.java:252) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.lambda$decorateWriteWithRetries$12(SyncOperationHelper.java:308) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.async.function.RetryingSyncSupplier.get(RetryingSyncSupplier.java:67) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.SyncOperationHelper.executeRetryableWrite(SyncOperationHelper.java:279) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.internal.operation.BaseFindAndModifyOperation.execute(BaseFindAndModifyOperation.java:73) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoClusterImpl$OperationExecutorImpl.execute(MongoClusterImpl.java:446) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoCollectionImpl.executeFindOneAndUpdate(MongoCollectionImpl.java:786) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at com.mongodb.client.internal.MongoCollectionImpl.findOneAndUpdate(MongoCollectionImpl.java:765) ~[mongodb-driver-sync-5.5.2.jar!/:na]
+	at org.springframework.data.mongodb.core.MongoTemplate$FindAndModifyCallback.doInCollection(MongoTemplate.java:3227) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate$FindAndModifyCallback.doInCollection(MongoTemplate.java:3185) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2912) ~[spring-data-mongodb-4.5.13.jar!/:4.5.13]
+	... 30 common frames omitted
+	Suppressed: com.mongodb.MongoInterruptedException: Interrupted waiting for lock
+		at com.mongodb.internal.thread.InterruptionUtil.interruptAndCreateMongoInterruptedException(InterruptionUtil.java:41) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.Locks.lockInterruptibly(Locks.java:92) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.Locks.checkedWithInterruptibleLock(Locks.java:80) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.Locks.withInterruptibleLock(Locks.java:75) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.Locks.withInterruptibleLock(Locks.java:68) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.connection.BaseCluster.withLock(BaseCluster.java:252) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.connection.SingleServerCluster.withLock(SingleServerCluster.java:47) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.connection.DefaultSdamServerDescriptionManager.handleExceptionAfterHandshake(DefaultSdamServerDescriptionManager.java:92) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		at com.mongodb.internal.connection.DefaultServer$DefaultServerProtocolExecutor.execute(DefaultServer.java:211) ~[mongodb-driver-core-5.5.2.jar!/:na]
+		... 51 common frames omitted
+	Caused by: java.lang.InterruptedException
+		at java.base/java.util.concurrent.locks.ReentrantLock$Sync.lockInterruptibly(Unknown Source)
+		at java.base/java.util.concurrent.locks.ReentrantLock.lockInterruptibly(Unknown Source)
+		at com.mongodb.internal.Locks.lockInterruptibly(Locks.java:90)
+		... 58 common frames omitted
+Caused by: java.lang.InterruptedException
+	at java.base/java.util.concurrent.locks.ReentrantLock$Sync.lockInterruptibly(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.locks.ReentrantLock.lockInterruptibly(Unknown Source) ~[na:na]
+	at com.mongodb.internal.Locks.lockInterruptibly(Locks.java:90) ~[mongodb-driver-core-5.5.2.jar!/:na]
+	... 64 common frames omitted
+
+2026-09-30T09:29:06.129Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.239Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.251Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.261Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.271Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.282Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+2026-09-30T09:29:06.292Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
 {activeMembers=184, pendingMembers=3, inactiveMembers=4, leftMembers=3, members=194, dogs=246, familyGroups=12, activeDogs=242, pendingDogs=3, inactiveDogs=1, instructors=3, administrators=2, receivedDocuments=7, pendingDocuments=239}
 452 changes (demo seed)
-2026-09-28T15:01:49.458Z  WARN 118 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
-{templateClasses=39, templates=3, weeks=3, generatedClasses=114, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=1, attendanceHistoryClasses=10, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=1, scenarioClassBookings=18, scenarioCancellations=3, scenarioWaitlist=5, scenarioOffers=0, scenarioRiskExempt=1, scenarioBookingBlocks=1, attendanceRenamed=6, attendanceLevelChanges=1, followupNotes=1, attendanceBookings=34, attendanceWaitlist=1, attendanceMarks=26, attendanceCancellations=2, attendanceNoShowBatches=1, followupTasks=2, followupTaskAttachments=1, followupObservations=1, scenarioTrainingOverrides=1, scenarioTrainingBookings=3, trainingHistoryOverrides=1, trainingHistoryBookings=10}
-376 changes (demo planning, week start 2026-09-28)
+2026-09-30T09:29:08.507Z  WARN 119 --- [agilityhub-core-api] [           main] o.a.pdfbox.pdmodel.font.PDType1Font      : Using fallback font LiberationSans for base font Helvetica
+{templateClasses=39, templates=3, weeks=3, generatedClasses=102, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=0, attendanceHistoryClasses=0, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=0, scenarioClassBookings=0, scenarioCancellations=0, scenarioWaitlist=0, scenarioOffers=0, scenarioRiskExempt=0, scenarioBookingBlocks=0, attendanceRenamed=0, attendanceLevelChanges=0, followupNotes=0, attendanceBookings=0, attendanceWaitlist=0, attendanceMarks=0, attendanceCancellations=0, attendanceNoShowBatches=0, followupTasks=0, followupTaskAttachments=0, followupObservations=0, scenarioTrainingOverrides=0, scenarioTrainingBookings=0, trainingHistoryOverrides=0, trainingHistoryBookings=0}
+233 changes (demo planning, week start 2026-09-28)

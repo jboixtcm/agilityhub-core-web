@@ -1,1 +1,1 @@
-{"account":false,"missing":"N-37 recipient.accountId, APP DELIVERED, OPEN_DOG, Neret E3","stored":[]}
+{"action":"OPEN_DOG","code":"N-37","deliveries":[{"channel":"APP","status":"DELIVERED"}],"dogName":"Neret E3","recipient":["accountId","displayName","memberId"],"variables":["audience","change","club_name","dog_name","dog_name_article","entityId","gender","member_first_name","member_last_names","member_name"]}

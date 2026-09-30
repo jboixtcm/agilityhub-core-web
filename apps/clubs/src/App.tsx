@@ -106,8 +106,9 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 24 (S09 §2 writes it as `/instructor/ring-blocks/new`).
   { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen 26 (`/instructor/alumnes/:dogId/tasques`, E6-W02) is a placeholder of this wildcard
-  // until then; E0-W06's `/instructor/tasques` is gone.
+  // Screen 26 (E6-W02): a placeholder until then, with its own route so that its module (TASKS,
+  // `modules.ts`) guards it; E0-W06's `/instructor/tasques` is gone.
+  { path: "/instructor/alumnes/:dogId/tasques", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/instructor/*", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
   { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
@@ -161,6 +162,14 @@ function profileRoles(me: CurrentMe): readonly Role[] {
   return me.membership.profiles;
 }
 
+/**
+ * Where a profile lands after 01/03b: an instructor on 20 «Grups del dia» (mockup 20, V6 note;
+ * ruling E71), everyone else on 03.
+ */
+function profileLanding(profile: Role | undefined): string {
+  return profile === "INSTRUCTOR" ? "/instructor/dia" : "/inici";
+}
+
 function routeAfterOnboarding(me: Me): string {
   if (!isCurrentClubMe(me)) {
     throw new TypeError("The club session did not contain a membership");
@@ -168,7 +177,7 @@ function routeAfterOnboarding(me: Me): string {
   if (profileRoles(me).length > 1 && !me.membership.rememberProfile) {
     return "/perfil-acces";
   }
-  return me.membership.activeProfile === "INSTRUCTOR" ? "/instructor/avui" : "/inici";
+  return profileLanding(me.membership.activeProfile);
 }
 
 async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> {
@@ -650,7 +659,7 @@ export function AccessPage({
     setPending("login");
     try {
       const me = await authClient.login(email, password);
-      window.location.assign(await routeAfterLogin(me, authClient));
+      navigate(await routeAfterLogin(me, authClient));
     } catch (loginError) {
       if (isApiError(loginError) && loginError.status === 429) {
         countdown.start(loginError.retryAfter ?? 60);
@@ -961,7 +970,13 @@ function roleCopy(
   };
 }
 
-function ProfileChoicePage({ authClient }: { authClient: AuthClient }) {
+function ProfileChoicePage({
+  authClient,
+  navigate,
+}: {
+  authClient: AuthClient;
+  navigate: (path: string) => void;
+}) {
   const { me } = useSession();
   const { t } = useTranslation("auth");
   const [remember, setRemember] = useState(true);
@@ -982,7 +997,7 @@ function ProfileChoicePage({ authClient }: { authClient: AuthClient }) {
         const handoff = await authClient.createHandoff("clubs-admin");
         window.location.assign(handoff.url);
       } else {
-        window.location.assign(role === "INSTRUCTOR" ? "/instructor/avui" : "/inici");
+        navigate(profileLanding(role));
       }
     } catch {
       setError(true);
@@ -1444,7 +1459,12 @@ export function App({
         presentation="modal"
       >
         <RequireAuth>
-          <ProfileChoicePage authClient={authClient} />
+          <ProfileChoicePage
+            authClient={authClient}
+            navigate={(path) => {
+              navigate(path, false);
+            }}
+          />
         </RequireAuth>
       </OnboardingExperience>
     );

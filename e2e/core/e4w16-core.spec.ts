@@ -356,31 +356,34 @@ test("T-01-19 E4-W16 step 10 · a RESET link sets the new password once without 
     )
     .toBe(true);
   if (link === undefined) throw new Error("The RESET link was not delivered");
-  await page.goto(`${clubsUrl}${link.pathname}${link.search}`);
+  // S01 R-01-04 (ruling E70): a RESET link carries `&purpose=reset`, which api E5-T29 adds. The
+  // link is single-use, so on an image without it the run opens the delivered link once with
+  // that parameter, as the api will send it: the E5-T27 half (a RESET session sets the password
+  // once without `current`, E49) is then proven on the core; the link's own shape stays pending.
+  const deliveredPurpose = link.searchParams.get("purpose");
+  const opened = new URL(link.toString());
+  if (deliveredPurpose === null) opened.searchParams.set("purpose", "reset");
+  await page.goto(`${clubsUrl}${opened.pathname}${opened.search}`);
   const heading = page.getByRole("heading", { level: 1 });
   await expect(heading).toBeVisible();
   // The link's shape (path, parameter names and `purpose`), never its token.
   writeEvidence("recovery-link-core.json", {
     heading: await heading.textContent(),
+    openedWithPurpose: opened.searchParams.get("purpose"),
     parameters: [...link.searchParams.keys()],
     path: link.pathname,
-    purpose: link.searchParams.get("purpose"),
+    purpose: deliveredPurpose,
   });
-  // Screen 02 is 02 whatever the link; the password form never asks for `current`.
-  await expect(page.getByLabel("contrasenya actual")).toHaveCount(0);
-  await expect(page.getByLabel("nova contrasenya")).toBeVisible();
-  if (link.searchParams.get("purpose") === null) {
-    // S01 R-01-04: the api links `/activacio?t=…` for every purpose, so 02 cannot tell a RESET
-    // link from a LOGIN one: the «Ja hi ets» variant and the used-link message wait for the
-    // contract (question in the E4-W16 report). The password is not changed here.
+  if (deliveredPurpose === null) {
     test.info().annotations.push({
-      description: "the api's RESET link carries no purpose: 02's reset variant cannot be proven",
+      description:
+        "the api's RESET link carries no purpose yet (api E5-T29): opened with &purpose=reset",
       type: "pending real-core proof",
     });
-    await screenshot(page, "02-recuperacio-core-375.png");
-    await context.close();
-    return;
   }
+  // The password form never asks for `current`.
+  await expect(page.getByLabel("contrasenya actual")).toHaveCount(0);
+  await expect(page.getByLabel("nova contrasenya")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Ja hi ets" })).toBeVisible();
   // The same password as the seed's (member.2 has one), so later logins keep working.
   const first = page.waitForResponse(
@@ -512,14 +515,55 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       clubsGrants.push(new URLSearchParams(request.postData() ?? "").get("grant_type") ?? "");
     }
   });
+  // What the club app's `/me` answered (status, the impersonation mark, whose name): the shape
+  // the banner reads, never a token.
+  const clubsMe: {
+    accountName: null | string;
+    impersonation: null | string[];
+    page: string;
+    status: number;
+  }[] = [];
+  clubs.on("response", (response) => {
+    if (new URL(response.url()).pathname !== "/api/v1/me") return;
+    let page = "(service worker)";
+    try {
+      page = new URL(response.request().frame().url()).pathname;
+    } catch {
+      // A service worker's request has no frame.
+    }
+    void response
+      .json()
+      .catch(() => ({}))
+      .then((payload: unknown) => {
+        const me = payload as { account?: { name?: string }; impersonation?: object | null };
+        clubsMe.push({
+          accountName: me.account?.name ?? null,
+          impersonation:
+            me.impersonation === undefined || me.impersonation === null
+              ? null
+              : Object.keys(me.impersonation).sort(),
+          page,
+          status: response.status(),
+        });
+      });
+  });
   await clubs.waitForURL((url) => url.pathname === "/inici", { timeout: 30_000 });
-  await expect(clubs.getByText(`Estàs veient l'app com ${memberName}`)).toBeVisible();
+  // The banner names the account `/me` carries (its only name). The seed names the account of
+  // member@example.test apart from its member record (question Q5 of the round 2 report).
+  await expect
+    .poll(() => clubsMe.find((answer) => answer.page === "/inici")?.status ?? 0)
+    .toBe(200);
+  const restored = clubsMe.find((answer) => answer.page === "/inici");
+  expect(restored?.impersonation).toEqual(["actorName"]);
+  const bannerName = restored?.accountName ?? "";
+  expect(bannerName).not.toBe("");
+  await expect(clubs.getByText(`Estàs veient l'app com ${bannerName}`)).toBeVisible();
   expect(failedMe).toBe(1);
   await admin.context().unroute("**/api/v1/me");
 
   // One member action, as the member (the api audits it with both ids, origin BACKOFFICE).
   await clubs.goto(`${clubsUrl}/gossos`);
-  await expect(clubs.getByText(`Estàs veient l'app com ${memberName}`)).toBeVisible();
+  await expect(clubs.getByText(`Estàs veient l'app com ${bannerName}`)).toBeVisible();
   const note = clubs.getByLabel(/Notes als instructors/u).first();
   await note.fill("Nota desada des del backoffice (E4-W16)");
   const noteAnswer = clubs.waitForResponse(
@@ -548,6 +592,7 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   // The impersonated tab never refreshed (no refresh_token grant, before or after the reload).
   expect(clubsGrants.filter((grant) => grant === "refresh_token")).toEqual([]);
   writeEvidence("impersonation-core.json", {
+    clubsMe,
     clubsRefreshGrants: clubsGrants.filter((grant) => grant === "refresh_token").length,
     firstMeAnswered503: failedMe === 1,
     launchUrl: `${launch.origin}${launch.pathname}?handoff=<redacted>`,

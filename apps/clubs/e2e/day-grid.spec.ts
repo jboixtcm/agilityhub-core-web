@@ -169,12 +169,17 @@ test.describe("T-06-29 screen 10 «Classes del dia» (/avui)", () => {
 
 test.describe("T-06-29 screen 23 «Visió global» (/instructor/avui)", () => {
   test("instructor: n/n +e, training names, block, class drawer", async ({ page }) => {
-    await login(page, "instructor", "/instructor/avui");
-    await expect(page.getByRole("link", { name: "Visió global" })).toHaveAttribute(
+    // E6-W01 round 2 #7 (ruling E71): an instructor lands on 20; 23 is the «Visió global» tab.
+    await login(page, "instructor", "/instructor/dia");
+    await expect(page.getByRole("link", { name: "El meu dia" })).toHaveAttribute(
       "aria-current",
       "page",
     );
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
+    await expect(page.getByRole("link", { name: "Visió global" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
 
     const grid = page.getByRole("table", { name: "Quadre del dia" });
     await expect(page.getByRole("heading", { name: "Visió global" })).toBeVisible();
@@ -227,7 +232,7 @@ test.describe("T-06-29 E4-W14 screen 23's class drawer names its instructors", (
   test("the «Instructor» row follows the count of instructorNames, the names as a list", async ({
     page,
   }) => {
-    await login(page, "instructor", "/instructor/avui");
+    await login(page, "instructor", "/instructor/dia");
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
     const grid = page.getByRole("table", { name: "Quadre del dia" });
     await grid.getByRole("button", { name: /B\+C/u }).click();
@@ -261,7 +266,7 @@ test.describe("E4-W12 step 7 the 375 px cells of 10 and 23", () => {
   test("instructor: «Bloq.» and its reason wrap between words or end with an ellipsis, never inside a word", async ({
     page,
   }) => {
-    await login(page, "instructor", "/instructor/avui");
+    await login(page, "instructor", "/instructor/dia");
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
     const grid = page.getByRole("table", { name: "Quadre del dia" });
     await expect(grid.getByText("Bloq.")).toBeVisible();
@@ -300,7 +305,7 @@ test.describe("T-06-29 E4-W15 step 5 «manteniment» whole in the 375 px cells o
   test("instructor: «Bloq. · manteniment» and every other cell line fit whole, with no ellipsis", async ({
     page,
   }) => {
-    await login(page, "instructor", "/instructor/avui");
+    await login(page, "instructor", "/instructor/dia");
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
     const grid = page.getByRole("table", { name: "Quadre del dia" });
     await expect(grid.getByText("manteniment")).toBeVisible();

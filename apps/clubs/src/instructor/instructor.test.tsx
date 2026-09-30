@@ -10,7 +10,16 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -22,6 +31,7 @@ import { AttendancePage } from "./AttendancePage";
 import { DayPage } from "./DayPage";
 import { StudentCardPage } from "./StudentCardPage";
 import { StudentSearchPage } from "./StudentSearchPage";
+import { type AttendanceSheet, useAttendanceSheet } from "./useAttendanceSheet";
 
 const canic: Branding = {
   ...brandingCanicFixture,
@@ -277,7 +287,12 @@ describe("T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01)", () => {
       ),
     );
     await dayPage();
-    expect(await screen.findByText("No s'ha pogut carregar el dia.")).toBeVisible();
+    // Round 2 #4: the catalog message of the answer's code (INTERNAL_ERROR).
+    expect(
+      await screen.findByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
     refuse = false;
     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
     expect(await screen.findByText("8:30–9:30 · A+B · Central")).toBeVisible();
@@ -411,6 +426,39 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     expect(dialog.querySelector("img")?.getAttribute("src")).toMatch(/^data:image\/svg\+xml,/u);
     fireEvent.click(within(dialog).getByRole("button", { name: "Tanca la foto de Duna" }));
     expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.body.innerHTML).toBe(before);
+    expect(open).toHaveFocus();
+  });
+
+  it("round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything", async () => {
+    const { container } = await sheetPage();
+    const open = await screen.findByRole("button", {
+      name: "Mostra la foto de Duna a pantalla completa",
+    });
+    const before = document.body.innerHTML;
+    open.focus();
+    fireEvent.click(open);
+    const dialog = screen.getByRole("dialog", { name: "Tanca la foto de Duna" });
+    const close = within(dialog).getByRole("button", { name: "Tanca la foto de Duna" });
+    expect(close).toHaveFocus();
+    // The page behind leaves the focus order and the accessibility tree, and does not scroll.
+    expect(container).toHaveAttribute("inert");
+    expect(dialog.closest("[inert]")).toBeNull();
+    expect(document.body.style.overflow).toBe("hidden");
+    // Tab and Shift+Tab are kept on the dialog's control (the browser's move is prevented).
+    expect(fireEvent.keyDown(close, { key: "Tab" })).toBe(false);
+    expect(close).toHaveFocus();
+    expect(fireEvent.keyDown(close, { key: "Tab", shiftKey: true })).toBe(false);
+    expect(close).toHaveFocus();
+    // A focus that escaped (a script, an old reference) is brought back by the next Tab.
+    open.focus();
+    expect(fireEvent.keyDown(document, { key: "Tab" })).toBe(false);
+    expect(close).toHaveFocus();
+
+    fireEvent.keyDown(close, { key: "Escape" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(container).not.toHaveAttribute("inert");
+    expect(document.body.style.overflow).toBe("");
     expect(document.body.innerHTML).toBe(before);
     expect(open).toHaveFocus();
   });
@@ -578,6 +626,180 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
   });
 });
 
+describe("E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save", () => {
+  const notOpen = () =>
+    HttpResponse.json(
+      { code: "ATTENDANCE_NOT_OPEN", details: {}, message: "not open", traceId: "t" },
+      { status: 422 },
+    );
+
+  /** The `nth` read of the sheet waits for `release()`; `answer` (if any) replaces the mock's. */
+  function holdRead(nth: number, answer?: () => AttendanceSheet | undefined) {
+    let reads = 0;
+    let answered = false;
+    let release: (() => void) | undefined;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/attendance", async () => {
+        reads += 1;
+        if (reads !== nth) return undefined;
+        await held;
+        answered = true;
+        const body = answer?.();
+        return body === undefined ? undefined : HttpResponse.json(body);
+      }),
+    );
+    return {
+      answered: () => answered,
+      reads: () => reads,
+      release: () => {
+        release?.();
+      },
+    };
+  }
+
+  it("after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing", async () => {
+    const requests = recordRequests();
+    let puts = 0;
+    server.use(
+      http.put("*/api/v1/class-sessions/:id/attendance", () => {
+        puts += 1;
+        return puts === 1 ? notOpen() : undefined;
+      }),
+    );
+    const read = holdRead(2);
+    await sheetPage();
+    const marc = await sheetRow("Marc + Chun-li");
+    fireEvent.click(within(marc).getByRole("radio", { name: "present" }));
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Encara no es pot passar llista.")).toBeVisible();
+    await waitFor(() => {
+      expect(read.reads()).toBe(2);
+    });
+    // The recovery read is in flight.
+    for (const radio of screen.getAllByRole("radio")) expect(radio).toBeDisabled();
+    const save = screen.getByRole("button", { name: /^Desa/u });
+    expect(save).toBeDisabled();
+    expect(save).toHaveAttribute("aria-busy", "true");
+    fireEvent.click(within(await sheetRow("Eva + Fish")).getByRole("radio", { name: "pendent" }));
+    fireEvent.click(save);
+    expect(puts).toBe(1);
+
+    read.release();
+    await waitFor(() => {
+      expect(within(marc).getByRole("radio", { name: "present" })).toBeEnabled();
+    });
+    // The caller's choice is rebased on the list read again, and nothing else was chosen.
+    expect(within(marc).getByRole("radio", { name: "present" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(
+      within(await sheetRow("Eva + Fish")).getByRole("radio", { name: "no presentat" }),
+    ).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Llista desada")).toBeVisible();
+    const last = requests.filter((request) => request.line.startsWith("PUT")).at(-1);
+    await waitFor(() => {
+      expect(last?.body).toEqual({ items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 });
+    });
+  });
+
+  it("the hook refuses a save captured before the refusal while that read is in flight", async () => {
+    let puts = 0;
+    server.use(
+      http.put("*/api/v1/class-sessions/:id/attendance", () => {
+        puts += 1;
+        return puts === 1 ? notOpen() : undefined;
+      }),
+    );
+    const read = holdRead(2);
+    mockScenario("instructor");
+    const api = client();
+    const { result } = renderHook(() => useAttendanceSheet(api, "c1"));
+    await waitFor(() => {
+      expect(result.current.status).toBe("ready");
+    });
+    act(() => {
+      result.current.choose("b2", "NO_SHOW");
+    });
+    await waitFor(() => {
+      expect(result.current.changes).toHaveLength(1);
+    });
+    // A save from the render before the refusal (a second click that raced the re-render).
+    const earlierSave = result.current.save;
+    let first: Promise<void> | undefined;
+    act(() => {
+      first = result.current.save();
+    });
+    await waitFor(() => {
+      expect(read.reads()).toBe(2);
+    });
+    expect(result.current.saving).toBe(true);
+    await act(async () => {
+      await earlierSave();
+      await result.current.save();
+    });
+    act(() => {
+      result.current.choose("b1", "PENDING");
+    });
+    expect(puts).toBe(1);
+    expect(result.current.draft).toEqual({ b2: "NO_SHOW" });
+
+    read.release();
+    await act(async () => {
+      await first;
+    });
+    expect(result.current.saving).toBe(false);
+    expect(result.current.notice).toEqual({ code: "ATTENDANCE_NOT_OPEN", kind: "error" });
+    expect(result.current.draft).toEqual({ b2: "NO_SHOW" });
+  });
+
+  it("a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada»", async () => {
+    const held: { sheet: AttendanceSheet | undefined } = { sheet: undefined };
+    const read = holdRead(2, () => held.sheet);
+    mockScenario("instructor");
+    const api = client();
+    const { result } = renderHook(() => useAttendanceSheet(api, "c1"));
+    const shown = () => (result.current.status === "ready" ? result.current.sheet : undefined);
+    await waitFor(() => {
+      expect(result.current.status).toBe("ready");
+    });
+    // The list as it is now (version 4), which the held read will answer late.
+    held.sheet = structuredClone(shown());
+    expect(held.sheet?.sheet.version).toBe(4);
+    act(() => {
+      result.current.refetch();
+    });
+    await waitFor(() => {
+      expect(read.reads()).toBe(2);
+    });
+    act(() => {
+      result.current.choose("b2", "NO_SHOW");
+    });
+    await act(async () => {
+      await result.current.save();
+    });
+    expect(shown()?.sheet.version).toBe(5);
+    expect(result.current.notice).toEqual({ kind: "saved" });
+
+    read.release();
+    await waitFor(() => {
+      expect(read.answered()).toBe(true);
+    });
+    // Let the held answer reach the hook and be judged.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
+    expect(shown()?.sheet.version).toBe(5);
+    expect(shown()?.rows.find((row) => row.bookingId === "b2")?.state).toBe("NO_SHOW");
+    expect(result.current.draft).toEqual({});
+    expect(result.current.notice).toEqual({ kind: "saved" });
+  });
+});
+
 describe("T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09)", () => {
   it("mockup 22: the header, «C · fa 8 mesos», the three metrics, the five badges, the three blocks and the manage button", async () => {
     await cardPage();
@@ -704,6 +926,129 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     fireEvent.click(screen.getByRole("link", { name: "Júlia Roca + Rock · D" }));
     expect(window.location.pathname).toBe("/instructor/alumnes/dog-rock");
   });
+
+  /** 51 active dogs that match, paged by `page` and `size` as the api pages `GET /dogs`. */
+  function fiftyOneDogs(refusePage?: () => boolean) {
+    const dogs = Array.from({ length: 51 }, (_, index) => {
+      const number = String(index + 1).padStart(2, "0");
+      return {
+        handlerName: null,
+        id: `00000000-0000-4000-8000-0000000000${number}`,
+        level: { code: "C", color: null, id: "00000000-0000-4000-8000-00000000000c", name: "C" },
+        name: `Gos ${number}`,
+        owner: {
+          fullName: "Clara Font Pons",
+          id: "00000000-0000-4000-8000-000000000c1a",
+          status: "ACTIVE",
+        },
+      };
+    });
+    server.use(
+      http.get("*/api/v1/dogs", ({ request }) => {
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get("page") ?? "0");
+        const size = Number(url.searchParams.get("size") ?? "20");
+        if (page > 0 && refusePage?.() === true) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+            { status: 500 },
+          );
+        }
+        return HttpResponse.json({
+          appliedFilters: [{ field: "status", label: "Actiu", operator: "eq", value: "ACTIVE" }],
+          items: dogs.slice(page * size, (page + 1) * size),
+          page,
+          size,
+          totalItems: dogs.length,
+          totalPages: Math.ceil(dogs.length / size),
+        });
+      }),
+    );
+  }
+
+  it("round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page", async () => {
+    const requests = recordRequests();
+    fiftyOneDogs();
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    expect(await screen.findByRole("link", { name: "Clara + Gos 01 · C" })).toBeVisible();
+    const list = () => within(screen.getByRole("list")).getAllByRole("link");
+    expect(list()).toHaveLength(50);
+    expect(screen.queryByRole("link", { name: "Clara + Gos 51 · C" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
+    expect(await screen.findByRole("link", { name: "Clara + Gos 51 · C" })).toBeVisible();
+    expect(list()).toHaveLength(51);
+    expect(screen.queryByRole("button", { name: /Mostra'n més/u })).toBeNull();
+    const pages = requests
+      .filter((request) => request.line.startsWith("GET /dogs"))
+      .map((request) => {
+        const query = new URLSearchParams(request.line.split("?")[1] ?? "");
+        return `${query.get("page") ?? ""}/${query.get("size") ?? ""}`;
+      });
+    expect(pages).toEqual(["0/50", "1/50"]);
+  });
+
+  it("round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again", async () => {
+    let refuse = true;
+    fiftyOneDogs(() => refuse);
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    expect(await screen.findByRole("link", { name: "Clara + Gos 50 · C" })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+    );
+    expect(within(screen.getByRole("list")).getAllByRole("link")).toHaveLength(50);
+    refuse = false;
+    fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
+    expect(await screen.findByRole("link", { name: "Clara + Gos 51 · C" })).toBeVisible();
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+});
+
+describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code", () => {
+  const refusal = (code: string, status: number) => () =>
+    HttpResponse.json({ code, details: {}, message: "refused", traceId: "t" }, { status });
+
+  it("20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN", async () => {
+    server.use(
+      http.get("*/api/v1/instructor/day", refusal("FORBIDDEN", 403)),
+      http.get("*/api/v1/class-sessions/:id/attendance", refusal("NOT_FOUND", 404)),
+      http.get("*/api/v1/dogs/:id/instructor-card", refusal("NOT_FOUND", 404)),
+      http.get("*/api/v1/dogs", refusal("FORBIDDEN", 403)),
+    );
+    await dayPage();
+    expect(await screen.findByText("No teniu permís per fer aquesta acció.")).toBeVisible();
+    expect(screen.queryByText("No s'ha pogut carregar el dia.")).toBeNull();
+    cleanup();
+    await sheetPage("c-unknown");
+    expect(await screen.findByText("No s'ha trobat l'element sol·licitat.")).toBeVisible();
+    cleanup();
+    await cardPage("dog-unknown");
+    expect(await screen.findByText("No s'ha trobat l'element sol·licitat.")).toBeVisible();
+    cleanup();
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    expect(await screen.findByText("No teniu permís per fer aquesta acció.")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
+  });
+
+  it("without an answer from the api (offline) each screen keeps its own «No s'ha pogut carregar…»", async () => {
+    server.use(
+      http.get("*/api/v1/instructor/day", () => HttpResponse.error()),
+      http.get("*/api/v1/class-sessions/:id/attendance", () => HttpResponse.error()),
+      http.get("*/api/v1/dogs/:id/instructor-card", () => HttpResponse.error()),
+      http.get("*/api/v1/dogs", () => HttpResponse.error()),
+    );
+    await dayPage();
+    expect(await screen.findByText("No s'ha pogut carregar el dia.")).toBeVisible();
+    cleanup();
+    await sheetPage();
+    expect(await screen.findByText("No s'ha pogut carregar la llista.")).toBeVisible();
+    cleanup();
+    await cardPage();
+    expect(await screen.findByText("No s'ha pogut carregar la fitxa.")).toBeVisible();
+    cleanup();
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    expect(await screen.findByText("No s'han pogut carregar els alumnes.")).toBeVisible();
+  });
 });
 
 describe("T-10-32 (20/21/22) the three locales, with no missing key", () => {
@@ -777,5 +1122,18 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
       "aria-current",
       "page",
     );
+  });
+
+  it("round 2 #3 (review #4, S10 §9): with TASKS off, screen 26's route opened directly is unavailable", async () => {
+    await renderApp("/instructor/alumnes/dog-duna/tasques", {
+      branding: without("TASKS"),
+      scenario: "instructorNoTasks",
+    });
+    expect(await screen.findByRole("heading", { level: 1, name: "No disponible" })).toBeVisible();
+    cleanup();
+    await renderApp("/instructor/alumnes/dog-duna/tasques", { scenario: "instructor" });
+    // With TASKS on it is still E6-W02's placeholder («Aviat»).
+    expect(await screen.findByText("Aviat")).toBeVisible();
+    expect(screen.queryByRole("heading", { level: 1, name: "No disponible" })).toBeNull();
   });
 });

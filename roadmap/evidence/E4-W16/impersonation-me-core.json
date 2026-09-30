@@ -1,0 +1,30 @@
+{
+  "clubsGrants": [
+    "urn:agilityhub:grant:handoff"
+  ],
+  "clubsMe": [
+    {
+      "accountName": null,
+      "impersonation": null,
+      "page": "/entrar",
+      "status": 503
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
+      "page": "/entrar",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
+      "page": "/inici",
+      "status": 200
+    }
+  ],
+  "failedMe": 1
+}

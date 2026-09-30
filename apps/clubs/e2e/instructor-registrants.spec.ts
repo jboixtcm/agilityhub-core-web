@@ -36,7 +36,8 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     await page.getByLabel("Correu electrònic").fill("ivet.puig@example.test");
     await page.getByLabel("Contrasenya").fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
-    await page.waitForURL("**/instructor/avui");
+    // E6-W01 round 2 #7 (ruling E71): an instructor lands on 20.
+    await page.waitForURL((url) => url.pathname === "/instructor/dia");
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
 
     const grid = page.getByRole("table", { name: "Quadre del dia" });

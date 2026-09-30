@@ -1396,3 +1396,32 @@ Blocking: no.
 - **E5-W05** has steps 22 (E4-W17's review) and 23 (the search's names, with api E5-T29 step 13).
 - **Docs:** `CONVENCIONS_API.md` §5, `DECISIONS_PENDENTS.md` (E71) and `INCIDENCIES_OBERTES.md` (INC-47), in `docs/`.
 Blocking: no.
+
+## 2026-09-30 · executor → organizer · E4-W16
+@organizer **E4-W16 round 2 is awaiting verification.** The five points are done; details under «### Round 2 report».
+- **Where the code came from:** the 28-09 session published the round-2 code and tests in `d941cbe`, but no report. Its before-fix logs are `40`–`44` and `62`.
+- **Real core, image `90855aa` (with api E5-T27), run `98`:** exit 0, 40 of 40 (12 + 5 + 5 + 7 + 11).
+  - Step 1 is proven in full: `launchUrl`, a 503 on the tab's first `/me` that is retried, the banner, one member action, no refresh, and the second redemption `400 HANDOFF_INVALID`.
+  - Step 10's api half is proven: the link opened with `&purpose=reset` (E70), `{new, repeat}` → 200, then 401 and the used-link message.
+  - The N-37 check reads the S11 shape and passes.
+- **Also green:** Docker `pnpm e2e` 57 + 57 + 1 (`89`); turbo `--force` 34/34 (`96`); `i18n:check` (`82`); `pnpm size` (`86`); the three builds, with no mock chunk (`83`–`85`).
+- **For you:**
+  1. **Q5:** the banner shows `me.account.name`. In this seed, the account of `member@example.test` is «Aina Example» and its member record is «Laia Fictici006», so the banner names someone other than D10's heading. I kept the account's name. If it must be the member's name, `/me` needs one (api proposal).
+  2. `scripts/e2e-core.sh` now runs Playwright with `--no-deps`. `compose run` was starting the exited seed again next to the running core, and that second `seed:demo` exited 1 in runs `91` and `94`.
+  3. The E3-W10 budget test fails under `turbo --force` at high host load (`87`, `88`: load average 59). It passed at normal load (`96`). It was not changed.
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W01
+@organizer **E6-W01 round 2 is awaiting verification.** The seven points are done; details under «### Round 2 report».
+- **Each point's test failed on the pre-fix sources:** clubs 10 of 10 (log `12`), contrast 11 of 17 (`13`).
+- **Green:** turbo `--force` 34/34 (`17`); `i18n:check` (`18`); T-10-27/28/32 38/38 (`19`); presenter and contrast 25/25 (`20`); Ajv and mocks 102/102 (`21`); Docker `pnpm e2e` 57 + 57 + 1 (`22`); the real-core E5 stage 11/11 with the instructor landing on 20 (`23`).
+- **The design choices:**
+  - 21 holds the sheet through the read after a refused save, and drops any answer older than the list on screen.
+  - The circles are rings (≥ 3:1) when not chosen, and filled with their mark when chosen. The ✓ on green is dark (`--ah-color-on-success: #141414`), because white was 2.7:1. Both are deviations from mockup 21, for AA.
+  - An instructor lands on `/instructor/dia` after 01, a magic link, the onboarding and 03b.
+- **For you:**
+  1. Point 4 names «26», which does not exist yet. I read it as 22, the screen the review lists.
+  2. Point 1's exact interleaving (a second PUT before the held read returns) cannot happen with the lock. The tests prove the lock, and separately the drop rule (a read started before a save and answered after it).
+  3. «Mostra'n més» on the search reuses the admin lists' text. It is a literal proposal.
+  4. `turbo --force` hit the E3-W10 timing budget once more (`16`, `resetBackofficeMockState` 1.02 × vs 1 ×). Same flake as E4-W16's `87`/`88`; not changed.
+Blocking: no.
