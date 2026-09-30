@@ -7,7 +7,9 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { SendAnnouncementDialog } from "../messaging/SendAnnouncementDialog";
 
 import { DogsPage, MembersPage } from "./CensusListPage";
 
@@ -92,6 +94,10 @@ afterEach(() => {
 afterAll(() => {
   server.close();
 });
+
+// E7-W01 round 2 #8: D5's first render took 16.8 s against the 15 s default on a loaded host
+// (0.7 s alone): the D5/D15 renders of this file get 45 s.
+vi.setConfig({ testTimeout: 45_000 });
 
 describe("T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13)", () => {
   it("D5's selection: the dialog sends `memberIds`, the dryRun drives «S'enviarà a 2 abonats», [ENVIA] waits for the tick, and the page says it was sent", async () => {
@@ -212,6 +218,57 @@ describe("T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13)", () =
     const real = sends(requests).filter((request) => request.body?.dryRun === false);
     expect(real).toHaveLength(2);
     expect(real[1]?.key).toBe(real[0]?.key);
+  });
+
+  it("E7-W01 round 2 #2: the tick confirms the latest dry run only — template A → B → A with three counts clears it each time", async () => {
+    const counts = [11, 22, 33];
+    server.use(
+      http.post("*/api/v1/message-templates/:id/send", async ({ request }) => {
+        const body = (await request.clone().json()) as { dryRun: boolean };
+        if (!body.dryRun) return undefined;
+        return HttpResponse.json({ recipientCount: counts.shift() ?? 0 });
+      }),
+    );
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-messaging", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <SendAnnouncementDialog
+            audience={{ kind: "selection", memberIds: ["member-laura", "member-anna"] }}
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            initialTemplateId="tpl-n-24"
+            onClose={() => undefined}
+            onSent={() => undefined}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const modal = await dialog();
+    const submit = within(modal).getByRole("button", { name: "ENVIA" });
+    // A: 11 members, ticked.
+    fireEvent.click(await within(modal).findByRole("checkbox", { name: confirmation(11) }));
+    expect(submit).toBeEnabled();
+    // B: its own count, not ticked (and left unticked).
+    fireEvent.change(within(modal).getByLabelText("Plantilla"), {
+      target: { value: "tpl-custom-1" },
+    });
+    expect(submit).toBeDisabled();
+    const second = await within(modal).findByRole("checkbox", { name: confirmation(22) });
+    expect(second).not.toBeChecked();
+    expect(submit).toBeDisabled();
+    // A again: a new dry run (33), and A's old tick does not come back with it.
+    fireEvent.change(within(modal).getByLabelText("Plantilla"), {
+      target: { value: "tpl-n-24" },
+    });
+    expect(submit).toBeDisabled();
+    const third = await within(modal).findByRole("checkbox", { name: confirmation(33) });
+    expect(third).not.toBeChecked();
+    expect(submit).toBeDisabled();
   });
 
   it("D15's selection is dogs: the dialog reads their owners and sends to each once («2 gossos · 1 abonat»)", async () => {

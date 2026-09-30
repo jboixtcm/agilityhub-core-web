@@ -113,6 +113,7 @@
     "error": "No s'han pogut carregar els avisos.",
     "noValue": "—",
     "valueSeparator": ", ",
+    "range": "{from} – {to}",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

@@ -139,8 +139,11 @@ interface Props {
   onDeleted: () => void;
   onEdits: (edits: TemplateEdits) => void;
   onReload: () => void;
-  /** A write the api accepted: its answer (the list and the counts are read again). */
-  onSaved: (detail: Detail, options?: { keepEdits?: boolean }) => void;
+  /**
+   * A write the api accepted: its answer (the list and the counts are read again). `savedEdits` are
+   * the edits that write carried: the page drops the draft only if it is still that one.
+   */
+  onSaved: (detail: Detail, options?: { keepEdits?: boolean; savedEdits?: TemplateEdits }) => void;
 }
 
 /**
@@ -293,7 +296,7 @@ export function TemplateEditor({
   const write = async (
     action: "delete" | "reset" | "save" | "state",
     request: () => Promise<Detail | undefined>,
-    options?: { keepEdits?: boolean },
+    options: { keepEdits?: boolean; savedEdits?: TemplateEdits } = { savedEdits: edits },
   ) => {
     if (busy !== undefined) return;
     setBusy(action);

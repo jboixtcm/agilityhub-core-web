@@ -217,7 +217,10 @@
       "sms": "+SMS",
       "club_news": "Club announcements",
       "minutesBefore": "{count} min before",
-      "sentLink": "Sent notifications ›"
+      "sentLink": "Sent notifications ›",
+      "loading": "Loading the notification settings",
+      "loadError": "The notification settings could not be loaded.",
+      "retry": "Try again"
     },
     "resend": {
       "description": "A new link will be sent to the account access email.",

@@ -1,0 +1,26 @@
+{
+  "title": "Notifications",
+  "feed": {
+    "loading": "Loading your notifications",
+    "loadingMore": "Loading more notifications",
+    "empty": "You have no notifications yet",
+    "error": "Your notifications could not be loaded.",
+    "retry": "Try again",
+    "unread": "New",
+    "viaSms": "{time} · and by SMS",
+    "action": {
+      "CHANGE_CLASS": "CHANGE CLASS",
+      "CLAIM_SEAT": "TAKE THE SPOT",
+      "expired": "This spot is no longer available"
+    }
+  },
+  "unsubscribe": {
+    "title": "Stop receiving these announcements",
+    "working": "One moment…",
+    "done": "You will no longer receive the club's announcements by email.",
+    "invalid": "This link is no longer valid.",
+    "error": "The unsubscription could not be completed.",
+    "retry": "Try again",
+    "toPreferences": "Change your notifications in your profile"
+  }
+}

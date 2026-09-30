@@ -569,37 +569,12 @@ select {
   font-weight: 700;
 }
 
-.profile-notices__toggle {
-  position: relative;
-  width: 1.9rem;
-  height: 1.05rem;
+.profile-notices__switch {
   justify-self: center;
-  background: var(--ah-color-border);
-  border-radius: 999px;
-}
-
-.profile-notices__toggle::after {
-  position: absolute;
-  top: 0.15rem;
-  left: 0.15rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: var(--ah-color-text);
-  border-radius: 50%;
-  content: "";
-}
-
-.profile-notices__toggle--on {
-  background: var(--ah-color-primary);
-}
-
-.profile-notices__toggle--on::after {
-  right: 0.15rem;
-  left: auto;
 }
 
 .profile-notices__reminder,
-.profile-notices__mobile {
+.profile-notices__mobile-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -607,17 +582,48 @@ select {
   font-size: 0.8125rem;
 }
 
-.profile-notices__reminder > :last-child {
-  padding: var(--ah-space-2) var(--ah-space-3);
+.profile-notices__reminder .ah-select {
+  width: auto;
+  min-height: 2rem;
+  padding-block: var(--ah-space-1);
   color: var(--ah-color-text-muted);
-  background: var(--ah-color-surface-2);
-  border: 1px solid var(--ah-color-border);
-  border-radius: var(--ah-radius-sm);
+  font-size: 0.75rem;
 }
 
 .profile-notices__mobile {
+  display: grid;
+  gap: var(--ah-space-2);
   padding-top: var(--ah-space-3);
   border-top: 1px solid var(--ah-color-border);
+}
+
+.profile-notices__note,
+.profile-notices__saving {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.profile-notices__note strong {
+  color: var(--ah-color-text);
+}
+
+.profile-language__help {
+  display: block;
+  padding-bottom: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.unsubscribe-page__link {
+  color: var(--ah-color-primary);
+  font-weight: 600;
+}
+
+.unsubscribe-page__icon {
+  color: var(--ah-color-success);
+  vertical-align: middle;
 }
 
 .profile-modal-form label {
@@ -1828,6 +1834,11 @@ select {
   color: var(--ah-color-text-muted);
   font-size: 0.82rem;
   line-height: 1.55;
+}
+
+/* R-11-14: a plain-text answer keeps its line breaks. */
+.info-faq__answer {
+  white-space: pre-line;
 }
 
 .info-club-page {

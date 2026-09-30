@@ -10,18 +10,30 @@ function localized(source: Record<string, string>, locale: string, fallback: str
   return source[locale] ?? source[fallback] ?? Object.values(source)[0] ?? "";
 }
 
-function FaqPanel({ items }: { items: FaqItem[] }) {
-  const { t } = useTranslation("shell");
-  const [open, setOpen] = useState<string>();
-  const categories = useMemo(() => {
-    const grouped = new Map<string, FaqItem[]>();
-    items.forEach((item) => {
+/**
+ * S05 R-05-22 (S11 R-11-14): the entries by `order`, grouped by their resolved category, and the
+ * groups by the lowest `order` of their entries — never alphabetically, never as delivered. Equal
+ * orders keep the api's sequence (a stable sort).
+ */
+export function faqGroups(items: readonly FaqItem[]): [string, FaqItem[]][] {
+  const grouped = new Map<string, FaqItem[]>();
+  [...items]
+    .sort((left, right) => left.order - right.order)
+    .forEach((item) => {
       const entries = grouped.get(item.category) ?? [];
       entries.push(item);
       grouped.set(item.category, entries);
     });
-    return [...grouped.entries()];
-  }, [items]);
+  return [...grouped.entries()].sort(
+    ([, left], [, right]) => (left[0]?.order ?? 0) - (right[0]?.order ?? 0),
+  );
+}
+
+function FaqPanel({ items }: { items: FaqItem[] }) {
+  const { t } = useTranslation("shell");
+  // One answer open at a time (R-11-14): opening another closes the previous.
+  const [open, setOpen] = useState<string>();
+  const categories = useMemo(() => faqGroups(items), [items]);
 
   if (items.length === 0) {
     return <p className="info-page__empty">{t("shell:info.noFaq")}</p>;
@@ -48,7 +60,12 @@ function FaqPanel({ items }: { items: FaqItem[] }) {
                     <strong>{item.question}</strong>
                     <Icon aria-hidden="true" name="chev" />
                   </button>
-                  {expanded ? <p id={`faq-answer-${item.id}`}>{item.answer}</p> : null}
+                  {/* Plain text with its line breaks (R-11-14): never Markdown here. */}
+                  {expanded ? (
+                    <p className="info-faq__answer" id={`faq-answer-${item.id}`}>
+                      {item.answer}
+                    </p>
+                  ) : null}
                 </Card>
               );
             })}

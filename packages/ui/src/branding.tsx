@@ -60,6 +60,11 @@ export interface Branding {
   };
   locales: string[];
   modules: string[];
+  /**
+   * The VAPID public key (base64url) web push subscribes with (S11 R-11-07); `null` without the
+   * `PUSH` module or a product key.
+   */
+  pushPublicKey?: string | null;
   signup: {
     enabled: boolean;
   };

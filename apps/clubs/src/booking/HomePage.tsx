@@ -8,7 +8,7 @@ import {
   Toast,
   useBranding,
 } from "@agilityhub/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ActivityReservationRow } from "../activities/ActivityReservationRow";
@@ -35,6 +35,18 @@ export function HomePage({ client }: { client: ApiClient }) {
   const activities = useMeActivities(client, activitiesEnabled);
   const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
+  const { refetch } = home;
+  // S11 R-11-10 (E7-W02): back from screen 11 through the browser's page cache, 03 reads
+  // `GET /me/home` again, so the bell shows what 11's read-all left (the in-app way remounts).
+  useEffect(() => {
+    const shown = (event: PageTransitionEvent) => {
+      if (event.persisted) refetch(true);
+    };
+    window.addEventListener("pageshow", shown);
+    return () => {
+      window.removeEventListener("pageshow", shown);
+    };
+  }, [refetch]);
 
   const header = (firstName: string | undefined, unread: number) => (
     <header className="home-header">

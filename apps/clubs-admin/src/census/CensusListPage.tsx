@@ -33,6 +33,8 @@ import {
   SendAnnouncementDialog,
 } from "../messaging/SendAnnouncementDialog";
 
+import { resolveDogOwners } from "./dog-owners";
+
 type MemberListItem = components["schemas"]["MemberListItem"];
 type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
   components["schemas"]["DogPendingFields"] & {
@@ -69,7 +71,7 @@ const DOG_ROW_FIELDS = ["name"] as const;
 /** A column that shows another key than its own: the dogs' «Guia» shows `handlerName`. */
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = { handler: ["handlerName"] };
 
-const MEMBER_DEFAULT_COLUMNS =["fullName", "dogs", "plan", "displayStatus"];
+const MEMBER_DEFAULT_COLUMNS = ["fullName", "dogs", "plan", "displayStatus"];
 const DOG_DEFAULT_COLUMNS = [
   "name",
   "breed",
@@ -407,11 +409,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   const branding = useBranding();
   const modules = branding.modules;
   const [state, setState, applySavedView] = useSyncedListState(kind, modules);
-  const { data, error, loading, retry } = useCensusData<DogRow | MemberRow>(
-    client,
-    kind,
-    state,
-  );
+  const { data, error, loading, retry } = useCensusData<DogRow | MemberRow>(client, kind, state);
   const savedViews = useSavedViews(client, kind, applySavedView);
   const loadFilterValues = useFilterValues(client, kind, state);
   const activeCount = useActiveCount(client, kind);
@@ -428,16 +426,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     setOwnersPending(true);
     setOwnersError(undefined);
     try {
-      const { data: owners } = await client.GET("/dogs", {
-        params: {
-          query: { fields: "id,owner", filter: [`id:in:${dogIds.join(",")}`], size: 1000 },
-        },
-      });
-      const memberIds = [
-        ...new Set(
-          (owners?.items ?? []).flatMap((dog) => (dog.owner?.id === undefined ? [] : [dog.owner.id])),
-        ),
-      ];
+      // Every selected dog, by batches (E7-W01 round 2 #6): a dog the api did not return would
+      // leave its owner out, so the dialog does not open with an incomplete audience.
+      const { memberIds, missing } = await resolveDogOwners(client, dogIds);
+      if (missing.length > 0) {
+        setOwnersError(t("census:list.ownersMissing", { count: missing.length }));
+        return;
+      }
       setAnnouncement({ dogs: dogIds.length, kind: "selection", memberIds });
     } catch (cause) {
       setOwnersError(
@@ -601,8 +596,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "familyGroup",
                 label: t("census:members.columns.familyGroup"),
-                render: (item: MemberRow) =>
-                  item.familyGroup?.name ?? t("census:values.empty"),
+                render: (item: MemberRow) => item.familyGroup?.name ?? t("census:values.empty"),
               },
             ]
           : []),

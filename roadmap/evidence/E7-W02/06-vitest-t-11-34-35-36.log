@@ -1,0 +1,61 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > shows the payload's title, body, icon and tag, and keeps its in-app route 1ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > opens screen 11 when the payload names no route or another site, and shows nothing without a title 0ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > focuses an open window of the app and takes it to the notification's route 1ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > opens the route in a new window when none of the app is open 0ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 is «iPhone · Safari» 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Mobile Safari/537.36 is «Android · Chrome» 0ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36 Edg/129.0 is «Windows · Edge» 0ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Macintosh; Intel Mac OS X 14.6; rv:130.0) Gecko/20100101 Firefox/130.0 is «Mac · Firefox» 0ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > turns the club's base64url VAPID key into the 65 bytes PushManager takes 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > tells an iPhone outside the installed app from a browser without push 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > never asks without the app's worker registration (mock mode: only MSW's worker exists) 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > subscribes with the key, upserts POST /push-subscriptions and keeps only the id 28ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > a denied permission is an outcome, and a 404 MODULE_DISABLED from a stale client is swallowed 8ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > logout sends the DELETE of this device's subscription, then logs out 11ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > a DELETE that never answers never blocks the logout 32ms
+ ✓ src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > shows FAQ, rules and other active pages only 146ms
+ ✓ src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > T-11-36 keeps Info available without the FAQ module, omits the FAQ tab and never reads /faq-entries 17ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > groups by category ordered by each group's lowest order, entries by order — never alphabetically nor as delivered 16ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > opening one answer closes the previous; the answer is plain text with its line breaks 25ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > says «El club encara no ha publicat preguntes» when there is none 18ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > 200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session 137ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > 422 UNSUBSCRIBE_TOKEN_INVALID: the link is no longer valid, change it on 12 25ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > a link without its token is invalid and sends nothing 16ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > a network error offers a retry, which sends the token again 28ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS» 194ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons 221ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > never prints «i per SMS» without the SMS module, even for an SMS the api lists 115ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [CANVIA DE CLASSE] opens 04 with the notification's dog 91ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29) 122ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false) 80ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card 95ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > an informative card opens its route on tap, without a button; one without an action is inert 101ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > entering calls read-all once, and 03's bell goes quiet 108ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > back on 03 from the browser's page cache, the bell reads GET /me/home again 131ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a card tapped before read-all has landed is marked read on its own 83ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > the empty state: «Encara no tens cap avís» 46ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > loads the second page when the list end shows (no page buttons) 92ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a failed read shows the error by its code, and [Torna-ho a provar] reads again 97ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > hides «+SMS» in a club without SMS (R-11-17) 61ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the reminder select lists «Mai» and the club's options 60ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > each change shows at once and is saved as a partial PUT after the 300 ms pause 1324ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > rolls a refused change back with its message (422 INVALID_REMINDER_OPTION) 360ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > keeps a newer choice when an older save answers late (the answer rebases the member's edits) 671ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > asks for the browser's permission only on interaction, never on mount, and registers the subscription 88ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a denied permission still saves the preference, and the row says how to allow it 373ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an iPhone outside the installed app gets the install hint and no permission prompt 382ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > no push toggle without PushManager in the browser, nor in a club without PUSH 103ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK 105ms
+Not implemented: navigation to another Document
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the language select writes Account.locale, switches the UI at once and says only new notices change 92ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > staff without the MEMBER role have no «Avisos» block and no request (S11 §6) 39ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > logout deletes this device's subscription first, and never waits on it 64ms
+
+ Test Files  6 passed (6)
+      Tests  51 passed (51)
+   Start at  20:19:27
+   Duration  5.62s (tests 42%, environment 22%, transform 21%, import 9%, setup 6%)
+

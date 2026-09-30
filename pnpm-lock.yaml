@@ -132,6 +132,15 @@ catalogs:
     vitest:
       specifier: ^5.0.0
       version: 5.0.0
+    workbox-precaching:
+      specifier: ^7.4.1
+      version: 7.4.1
+    workbox-routing:
+      specifier: ^7.4.1
+      version: 7.4.1
+    workbox-window:
+      specifier: ^7.4.1
+      version: 7.4.1
 
 importers:
 
@@ -270,6 +279,15 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 5.0.0(@types/node@24.13.3)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@5.9.3))(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+      workbox-precaching:
+        specifier: 'catalog:'
+        version: 7.4.1
+      workbox-routing:
+        specifier: 'catalog:'
+        version: 7.4.1
+      workbox-window:
+        specifier: 'catalog:'
+        version: 7.4.1
 
   apps/clubs-admin:
     dependencies:

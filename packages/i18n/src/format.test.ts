@@ -38,6 +38,35 @@ describe("E6-W01 S10 §10 the Catalan personal article of a person (personArticl
   });
 });
 
+describe("E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone", () => {
+  // Mockup 11 is read on Sunday 2 August 2026 at 18:00 in Madrid (16:00 UTC, 13:00 in Buenos Aires).
+  const now = "2026-08-02T16:00:00Z";
+  it.each([
+    ["2026-08-02T15:58:00Z", "Europe/Madrid", "fa 2 min"],
+    ["2026-08-02T12:30:00Z", "Europe/Madrid", "fa 3 h"],
+    ["2026-08-02T06:00:00Z", "Europe/Madrid", "avui 8:00"],
+    ["2026-08-01T17:12:00Z", "Europe/Madrid", "ahir 19:12"],
+    ["2026-07-31T16:30:00Z", "Europe/Madrid", "31/07 · 18:30"],
+    ["2026-08-02T15:58:00Z", "America/Argentina/Buenos_Aires", "fa 2 min"],
+    ["2026-08-02T12:30:00Z", "America/Argentina/Buenos_Aires", "fa 3 h"],
+    ["2026-08-02T06:00:00Z", "America/Argentina/Buenos_Aires", "avui 3:00"],
+    ["2026-08-01T17:12:00Z", "America/Argentina/Buenos_Aires", "ahir 14:12"],
+    ["2026-07-31T16:30:00Z", "America/Argentina/Buenos_Aires", "31/07 · 13:30"],
+  ] as const)("%s in %s → «%s»", (createdAt, timeZone, text) => {
+    expect(fmtDayRelative(createdAt, "ca", timeZone, now)).toBe(text);
+  });
+
+  it("draws the day line where the club's day ends, never the device's", () => {
+    // 02:30 UTC is 04:30 of Sunday in Madrid and 23:30 of Saturday in Buenos Aires.
+    expect(fmtDayRelative("2026-08-02T02:30:00Z", "ca", "Europe/Madrid", now)).toBe("avui 4:30");
+    expect(
+      fmtDayRelative("2026-08-02T02:30:00Z", "ca", "America/Argentina/Buenos_Aires", now),
+    ).toBe("ahir 23:30");
+    expect(fmtDayRelative("2026-08-02T06:00:00Z", "es", "Europe/Madrid", now)).toBe("hoy 8:00");
+    expect(fmtDayRelative("2026-08-02T15:58:00Z", "en", "Europe/Madrid", now)).toBe("2 min ago");
+  });
+});
+
 describe("E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative)", () => {
   // Pau joined the waiting list on Sunday 2 August at 21:04 in Madrid (19:04 UTC).
   const joined = "2026-08-02T19:04:00Z";

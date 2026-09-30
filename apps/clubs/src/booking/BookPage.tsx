@@ -140,7 +140,12 @@ export function BookPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["booking", "home", "enums", "errors", "shell"]);
   const formats = useClubFormats();
   const branding = useBranding();
-  const [dogId, setDogId] = useState<string | null>(null);
+  // S11 R-11-11 (E7-W02): [CANVIA DE CLASSE] of screen 11 opens 04 with its dog (`?dogId=`); a dog
+  // no longer accessible answers DOG_NOT_ACCESSIBLE and the retry falls back to the proposed one.
+  const [dogId, setDogId] = useState<string | null>(() => {
+    const requested = new URLSearchParams(window.location.search).get("dogId");
+    return requested === null || requested === "" ? null : requested;
+  });
   const view = useBookableClasses(client, dogId);
   const [pending, setPending] = useState<string>();
   const [joining, setJoining] = useState<BookableClass>();

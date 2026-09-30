@@ -2974,7 +2974,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * memberNotificationPreferences
+         * @description Mocks-first (E7-W01 round 2 #4; api E7-T03 round 2, item 8; S11 §6 amended 30-09, ruling E76). Roles: ADMIN (impersonation → 403). D10's block: the member's preferences in the shape of GET /me/notification-preferences. Another club's member → 404. Tenant comes from the JWT.
+         */
+        get: operations["memberNotificationPreferences"];
         /**
          * saveMemberNotificationPreferences
          * @description Roles: ADMIN (impersonation → 403). The same block from D10, audited as MEMBER_UPDATED (changes[].path = notificationPreferences, the actor's actorAccountId). Another club's member → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
@@ -33920,6 +33924,46 @@ export interface operations {
             };
             /** @description Server error */
             "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    memberNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationPreferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferences"];
+                };
+            };
+            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

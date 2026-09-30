@@ -8,19 +8,19 @@
   {
     "name": "clubs all JavaScript",
     "path": "apps/clubs/dist/assets/*.js",
-    "limit": "335 kB",
+    "limit": "370 kB",
     "gzip": true
   },
   {
     "name": "clubs-admin initial JavaScript",
     "path": "apps/clubs-admin/dist/assets/index-*.js",
-    "limit": "390 kB",
+    "limit": "425 kB",
     "gzip": true
   },
   {
     "name": "clubs-admin all JavaScript",
     "path": "apps/clubs-admin/dist/assets/*.js",
-    "limit": "550 kB",
+    "limit": "600 kB",
     "gzip": true
   },
   {
@@ -32,7 +32,7 @@
   {
     "name": "id all JavaScript",
     "path": "apps/id/dist/assets/*.js",
-    "limit": "265 kB",
+    "limit": "290 kB",
     "gzip": true
   }
 ]

@@ -310,6 +310,55 @@ describe("typed API client", () => {
     ]);
   });
 
+  it("E7-W02 step 0 (R-11-10, R-11-07) sends an Idempotency-Key on 11's reads and 12's push subscription, never on their GETs, the preferences or the unsubscription", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string, body: Record<string, unknown> = {}) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return HttpResponse.json(body);
+      };
+    server.use(
+      http.get("https://core.example.test/api/v1/me/notifications", record("feed")),
+      http.post(
+        "https://core.example.test/api/v1/me/notifications/read-all",
+        record("read-all", { unreadCount: 0 }),
+      ),
+      http.post(
+        "https://core.example.test/api/v1/me/notifications/:id/read",
+        record("read", { unreadCount: 1 }),
+      ),
+      http.put("https://core.example.test/api/v1/me/notification-preferences", record("prefs")),
+      http.post(
+        "https://core.example.test/api/v1/push-subscriptions",
+        record("subscribe", { id: "push-1" }),
+      ),
+      http.delete("https://core.example.test/api/v1/push-subscriptions/:id", record("unsubscribe")),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174007",
+    });
+
+    await client.GET("/me/notifications", { params: { query: { page: 0, size: 20 } } });
+    await client.POST("/me/notifications/read-all");
+    await client.POST("/me/notifications/{id}/read", { params: { path: { id: "n-1" } } });
+    await client.PUT("/me/notification-preferences", { body: { pushClubNews: false } });
+    await client.POST("/push-subscriptions", {
+      body: { endpoint: "https://push.example.test/e/1", keys: { auth: "a", p256dh: "p" } },
+    });
+    await client.DELETE("/push-subscriptions/{id}", { params: { path: { id: "push-1" } } });
+
+    expect(keys).toEqual([
+      "feed:",
+      "read-all:123e4567-e89b-42d3-a456-426614174007",
+      "read:123e4567-e89b-42d3-a456-426614174007",
+      "prefs:",
+      "subscribe:123e4567-e89b-42d3-a456-426614174007",
+      "unsubscribe:",
+    ]);
+  });
+
   it("E6-W01 step 0 (R-10-04, ruling E46) sends a UUID Idempotency-Key on PUT /class-sessions/{id}/attendance, never on its GET", async () => {
     const keys: string[] = [];
     const record =
@@ -572,7 +621,11 @@ describe("MSW bootstrap handlers", () => {
     // read and read-all (`followup-handlers.ts`).
     // E7-W01: + the ten S11 handlers of `messaging-handlers.ts` (D9's templates, preview, reset,
     // deletion, the log, its filter values and detail), «Enviar comunicat» and the log's export.
-    expect(handlers).toHaveLength(250);
+    // E7-W02: + the eight S11 member handlers of `notification-handlers.ts` (11's feed, its read and
+    // read-all, 12's preferences GET and PUT, the push subscription and its deletion, the e-mail
+    // unsubscribe page).
+    // E7-W01 round 2: + `GET /members/{id}/notification-preferences` (D10's block, pending.json).
+    expect(handlers).toHaveLength(259);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

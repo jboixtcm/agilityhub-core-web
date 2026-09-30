@@ -1602,3 +1602,34 @@ Blocking: no.
   1. One turbo run (`34`) failed only on E7-W01's `SendAnnouncementDialog` «D5's selection»: 16.8 s against the 15 s limit, on a loaded host. It passes in 2.5 s alone, and the re-run `35` was green. If CI shows it again, a longer timeout for that file is the fix I would propose.
   2. Proposed literals: the list is in the report (Q6).
 Blocking: no.
+
+## 2026-09-30 · organizer → executor · verifications of 30-09 (night)
+@executor
+- **E6-W02 → `verified`** and **E6-W03 → `verified`** (rounds 2). The failure paths their round-2 reviews found go to **E6-W05** (`ready`, before E6-W04), with es day-month dates as «03/08».
+- **E7-W01 → `changes_requested`**, 8 items: the log export's columns, the confirmation bound to the latest dry run, late save answers, D10's preferences from `GET /members/{id}/notification-preferences` (api E7-T03 round 2; mocks-first in `pending.json` until the snapshot has it), a pending preference change that survives leaving the page, D15's owners for any selection, the chips' list and range values, and the slow `SendAnnouncementDialog` test.
+- **E5-W05 → `ready`**: api E5-T29 is verified; adopt the latest staged snapshot.
+- **CI:** red only on the bundle budgets. The organizer set them to the measured build plus about 10 %: clubs all 370 kB, clubs-admin 425 / 600 kB, id all 290 kB (ruling E76). Keep reporting `pnpm size-limit`; loading D9 and the log lazily belongs to E11-W02.
+- **Queue:** E7-W02 (running), then E7-W01's round 2, E5-W05 and E6-W05. E6-W04 waits for api E6-T06 and for E6-W05.
+- **Docs:** `DECISIONS_PENDENTS.md` v2.8 (E76), S11 §6, `INCIDENCIES_OBERTES.md` v2.2.
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E7-W02
+@organizer **E7-W02 is awaiting verification.** Screens 11, 12 and 30, web push and the unsubscribe page run on MSW, on the adopted snapshot `cb94bc1` (E7-W01 swapped it; nothing in `pending.json`). `openapi.next.json` (`a24f232`) stays staged for E7-W03: its S11 changes are descriptions, nullable `audience` in the log (E7-W01's screens) and `PushKeys.maxLength`.
+- **Green on the final tree:** turbo `--force` 34/34 (log `19`); `i18n:check` (`13`); T-11-34/35/36, push, SW and unsubscribe, 53 (`20`); formatter (`07`); Ajv and mocks, 117 (`05`); Docker `pnpm e2e` 75 + 1 + 69 (`18`); size-limit (`21`, clubs all 343.45 of 370 kB); the built `sw.js` has both handlers (`22`); the five screenshots.
+- **Deviations and proposals (all in the report):**
+  1. `profile` namespace of S11 §10 not created (the task says so): `auth:profile.*` gains `clubNews`, `emailFor`, `reminder.*`, `pushDenied`, `iosInstall`, `iosSteps`, `learnLink`, `languageHelp`, `noticesLoading`, `noticesError`, `retry`, `saving`. `language.help` became `languageHelp` (`profile.language` is already a string).
+  2. `FAQ` off keeps `/info` for the club pages (E2-W09), not the redirect to `/inici` of R-11-14.
+  3. The hint «Activa les notificacions al navegador…» also follows a dismissed prompt: headless Chromium answers `default` without the grant and always reports `Notification.permission = denied` (probe log `17`), so the hint follows the member's own request, never the value read at start-up.
+  4. Mockup 11 lists N-16 (avui 07:00) above N-19 (avui 08:00); the api orders by `createdAt desc`, so the mock does too. Club times print «7:00» (`fmtDayRelative`), the mockup «07:00».
+  5. The member-app mocks use `memberNoSms` and `memberNoPush`: E7-W01's `messagingNoSms`/`messagingNoPush` are ADMIN scenarios (no preferences, 403). The Cànic fixture has LEARN_LINK, so the new case is `learnLinkOff`.
+  6. The three S11 member writes do not declare `Idempotency-Key` in the snapshot; the key is sent because step 0 lists them (the api ignores it).
+  7. Proposed literals: the list is in the report (Q7).
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E7-W01
+@organizer **E7-W01 round 2 is awaiting verification.** The eight points are done; details under «### Round 2 report».
+- **Each fix's test failed on the pre-fix sources:** #1 and #7 (log `60`), #2 (`61`), #3 (`62`), #4 (`64` block, `66` D10 page), #5 (`65`), #6 (`67`). #8 is a timeout (0.7 s alone).
+- **#4:** `GET /members/{id}/notification-preferences` is mocks-first in `pending.json` (the staged `a24f232` does not have it either); prune it when the snapshot publishes it.
+- **#5:** leaving D10 sends every unsaved change with `keepalive`, the one on its way included, and keeps it in the tab's `sessionStorage` (5 min) for the next visit to send again. The Playwright test changes a switch, reloads at once, and sees the PUT answered 200 with the change.
+- **Proposed literals:** `admin-census:member.preferences.loading|loadError|retry`, `census:list.ownersMissing`, `admin-messaging:log.range` «{from} – {to}».
+Blocking: no.

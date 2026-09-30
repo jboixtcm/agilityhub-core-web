@@ -377,7 +377,9 @@ const initialFaqEntries: FaqEntry[] = [
   },
   {
     active: true,
-    answer: "Anul·la la reserva des de l'app.",
+    // Mockup 30's open answer, verbatim.
+    answer:
+      "Des de l'aplicació pots anul·lar la teva classe i queda disponible pels teus companys. Si ho fas fins a dues hores abans de l'hora d'inici podràs reservar una nova classe dins la setmana. Si és més tard, la classe sí que compta com a feta, però hauràs donat als teus companys l'opció d'aprofitar-la i informat als instructors de la teva absència.",
     category: "Reserves de classe",
     id: "faq-cancel",
     order: 20,

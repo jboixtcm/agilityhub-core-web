@@ -226,7 +226,10 @@
       "sms": "+SMS",
       "club_news": "Comunicats del club",
       "minutesBefore": "{count} min abans",
-      "sentLink": "Avisos enviats ›"
+      "sentLink": "Avisos enviats ›",
+      "loading": "Carregant les preferències d'avisos",
+      "loadError": "No s'han pogut carregar les preferències d'avisos.",
+      "retry": "Torna-ho a provar"
     },
     "resend": {
       "description": "S'enviarà un enllaç nou al correu d'accés del compte.",

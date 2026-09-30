@@ -149,4 +149,34 @@ test.describe("E7-W01 T-11-37 / T-11-38 D9, the log and D10 (S11) against MSW", 
     await expect(drawer.getByText("l···a@example.test")).toBeVisible();
     await page.screenshot({ path: resolve(evidenceDirectory, "log-notificacions-1280.png") });
   });
+
+  test("E7-W01 round 2 #5: a D10 preference changed right before a reload is saved (keepalive, and the next visit sends it again)", async ({
+    page,
+  }) => {
+    await signIn(page);
+    await page.goto(`${baseUrl}/abonats/member-laura`);
+    const personal = () =>
+      page
+        .locator(".notification-preferences")
+        .getByRole("switch", { name: "Correu: Comunicats personals" });
+    await expect(personal()).toHaveAttribute("aria-checked", "true");
+    // The change is answered by the api whichever request carries it (the keepalive one or the
+    // next visit's), with the member's value.
+    const saved = page.waitForResponse(
+      (response) =>
+        response.request().method() === "PUT" &&
+        response.url().endsWith("/members/member-laura/notification-preferences") &&
+        response.status() === 200 &&
+        JSON.stringify(response.request().postDataJSON()) ===
+          JSON.stringify({ emailByCategory: { PERSONAL: false } }),
+    );
+    await personal().click();
+    // Leave at once: the 300 ms pause has not passed.
+    await page.reload();
+    const answer = (await (await saved).json()) as {
+      emailByCategory: { PERSONAL: boolean };
+    };
+    expect(answer.emailByCategory.PERSONAL).toBe(false);
+    await expect(personal()).toHaveAttribute("aria-checked", "false");
+  });
 });

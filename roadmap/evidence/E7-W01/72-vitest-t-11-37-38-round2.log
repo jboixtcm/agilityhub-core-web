@@ -1,0 +1,58 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/census/dog-owners.test.ts > E7-W01 round 2 #6: D15's «Enviar comunicat» reads the owners of the whole selection > 1,200 selected dogs: read in batches of 100 ids, every dog resolved, each owner once 24ms
+ ✓ src/census/dog-owners.test.ts > E7-W01 round 2 #6: D15's «Enviar comunicat» reads the owners of the whole selection > a selected dog the api does not return is reported, so the audience is never silently short 5ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > renders D10's wording: the four categories (the fourth CLUB_NEWS row), the App tick always on, «+SMS», the reminder «Mai» with the six options, the push toggle and «Avisos enviats ›» 157ms
+ ✓ src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > lists the club's notifications newest first: date, code, category, recipient, one chip per delivery with its status, read 210ms
+ ✓ src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > ?filter=memberId:eq:… (D10's link) reads only that member's notifications, and a row opens its detail with every delivery and the destinations masked 95ms
+Not implemented: navigation to another Document
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL 261ms
+Not implemented: navigation to another Document
+ ✓ src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > E7-W01 round 2 #1: the default XLSX and PDF exports ask for the export's own columns (createdAt, code, recipient, channels, readAt), and the file comes 183ms
+ ✓ src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > E7-W01 round 2 #7: the chips of a list (in) and a range (between) show their values, as the api echoes them (arrays) 47ms
+ ✓ src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > masks an e-mail and a phone, never prints them whole 0ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > each change shows at once and the changes of 300 ms travel as one partial PUT 342ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > «Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens 79ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > mockup D9: the four counts, a category row filters the list, and N-28 opens with its title, category chip, icons, «idioma: CA (amb versió ES)», the body with the variables' labels and the variable chips 302ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason 204ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > a full page load (how D10's links leave the record) sends the change still waiting for its 300 ms, with keepalive 75ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member 146ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > the language select switches the title and the body; a variable chip inserts its label at the caret and [DESA] saves the code keys with the version read 304ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL 98ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess) 76ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route > an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences 55ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > the matrix: a cell outside caps is an inert «—», one inside toggles; the Push column is informative; SMS and Push columns follow the modules 271ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > D5's selection: the dialog sends `memberIds`, the dryRun drives «S'enviarà a 2 abonats», [ENVIA] waits for the tick, and the page says it was sent 937ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > [Vista prèvia] renders the unsaved draft per language with the SMS counter and the truncation note, and «Envia'm una prova» says it was sent 107ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > R-11-01 in [Vista prèvia]: a language without its own text is previewed with the club's default language, as a member of that language would receive it 82ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method > reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL 118ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)», «Tota l'auditoria ›» and the recent changes; only the invoice rows and «Tots els rebuts» go 64ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > with BILLING the card keeps its invoice rows and «Tots els rebuts» 45ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent» 62ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > never shows the raw key while the labels load or when they cannot be read 50ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > shows no «núm.» badge for a member without a number 34ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > [DESA] on its way: the texts, chips and cells are read-only until the api answers, so nothing typed meanwhile is dropped by the answer 165ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > D5's current filters: the dialog sends the list's filters and search, and the count is the api's for them (the members GET /members lists) 411ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning 177ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record 204ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > E7-W01 round 2 #3: a late save answer never replaces another template — save A, open B, reopen A and write again, back to B, then A's answer: B stays shown and editable, and A's newer draft is kept 325ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > a refused save (422 INVALID_REMINDER_OPTION) puts back what the api holds and says why 323ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #4: the block reads its own route, GET /members/{id}/notification-preferences 16ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #4: a failed read says so with [Torna-ho a provar], and the block stays 19ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again 702ms
+ ✓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle 11ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > another template clears the tick and asks the dryRun again; NO_RECIPIENTS is said inside the dialog and [ENVIA] stays off 362ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version 339ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > one Idempotency-Key per submission: a send that got no answer is retried with its key — also after closing and opening the dialog again — and the api counts it once 386ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > E7-W01 round 2 #2: the tick confirms the latest dry run only — template A → B → A with three counts clears it each time 23ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > the secondary actions as the api allows them: «Restaura el text per defecte» only when customized, no [Desactiva] on a mandatory template, «Elimina» only on the club's own 316ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe 171ms
+ ✓ src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > «＋ Nova plantilla» creates a CUSTOM template of the chosen category and opens it; the admin's unsaved edits stay with their template while another one is open 170ms
+ ✓ src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > D15's selection is dogs: the dialog reads their owners and sends to each once («2 gossos · 1 abonat») 518ms
+
+ Test Files  6 passed (6)
+      Tests  47 passed (47)
+   Start at  21:01:31
+   Duration  3.96s (tests 56%, transform 18%, environment 15%, import 8%, setup 3%)
+

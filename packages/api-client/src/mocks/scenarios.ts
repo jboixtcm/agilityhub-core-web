@@ -9,6 +9,7 @@ import meImpersonated from "./fixtures/me-impersonated.json";
 import meInstructor from "./fixtures/me-instructor.json";
 import meMember from "./fixtures/me-member.json";
 import meMultiProfile from "./fixtures/me-multi-profile.json";
+import type { NotificationsVariant } from "./fixtures/notifications";
 import { importedAccountOnboarding, policyReconsentOnboarding } from "./fixtures/onboarding";
 import sessions from "./fixtures/sessions.json";
 import type { SignupReviewVariant } from "./fixtures/signup-review";
@@ -37,6 +38,8 @@ export interface MockScenarioDefinition {
   /** The D14 variant (`fixtures/followup.ts`): the caller has read every row already. */
   inbox?: InboxVariant;
   me: Me;
+  /** The S11 feed variant of screen 11 (`fixtures/notifications.ts`, E7-W02). */
+  notifications?: NotificationsVariant;
   sessions: SessionList;
   invalidMagicLink?: boolean;
   /** Parameter `levels.enabled` (R-06-15); default true. */
@@ -296,6 +299,51 @@ const scenarios = {
       pushPublicKey: null,
     },
     me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S11 R-11-17 (E7-W02): a member of a club without SMS (no «+SMS» on 12, never «i per SMS»). */
+  memberNoSms: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "SMS") },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S11 R-11-17 (E7-W02): a member of a club without PUSH (no push toggle on 12, 404 on subscribe). */
+  memberNoPush: {
+    branding: {
+      ...canic,
+      modules: canic.modules.filter((module) => module !== "PUSH"),
+      pushPublicKey: null,
+    },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S11 R-11-14 (E7-W02): a member of a club without FAQ (30 keeps its club pages). */
+  faqOff: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "FAQ") },
+    me: member,
+    sessions: accountSessions,
+  },
+  /**
+   * S11 R-11-17 (E7-W02): the Cànic fixture carries LEARN_LINK, so `member` is the «on» case; this
+   * club has it off (no «Aprèn amb AgilityHub» row on 12).
+   */
+  learnLinkOff: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "LEARN_LINK") },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S11 §2 row 11 (E7-W02): nothing in the feed yet («Encara no tens cap avís»). */
+  notificationsEmpty: {
+    branding: canic,
+    me: member,
+    notifications: "empty",
+    sessions: accountSessions,
+  },
+  /** S11 R-11-11 (E7-W02): N-15's seat was taken, so its [AGAFA LA PLAÇA] reads disabled. */
+  notificationsSeatTaken: {
+    branding: canic,
+    me: member,
+    notifications: "seatTaken",
     sessions: accountSessions,
   },
   /**

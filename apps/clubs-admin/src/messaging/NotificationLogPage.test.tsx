@@ -123,6 +123,55 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     expect(drawer.textContent).not.toContain("655100101");
   });
 
+  it("E7-W01 round 2 #1: the default XLSX and PDF exports ask for the export's own columns (createdAt, code, recipient, channels, readAt), and the file comes", async () => {
+    Object.defineProperty(URL, "createObjectURL", {
+      configurable: true,
+      value: () => "blob:mock-export",
+    });
+    Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: () => undefined });
+    const lines = requestLines();
+    await renderLog();
+    await waitFor(() => {
+      expect(rows()).toHaveLength(12);
+    });
+    for (const [format, button] of [
+      ["xlsx", "Excel"],
+      ["pdf", "PDF"],
+    ] as const) {
+      fireEvent.click(screen.getByText("Excel · PDF"));
+      fireEvent.click(screen.getByRole("button", { name: button }));
+      await waitFor(() => {
+        expect(lines.some((line) => line.includes(`format=${format}`))).toBe(true);
+      });
+      const exported = new URL(
+        lines.find((line) => line.includes(`format=${format}`))?.split(" ")[1] ?? "",
+        window.location.origin,
+      );
+      expect(exported.pathname).toBe("/notifications/export");
+      expect(exported.searchParams.get("columns")).toBe("createdAt,code,recipient,channels,readAt");
+    }
+    await waitFor(() => {
+      expect(screen.queryByText("El filtre no és vàlid.")).toBeNull();
+    });
+    expect(screen.queryByText("No s'ha pogut completar l'acció. Torna-ho a provar.")).toBeNull();
+  });
+
+  it("E7-W01 round 2 #7: the chips of a list (in) and a range (between) show their values, as the api echoes them (arrays)", async () => {
+    await renderLog(
+      "/notificacions?filter=memberId%3Ain%3Amember-laura%2Cmember-anna&filter=createdAt%3Abetween%3A2026-08-01%2C2026-08-31",
+    );
+    await waitFor(() => {
+      expect(rows().length).toBeGreaterThan(0);
+    });
+    const chips = [...document.querySelectorAll(".ah-universal-list__active-filter > span")].map(
+      (chip) => chip.textContent,
+    );
+    const member = chips.find((text) => text.startsWith("Abonat = «"));
+    expect(member).toMatch(/^Abonat = «Laura Serra Vidal, [^»]+»$/u);
+    expect(member).not.toContain("member-");
+    expect(chips).toContain("Data = «01/08/2026 – 31/08/2026»");
+  });
+
   it("masks an e-mail and a phone, never prints them whole", () => {
     expect(maskedTarget("laura@example.test")).toBe("l···a@example.test");
     expect(maskedTarget("jo@example.test")).toBe("j···@example.test");

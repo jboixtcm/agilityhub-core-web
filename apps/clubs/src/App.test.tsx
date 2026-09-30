@@ -480,7 +480,8 @@ describe("T-01-21 profile access rows and impersonation", () => {
     const password = screen.getByRole("button", { name: "Canvia la contrasenya" });
     const profile = screen.getByRole("link", { name: /Canviar de perfil/u });
     const notices = screen.getByRole("heading", { name: "Avisos" });
-    expect(screen.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
+    // E7-W02: the «Avisos» block reads `GET /me/notification-preferences` first.
+    expect(await screen.findByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
     const language = document.querySelector(".profile-language");
     if (language === null) {
       throw new TypeError("Expected the profile language row");

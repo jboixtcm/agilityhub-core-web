@@ -25,7 +25,10 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-pwa": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "workbox-precaching": "catalog:",
+    "workbox-routing": "catalog:",
+    "workbox-window": "catalog:"
   },
   "scripts": {
     "dev": "vite",

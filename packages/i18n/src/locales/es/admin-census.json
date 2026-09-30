@@ -217,7 +217,10 @@
       "sms": "+SMS",
       "club_news": "Comunicados del club",
       "minutesBefore": "{count} min antes",
-      "sentLink": "Avisos enviados ›"
+      "sentLink": "Avisos enviados ›",
+      "loading": "Cargando las preferencias de avisos",
+      "loadError": "No se han podido cargar las preferencias de avisos.",
+      "retry": "Vuelve a intentarlo"
     },
     "resend": {
       "description": "Se enviará un enlace nuevo al correo de acceso de la cuenta.",

@@ -1,0 +1,10 @@
+/api/v1/me/notifications ['get']
+/api/v1/me/notifications/{id}/read ['post']
+/api/v1/me/notifications/read-all ['post']
+/api/v1/me/notification-preferences ['get', 'put']
+/api/v1/push-subscriptions ['post']
+/api/v1/push-subscriptions/{id} ['delete']
+/api/v1/email-unsubscribes ['post']
+/api/v1/faq-entries ['get', 'post']
+BrandingResponse.pushPublicKey {'description': 'S11 R-11-07 (E7-T02): the VAPID public key (base64url) the browser subscribes with (`PushManager.subscribe`); null when the club has no PUSH module or the product has no key.', 'type': ['string', 'null']}
+pending paths []

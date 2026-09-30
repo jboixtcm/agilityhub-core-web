@@ -16,6 +16,7 @@
     "formatPdf": "PDF",
     "formatXlsx": "Excel",
     "genericError": "The list could not be loaded.",
+    "ownersMissing": "The owners of {count, plural, one {# dog} other {# dogs}} in the selection could not be read. Try again.",
     "loading": "Loading list",
     "loadingFilterValues": "Loading values…",
     "nextPage": "Next page",

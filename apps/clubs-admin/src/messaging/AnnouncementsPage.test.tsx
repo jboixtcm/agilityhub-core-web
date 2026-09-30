@@ -325,6 +325,61 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
     expect(save()).toBeDisabled();
   });
 
+  it("E7-W01 round 2 #3: a late save answer never replaces another template — save A, open B, reopen A and write again, back to B, then A's answer: B stays shown and editable, and A's newer draft is kept", async () => {
+    let release: () => void = () => undefined;
+    const answered = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let held = false;
+    server.use(
+      // Holds the first save of N-28, then falls through to the stateful mock.
+      http.put("*/api/v1/message-templates/:id", async ({ params }) => {
+        if (params.id !== "tpl-n-28" || held) return;
+        held = true;
+        await answered;
+      }),
+    );
+    await renderD9();
+    await editor();
+    fireEvent.change(body(), { target: { value: "Primer text desat de la baixa." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(body()).toHaveAttribute("readonly");
+    });
+    // B while A's save is on its way.
+    fireEvent.click(screen.getByRole("button", { name: "Canvi de nivell (N-09)" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Canvi de nivell");
+    });
+    // A again, and a newer draft written before A's first answer.
+    fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
+    await waitFor(() => {
+      expect(title().value).toBe("Comunicació de baixa com a associat");
+    });
+    fireEvent.change(body(), { target: { value: "Un text més nou, encara sense desar." } });
+    fireEvent.click(screen.getByRole("button", { name: "Canvi de nivell (N-09)" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Canvi de nivell");
+    });
+    release();
+    // A's answer arrives: B stays shown and editable.
+    await waitFor(() => {
+      expect(screen.getAllByText("sense desar")).toHaveLength(1);
+    });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    expect(title().value).toBe("Canvi de nivell");
+    expect(body()).not.toHaveAttribute("readonly");
+    fireEvent.change(body(), { target: { value: "B es pot editar." } });
+    expect(body().value).toBe("B es pot editar.");
+    // A keeps the draft written after its save left.
+    fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
+    await waitFor(() => {
+      expect(body().value).toBe("Un text més nou, encara sense desar.");
+    });
+  });
+
   it("a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version", async () => {
     const requests = recordRequests();
     await renderD9();

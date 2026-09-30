@@ -94,13 +94,15 @@ export function SendAnnouncementDialog({
   const [sendError, setSendError] = useState<string>();
   const countRequest = useRef(0);
   const recipientsKey = JSON.stringify(recipientsOf(audience));
-  // The count and the tick belong to one template and one set of recipients: another of either
-  // shows neither until its own `dryRun` answers.
+  // The count belongs to one template and one set of recipients: another of either shows none
+  // until its own `dryRun` answers. The tick belongs to the one dry run it confirmed (its request
+  // number): coming back to a template after another one asks again, and the new count needs a
+  // new tick (E7-W01 round 2 #2).
   const question = `${templateId}|${recipientsKey}`;
-  const [answer, setAnswer] = useState<{ count: Count; question: string }>();
-  const [confirmedFor, setConfirmedFor] = useState<string>();
+  const [answer, setAnswer] = useState<{ count: Count; question: string; request: number }>();
+  const [confirmedRequest, setConfirmedRequest] = useState<number>();
   const count = answer?.question === question ? answer.count : undefined;
-  const confirmed = confirmedFor === question;
+  const confirmed = answer?.question === question && confirmedRequest === answer.request;
 
   const errorText = (cause: unknown, fallback: string) =>
     isApiError(cause) && cause.status !== 0
@@ -150,7 +152,7 @@ export function SendAnnouncementDialog({
       .then(
         ({ data }) => {
           if (current === countRequest.current && data !== undefined) {
-            setAnswer({ count: { count: data.recipientCount }, question: asked });
+            setAnswer({ count: { count: data.recipientCount }, question: asked, request: current });
           }
         },
         (cause: unknown) => {
@@ -158,6 +160,7 @@ export function SendAnnouncementDialog({
             setAnswer({
               count: { error: errorText(cause, t("admin-messaging:send.countError")) },
               question: asked,
+              request: current,
             });
           }
         },
@@ -224,6 +227,7 @@ export function SendAnnouncementDialog({
               disabled={sending}
               id="announcement-template"
               onChange={(event) => {
+                setConfirmedRequest(undefined);
                 setTemplateId(event.currentTarget.value);
               }}
               value={templateId}
@@ -256,7 +260,7 @@ export function SendAnnouncementDialog({
                   checked={confirmed}
                   disabled={sending}
                   onChange={(event) => {
-                    setConfirmedFor(event.currentTarget.checked ? question : undefined);
+                    setConfirmedRequest(event.currentTarget.checked ? answer?.request : undefined);
                   }}
                 />
                 <span>{t("admin-messaging:send.confirm", { count: count.count })}</span>

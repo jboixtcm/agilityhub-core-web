@@ -21,6 +21,7 @@ import {
   type BookingOptions,
   type StoredBooking,
 } from "./fixtures/bookings";
+import { feedUnreadCount, notificationWorld } from "./fixtures/notifications";
 import { findParameter } from "./fixtures/settings";
 import { apiError, readerLocale } from "./planning-handlers";
 import { currentMockScenario, currentMockScenarioName, type MockScenario } from "./scenarios";
@@ -93,6 +94,25 @@ function options(request: Request): BookingOptions {
     now: Date.now(),
     thresholdMinutes: typeof threshold === "number" ? threshold : 240,
   };
+}
+
+/** S11 (E7-W02): a waiting entry of the S08 world as screen 11 reads it (the world drawn first). */
+export function feedWaitlistEntry(request: Request, id: string) {
+  options(request);
+  return bookingState.entries.find((item) => item.id === id);
+}
+
+/**
+ * `WaitlistNotified` (R-08-13) behind screen 11's N-15: the feed is drawn after the entry was
+ * notified, so the S08 world marks it NOTIFIED when the feed is first read (E5-W01's own suites,
+ * which never read the feed, keep it ACTIVE).
+ */
+export function notifyFeedWaitlistEntry(request: Request, id: string, at: string): void {
+  const entry = feedWaitlistEntry(request, id);
+  if (entry?.state !== "ACTIVE") return;
+  entry.state = "NOTIFIED";
+  entry.notifiedAt = at;
+  persist();
 }
 
 function waitlistOff(context: BookingOptions) {
@@ -273,9 +293,13 @@ export const bookingHandlers = [
     const impersonated = currentMockScenarioName() === "impersonated";
     // The admin acting as the member, as `/me` names them (`me-impersonated.json`).
     const actorName = currentMockScenario().me.impersonation?.actorName;
+    const scenario = currentMockScenario();
+    // R-11-10: the bell counts what screen 11's feed has unread (E7-W02).
+    const feed = notificationWorld(currentMockScenarioName(), scenario.notifications ?? "default");
     return HttpResponse.json({
       ...home,
       impersonation: impersonated && actorName !== undefined ? { actorName } : null,
+      notifications: { unreadCount: feedUnreadCount(feed) },
     });
   }),
   http.get("*/api/v1/me/bookable-classes", ({ request }) => {

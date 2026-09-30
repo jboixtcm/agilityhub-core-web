@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/NotificationLogPage.test.tsx (5 tests | 2 failed | 3 skipped) 211ms
+   ❯ E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) (5)
+     × E7-W01 round 2 #1: the default XLSX and PDF exports ask for the export's own columns (createdAt, code, recipient, channels, readAt), and the file comes 179ms
+     × E7-W01 round 2 #7: the chips of a list (in) and a range (between) show their values, as the api echoes them (arrays) 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > E7-W01 round 2 #1: the default XLSX and PDF exports ask for the export's own columns (createdAt, code, recipient, channels, readAt), and the file comes
+AssertionError: expected 'createdAt,code,category,recipient,aud…' to be 'createdAt,code,recipient,channels,rea…' // Object.is equality
+
+Expected: "createdAt,code,recipient,channels,readAt"
+Received: "createdAt,code,category,recipient,audience,channels,readAt"
+
+ ❯ src/messaging/NotificationLogPage.test.tsx:151:52
+    149|       );
+    150|       expect(exported.pathname).toBe("/notifications/export");
+    151|       expect(exported.searchParams.get("columns")).toBe("createdAt,cod…
+       |                                                    ^
+    152|     }
+    153|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > E7-W01 round 2 #7: the chips of a list (in) and a range (between) show their values, as the api echoes them (arrays)
+AssertionError: expected 'Abonat = «»' to match /^Abonat = «Laura Serra Vidal, [^»]+»$/u
+
+- Expected:
+/^Abonat = «Laura Serra Vidal, [^»]+»$/u
+
++ Received:
+"Abonat = «»"
+
+ ❯ src/messaging/NotificationLogPage.test.tsx:170:20
+    168|     );
+    169|     const member = chips.find((text) => text.startsWith("Abonat = «"));
+    170|     expect(member).toMatch(/^Abonat = «Laura Serra Vidal, [^»]+»$/u);
+       |                    ^
+    171|     expect(member).not.toContain("member-");
+    172|     expect(chips).toContain("Data = «01/08/2026 – 31/08/2026»");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 skipped (5)
+   Start at  20:49:21
+   Duration  1.31s (transform 34%, environment 26%, tests 17%, import 17%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/NotificationLogPage.test.tsx -t round 2

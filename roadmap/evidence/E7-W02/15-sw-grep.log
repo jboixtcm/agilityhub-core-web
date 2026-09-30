@@ -1,0 +1,7 @@
+assets
+index.html
+mockServiceWorker.js
+sw.js
+addEventListener(`push`,e=>{let t
+addEventListener(`notificationclick`,e=>{e.notification.close(),e.waitUntil(ee(self.clients,e.no
+precache entries naming the mock worker or its world: 0

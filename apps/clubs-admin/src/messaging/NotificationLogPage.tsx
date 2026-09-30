@@ -41,6 +41,23 @@ const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   readAt: ["readAt"],
   recipient: ["recipient", "audience"],
 };
+/**
+ * The export's own columns (`x-columns` of `GET /notifications/export`: createdAt, code,
+ * recipient, channels, readAt), by list column: a list column the export does not publish
+ * (the category) is left out of the file.
+ */
+const EXPORT_COLUMNS: Readonly<Record<string, string>> = {
+  channels: "channels",
+  code: "code",
+  createdAt: "createdAt",
+  readAt: "readAt",
+  recipient: "recipient",
+};
+
+/** The export columns of the list's visible ones, in the list's order. */
+export function exportColumns(columns: readonly string[]): string {
+  return [...new Set(columns.flatMap((column) => EXPORT_COLUMNS[column] ?? []))].join(",");
+}
 
 const STATUS_TONES: Readonly<Record<DeliveryStatus, Tone>> = {
   DELIVERED: "success",
@@ -75,7 +92,17 @@ export function maskedTarget(target: string | null | undefined): string | undefi
   return "···";
 }
 
-function filterValue(value: unknown): string {
+/**
+ * An applied filter's value as the list's state writes it: a scalar, or a list (`in`, `nin`) or a
+ * range (`between`) — the api echoes both as arrays — joined by commas.
+ */
+export function filterValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => filterValue(item))
+      .filter((item) => item !== "")
+      .join(",");
+  }
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
@@ -224,18 +251,35 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     },
   ];
 
-  /** An applied filter's chip: the member's name (from the rows the api sent) for `memberId`. */
-  const valueLabel = (field: string, value: string) =>
-    field === "memberId"
-      ? value
-          .split(",")
-          .map(
-            (id) =>
-              data?.items.find((row) => row.recipient?.memberId === id)?.recipient?.displayName ??
-              id,
-          )
-          .join(t("admin-messaging:log.valueSeparator"))
-      : enumLabel(field, value);
+  /** A date bound of a `createdAt` filter: a club-local day, or an instant in the club's zone. */
+  const dateLabel = (value: string) =>
+    /^\d{4}-\d{2}-\d{2}$/u.test(value)
+      ? formats.formatPlainDate(value, "short")
+      : Number.isNaN(Date.parse(value))
+        ? value
+        : formats.formatDate(value, "short");
+
+  /**
+   * An applied filter's chip: each value of a list (`in`, `nin`) by its label — the member's name
+   * from the rows the api sent for `memberId` — and a range (`between`) as «from – to».
+   */
+  const valueLabel = (field: string, operator: string, value: string) => {
+    const parts = value.split(",");
+    const label = (part: string) =>
+      field === "memberId"
+        ? (data?.items.find((row) => row.recipient?.memberId === part)?.recipient?.displayName ??
+          part)
+        : field === "createdAt"
+          ? dateLabel(part)
+          : enumLabel(field, part);
+    if (operator === "between" && parts.length === 2) {
+      return t("admin-messaging:log.range", {
+        from: label(parts[0] ?? ""),
+        to: label(parts[1] ?? ""),
+      });
+    }
+    return parts.map(label).join(t("admin-messaging:log.valueSeparator"));
+  };
 
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const value = filterValue(filter.value);
@@ -245,7 +289,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         filterColumns.find((column) => column.key === filter.field)?.label ?? filter.field,
       operator: filter.op,
       value,
-      valueLabel: valueLabel(filter.field, value),
+      valueLabel: valueLabel(filter.field, filter.op, value),
     };
   });
 
@@ -282,9 +326,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         onDeleteView={savedViews.remove}
         onExport={(format, current) => {
           void listExport.run("/notifications/export", {
-            columns: [
-              ...new Set(current.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [])),
-            ].join(","),
+            columns: exportColumns(current.columns),
             filter: apiFilters(current.filters),
             format,
             ...(current.q === "" ? {} : { q: current.q }),

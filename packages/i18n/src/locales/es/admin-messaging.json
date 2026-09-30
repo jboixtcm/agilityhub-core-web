@@ -113,6 +113,7 @@
     "error": "No se han podido cargar los avisos.",
     "noValue": "—",
     "valueSeparator": ", ",
+    "range": "{from} – {to}",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

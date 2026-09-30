@@ -1,0 +1,185 @@
+/* Screen 11 «Notificacions» (S11 §2): one card per notification, as mockup 11. */
+
+.notifications-page {
+  display: grid;
+  align-content: start;
+  align-self: start;
+  gap: var(--ah-space-3);
+  width: 100%;
+  padding: 0 var(--ah-space-3) var(--ah-space-4);
+}
+
+.notifications-page__bar {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  margin: 0 calc(-1 * var(--ah-space-3));
+  border-bottom: 0;
+}
+
+.notifications-page__bar .ah-app-bar__title {
+  text-align: left;
+}
+
+.notifications-page__bar h1 {
+  margin: 0;
+  font: 700 1.2rem/1.2 var(--ah-font-display);
+}
+
+.notifications-page__skeletons,
+.notifications-list {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notifications-page__note {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.notifications-page__empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-6) var(--ah-space-4);
+  color: var(--ah-color-text-muted);
+  text-align: center;
+}
+
+.notifications-page__empty p {
+  margin: 0;
+}
+
+.notifications-page__more {
+  display: grid;
+}
+
+/* The template's colour (TemplateColor → theme tokens: text2 · ok · avis · error · taronja). */
+.notification-card--neutral {
+  --notification-color: var(--ah-color-text-muted);
+}
+
+.notification-card--ok {
+  --notification-color: var(--ah-color-success);
+}
+
+.notification-card--warning {
+  --notification-color: var(--ah-color-warning);
+}
+
+.notification-card--error {
+  --notification-color: var(--ah-color-danger);
+}
+
+.notification-card--accent {
+  --notification-color: var(--ah-color-primary);
+}
+
+.notification-card {
+  position: relative;
+  display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3) var(--ah-space-3);
+}
+
+/* Mockup 11: a left border in the tone only for WARNING, ERROR and ACCENT. */
+.notification-card--warning,
+.notification-card--error,
+.notification-card--accent {
+  border-left: 3px solid var(--notification-color);
+}
+
+.notification-card__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.notification-card__icon {
+  color: var(--notification-color);
+}
+
+.notification-card__title {
+  margin: 0;
+  font: 700 0.95rem/1.3 var(--ah-font-display);
+}
+
+.notification-card__open {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card opens its route (R-11-11): the title's link covers it. */
+.notification-card__open::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+}
+
+.notification-card__open:focus-visible {
+  outline: none;
+}
+
+.notification-card--link:has(.notification-card__open:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.notification-card__unread {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-full);
+}
+
+/* Rendered and frozen by the api: printed as delivered, its line breaks kept. */
+.notification-card__body {
+  margin: 0;
+  color: var(--ah-color-text);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.notification-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+  margin-top: var(--ah-space-1);
+}
+
+.notification-card__meta {
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.notification-card__action {
+  position: relative;
+  z-index: 1;
+  min-height: 2.25rem;
+  margin-left: auto;
+  padding: var(--ah-space-1) var(--ah-space-4);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+
+.notification-card__hint,
+.notification-card__error {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.notification-card__hint {
+  color: var(--ah-color-text-muted);
+  text-align: right;
+}
+
+.notification-card__error {
+  color: var(--ah-color-danger);
+}

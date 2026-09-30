@@ -182,6 +182,28 @@ describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the 
   });
 });
 
+describe("E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route", () => {
+  it("an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (data === undefined) throw new TypeError("The mock overview did not answer");
+    const overview: Record<string, unknown> = { ...data };
+    delete overview.notificationPreferences;
+    server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(
+      await screen.findByRole("heading", {
+        name: "Preferències d'avisos (mantenibles aquí i al perfil)",
+      }),
+    ).toBeVisible();
+    expect(await screen.findByLabelText("Recordatori de classe")).toBeVisible();
+    expect(screen.getByRole("link", { name: "Avisos enviats ›" })).toBeVisible();
+  });
+});
+
 describe("T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method", () => {
   async function serveCashMember() {
     const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
@@ -193,7 +215,12 @@ describe("T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a 
       ...data,
       member: {
         ...data.member,
-        paymentMethod: { channel: "Efectiu", holderName: null, maskedAccount: null, type: "MANUAL" },
+        paymentMethod: {
+          channel: "Efectiu",
+          holderName: null,
+          maskedAccount: null,
+          type: "MANUAL",
+        },
       },
     };
     server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));

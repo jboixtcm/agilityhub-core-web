@@ -590,8 +590,7 @@ function MemberSummary({
   const contact = [
     ...member.contactEmails.map((item) => item.email),
     ...member.phones.map(
-      (phone) =>
-        `${phone.prefix} ${phone.number}${phone.label == null ? "" : ` (${phone.label})`}`,
+      (phone) => `${phone.prefix} ${phone.number}${phone.label == null ? "" : ` (${phone.label})`}`,
     ),
   ].join(" · ");
   const memberPlan = plan?.id === member.planId ? plan : undefined;
@@ -639,8 +638,7 @@ function MemberSummary({
                 </Button>
               </DataRow>
             ) : null}
-            {modules.includes("BILLING") &&
-            overview.nextInvoice !== undefined ? (
+            {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
                 <strong>{formatDate(overview.nextInvoice.date, locale)}</strong> ·{" "}
                 {formatMoney(
@@ -682,8 +680,7 @@ function MemberSummary({
                 {t("admin-census:common.edit")}
               </Button>
             </DataRow>
-            {modules.includes("FAMILY_GROUP") &&
-            overview.familyGroup !== undefined ? (
+            {modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
               <DataRow label={t("admin-census:member.fields.familyGroup")}>
                 <span className="census-record__links">
                   {overview.familyGroup.members.map((familyMember) => (
@@ -746,17 +743,13 @@ function MemberSummary({
           </ul>
         </Card>
 
-        {isNotificationPreferences(overview.notificationPreferences) ? (
-          <NotificationPreferencesBlock
-            client={client}
-            memberId={member.id}
-            onFeedback={onFeedback}
-            onSaved={(saved) => {
-              onChange({ ...overview, notificationPreferences: saved });
-            }}
-            preferences={overview.notificationPreferences}
-          />
-        ) : null}
+        {/* E7-W01 round 2 #4: the block reads its own route, so it never depends on the free-form
+            `MemberOverview.notificationPreferences` and never disappears. */}
+        <NotificationPreferencesBlock
+          client={client}
+          memberId={member.id}
+          onFeedback={onFeedback}
+        />
 
         {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
             audit, the booking block, «Inactivitat» (INACTIVITY) and «Baixa» stay without it. */}
@@ -1201,8 +1194,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               {t("admin-census:member.activeSince", { year: joinedYear })}
             </Badge>
           )}
-          {branding.modules.includes("FAMILY_GROUP") &&
-          overview.familyGroup !== undefined ? (
+          {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
                 ? t("admin-census:member.familyHolder")

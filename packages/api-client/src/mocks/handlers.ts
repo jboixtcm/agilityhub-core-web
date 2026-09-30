@@ -58,6 +58,7 @@ import {
   type MeProfile,
 } from "./fixtures/member-self-service";
 import { findTemplate, messagingState } from "./fixtures/messaging";
+import { NOTIFICATIONS_MOCK_NOW, UNSUBSCRIBE_TOKENS } from "./fixtures/notifications";
 import {
   findParameter,
   replaceParameter,
@@ -118,6 +119,7 @@ import {
   notificationExportRows,
   resetMessagingMockState,
 } from "./messaging-handlers";
+import { notificationHandlers, resetNotificationMockState } from "./notification-handlers";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -2820,6 +2822,23 @@ export const handlers = [
     member.roles = body.roles;
     return HttpResponse.json({ roles: body.roles });
   }),
+  // D10's block reads its own route (E7-W01 round 2 #4, `pending.json` until the snapshot has it):
+  // the member's preferences in the shape of `GET /me/notification-preferences`.
+  http.get("*/api/v1/members/:id/notification-preferences", ({ params }) => {
+    const scenario = currentMockScenario();
+    if (scenario.me.impersonation !== undefined) {
+      return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
+    }
+    if (!(scenario.me.membership?.roles.includes("ADMIN") ?? false)) {
+      return apiError("FORBIDDEN", "Forbidden", 403);
+    }
+    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    return HttpResponse.json(
+      censusRecordState.memberOverview.notificationPreferences as NotificationPreferences,
+    );
+  }),
   http.put("*/api/v1/members/:id/notification-preferences", async ({ params, request }) => {
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
@@ -3691,7 +3710,26 @@ export const handlers = [
         ? catalogState.faqEntries
         : catalogState.faqEntries.filter((entry) => entry.active),
     );
-    return HttpResponse.json(catalogResponse(entries));
+    const scenario = currentMockScenario();
+    const admin =
+      scenario.me.impersonation === undefined &&
+      (scenario.me.membership?.roles.includes("ADMIN") ?? false);
+    // S05 §6: MEMBER and INSTRUCTOR read `FaqReaderView`, without translation maps or usage.
+    return HttpResponse.json(
+      catalogResponse(
+        admin
+          ? entries
+          : entries.map(({ active, answer, category, id, order, question, version }) => ({
+              active,
+              answer,
+              category,
+              id,
+              order,
+              question,
+              version,
+            })),
+      ),
+    );
   }),
   http.get("*/api/v1/faq-entries/filter-values", ({ request }) => {
     const field = new URL(request.url).searchParams.get("field");
@@ -3918,6 +3956,8 @@ export const handlers = [
   ...calendarHandlers,
   ...activityHandlers,
   ...bookingHandlers,
+  // S11 (E7-W02): screen 11's feed, 12's preferences, push subscriptions and the unsubscribe page.
+  ...notificationHandlers,
   // S10 (E6-W01, E6-W03): screens 20, 21 and 22, and D12.
   ...attendanceHandlers,
   http.get("*/api/v1/health", () =>
@@ -3940,6 +3980,7 @@ export {
   JOBS_MOCK_NOW,
   mockExportBody,
   mockScenario,
+  NOTIFICATIONS_MOCK_NOW,
   planningState,
   resetActivityState,
   resetAttendanceMockState,
@@ -3953,6 +3994,7 @@ export {
   resetFollowupMockState,
   resetMemberSelfServiceState,
   resetMessagingMockState,
+  resetNotificationMockState,
   resetOnboardingMockState,
   resetPlanningState,
   resetSettingsState,
@@ -3961,6 +4003,7 @@ export {
   setSignupMockToday,
   TRAINING_MOCK_NOW,
   trainingState,
+  UNSUBSCRIBE_TOKENS,
   updateFollowupNoteMock,
   type MockScenario,
 };

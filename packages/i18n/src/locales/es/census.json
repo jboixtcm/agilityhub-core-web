@@ -16,6 +16,7 @@
     "formatPdf": "PDF",
     "formatXlsx": "Excel",
     "genericError": "No se ha podido cargar el listado.",
+    "ownersMissing": "No se han podido leer los propietarios de {count, plural, one {# perro} other {# perros}} de la selección. Vuelve a intentarlo.",
     "loading": "Cargando el listado",
     "loadingFilterValues": "Cargando valores…",
     "nextPage": "Página siguiente",

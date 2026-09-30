@@ -1,0 +1,40 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/profile/NoticesCard.test.tsx (15 tests | 1 failed | 14 skipped) 503ms
+   ❯ T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) (15)
+     × an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription 500ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/profile/NoticesCard.test.tsx:404:35
+    402|       expect(puts()).toEqual([{ pushClubNews: true }]);
+    403|     });
+    404|     expect(requestPermission).not.toHaveBeenCalled();
+       |                                   ^
+    405|     fireEvent.click(screen.getByRole("button", { name: "Tanca la sessi…
+    406|     await new Promise((resolve) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  20:23:35
+   Duration  2.20s (transform 41%, tests 24%, environment 18%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/profile/NoticesCard.test.tsx -t impersonated

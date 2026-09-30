@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/SendAnnouncementDialog.test.tsx (6 tests | 1 failed | 5 skipped) 133ms
+   ❯ T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) (6)
+     × E7-W01 round 2 #2: the tick confirms the latest dry run only — template A → B → A with three counts clears it each time 131ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > E7-W01 round 2 #2: the tick confirms the latest dry run only — template A → B → A with three counts clears it each time
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeChecked()[22m
+
+Received element is checked:
+  [31m<input
+  checked=""
+  class="ah-checkbox"
+  type="checkbox"
+/>[39m
+ ❯ src/census/SendAnnouncementDialog.test.tsx:266:23
+    264|     expect(submit).toBeDisabled();
+    265|     const third = await within(modal).findByRole("checkbox", { name: c…
+    266|     expect(third).not.toBeChecked();
+       |                       ^
+    267|     expect(submit).toBeDisabled();
+    268|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  20:50:24
+   Duration  1.23s (transform 34%, environment 32%, import 17%, tests 12%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/SendAnnouncementDialog.test.tsx -t round 2

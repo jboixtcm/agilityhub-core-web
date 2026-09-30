@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+ ❯ src/profile/NoticesCard.test.tsx (15 tests | 1 failed | 14 skipped) 613ms
+   ❯ T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) (15)
+     × an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription 611ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/profile/NoticesCard.test.tsx:409:63
+    407|       setTimeout(resolve, 100);
+    408|     });
+    409|     expect(requests.some((item) => item.method === "DELETE")).toBe(fal…
+       |                                                               ^
+    410|     expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBe('…
+    411|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  20:23:43
+   Duration  2.18s (transform 37%, tests 29%, environment 17%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/profile/NoticesCard.test.tsx -t impersonated

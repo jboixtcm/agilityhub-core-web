@@ -113,6 +113,7 @@
     "error": "The notifications could not be loaded.",
     "noValue": "—",
     "valueSeparator": ", ",
+    "range": "{from} – {to}",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

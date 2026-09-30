@@ -11,7 +11,7 @@
     "faq": "FAQ",
     "loadError": "The information could not be loaded.",
     "loading": "Loading information",
-    "noFaq": "There are no published frequently asked questions yet.",
+    "noFaq": "The club has not published any questions yet",
     "rules": "Rules",
     "tabs": "Club information",
     "updated": "Updated on {date}"

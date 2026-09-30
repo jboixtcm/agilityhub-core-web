@@ -25,22 +25,22 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      // S11 R-11-07 (E7-W02): our own worker (`src/sw.ts`) for web push. The navigation fallback
+      // to `/index.html` and its denylist of the same-site proxy routes live in the worker now.
+      // `injectRegister: false`: only `main.tsx` registers it, and never with `VITE_MOCK=1`, where
+      // the only worker on `/` is MSW's.
       VitePWA({
         devOptions: { enabled: false },
-        manifest: false,
-        registerType: "autoUpdate",
-        workbox: {
+        filename: "sw.ts",
+        injectManifest: {
           // INC-20: the mock world (and its worker) never goes into the production precache.
           globIgnores: ["**/browser-*.js", "**/mockServiceWorker.js"],
-          navigateFallback: "/index.html",
-          // The same-site proxy routes (api, OAuth2, OIDC) are never answered by the app shell.
-          navigateFallbackDenylist: [
-            /^\/api\//,
-            /^\/oauth2\//,
-            /^\/connect\//,
-            /^\/\.well-known\//,
-          ],
         },
+        injectRegister: false,
+        manifest: false,
+        registerType: "autoUpdate",
+        srcDir: "src",
+        strategies: "injectManifest",
       }),
     ],
     server: mockEnabled

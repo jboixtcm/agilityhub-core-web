@@ -5,7 +5,46 @@
     "version": "0.0.0-pending",
     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
   },
-  "paths": {},
+  "paths": {
+    "/api/v1/members/{id}/notification-preferences": {
+      "get": {
+        "description": "Mocks-first (E7-W01 round 2 #4; api E7-T03 round 2, item 8; S11 §6 amended 30-09, ruling E76). Roles: ADMIN (impersonation → 403). D10's block: the member's preferences in the shape of GET /me/notification-preferences. Another club's member → 404. Tenant comes from the JWT.",
+        "operationId": "memberNotificationPreferences",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationPreferences" }
+              }
+            },
+            "description": "NotificationPreferences"
+          },
+          "403": {
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            },
+            "description": "FORBIDDEN, IMPERSONATION_DENIED"
+          },
+          "404": {
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } }
+            },
+            "description": "NOT_FOUND"
+          }
+        },
+        "summary": "memberNotificationPreferences",
+        "tags": ["clubs.messaging"]
+      }
+    }
+  },
   "x-schema-overlays": {},
   "components": {
     "schemas": {

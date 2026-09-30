@@ -16,6 +16,7 @@
     "formatPdf": "PDF",
     "formatXlsx": "Excel",
     "genericError": "No s'ha pogut carregar el llistat.",
+    "ownersMissing": "No s'han pogut llegir els propietaris de {count, plural, one {# gos} other {# gossos}} de la selecció. Torna-ho a provar.",
     "loading": "Carregant el llistat",
     "loadingFilterValues": "Carregant valors…",
     "nextPage": "Pàgina següent",

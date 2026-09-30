@@ -22,6 +22,7 @@ export const namespaces = [
   "home",
   "id",
   "instructor",
+  "notifications",
   "shell",
   "signup",
   "training",

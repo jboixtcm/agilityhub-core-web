@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run src/mocks/fixtures.contract.test.ts src/mocks/messaging-handlers.test.ts src/mocks/notification-handlers.test.ts src/index.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  4 passed (4)
+      Tests  108 passed (108)
+   Start at  21:00:35
+   Duration  2.05s (tests 47%, import 27%, transform 26%)
+

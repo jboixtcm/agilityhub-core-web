@@ -11,7 +11,8 @@ const TEXTLESS = new Set([
   ".ah-bar-chart__bar--highlighted",
   ".ah-switch--checked",
   ".dog-pack__track span",
-  ".profile-notices__toggle--on",
+  // Screen 11's unread dot (E7-W02); its «Nova» is screen-reader text only.
+  ".notification-card__unread",
   ".signup-progress__track .signup-progress__done",
 ]);
 
@@ -72,7 +73,9 @@ function declarations(block: string): Map<string, string> {
 
 /** The selector without its states (`:hover`, `:not(…)`, `:focus-visible`…): the base rule. */
 function baseSelector(selector: string): string {
-  return selector.replaceAll(/:(?:hover|active|focus|focus-visible|focus-within|not\([^)]*\))/gu, "").trim();
+  return selector
+    .replaceAll(/:(?:hover|active|focus|focus-visible|focus-within|not\([^)]*\))/gu, "")
+    .trim();
 }
 
 describe("A32 (Jordi 24-09): text on the primary colour reads the club's onPrimary", () => {
@@ -81,25 +84,31 @@ describe("A32 (Jordi 24-09): text on the primary colour reads the club's onPrima
     let checked = 0;
     for (const file of filesOf(".css")) {
       const css = readFileSync(file, "utf8").replaceAll(/\/\*[\s\S]*?\*\//gu, "");
-      const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/gu)].map(([, selector = "", block = ""]) => ({
-        declarations: declarations(block),
-        selectors: selector.trim().split(/\s*,\s*/u),
-      }));
+      const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/gu)].map(
+        ([, selector = "", block = ""]) => ({
+          declarations: declarations(block),
+          selectors: selector.trim().split(/\s*,\s*/u),
+        }),
+      );
       // The text colour each selector sets, so a state rule (`:hover`) inherits its base rule's.
       const textColour = new Map<string, string>();
       for (const rule of rules) {
         const colour = rule.declarations.get("color");
-        if (colour !== undefined) for (const selector of rule.selectors) textColour.set(selector, colour);
+        if (colour !== undefined)
+          for (const selector of rule.selectors) textColour.set(selector, colour);
       }
       for (const rule of rules) {
-        const background = rule.declarations.get("background") ?? rule.declarations.get("background-color");
+        const background =
+          rule.declarations.get("background") ?? rule.declarations.get("background-color");
         if (background === undefined || primaryShare(background) < PRIMARY_SHARE) continue;
         for (const selector of rule.selectors) {
           if (TEXTLESS.has(selector)) continue;
           checked += 1;
           const colour = rule.declarations.get("color") ?? textColour.get(baseSelector(selector));
           if (colour?.replace(/\s*!important$/u, "") !== "var(--ah-color-primary-fg)") {
-            offending.push(`${relative(repositoryRoot, file)}: ${selector} (color: ${colour ?? "unset"})`);
+            offending.push(
+              `${relative(repositoryRoot, file)}: ${selector} (color: ${colour ?? "unset"})`,
+            );
           }
         }
       }
@@ -114,7 +123,9 @@ describe("A32 (Jordi 24-09): text on the primary colour reads the club's onPrima
     expect(primaryShare("var(--ah-color-primary) !important")).toBe(100);
     expect(primaryShare("var(--ah-color-primary) url(mark.svg) no-repeat")).toBe(100);
     expect(primaryShare("var(--ring-colour, var(--ah-color-primary))")).toBe(100);
-    expect(primaryShare("color-mix(in srgb, var(--ah-color-primary) 86%, var(--ah-color-text))")).toBe(86);
+    expect(
+      primaryShare("color-mix(in srgb, var(--ah-color-primary) 86%, var(--ah-color-text))"),
+    ).toBe(86);
     expect(primaryShare("color-mix(in srgb, var(--ah-color-primary) 12%, transparent)")).toBe(12);
     expect(primaryShare("var(--ah-color-surface)")).toBe(0);
     expect(baseSelector(".ah-button--primary:hover:not(:disabled)")).toBe(".ah-button--primary");
@@ -122,9 +133,11 @@ describe("A32 (Jordi 24-09): text on the primary colour reads the club's onPrima
 
   it("no component paints the primary colour in an inline style (TSX): the colour lives in the CSS rules above", () => {
     const inline = filesOf(".tsx").flatMap((file) =>
-      [...readFileSync(file, "utf8").matchAll(/background(?:Color)?\s*:\s*[`"'][^`"']*--ah-color-primary\)/gu)].map(
-        () => relative(repositoryRoot, file),
-      ),
+      [
+        ...readFileSync(file, "utf8").matchAll(
+          /background(?:Color)?\s*:\s*[`"'][^`"']*--ah-color-primary\)/gu,
+        ),
+      ].map(() => relative(repositoryRoot, file)),
     );
     expect(inline).toEqual([]);
   });

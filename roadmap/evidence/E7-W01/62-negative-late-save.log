@@ -1,0 +1,217 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx (11 tests | 1 failed | 10 skipped) 408ms
+   ❯ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (11)
+     × E7-W01 round 2 #3: a late save answer never replaces another template — save A, open B, reopen A and write again, back to B, then A's answer: B stays shown and editable, and A's newer draft is kept 406ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > E7-W01 round 2 #3: a late save answer never replaces another template — save A, open B, reopen A and write again, back to B, then A's answer: B stays shown and editable, and A's newer draft is kept
+TestingLibraryElementError: Unable to find a label with the text of: Títol —
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"messaging-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"messaging-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mComunicats i plantilles[0m
+        [36m</h1>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"messaging-page__link"[39m
+          [33mhref[39m=[32m"/notificacions"[39m
+        [36m>[39m
+          [0mAvisos enviats ›[0m
+        [36m</a>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0mEnviar comunicat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0mNova plantilla[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"messaging-page__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card messaging-templates"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"messaging-templates__title"[39m
+          [36m>[39m
+            [0mPlantilles per categoria[0m
+          [36m</h2>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"messaging-categories"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"messaging-categories__row"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [36m<strong>[39m
+                    [0mOperativa[0m
+                  [36m</strong>[39m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__hint"[39m
+                  [36m>[39m
+                    [0m(reserves, canvis — sistema)[0m
+                  [36m</span>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"messaging-categories__count"[39m
+                [36m>[39m
+                  [0m12[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"messaging-categories__row"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [36m<strong>[39m
+                    [0mComunicats individuals[0m
+                  [36m</strong>[39m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__hint"[39m
+                  [36m>[39m
+                    [0m(canvi de nivell, baixa…)[0m
+                  [36m</span>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"messaging-categories__count"[39m
+                [36m>[39m
+                  [0m6[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"messaging-categories__row"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [36m<strong>[39m
+                    [0mCanvis en reserves[0m
+                  [36m</strong>[39m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__hint"[39m
+                  [36m>[39m
+                    [0m(anul·lacions del club, espera)[0m
+                  [36m</span>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"messaging-categories__count"[39m
+                [36m>[39m
+                  [0m8[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"messaging-categories__row"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [36m<strong>[39m
+                    [0mComunicats del club[0m
+                  [36m</strong>[39m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__hint"[39m
+                  [36m>[39m
+                    [0m(activitats, avisos generals)[0m
+                  [36m</span>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"messaging-categories__count"[39m
+                [36m>[39m
+                  [0m4[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Plantilles"[39m
+            [33mclass[39m=[32m"messaging-list"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"messaging-list__row"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+       ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ title src/messaging/AnnouncementsPage.test.tsx:84:28
+     82| const editor = () => screen.findByRole("region", { name: "Editor de la…
+     83| const body = () => screen.getByLabelText<HTMLTextAreaElement>("Text");
+     84| const title = () => screen.getByLabelText<HTMLInputElement>("Títol —");
+       |                            ^
+     85| const save = () => screen.getByRole("button", { name: "DESA" });
+     86|
+ ❯ src/messaging/AnnouncementsPage.test.tsx:372:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  20:51:26
+   Duration  1.50s (transform 34%, tests 29%, environment 20%, import 14%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/AnnouncementsPage.test.tsx -t round 2

@@ -1,0 +1,257 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/dog-owners.test.ts (2 tests | 2 failed) 20ms
+   ❯ E7-W01 round 2 #6: D15's «Enviar comunicat» reads the owners of the whole selection (2)
+     × 1,200 selected dogs: read in batches of 100 ids, every dog resolved, each owner once 14ms
+     × a selected dog the api does not return is reported, so the audience is never silently short 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/dog-owners.test.ts > E7-W01 round 2 #6: D15's «Enviar comunicat» reads the owners of the whole selection > 1,200 selected dogs: read in batches of 100 ids, every dog resolved, each owner once
+AssertionError: expected [ [ 'dog-0', 'dog-1', …(1198) ] ] to have a length of 0.012 but got 1
+
+- Expected
++ Received
+
+- 0.012
++ 1
+
+ ❯ src/census/dog-owners.test.ts:54:23
+     52|     const client = createApiClient({ baseUrl: `${window.location.origi…
+     53|     const { memberIds, missing } = await resolveDogOwners(client, SELE…
+     54|     expect(requested).toHaveLength(SELECTED.length / OWNER_BATCH_SIZE);
+       |                       ^
+     55|     expect(requested.every((ids) => ids.length <= OWNER_BATCH_SIZE)).t…
+     56|     expect(requested.flat()).toEqual(SELECTED);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/dog-owners.test.ts > E7-W01 round 2 #6: D15's «Enviar comunicat» reads the owners of the whole selection > a selected dog the api does not return is reported, so the audience is never silently short
+AssertionError: expected [ 'dog-1000', 'dog-1001', …(198) ] to deeply equal [ 'dog-1150' ]
+
+- Expected
++ Received
+
+  [
++   "dog-1000",
++   "dog-1001",
++   "dog-1002",
++   "dog-1003",
++   "dog-1004",
++   "dog-1005",
++   "dog-1006",
++   "dog-1007",
++   "dog-1008",
++   "dog-1009",
++   "dog-1010",
++   "dog-1011",
++   "dog-1012",
++   "dog-1013",
++   "dog-1014",
++   "dog-1015",
++   "dog-1016",
++   "dog-1017",
++   "dog-1018",
++   "dog-1019",
++   "dog-1020",
++   "dog-1021",
++   "dog-1022",
++   "dog-1023",
++   "dog-1024",
++   "dog-1025",
++   "dog-1026",
++   "dog-1027",
++   "dog-1028",
++   "dog-1029",
++   "dog-1030",
++   "dog-1031",
++   "dog-1032",
++   "dog-1033",
++   "dog-1034",
++   "dog-1035",
++   "dog-1036",
++   "dog-1037",
++   "dog-1038",
++   "dog-1039",
++   "dog-1040",
++   "dog-1041",
++   "dog-1042",
++   "dog-1043",
++   "dog-1044",
++   "dog-1045",
++   "dog-1046",
++   "dog-1047",
++   "dog-1048",
++   "dog-1049",
++   "dog-1050",
++   "dog-1051",
++   "dog-1052",
++   "dog-1053",
++   "dog-1054",
++   "dog-1055",
++   "dog-1056",
++   "dog-1057",
++   "dog-1058",
++   "dog-1059",
++   "dog-1060",
++   "dog-1061",
++   "dog-1062",
++   "dog-1063",
++   "dog-1064",
++   "dog-1065",
++   "dog-1066",
++   "dog-1067",
++   "dog-1068",
++   "dog-1069",
++   "dog-1070",
++   "dog-1071",
++   "dog-1072",
++   "dog-1073",
++   "dog-1074",
++   "dog-1075",
++   "dog-1076",
++   "dog-1077",
++   "dog-1078",
++   "dog-1079",
++   "dog-1080",
++   "dog-1081",
++   "dog-1082",
++   "dog-1083",
++   "dog-1084",
++   "dog-1085",
++   "dog-1086",
++   "dog-1087",
++   "dog-1088",
++   "dog-1089",
++   "dog-1090",
++   "dog-1091",
++   "dog-1092",
++   "dog-1093",
++   "dog-1094",
++   "dog-1095",
++   "dog-1096",
++   "dog-1097",
++   "dog-1098",
++   "dog-1099",
++   "dog-1100",
++   "dog-1101",
++   "dog-1102",
++   "dog-1103",
++   "dog-1104",
++   "dog-1105",
++   "dog-1106",
++   "dog-1107",
++   "dog-1108",
++   "dog-1109",
++   "dog-1110",
++   "dog-1111",
++   "dog-1112",
++   "dog-1113",
++   "dog-1114",
++   "dog-1115",
++   "dog-1116",
++   "dog-1117",
++   "dog-1118",
++   "dog-1119",
++   "dog-1120",
++   "dog-1121",
++   "dog-1122",
++   "dog-1123",
++   "dog-1124",
++   "dog-1125",
++   "dog-1126",
++   "dog-1127",
++   "dog-1128",
++   "dog-1129",
++   "dog-1130",
++   "dog-1131",
++   "dog-1132",
++   "dog-1133",
++   "dog-1134",
++   "dog-1135",
++   "dog-1136",
++   "dog-1137",
++   "dog-1138",
++   "dog-1139",
++   "dog-1140",
++   "dog-1141",
++   "dog-1142",
++   "dog-1143",
++   "dog-1144",
++   "dog-1145",
++   "dog-1146",
++   "dog-1147",
++   "dog-1148",
++   "dog-1149",
+    "dog-1150",
++   "dog-1151",
++   "dog-1152",
++   "dog-1153",
++   "dog-1154",
++   "dog-1155",
++   "dog-1156",
++   "dog-1157",
++   "dog-1158",
++   "dog-1159",
++   "dog-1160",
++   "dog-1161",
++   "dog-1162",
++   "dog-1163",
++   "dog-1164",
++   "dog-1165",
++   "dog-1166",
++   "dog-1167",
++   "dog-1168",
++   "dog-1169",
++   "dog-1170",
++   "dog-1171",
++   "dog-1172",
++   "dog-1173",
++   "dog-1174",
++   "dog-1175",
++   "dog-1176",
++   "dog-1177",
++   "dog-1178",
++   "dog-1179",
++   "dog-1180",
++   "dog-1181",
++   "dog-1182",
++   "dog-1183",
++   "dog-1184",
++   "dog-1185",
++   "dog-1186",
++   "dog-1187",
++   "dog-1188",
++   "dog-1189",
++   "dog-1190",
++   "dog-1191",
++   "dog-1192",
++   "dog-1193",
++   "dog-1194",
++   "dog-1195",
++   "dog-1196",
++   "dog-1197",
++   "dog-1198",
++   "dog-1199",
+  ]
+
+ ❯ src/census/dog-owners.test.ts:67:21
+     65|     const client = createApiClient({ baseUrl: `${window.location.origi…
+     66|     const { memberIds, missing } = await resolveDogOwners(client, SELE…
+     67|     expect(missing).toEqual(["dog-1150"]);
+       |                     ^
+     68|     // Its owner still has the other dog (1151), so the owner is kept.
+     69|     expect(memberIds).toContain("member-575");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:58:48
+   Duration  901ms (environment 37%, transform 31%, import 21%, setup 8%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/dog-owners.test.ts

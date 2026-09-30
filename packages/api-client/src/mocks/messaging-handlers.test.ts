@@ -321,4 +321,35 @@ describe("E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12)", (
       status: 403,
     });
   });
+
+  it("E7-W01 round 2 #1: the export takes its own x-columns (createdAt, code, recipient, channels, readAt), never the list's category or audience", async () => {
+    const exported = (columns: string) =>
+      fetch(`${base}/notifications/export?format=xlsx&columns=${encodeURIComponent(columns)}`);
+    expect((await exported("createdAt,code,recipient,channels,readAt")).status).toBe(200);
+    for (const columns of ["createdAt,code,category", "recipient,audience"]) {
+      const refused = await exported(columns);
+      expect(refused.status).toBe(400);
+      expect(((await refused.json()) as { code: string }).code).toBe("INVALID_FILTER");
+    }
+  });
+
+  it("E7-W01 round 2 #7: the applied filters echo a list (in, nin) and a range (between) as arrays, as the api does", async () => {
+    const { data } = await client.GET("/notifications", {
+      params: {
+        query: {
+          filter: [
+            "memberId:in:member-laura,member-anna",
+            "createdAt:between:2026-08-01,2026-08-31",
+            "status:nin:FAILED",
+          ],
+        },
+      },
+    });
+    expectValid("NotificationPage", data);
+    expect(data?.appliedFilters).toEqual([
+      { field: "memberId", op: "in", value: ["member-laura", "member-anna"] },
+      { field: "createdAt", op: "between", value: ["2026-08-01", "2026-08-31"] },
+      { field: "status", op: "nin", value: ["FAILED"] },
+    ]);
+  });
 });

@@ -76,6 +76,11 @@ export function AnnouncementsPage({
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<number>();
   const listRequest = useRef(0);
+  // The template open now, for the answers of writes sent from another one (E7-W01 round 2 #3).
+  const selectedRef = useRef<string | null>(selectedId);
+  useEffect(() => {
+    selectedRef.current = selectedId;
+  }, [selectedId]);
 
   const errorText = useCallback(
     (cause: unknown, fallback: string) =>
@@ -124,6 +129,7 @@ export function AnnouncementsPage({
 
   const select = (id: string | null) => {
     if (id === selectedId) return;
+    selectedRef.current = id;
     setDetail({ status: "loading" });
     setSelectedId(id);
     writeTemplateParam(id);
@@ -291,8 +297,10 @@ export function AnnouncementsPage({
               edits={drafts[shownDetail.id] ?? {}}
               key={shownDetail.id}
               onDeleted={() => {
-                setDrafts((current) => without(current, shownDetail.id));
-                select(null);
+                const deleted = shownDetail.id;
+                setDrafts((current) => without(current, deleted));
+                // Another template opened meanwhile stays open.
+                if (selectedRef.current === deleted) select(null);
                 setListReload((value) => value + 1);
               }}
               onEdits={(edits) => {
@@ -302,9 +310,17 @@ export function AnnouncementsPage({
                 setDetailReload((value) => value + 1);
               }}
               onSaved={(saved, options) => {
-                setDetail({ data: saved, status: "ready" });
+                // The answer of a template no longer open never replaces the one shown; reopening
+                // it reads it again.
+                if (selectedRef.current === saved.id) setDetail({ data: saved, status: "ready" });
                 if (options?.keepEdits !== true) {
-                  setDrafts((current) => without(current, saved.id));
+                  // Only the draft that write carried: one written after it (the template was
+                  // reopened meanwhile) stays.
+                  setDrafts((current) =>
+                    current[saved.id] === options?.savedEdits
+                      ? without(current, saved.id)
+                      : current,
+                  );
                 }
                 setListReload((value) => value + 1);
               }}
@@ -321,6 +337,7 @@ export function AnnouncementsPage({
           }}
           onCreated={(created) => {
             setCreating(false);
+            selectedRef.current = created.id;
             setDetail({ data: created, status: "ready" });
             setSelectedId(created.id);
             writeTemplateParam(created.id);

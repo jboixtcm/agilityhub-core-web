@@ -55,6 +55,9 @@ import { RingBlockPage } from "./instructor/RingBlockPage";
 import { StudentCardPage } from "./instructor/StudentCardPage";
 import { StudentSearchPage } from "./instructor/StudentSearchPage";
 import { TasksPage } from "./instructor/TasksPage";
+import { logoutWithPush } from "./notifications/push";
+import { NotificationsPage } from "./NotificationsPage";
+import { NoticesCard } from "./profile/NoticesCard";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -63,6 +66,7 @@ import { TodayPage } from "./today/TodayPage";
 import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
 import { TrainingDetailPage } from "./training/TrainingDetailPage";
 import { TrainingPage } from "./training/TrainingPage";
+import { UnsubscribePage } from "./UnsubscribePage";
 
 interface RouteDefinition {
   path: string;
@@ -92,6 +96,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/avui" },
   // Screen 11.
   { path: "/notificacions" },
+  // The e-mail unsubscribe page of CLUB_NEWS (S11 R-11-08, api E7-T02; no mockup), anonymous.
+  { path: "/comunicats/baixa", public: true },
   // Screens 12, 13 and 28.
   { path: "/perfil" },
   { path: "/gossos" },
@@ -341,8 +347,9 @@ export function MobileNavigation({
         item.id === "profile"
           ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
           : item.id === "home"
-            ? // Mockup 25: the history is reached from 03, and «Inici» stays lit.
-              ["/inici", "/historic"].some((path) => matchesPath(pathname, path))
+            ? // Mockups 25 and 11: the history and the notifications are reached from 03, and
+              // «Inici» stays lit.
+              ["/inici", "/historic", "/notificacions"].some((path) => matchesPath(pathname, path))
             : item.id === "training"
               ? ["/entrenaments", "/entrenaments/:id"].some((path) => matchesPath(pathname, path))
               : item.id === "reserve"
@@ -1187,7 +1194,7 @@ function activeProfileLabel(
   return t("auth:profile.memberProfile", { gender });
 }
 
-function ProfilePage({ authClient }: { authClient: AuthClient }) {
+function ProfilePage({ authClient, client }: { authClient: AuthClient; client: ApiClient }) {
   const branding = useBranding();
   const { me } = useSession();
   const { i18n, t } = useTranslation(["auth", "shell"]);
@@ -1198,6 +1205,8 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
   }
   const profiles = profileRoles(me);
   const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
+  // S11 §13-11: «Aprèn amb AgilityHub» after «Els meus gossos», only with LEARN_LINK.
+  const learnLink = isModuleUiItemEnabled(branding.modules, "menuEntries", "learn");
 
   return (
     <div className="profile-page">
@@ -1216,6 +1225,13 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
           <span>{t("auth:profile.dogs")}</span>
           <Icon aria-hidden="true" name="chev" />
         </a>
+        {learnLink ? (
+          <a href="https://learn.agilitydoghub.com" rel="noopener noreferrer" target="_blank">
+            <Icon aria-hidden="true" name="link" />
+            <span>{t("auth:profile.learnLink")}</span>
+            <Icon aria-hidden="true" name="chev" />
+          </a>
+        ) : null}
         <button
           onClick={() => {
             setPasswordOpen(true);
@@ -1241,48 +1257,7 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
           </a>
         ) : null}
       </Card>
-      <Card aria-disabled="true" className="profile-notices">
-        <div className="profile-notices__header">
-          <h2>{t("auth:profile.notices")}</h2>
-          <small>{t("auth:profile.appChannel")}</small>
-          <small>{t("auth:profile.emailChannel")}</small>
-        </div>
-        <div className="profile-notices__row">
-          <span>{t("auth:profile.operationalNotices")}</span>
-          <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
-          <span aria-hidden="true" className="profile-notices__toggle" />
-        </div>
-        <div className="profile-notices__row">
-          <span>{t("auth:profile.personalNotices")}</span>
-          <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
-          <span
-            aria-hidden="true"
-            className="profile-notices__toggle profile-notices__toggle--on"
-          />
-        </div>
-        <div className="profile-notices__row">
-          <span>{t("auth:profile.clubChanges")}</span>
-          <span className="profile-notices__app-state">
-            <Icon aria-label={t("auth:profile.appAlwaysOn")} name="check" />
-            <small>{t("auth:profile.smsIncluded")}</small>
-          </span>
-          <span
-            aria-hidden="true"
-            className="profile-notices__toggle profile-notices__toggle--on"
-          />
-        </div>
-        <div className="profile-notices__reminder">
-          <span>{t("auth:profile.classReminder")}</span>
-          <span>{t("auth:profile.never")}</span>
-        </div>
-        <div className="profile-notices__mobile">
-          <span>{t("auth:profile.mobileNotices")}</span>
-          <span
-            aria-hidden="true"
-            className="profile-notices__toggle profile-notices__toggle--on"
-          />
-        </div>
-      </Card>
+      <NoticesCard client={client} />
       <Card className="profile-language-card">
         <label className="profile-language">
           <Icon aria-hidden="true" name="globe" />
@@ -1317,6 +1292,8 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
             ))}
           </Select>
         </label>
+        {/* R-11-15: only the notifications created from now on come in the new language. */}
+        <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
       </Card>
       <Card className="profile-list profile-list--final">
         <a href="/inactivitat">
@@ -1334,7 +1311,14 @@ function ProfilePage({ authClient }: { authClient: AuthClient }) {
           disabled={working}
           onClick={() => {
             setWorking(true);
-            void authClient.logout().catch(() => undefined);
+            // R-11-07: this device's push subscription goes first, never blocking the logout. An
+            // impersonated session never subscribed (IMPERSONATION_DENIED): the stored id is the
+            // admin's own device's and stays.
+            void (
+              me.impersonation === undefined
+                ? logoutWithPush(client, () => authClient.logout())
+                : authClient.logout()
+            ).catch(() => undefined);
           }}
           type="button"
         >
@@ -1498,6 +1482,10 @@ export function App({
   if (pathname === "/activacio") {
     return <ActivationPage authClient={authClient} />;
   }
+  if (pathname === "/comunicats/baixa") {
+    // S11 R-11-08: the «Deixar de rebre aquests comunicats» link of a CLUB_NEWS e-mail.
+    return <UnsubscribePage client={publicApiClient} logo={<LogoMark compact />} />;
+  }
   if (pathname === "/benvinguda") {
     return (
       <RequireAuth>
@@ -1574,7 +1562,12 @@ export function App({
   const content =
     pathname === "/perfil" ? (
       <RequireAuth>
-        <ProfilePage authClient={authClient} />
+        <ProfilePage authClient={authClient} client={apiClient} />
+      </RequireAuth>
+    ) : pathname === "/notificacions" ? (
+      // Screen 11 (S11 §2): any session of the club, the impersonated member's included.
+      <RequireAuth>
+        <NotificationsPage client={apiClient} />
       </RequireAuth>
     ) : pathname === "/gossos" ? (
       <RequireAuth>
@@ -1732,6 +1725,7 @@ export function App({
             "/instructor/dia",
             "/instructor/alumnes",
             "/inici",
+            "/notificacions",
             "/reservar",
             "/reservar/confirmar",
             "/entrenaments",

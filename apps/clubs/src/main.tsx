@@ -12,6 +12,7 @@ import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 
 import { App } from "./App";
+import { setPushRegistration } from "./notifications/push";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
@@ -28,6 +29,22 @@ async function bootstrap(root: HTMLElement) {
   if (import.meta.env.VITE_MOCK === "1") {
     const { startMockWorker } = await import("@agilityhub/api-client/mocks/browser");
     await startMockWorker();
+    // S11 R-11-07: mock mode registers no app worker (MSW's owns `/`), and a headless browser has
+    // no push service, so the e2e suite may hand in a stand-in registration (`addInitScript`).
+    const standIn: unknown = Reflect.get(window, "__agilityhubPushRegistration");
+    if (typeof standIn === "object" && standIn !== null) {
+      setPushRegistration(standIn as ServiceWorkerRegistration);
+    }
+  } else {
+    // The app's worker (`src/sw.ts`): the precache and web push; its registration is the one push
+    // subscribes with (never `navigator.serviceWorker.ready`).
+    const { registerSW } = await import("virtual:pwa-register");
+    registerSW({
+      immediate: true,
+      onRegisteredSW: (_url, registration) => {
+        setPushRegistration(registration);
+      },
+    });
   }
 
   const apiBaseUrl = env.VITE_API_BASE_URL ?? "/api/v1";

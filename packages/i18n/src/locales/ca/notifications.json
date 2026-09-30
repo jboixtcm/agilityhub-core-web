@@ -1,0 +1,26 @@
+{
+  "title": "Notificacions",
+  "feed": {
+    "loading": "Carregant les notificacions",
+    "loadingMore": "Carregant més avisos",
+    "empty": "Encara no tens cap avís",
+    "error": "No s'han pogut carregar les notificacions.",
+    "retry": "Torna-ho a provar",
+    "unread": "Nova",
+    "viaSms": "{time} · i per SMS",
+    "action": {
+      "CHANGE_CLASS": "CANVIA DE CLASSE",
+      "CLAIM_SEAT": "AGAFA LA PLAÇA",
+      "expired": "Aquesta plaça ja no està disponible"
+    }
+  },
+  "unsubscribe": {
+    "title": "Deixar de rebre aquests comunicats",
+    "working": "Un moment…",
+    "done": "Ja no rebràs els comunicats del club per correu.",
+    "invalid": "Aquest enllaç ja no és vàlid.",
+    "error": "No s'ha pogut completar la baixa.",
+    "retry": "Torna-ho a provar",
+    "toPreferences": "Canvia els teus avisos al perfil"
+  }
+}

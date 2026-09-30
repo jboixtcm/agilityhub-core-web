@@ -157,13 +157,26 @@ const NOTIFICATION_SPEC: ListSpec<StoredNotification> = {
   },
 };
 
+/**
+ * The export's own columns (`x-columns` of `GET /notifications/export` in the snapshot), not the
+ * list's fields: the category and the audience are not exported (E7-W01 round 2 #1).
+ */
+export const NOTIFICATION_EXPORT_COLUMNS = [
+  "createdAt",
+  "code",
+  "recipient",
+  "channels",
+  "readAt",
+] as const;
+
 /** Rows of `GET /notifications/export` (ADMIN), or the api's error (the handler is in `handlers.ts`). */
 export function notificationExportRows(request: Request): number | Response {
   const refused = adminOnly();
   if (refused !== undefined) return refused;
   const url = new URL(request.url);
   const columns = (url.searchParams.get("columns") ?? "").split(",").filter((key) => key !== "");
-  if (!columns.every((key) => NOTIFICATION_SPEC.fields.includes(key))) {
+  const exportable: readonly string[] = NOTIFICATION_EXPORT_COLUMNS;
+  if (!columns.every((key) => exportable.includes(key))) {
     return apiError("INVALID_FILTER", "Invalid columns", 400);
   }
   const selected = selectItems(url, notificationLog, NOTIFICATION_SPEC);
@@ -410,10 +423,14 @@ export const messagingHandlers = [
     if (selected.error !== undefined) return selected.error;
     const items = selected.items.slice(page * size, (page + 1) * size).map(notificationListItem);
     return HttpResponse.json({
+      // The api echoes a list (`in`, `nin`) and a range (`between`) as JSON arrays (CONVENCIONS_API
+      // §4: «JSON scalar or array»), the rest as the scalar it received.
       appliedFilters: selected.filters.map((filter): Filter => ({
         field: filter.field,
         op: filter.op as Filter["op"],
-        value: filter.value,
+        value: ["between", "in", "nin"].includes(filter.op)
+          ? filter.value.split(",")
+          : filter.value,
       })),
       items: projection === null ? items : items.map(projection),
       page,

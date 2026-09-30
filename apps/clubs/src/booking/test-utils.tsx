@@ -123,5 +123,12 @@ export async function renderPage(node: ReactNode, options: RenderOptions = {}) {
 export async function renderApp(path: string, options: RenderOptions = {}) {
   window.history.replaceState(null, "", path);
   const locale = options.locale ?? "ca";
-  return providers((auth) => <App apiClient={apiClient(locale)} authClient={auth} />, options);
+  // E7-W02: the anonymous pages (the unsubscribe link) use the public client, created here after
+  // MSW listens (a client keeps the `fetch` it was created with).
+  return providers(
+    (auth) => (
+      <App apiClient={apiClient(locale)} authClient={auth} publicApiClient={apiClient(locale)} />
+    ),
+    options,
+  );
 }

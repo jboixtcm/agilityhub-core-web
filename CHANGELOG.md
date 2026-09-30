@@ -120,9 +120,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     - a waiting change is sent before the page is left;
     - «Avisos enviats ›» opens the member's notifications.
   - `packages/i18n` gains the `admin-messaging` namespace and the S11 enums; `packages/api-client` sends `Idempotency-Key` on `POST /message-templates/{id}/send`, drops the notification preferences from `pending.json`, and has a stateful MSW S11 world (templates, preview, reset, archive, send with `dryRun`, the log, and the scenarios `messagingNoSms` and `messagingNoPush`).
+- Add the member side of S11 to the Clubs app (E7-W02, WP-11-E), on the adopted api snapshot `cb94bc1`:
+  - screen 11 «Notificacions» (`/notificacions`, any session of the club): the api's rendered cards with the template's icon and tone (a left border for WARNING, ERROR and ACCENT), the relative time in the club's zone (`fmtDayRelative`), « · i per SMS» (never with SMS off), [CANVIA DE CLASSE] → 04 with the dog (`/reservar?dogId=`, which 04 now reads), [AGAFA LA PLAÇA] through E5-W01's claim (disabled with «Aquesta plaça ja no està disponible» when the api says so), the other actions as a tap on the card; infinite scroll; entering sends `read-all` once, a card tapped before it lands is read alone, and 03's bell reads `GET /me/home` again when it comes back from the page cache;
+  - screen 12: the «Avisos» block is live (`GET/PUT /me/notification-preferences`): fixed ticks under «App», an e-mail switch per category with the fourth «Comunicats del club» row, «+SMS», the reminder select from the api's options, the push switch; partial `PUT`s 300 ms after the last change, optimistic with rollback and the member's later edits kept over a late answer, sent when the page is left; «Els avisos nous et arribaran en aquest idioma» under «Idioma»; «Aprèn amb AgilityHub ›» with LEARN_LINK;
+  - web push in context only (the push switch or a reminder other than «Mai»): the browser's permission, `PushManager.subscribe` with `GET /branding.pushPublicKey`, `POST /push-subscriptions` with the device label; the refusal and iPhone-install hints; no toggle without `PushManager` or PUSH; logout sends `DELETE /push-subscriptions/{id}` first (never for an impersonated session, never blocking);
+  - the service worker is now ours (`src/sw.ts`, Workbox `injectManifest`): the precache and app shell as before, plus `push` (shows `{title, body, icon, tag}`) and `notificationclick` (focuses the app and opens the payload's route); `main.tsx` registers it through `virtual:pwa-register`, never with `VITE_MOCK=1`;
+  - screen 30: the FAQ in S05 R-05-22 order, plain-text answers with their line breaks, «El club encara no ha publicat preguntes»;
+  - the CLUB_NEWS unsubscribe page `/comunicats/baixa?t=` (anonymous; done, invalid link, retry);
+  - `packages/i18n` gains the `notifications` namespace; `packages/api-client` sends `Idempotency-Key` on the reads and the subscription, and gains a stateful MSW world for the feed (the bell of 03 counts it), the preferences, push subscriptions and unsubscribe tokens, with the scenarios `memberNoSms`, `memberNoPush`, `faqOff`, `learnLinkOff`, `notificationsEmpty` and `notificationsSeatTaken`; members read `FaqReaderView`.
 
 ### Changed
 
+- D9, the log, D10 and «Enviar comunicat» (E7-W01 round 2):
+  - the log's exports ask for the export's own columns (`createdAt, code, recipient, channels, readAt`), and MSW checks them as the api does;
+  - the send's confirmation belongs to the dry run that finished last: another template, or the same one again, needs a new tick;
+  - a save answer for a template no longer open never replaces the one shown, and it drops only the draft it saved;
+  - D10's «Preferències d'avisos» reads `GET /members/{id}/notification-preferences` (mocks-first in `pending.json`), shows a failed read with a retry, and never disappears;
+  - leaving D10 (a link, the browser's back, a reload) sends every unsaved preference with `keepalive`, and the next visit of the record sends it again (a short-lived outbox in the tab's `sessionStorage`);
+  - D15 reads the owners of the whole selection in batches of 100 dogs and refuses to open the dialog when a dog did not come back;
+  - the log's chips show a list (`in`, `nin`) and a range (`between`) as the api echoes them (arrays), and the log's MSW echoes them that way;
+  - `SendAnnouncementDialog`'s D5/D15 tests get 45 s on a loaded host.
 - Screens 25 and 26 and D13 (E6-W02 round 2):
   - One `Idempotency-Key` per submission (CONVENCIONS_API §7, E74). A retry after a network failure keeps its key; any answer from the api retires it, so two deliberate tasks with the same text are two tasks.
   - The tasks list of 26 and of D13's drawer reads every page of `GET /tasks` with «Mostra'n més», with the same actions on every task. After each write, every page read so far is read again.
