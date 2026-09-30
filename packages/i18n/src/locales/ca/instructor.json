@@ -267,6 +267,7 @@
     "classWhereNoRing": "{instructor}{waiting, plural, =0 {} other { · # espera}}",
     "training": "{time} Reserva",
     "trainingWho": "{ring} — {who}",
+    "trainingFull": "{time} Reserva · {ring} — {who}",
     "block": "{from}–{to} Bloqueig",
     "blockReason": "{ring} — {reason}",
     "legend": "{training, select, yes {Reserva = pista reservada per a entrenament (mitja alçada: 30 min) · } other {}}Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista{selected, select, yes { — seleccionada: {day} {time}} other {}}",

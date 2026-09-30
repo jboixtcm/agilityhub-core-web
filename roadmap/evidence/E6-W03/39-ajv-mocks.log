@@ -1,0 +1,17 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run src/mocks/fixtures.contract.test.ts src/mocks/followup-handlers.test.ts src/mocks/agenda-handlers.test.ts src/index.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  4 passed (4)
+      Tests  115 passed (115)
+   Start at  19:08:28
+   Duration  4.43s (tests 40%, transform 32%, import 28%)
+
+  Transform  transforming modules took 3.00s · 32% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

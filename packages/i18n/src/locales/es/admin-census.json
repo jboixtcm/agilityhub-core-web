@@ -445,6 +445,9 @@
     "emptyDescription": "Las tareas de los instructores y las notas de los alumnos llegarán aquí.",
     "selectRow": "Abre la ficha de {name}",
     "error": "No se ha podido cargar el seguimiento.",
-    "dismiss": "Cierra"
+    "dismiss": "Cierra",
+    "readFailed": "No se ha podido marcar como leído el seguimiento de {name}.",
+    "readOffline": "No hay conexión con el servidor.",
+    "readRetry": "Vuelve a intentarlo"
   }
 }

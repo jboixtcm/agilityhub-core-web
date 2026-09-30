@@ -1,8 +1,9 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { type ApiClient, createApiClient } from "@agilityhub/api-client";
 import {
   mockScenario,
   type MockScenario,
   resetFollowupMockState,
+  updateFollowupNoteMock,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -18,13 +19,20 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
+import { delay, http, HttpResponse } from "msw";
+import { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminNavigation } from "../App";
 
 import { FollowUpPage } from "./FollowUpPage";
-import { FOLLOWUP_UNREAD_POLL_MS, useUnreadFollowUp } from "./unread";
+import {
+  FOLLOWUP_UNREAD_POLL_MS,
+  FollowUpReadFailureNotice,
+  UnreadFollowUpContext,
+  useUnreadFollowUp,
+} from "./unread";
 
 const canic: Branding = {
   ...brandingCanicFixture,
@@ -244,14 +252,206 @@ describe("T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13)", () => {
     const requests = recordRequests();
     await renderFollowUp({ path: "/seguiment?size=200" });
     await tableRows();
-    expect(requests.find((request) => request.line.startsWith("GET /followup?"))?.line).toContain(
-      "size=50",
-    );
+    // The list's own read (sorted); the filter menu's counts ask with a filter of their own.
+    expect(
+      requests.find(
+        (request) => request.line.startsWith("GET /followup?") && request.line.includes("sort="),
+      )?.line,
+    ).toContain("size=50");
     expect(
       [
         ...screen.getByRole("combobox", { name: "files per pàgina" }).querySelectorAll("option"),
       ].map((option) => option.value),
     ).toEqual(["20", "50"]);
+  });
+});
+
+/** `POST /followup/{id}/read` answered 404 NOT_FOUND (a row hidden meanwhile, S10 §6) while `refuse` says so. */
+function refuseReads(refuse: () => boolean, wait = 0) {
+  server.use(
+    http.post("*/api/v1/followup/:id/read", async () => {
+      if (wait > 0) await delay(wait);
+      if (!refuse()) return undefined;
+      return HttpResponse.json(
+        { code: "NOT_FOUND", details: {}, message: "Not found", traceId: "t-read" },
+        { status: 404 },
+      );
+    }),
+  );
+}
+
+/** The shell of the back office, reduced to what owns the reads: the counter and its notice. */
+function Shell({ api }: { api: ApiClient }) {
+  const unread = useUnreadFollowUp(api, true);
+  const [page, setPage] = useState("/seguiment");
+  return (
+    <UnreadFollowUpContext.Provider value={unread}>
+      <FollowUpReadFailureNotice unread={unread} />
+      {page === "/seguiment" ? (
+        <FollowUpPage client={api} onNavigate={setPage} />
+      ) : (
+        <p>{`D13 ${page}`}</p>
+      )}
+    </UnreadFollowUpContext.Provider>
+  );
+}
+
+describe("E6-W03 round 2: D14's reads (R-10-13) and its filter values", () => {
+  it("#1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again", async () => {
+    const requests = recordRequests();
+    let refuse = true;
+    refuseReads(() => refuse);
+    await renderFollowUp();
+    await tableRows();
+    fireEvent.click(screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" }));
+    const alert = await screen.findByText(
+      /^No s'ha pogut marcar com a llegit el seguiment de Blat\. No s'ha trobat l'element sol·licitat\./u,
+    );
+    await waitFor(async () => {
+      expect((await tableRows())[1]?.startsWith("* Pau Riera")).toBe(true);
+    });
+    expect(await screen.findByText("5 pendents de llegir")).toBeVisible();
+    const reads = () =>
+      requests.filter((request) => request.line === "POST /followup/f-note-blat/read");
+    expect(reads()).toHaveLength(1);
+    refuse = false;
+    fireEvent.click(
+      within(alert.closest<HTMLElement>(".ah-toast") ?? document.body).getByRole("button", {
+        name: "Torna-ho a provar",
+      }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText(/^No s'ha pogut marcar com a llegit/u)).toBeNull();
+    });
+    expect(await screen.findByText("4 pendents de llegir")).toBeVisible();
+    expect(reads()).toHaveLength(2);
+    // The api answered the first one: the retry is a new submission, with its own key.
+    expect(reads()[1]?.key).not.toBe(reads()[0]?.key);
+  });
+
+  it("#1: the read belongs to the shell, so its failure is said on D13, where the user already is", async () => {
+    let refuse = true;
+    refuseReads(() => refuse, 80);
+    mockScenario("admin");
+    window.history.replaceState(null, "", "/seguiment");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census", "census", "enums", "errors", "common"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <Shell api={client()} />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    await tableRows();
+    fireEvent.click(screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" }));
+    expect(screen.getByText("D13 /alumnes/dog-blat")).toBeVisible();
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(
+      "No s'ha pogut marcar com a llegit el seguiment de Blat. No s'ha trobat l'element sol·licitat.",
+    );
+    refuse = false;
+    fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("alert")).toBeNull();
+    });
+    expect(screen.getByText("D13 /alumnes/dog-blat")).toBeVisible();
+  });
+
+  it("#1: a read that got no answer says so, and its retry keeps the key", async () => {
+    const requests = recordRequests();
+    let offline = true;
+    server.use(
+      http.post("*/api/v1/followup/:id/read", () => (offline ? HttpResponse.error() : undefined)),
+    );
+    await renderFollowUp();
+    await tableRows();
+    fireEvent.click(screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" }));
+    const alert = await screen.findByText(
+      "No s'ha pogut marcar com a llegit el seguiment de Blat. No hi ha connexió amb el servidor.",
+    );
+    offline = false;
+    fireEvent.click(
+      within(alert.closest<HTMLElement>(".ah-toast") ?? document.body).getByRole("button", {
+        name: "Torna-ho a provar",
+      }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText(/^No s'ha pogut marcar com a llegit/u)).toBeNull();
+    });
+    const reads = requests.filter((request) => request.line === "POST /followup/f-note-blat/read");
+    expect(reads).toHaveLength(2);
+    expect(reads[1]?.key).toBe(reads[0]?.key);
+  });
+
+  it("#3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read", async () => {
+    const requests = recordRequests();
+    const { onNavigate } = await renderFollowUp({ scenario: "followupAllRead" });
+    expect(await screen.findByText("0 pendents de llegir")).toBeVisible();
+    expect((await tableRows()).some((row) => row.startsWith("* "))).toBe(false);
+    // Meanwhile Laura edits her note: unread again for the instructor, not yet on this screen.
+    expect(updateFollowupNoteMock("f-note-duna", "2026-08-20T07:30:00Z")).toBe(true);
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+    });
+    expect(await screen.findByText("1 pendent de llegir")).toBeVisible();
+    expect((await tableRows())[0]?.startsWith("* ")).toBe(false);
+    fireEvent.click(
+      screen.getByRole("link", {
+        name: "A veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí",
+      }),
+    );
+    expect(onNavigate).toHaveBeenCalledWith("/alumnes/dog-duna");
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line === "POST /followup/f-note-duna/read"),
+      ).toHaveLength(1);
+    });
+    expect(await screen.findByText("0 pendents de llegir")).toBeVisible();
+  });
+
+  it("#5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes", async () => {
+    const requests = recordRequests();
+    await renderFollowUp({ scenario: "followupMany" });
+    const rows = await tableRows();
+    expect(rows).toHaveLength(50);
+    expect(rows.every((row) => row.startsWith("* ") && row.includes("(alumna)"))).toBe(true);
+    const summary = [...document.querySelectorAll("summary")].find((element) =>
+      element.textContent.trim().startsWith("Filtre"),
+    );
+    if (summary === undefined) throw new TypeError("No filter menu");
+    fireEvent.click(summary);
+    const filters = summary.parentElement ?? document.body;
+    const field = within(filters).getByLabelText("Columna");
+    const options = () =>
+      within(within(filters).getByLabelText("Valor"))
+        .getAllByRole("option")
+        .map((option) => option.textContent);
+    // «Tipus» is the first column, chosen when the menu opens.
+    expect(field).toHaveValue("kind");
+    await waitFor(() => {
+      expect(options()).toEqual(["tasca (3)", "nota d'alumne (54)"]);
+    });
+    fireEvent.change(field, { target: { value: "unread" } });
+    await waitFor(() => {
+      expect(options()).toEqual(["no llegit (54)", "llegit (3)"]);
+    });
+    expect(
+      requests
+        .filter((request) => request.line.startsWith("GET /followup?"))
+        .map((request) => request.line),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("filter=kind:eq:TASK"),
+        expect.stringContaining("filter=kind:eq:MEMBER_NOTE"),
+        expect.stringContaining("filter=unread:eq:true"),
+        expect.stringContaining("filter=unread:eq:false"),
+      ]),
+    );
   });
 });
 

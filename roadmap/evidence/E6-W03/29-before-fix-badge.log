@@ -1,0 +1,80 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/attendance-contrast.test.ts (34 tests | 17 failed | 17 skipped) 19ms
+   ❯ E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 (17)
+     × the badge paints its own foreground and background tokens (not the generic tone on a transparent tint) 8ms
+     × light: the «pending» badge's text is 4.5:1 or more on its background 2ms
+     × light: the «present» badge's text is 4.5:1 or more on its background 1ms
+     × light: the «notified» badge's text is 4.5:1 or more on its background 0ms
+     × light: the «no-show» badge's text is 4.5:1 or more on its background 0ms
+     × dark: the «pending» badge's text is 4.5:1 or more on its background 0ms
+     × dark: the «present» badge's text is 4.5:1 or more on its background 1ms
+     × dark: the «notified» badge's text is 4.5:1 or more on its background 1ms
+     × dark: the «no-show» badge's text is 4.5:1 or more on its background 1ms
+     × the Cànic fixture (dark): the «pending» badge's text is 4.5:1 or more on its background 1ms
+     × the Cànic fixture (dark): the «present» badge's text is 4.5:1 or more on its background 0ms
+     × the Cànic fixture (dark): the «notified» badge's text is 4.5:1 or more on its background 0ms
+     × the Cànic fixture (dark): the «no-show» badge's text is 4.5:1 or more on its background 0ms
+     × the light fixture: the «pending» badge's text is 4.5:1 or more on its background 1ms
+     × the light fixture: the «present» badge's text is 4.5:1 or more on its background 1ms
+     × the light fixture: the «notified» badge's text is 4.5:1 or more on its background 0ms
+     × the light fixture: the «no-show» badge's text is 4.5:1 or more on its background 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the badge paints its own foreground and background tokens (not the generic tone on a transparent tint)
+AssertionError: expected undefined to be 'var(--ah-attendance-badge-fg)' // Object.is equality
+
+- Expected:
+"var(--ah-attendance-badge-fg)"
+
++ Received:
+undefined
+
+ ❯ src/attendance-contrast.test.ts:195:34
+    193|   it("the badge paints its own foreground and background tokens (not t…
+    194|     const painted = rule(attendanceCss, ".ah-badge.ah-attendance-badge…
+    195|     expect(painted.get("color")).toBe("var(--ah-attendance-badge-fg)");
+       |                                  ^
+    196|     expect(painted.get("background")).toBe("var(--ah-attendance-badge-…
+    197|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > light: the «pending» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > light: the «present» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > light: the «notified» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > light: the «no-show» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > dark: the «pending» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > dark: the «present» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > dark: the «notified» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > dark: the «no-show» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the Cànic fixture (dark): the «pending» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the Cànic fixture (dark): the «present» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the Cànic fixture (dark): the «notified» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the Cànic fixture (dark): the «no-show» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the light fixture: the «pending» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the light fixture: the «present» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the light fixture: the «notified» badge's text is 4.5:1 or more on its background
+ FAIL  src/attendance-contrast.test.ts > E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1 > the light fixture: the «no-show» badge's text is 4.5:1 or more on its background
+AssertionError: expected 0 to be greater than or equal to 4.5
+ ❯ src/attendance-contrast.test.ts:207:43
+    205|     const foreground = color(tokens.get("--ah-attendance-badge-fg") ??…
+    206|     const background = color(tokens.get("--ah-attendance-badge-bg") ??…
+    207|     expect(ratio(foreground, background)).toBeGreaterThanOrEqual(4.5);
+       |                                           ^
+    208|   });
+    209| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  17 failed | 17 skipped (34)
+   Start at  19:00:42
+   Duration  1.22s (environment 71%, setup 17%, transform 6%, import 2%, tests 2%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance-contrast.test.ts -t badge

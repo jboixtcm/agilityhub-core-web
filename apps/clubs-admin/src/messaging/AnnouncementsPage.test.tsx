@@ -9,6 +9,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -269,6 +270,61 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
     expect(await within(dialog).findByRole("status")).toHaveTextContent("T'hem enviat la prova");
   });
 
+  it("R-11-01 in [Vista prèvia]: a language without its own text is previewed with the club's default language, as a member of that language would receive it", async () => {
+    const requests = recordRequests();
+    await renderD9();
+    await editor();
+    fireEvent.change(screen.getByLabelText("Idioma del text"), { target: { value: "es" } });
+    fireEvent.change(body(), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "Vista prèvia" }));
+    await screen.findByRole("dialog", { name: "Vista prèvia" });
+    let draft: { body: string; title: string } | undefined;
+    await waitFor(() => {
+      const preview = requests.find(
+        (request) =>
+          request.line === "POST /message-templates/tpl-n-28/preview" && request.body !== undefined,
+      )?.body as { draft: { body: string; title: string }; locale: string } | undefined;
+      expect(preview?.locale).toBe("es");
+      draft = preview?.draft;
+    });
+    // The title has its es text; the emptied es body is the ca one, with the code keys.
+    expect(draft?.title).toBe("Comunicación de baja como asociado");
+    expect(draft?.body).toMatch(/^Hola \[\[member_first_name\]\],\net comuniquem que en data/u);
+  });
+
+  it("[DESA] on its way: the texts, chips and cells are read-only until the api answers, so nothing typed meanwhile is dropped by the answer", async () => {
+    let release: () => void = () => undefined;
+    const answered = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      // Holds the save, then falls through to the stateful mock (no response returned).
+      http.put("*/api/v1/message-templates/:id", async () => {
+        await answered;
+      }),
+    );
+    await renderD9();
+    await editor();
+    fireEvent.change(body(), { target: { value: "Hola [[persona_nom]], fins aviat!" } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(body()).toHaveAttribute("readonly");
+    });
+    expect(title()).toHaveAttribute("readonly");
+    expect(screen.getByRole("button", { name: "Document" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Correcte" })).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: "Instructors · App" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Insereix [[gos_nom]]" })).toBeDisabled();
+    fireEvent.change(body(), { target: { value: "Un text escrit mentre es desa" } });
+    expect(body().value).toBe("Hola [[persona_nom]], fins aviat!");
+    release();
+    await waitFor(() => {
+      expect(body()).not.toHaveAttribute("readonly");
+    });
+    expect(body().value).toBe("Hola [[persona_nom]], fins aviat!");
+    expect(save()).toBeDisabled();
+  });
+
   it("a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version", async () => {
     const requests = recordRequests();
     await renderD9();
@@ -365,12 +421,25 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
     });
   });
 
-  it("errors by code where they belong: a missing required variable under the text (VALIDATION_ERROR missingVariables), a disabled mandatory template never offered", async () => {
+  it("errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe", async () => {
     await renderD9({ path: "/comunicats?template=tpl-n-02" });
     await editor();
     fireEvent.change(body(), { target: { value: "Ja tens accés a l'app del club." } });
     fireEvent.click(save());
     expect(await screen.findByText("Falta la variable [[enllac]] al text")).toBeVisible();
+    expect(body()).toHaveAccessibleDescription("Falta la variable [[enllac]] al text");
+    expect(body()).toHaveAttribute("aria-invalid", "true");
+    fireEvent.change(body(), { target: { value: "Entra-hi persona_nom]] amb [[enllac]]." } });
+    // An edit clears the refusal it answered.
+    expect(body()).not.toHaveAttribute("aria-invalid");
+    fireEvent.click(save());
+    expect(await screen.findByText("La sintaxi de la plantilla no és vàlida.")).toBeVisible();
+    expect(body()).toHaveAccessibleDescription("La sintaxi de la plantilla no és vàlida.");
+    fireEvent.change(body(), { target: { value: "Entra-hi, [[sabor]], amb [[enllac]]." } });
+    fireEvent.click(save());
+    expect(await screen.findByText("La plantilla conté una variable desconeguda.")).toBeVisible();
+    expect(body()).toHaveAccessibleDescription("La plantilla conté una variable desconeguda.");
+    expect(title()).not.toHaveAttribute("aria-invalid");
   });
 
   it("«＋ Nova plantilla» creates a CUSTOM template of the chosen category and opens it; the admin's unsaved edits stay with their template while another one is open", async () => {

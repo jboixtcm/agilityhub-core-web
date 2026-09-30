@@ -158,6 +158,47 @@ test.describe("E6-W03 T-10-29 D12 «Agenda de la setmana» against MSW", () => {
     ).toHaveText("—");
   });
 
+  test("round 2 #4 (review #6, R-10-15): a training's «{guia} + {gos}» clipped by the half height is whole on focus and on hover, and is the cell's name", async ({
+    page,
+  }) => {
+    await signIn(page, "instructor");
+    await page.goto(`${baseUrl}/agenda`);
+    const full = "19:00 Reserva · Carretera — Sergio + Thai";
+    const training = page.getByRole("button", { name: full });
+    await expect(training.locator("xpath=..")).toHaveAttribute("title", full);
+    /** Whether the cell or its «{pista} — {guia} + {gos}» line cuts its text. */
+    const clipped = () =>
+      training.evaluate((cell) => {
+        const cuts = (element: Element | null) =>
+          element !== null &&
+          (element.scrollWidth > element.clientWidth + 1 ||
+            element.scrollHeight > element.clientHeight + 1);
+        return cuts(cell) || cuts(cell.querySelector(".ah-schedule-cell__subtitle"));
+      });
+    const height = () => training.evaluate((cell) => cell.getBoundingClientRect().height);
+    // At rest: half height, and the pair does not fit (the committed screenshot's state).
+    await page.mouse.move(0, 0);
+    const rest = await height();
+    expect(await clipped()).toBe(true);
+    // The keyboard reaches it: focused, it grows until the whole text fits.
+    await training.focus();
+    await expect.poll(clipped).toBe(false);
+    expect(await height()).toBeGreaterThan(rest);
+    await expect(training.locator(".ah-schedule-cell__subtitle")).toHaveText(
+      "Carretera — Sergio + Thai",
+    );
+    // So does the pointer, and a press keeps it open.
+    await training.blur();
+    await expect.poll(clipped).toBe(true);
+    await training.hover();
+    await expect.poll(clipped).toBe(false);
+    await training.click();
+    await expect(training).toHaveAttribute("aria-pressed", "true");
+    await training.blur();
+    await page.mouse.move(0, 0);
+    expect(await clipped()).toBe(false);
+  });
+
   test("the instructor filter asks for «Els meus» without hiding trainings or blocks", async ({
     page,
   }) => {

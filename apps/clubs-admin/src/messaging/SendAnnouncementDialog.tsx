@@ -230,7 +230,9 @@ export function SendAnnouncementDialog({
             >
               {templates.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.code == null ? item.name : `${item.name} (${item.code})`}
+                  {item.code == null
+                    ? item.name
+                    : `${item.name} ${t("admin-messaging:templates.code", { code: item.code })}`}
                 </option>
               ))}
             </Select>

@@ -1,0 +1,2410 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda.test.tsx (16 tests | 1 failed | 15 skipped) 769ms
+   ❯ T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) (7)
+     × mockup D12: «‹ Setmana actual › del 10 al 15 d'agost», dl–ds, the rows at their hour lines, a training at half height, the block with its reason and note, the classes as delivered 765ms
+ ❯ src/followup/followup.test.tsx (18 tests | 5 failed | 13 skipped) 41005ms
+   ❯ E6-W03 round 2: D14's reads (R-10-13) and its filter values (5)
+     × #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again 10418ms
+     × #1: the read belongs to the shell, so its failure is said on D13, where the user already is 9ms
+     × #1: a read that got no answer says so, and its retry keeps the key 10119ms
+     × #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read 10139ms
+     × #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes 10316ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again
+TestingLibraryElementError: Unable to find an element with the text: /^No s'ha pogut marcar com a llegit el seguiment de Blat\. No s'ha trobat l'element sol·licitat\./u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+    ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+    ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/followup/followup.test.tsx:307:32
+    305|     await tableRows();
+    306|     fireEvent.click(screen.getByRole("link", { name: "Aquesta setmana …
+    307|     const alert = await screen.findByText(
+       |                                ^
+    308|       /^No s'ha pogut marcar com a llegit el seguiment de Blat\. No s'…
+    309|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: the read belongs to the shell, so its failure is said on D13, where the user already is
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `Shell`.
+ ❯ createFiberFromTypeAndProps ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5021:28
+ ❯ createFiberFromElement ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5035:14
+ ❯ createChild ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:6338:26
+ ❯ reconcileChildrenArray ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:6670:25
+ ❯ reconcileChildFibersImpl ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:6993:30
+ ❯ ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7098:33
+ ❯ reconcileChildren ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:9701:13
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:12171:13
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: a read that got no answer says so, and its retry keeps the key
+TestingLibraryElementError: Unable to find an element with the text: No s'ha pogut marcar com a llegit el seguiment de Blat. No hi ha connexió amb el servidor.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+    ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+    ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/followup/followup.test.tsx:374:32
+    372|     await tableRows();
+    373|     fireEvent.click(screen.getByRole("link", { name: "Aquesta setmana …
+    374|     const alert = await screen.findByText(
+       |                                ^
+    375|       "No s'ha pogut marcar com a llegit el seguiment de Blat. No hi h…
+    376|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read
+AssertionError: expected [] to have a length of 1 but got +0
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"followup"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"followup__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mSeguiment alumnes[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m1 pendent de llegir[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Què es mostra"[39m
+              [33mclass[39m=[32m"followup__chips"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTot[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNotes d'alumnes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mMarcar-ho tot com a llegit[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca al seguiment[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca al seguiment"[39m
+                [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"kind"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"unread"[39m
+                    [36m>[39m
+                      [0mPendent de llegir[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"dogId"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+           ...
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/followup/followup.test.tsx:412:9
+    410|       expect(
+    411|         requests.filter((request) => request.line === "POST /followup/…
+    412|       ).toHaveLength(1);
+       |         ^
+    413|     });
+    414|     expect(await screen.findByText("0 pendents de llegir")).toBeVisibl…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes
+AssertionError: expected [ 'nota d\'alumne (50)' ] to deeply equal [ 'tasca (3)', 'nota d\'alumne (54)' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"followup"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"followup__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mSeguiment alumnes[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m54 pendents de llegir[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Què es mostra"[39m
+              [33mclass[39m=[32m"followup__chips"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTot[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNotes d'alumnes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mMarcar-ho tot com a llegit[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca al seguiment[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca al seguiment"[39m
+                [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [33mopen[39m=[32m""[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"kind"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"unread"[39m
+                    [36m>[39m
+                      [0mPendent de llegir[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"dogId"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</option>[39m
+     ...
+
+- Expected
++ Received
+
+  [
+-   "tasca (3)",
+-   "nota d'alumne (54)",
++   "nota d'alumne (50)",
+  ]
+
+ ❯ src/followup/followup.test.tsx:437:25
+    435|     expect(field).toHaveValue("kind");
+    436|     await waitFor(() => {
+    437|       expect(options()).toEqual(["tasca (3)", "nota d'alumne (54)"]);
+       |                         ^
+    438|     });
+    439|     fireEvent.change(field, { target: { value: "unread" } });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > mockup D12: «‹ Setmana actual › del 10 al 15 d'agost», dl–ds, the rows at their hour lines, a training at half height, the block with its reason and note, the classes as delivered
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "8:00 Reserva · Muntanya — Pau + Blat"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"week-agenda__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Agenda de la setmana":
+  [36m<h1[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  Name "Reservar o bloquejar pista (sense alumne)":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ring-block-card__title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Setmana anterior":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Setmana anterior"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "PDF":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "A i B4/5Central · Estel":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "C i sup.3/5passar llista pendentMuntanya · Marc":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "C i sup.0/5Muntanya · Marc · anul·lada":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--muted ah-schedule-cell--struck"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "A i B5/5Central · Estel · 1 espera":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "C i sup.4/5Muntanya · Marc":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Cadells3/5Cadells · Marc":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "A5/5Muntanya · Estel":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "B i C5/5Central · Marc · 3 espera":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "B i C4/5passar llista pendentCentral · Marc · 2 espera":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Cadells2/5Cadells · Núria":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "A i B3/5Central · Estel":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "B i C4/5Central · Marc":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Teràpia1/1Petita · Núria":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Cadells2/5Cadells · Marc":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Particular1/1Petita · Estel":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "A i B4/5Central · Estel":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reserva de pista":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-chip ring-block-card__chip ring-block-card__chip--on"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bloqueig":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-chip ring-block-card__chip"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reserva":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary ring-block-card__submit"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"week-agenda__current"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "Filtres de l'agenda":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+    [33mclass[39m=[32m"week-agenda__filters"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  Name "Tipus":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tipus"[39m
+    [33mclass[39m=[32m"ring-block-card__kinds"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  Name "Dia i hores":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Dia i hores"[39m
+    [33mclass[39m=[32m"ring-block-card__when"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Instructor":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Instructor"[39m
+  [36m/>[39m
+
+  Name "Filtre de pista":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Filtre de pista"[39m
+  [36m/>[39m
+
+  Name "Motiu":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Motiu"[39m
+    [33mclass[39m=[32m"ring-block-card__select"[39m
+  [36m/>[39m
+
+  Name "Dia":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Dia"[39m
+  [36m/>[39m
+
+  Name "De":
+  [36m<select[39m
+    [33maria-label[39m=[32m"De"[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "A":
+  [36m<select[39m
+    [33maria-label[39m=[32m"A"[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Pista"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Instructor: Tots":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Instructor: Els meus":
+  [36m<option[39m
+    [33mvalue[39m=[32m"me"[39m
+  [36m/>[39m
+
+  Name "Instructor: Estel":
+  [36m<option[39m
+    [33mvalue[39m=[32m"instructor-estel"[39m
+  [36m/>[39m
+
+  Name "Instructor: Marc":
+  [36m<option[39m
+    [33mvalue[39m=[32m"instructor-marc"[39m
+  [36m/>[39m
+
+  Name "Instructor: Núria":
+  [36m<option[39m
+    [33mvalue[39m=[32m"instructor-nuria"[39m
+  [36m/>[39m
+
+  Name "Totes les pistes":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Muntanya":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-muntanya"[39m
+  [36m/>[39m
+
+  Name "Central":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-central"[39m
+  [36m/>[39m
+
+  Name "Carretera":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-carretera"[39m
+  [36m/>[39m
+
+  Name "Cadells":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-cadells"[39m
+  [36m/>[39m
+
+  Name "Petita":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-petita"[39m
+  [36m/>[39m
+
+  Name "motiu: classe particular":
+  [36m<option[39m
+    [33mvalue[39m=[32m"PRIVATE_CLASS"[39m
+  [36m/>[39m
+
+  Name "motiu: teràpia":
+  [36m<option[39m
+    [33mvalue[39m=[32m"THERAPY"[39m
+  [36m/>[39m
+
+  Name "motiu: preparació":
+  [36m<option[39m
+    [33mvalue[39m=[32m"PREPARATION"[39m
+  [36m/>[39m
+
+  Name "motiu: altres":
+  [36m<option[39m
+    [33mvalue[39m=[32m"OTHER"[39m
+  [36m/>[39m
+
+  Name "dl 10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-10"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-11"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-12"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-13"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-14"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-15"[39m
+  [36m/>[39m
+
+  Name "dg 16":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-16"[39m
+  [36m/>[39m
+
+  Name "dl 17":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-17"[39m
+  [36m/>[39m
+
+  Name "dt 18":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-18"[39m
+  [36m/>[39m
+
+  Name "dc 19":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-19"[39m
+  [36m/>[39m
+
+  Name "dj 20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-20"[39m
+  [36m/>[39m
+
+  Name "dv 21":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-21"[39m
+  [36m/>[39m
+
+  Name "ds 22":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-22"[39m
+  [36m/>[39m
+
+  Name "dg 23":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-23"[39m
+  [36m/>[39m
+
+  Name "dl 24":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-24"[39m
+  [36m/>[39m
+
+  Name "dt 25":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-25"[39m
+  [36m/>[39m
+
+  Name "dc 26":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-26"[39m
+  [36m/>[39m
+
+  Name "dj 27":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-27"[39m
+  [36m/>[39m
+
+  Name "dv 28":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-28"[39m
+  [36m/>[39m
+
+  Name "ds 29":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-29"[39m
+  [36m/>[39m
+
+  Name "dg 30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-30"[39m
+  [36m/>[39m
+
+  Name "dl 31":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-08-31"[39m
+  [36m/>[39m
+
+  Name "dt 1":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-01"[39m
+  [36m/>[39m
+
+  Name "dc 2":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-02"[39m
+  [36m/>[39m
+
+  Name "dj 3":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-03"[39m
+  [36m/>[39m
+
+  Name "dv 4":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-04"[39m
+  [36m/>[39m
+
+  Name "ds 5":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-05"[39m
+  [36m/>[39m
+
+  Name "dg 6":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-06"[39m
+  [36m/>[39m
+
+  Name "dl 7":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-07"[39m
+  [36m/>[39m
+
+  Name "dt 8":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-08"[39m
+  [36m/>[39m
+
+  Name "dc 9":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-09"[39m
+  [36m/>[39m
+
+  Name "dj 10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-10"[39m
+  [36m/>[39m
+
+  Name "dv 11":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-11"[39m
+  [36m/>[39m
+
+  Name "ds 12":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-12"[39m
+  [36m/>[39m
+
+  Name "dg 13":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-13"[39m
+  [36m/>[39m
+
+  Name "dl 14":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-14"[39m
+  [36m/>[39m
+
+  Name "dt 15":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-15"[39m
+  [36m/>[39m
+
+  Name "dc 16":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-16"[39m
+  [36m/>[39m
+
+  Name "dj 17":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-17"[39m
+  [36m/>[39m
+
+  Name "dv 18":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-18"[39m
+  [36m/>[39m
+
+  Name "ds 19":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-19"[39m
+  [36m/>[39m
+
+  Name "dg 20":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-20"[39m
+  [36m/>[39m
+
+  Name "dl 21":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-21"[39m
+  [36m/>[39m
+
+  Name "dt 22":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-22"[39m
+  [36m/>[39m
+
+  Name "dc 23":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-23"[39m
+  [36m/>[39m
+
+  Name "dj 24":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-24"[39m
+  [36m/>[39m
+
+  Name "dv 25":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-25"[39m
+  [36m/>[39m
+
+  Name "ds 26":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-26"[39m
+  [36m/>[39m
+
+  Name "dg 27":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-27"[39m
+  [36m/>[39m
+
+  Name "dl 28":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-28"[39m
+  [36m/>[39m
+
+  Name "dt 29":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-29"[39m
+  [36m/>[39m
+
+  Name "dc 30":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-09-30"[39m
+  [36m/>[39m
+
+  Name "dj 1":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-01"[39m
+  [36m/>[39m
+
+  Name "dv 2":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-02"[39m
+  [36m/>[39m
+
+  Name "ds 3":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-03"[39m
+  [36m/>[39m
+
+  Name "dg 4":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-04"[39m
+  [36m/>[39m
+
+  Name "dl 5":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-05"[39m
+  [36m/>[39m
+
+  Name "dt 6":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-06"[39m
+  [36m/>[39m
+
+  Name "dc 7":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-07"[39m
+  [36m/>[39m
+
+  Name "dj 8":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-08"[39m
+  [36m/>[39m
+
+  Name "dv 9":
+  [36m<option[39m
+    [33mvalue[39m=[32m"2026-10-09"[39m
+  [36m/>[39m
+
+  Name "Muntanya":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-muntanya"[39m
+  [36m/>[39m
+
+  Name "Central":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-central"[39m
+  [36m/>[39m
+
+  Name "Carretera":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-carretera"[39m
+  [36m/>[39m
+
+  Name "Cadells":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-cadells"[39m
+  [36m/>[39m
+
+  Name "Petita":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ring-petita"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Agenda de la setmana del 10 al 15 d’agost":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+    [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Agenda de la setmana del 10 al 15 d’agost":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "dl 10 dt 11 dc 12 dj 13 dv 14 ds 15":
+  [36m<tr />[39m
+
+  Name "8:00 8:00 ReservaMuntanya — Pau + Blat":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "8:30 A i B4/5Central · Estel C i sup.3/5passar llista pendentMuntanya · Marc C i sup.0/5Muntanya · Marc · anul·lada A i B5/5Central · Estel · 1 espera C i sup.4/5Muntanya · Marc 8:30 ReservaCarretera — Júlia + Kira Cadells3/5Cadells · Marc A5/5Muntanya · Estel B i C5/5Central · Marc · 3 espera":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "16:00 16:00–18:00 BloqueigCarretera — manteniment":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row week-agenda__hour"[39m
+  [36m/>[39m
+
+  Name "18:50 B i C4/5passar llista pendentCentral · Marc · 2 espera Cadells2/5Cadells · Núria A i B3/5Central · Estel B i C4/5Central · Marc Teràpia1/1Petita · Núria Cadells2/5Cadells · Marc Particular1/1Petita · Estel A i B4/5Central · Estel":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row week-agenda__hour"[39m
+  [36m/>[39m
+
+  Name "19:00 19:00 ReservaCarretera — Sergio + Thai":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row week-agenda__hour"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+  [36m/>[39m
+
+  Name "8:00 ReservaMuntanya — Pau + Blat":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A i B4/5Central · Estel C i sup.3/5passar llista pendentMuntanya · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "C i sup.0/5Muntanya · Marc · anul·lada":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A i B5/5Central · Estel · 1 espera C i sup.4/5Muntanya · Marc 8:30 ReservaCarretera — Júlia + Kira":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells3/5Cadells · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A5/5Muntanya · Estel B i C5/5Central · Marc · 3 espera":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "16:00–18:00 BloqueigCarretera — manteniment":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "B i C4/5passar llista pendentCentral · Marc · 2 espera Cadells2/5Cadells · Núria":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A i B3/5Central · Estel":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "B i C4/5Central · Marc Teràpia1/1Petita · Núria":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells2/5Cadells · Marc Particular1/1Petita · Estel":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A i B4/5Central · Estel":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "19:00 ReservaCarretera — Sergio + Thai":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "dl 10":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "8:00":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "8:30":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "16:00":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "18:50":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "19:00":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"week-agenda__legend"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"week-agenda"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"week-agenda__header"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mAgenda de la setmana[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"week-agenda__navigator"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"week-agenda__current"[39m
+          [36m>[39m
+            [0mSetmana actual[0m
+          [36m</strong>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"week-agenda__range"[39m
+          [36m>[39m
+            [0mdel 10 al 15 d’agost[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+          [33mclass[39m=[32m"week-agenda__filters"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mInstructor[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Instructor"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mInstructor: Tots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"me"[39m
+              [36m>[39m
+                [0mInstructor: Els meus[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-estel"[39m
+              [36m>[39m
+                [0mInstructor: Estel[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-marc"[39m
+              [36m>[39m
+                [0mInstructor: Marc[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-nuria"[39m
+              [36m>[39m
+                [0mInstructor: Núria[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mFiltre de pista[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Filtre de pista"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les pistes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-muntanya"[39m
+              [36m>[39m
+                [0mMuntanya[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-central"[39m
+              [36m>[39m
+                [0mCentral[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-carretera"[39m
+              [36m>[39m
+                [0mCarretera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-cadells"[39m
+              [36m>[39m
+                [0mCadells[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-petita"[39m
+              [36m>[39m
+                [0mPetita[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPDF[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+ ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/week-agenda.test.tsx:210:35
+    208|     // Round 2 #4 (review #6): the half height may clip the pair; the …
+    209|     // name and tooltip, and a press keeps it open (the browser test c…
+    210|     const trainingButton = screen.getByRole("button", {
+       |                                   ^
+    211|       name: "8:00 Reserva · Muntanya — Pau + Blat",
+    212|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 28 skipped (34)
+   Start at  19:00:44
+   Duration  44.30s (tests 88%, transform 6%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/followup/followup.test.tsx src/instructor/week-agenda.test.tsx -t round 2|mockup D12

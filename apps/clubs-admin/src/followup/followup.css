@@ -90,3 +90,11 @@
 .followup__level {
   min-width: 1.75rem;
 }
+
+/* A failed row read (round 2 #1): its message and [Torna-ho a provar], on any page. */
+.followup-read-failure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}

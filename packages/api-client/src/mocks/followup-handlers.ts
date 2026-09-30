@@ -24,6 +24,7 @@ import {
   resetInboxState,
   storedObservations,
   syncFollowupVariant,
+  syncInboxVariant,
   taskView,
 } from "./fixtures/followup";
 import { fieldsProjection } from "./list-fields";
@@ -50,10 +51,22 @@ export function resetFollowupMockState(): void {
   resetInboxState();
 }
 
-/** The current scenario, with its variant of the tasks world in place (`tasksMany`). */
+/**
+ * A member edits a note of D14 (a test's «meanwhile»): it moves to `at`, so it is unread again for
+ * whoever read it before (R-10-13). `false` = no such row.
+ */
+export function updateFollowupNoteMock(id: string, at: string): boolean {
+  const item = inboxState.items.find((candidate) => candidate.id === id);
+  if (item?.kind !== "MEMBER_NOTE") return false;
+  item.activityAt = at;
+  return true;
+}
+
+/** The current scenario, with its variants of the tasks and D14 worlds in place. */
 function followupScenario(): MockScenarioDefinition {
   const scenario = currentMockScenario();
   syncFollowupVariant(scenario.followup);
+  syncInboxVariant(scenario.inbox);
   return scenario;
 }
 

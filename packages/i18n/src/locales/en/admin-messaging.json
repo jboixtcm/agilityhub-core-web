@@ -112,6 +112,7 @@
     "emptyDescription": "Change the filters or the search to see more.",
     "error": "The notifications could not be loaded.",
     "noValue": "—",
+    "valueSeparator": ", ",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

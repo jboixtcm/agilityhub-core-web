@@ -94,6 +94,12 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
       expect(rows()).toHaveLength(4);
     });
     expect(rows().every((row) => row.textContent.includes("Laura Serra Vidal"))).toBe(true);
+    // The applied filter reads the member's name, not the api's id.
+    expect(document.querySelector(".ah-universal-list__filter-menu > summary")).toHaveTextContent(
+      "Abonat = «Laura Serra Vidal»",
+    );
+    expect(screen.getByText("Abonat = «Laura Serra Vidal»")).toBeInTheDocument();
+    expect(screen.queryByText(/member-laura/u)).toBeNull();
     expect(
       lines.some(
         (line) =>

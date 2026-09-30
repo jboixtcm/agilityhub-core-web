@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/NotificationLogPage.test.tsx (3 tests | 1 failed) 206ms
+   ❯ E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) (3)
+     × ?filter=memberId:eq:… (D10's link) reads only that member's notifications, and a row opens its detail with every delivery and the destinations masked 41ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > ?filter=memberId:eq:… (D10's link) reads only that member's notifications, and a row opens its detail with every delivery and the destinations masked
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Abonat = «Laura Serra Vidal»[39m
+Received:
+[31m  Filtre (1): Abonat = «member-laura»▾[39m
+ ❯ src/messaging/NotificationLogPage.test.tsx:98:81
+     96|     expect(rows().every((row) => row.textContent.includes("Laura Serra…
+     97|     // The applied filter reads the member's name, not the api's id.
+     98|     expect(document.querySelector(".ah-universal-list__filter-menu > s…
+       |                                                                                 ^
+     99|       "Abonat = «Laura Serra Vidal»",
+    100|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  18:37:07
+   Duration  1.24s (transform 37%, environment 24%, tests 18%, import 16%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/NotificationLogPage.test.tsx

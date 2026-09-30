@@ -1,0 +1,4 @@
+pending paths: []
+pending schemas: ['DogPatchPendingFields', 'DogPendingFields', 'LicensePendingFields', 'LicenseWithPendingFields', 'PlanBillingMode']
+ packages/api-client/openapi/pending.json | 163 +------------------------------
+ 1 file changed, 1 insertion(+), 162 deletions(-)

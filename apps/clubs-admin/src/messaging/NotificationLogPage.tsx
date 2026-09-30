@@ -224,6 +224,19 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     },
   ];
 
+  /** An applied filter's chip: the member's name (from the rows the api sent) for `memberId`. */
+  const valueLabel = (field: string, value: string) =>
+    field === "memberId"
+      ? value
+          .split(",")
+          .map(
+            (id) =>
+              data?.items.find((row) => row.recipient?.memberId === id)?.recipient?.displayName ??
+              id,
+          )
+          .join(t("admin-messaging:log.valueSeparator"))
+      : enumLabel(field, value);
+
   const applied = (data?.appliedFilters ?? []).map((filter) => {
     const value = filterValue(filter.value);
     return {
@@ -232,7 +245,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         filterColumns.find((column) => column.key === filter.field)?.label ?? filter.field,
       operator: filter.op,
       value,
-      valueLabel: enumLabel(filter.field, value),
+      valueLabel: valueLabel(filter.field, value),
     };
   });
 

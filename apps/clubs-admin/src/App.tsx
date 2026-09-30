@@ -52,7 +52,11 @@ import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
 import { FollowUpPage } from "./followup/FollowUpPage";
-import { UnreadFollowUpContext, useUnreadFollowUp } from "./followup/unread";
+import {
+  FollowUpReadFailureNotice,
+  UnreadFollowUpContext,
+  useUnreadFollowUp,
+} from "./followup/unread";
 import { StudentRecordPage } from "./instructor/StudentRecordPage";
 import { StudentsPage } from "./instructor/StudentsPage";
 import { WeekAgendaPage } from "./instructor/WeekAgendaPage";
@@ -697,6 +701,8 @@ function AdminShell({
         roles={session.roles}
       />
       <main className="admin-shell__content">
+        {/* A D14 row read that failed (R-10-13): said here, on whatever page the user went to. */}
+        <FollowUpReadFailureNotice unread={unreadFollowUp} />
         <CountersRefreshContext.Provider value={refreshCounters}>
           <UnreadFollowUpContext.Provider value={unreadFollowUp}>
             {children}

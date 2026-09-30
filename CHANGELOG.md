@@ -104,6 +104,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - the sidebar's `weekly-agenda` entry replaces `agenda` (`shell:nav.weeklyAgenda`) and sits with «Alumnes» in a new «Instructor» group (mockups D12/D13), and «Persones» shows «Seguiment alumnes» to instructors.
 
   `packages/ui` exports `useAttendanceSheet` (the sheet of 21 and D12 over a transport), `AttendanceBadgeCycler` and `nextAttendanceState`, and the universal list takes `rowClassName`, `pageSizes` and an optional status select; `packages/api-client` exports `attendanceSheetTransport` and sends `Idempotency-Key` on `POST /followup/{id}/read` and `POST /followup/read-all`. The MSW S10 world gains D12's week (its classes are sheets of the same world), the PDF, and D14's rows with per-account read marks.
+- Add the club's notification templates, announcements and notification log to the back office (E7-W01, S11 WP-11-D), on the adopted api snapshot `cb94bc1` (S11 contract of api E7-T01):
+  - D9 «Comunicats i plantilles» (`/comunicats?template=`, ADMIN):
+    - the four category counts of `countsByCategory` (a row filters the list) and the templates with their icon, «(N-xx)», «desactivada» and «← editant»;
+    - «＋ Nova plantilla» (a CUSTOM template of PERSONAL, CLUB_NEWS or CLUB_CHANGES);
+    - the editor: the title and body per club language («idioma: CA ▾ (amb versió ES)»), the variable chips with the api's labels (saved as the code keys), the icon and colour chips, the category (a select on CUSTOM only), «SMS (text curt)» when an SMS cell may be active, and the channel × audience matrix limited to `caps` (inert «—» outside, «segons prefer.», a read-only Push column; SMS and Push columns follow the modules);
+    - [Vista prèvia] of the unsaved draft per language, with the e-mail in a sandboxed frame, the SMS length, segments and truncation note, the api's warnings, and «Envia'm una prova»;
+    - [DESA] with the version (409 `STALE_VERSION` → «Algú ha modificat aquesta plantilla; recarrega-la» and [Recarrega], which keeps the admin's own edits), «Restaura el text per defecte», «Desactiva»/«Activa», «Elimina» and `LastChange`;
+    - every refusal is shown by its code where it belongs.
+  - «Enviar comunicat» from D9, from a D5 selection or from D5's current filters and search, and from a D15 selection (dogs → their owners, once each): «S'enviarà a {n} abonats» from the api's `dryRun`, [ENVIA] only after that count and the explicit confirmation, one `Idempotency-Key` per submission, «Comunicat enviat a {n} abonats» with «Avisos enviats ›».
+  - «Avisos enviats» (`/notificacions`, ADMIN, no sidebar entry): the universal list of `GET /notifications` (date, code, category, recipient, one chip per delivery with its status, read), its filters, saved views and exports, and a drawer with the rendered texts, the trace and every delivery with the destination masked.
+  - D10's «Preferències d'avisos» becomes `NotificationPreferencesBlock`:
+    - D10's wording, with the fourth «Comunicats del club» row (B21), «+SMS», the reminder options of the api and the push toggle;
+    - partial `PUT`s 300 ms after the last change, optimistic with rollback;
+    - a waiting change is sent before the page is left;
+    - «Avisos enviats ›» opens the member's notifications.
+  - `packages/i18n` gains the `admin-messaging` namespace and the S11 enums; `packages/api-client` sends `Idempotency-Key` on `POST /message-templates/{id}/send`, drops the notification preferences from `pending.json`, and has a stateful MSW S11 world (templates, preview, reset, archive, send with `dryRun`, the log, and the scenarios `messagingNoSms` and `messagingNoPush`).
 
 ### Changed
 
@@ -116,6 +132,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - 25 drops a `?tipus=` the club does not offer and reads «Tot» again.
   - The MSW scenario `tasksMany` gives Duna 52 tasks.
 - «Entra com l'abonat» handoffs (E4-W18 round 2, E47): the tab gives up its refresh cookie before the code is sent (`exchanging` in session storage), so a reload while `/oauth2/token` has not answered ends the handoff with «Aquest enllaç ja no és vàlid» instead of restoring the tab's own session; the back office and 01 enter a session that a background recovery opened before their retry listened. The E4-W16 core stage's «fails before» is proven with two negative runs (no `launchUrl`, a first password `PUT` answering 401).
+- D12 and D14 after the E6-W03 review (round 2):
+  - a D14 row's read belongs to the shell. If it fails (an api code, or no answer), the row is unread again, the counter is read again, and the reason shows with «Torna-ho a provar» on whatever page the user is (D13 included); a retry keeps the key only after no answer;
+  - every row activation sends its read, also on a row shown «llegit» (a note may have changed meanwhile); only a row shown unread takes one off the counter at once;
+  - D14's «Tipus» and «Pendent de llegir» filter values are the contract's, each counted by the api (`totalItems`), whatever the first page holds;
+  - D12's attendance badge has its own foreground and background tokens (the state's colour pulled towards the text colour, on the state's tint over the surface): 4.5:1 or more in the light and dark themes and in the club fixtures;
+  - a D12 training cell keeps its half height; its whole «{hora} Reserva · {pista} — {guia} + {gos}» is its accessible name and tooltip, and it grows over the next row on hover, on focus and while pressed;
+  - the MSW scenario `followupMany` (52 more unread notes, so the first page holds only unread notes) and `updateFollowupNoteMock`.
 - The attendance sheet after a refusal (E6-W03 steps 11–14, E6-W01 round-2 review): a list read again drops the choices it no longer allows (`mergeSheet` takes the sheet's permissions and its base rows are required), a save's `Idempotency-Key` is kept only after a network failure, the student search's «Mostra'n més» answers at once after a new query, and a save no longer fades every circle (only those the api refuses).
 
 - Corrections of the global audit of 26-09 (E4-W16; INC-15 web half, INC-18…INC-22, INC-24 web half, INC-26…INC-29):

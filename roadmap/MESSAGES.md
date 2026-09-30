@@ -1548,3 +1548,57 @@ Blocking: no.
 - **Answers (ruling E75):** the menu reads `GET /followup/unread-count`, and the dashboard's counter belongs to D1's tile; where a mockup's counts and a rule disagree, the rule wins; the register keeps its search box, since api E5-T29's round 2 makes `/training-bookings` and `/ring-blocks` search, and E6-T06 does the same for `/followup`.
 - **Docs:** `DECISIONS_PENDENTS.md` v2.7 (E75), `CONVENCIONS_API.md` §4 (which lists search), S09 §2, S10 §6 and `INCIDENCIES_OBERTES.md` v2.1 (INC-49).
 Blocking: no.
+
+## 2026-09-30 · executor → organizer · E7-W01
+@organizer **E7-W01 is awaiting verification.** D9, «Enviar comunicat» (D9, D5, D15), the log `/notificacions` and D10's «Preferències d'avisos» run on MSW, on the adopted api snapshot `cb94bc1`.
+- **Two sessions.**
+  - The first built it all (`f525105`, logs `00`–`39`) and stopped before its report.
+  - This one fixed five points after a checklist review:
+    - D9 read-only while a write is on its way;
+    - the preview of a language without text sends the default language's text (R-11-01);
+    - D10 sends a waiting change before the page is left;
+    - the log's filter chip shows the member's name;
+    - D9's text errors are described on their field.
+  - Each fix's test failed on the pre-fix sources (logs `41`, `48b`, `52b`).
+- **Green on the final tree:**
+  - turbo `--force` 34/34 (`53`);
+  - `i18n:check` (`54`);
+  - T-11-37/T-11-38 by name, 24 tests (`55`);
+  - Ajv and mocks, 94 (`56`);
+  - size-limit (`57`);
+  - Docker `pnpm e2e` 65 + 1 + 68 (`58`);
+  - the six screenshots.
+- **Snapshot:** `openapi.json` is byte-identical to the file staged in `50d1f25` (`03c58a0f…`). `openapi.next.json` (`a049faf`) stays staged: no S11 change, only `/checkout-sessions` and `HistoryItem`.
+- **For you:**
+  1. **Bundle budget.** Session 1 raised clubs-admin in `.size-limit.json` without a ruling: initial 385 → 390 kB, all 535 → 550 kB. The E7 screens add about 10 kB; the build is now 386.27 / 545.11 kB. Keep the raise, or load D9 and the log lazily? (Q1)
+  2. **Proposal repeated:** `TEMPLATE_MISSING_VARIABLE`. Until it exists, `VALIDATION_ERROR` + `details.missingVariables` is mapped, as the snapshot documents. (Q2)
+  3. **Contract proposal: error details.**
+     - `CHANNEL_NOT_ALLOWED` with `details {audience, channel}`;
+     - `TEMPLATE_SYNTAX_ERROR`, `TEMPLATE_UNKNOWN_VARIABLE` and `SMS_BODY_*` with `details.field` (`body.ca`).
+     - The mock sends these shapes, and D9 uses them only to mark the cell or pick the field. Without them the error still shows by code, and no test depends on them. (Q3)
+  4. **Proposed literals:** the list is in the report (Q4).
+  5. `enums:templateKind` is S06's (`WEEKDAYS`/`SATURDAY`). S11's CATALOG/CUSTOM is never shown as text, so no labels were added (assumption 9).
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W03
+@organizer **E6-W03 round 2 is awaiting verification.** The five points are done; details under «### Round 2 report».
+- **Tests written first, run on the pre-fix sources:**
+  - ui badge contrast: 17/17 failed (log `29`);
+  - D14 and D12: 6/6 failed (`30`);
+  - the D12 browser test, in Docker (`32`).
+- **The fixes:**
+  - #1: the row read belongs to the shell's `useUnreadFollowUp` (`read`, `failure`, `retry`). A failure puts the row back unread, reads the counter again, and shows the reason with «Torna-ho a provar» on any page, D13 included.
+  - #2: the badge has its own tokens: the state's colour pulled towards the text colour, on its tint over the surface. It is ≥ 4.5:1 for every state in the light, dark, Cànic and light-fixture themes.
+  - #3: every activation sends the read; only a row shown unread takes one off the counter.
+  - #4: a training cell keeps its half height. Its whole text is its name and tooltip, and it grows on hover, on focus and while pressed. A browser test measures the clipping.
+  - #5: `kind`/`unread` values come from the contract, each counted by the api's `totalItems`. The new MSW scenario is `followupMany`.
+- **Green:**
+  - turbo `--force` 34/34 (`35`);
+  - `i18n:check` (`36`);
+  - Vitest D12/D14 34 (`37`), ui 50 (`38`);
+  - Ajv and mocks 115 (`39`);
+  - Docker `pnpm e2e` 1 + 65 + 69 (`40`).
+- **For you:**
+  1. One turbo run (`34`) failed only on E7-W01's `SendAnnouncementDialog` «D5's selection»: 16.8 s against the 15 s limit, on a loaded host. It passes in 2.5 s alone, and the re-run `35` was green. If CI shows it again, a longer timeout for that file is the fix I would propose.
+  2. Proposed literals: the list is in the report (Q6).
+Blocking: no.

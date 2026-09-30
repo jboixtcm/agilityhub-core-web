@@ -95,7 +95,11 @@ import {
   withReadmissionValues,
 } from "./fixtures/signup-review";
 import { TRAINING_MOCK_NOW, trainingState } from "./fixtures/training";
-import { followupHandlers, resetFollowupMockState } from "./followup-handlers";
+import {
+  followupHandlers,
+  resetFollowupMockState,
+  updateFollowupNoteMock,
+} from "./followup-handlers";
 import {
   exportFileName,
   exportFileResponse,
@@ -3957,5 +3961,6 @@ export {
   setSignupMockToday,
   TRAINING_MOCK_NOW,
   trainingState,
+  updateFollowupNoteMock,
   type MockScenario,
 };

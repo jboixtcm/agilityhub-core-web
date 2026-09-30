@@ -89,9 +89,35 @@
   outline-offset: 2px;
 }
 
-/* D12's badge that cycles on click: a Badge in the state's tone, as a button. */
+/*
+ * D12's badge that cycles on click: a Badge in the state's tone, as a button, with its own tokens
+ * so its small text keeps 4.5:1 or more in every theme (AGENTS rule 6, WCAG 1.4.3): the state's
+ * colour pulled towards the theme's text colour, on the state's tint over the surface (mockup D12's
+ * coloured text on a light tint).
+ */
 .ah-attendance-badge {
+  --ah-attendance-badge-tone: var(--ah-color-text-muted);
+  --ah-attendance-badge-fg: color-mix(in srgb, var(--ah-attendance-badge-tone) 45%, var(--ah-color-text));
+  --ah-attendance-badge-bg: color-mix(in srgb, var(--ah-attendance-badge-tone) 15%, var(--ah-color-surface));
+}
+
+.ah-attendance-badge--present {
+  --ah-attendance-badge-tone: var(--ah-color-success);
+}
+
+.ah-attendance-badge--notified {
+  --ah-attendance-badge-tone: var(--ah-color-warning);
+}
+
+.ah-attendance-badge--no-show {
+  --ah-attendance-badge-tone: var(--ah-color-danger);
+}
+
+.ah-badge.ah-attendance-badge {
   min-width: 2.5rem;
+  color: var(--ah-attendance-badge-fg);
+  background: var(--ah-attendance-badge-bg);
+  border-color: color-mix(in srgb, var(--ah-attendance-badge-tone) 42%, transparent);
   font: inherit;
   font-size: 0.75rem;
   font-weight: 700;

@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx (10 tests | 1 failed | 9 skipped) 247ms
+   ❯ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (10)
+     × errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe 245ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleDescription()[22m
+
+Expected element to have accessible description:
+[32m  Falta la variable [[enllac]] al text[39m
+Received:
+[31m[39m
+ ❯ src/messaging/AnnouncementsPage.test.tsx:430:20
+    428|     fireEvent.click(save());
+    429|     expect(await screen.findByText("Falta la variable [[enllac]] al te…
+    430|     expect(body()).toHaveAccessibleDescription("Falta la variable [[en…
+       |                    ^
+    431|     expect(body()).toHaveAttribute("aria-invalid", "true");
+    432|     fireEvent.change(body(), { target: { value: "Entra-hi persona_nom]…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  18:31:56
+   Duration  1.97s (transform 44%, import 23%, environment 16%, tests 13%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/AnnouncementsPage.test.tsx -t errors by code

@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { contrastRatio } from "./branding";
+import { applyBrandingTheme, type BrandingTheme, contrastRatio } from "./branding";
 
 type Rgb = [number, number, number];
 type Variables = ReadonlyMap<string, string>;
@@ -153,4 +153,57 @@ describe("E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles k
       expect(ratio(color(dot?.[1] ?? "", chosen), surface)).toBeGreaterThanOrEqual(3);
     },
   );
+});
+
+/**
+ * A club theme the repo ships (the MSW branding fixtures), as `applyBrandingTheme` sets it: the
+ * club's colour tokens over the product's.
+ */
+function clubPalette(file: string): Variables {
+  const fixture = JSON.parse(
+    readFileSync(resolve(import.meta.dirname, "../../api-client/src/mocks/fixtures", file), "utf8"),
+  ) as { theme: BrandingTheme };
+  const element = document.createElement("div");
+  applyBrandingTheme(fixture.theme, element);
+  const club = [...light.keys()].flatMap((property) => {
+    const value = element.style.getPropertyValue(property).trim();
+    return value === "" ? [] : [[property, value] as const];
+  });
+  if (club.length === 0) throw new TypeError(`${file} set no colour token`);
+  return new Map([...light, ...club]);
+}
+
+const BADGE_PALETTES = [
+  ...PALETTES,
+  { name: "the Cànic fixture (dark)", variables: clubPalette("branding-canic.json") },
+  { name: "the light fixture", variables: clubPalette("branding-minim.json") },
+];
+
+const badgeBase = rule(attendanceCss, ".ah-attendance-badge", "--ah-attendance-badge-fg");
+/** The custom properties of D12's badge in one state: the base rule's, then its state's. */
+function badge(palette: Variables, state: string): Map<string, string> {
+  return new Map([
+    ...palette,
+    ...badgeBase,
+    ...rule(attendanceCss, `.ah-attendance-badge--${state}`),
+  ]);
+}
+
+describe("E6-W03 round 2 #2 (review #3, AGENTS rule 6): D12's attendance badge keeps its text at 4.5:1", () => {
+  it("the badge paints its own foreground and background tokens (not the generic tone on a transparent tint)", () => {
+    const painted = rule(attendanceCss, ".ah-badge.ah-attendance-badge");
+    expect(painted.get("color")).toBe("var(--ah-attendance-badge-fg)");
+    expect(painted.get("background")).toBe("var(--ah-attendance-badge-bg)");
+  });
+
+  it.each(
+    BADGE_PALETTES.flatMap((palette) =>
+      ["pending", "present", "notified", "no-show"].map((state) => ({ ...palette, state })),
+    ),
+  )("$name: the «$state» badge's text is 4.5:1 or more on its background", ({ state, variables }) => {
+    const tokens = badge(variables, state);
+    const foreground = color(tokens.get("--ah-attendance-badge-fg") ?? "", tokens);
+    const background = color(tokens.get("--ah-attendance-badge-bg") ?? "", tokens);
+    expect(ratio(foreground, background)).toBeGreaterThanOrEqual(4.5);
+  });
 });

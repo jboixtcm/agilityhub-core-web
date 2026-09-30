@@ -68,16 +68,11 @@ export function NotificationPreferencesBlock({
   const [base, setBase] = useState(preferences);
   const [overlay, setOverlay] = useState<Patch>({});
   const waiting = useRef<Patch>({});
-  const sending = useRef(false);
+  const sending = useRef<Promise<void>>(undefined);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const flushRef = useRef<() => void>(() => undefined);
+  const flushRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
-  const flush = async () => {
-    timer.current = undefined;
-    if (sending.current || Object.keys(waiting.current).length === 0) return;
-    const body = waiting.current;
-    waiting.current = {};
-    sending.current = true;
+  const save = async (body: Patch) => {
     try {
       const { data } = await client.PUT("/members/{id}/notification-preferences", {
         body,
@@ -96,37 +91,62 @@ export function NotificationPreferencesBlock({
         tone: "danger",
       });
     } finally {
-      sending.current = false;
+      sending.current = undefined;
       setOverlay(waiting.current);
       if (Object.keys(waiting.current).length > 0) {
         timer.current = setTimeout(() => {
-          flushRef.current();
+          void flushRef.current();
         }, 300);
       }
     }
   };
+  /** Sends what waits (one request at a time); resolves when the request on its way is answered. */
+  const flush = () => {
+    timer.current = undefined;
+    if (sending.current !== undefined || Object.keys(waiting.current).length === 0) {
+      return sending.current ?? Promise.resolve();
+    }
+    const body = waiting.current;
+    waiting.current = {};
+    const request = save(body);
+    sending.current = request;
+    return request;
+  };
   // The timers call the latest `flush` (it closes over this render's props).
   useEffect(() => {
-    flushRef.current = () => void flush();
+    flushRef.current = flush;
   });
 
-  // Leaving the record sends what is still waiting.
-  useEffect(
-    () => () => {
-      if (timer.current !== undefined) {
-        clearTimeout(timer.current);
-        flushRef.current();
-      }
-    },
-    [],
-  );
+  /** Sends at once what waits for the debounce, then waits until nothing is left unsaved. */
+  const settle = async (): Promise<void> => {
+    if (timer.current !== undefined) clearTimeout(timer.current);
+    timer.current = undefined;
+    if (sending.current === undefined && Object.keys(waiting.current).length === 0) return;
+    await flushRef.current();
+    await settle();
+  };
+
+  // Leaving the record sends what is still waiting: another route of the app (unmount) or a full
+  // page load, which is how D10's links navigate (`pagehide`, the request leaves before the page).
+  useEffect(() => {
+    const leave = () => {
+      if (timer.current === undefined) return;
+      clearTimeout(timer.current);
+      void flushRef.current();
+    };
+    window.addEventListener("pagehide", leave);
+    return () => {
+      window.removeEventListener("pagehide", leave);
+      leave();
+    };
+  }, []);
 
   const change = (patch: Patch) => {
     waiting.current = combined(waiting.current, patch);
     setOverlay((current) => combined(current, patch));
     if (timer.current !== undefined) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      flushRef.current();
+      void flushRef.current();
     }, 300);
   };
 
@@ -222,9 +242,14 @@ export function NotificationPreferencesBlock({
         className="notification-preferences__log"
         href={logPath}
         onClick={(event) => {
-          if (onNavigate === undefined) return;
+          // A change still waiting for its save is sent (and answered) before the log is opened.
+          const pending = timer.current !== undefined || sending.current !== undefined;
+          if (onNavigate === undefined && !pending) return;
           event.preventDefault();
-          onNavigate(logPath);
+          void settle().then(() => {
+            if (onNavigate === undefined) window.location.assign(logPath);
+            else onNavigate(logPath);
+          });
         }}
       >
         {t("admin-census:member.preferences.sentLink")}

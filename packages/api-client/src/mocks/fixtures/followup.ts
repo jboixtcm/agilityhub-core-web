@@ -585,8 +585,11 @@ export function applyOtherObservationsSave(dogId: string, at: string): void {
 
 type FollowupItem = components["schemas"]["FollowupItem"];
 
-/** Club-wide variants of D14 (one per scenario): every row already read by the caller. */
-export type InboxVariant = "allRead";
+/**
+ * Club-wide variants of D14 (one per scenario): `allRead`, every row already read by the caller;
+ * `many`, more rows than one page (see `manyInboxNotes`).
+ */
+export type InboxVariant = "allRead" | "many";
 
 /** The account of the `instructor` scenario, which this world treats as Estel's (mockup 20). */
 export const ESTEL_ACCOUNT_ID = "10000000-0000-4000-8000-000000000003";
@@ -714,6 +717,43 @@ function initialInbox(): StoredInboxItem[] {
   ];
 }
 
+/** The `followupMany` variant: this many more notes of Laura's, all newer than mockup D14's rows. */
+export const INBOX_MANY_NOTES = 52;
+/** In the `many` variant the caller has read mockup D14's three tasks one by one. */
+const INBOX_MANY_READ_IDS = ["f-task-balanci", "f-task-contactes", "f-task-espera"];
+
+/**
+ * The `followupMany` variant's notes (Laura on Duna, one a minute back from 19-08 20:00 UTC): unread
+ * and newer than every mockup row, so the first page (50) holds only unread notes, while the tasks
+ * and the rows already read sit on the second one.
+ */
+function manyInboxNotes(): StoredInboxItem[] {
+  return Array.from({ length: INBOX_MANY_NOTES }, (_, index) => {
+    const at = new Date(Date.UTC(2026, 7, 19, 20, 0 - index))
+      .toISOString()
+      .replace(/\.\d{3}Z$/u, "Z");
+    return {
+      activityAt: at,
+      authorAccountId: LAURA_ACCOUNT_ID,
+      authorGender: "FEMALE",
+      authorName: "Laura",
+      authorRole: "MEMBER",
+      completedAt: null,
+      createdAt: at,
+      dogId: DUNA,
+      dogName: "Duna",
+      hidden: false,
+      id: `f-note-many-${String(index + 1)}`,
+      kind: "MEMBER_NOTE",
+      levelCode: "C",
+      memberId: "member-laura",
+      memberName: "Laura Serra",
+      taskId: null,
+      textExcerpt: `Nota ${String(index + 1)}: avui la Duna ha treballat bé el balancí`,
+    };
+  });
+}
+
 /** `FollowupReadMark` of one account (R-10-13): `readAllAt` and the rows read one by one. */
 interface ReadMark {
   readAllAt: string | null;
@@ -723,17 +763,28 @@ interface ReadMark {
 export const inboxState: {
   idempotency: Map<string, Replay>;
   items: StoredInboxItem[];
+  /** The `many` variant's notes are in `items` already. */
+  manySeeded: boolean;
   marks: Map<string, ReadMark>;
 } = {
   idempotency: new Map(),
   items: initialInbox(),
+  manySeeded: false,
   marks: new Map(),
 };
 
 export function resetInboxState(): void {
   inboxState.idempotency = new Map();
   inboxState.items = initialInbox();
+  inboxState.manySeeded = false;
   inboxState.marks = new Map();
+}
+
+/** The scenario's variant of D14's rows (`many`), seeded once per reset. */
+export function syncInboxVariant(variant: InboxVariant | undefined): void {
+  if (variant !== "many" || inboxState.manySeeded) return;
+  inboxState.manySeeded = true;
+  inboxState.items.push(...manyInboxNotes());
 }
 
 function readMark(accountId: string, variant: InboxVariant | undefined): ReadMark {
@@ -741,7 +792,7 @@ function readMark(accountId: string, variant: InboxVariant | undefined): ReadMar
   if (known !== undefined) return known;
   const created: ReadMark = {
     readAllAt: variant === "allRead" ? INBOX_ALL_READ_AT : null,
-    readItemIds: [],
+    readItemIds: variant === "many" ? [...INBOX_MANY_READ_IDS] : [],
   };
   inboxState.marks.set(accountId, created);
   return created;

@@ -1,0 +1,504 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (6 tests | 2 failed | 4 skipped) 10190ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (6)
+     × «Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens 146ms
+     × a full page load (how D10's links leave the record) sends the change still waiting for its 300 ms 10039ms
+ ❯ src/messaging/AnnouncementsPage.test.tsx (10 tests | 2 failed | 8 skipped) 10390ms
+   ❯ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (10)
+     × R-11-01 in [Vista prèvia]: a language without its own text is previewed with the club's default language, as a member of that language would receive it 285ms
+     × [DESA] on its way: the texts, chips and cells are read-only until the api answers, so nothing typed meanwhile is dropped by the answer 10101ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > R-11-01 in [Vista prèvia]: a language without its own text is previewed with the club's default language, as a member of that language would receive it
+AssertionError: expected '' to match /^Hola \[\[member_first_name\]\],\net…/u
+
+- Expected:
+/^Hola \[\[member_first_name\]\],\net comuniquem que en data/u
+
++ Received:
+""
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx:292:25
+    290|     // The title has its es text; the emptied es body is the ca one, w…
+    291|     expect(draft?.title).toBe("Comunicación de baja como asociado");
+    292|     expect(draft?.body).toMatch(/^Hola \[\[member_first_name\]\],\net …
+       |                         ^
+    293|   });
+    294|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > [DESA] on its way: the texts, chips and cells are read-only until the api answers, so nothing typed meanwhile is dropped by the answer
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"readonly"[32m[39m[2m) // element.hasAttribute("readonly")[22m
+
+Expected the element to have attribute:
+[32m  readonly[39m
+Received:
+[31m  null[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"messaging-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"messaging-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mComunicats i plantilles[0m
+          [36m</h1>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"messaging-page__link"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mAvisos enviats ›[0m
+          [36m</a>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mEnviar comunicat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNova plantilla[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"messaging-page__grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card messaging-templates"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"messaging-templates__title"[39m
+            [36m>[39m
+              [0mPlantilles per categoria[0m
+            [36m</h2>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"messaging-categories"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mOperativa[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(reserves, canvis — sistema)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m12[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mComunicats individuals[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(canvi de nivell, baixa…)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m6[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mCanvis en reserves[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(anul·lacions del club, espera)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m8[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mComunicats del club[0m
+                    [36m</strong>[39m
+   ...
+ ❯ src/messaging/AnnouncementsPage.test.tsx:311:22
+    309|     fireEvent.click(save());
+    310|     await waitFor(() => {
+    311|       expect(body()).toHaveAttribute("readonly");
+       |                      ^
+    312|     });
+    313|     expect(title()).toHaveAttribute("readonly");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > «Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens
+AssertionError: expected [ Array(1) ] to deeply equal [ 'saved', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "saved",
+    "navigate /notificacions?filter=memberId%3Aeq%3Amember-laura",
+  ]
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:169:19
+    167|       expect(onNavigate).toHaveBeenCalledTimes(1);
+    168|     });
+    169|     expect(order).toEqual(["saved", "navigate /notificacions?filter=me…
+       |                   ^
+    170|     expect(puts).toEqual([{ emailByCategory: { PERSONAL: false } }]);
+    171|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > a full page load (how D10's links leave the record) sends the change still waiting for its 300 ms
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card notification-preferences"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"census-record__section-title"[39m
+        [36m>[39m
+          [0mPreferències d'avisos (mantenibles aquí i al perfil)[0m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preferences-head"[39m
+        [36m>[39m
+          [36m<span />[39m
+          [36m<span>[39m
+            [0mApp[0m
+          [36m</span>[39m
+          [36m<span>[39m
+            [0mCorreu[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOperativa (reserves i canvis fets per l'abonat)[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+            [33mrole[39m=[32m"img"[39m
+          [36m>[39m
+            [36m<title>[39m
+              [0mSempre actiu a l'app[0m
+            [36m</title>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-record__preference-control"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis fets per l'abonat)"[39m
+              [33mclass[39m=[32m"ah-switch"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-switch__thumb"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mComunicats personals[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+            [33mrole[39m=[32m"img"[39m
+          [36m>[39m
+            [36m<title>[39m
+              [0mSempre actiu a l'app[0m
+            [36m</title>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-record__preference-control"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Correu: Comunicats personals"[39m
+              [33mclass[39m=[32m"ah-switch"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-switch__thumb"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mCanvis en reserves (fets pel club)[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+            [33mrole[39m=[32m"img"[39m
+          [36m>[39m
+            [36m<title>[39m
+              [0mSempre actiu a l'app[0m
+            [36m</title>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-record__preference-control"[39m
+          [36m>[39m
+            [36m<small>[39m
+              [0m+SMS[0m
+            [36m</small>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Correu: Canvis en reserves (fets pel club)"[39m
+              [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-switch__thumb"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mComunicats del club[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+            [33mrole[39m=[32m"img"[39m
+          [36m>[39m
+            [36m<title>[39m
+              [0mSempre actiu a l'app[0m
+            [36m</title>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-record__preference-control"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Correu: Comunicats del club"[39m
+              [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-switch__thumb"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"member-reminder-member-laura"[39m
+          [36m>[39m
+            [0mRecordatori de classe[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select notification-preferences__reminder"[39m
+            [33mid[39m=[32m"member-reminder-member-laura"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mMai[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"60"[39m
+            [36m>[39m
+              [0m1 h abans[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"120"[39m
+            [36m>[39m
+              [0m2 h abans[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"240"[39m
+            [36m>[39m
+              [0m4 h abans[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"360"[39m
+            [36m>[39m
+              [0m6 h abans[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"720"[39m
+            [36m>[39m
+              [0m12 h abans[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"1440"[39m
+            [36m>[39m
+              [0m24 h abans[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__preference-row"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mNotificacions push de comunicats del club[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Notificacions push de comunicats del club"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+          [36m<span />[39m
+        [36m</div>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"notification-preferences__log"[39m
+          [33mhref[39m=[32m"/notificacions?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mAvisos enviats ›[0m
+        [36m</a>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:183:23
+    181|     window.dispatchEvent(new Event("pagehide"));
+    182|     await waitFor(() => {
+    183|       expect(onSaved).toHaveBeenCalledTimes(1);
+       |                       ^
+    184|     });
+    185|     expect(puts).toEqual([{ emailByCategory: { PERSONAL: false } }]);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 12 skipped (16)
+   Start at  18:28:50
+   Duration  13.06s (tests 81%, environment 8%, transform 6%, import 3%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/AnnouncementsPage.test.tsx src/census/NotificationPreferencesBlock.test.tsx -t R-11-01 in|DESA\] on its way|right after a change|full page load

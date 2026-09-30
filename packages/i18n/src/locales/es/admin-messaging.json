@@ -112,6 +112,7 @@
     "emptyDescription": "Cambia los filtros o la búsqueda para ver más.",
     "error": "No se han podido cargar los avisos.",
     "noValue": "—",
+    "valueSeparator": ", ",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

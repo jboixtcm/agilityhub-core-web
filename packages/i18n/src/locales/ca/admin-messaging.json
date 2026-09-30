@@ -112,6 +112,7 @@
     "emptyDescription": "Canvia els filtres o la cerca per veure'n més.",
     "error": "No s'han pogut carregar els avisos.",
     "noValue": "—",
+    "valueSeparator": ", ",
     "dateTime": "{date} {time}",
     "channelState": "{channel} · {status}",
     "column": {

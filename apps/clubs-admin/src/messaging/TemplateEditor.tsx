@@ -189,7 +189,11 @@ export function TemplateEditor({
     (candidate) => candidate !== locale && (texts.body[candidate] ?? "").trim() !== "",
   );
 
+  // While a write is on its way the editor is read-only: its answer replaces the draft, so nothing
+  // typed meanwhile could be kept.
+  const locked = busy !== undefined;
   const edit = (change: TemplateEdits) => {
+    if (locked) return;
     setRefusal(undefined);
     onEdits({ ...edits, ...change });
   };
@@ -352,6 +356,12 @@ export function TemplateEditor({
       { keepEdits: true },
     );
 
+  /** A text field the api's refusal belongs to: marked invalid and described by its message. */
+  const refusedField = (field: "body" | "sms" | "title", id: string) =>
+    refusal?.field === field
+      ? { "aria-describedby": `${id}-error`, "aria-invalid": true as const }
+      : {};
+
   const said = (field: Refusal["field"]) =>
     refusal?.field === field ? (
       <p className="messaging-editor__error" role="alert">
@@ -370,12 +380,21 @@ export function TemplateEditor({
       </p>
     ) : null;
 
+  /**
+   * The draft of one language for [Vista prèvia]. A field without text in that language is the
+   * one a notification would carry (R-11-01): the club's default language, then the first that has
+   * it — so a member of that language is previewed with what they would receive.
+   */
   const draftFor = (candidate: string) => {
-    const sms = texts.sms[candidate];
+    const text = (field: "body" | "sms" | "title") =>
+      [candidate, branding.defaultLocale, ...locales]
+        .map((item) => texts[field][item])
+        .find((value): value is string => value !== undefined && value.trim() !== "");
+    const sms = text("sms");
     return {
-      body: withKeys(texts.body[candidate] ?? "", detail.variables),
-      smsBody: sms === undefined || sms.trim() === "" ? null : withKeys(sms, detail.variables),
-      title: withKeys(texts.title[candidate] ?? "", detail.variables),
+      body: withKeys(text("body") ?? "", detail.variables),
+      smsBody: sms === undefined ? null : withKeys(sms, detail.variables),
+      title: withKeys(text("title") ?? "", detail.variables),
     };
   };
 
@@ -389,6 +408,7 @@ export function TemplateEditor({
           {...(refusal?.field === "title" ? { error: refusal.message } : {})}
         >
           <input
+            {...refusedField("title", "template-title")}
             className="ah-input"
             id="template-title"
             maxLength={120}
@@ -398,6 +418,7 @@ export function TemplateEditor({
             onFocus={() => {
               focused.current = "title";
             }}
+            readOnly={locked}
             ref={titleField}
             value={texts.title[locale] ?? ""}
           />
@@ -405,6 +426,7 @@ export function TemplateEditor({
         {custom ? (
           <FormField id="template-category" label={t("admin-messaging:templates.category")}>
             <Select
+              disabled={locked}
               id="template-category"
               onChange={(event) => {
                 edit({ category: event.currentTarget.value as Category });
@@ -434,6 +456,7 @@ export function TemplateEditor({
               aria-label={t(`enums:templateIcon.${item}`)}
               aria-pressed={item === icon}
               className="messaging-editor__chip"
+              disabled={locked}
               key={item}
               onClick={() => {
                 edit({ icon: item });
@@ -478,6 +501,7 @@ export function TemplateEditor({
               aria-label={t(`enums:templateColor.${item}`)}
               aria-pressed={item === color}
               className="messaging-editor__swatch"
+              disabled={locked}
               key={item}
               onClick={() => {
                 edit({ color: item });
@@ -494,6 +518,7 @@ export function TemplateEditor({
         {...(refusal?.field === "body" ? { error: refusal.message } : {})}
       >
         <textarea
+          {...refusedField("body", "template-body")}
           className="ah-input ah-textarea messaging-editor__body"
           id="template-body"
           maxLength={2000}
@@ -503,6 +528,7 @@ export function TemplateEditor({
           onFocus={() => {
             focused.current = "body";
           }}
+          readOnly={locked}
           ref={bodyField}
           rows={6}
           value={texts.body[locale] ?? ""}
@@ -514,6 +540,7 @@ export function TemplateEditor({
           <button
             aria-label={t("admin-messaging:templates.insertVariable", { label: variable.label })}
             className="messaging-editor__variable"
+            disabled={locked}
             key={variable.key}
             onClick={() => {
               insertVariable(variable);
@@ -538,6 +565,7 @@ export function TemplateEditor({
           {...(refusal?.field === "sms" ? { error: refusal.message } : {})}
         >
           <textarea
+            {...refusedField("sms", "template-sms")}
             className="ah-input ah-textarea"
             id="template-sms"
             onChange={(event) => {
@@ -546,6 +574,7 @@ export function TemplateEditor({
             onFocus={() => {
               focused.current = "sms";
             }}
+            readOnly={locked}
             ref={smsField}
             rows={2}
             value={texts.sms[locale] ?? ""}
@@ -586,6 +615,7 @@ export function TemplateEditor({
                         <Checkbox
                           aria-label={cell}
                           checked={matrix[audience][channel]}
+                          disabled={locked}
                           onChange={(event) => {
                             const checked = event.currentTarget.checked;
                             edit({

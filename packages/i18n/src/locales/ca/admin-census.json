@@ -460,6 +460,9 @@
     "emptyDescription": "Les tasques dels instructors i les notes dels alumnes arribaran aquí.",
     "selectRow": "Obre la fitxa de {name}",
     "error": "No s'ha pogut carregar el seguiment.",
-    "dismiss": "Tanca"
+    "dismiss": "Tanca",
+    "readFailed": "No s'ha pogut marcar com a llegit el seguiment de {name}.",
+    "readOffline": "No hi ha connexió amb el servidor.",
+    "readRetry": "Torna-ho a provar"
   }
 }

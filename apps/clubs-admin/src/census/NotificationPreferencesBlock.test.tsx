@@ -42,7 +42,10 @@ function recordPuts(): unknown[] {
   return bodies;
 }
 
-async function renderBlock(preferences: Preferences = PREFERENCES) {
+async function renderBlock(
+  preferences: Preferences = PREFERENCES,
+  onNavigate?: (path: string) => void,
+) {
   mockScenario("admin");
   const i18n = await createI18n({
     branding: canic,
@@ -59,6 +62,7 @@ async function renderBlock(preferences: Preferences = PREFERENCES) {
           client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
           memberId="member-laura"
           onFeedback={onFeedback}
+          onNavigate={onNavigate}
           onSaved={onSaved}
           preferences={preferences}
         />
@@ -72,6 +76,7 @@ beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
 afterEach(() => {
+  vi.useRealTimers();
   cleanup();
   server.events.removeAllListeners();
   server.resetHandlers();
@@ -144,6 +149,40 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     });
     expect(puts).toEqual([{ emailByCategory: { OPERATIONAL: true }, reminderMinutesBefore: 120 }]);
     expect(screen.getByLabelText("Recordatori de classe")).toHaveValue("120");
+  });
+
+  it("«Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens", async () => {
+    const puts = recordPuts();
+    const order: string[] = [];
+    const onNavigate = vi.fn((path: string) => {
+      order.push(`navigate ${path}`);
+    });
+    const { onSaved } = await renderBlock(PREFERENCES, onNavigate);
+    onSaved.mockImplementation(() => {
+      order.push("saved");
+    });
+    fireEvent.click(screen.getByRole("switch", { name: "Correu: Comunicats personals" }));
+    fireEvent.click(screen.getByRole("link", { name: "Avisos enviats ›" }));
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledTimes(1);
+    });
+    expect(order).toEqual(["saved", "navigate /notificacions?filter=memberId%3Aeq%3Amember-laura"]);
+    expect(puts).toEqual([{ emailByCategory: { PERSONAL: false } }]);
+  });
+
+  it("a full page load (how D10's links leave the record) sends the change still waiting for its 300 ms", async () => {
+    const puts = recordPuts();
+    const { onSaved } = await renderBlock();
+    // The debounce's timer belongs to a fake clock that is dropped at once: it never fires, so
+    // only the page being left can send the change.
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    fireEvent.click(screen.getByRole("switch", { name: "Correu: Comunicats personals" }));
+    vi.useRealTimers();
+    window.dispatchEvent(new Event("pagehide"));
+    await waitFor(() => {
+      expect(onSaved).toHaveBeenCalledTimes(1);
+    });
+    expect(puts).toEqual([{ emailByCategory: { PERSONAL: false } }]);
   });
 
   it("a refused save (422 INVALID_REMINDER_OPTION) puts back what the api holds and says why", async () => {

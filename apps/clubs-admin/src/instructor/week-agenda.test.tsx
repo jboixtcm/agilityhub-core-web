@@ -205,6 +205,19 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     const training = screen.getByText("8:00 Reserva").closest<HTMLElement>(".week-agenda__half");
     expect(training?.style.getPropertyValue("--week-agenda-span")).toBe("0.5");
     expect(within(training ?? document.body).getByText("Muntanya — Pau + Blat")).toBeVisible();
+    // Round 2 #4 (review #6): the half height may clip the pair; the whole text is the cell's
+    // name and tooltip, and a press keeps it open (the browser test checks the clipping).
+    const trainingButton = screen.getByRole("button", {
+      name: "8:00 Reserva · Muntanya — Pau + Blat",
+    });
+    expect(training).toContainElement(trainingButton);
+    expect(training).toHaveAttribute("title", "8:00 Reserva · Muntanya — Pau + Blat");
+    expect(trainingButton).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(trainingButton);
+    expect(trainingButton).toHaveAttribute("aria-pressed", "true");
+    expect(training).toHaveClass("week-agenda__half--open");
+    fireEvent.click(trainingButton);
+    expect(training).not.toHaveClass("week-agenda__half--open");
     expect(screen.getByText("8:30 Reserva")).toBeVisible();
     expect(screen.getByText("Carretera — Júlia + Kira")).toBeVisible();
     const block = screen

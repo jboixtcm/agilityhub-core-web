@@ -438,6 +438,46 @@ function AttendancePanel({
   );
 }
 
+/**
+ * A free-training booking (R-10-15): `training.slotMinutes` (its own length) out of the class
+ * height. The half height clips a long «{guia} + {gos}» (review #6 of E6-W03), so the whole text is
+ * the cell's name and tooltip, and the cell grows over the next row on hover, on keyboard focus,
+ * and while pressed (a click keeps it open).
+ */
+function TrainingCellView({ cell }: { cell: WeekCell }): ReactNode {
+  const { t } = useTranslation(["instructor"]);
+  const [open, setOpen] = useState(false);
+  const minutes = minutesOf(cell.endTime) - minutesOf(cell.time);
+  const span = Math.min(Math.max(minutes / 60, 0.25), 1);
+  const full = t("instructor:agenda.trainingFull", {
+    ring: cell.ringName ?? "",
+    time: timeLabel(cell.time),
+    who: cell.who ?? "",
+  });
+  return (
+    <div
+      className={open ? "week-agenda__half week-agenda__half--open" : "week-agenda__half"}
+      style={{ "--week-agenda-span": String(span) } as CSSProperties}
+      title={full}
+    >
+      <ScheduleCell
+        dashed
+        label={full}
+        onClick={() => {
+          setOpen((value) => !value);
+        }}
+        plain
+        selected={open}
+        subtitle={t("instructor:agenda.trainingWho", {
+          ring: cell.ringName ?? "",
+          who: cell.who ?? "",
+        })}
+        title={t("instructor:agenda.training", { time: timeLabel(cell.time) })}
+      />
+    </div>
+  );
+}
+
 function WeekCellView({
   cell,
   onSelect,
@@ -449,27 +489,7 @@ function WeekCellView({
 }): ReactNode {
   const { t } = useTranslation(["instructor", "enums"]);
   const branding = useBranding();
-  if (cell.kind === "TRAINING") {
-    // R-10-15: a training takes `training.slotMinutes` (its own length) out of the class height.
-    const minutes = minutesOf(cell.endTime) - minutesOf(cell.time);
-    const span = Math.min(Math.max(minutes / 60, 0.25), 1);
-    return (
-      <div
-        className="week-agenda__half"
-        style={{ "--week-agenda-span": String(span) } as CSSProperties}
-      >
-        <ScheduleCell
-          dashed
-          plain
-          subtitle={t("instructor:agenda.trainingWho", {
-            ring: cell.ringName ?? "",
-            who: cell.who ?? "",
-          })}
-          title={t("instructor:agenda.training", { time: timeLabel(cell.time) })}
-        />
-      </div>
-    );
-  }
+  if (cell.kind === "TRAINING") return <TrainingCellView cell={cell} />;
   if (cell.kind === "BLOCK") {
     const reason = cell.reason === undefined ? "" : t(`enums:ringBlockReason.${cell.reason}`);
     return (

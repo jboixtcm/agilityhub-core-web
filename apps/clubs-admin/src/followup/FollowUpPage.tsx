@@ -23,12 +23,22 @@ import { useTranslation } from "react-i18next";
 import { useSavedViews } from "../activities/shared";
 
 import "./followup.css";
-import { useUnreadFollowUp, useUnreadFollowUpContext } from "./unread";
+import {
+  FollowUpReadFailureNotice,
+  useUnreadFollowUp,
+  useUnreadFollowUpContext,
+} from "./unread";
 
 type FollowupItem = components["schemas"]["FollowupItem"];
 type Translate = ReturnType<typeof useTranslation>["t"];
 
 const FOLLOWUP_LIST_KEY = "followup";
+/** `FollowupItem.kind`'s values in the contract, in the chips' order («Tasques», «Notes d'alumnes»). */
+const FOLLOWUP_KINDS = ["TASK", "MEMBER_NOTE"] as const satisfies readonly NonNullable<
+  FollowupItem["kind"]
+>[];
+/** `unread`'s values («no llegit», «llegit»): a boolean of the contract. */
+const UNREAD_VALUES = ["true", "false"] as const;
 /** `GET /followup` pages hold at most 50 rows (S10 §3; api E6-T02 accepts 20 or 50). */
 const FOLLOWUP_PAGE_SIZES = [20, 50] as const;
 const DEFAULT_COLUMNS = [
@@ -398,12 +408,36 @@ export function FollowUpPage({
 
   const loadFilterValues = useCallback(
     async (field: string): Promise<UniversalFilterValue[]> => {
+      const others = apiFilters(state.filters.filter((filter) => filter.field !== field));
+      const search = state.q === "" ? {} : { q: state.q };
+      if (field === "kind" || field === "unread") {
+        // Round 2 #5 (review #1): the contract's values, whatever the first page holds, each
+        // counted by the api (`totalItems` of the list with that value and the other filters).
+        const values: readonly string[] = field === "kind" ? FOLLOWUP_KINDS : UNREAD_VALUES;
+        return Promise.all(
+          values.map(async (value) => {
+            const { data } = await client.GET("/followup", {
+              params: {
+                query: {
+                  filter: [...others, `${field}:eq:${value}`],
+                  page: 0,
+                  ...search,
+                  size: 20,
+                },
+              },
+            });
+            return { count: data?.totalItems ?? 0, label: valueLabel(field, value), value };
+          }),
+        );
+      }
+      // The member and dog values: the first page's, until api E6-T06 publishes
+      // `GET /followup/filter-values` (E6-W04 step 0c).
       const { data } = await client.GET("/followup", {
         params: {
           query: {
-            filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
+            filter: others,
             page: 0,
-            ...(state.q === "" ? {} : { q: state.q }),
+            ...search,
             size: 50,
             sort: ["activityAt,desc"],
           },
@@ -450,16 +484,17 @@ export function FollowUpPage({
 
   const open = (row: FollowupItem) => {
     if (row.dogId === undefined) return;
-    if (row.unread === true) {
-      // R-10-13: `readItemIds += id` for the caller; the row and the counter drop at once.
-      setReadIds((current) => new Set([...current, row.id]));
-      unread.markOneRead();
-      client
-        .POST("/followup/{id}/read", {
-          params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: row.id } },
-        })
-        .then(unread.refresh, unread.refresh);
-    }
+    // R-10-13: `readItemIds += id` for the caller. Every activation sends it, also on a row shown
+    // «llegit» (a note may have changed since this list was read; round 2 #3); a row shown unread
+    // loses its highlight and one off the counter at once. The read is the shell's: if it fails,
+    // the row is unread again and the failure is said wherever the user is (round 2 #1).
+    setReadIds((current) => new Set([...current, row.id]));
+    void unread
+      .read({ dogName: row.dogName, id: row.id, unread: row.unread === true })
+      .then((accepted) => {
+        if (accepted) return;
+        setReadIds((current) => new Set([...current].filter((id) => id !== row.id)));
+      });
     onNavigate(`/alumnes/${encodeURIComponent(row.dogId)}`);
   };
 
@@ -547,6 +582,8 @@ export function FollowUpPage({
           {feedback}
         </Toast>
       )}
+      {/* In the back office the shell says a failed read on every page; alone, D14 says it. */}
+      {shell === undefined ? <FollowUpReadFailureNotice unread={own} /> : null}
       <UniversalList<FollowupItem>
         appliedFilters={applied}
         caption={t("admin-census:followup.caption")}

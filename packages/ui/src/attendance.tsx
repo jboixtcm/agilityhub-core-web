@@ -255,6 +255,8 @@ export function AttendanceBadgeCycler({
         "ah-badge",
         `ah-tone--${attendanceTone(value)}`,
         "ah-attendance-badge",
+        // The badge's own tokens by state (its text at 4.5:1 or more, `attendance.css`).
+        `ah-attendance-badge--${value.toLowerCase().replace("_", "-")}`,
         ...(inert ? ["ah-attendance-badge--inert"] : []),
       ].join(" ")}
       disabled={inert || disabled}

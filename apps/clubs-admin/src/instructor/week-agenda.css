@@ -119,6 +119,40 @@
   line-height: 1.15;
 }
 
+/*
+ * Hovered, focused or pressed, a training shows its whole «{guia} + {gos}» (review #6 of E6-W03):
+ * the cell grows over the next row with the surface behind it; at rest it keeps its half height.
+ */
+.week-agenda__half {
+  position: relative;
+}
+
+.week-agenda__half:hover,
+.week-agenda__half:focus-within,
+.week-agenda__half--open {
+  z-index: 2;
+}
+
+.week-agenda__half:hover .ah-schedule-cell,
+.week-agenda__half:focus-within .ah-schedule-cell,
+.week-agenda__half--open .ah-schedule-cell {
+  height: auto;
+  min-height: calc(var(--week-agenda-cell) * var(--week-agenda-span, 0.5));
+  overflow: visible;
+  background: var(--ah-color-surface);
+  box-shadow: var(--ah-shadow-lg);
+}
+
+.week-agenda__half:hover .ah-schedule-cell__title,
+.week-agenda__half:hover .ah-schedule-cell__subtitle,
+.week-agenda__half:focus-within .ah-schedule-cell__title,
+.week-agenda__half:focus-within .ah-schedule-cell__subtitle,
+.week-agenda__half--open .ah-schedule-cell__title,
+.week-agenda__half--open .ah-schedule-cell__subtitle {
+  overflow: visible;
+  white-space: normal;
+}
+
 .week-agenda__block .ah-schedule-cell {
   min-height: calc(var(--week-agenda-cell) * 0.75);
 }

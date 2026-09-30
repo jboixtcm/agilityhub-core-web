@@ -445,6 +445,9 @@
     "emptyDescription": "Instructors' tasks and students' notes will arrive here.",
     "selectRow": "Open {name}'s record",
     "error": "The follow-up could not be loaded.",
-    "dismiss": "Close"
+    "dismiss": "Close",
+    "readFailed": "{name}'s follow-up could not be marked as read.",
+    "readOffline": "There is no connection to the server.",
+    "readRetry": "Try again"
   }
 }

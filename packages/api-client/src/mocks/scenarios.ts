@@ -298,6 +298,16 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
+  /**
+   * S10 R-10-13 (D14, E6-W03 round 2 #5): an ADMIN with 52 more unread notes than mockup D14, so
+   * the first page of `GET /followup` holds only unread notes; the three tasks, read, are on page 2.
+   */
+  followupMany: {
+    branding: canic,
+    inbox: "many",
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
   /** S10 R-10-10: Duna has 52 tasks, so the two oldest are on the second page of `GET /tasks`. */
   tasksMany: {
     branding: canic,

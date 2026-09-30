@@ -267,6 +267,7 @@
     "classWhereNoRing": "{instructor}{waiting, plural, =0 {} other { · # waiting}}",
     "training": "{time} Booking",
     "trainingWho": "{ring} — {who}",
+    "trainingFull": "{time} Booking · {ring} — {who}",
     "block": "{from}–{to} Block",
     "blockReason": "{ring} — {reason}",
     "legend": "{training, select, yes {Booking = ring booked for training (half height: 30 min) · } other {}}Block = ring closed, with the reason · click a class: registrants and attendance{selected, select, yes { — selected: {day} {time}} other {}}",
