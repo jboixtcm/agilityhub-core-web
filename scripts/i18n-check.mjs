@@ -176,6 +176,16 @@ const dynamicKeyPrefixes = [
   // S10 (E6-W02): the history badges of 25 and the task states of 26, D13 and 13.
   "enums:historyState.",
   "enums:taskState.",
+  // S11 (E7-W01): D9's categories, audiences, channels, icons and colours, and the log's
+  // delivery statuses, rendered from the api's enums.
+  "admin-messaging:templates.categoryHint.",
+  "enums:deliveryStatus.",
+  "enums:notificationAudience.",
+  "enums:notificationCategory.",
+  "enums:notificationChannel.",
+  "enums:templateColor.",
+  "enums:templateIcon.",
+  "enums:templateStatus.",
   // S08 (E5-W01): rendered by the api's state, so a new value needs only its key.
   "enums:bookableState.",
   "enums:bookingOrigin.",

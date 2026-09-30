@@ -78,9 +78,21 @@
   gap: var(--ah-space-2);
 }
 
-.ah-followup__more {
-  justify-self: center;
-  margin-top: var(--ah-space-3);
+/* «Mostra'n més» under a list of tasks (26, D13's drawer and the history). */
+.ah-tasks__more {
+  display: grid;
+  justify-items: center;
+  gap: var(--ah-space-2);
+  margin-top: var(--ah-space-1);
+}
+
+.ah-tasks__more .ah-tasks__error {
+  justify-self: stretch;
+  margin: 0;
+}
+
+.ah-followup-history:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .ah-followup__error,
@@ -260,6 +272,17 @@
 .ah-attachment-chip__open svg {
   width: 0.85rem;
   height: 0.85rem;
+}
+
+/* Why a clip could not be opened, right after it (AGENTS rule 4). */
+.ah-attachment-chip__error {
+  flex-basis: 100%;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-text);
+  font-size: 0.8rem;
+  background: color-mix(in srgb, var(--ah-color-danger) 14%, var(--ah-color-surface));
+  border: 1px solid var(--ah-color-danger);
+  border-radius: var(--ah-radius-md);
 }
 
 .ah-attachment-chip__remove {

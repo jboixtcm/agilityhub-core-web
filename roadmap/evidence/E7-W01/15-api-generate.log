@@ -1,0 +1,14 @@
+ac34201b5da1e8a0808bc45eecc386d5915a01ebb4339f98bda129cc3749ba98  packages/api-client/src/generated/schema.d.ts
+
+> agilityhub-core-web@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web
+> pnpm --filter @agilityhub/api-client api:generate
+
+
+> @agilityhub/api-client@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> node scripts/generate.mjs
+
+Generated /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/generated/schema.d.ts from /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/openapi.json merged with /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/pending.json
+ac34201b5da1e8a0808bc45eecc386d5915a01ebb4339f98bda129cc3749ba98  packages/api-client/src/generated/schema.d.ts
+03c58a0f0189bb94fdaaa0f709575aff97700434cb78af281edd7dc5aafad115  packages/api-client/openapi/openapi.json
+03c58a0f0189bb94fdaaa0f709575aff97700434cb78af281edd7dc5aafad115  -
+7c1693450e7c679b3979f322596ba363a90c2a70a1bb5a7b946814dc0faf0a92  -

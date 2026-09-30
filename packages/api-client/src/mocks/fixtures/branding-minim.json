@@ -44,6 +44,7 @@
     "enabled": false
   },
   "status": "ONBOARDING",
+  "pushPublicKey": "BJwYKWJwc1C8oN8MAa7m3bvH8x5Iw50VnpjwnImHRzjtD9EMc-OcG4dVz713rzVBUwrTNvrantSFnBMvqQCLk94",
   "legal": {
     "privacyPolicyUrl": "https://minim.example.test/privacy"
   }

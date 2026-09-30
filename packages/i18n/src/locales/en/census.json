@@ -142,6 +142,7 @@
       "status": "Status"
     },
     "search": "Search by dog, member, chip…",
+    "selectCheckbox": "Select {name}",
     "selectRow": "Open {name}'s record",
     "statusLabel": "Dog status",
     "statuses": {
@@ -149,7 +150,10 @@
       "all": "All",
       "inactive": "Inactive"
     },
-    "title": "Dogs"
+    "title": "Dogs",
+    "bulk": {
+      "sendAnnouncement": "Send announcement"
+    }
   },
   "selfService": {
     "back": "Back to profile",

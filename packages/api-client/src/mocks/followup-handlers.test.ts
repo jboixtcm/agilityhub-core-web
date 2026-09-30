@@ -151,6 +151,10 @@ describe("E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants
     const classes = (await history()).data;
     expect(classes?.types).toEqual(["CLASS"]);
     expect(new Set(classes?.items.map((item) => item.type))).toEqual(new Set(["CLASS"]));
+    // A type the club does not offer is read as asked: no rows, and `types` says what it offers.
+    const trainingsOff = (await history({ type: "TRAINING" })).data;
+    expect(trainingsOff?.types).toEqual(["CLASS"]);
+    expect(trainingsOff?.items).toEqual([]);
     use("historyAllReasons");
     const all = (await history()).data;
     expectValid("MemberHistory", all);
@@ -213,6 +217,32 @@ describe("E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful", ()
       role: "MEMBER",
     });
     expect(data?.items[2]?.doneAt).toBe("2026-08-02T09:15:00Z");
+  });
+
+  it("tasksMany (round 2 #2): 52 tasks in pages of 50, the two oldest — one done, one pending — on the second page; the card counts all of them", async () => {
+    use("tasksMany");
+    const page = async (number: number) =>
+      (
+        await client.GET("/tasks", {
+          params: { query: { dogId: "dog-duna", includeDone: true, page: number, size: 50 } },
+        })
+      ).data;
+    const first = await page(0);
+    const second = await page(1);
+    expectValid("TaskList", first);
+    expectValid("TaskList", second);
+    expect(first?.items).toHaveLength(50);
+    expect(first?.items.slice(0, 3).map((task) => task.id)).toEqual(["t1", "t2", "t3"]);
+    expect(second?.items.map((task) => `${task.state} ${task.text}`)).toEqual([
+      "DONE Repàs 48: dues sessions curtes de contactes",
+      "PENDING Repàs 49: dues sessions curtes de contactes",
+    ]);
+    const all = [...(first?.items ?? []), ...(second?.items ?? [])];
+    expect(new Set(all.map((task) => task.id)).size).toBe(52);
+    expect((await card()).data?.tasks).toMatchObject({
+      doneCount: all.filter((task) => task.state === "DONE").length,
+      pendingCount: all.filter((task) => task.state === "PENDING").length,
+    });
   });
 
   it("T-10-25 «＋ Afegir» with an uploaded video creates one task, even when the same key is sent twice; the card counts it", async () => {

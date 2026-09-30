@@ -12,6 +12,8 @@ import {
   localInstant,
   resetRegistrantsState,
 } from "./fixtures/bookings";
+import { catalogState } from "./fixtures/catalogs";
+import { censusMembers } from "./fixtures/census";
 import { dayGridClassSessions } from "./fixtures/day-grid";
 import {
   JOBS_MOCK_NOW,
@@ -239,6 +241,9 @@ function text(value: unknown): string[] {
     : [];
 }
 
+// The universal-list helpers, shared with the S11 log (`messaging-handlers.ts`, E7-W01).
+export { type ListSpec, refuse, selectItems, text as listValues };
+
 // ---------------------------------------------------------------------------------------------
 // S08 staff reads: class registrants, waiting entries and the universal `GET /bookings`.
 
@@ -261,6 +266,20 @@ const CENSUS_MEMBER_IDS: Readonly<Record<string, string>> = {
 };
 const censusMemberId = (id: string) => CENSUS_MEMBER_IDS[id] ?? id;
 
+/**
+ * A register row's ring as the api projects it (E5-T29): the catalog's id, name and colour; null
+ * for a class without a ring.
+ */
+function ringFields(ring: { id?: string | null | undefined; name?: string | null | undefined }) {
+  const found = catalogState.rings.find(
+    (item) =>
+      (ring.id != null && item.id === ring.id) || (ring.name != null && item.name === ring.name),
+  );
+  return found === undefined
+    ? { ringColor: null, ringId: ring.id ?? null, ringName: ring.name ?? null }
+    : { ringColor: found.color, ringId: found.id, ringName: found.name };
+}
+
 /** `GET /bookings`: the member world's bookings (E5-W01) and the registrants of every class. */
 function bookingListItems(): Required<BookingListItem>[] {
   const memberWorld = bookingState.bookings.flatMap((booking) => {
@@ -274,6 +293,7 @@ function bookingListItems(): Required<BookingListItem>[] {
       {
         bookedAt: booking.bookedAt,
         bookingWeekKey: new Date(monday.getTime() - 86_400_000).toISOString().slice(0, 10),
+        classDescription: item.description,
         classSessionId: booking.classSessionId,
         classStartsAt: localInstant(item.startsAtLocal),
         dogId: booking.dogId,
@@ -283,12 +303,29 @@ function bookingListItems(): Required<BookingListItem>[] {
         memberId: censusMemberId(booking.memberId),
         memberName: "Laura",
         origin: booking.origin,
+        ...ringFields({ name: item.ringName }),
         state: booking.state,
       },
     ];
   });
+  // The register's projection (x-fields): a registrant row without the class list's own fields.
   const staffWorld = planningState.sessions.flatMap((session) =>
-    classBookingItems(session).map((item) => ({ ...item, late: item.late ?? null })),
+    classBookingItems(session).map((item) => ({
+      bookedAt: item.bookedAt,
+      bookingWeekKey: item.bookingWeekKey,
+      classDescription: session.displayDescription,
+      classSessionId: item.classSessionId,
+      classStartsAt: item.classStartsAt,
+      dogId: item.dogId,
+      dogName: item.dogName,
+      id: item.id,
+      late: item.late ?? null,
+      memberId: item.memberId,
+      memberName: item.memberName,
+      origin: item.origin,
+      ...ringFields({ id: session.ringId }),
+      state: item.state,
+    })),
   );
   return [...memberWorld, ...staffWorld];
 }
@@ -307,6 +344,10 @@ const BOOKING_SPEC: ListSpec<Required<BookingListItem>> = {
     "memberName",
     "bookedAt",
     "late",
+    "classDescription",
+    "ringId",
+    "ringName",
+    "ringColor",
   ],
   filterable: [
     "id",
@@ -327,10 +368,15 @@ const BOOKING_SPEC: ListSpec<Required<BookingListItem>> = {
 // S09 ring-usage register: `GET /training-bookings` and `GET /ring-blocks`.
 
 const trainingRows = () =>
-  trainingBookingListItems(nowMs()).map((item) => ({
-    ...item,
-    memberId: censusMemberId(item.memberId),
-  }));
+  trainingBookingListItems(nowMs()).map((item) => {
+    const memberId = censusMemberId(item.memberId);
+    return {
+      ...item,
+      memberId,
+      // Member.memberNumber from the census (E5-T29); null for a member without one.
+      memberNumber: censusMembers.find((member) => member.id === memberId)?.memberNumber ?? null,
+    };
+  });
 
 type TrainingRow = ReturnType<typeof trainingRows>[number];
 
@@ -340,10 +386,13 @@ const TRAINING_SPEC: ListSpec<TrainingRow> = {
     "date",
     "startsAt",
     "startsAtLocal",
+    "endsAt",
+    "endsAtLocal",
     "ringId",
     "ringName",
     "memberId",
     "memberName",
+    "memberNumber",
     "dogId",
     "dogName",
     "state",
@@ -373,11 +422,16 @@ export function trainingBookingExportRows(request: Request): number | Response {
 /** The MEMBER projection leaves out `note` and `createdByName` (S06 §6, T-09-30). */
 const MEMBER_BLOCK_KEYS = new Set(["note", "createdByName"]);
 
-function ringBlockSpec(member: boolean): ListSpec<RingBlock> {
+/** A row of `GET /ring-blocks` (`RingBlockListItem`): the block with its ring's name and colour. */
+type RingBlockRow = RingBlock & { ringColor: string | null; ringName: string | null };
+
+function ringBlockSpec(member: boolean): ListSpec<RingBlockRow> {
   return {
     fields: [
       "id",
       "ringId",
+      "ringName",
+      "ringColor",
       "from",
       "to",
       "date",
@@ -525,13 +579,16 @@ export const backofficeHandlers = [
   http.get("*/api/v1/ring-blocks", ({ request }) => {
     const scenario = currentMockScenario();
     const member = isImpersonation(scenario) || !hasRole(scenario, ["INSTRUCTOR", "ADMIN"]);
-    const items = ringBlockListItems().map((block) =>
-      member
+    const items = ringBlockListItems().map((stored): RingBlockRow => {
+      // The ring's name and colour, a deactivated ring's included (E5-T29).
+      const { ringColor, ringName } = ringFields({ id: stored.ringId });
+      const block = { ...stored, ringColor, ringName };
+      return member
         ? (Object.fromEntries(
             Object.entries(block).filter(([key]) => !MEMBER_BLOCK_KEYS.has(key)),
-          ) as RingBlock)
-        : block,
-    );
+          ) as RingBlockRow)
+        : block;
+    });
     return listResponse(request, items, ringBlockSpec(member));
   }),
   // R-06-11 / R-09-13 for this world's blocks (the calendar world answers its own).

@@ -142,6 +142,7 @@
       "status": "Estat"
     },
     "search": "Cerca per gos, abonat, xip…",
+    "selectCheckbox": "Selecciona {name}",
     "selectRow": "Obre la fitxa de {name}",
     "statusLabel": "Estat dels gossos",
     "statuses": {
@@ -149,7 +150,10 @@
       "all": "Tots",
       "inactive": "Baixa"
     },
-    "title": "Gossos"
+    "title": "Gossos",
+    "bulk": {
+      "sendAnnouncement": "Enviar comunicat"
+    }
   },
   "selfService": {
     "back": "Torna al perfil",

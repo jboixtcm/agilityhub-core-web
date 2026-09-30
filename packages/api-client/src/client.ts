@@ -42,6 +42,8 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   // S10 D14 (R-10-13): a row read and «Marcar-ho tot com a llegit».
   /^\/followup\/[^/]+\/read$/,
   "/followup/read-all",
+  // S11 «Enviar comunicat» and its dryRun (R-11-13).
+  /^\/message-templates\/[^/]+\/send$/,
 ];
 
 type MaybePromise<T> = Promise<T> | T;

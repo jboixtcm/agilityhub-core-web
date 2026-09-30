@@ -332,6 +332,35 @@ function initialTasks(): StoredTask[] {
   ];
 }
 
+/** The `tasksMany` variant: Duna has this many tasks, more than one page of `GET /tasks` (50). */
+export const FOLLOWUP_MANY_TASKS = 52;
+
+/**
+ * The older tasks of the `tasksMany` variant, one a day back from 27-07 (after mockup 26's three,
+ * `createdAt` desc): every third one done by Laura; the two oldest — «Repàs 48», done, and «Repàs
+ * 49», pending — sit on the second page.
+ */
+function manyTasks(): StoredTask[] {
+  return Array.from({ length: FOLLOWUP_MANY_TASKS - 3 }, (_, index) => {
+    const created = new Date(Date.UTC(2026, 6, 27 - index, 16));
+    const done = index % 3 === 2;
+    return {
+      createdAt: created.toISOString().replace(/\.\d{3}Z$/u, "Z"),
+      createdBy: index % 2 === 0 ? ESTEL : MARC,
+      deletedAt: null,
+      dogId: DUNA,
+      doneAt: done
+        ? new Date(created.getTime() + 2 * 86_400_000).toISOString().replace(/\.\d{3}Z$/u, "Z")
+        : null,
+      doneBy: done ? LAURA : null,
+      id: `t-repas-${String(index + 1)}`,
+      state: done ? ("DONE" as const) : ("PENDING" as const),
+      text: `Repàs ${String(index + 1)}: dues sessions curtes de contactes`,
+      version: done ? 2 : 1,
+    };
+  });
+}
+
 function initialAttachments(): StoredAttachment[] {
   return [
     {
@@ -376,6 +405,8 @@ function initialObservations(): Map<string, StoredObservations> {
 export const followupState: {
   attachments: StoredAttachment[];
   idempotency: Map<string, Replay>;
+  /** The `many` variant's older tasks are in `tasks` already. */
+  manySeeded: boolean;
   nextId: number;
   observations: Map<string, StoredObservations>;
   /** The `stale` variant's other save of the observations happened already. */
@@ -385,6 +416,7 @@ export const followupState: {
 } = {
   attachments: initialAttachments(),
   idempotency: new Map(),
+  manySeeded: false,
   nextId: 100,
   observations: initialObservations(),
   otherSaved: false,
@@ -395,11 +427,21 @@ export const followupState: {
 export function resetFollowupState(): void {
   followupState.attachments = initialAttachments();
   followupState.idempotency = new Map();
+  followupState.manySeeded = false;
   followupState.nextId = 100;
   followupState.observations = initialObservations();
   followupState.otherSaved = false;
   followupState.tasks = initialTasks();
   followupState.uploads = new Map();
+}
+
+/** The scenario's variant of the tasks world (`many`: 52 tasks on Duna), seeded once per reset. */
+export type FollowupVariant = "many" | "stale";
+
+export function syncFollowupVariant(variant: FollowupVariant | undefined): void {
+  if (variant !== "many" || followupState.manySeeded) return;
+  followupState.manySeeded = true;
+  followupState.tasks.push(...manyTasks());
 }
 
 export function nextFollowupId(prefix: string): string {

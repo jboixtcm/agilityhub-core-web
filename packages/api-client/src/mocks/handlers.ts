@@ -8,6 +8,7 @@ import { attendanceHandlers, resetAttendanceMockState } from "./attendance-handl
 import {
   backofficeHandlers,
   JOBS_MOCK_NOW,
+  refuse,
   resetBackofficeMockState,
   trainingBookingExportRows,
 } from "./backoffice-handlers";
@@ -34,6 +35,7 @@ import {
   censusRecordState,
   censusDogs,
   censusLevels,
+  censusMemberFirstNames,
   censusMembers,
   initialSavedViews,
   resetCensusRecordState,
@@ -55,6 +57,7 @@ import {
   type MeDogs,
   type MeProfile,
 } from "./fixtures/member-self-service";
+import { findTemplate, messagingState } from "./fixtures/messaging";
 import {
   findParameter,
   replaceParameter,
@@ -106,6 +109,11 @@ import {
   fieldsProjection,
   MEMBER_LIST_FIELDS,
 } from "./list-fields";
+import {
+  messagingHandlers,
+  notificationExportRows,
+  resetMessagingMockState,
+} from "./messaging-handlers";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -131,7 +139,7 @@ type PaymentMethodRequest = components["schemas"]["PaymentMethodPatch"];
 type BookingBlockRequest = components["schemas"]["BookingBlockRequest"];
 type RolesRequest = components["schemas"]["RolesRequest"];
 type NotificationPreferences = components["schemas"]["NotificationPreferences"];
-type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesPatch"];
+type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesRequest"];
 type DogPatchRequest = components["schemas"]["DogPatch"] &
   components["schemas"]["DogPatchPendingFields"];
 type DogLevelRequest = components["schemas"]["DogLevelRequest"];
@@ -755,6 +763,31 @@ function filterItems<Item>(
   );
 }
 
+/**
+ * The members an announcement reaches (S11 R-11-13): the selection's existing members, or the
+ * members `GET /members` lists for the same filters and `q` (any status the list shows); `undefined`
+ * for a filter the list does not take (400 INVALID_FILTER).
+ */
+function announcementRecipients(
+  recipients: components["schemas"]["AnnouncementRecipients"],
+): string[] | undefined {
+  if (recipients.memberIds != null) {
+    const ids = new Set(recipients.memberIds);
+    return censusMembers.filter((member) => ids.has(member.id)).map((member) => member.id);
+  }
+  const url = new URL("https://mock.example.test/api/v1/members");
+  for (const filter of recipients.filters ?? []) url.searchParams.append("filter", filter);
+  const filters = parseFilters(url);
+  if (
+    filters === undefined ||
+    filters.some((filter) => memberFilterLabels[filter.field] === undefined)
+  ) {
+    return undefined;
+  }
+  const searched = filterMembersBySearch(censusMembers, recipients.q ?? "");
+  return filterItems(searched, filters, memberValues)?.map((member) => member.id);
+}
+
 function filterMembersBySearch(items: readonly MemberListItem[], query: string): MemberListItem[] {
   const target = normalized(query);
   if (target === "") {
@@ -1069,7 +1102,13 @@ function signupPaymentMethod(
   const iban = patch.sepa?.iban;
   const stored =
     member.paymentMethod?.type === "SEPA_DD" ? member.paymentMethod.maskedAccount : undefined;
-  const maskedAccount = iban === undefined ? stored : `···· ···· ···· ···· ${iban.slice(-4)}`;
+  // E42: an absent IBAN keeps the stored account, `null` clears it.
+  const maskedAccount =
+    iban === undefined
+      ? stored
+      : iban === null
+        ? undefined
+        : `···· ···· ···· ···· ${iban.slice(-4)}`;
   return {
     accountMissing: maskedAccount === undefined,
     paymentMethod: {
@@ -1323,6 +1362,62 @@ export const handlers = [
   // S10 (E6-W02) first: its signed-upload purposes (TASK, DOG_OBSERVATIONS) are answered before the
   // generic upload handler below, which keeps the other purposes.
   ...followupHandlers,
+  // S11 (E7-W01) «Enviar comunicat» (R-11-13): the recipients are the members of the selection or
+  // of `GET /members`'s filters; one `Idempotency-Key` replays its batch.
+  http.post("*/api/v1/message-templates/:id/send", async ({ params, request }) => {
+    const refused = refuse(currentMockScenario(), ["ADMIN"]);
+    if (refused !== undefined) return refused;
+    const template = findTemplate(String(params.id));
+    if (template === undefined) return apiError("NOT_FOUND", "Template not found", 404);
+    const key = request.headers.get("Idempotency-Key");
+    if (key === null || key === "") {
+      return validationError([{ code: "REQUIRED", field: "Idempotency-Key" }]);
+    }
+    const body = (await request.json().catch(() => null)) as
+      components["schemas"]["AnnouncementRequest"] | null;
+    if (body === null || typeof body.dryRun !== "boolean") {
+      return validationError([{ code: "REQUIRED", field: "dryRun" }]);
+    }
+    const signature = JSON.stringify({ body, id: template.id });
+    const replay = messagingState.idempotency.get(key);
+    if (replay !== undefined) {
+      return replay.signature === signature
+        ? HttpResponse.json(replay.body as Record<string, unknown>, { status: replay.status })
+        : HttpResponse.json<ApiErrorResponse>(
+            {
+              code: "IDEMPOTENCY_KEY_REUSED",
+              details: { reason: "DIFFERENT_REQUEST" },
+              message: "Idempotency key reused",
+              traceId: "mock-trace-id",
+            },
+            { status: 409 },
+          );
+    }
+    if (template.code !== "N-24" && template.kind !== "CUSTOM") {
+      return apiError("TEMPLATE_NOT_SENDABLE", "Template not sendable", 422);
+    }
+    const members = announcementRecipients(body.recipients);
+    if (members === undefined) return apiError("INVALID_FILTER", "Invalid member filter", 400);
+    if (members.length === 0) return apiError("NO_RECIPIENTS", "No recipients", 422);
+    if (body.dryRun) {
+      return HttpResponse.json({ batchId: null, recipientCount: members.length });
+    }
+    messagingState.batches += 1;
+    const answer = {
+      batchId: `batch-${String(messagingState.batches).padStart(4, "0")}`,
+      recipientCount: members.length,
+    };
+    messagingState.idempotency.set(key, { body: answer, signature, status: 202 });
+    return HttpResponse.json(answer, { status: 202 });
+  }),
+  // S11 (E7-W01) the log's export, before `/notifications/:id` (same `q`, filters and columns).
+  http.get("*/api/v1/notifications/export", ({ request }) => {
+    const rows = notificationExportRows(request);
+    return typeof rows === "number"
+      ? listExport(request, "notifications", rows, "00000000-0000-4000-8000-000000000410")
+      : rows;
+  }),
+  ...messagingHandlers,
   http.get("*/api/v1/branding", () =>
     HttpResponse.json(currentMockScenario().branding, {
       headers: { ETag: '"mock-branding-v1"' },
@@ -2728,13 +2823,28 @@ export const handlers = [
     const body = (await request.json()) as NotificationPreferencesPatch;
     const preferences = censusRecordState.memberOverview
       .notificationPreferences as NotificationPreferences;
+    // A partial save (T-11-20): an absent or null key keeps its value; `reminderMinutesBefore: null`
+    // is «Mai»; any other value must be one of the options (422 INVALID_REMINDER_OPTION, rule 0).
+    const reminder = body.reminderMinutesBefore;
+    if (
+      reminder !== undefined &&
+      reminder !== null &&
+      !preferences.reminderOptionsMinutes.includes(reminder)
+    ) {
+      return apiError("INVALID_REMINDER_OPTION", "Invalid reminder option", 422);
+    }
+    const emailByCategory = { ...preferences.emailByCategory };
+    for (const category of ["OPERATIONAL", "PERSONAL", "CLUB_CHANGES", "CLUB_NEWS"] as const) {
+      const value = body.emailByCategory?.[category];
+      if (value !== undefined && value !== null) emailByCategory[category] = value;
+    }
     const updatedPreferences: NotificationPreferences = {
       ...preferences,
-      ...body,
-      emailByCategory: {
-        ...preferences.emailByCategory,
-        ...body.emailByCategory,
-      },
+      emailByCategory,
+      ...(body.pushClubNews === undefined || body.pushClubNews === null
+        ? {}
+        : { pushClubNews: body.pushClubNews }),
+      ...(reminder === undefined ? {} : { reminderMinutesBefore: reminder }),
     };
     censusRecordState.memberOverview.notificationPreferences = updatedPreferences;
     return HttpResponse.json(updatedPreferences);
@@ -3004,6 +3114,7 @@ export const handlers = [
       return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
     }
     dog.owner = {
+      firstName: censusMemberFirstNames.get(target.id) ?? target.fullName,
       fullName: target.fullName,
       id: target.id,
       ...(target.memberNumber === undefined ? {} : { memberNumber: target.memberNumber }),
@@ -3837,6 +3948,7 @@ export {
   resetDashboardMockState,
   resetFollowupMockState,
   resetMemberSelfServiceState,
+  resetMessagingMockState,
   resetOnboardingMockState,
   resetPlanningState,
   resetSettingsState,

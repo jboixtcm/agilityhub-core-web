@@ -214,7 +214,10 @@
       "personal": "Personal announcements",
       "push": "Push notifications for club announcements",
       "reminder": "Class reminder",
-      "sms": "+SMS"
+      "sms": "+SMS",
+      "club_news": "Club announcements",
+      "minutesBefore": "{count} min before",
+      "sentLink": "Sent notifications ›"
     },
     "resend": {
       "description": "A new link will be sent to the account access email.",

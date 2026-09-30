@@ -14,13 +14,13 @@
   {
     "name": "clubs-admin initial JavaScript",
     "path": "apps/clubs-admin/dist/assets/index-*.js",
-    "limit": "385 kB",
+    "limit": "390 kB",
     "gzip": true
   },
   {
     "name": "clubs-admin all JavaScript",
     "path": "apps/clubs-admin/dist/assets/*.js",
-    "limit": "535 kB",
+    "limit": "550 kB",
     "gzip": true
   },
   {

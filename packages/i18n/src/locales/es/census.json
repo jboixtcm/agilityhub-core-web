@@ -142,6 +142,7 @@
       "status": "Estado"
     },
     "search": "Buscar por perro, abonado, chip…",
+    "selectCheckbox": "Seleccionar a {name}",
     "selectRow": "Abrir la ficha de {name}",
     "statusLabel": "Estado de los perros",
     "statuses": {
@@ -149,7 +150,10 @@
       "all": "Todos",
       "inactive": "Baja"
     },
-    "title": "Perros"
+    "title": "Perros",
+    "bulk": {
+      "sendAnnouncement": "Enviar comunicado"
+    }
   },
   "selfService": {
     "back": "Volver al perfil",

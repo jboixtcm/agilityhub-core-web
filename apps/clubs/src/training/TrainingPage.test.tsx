@@ -433,7 +433,10 @@ describe("E5-W02 round 2 · review #1: the offline copy of 08 is per club and pe
     expect(pressed(group("Gossos"))).toEqual(["Rock · D"]);
     cleanup();
     // The same account, now through «Entra com l'abonat»: another scope.
-    await expectNothingKept({ ...own, impersonation: { actorName: "Aina Serra" } });
+    await expectNothingKept({
+      ...own,
+      impersonation: { actorName: "Aina Serra", memberName: "Laura Serra Vidal" },
+    });
     // The impersonation ended: its start already dropped the account's own copy.
     await expectNothingKept(own);
   });

@@ -181,5 +181,66 @@
   "followupKind": {
     "TASK": "task",
     "MEMBER_NOTE": "student note"
+  },
+  "notificationCategory": {
+    "OPERATIONAL": "Operational",
+    "PERSONAL": "Personal notices",
+    "CLUB_CHANGES": "Booking changes",
+    "CLUB_NEWS": "Club announcements",
+    "SYSTEM": "System"
+  },
+  "notificationAudience": {
+    "MEMBER": "Student",
+    "INSTRUCTORS": "Instructors",
+    "ADMINS": "Administrator",
+    "APPLICANT": "Applicant"
+  },
+  "notificationChannel": {
+    "APP": "App",
+    "EMAIL": "Email",
+    "SMS": "SMS",
+    "PUSH": "Push"
+  },
+  "deliveryStatus": {
+    "QUEUED": "queued",
+    "SENT": "sent",
+    "DELIVERED": "delivered",
+    "FAILED": "failed",
+    "SKIPPED_BY_PREFERENCE": "skipped by preference",
+    "SKIPPED_MODULE_OFF": "module off",
+    "SKIPPED_NO_CONTACT": "no contact",
+    "SKIPPED_CAP": "SMS limit",
+    "SKIPPED_STALE": "no longer needed",
+    "SKIPPED_NOT_ALLOWED": "not allowed"
+  },
+  "templateIcon": {
+    "check": "Check mark",
+    "x": "Cross",
+    "unlock": "Open padlock",
+    "warn": "Warning",
+    "up": "Up",
+    "heart": "Heart",
+    "bell": "Bell",
+    "doc": "Document",
+    "flag": "Flag",
+    "mail": "Email",
+    "cal": "Calendar",
+    "clock": "Clock",
+    "info": "Information",
+    "paw": "Paw",
+    "cone": "Cone",
+    "lock": "Padlock"
+  },
+  "templateColor": {
+    "NEUTRAL": "Neutral",
+    "OK": "Success",
+    "WARNING": "Warning",
+    "ERROR": "Error",
+    "ACCENT": "Highlight"
+  },
+  "templateStatus": {
+    "ACTIVE": "active",
+    "DISABLED": "disabled",
+    "ARCHIVED": "archived"
   }
 }

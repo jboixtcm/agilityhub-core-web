@@ -1,0 +1,5142 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table 143ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card 42ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters 92ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > T-10-32 (D13): en with no missing key; `Level.name` is the api's (its ca fallback), never translated here 28ms
+ × src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there 321ms
+   → Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Gestionar tasques i notes":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_7_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------region:
+
+  Name "Observacions · privades · camp únic":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_8_-title"[39m
+    [33mclass[39m=[32m"ah-followup__block"[39m
+  [36m/>[39m
+
+  Name "Tasques":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_9_"[39m
+    [33mclass[39m=[32m"ah-tasks"[39m
+  [36m/>[39m
+
+  Name "Notes als instructors · de l'alumne · només lectura":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_8_-note"[39m
+    [33mclass[39m=[32m"ah-followup__block"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Observacions · privades · camp únic":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-followup__title"[39m
+    [33mid[39m=[32m"_r_8_-title"[39m
+  [36m/>[39m
+
+  Name "Tasques":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-tasks__title"[39m
+    [33mid[39m=[32m"_r_9_"[39m
+  [36m/>[39m
+
+  Name "Notes als instructors · de l'alumne · només lectura":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-followup__title"[39m
+    [33mid[39m=[32m"_r_8_-note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Observacions privades":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+    [33mid[39m=[32m"_r_8_"[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mrows[39m=[32m"3"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Adjunta un fitxer":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Afegir":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "vídeo_balancí.mp4":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Veure l'historial complet ›":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-followup__history"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "foto_balancí.jpg":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Desa":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-tasks__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-tasks__list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_7_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_7_"[39m
+    [36m>[39m
+      [0mGestionar tasques i notes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-followup"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_8_-title"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_8_-title"[39m
+        [36m>[39m
+          [0mObservacions[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· privades · camp únic[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+          [33mfor[39m=[32m"_r_8_"[39m
+        [36m>[39m
+          [0mObservacions privades[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+          [33mid[39m=[32m"_r_8_"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+        [36m</textarea>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__clips"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-picker"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAdjunta un fitxer[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mmultiple[39m=[32m""[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"file"[39m
+            [36m/>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_9_"[39m
+        [33mclass[39m=[32m"ah-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-tasks__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-tasks__title"[39m
+            [33mid[39m=[32m"_r_9_"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mAfegir[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"ah-tasks__list"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"...
+ × src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link 94ms
+   → Unable to find a label with the text of: Text de la tasca nova
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_b_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_b_"[39m
+    [36m>[39m
+      [0mGestionar tasques i notes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-followup"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_i_-title"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_i_-title"[39m
+        [36m>[39m
+          [0mObservacions[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· privades · camp únic[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+          [33mfor[39m=[32m"_r_i_"[39m
+        [36m>[39m
+          [0mObservacions privades[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+          [33mid[39m=[32m"_r_i_"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+        [36m</textarea>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__clips"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-picker"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAdjunta un fitxer[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mmultiple[39m=[32m""[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"file"[39m
+            [36m/>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_j_"[39m
+        [33mclass[39m=[32m"ah-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-tasks__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-tasks__title"[39m
+            [33mid[39m=[32m"_r_j_"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mAfegir[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"ah-tasks__list"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m31-07 · Estel[0m
+                [0m · [0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chips"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-attachment-chip"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span>[39m
+                      [0mvídeo_balancí.mp4[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mRepasseu la taula de contactes al jardí, 5 minuts al dia[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m30-07 · Marc[0m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--done"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mfeta[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mTreballar l'«espera» a la línia de sortida[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m28-07 · Estel[0m
+                [0m · feta per la Laura el 02-08[0m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-followup__history"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mVeure l'historial complet ›[0m
+      [36m</button>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_i_-note"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_i_-note"[39m
+        [36m>[39m
+          [0mNotes als instructors[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· de l'alumne · només lectura[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__note"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+          [36m</p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-chips"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-chip"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mfoto_balancí.jpg[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ × src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer 10026ms
+   → Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card student-record__block"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mNotes als instructors — de l'alumne[0m
+  [36m</h2>[39m
+  [36m<p>[39m
+    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"student-record__clips"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0m [0m
+      [0mfoto_balancí.jpg[0m
+    [36m</button>[39m
+  [36m</p>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card student-record__block"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mNotes als instructors — de l'alumne[0m
+  [36m</h2>[39m
+  [36m<p>[39m
+    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"student-record__clips"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0m [0m
+      [0mfoto_balancí.jpg[0m
+    [36m</button>[39m
+  [36m</p>[39m
+[36m</div>[39m
+ × src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key 49ms
+   → expected [ …(4) ] to deeply equal [ …(4) ]
+ ✓ src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 489ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Mostra'n més"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Gestionar tasques i notes":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_7_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------region:
+
+  Name "Observacions · privades · camp únic":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_8_-title"[39m
+    [33mclass[39m=[32m"ah-followup__block"[39m
+  [36m/>[39m
+
+  Name "Tasques":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_9_"[39m
+    [33mclass[39m=[32m"ah-tasks"[39m
+  [36m/>[39m
+
+  Name "Notes als instructors · de l'alumne · només lectura":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"_r_8_-note"[39m
+    [33mclass[39m=[32m"ah-followup__block"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Observacions · privades · camp únic":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-followup__title"[39m
+    [33mid[39m=[32m"_r_8_-title"[39m
+  [36m/>[39m
+
+  Name "Tasques":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-tasks__title"[39m
+    [33mid[39m=[32m"_r_9_"[39m
+  [36m/>[39m
+
+  Name "Notes als instructors · de l'alumne · només lectura":
+  [36m<h2[39m
+    [33mclass[39m=[32m"ah-followup__title"[39m
+    [33mid[39m=[32m"_r_8_-note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Observacions privades":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+    [33mid[39m=[32m"_r_8_"[39m
+    [33mmaxlength[39m=[32m"2000"[39m
+    [33mrows[39m=[32m"3"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Adjunta un fitxer":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Afegir":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "vídeo_balancí.mp4":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Torna-la a pendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Marca-la com a feta":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la tasca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Elimina la tasca"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Veure l'historial complet ›":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-followup__history"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "foto_balancí.jpg":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Desa":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-tasks__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-tasks__list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--done"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__text"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-task__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_7_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_7_"[39m
+    [36m>[39m
+      [0mGestionar tasques i notes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-followup"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_8_-title"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_8_-title"[39m
+        [36m>[39m
+          [0mObservacions[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· privades · camp únic[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+          [33mfor[39m=[32m"_r_8_"[39m
+        [36m>[39m
+          [0mObservacions privades[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+          [33mid[39m=[32m"_r_8_"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+        [36m</textarea>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__clips"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-picker"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAdjunta un fitxer[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mmultiple[39m=[32m""[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"file"[39m
+            [36m/>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_9_"[39m
+        [33mclass[39m=[32m"ah-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-tasks__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-tasks__title"[39m
+            [33mid[39m=[32m"_r_9_"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mAfegir[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"ah-tasks__list"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/student-record.test.tsx:243:36
+    241|       expect(drawerCards(drawer)).toHaveLength(50);
+    242|     });
+    243|     fireEvent.click(within(drawer).getByRole("button", { name: "Mostra…
+       |                                    ^
+    244|     await waitFor(() => {
+    245|       expect(drawerCards(drawer)).toHaveLength(52);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link
+TestingLibraryElementError: Unable to find a label with the text of: Text de la tasca nova
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_b_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_b_"[39m
+    [36m>[39m
+      [0mGestionar tasques i notes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-followup"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_i_-title"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_i_-title"[39m
+        [36m>[39m
+          [0mObservacions[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· privades · camp únic[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+          [33mfor[39m=[32m"_r_i_"[39m
+        [36m>[39m
+          [0mObservacions privades[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+          [33mid[39m=[32m"_r_i_"[39m
+          [33mmaxlength[39m=[32m"2000"[39m
+          [33mrows[39m=[32m"3"[39m
+        [36m>[39m
+          [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+        [36m</textarea>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__clips"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-picker"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAdjunta un fitxer[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mmultiple[39m=[32m""[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"file"[39m
+            [36m/>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_j_"[39m
+        [33mclass[39m=[32m"ah-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-tasks__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-tasks__title"[39m
+            [33mid[39m=[32m"_r_j_"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mAfegir[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"ah-tasks__list"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m31-07 · Estel[0m
+                [0m · [0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chips"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-attachment-chip"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span>[39m
+                      [0mvídeo_balancí.mp4[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Edita la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mRepasseu la taula de contactes al jardí, 5 minuts al dia[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m30-07 · Marc[0m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"ah-task ah-task--done"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-task__head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mfeta[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-task__actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Elimina la tasca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__text"[39m
+            [36m>[39m
+              [0mTreballar l'«espera» a la línia de sortida[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"ah-task__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m28-07 · Estel[0m
+                [0m · feta per la Laura el 02-08[0m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-followup__history"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mVeure l'historial complet ›[0m
+      [36m</button>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"_r_i_-note"[39m
+        [33mclass[39m=[32m"ah-followup__block"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"ah-followup__title"[39m
+          [33mid[39m=[32m"_r_i_-note"[39m
+        [36m>[39m
+          [0mNotes als instructors[0m
+          [0m [0m
+          [36m<span>[39m
+            [0m· de l'alumne · només lectura[0m
+          [36m</span>[39m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup__note"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+          [36m</p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-attachment-chips"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-chip"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mfoto_balancí.jpg[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/student-record.test.tsx:284:25
+    282|     fireEvent.click(within(history).getByRole("button", { name: "Tanca…
+    283|     const back = await screen.findByRole("dialog", { name: "Gestionar …
+    284|     expect(within(back).getByLabelText("Text de la tasca nova")).toHav…
+       |                         ^
+    285|     expect(within(back).getByRole("button", { name: "vídeo_salt.mp4" }…
+    286|     expect(within(back).getByLabelText("Text de la tasca")).toHaveValu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card student-record__block"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mNotes als instructors — de l'alumne[0m
+  [36m</h2>[39m
+  [36m<p>[39m
+    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"student-record__clips"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0m [0m
+      [0mfoto_balancí.jpg[0m
+    [36m</button>[39m
+  [36m</p>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card student-record__block"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mNotes als instructors — de l'alumne[0m
+  [36m</h2>[39m
+  [36m<p>[39m
+    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"student-record__clips"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [0m [0m
+      [0mfoto_balancí.jpg[0m
+    [36m</button>[39m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/student-record.test.tsx:307:40
+    305|     const clip = within(note).getByRole("button", { name: "foto_balanc…
+    306|     fireEvent.click(clip);
+    307|     const refused = await within(note).findByRole("alert");
+       |                                        ^
+    308|     expect(refused).toHaveTextContent("No teniu permís per fer aquesta…
+    309|     expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key
+AssertionError: expected [ …(4) ] to deeply equal [ …(4) ]
+
+- Expected
++ Received
+
+  [
+    "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisado",
+    "7 | Clases · últimos 30 días | mes móvil",
+    "2,3 | Entrenamientos / semana | media 30 días",
+-   "lun 03/08 | Última clase | A+B · Central · Estel",
++   "lun 3/8 | Última clase | A+B · Central · Estel",
+  ]
+
+ ❯ src/instructor/student-record.test.tsx:331:7
+    329|         [...card.children].map((part) => clean(part.textContent)).join…
+    330|       ),
+    331|     ).toEqual([
+       |       ^
+    332|       "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisad…
+    333|       "7 | Clases · últimos 30 días | mes móvil",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  16:15:02
+   Duration  12.55s (tests 90%, transform 5%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --reporter=verbose src/instructor/student-record.test.tsx

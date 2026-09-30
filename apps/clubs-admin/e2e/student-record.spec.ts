@@ -110,4 +110,32 @@ test.describe("E6-W02 T-10-28 D13 «Fitxa d'alumne» (desktop) against MSW", () 
     await expect(page.getByText("1 pendent", { exact: true })).toBeVisible();
     await expect(page.getByText("2 fetes", { exact: true })).toBeVisible();
   });
+
+  test("round 2 #3: the history takes the drawer's place and gives it back with the drafts — a new task's text and file — and the focus on its link", async ({
+    page,
+  }) => {
+    await signIn(page);
+    await page.getByRole("link", { exact: true, name: "Alumnes" }).click();
+    await page.getByPlaceholder("Cerca un alumne").fill("Duna");
+    await page.getByRole("link", { name: "Laura + Duna · C" }).click();
+    await page.waitForURL("**/alumnes/dog-duna");
+    await page.getByRole("button", { name: "Gestionar tasques i notes" }).click();
+    const drawer = page.getByRole("dialog", { name: "Gestionar tasques i notes" });
+    await drawer.getByRole("button", { name: "Afegir" }).click();
+    const form = drawer.getByRole("form", { name: "Nova tasca" });
+    await form.getByLabel("Text de la tasca nova").fill("Salts amb calma");
+    await form.locator('input[type="file"]').setInputFiles({
+      buffer: Buffer.from("x"),
+      mimeType: "video/mp4",
+      name: "vídeo_salt.mp4",
+    });
+    await drawer.getByRole("button", { name: "Veure l'historial complet ›" }).click();
+    const history = page.getByRole("dialog", { name: "Historial de tasques" });
+    await expect(history.locator(".ah-followup-history .ah-task")).toHaveCount(3);
+    await expect(history.getByLabel("Text de la tasca nova")).toBeHidden();
+    await page.keyboard.press("Escape");
+    await expect(drawer.getByLabel("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    await expect(drawer.getByRole("button", { exact: true, name: "vídeo_salt.mp4" })).toBeVisible();
+    await expect(drawer.getByRole("button", { name: "Veure l'historial complet ›" })).toBeFocused();
+  });
 });

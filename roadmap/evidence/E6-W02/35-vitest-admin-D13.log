@@ -1,0 +1,18 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table 175ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card 50ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters 112ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > T-10-32 (D13): en with no missing key; `Level.name` is the api's (its ca fallback), never translated here 33ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there 228ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link 126ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer 32ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key 41ms
+ ✓ src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 464ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  16:23:49
+   Duration  2.65s (tests 49%, transform 30%, environment 10%, import 9%, setup 2%)
+

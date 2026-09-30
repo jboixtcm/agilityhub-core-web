@@ -1,0 +1,46 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx (8 tests | 1 failed | 7 skipped) 415ms
+   ❯ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (8)
+     × a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version 413ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version
+AssertionError: expected { ADMINS: { APP: true, …(2) }, …(2) } to deeply equal { ADMINS: { APP: true, …(2) }, …(2) }
+
+- Expected
++ Received
+
+@@ -1,9 +1,9 @@
+  {
+    "ADMINS": {
+      "APP": true,
+-     "EMAIL": true,
++     "EMAIL": false,
+      "SMS": false,
+    },
+    "INSTRUCTORS": {
+      "APP": true,
+      "EMAIL": false,
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx:306:29
+    304|       [4, "OK"],
+    305|     ]);
+    306|     expect(puts[2]?.matrix).toEqual({
+       |                             ^
+    307|       ADMINS: { APP: true, EMAIL: true, SMS: false },
+    308|       INSTRUCTORS: { APP: true, EMAIL: false, SMS: false },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  17:33:56
+   Duration  1.46s (transform 31%, tests 30%, environment 20%, import 13%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/AnnouncementsPage.test.tsx -t stale PUT

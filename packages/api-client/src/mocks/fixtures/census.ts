@@ -313,6 +313,7 @@ function dogDetailFixture(id: "dog-duna" | "dog-rock"): DogDetail {
         ]
       : [],
     owner: {
+      firstName: "Laura",
       fullName: "Laura Serra Vidal",
       id: "member-laura",
       memberNumber: 87,
@@ -620,10 +621,17 @@ function memberListItem(input: MemberFixtureInput): MemberListItem {
   };
 }
 
-export const censusMembers: readonly MemberListItem[] = [
+const memberInputs: readonly MemberFixtureInput[] = [
   ...featuredMembers,
   ...Array.from({ length: 184 - featuredMembers.length }, (_, index) => generatedMember(index)),
-].map(memberListItem);
+];
+
+export const censusMembers: readonly MemberListItem[] = memberInputs.map(memberListItem);
+
+/** Each census member's `firstName` (the list item has none): an owner's `OwnerSummary.firstName`. */
+export const censusMemberFirstNames: ReadonlyMap<string, string> = new Map(
+  memberInputs.map((input) => [input.id, input.firstName]),
+);
 
 const featuredDogs = [
   {
@@ -797,6 +805,10 @@ function dogListItem(input: DogFixtureInput): DogListItem {
     licenses: input.licenses,
     name: input.name,
     owner: {
+      // Member.firstName, a compound one whole (E5-T29): the full name without the last names.
+      firstName: input.owner.fullName.endsWith(` ${input.owner.lastName}`)
+        ? input.owner.fullName.slice(0, -input.owner.lastName.length - 1)
+        : input.owner.fullName,
       fullName: input.owner.fullName,
       id: input.owner.id,
       status: "ACTIVE",

@@ -236,7 +236,8 @@ export function FollowUpPage({
             filter: apiFilters(state.filters),
             page: state.page,
             ...(state.q === "" ? {} : { q: state.q }),
-            size: state.size,
+            // The state holds 20 or 50 only (`useUrlListState`), the contract's two sizes.
+            size: state.size === 20 ? 20 : 50,
             sort: state.sort,
           },
         },

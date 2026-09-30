@@ -223,7 +223,10 @@
       "personal": "Comunicats personals",
       "push": "Notificacions push de comunicats del club",
       "reminder": "Recordatori de classe",
-      "sms": "+SMS"
+      "sms": "+SMS",
+      "club_news": "Comunicats del club",
+      "minutesBefore": "{count} min abans",
+      "sentLink": "Avisos enviats ›"
     },
     "resend": {
       "description": "S'enviarà un enllaç nou al correu d'accés del compte.",

@@ -181,5 +181,66 @@
   "followupKind": {
     "TASK": "tasca",
     "MEMBER_NOTE": "nota d'alumne"
+  },
+  "notificationCategory": {
+    "OPERATIONAL": "Operativa",
+    "PERSONAL": "Comunicats individuals",
+    "CLUB_CHANGES": "Canvis en reserves",
+    "CLUB_NEWS": "Comunicats del club",
+    "SYSTEM": "Sistema"
+  },
+  "notificationAudience": {
+    "MEMBER": "Alumne",
+    "INSTRUCTORS": "Instructors",
+    "ADMINS": "Administrador",
+    "APPLICANT": "Sol·licitant"
+  },
+  "notificationChannel": {
+    "APP": "App",
+    "EMAIL": "Correu",
+    "SMS": "SMS",
+    "PUSH": "Push"
+  },
+  "deliveryStatus": {
+    "QUEUED": "en cua",
+    "SENT": "enviat",
+    "DELIVERED": "lliurat",
+    "FAILED": "fallit",
+    "SKIPPED_BY_PREFERENCE": "omès per preferència",
+    "SKIPPED_MODULE_OFF": "mòdul desactivat",
+    "SKIPPED_NO_CONTACT": "sense contacte",
+    "SKIPPED_CAP": "límit d'SMS",
+    "SKIPPED_STALE": "ja no calia",
+    "SKIPPED_NOT_ALLOWED": "no permès"
+  },
+  "templateIcon": {
+    "check": "Validat",
+    "x": "Creu",
+    "unlock": "Cadenat obert",
+    "warn": "Avís",
+    "up": "Amunt",
+    "heart": "Cor",
+    "bell": "Campana",
+    "doc": "Document",
+    "flag": "Bandera",
+    "mail": "Correu",
+    "cal": "Calendari",
+    "clock": "Rellotge",
+    "info": "Informació",
+    "paw": "Petja",
+    "cone": "Con",
+    "lock": "Cadenat"
+  },
+  "templateColor": {
+    "NEUTRAL": "Neutre",
+    "OK": "Correcte",
+    "WARNING": "Avís",
+    "ERROR": "Error",
+    "ACCENT": "Destacat"
+  },
+  "templateStatus": {
+    "ACTIVE": "activa",
+    "DISABLED": "desactivada",
+    "ARCHIVED": "arxivada"
   }
 }

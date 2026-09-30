@@ -46,6 +46,7 @@ export {
   type FollowupHistory,
   type FollowupLoad,
   type FollowupTask,
+  type FollowupTasksPaging,
   useDogFollowup,
 } from "./followup";
 export type { components, operations, paths } from "./generated/schema";

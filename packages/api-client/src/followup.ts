@@ -39,7 +39,17 @@ export interface FollowupHistory {
   read: number;
 }
 
-/** CONVENCIONS_API §4: the history drawer reads pages of 50. */
+/** The paging of the editable list (26 and D13's drawer): the pages of `GET /tasks` read so far. */
+export interface FollowupTasksPaging {
+  /** «Mostra'n més» failed to read the next page. */
+  error?: unknown;
+  /** The last page came back full: there may be another. */
+  more: boolean;
+  /** «Mostra'n més» is reading the next page. */
+  pending: boolean;
+}
+
+/** CONVENCIONS_API §4: the tasks are read in pages of 50 (the list and the history drawer). */
 export const FOLLOWUP_HISTORY_PAGE_SIZE = 50;
 
 /** `Attachment.name` is at most 80 characters (S10 §3): a longer file name keeps its extension. */
@@ -51,19 +61,29 @@ export function attachmentName(fileName: string): string {
 }
 
 /**
- * One `Idempotency-Key` per payload (CONVENCIONS_API §7): a retry of the same payload (after a
- * network failure, or a double tap) reuses the key, so the api creates or deletes once; another
- * payload gets a new one.
+ * One `Idempotency-Key` per submission (CONVENCIONS_API §7, ruling E74): the key is created when a
+ * submission starts and reused by its retries — the same payload sent again after a request that
+ * got no answer (a network failure) — so the api creates or deletes once; it is retired as soon as
+ * the api answers, success or refusal, so the next submission of the same payload is a new one
+ * with a new key. (A double tap while a write runs sends nothing: `run` refuses it.)
  */
-function useIdempotencyKeys() {
-  const keys = useRef(new Map<string, string>());
-  return useCallback((signature: string) => {
-    const known = keys.current.get(signature);
-    if (known !== undefined) return known;
-    const key = crypto.randomUUID();
-    keys.current.set(signature, key);
-    return key;
-  }, []);
+function useSubmissionKeys() {
+  const unanswered = useRef(new Map<string, string>());
+  return useCallback(
+    async <Result>(signature: string, send: (key: string) => Promise<Result>): Promise<Result> => {
+      const key = unanswered.current.get(signature) ?? crypto.randomUUID();
+      unanswered.current.set(signature, key);
+      try {
+        const result = await send(key);
+        unanswered.current.delete(signature);
+        return result;
+      } catch (cause) {
+        if (isApiError(cause) && cause.status !== 0) unanswered.current.delete(signature);
+        throw cause;
+      }
+    },
+    [],
+  );
 }
 
 /**
@@ -80,6 +100,10 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   const tasksEnabled = options.tasks;
   const [card, setCard] = useState<FollowupLoad<FollowupCard>>({ status: "loading" });
   const [tasks, setTasks] = useState<FollowupLoad<FollowupTask[]>>({ status: "loading" });
+  const [tasksPaging, setTasksPaging] = useState<FollowupTasksPaging>({
+    more: false,
+    pending: false,
+  });
   const [limits, setLimits] = useState<FileLimits>({});
   const [busy, setBusy] = useState<FollowupBusy>();
   const [error, setError] = useState<unknown>();
@@ -96,8 +120,10 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   const running = useRef(false);
   const cardRequest = useRef(0);
   const tasksRequest = useRef(0);
+  // How many pages of `GET /tasks` the list shows: every read (after a write too) reads them all.
+  const taskPages = useRef(1);
   const uploaded = useRef(new WeakMap<File, string>());
-  const keyFor = useIdempotencyKeys();
+  const submit = useSubmissionKeys();
 
   const readCard = useCallback(
     async (quiet: boolean) => {
@@ -128,30 +154,67 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
     [client, dogId],
   );
 
+  /**
+   * The dog's tasks, done ones included, as the api orders them (`createdAt` desc): the pages the
+   * list shows, read again together so a write on any page is seen (R-10-10). `more` reads one
+   * page further («Mostra'n més»); only the newest read is applied.
+   */
   const readTasks = useCallback(
-    async (quiet: boolean) => {
+    async (mode: "load" | "more" | "quiet") => {
       if (!tasksEnabled) return;
+      if (mode === "more") {
+        taskPages.current += 1;
+        setTasksPaging((value) => ({ ...value, error: undefined, pending: true }));
+      }
       tasksRequest.current += 1;
       const request = tasksRequest.current;
-      if (!quiet) setTasks({ status: "loading" });
+      const pages = taskPages.current;
+      if (mode === "load") setTasks({ status: "loading" });
       try {
-        const { data } = await client.GET("/tasks", {
-          params: { query: { dogId, includeDone: true } },
+        const lists = await Promise.all(
+          Array.from({ length: pages }, async (_, page) => {
+            const { data } = await client.GET("/tasks", {
+              params: {
+                query: { dogId, includeDone: true, page, size: FOLLOWUP_HISTORY_PAGE_SIZE },
+              },
+            });
+            if (data === undefined) throw new TypeError("The tasks response did not contain data");
+            return data.items;
+          }),
+        );
+        if (request !== tasksRequest.current) return;
+        // A task created between two page reads moves the others one place: keep each once.
+        const seen = new Set<string>();
+        const items = lists.flat().filter((item) => {
+          if (seen.has(item.id)) return false;
+          seen.add(item.id);
+          return true;
         });
-        if (data === undefined) throw new TypeError("The tasks response did not contain data");
-        if (request === tasksRequest.current) setTasks({ data: data.items, status: "ready" });
+        setTasks({ data: items, status: "ready" });
+        setTasksPaging({
+          more: (lists.at(-1)?.length ?? 0) === FOLLOWUP_HISTORY_PAGE_SIZE,
+          pending: false,
+        });
       } catch (cause) {
         if (request !== tasksRequest.current) return;
-        if (quiet) setError(cause);
-        else setTasks({ error: cause, status: "error" });
+        if (mode === "more") {
+          // The list keeps what it showed; «Mostra'n més» says why and asks that page again.
+          taskPages.current -= 1;
+          setTasksPaging({ error: cause, more: true, pending: false });
+        } else {
+          setTasksPaging((value) => ({ ...value, pending: false }));
+          if (mode === "quiet") setError(cause);
+          else setTasks({ error: cause, status: "error" });
+        }
       }
     },
     [client, dogId, tasksEnabled],
   );
 
   useEffect(() => {
+    taskPages.current = 1;
     void readCard(false);
-    void readTasks(false);
+    void readTasks("load");
   }, [readCard, readTasks]);
 
   useEffect(() => {
@@ -177,13 +240,13 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
       setError(undefined);
       try {
         await write();
-        if (reread) await Promise.all([readTasks(true), readCard(true)]);
+        if (reread) await Promise.all([readTasks("quiet"), readCard(true)]);
         return true;
       } catch (cause) {
         setError(cause);
         // The api refused it (a state or a version changed): show what is true now.
         if (isApiError(cause) && cause.status !== 0) {
-          await Promise.all([readTasks(true), readCard(true)]);
+          await Promise.all([readTasks("quiet"), readCard(true)]);
         }
         return false;
       } finally {
@@ -216,12 +279,11 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
       run("create", async () => {
         const attachmentIds = (await upload(files, "TASK")).map((item) => item.fileKey);
         const body = { attachmentIds, dogId, text };
-        await client.POST("/tasks", {
-          body,
-          params: { header: { "Idempotency-Key": keyFor(`create:${JSON.stringify(body)}`) } },
-        });
+        await submit(`create:${JSON.stringify(body)}`, (key) =>
+          client.POST("/tasks", { body, params: { header: { "Idempotency-Key": key } } }),
+        );
       }),
-    [client, dogId, keyFor, run, upload],
+    [client, dogId, run, submit, upload],
   );
 
   /**
@@ -242,14 +304,13 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   const deleteTask = useCallback(
     (task: FollowupTask) =>
       run(`delete:${task.id}`, async () => {
-        await client.DELETE("/tasks/{id}", {
-          params: {
-            header: { "Idempotency-Key": keyFor(`delete:${task.id}`) },
-            path: { id: task.id },
-          },
-        });
+        await submit(`delete:${task.id}`, (key) =>
+          client.DELETE("/tasks/{id}", {
+            params: { header: { "Idempotency-Key": key }, path: { id: task.id } },
+          }),
+        );
       }),
-    [client, keyFor, run],
+    [client, run, submit],
   );
 
   const completeTask = useCallback(
@@ -273,26 +334,24 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
       run(`attachment:${entityId}`, async () => {
         for (const { file, fileKey } of await upload(files, entityType)) {
           const body = { entityId, entityType, fileKey, name: attachmentName(file.name) };
-          await client.POST("/attachments", {
-            body,
-            params: { header: { "Idempotency-Key": keyFor(`attach:${JSON.stringify(body)}`) } },
-          });
+          await submit(`attach:${JSON.stringify(body)}`, (key) =>
+            client.POST("/attachments", { body, params: { header: { "Idempotency-Key": key } } }),
+          );
         }
       }),
-    [client, keyFor, run, upload],
+    [client, run, submit, upload],
   );
 
   const removeAttachment = useCallback(
     (attachmentId: string) =>
       run(`attachment:${attachmentId}`, async () => {
-        await client.DELETE("/attachments/{id}", {
-          params: {
-            header: { "Idempotency-Key": keyFor(`detach:${attachmentId}`) },
-            path: { id: attachmentId },
-          },
-        });
+        await submit(`detach:${attachmentId}`, (key) =>
+          client.DELETE("/attachments/{id}", {
+            params: { header: { "Idempotency-Key": key }, path: { id: attachmentId } },
+          }),
+        );
       }),
-    [client, keyFor, run],
+    [client, run, submit],
   );
 
   /**
@@ -333,10 +392,16 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
     [client, dogId],
   );
 
-  /** A fresh signed url (they last 5 minutes, R-10-11), opened in a new tab. */
+  /**
+   * A fresh signed url (they last 5 minutes, R-10-11), opened in a new tab. Resolves to the
+   * failure (`undefined` when the file opened), which the clicked clip says next to it.
+   */
   const openAttachment = useCallback(
-    async (entityType: FollowupAttachmentEntity, entityId: string, attachmentId: string) => {
-      setError(undefined);
+    async (
+      entityType: FollowupAttachmentEntity,
+      entityId: string,
+      attachmentId: string,
+    ): Promise<unknown> => {
       try {
         const { data } = await client.GET("/attachments", {
           params: { query: { entityId, entityType } },
@@ -344,8 +409,9 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
         const found = data?.items.find((item) => item.id === attachmentId);
         if (found === undefined) throw new TypeError("The attachment is gone");
         window.open(found.url, "_blank", "noopener,noreferrer");
+        return undefined;
       } catch (cause) {
-        setError(cause);
+        return cause;
       }
     },
     [client],
@@ -370,15 +436,16 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   const saveObservations = useCallback(async () => {
     if (draft === undefined || !dirty) return false;
     const body = { text: draft.text, version: draft.baseVersion };
-    const key = keyFor(`observations:${JSON.stringify(body)}`);
     return run(
       "observations",
       async () => {
         try {
-          const { data } = await client.PUT("/dogs/{id}/observations", {
-            body,
-            params: { header: { "Idempotency-Key": key }, path: { id: dogId } },
-          });
+          const { data } = await submit(`observations:${JSON.stringify(body)}`, (key) =>
+            client.PUT("/dogs/{id}/observations", {
+              body,
+              params: { header: { "Idempotency-Key": key }, path: { id: dogId } },
+            }),
+          );
           if (data === undefined) throw new TypeError("The observations response had no data");
           setCard((previous) =>
             previous.status !== "ready" || previous.data.observations === undefined
@@ -413,7 +480,7 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
       },
       false,
     );
-  }, [client, dirty, dogId, draft, keyFor, run]);
+  }, [client, dirty, dogId, draft, run, submit]);
 
   const recoverObservations = useCallback(() => {
     if (recoverable === undefined) return;
@@ -448,11 +515,13 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
     openAttachment,
     patchTask,
     readHistory,
+    readMoreTasks: () => readTasks("more"),
     reloadCard: () => void readCard(false),
-    reloadTasks: () => void readTasks(false),
+    reloadTasks: () => void readTasks("load"),
     removeAttachment,
     reopenTask,
     tasks,
+    tasksPaging,
   };
 }
 

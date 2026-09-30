@@ -3,7 +3,7 @@ import type { components } from "../generated/schema";
 import type { AttendanceVariant } from "./fixtures/attendance";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
-import type { HistoryVariant, InboxVariant } from "./fixtures/followup";
+import type { FollowupVariant, HistoryVariant, InboxVariant } from "./fixtures/followup";
 import meAdmin from "./fixtures/me-admin.json";
 import meImpersonated from "./fixtures/me-impersonated.json";
 import meInstructor from "./fixtures/me-instructor.json";
@@ -27,8 +27,11 @@ export interface MockScenarioDefinition {
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
-  /** S10 R-10-12 (E6-W02): another instructor saves the observations just before the caller (409). */
-  followup?: "stale";
+  /**
+   * S10 (E6-W02): `stale` — another instructor saves the observations just before the caller
+   * (409); `many` — Duna has 52 tasks, more than one page of `GET /tasks`.
+   */
+  followup?: FollowupVariant;
   /** The screen 25 variant of `GET /me/history` (`fixtures/followup.ts`). */
   history?: HistoryVariant;
   /** The D14 variant (`fixtures/followup.ts`): the caller has read every row already. */
@@ -276,6 +279,29 @@ const scenarios = {
   tasksStale: {
     branding: canic,
     followup: "stale",
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S11 R-11-17 (E7-W01): an ADMIN of a club without SMS (D9 hides the SMS column, D10 «+SMS»). */
+  messagingNoSms: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "SMS") },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S11 R-11-17 (E7-W01): an ADMIN of a club without PUSH (no Push column, no push toggle). */
+  messagingNoPush: {
+    branding: {
+      ...canic,
+      modules: canic.modules.filter((module) => module !== "PUSH"),
+      pushPublicKey: null,
+    },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-10: Duna has 52 tasks, so the two oldest are on the second page of `GET /tasks`. */
+  tasksMany: {
+    branding: canic,
+    followup: "many",
     me: meInstructor as Me,
     sessions: accountSessions,
   },

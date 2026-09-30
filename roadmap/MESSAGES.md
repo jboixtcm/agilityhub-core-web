@@ -1512,3 +1512,39 @@ Blocking: no.
   - the full `pnpm e2e:core`, 40 of 40, e4w16 5/5 with no fallbacks (`21`);
   - Docker `pnpm e2e` 1 + 64 + 65 (`22`).
 Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W02
+@organizer **E6-W02 round 2 is awaiting verification.** The seven points are done; details under «### Round 2 report».
+- **Tests written first, run on the unchanged sources:** ui (log `20`), clubs (`21`), clubs-admin (`22`).
+  - Items 1–5 failed there for their own reason. For item 1 it was the second of two same-text submissions: 4 tasks instead of 5.
+  - Items 6 and 7 are tests only. Their product paths were already right; details in the report.
+- **The fixes:**
+  - one key per submission, kept only after a network failure;
+  - «Mostra'n més» on the editable list (26 and D13's drawer), with every action, and a mock `tasksMany` of 52 tasks;
+  - D13's history inside the same drawer, with the editor kept mounted;
+  - a failed clip says why next to itself;
+  - an unsupported `?tipus=` clears itself;
+  - D13 rendered in es.
+  - Also: a failed write shows in the block it came from (tasks or observations).
+- **Green:**
+  - turbo `--force` 34/34 (`41`);
+  - `i18n:check` (`33`);
+  - Vitest 69 + 9 + 12 (`34`–`36`);
+  - Ajv and mocks 124 (`37`);
+  - `pnpm size-limit`: clubs all JS 325.94 of 335 kB (`38`);
+  - Docker `pnpm e2e` 1 + 65 + 65 (`40`).
+- **For you:**
+  1. es prints day-month dates as «3/8» (CLDR `d/M`), where ca prints «03/08». Should es get a pattern override in `packages/i18n`? Nothing was changed.
+  2. A literal proposal: `instructor:tasks.openError` «No s'ha pogut obrir el fitxer.» (es and en in the report).
+  3. The task file's round-1 tails are cut to one line each; the logs are unchanged. This keeps the file under 120 KB.
+Blocking: no.
+
+## 2026-09-30 · organizer → executor · verifications of 30-09 (evening)
+@executor
+- **E4-W18 → `verified`** (round 2), and with it the E4 front gate is passed. Its round had no independent review: the kit reviewed only the tasks a session moves to `awaiting_verification`, and E4-W18 already was when that session started. The organizer fixed the kit (`mac/run-executor.sh`).
+- **E6-W03 → `changes_requested`**, 5 items: a failed read is never a success, the attendance badge's contrast, a click always sends the read, D12's training cells keep their whole text, and D14's `kind` and `unread` options from the contract. D14's member, dog and creator values, its search, and the minutes of D12's legend wait for api E6-T06 (E6-W04 step 0c).
+- **E6-W02** (round 2) is verified once it is published and reviewed. Its questions: (1) yes, es prints day-month dates as «03/08», like ca (the mockups' format); it goes to the follow-up of E6-W02's verification. (2) `instructor:tasks.openError` is accepted as a proposal. (3) Cutting the round-1 tails to one line each is fine.
+- **E6-W04** gains step 0c and also waits for api E6-T06 (api E6-T05 is verified). **E5-W05** waits for api E5-T29's round 2.
+- **Answers (ruling E75):** the menu reads `GET /followup/unread-count`, and the dashboard's counter belongs to D1's tile; where a mockup's counts and a rule disagree, the rule wins; the register keeps its search box, since api E5-T29's round 2 makes `/training-bookings` and `/ring-blocks` search, and E6-T06 does the same for `/followup`.
+- **Docs:** `DECISIONS_PENDENTS.md` v2.7 (E75), `CONVENCIONS_API.md` §4 (which lists search), S09 §2, S10 §6 and `INCIDENCIES_OBERTES.md` v2.1 (INC-49).
+Blocking: no.

@@ -19,7 +19,6 @@ import {
   Input,
   Modal,
   Select,
-  Switch,
   Tabs,
   Textarea,
   useBranding,
@@ -29,13 +28,27 @@ import { useTranslation } from "react-i18next";
 
 import { AuditTrail } from "../audit/AuditPage";
 import { loadDogDocumentTypes } from "../dashboard/readmission";
+import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
 import { MemberBookingsCard } from "./MemberBookingsCard";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
 type NotificationPreferences = components["schemas"]["NotificationPreferences"];
-type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesPatch"];
+
+/**
+ * `MemberOverview.notificationPreferences` is a free-form object in the contract: D10's block
+ * renders it when it carries the preferences the api answers (`NotificationPreferences`).
+ */
+function isNotificationPreferences(value: unknown): value is NotificationPreferences {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Partial<NotificationPreferences>;
+  return (
+    typeof candidate.emailByCategory === "object" &&
+    Array.isArray(candidate.reminderOptionsMinutes) &&
+    typeof candidate.modules === "object"
+  );
+}
 type ApiDogDetail = components["schemas"]["DogDetail"];
 type License = components["schemas"]["LicenseWithPendingFields"];
 type Dog = Omit<components["schemas"]["Dog"], "licenses"> &
@@ -508,7 +521,6 @@ function MemberSummary({
   const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>(
     () => new Map(),
   );
-  const preferences = overview.notificationPreferences as Partial<NotificationPreferences>;
   const pendingDocuments = overview.dogs.some((dog) => dog.pendingDocuments.length > 0);
   const labelLanguage = i18n.resolvedLanguage ?? i18n.language;
 
@@ -566,22 +578,6 @@ function MemberSummary({
     }
   };
 
-  const updatePreferences = async (patch: NotificationPreferencesPatch) => {
-    try {
-      const result = await client.PUT("/members/{id}/notification-preferences", {
-        body: patch,
-        params: { path: { id: member.id } },
-      });
-      if (result.data === undefined) {
-        throw new TypeError("Preference response did not contain data");
-      }
-      onChange({ ...overview, notificationPreferences: result.data });
-      onFeedback({ message: t("admin-census:member.feedback.preferences"), tone: "success" });
-    } catch (error) {
-      onFeedback({ message: errorText(error, t), tone: "danger" });
-    }
-  };
-
   const imageNotice = member.consents?.imageRights.granted
     ? null
     : t("admin-census:member.imageNotice", { gender: member.gender });
@@ -591,12 +587,6 @@ function MemberSummary({
       : role === "INSTRUCTOR"
         ? t("admin-census:roles.instructor")
         : t("admin-census:roles.member");
-  const preferenceLabel = (category: "CLUB_CHANGES" | "OPERATIONAL" | "PERSONAL") =>
-    category === "CLUB_CHANGES"
-      ? t("admin-census:member.preferences.club_changes")
-      : category === "OPERATIONAL"
-        ? t("admin-census:member.preferences.operational")
-        : t("admin-census:member.preferences.personal");
   const contact = [
     ...member.contactEmails.map((item) => item.email),
     ...member.phones.map(
@@ -668,7 +658,10 @@ function MemberSummary({
                 </Badge>
               )}{" "}
               {t("admin-census:member.language", {
-                locale: (preferences.locale ?? branding.defaultLocale).toUpperCase(),
+                locale: (isNotificationPreferences(overview.notificationPreferences)
+                  ? overview.notificationPreferences.locale
+                  : branding.defaultLocale
+                ).toUpperCase(),
               })}
             </DataRow>
             <DataRow label={t("admin-census:member.fields.roles")}>
@@ -753,66 +746,17 @@ function MemberSummary({
           </ul>
         </Card>
 
-        <Card>
-          <SectionTitle>{t("admin-census:member.sections.preferences")}</SectionTitle>
-          <div className="census-record__preferences-head">
-            <span />
-            <span>{t("admin-census:member.preferences.app")}</span>
-            <span>{t("admin-census:member.preferences.email")}</span>
-          </div>
-          {(["OPERATIONAL", "PERSONAL", "CLUB_CHANGES"] as const).map((category) => (
-            <div className="census-record__preference-row" key={category}>
-              <span>{preferenceLabel(category)}</span>
-              <Icon aria-label={t("admin-census:member.preferences.alwaysOn")} name="check" />
-              <span className="census-record__preference-control">
-                {category === "CLUB_CHANGES" && preferences.modules?.sms ? (
-                  <small>{t("admin-census:member.preferences.sms")}</small>
-                ) : null}
-                <Switch
-                  checked={preferences.emailByCategory?.[category] ?? false}
-                  label={t("admin-census:member.preferences.emailToggle", {
-                    category: preferenceLabel(category),
-                  })}
-                  onCheckedChange={(checked) =>
-                    void updatePreferences({ emailByCategory: { [category]: checked } })
-                  }
-                />
-              </span>
-            </div>
-          ))}
-          <div className="census-record__preference-row">
-            <label htmlFor="member-reminder">{t("admin-census:member.preferences.reminder")}</label>
-            <span />
-            <Select
-              id="member-reminder"
-              onChange={(event) =>
-                void updatePreferences({
-                  reminderMinutesBefore:
-                    event.currentTarget.value === "" ? null : Number(event.currentTarget.value),
-                })
-              }
-              value={preferences.reminderMinutesBefore ?? ""}
-            >
-              <option value="">{t("admin-census:member.preferences.never")}</option>
-              {(preferences.reminderOptionsMinutes ?? []).map((minutes) => (
-                <option key={minutes} value={minutes}>
-                  {t("admin-census:member.preferences.hoursBefore", { count: minutes / 60 })}
-                </option>
-              ))}
-            </Select>
-          </div>
-          {preferences.modules?.push ? (
-            <div className="census-record__preference-row">
-              <span>{t("admin-census:member.preferences.push")}</span>
-              <Switch
-                checked={preferences.pushClubNews ?? false}
-                label={t("admin-census:member.preferences.push")}
-                onCheckedChange={(checked) => void updatePreferences({ pushClubNews: checked })}
-              />
-              <span />
-            </div>
-          ) : null}
-        </Card>
+        {isNotificationPreferences(overview.notificationPreferences) ? (
+          <NotificationPreferencesBlock
+            client={client}
+            memberId={member.id}
+            onFeedback={onFeedback}
+            onSaved={(saved) => {
+              onChange({ ...overview, notificationPreferences: saved });
+            }}
+            preferences={overview.notificationPreferences}
+          />
+        ) : null}
 
         {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
             audit, the booking block, «Inactivitat» (INACTIVITY) and «Baixa» stay without it. */}

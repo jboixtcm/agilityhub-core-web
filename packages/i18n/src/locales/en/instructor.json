@@ -234,6 +234,7 @@
     "empty": "No tasks yet",
     "loading": "Loading the tasks",
     "loadError": "The tasks could not be loaded.",
+    "openError": "The file could not be opened.",
     "retry": "Try again",
     "close": "Close",
     "historyLink": "See the full history ›",

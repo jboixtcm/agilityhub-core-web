@@ -27,6 +27,11 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react
 import { useTranslation } from "react-i18next";
 
 import { useListExport } from "../audit/useListExport";
+import {
+  type AnnouncementAudience,
+  AnnouncementSent,
+  SendAnnouncementDialog,
+} from "../messaging/SendAnnouncementDialog";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
 type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
@@ -412,6 +417,38 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   const activeCount = useActiveCount(client, kind);
   const listExport = useListExport(client);
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
+  // «Enviar comunicat» (S11 R-11-13): the recipients the dialog was opened with.
+  const [announcement, setAnnouncement] = useState<AnnouncementAudience>();
+  const [announcementSent, setAnnouncementSent] = useState<number>();
+  const [ownersPending, setOwnersPending] = useState(false);
+  const [ownersError, setOwnersError] = useState<string>();
+
+  /** D15's selection is dogs: the dialog sends to their owners, each once (read, not guessed). */
+  const announceToOwners = async (dogIds: readonly string[]) => {
+    setOwnersPending(true);
+    setOwnersError(undefined);
+    try {
+      const { data: owners } = await client.GET("/dogs", {
+        params: {
+          query: { fields: "id,owner", filter: [`id:in:${dogIds.join(",")}`], size: 1000 },
+        },
+      });
+      const memberIds = [
+        ...new Set(
+          (owners?.items ?? []).flatMap((dog) => (dog.owner?.id === undefined ? [] : [dog.owner.id])),
+        ),
+      ];
+      setAnnouncement({ dogs: dogIds.length, kind: "selection", memberIds });
+    } catch (cause) {
+      setOwnersError(
+        isApiError(cause) && cause.status !== 0
+          ? t(`errors:${cause.code}`, { defaultValue: t("census:list.genericError") })
+          : t("census:list.genericError"),
+      );
+    } finally {
+      setOwnersPending(false);
+    }
+  };
 
   const operatorLabels: Record<UniversalFilterOperator, string> = {
     between: t("census:list.operators.between"),
@@ -901,6 +938,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     emptyDescription: t("census:dogs.emptyDescription"),
     emptyTitle: t("census:dogs.emptyTitle"),
     search: t("census:dogs.search"),
+    selectCheckbox: (item) => t("census:dogs.selectCheckbox", { name: item.name }),
     selectRow: (item) => t("census:dogs.selectRow", { name: item.name }),
   };
 
@@ -979,14 +1017,39 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         </h1>
         {/* «Nou abonat» opens the S04 signup form inside the back office (S03 §2 D5, open point 1);
             that form does not exist yet, so the button stays hidden instead of a dead link. */}
+        {kind === "members" ? (
+          // S11 R-11-13: the members of the list's current filters and search (GET /members's).
+          <Button
+            onClick={() => {
+              setAnnouncement({ filters: apiFilters(state.filters), kind: "filters", q: state.q });
+            }}
+            variant="secondary"
+          >
+            <Icon aria-hidden="true" name="send" />
+            {t("census:members.bulk.sendAnnouncement")}
+          </Button>
+        ) : null}
       </header>
+      {announcementSent === undefined ? null : (
+        <AnnouncementSent
+          count={announcementSent}
+          onDismiss={() => {
+            setAnnouncementSent(undefined);
+          }}
+        />
+      )}
 
       {kind === "members" ? (
         <UniversalList<MemberRow>
           appliedFilters={applied}
           bulkActions={(ids) => (
             <>
-              <Button variant="ghost">
+              <Button
+                onClick={() => {
+                  setAnnouncement({ kind: "selection", memberIds: ids });
+                }}
+                variant="ghost"
+              >
                 <Icon aria-hidden="true" name="send" />
                 {t("census:members.bulk.sendAnnouncement")}
               </Button>
@@ -1046,6 +1109,24 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
       ) : (
         <UniversalList<DogRow>
           appliedFilters={applied}
+          bulkActions={(ids) => (
+            <>
+              <Button
+                aria-busy={ownersPending || undefined}
+                disabled={ownersPending}
+                onClick={() => void announceToOwners(ids)}
+                variant="ghost"
+              >
+                <Icon aria-hidden="true" name="send" />
+                {t("census:dogs.bulk.sendAnnouncement")}
+              </Button>
+              {ownersError === undefined ? null : (
+                <span className="ah-universal-list__export-error" role="alert">
+                  {ownersError}
+                </span>
+              )}
+            </>
+          )}
           caption={t("census:dogs.caption")}
           columns={dogColumns}
           {...(errorMessage === undefined ? {} : { error: errorMessage })}
@@ -1064,6 +1145,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           rowKey={(item) => item.id}
           rows={(data?.items ?? []) as DogRow[]}
           savedViews={savedViews.views}
+          selectable
           state={state}
           statusFilter={{
             field: "status",
@@ -1075,6 +1157,19 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
             ],
           }}
           totalPages={data?.totalPages ?? 0}
+        />
+      )}
+      {announcement === undefined ? null : (
+        <SendAnnouncementDialog
+          audience={announcement}
+          client={client}
+          onClose={() => {
+            setAnnouncement(undefined);
+          }}
+          onSent={(count) => {
+            setAnnouncement(undefined);
+            setAnnouncementSent(count);
+          }}
         />
       )}
     </div>

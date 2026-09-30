@@ -265,8 +265,11 @@ describe("E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answe
 });
 
 describe("E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13)", () => {
-  const list = (query: { filter?: string[]; size?: 20 | 50 | 200 | 1000; sort?: string[] } = {}) =>
-    client.GET("/followup", { params: { query } });
+  // `size` outside the contract's 20 | 50 is sent on purpose: the api answers INVALID_FILTER.
+  const list = (query: { filter?: string[]; size?: number; sort?: string[] } = {}) =>
+    client.GET("/followup", {
+      params: { query: query as { filter?: string[]; size?: 20 | 50; sort?: string[] } },
+    });
   const count = async () => (await client.GET("/followup/unread-count")).data?.count;
   const read = (id: string) =>
     client.POST("/followup/{id}/read", {

@@ -1,6 +1,7 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
   ATTENDANCE_MOCK_NOW,
+  handlers,
   mockScenario,
   resetAttendanceMockState,
   resetFollowupMockState,
@@ -11,7 +12,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -59,7 +60,8 @@ function recordRequests(): Recorded[] {
 async function renderTasks({
   locale = "ca",
   scenario = "instructor",
-}: { locale?: "ca" | "en" | "es"; scenario?: MockScenario } = {}) {
+  tasks = 3,
+}: { locale?: "ca" | "en" | "es"; scenario?: MockScenario; tasks?: number } = {}) {
   mockScenario(scenario);
   window.history.replaceState(null, "", "/instructor/alumnes/dog-duna/tasques");
   const i18n = await createI18n({
@@ -80,7 +82,7 @@ async function renderTasks({
     </I18nextProvider>,
   );
   await waitFor(() => {
-    expect(document.querySelectorAll(".ah-task")).toHaveLength(3);
+    expect(document.querySelectorAll(".ah-task")).toHaveLength(tasks);
   });
 }
 
@@ -411,6 +413,218 @@ describe("T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12
       expect(document.body.textContent).not.toMatch(/instructor:|enums:|errors:/u);
     }
     expect(cardText(cards()[2])).toContain("done by Laura on");
+  });
+});
+
+describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
+  const newTask = (text: string, files: File[] = []) => {
+    fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
+    const form = screen.getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: text },
+    });
+    if (files.length > 0) {
+      fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+        target: { files },
+      });
+    }
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    return form;
+  };
+  const tasksBlock = () =>
+    present(screen.getByRole("heading", { name: "Tasques" }).closest<HTMLElement>("section"));
+
+  it("#1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task", async () => {
+    let lost = true;
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        if (!lost) return undefined;
+        lost = false;
+        // The api creates the task and its answer never arrives.
+        await getResponse(handlers, request.clone());
+        return HttpResponse.error();
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma");
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(2);
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+    expect(cards().filter((item) => item.textContent.includes("Salts amb calma"))).toHaveLength(1);
+  });
+
+  it("#1 (E74): two deliberate submissions with the same text are two tasks, each with its own key", async () => {
+    const requests = recordRequests();
+    await renderTasks();
+    for (const expected of [4, 5]) {
+      newTask("Salts amb calma");
+      await waitFor(() => {
+        expect(cards()).toHaveLength(expected);
+      });
+      await waitFor(() => {
+        expect(screen.queryByRole("form", { name: "Nova tasca" })).toBeNull();
+      });
+    }
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts.map((request) => request.body)).toEqual([
+      { attachmentIds: [], dogId: "dog-duna", text: "Salts amb calma" },
+      { attachmentIds: [], dogId: "dog-duna", text: "Salts amb calma" },
+    ]);
+    expect(posts[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(posts[1]?.key).not.toBe(posts[0]?.key);
+  });
+
+  it("#2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted", async () => {
+    const requests = recordRequests();
+    await renderTasks({ scenario: "tasksMany", tasks: 50 });
+    expect(screen.queryByText(/^Repàs 49/u)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(52);
+    });
+    expect(
+      requests.some(
+        (request) => request.line === "GET /tasks?dogId=dog-duna&includeDone=true&page=1&size=50",
+      ),
+    ).toBe(true);
+    expect(screen.queryByRole("button", { name: "Mostra'n més" })).toBeNull();
+    expect(cardText(card(50))).toBe(
+      "feta | Repàs 48: dues sessions curtes de contactes | 10-06 · Marc · feta per la Laura el 12-06",
+    );
+    expect(cardText(card(51))).toBe(
+      "pendent | Repàs 49: dues sessions curtes de contactes | 09-06 · Estel",
+    );
+    fireEvent.click(within(card(50)).getByRole("button", { name: "Torna-la a pendent" }));
+    await waitFor(() => {
+      expect(cardText(card(50))).toMatch(/^pendent \| Repàs 48/u);
+    });
+    fireEvent.click(within(card(51)).getByRole("button", { name: "Edita la tasca" }));
+    fireEvent.change(within(card(51)).getByLabelText("Text de la tasca"), {
+      target: { value: "Repàs 49: contactes i balancí" },
+    });
+    fireEvent.click(within(card(51)).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(cardText(card(51))).toBe("pendent | Repàs 49: contactes i balancí | 09-06 · Estel");
+    });
+    fireEvent.click(within(card(51)).getByRole("button", { name: "Marca-la com a feta" }));
+    await waitFor(() => {
+      expect(cardText(card(51))).toContain("feta per l'Estel el 03-08");
+    });
+    fireEvent.click(within(card(51)).getByRole("button", { name: "Elimina la tasca" }));
+    fireEvent.click(
+      within(screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" })).getByRole(
+        "button",
+        { name: "Elimina" },
+      ),
+    );
+    await waitFor(() => {
+      expect(cards()).toHaveLength(51);
+    });
+    expect(screen.queryByText(/^Repàs 49/u)).toBeNull();
+    expect(
+      requests
+        .filter((request) => !request.line.startsWith("GET"))
+        .map((request) => request.line),
+    ).toEqual([
+      "POST /tasks/t-repas-48/reopening",
+      "PATCH /tasks/t-repas-49",
+      "POST /tasks/t-repas-49/completion",
+      "DELETE /tasks/t-repas-49",
+    ]);
+    expect(requests.find((request) => request.line === "PATCH /tasks/t-repas-49")?.body).toEqual({
+      text: "Repàs 49: contactes i balancí",
+      version: 1,
+    });
+  });
+
+  it("#4 (AGENTS rule 4): a clip that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer — on the list, the member's note and the history drawer", async () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
+    let answer: "forbidden" | "network" = "forbidden";
+    server.use(
+      http.get("*/api/v1/attachments", () =>
+        answer === "network"
+          ? HttpResponse.error()
+          : HttpResponse.json(
+              { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "t" },
+              { status: 403 },
+            ),
+      ),
+    );
+    await renderTasks();
+    const clip = within(card(0)).getByRole("button", { name: "vídeo_balancí.mp4" });
+    fireEvent.click(clip);
+    const refused = await within(card(0)).findByRole("alert");
+    expect(refused).toHaveTextContent("No teniu permís per fer aquesta acció.");
+    expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).toBe(refused);
+    answer = "network";
+    fireEvent.click(clip);
+    await waitFor(() => {
+      expect(within(card(0)).getByRole("alert")).toHaveTextContent(
+        "No s'ha pogut obrir el fitxer.",
+      );
+    });
+    const note = present(
+      screen
+        .getByRole("heading", { name: "Notes als instructors · de l'alumne · només lectura" })
+        .closest<HTMLElement>("section"),
+    );
+    fireEvent.click(within(note).getByRole("button", { name: "foto_balancí.jpg" }));
+    expect(await within(note).findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut obrir el fitxer.",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Veure l'historial complet ›" }));
+    const drawer = await screen.findByRole("dialog", { name: "Historial de tasques" });
+    await waitFor(() => {
+      expect(within(drawer).getAllByRole("listitem")).toHaveLength(3);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "vídeo_balancí.mp4" }));
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut obrir el fitxer.",
+    );
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  it("#7 (ruling E74): an instructor cannot read the file limits, so a 30 MB file is checked by the signed-url request: FILE_TOO_LARGE by its code, and nothing is PUT nor registered — an observation file and a new task's file", async () => {
+    const requests = recordRequests();
+    await renderTasks();
+    await waitFor(() => {
+      expect(requests.filter((request) => request.line.startsWith("GET /parameters/"))).toHaveLength(
+        3,
+      );
+    });
+    const big = () => file("vídeo_llarg.mp4", "video/mp4", 30 * 1024 * 1024);
+    fireEvent.change(firstPicker(), { target: { files: [big()] } });
+    expect(await screen.findByText("El fitxer és massa gran.")).toBeVisible();
+    const form = newTask("Salts amb calma", [big()]);
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line === "POST /attachments/upload-url"),
+      ).toHaveLength(2);
+    });
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "El fitxer és massa gran.",
+    );
+    expect(requests.map((request) => request.body)).toContainEqual({
+      fileName: "vídeo_llarg.mp4",
+      mimeType: "video/mp4",
+      purpose: "TASK",
+      sizeBytes: 30 * 1024 * 1024,
+    });
+    expect(requests.some((request) => request.line.startsWith("PUT "))).toBe(false);
+    expect(
+      requests.some((request) => ["POST /attachments", "POST /tasks"].includes(request.line)),
+    ).toBe(false);
+    expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    expect(within(form).getByRole("button", { name: "vídeo_llarg.mp4" })).toBeVisible();
   });
 });
 

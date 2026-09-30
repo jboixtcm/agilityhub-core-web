@@ -6,6 +6,7 @@ import {
 } from "@agilityhub/api-client";
 import { useClubFormats, useFollowupTexts } from "@agilityhub/i18n";
 import {
+  AttachmentChips,
   Badge,
   Button,
   Card,
@@ -13,14 +14,14 @@ import {
   DataTable,
   DogFollowupEditor,
   Drawer,
-  FollowupHistoryDrawer,
+  FollowupHistoryPanel,
   Icon,
   Skeleton,
   Toast,
   type Tone,
   useBranding,
 } from "@agilityhub/ui";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./student-record.css";
@@ -54,6 +55,16 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
   const texts = useFollowupTexts<FollowupTask>();
   const [drawer, setDrawer] = useState(false);
   const [history, setHistory] = useState(false);
+  const historyLink = useRef<HTMLButtonElement>(null);
+  const historyShown = useRef(false);
+  // Back from the history, the focus returns to the link that opened it.
+  useEffect(() => {
+    if (history) historyShown.current = true;
+    else if (historyShown.current) {
+      historyShown.current = false;
+      historyLink.current?.focus();
+    }
+  }, [history]);
   const { card } = followup;
 
   if (card.status !== "ready") {
@@ -115,22 +126,24 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
   const tasksBlock = tasksModule ? card.data.tasks : undefined;
   const observations = tasksModule ? card.data.observations : undefined;
   const tasks = followup.tasks.status === "ready" ? followup.tasks.data : [];
+  // A clip that cannot be opened says why next to it (AGENTS rule 4), by its code.
   const clips = (
     entityType: "DOG_OBSERVATIONS" | "INSTRUCTOR_NOTE",
     attachments: readonly CardAttachment[],
   ) =>
     attachments.length === 0 ? null : (
-      <p className="student-record__clips">
-        {attachments.map((attachment) => (
-          <button
-            key={attachment.id}
-            onClick={() => void followup.openAttachment(entityType, dogId, attachment.id)}
-            type="button"
-          >
-            <Icon aria-hidden="true" name="clip" /> {attachment.name}
-          </button>
-        ))}
-      </p>
+      <div className="student-record__clips">
+        <AttachmentChips
+          items={attachments}
+          onOpen={(attachment) =>
+            followup
+              .openAttachment(entityType, dogId, attachment.id)
+              .then((failure) =>
+                failure === undefined ? undefined : texts.errorText(failure, texts.openError),
+              )
+          }
+        />
+      </div>
     );
 
   return (
@@ -321,30 +334,31 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
         <Drawer
           closeLabel={t("instructor:tasks.close")}
           onClose={() => {
-            setDrawer(false);
+            // From the history, closing goes back to the editor.
+            if (history) setHistory(false);
+            else setDrawer(false);
           }}
-          // One overlay at a time: the history replaces the editor until it closes.
-          open={drawer && !history}
-          title={t("instructor:card.manageButton")}
+          open={drawer}
+          title={history ? texts.history.title : t("instructor:card.manageButton")}
         >
-          <DogFollowupEditor<FollowupTask>
-            dogId={dogId}
-            model={followup}
-            onHistory={() => {
-              setHistory(true);
-            }}
-            texts={texts}
-          />
+          {/* One overlay at a time: the history takes the drawer's place until it closes, and the
+              editor stays mounted behind it, so its drafts (new task, picked files, an open edit)
+              are there when it comes back. */}
+          <div hidden={history}>
+            <DogFollowupEditor<FollowupTask>
+              dogId={dogId}
+              historyLinkRef={historyLink}
+              model={followup}
+              onHistory={() => {
+                setHistory(true);
+              }}
+              texts={texts}
+            />
+          </div>
+          {history ? (
+            <FollowupHistoryPanel<FollowupTask> focusOnMount model={followup} texts={texts} />
+          ) : null}
         </Drawer>
-      ) : null}
-      {history ? (
-        <FollowupHistoryDrawer<FollowupTask>
-          model={followup}
-          onClose={() => {
-            setHistory(false);
-          }}
-          texts={texts}
-        />
       ) : null}
     </section>
   );

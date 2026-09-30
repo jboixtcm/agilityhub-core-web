@@ -20,7 +20,8 @@
     "rememberProfile": true
   },
   "impersonation": {
-    "actorName": "Jordi Soler"
+    "actorName": "Jordi Soler",
+    "memberName": "Laura Serra Vidal"
   },
   "features": ["CLASSES", "FREE_TRAINING", "COURSES"]
 }

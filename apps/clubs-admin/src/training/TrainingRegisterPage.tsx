@@ -14,23 +14,24 @@ import {
   type Tone,
   Toast,
   UniversalList,
-  type UniversalFilter,
   type UniversalFilterOperator,
   type UniversalFilterValue,
   type UniversalListColumn,
   type UniversalListFilterColumn,
   type UniversalListLabels,
-  type UniversalListSavedView,
-  type UniversalListState,
-  readUniversalListState,
-  universalListSearchParams,
   useBranding,
 } from "@agilityhub/ui";
-import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useSavedViews } from "../activities/shared";
 import { useListExport } from "../audit/useListExport";
+import {
+  apiFilters,
+  useListData,
+  universalListLabels,
+  useUrlListState,
+} from "../lists/list-helpers";
 import { addDays, clubInstant, dayLabel, timeLabel } from "../planning/calendar-shared";
 import { clubToday, mondayOf } from "../planning/shared";
 
@@ -94,10 +95,6 @@ const TRAINING_STATE_TONES: Readonly<Record<NonNullable<TrainingRow["state"]>, T
   CANCELLED_BY_CLUB: "danger",
 };
 
-function apiFilters(filters: readonly UniversalFilter[]): string[] {
-  return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
-}
-
 function filterValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
@@ -108,139 +105,6 @@ function filterValue(value: unknown): string {
 function currentWeek(timeZone: string): { end: string; start: string } {
   const start = mondayOf(clubToday(timeZone));
   return { end: addDays(start, 6), start };
-}
-
-interface ListData<Row> {
-  appliedFilters: components["schemas"]["Filter"][];
-  items: Row[];
-  totalPages: number;
-}
-
-/** A list's rows for its state; an answer for an older state is dropped. */
-function useListData<Row>(load: () => Promise<ListData<Row>>, key: string) {
-  const [reload, setReload] = useState(0);
-  const requestKey = `${key}|${String(reload)}`;
-  const [state, setState] = useState<{ data?: ListData<Row>; error?: unknown; key: string }>({
-    key: "",
-  });
-  useEffect(() => {
-    let current = true;
-    load().then(
-      (data) => {
-        if (current) setState({ data, key: requestKey });
-      },
-      (error: unknown) => {
-        if (current) setState((previous) => ({ ...previous, error, key: requestKey }));
-      },
-    );
-    return () => {
-      current = false;
-    };
-    // `load` is rebuilt on every render; the request identity is `requestKey`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestKey]);
-  return {
-    data: state.data,
-    error: state.key === requestKey ? state.error : undefined,
-    loading: state.key !== requestKey,
-    retry: () => {
-      setReload((value) => value + 1);
-    },
-  };
-}
-
-/** The list's state in the URL, next to the tab (`?vista=…&page=…&filter=…`). */
-function useUrlListState(tab: Tab, defaults: Parameters<typeof readUniversalListState>[1]) {
-  const [state, setState] = useState(() =>
-    readUniversalListState(window.location.search, defaults),
-  );
-  const write = useCallback(
-    (next: UniversalListState) => {
-      const parameters = universalListSearchParams(next);
-      parameters.set(TAB_PARAMETER, TAB_VALUES[tab]);
-      window.history.replaceState(null, "", `${window.location.pathname}?${parameters.toString()}`);
-    },
-    [tab],
-  );
-  const update = useCallback(
-    (next: UniversalListState) => {
-      write(next);
-      setState(next);
-    },
-    [write],
-  );
-  const applySavedView = useCallback(
-    (view: UniversalListSavedView) => {
-      setState((current) => {
-        const next = {
-          ...current,
-          columns: view.columns,
-          filters: view.filters,
-          page: 0,
-          sort: view.sort,
-        };
-        write(next);
-        return next;
-      });
-    },
-    [write],
-  );
-  return [state, update, applySavedView] as const;
-}
-
-/** The labels every universal list of the page shares (D5's, `census:list.*`). */
-function commonLabels(t: Translate) {
-  const operators: Record<UniversalFilterOperator, string> = {
-    between: t("census:list.operators.between"),
-    contains: t("census:list.operators.contains"),
-    eq: t("census:list.operators.eq"),
-    exists: t("census:list.operators.exists"),
-    gt: t("census:list.operators.gt"),
-    gte: t("census:list.operators.gte"),
-    in: t("census:list.operators.in"),
-    lt: t("census:list.operators.lt"),
-    lte: t("census:list.operators.lte"),
-    ne: t("census:list.operators.ne"),
-    nin: t("census:list.operators.nin"),
-    startsWith: t("census:list.operators.startsWith"),
-  };
-  return {
-    addFilter: t("census:list.addFilter"),
-    clearFilters: t("census:list.clearFilters"),
-    closeError: t("census:list.closeError"),
-    columns: t("census:list.columns"),
-    createView: t("census:list.createView"),
-    defaultView: t("census:list.defaultView"),
-    deleteView: t("census:list.deleteView"),
-    emptyDescription: t("admin-training:list.emptyDescription"),
-    export: t("census:list.export"),
-    filter: t("census:list.filter"),
-    filterField: t("census:list.filterField"),
-    filterOperator: t("census:list.filterOperator"),
-    filterValue: t("census:list.filterValue"),
-    formatPdf: t("census:list.formatPdf"),
-    formatXlsx: t("census:list.formatXlsx"),
-    loading: t("census:list.loading"),
-    loadingFilterValues: t("census:list.loadingFilterValues"),
-    nextPage: t("census:list.nextPage"),
-    noSavedView: t("census:list.noSavedView"),
-    operators,
-    page: (page: number, totalPages: number) => t("census:list.page", { page, totalPages }),
-    previousPage: t("census:list.previousPage"),
-    removeFilter: (field: string) => t("census:list.removeFilter", { field }),
-    renameView: t("census:list.renameView"),
-    retry: t("census:list.retry"),
-    rowsPerPage: t("census:list.rowsPerPage"),
-    saveError: t("census:list.saveError"),
-    saveViewName: t("census:list.saveViewName"),
-    selectAll: t("census:list.selectAll"),
-    selected: (count: number) => t("census:list.selected", { count }),
-    sharedView: t("census:list.sharedView"),
-    sortAscending: (column: string) => t("census:list.sortAscending", { column }),
-    sortDescending: (column: string) => t("census:list.sortDescending", { column }),
-    view: (name: string) => t("census:list.view", { name }),
-    views: t("census:list.views"),
-  };
 }
 
 /** `400 INVALID_FILTER` keeps the list's own message (T-08-47 / T-09-24); other codes theirs. */
@@ -302,12 +166,15 @@ function TrainingBookingsList({
   const { t } = useTranslation(["admin-training", "census", "enums", "errors"]);
   const rings = useClubRings(client, admin);
   const week = currentWeek(branding.timeZone);
-  const [state, setState, applySavedView] = useUrlListState("bookings", {
-    columns: TRAINING_DEFAULT_COLUMNS,
-    filters: [{ field: "date", operator: "between", value: `${week.start},${week.end}` }],
-    size: 50,
-    sort: ["startsAt,desc"],
-  });
+  const [state, setState, applySavedView] = useUrlListState(
+    {
+      columns: TRAINING_DEFAULT_COLUMNS,
+      filters: [{ field: "date", operator: "between", value: `${week.start},${week.end}` }],
+      size: 50,
+      sort: ["startsAt,desc"],
+    },
+    { [TAB_PARAMETER]: TAB_VALUES.bookings },
+  );
   const savedViews = useSavedViews(client, TRAINING_LIST_KEY, applySavedView);
   const listExport = useListExport(client);
   const { data, error, loading, retry } = useListData<TrainingRow>(async () => {
@@ -520,7 +387,7 @@ function TrainingBookingsList({
   });
 
   const labels: UniversalListLabels<TrainingRow> = {
-    ...commonLabels(t),
+    ...universalListLabels(t, t("admin-training:list.emptyDescription")),
     emptyTitle: t("admin-training:bookings.emptyTitle"),
     search: t("admin-training:bookings.search"),
     selectRow: (row) => t("admin-training:bookings.selectRow", { name: row.memberName ?? "" }),
@@ -584,12 +451,15 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   const rings = useClubRings(client, admin);
   const week = currentWeek(branding.timeZone);
   const weekFilter = `${clubInstant(week.start, "00:00", branding.timeZone)},${clubInstant(addDays(week.end, 1), "00:00", branding.timeZone)}`;
-  const [state, setState, applySavedView] = useUrlListState("blocks", {
-    columns: admin ? [...BLOCK_DEFAULT_COLUMNS, "actions"] : BLOCK_DEFAULT_COLUMNS,
-    filters: [{ field: "from", operator: "between", value: weekFilter }],
-    size: 50,
-    sort: ["from,desc"],
-  });
+  const [state, setState, applySavedView] = useUrlListState(
+    {
+      columns: admin ? [...BLOCK_DEFAULT_COLUMNS, "actions"] : BLOCK_DEFAULT_COLUMNS,
+      filters: [{ field: "from", operator: "between", value: weekFilter }],
+      size: 50,
+      sort: ["from,desc"],
+    },
+    { [TAB_PARAMETER]: TAB_VALUES.blocks },
+  );
   const savedViews = useSavedViews(client, BLOCK_LIST_KEY, applySavedView);
   const [pendingId, setPendingId] = useState<string>();
   const [feedback, setFeedback] = useState<{ message: string; tone: Tone }>();
@@ -823,7 +693,7 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   });
 
   const labels: UniversalListLabels<BlockRow> = {
-    ...commonLabels(t),
+    ...universalListLabels(t, t("admin-training:list.emptyDescription")),
     emptyTitle: t("admin-training:blocks.emptyTitle"),
     search: t("admin-training:blocks.search"),
     selectRow: (row) => t("admin-training:blocks.selectRow", { when: dayOf(row) }),

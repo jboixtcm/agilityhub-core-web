@@ -454,7 +454,10 @@ describe("T-01-21 AuthClient session flow", () => {
   });
 });
 
-const impersonatedMe: Me = { ...memberMe, impersonation: { actorName: "Aina Serra" } };
+const impersonatedMe: Me = {
+  ...memberMe,
+  impersonation: { actorName: "Aina Serra", memberName: "Laura Serra Vidal" },
+};
 
 function unauthenticated() {
   return HttpResponse.json(

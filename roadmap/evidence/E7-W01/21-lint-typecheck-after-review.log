@@ -1,0 +1,46 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, clubs-admin
+   • Running lint, typecheck in 2 packages
+   • Remote caching disabled
+
+clubs-admin:lint: cache miss, executing 390f6d752b7228ae
+@agilityhub/api-client:lint: cache hit, replaying logs f0cee28544927d55
+@agilityhub/ui:typecheck: cache hit, replaying logs 27b8d148ecd3af7a
+@agilityhub/api-client:typecheck: cache hit, replaying logs 50dfcfbe2d06c738
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/i18n:typecheck: cache hit, replaying logs 1dcfa9d9b98e88b7
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/auth:typecheck: cache hit, replaying logs 01209f5287eab12d
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs-admin:typecheck: cache miss, executing 494c080d2a4f4aad
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+
+ Tasks:    7 successful, 7 total
+Cached:    5 cached, 7 total
+  Time:    15.182s 
+

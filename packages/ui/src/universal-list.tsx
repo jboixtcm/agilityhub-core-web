@@ -134,6 +134,8 @@ export interface UniversalListLabels<Row> {
   saveViewName: string;
   search: string;
   selectAll: string;
+  /** The row's checkbox when it differs from the row's link text (`selectRow`), e.g. D15's. */
+  selectCheckbox?: ((row: Row) => string) | undefined;
   selectRow: (row: Row) => string;
   selected: (count: number) => string;
   sharedView: string;
@@ -908,7 +910,7 @@ export function UniversalList<Row>({
                       {selectable ? (
                         <td className="ah-universal-list__selection">
                           <Checkbox
-                            aria-label={labels.selectRow(row)}
+                            aria-label={(labels.selectCheckbox ?? labels.selectRow)(row)}
                             checked={selected.has(id)}
                             onChange={() => {
                               setSelected((current) => {

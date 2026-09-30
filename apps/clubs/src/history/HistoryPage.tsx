@@ -120,11 +120,11 @@ export function HistoryPage({ client }: { client: ApiClient }) {
       return data;
     };
     try {
-      return { data: await read(dogId), refused: undefined };
+      return { data: await read(dogId), refused: undefined, type };
     } catch (error) {
       // A dog outside the member's (404 DOG_NOT_ACCESSIBLE): say so and read «Tots» instead.
       if (dogId === null || !isApiError(error, "DOG_NOT_ACCESSIBLE")) throw error;
-      return { data: await read(null), refused: error };
+      return { data: await read(null), refused: error, type };
     }
   }, [client, dogId, type]);
   const history = useLoader(load);
@@ -134,6 +134,15 @@ export function HistoryPage({ client }: { client: ApiClient }) {
   useEffect(() => {
     if (refused !== undefined) writeParam("dogId", undefined);
   }, [refused]);
+  // A type the club does not offer (`?tipus=` of a saved link, a module switched off since): no
+  // chip could clear it, so it clears itself and «Tot» is read again (R-10-14, §9).
+  const readType = history.status === "ready" ? history.data.type : null;
+  const unsupported =
+    history.status === "ready" && readType !== null && !history.data.data.types.includes(readType);
+  if (unsupported && type !== null) setType(null);
+  useEffect(() => {
+    if (unsupported) writeParam("tipus", undefined);
+  }, [unsupported]);
 
   const selectDog = (next: string | null) => {
     setDogId(next);
@@ -164,11 +173,11 @@ export function HistoryPage({ client }: { client: ApiClient }) {
       title={<h1>{t("history:title")}</h1>}
     />
   );
-  if (history.status !== "ready") {
+  if (history.status !== "ready" || unsupported) {
     return (
       <section className="history-screen">
         {bar}
-        {history.status === "loading" ? (
+        {history.status !== "error" ? (
           <Skeleton height="18rem" label={t("history:loading")} />
         ) : (
           <Toast tone="danger">

@@ -1,0 +1,21 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > refuses a file over files.maxSizeMb (MiB), a type outside files.allowedTypes and one past files.maxAttachmentsPerEntity 1ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > the picker passes the accepted files and reports each refused one with its reason 14ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > paints each task with its state chip, text, «{dd-mm} · {autor}», the clip chip and, done, struck through with «feta per …» 52ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > «＋ Afegir» opens the inline form beside the title; it creates with the text and the picked files, and closes only when the write succeeded 37ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > the pencil edits the text in place; the ✕ asks «Vols eliminar aquesta tasca?» before deleting; ✓ completes and ↺ reopens 33ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > an edit is sent with the version it was opened at, even after a read brings a newer one (optimistic lock) 18ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > while a write runs every action waits (pending state), and a read-only list has no «＋ Afegir», pencil, ✕ nor reopening 16ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > a refused file reaches the caller as a message; the error is shown inside the panel 9ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > round 2 #2: «Mostra'n més» below the list reads the next page, waits while it reads and says why a page failed 14ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > round 2 #4: a clip whose opening fails says why next to it; a later click clears it, and a late failure of an earlier click is dropped 9ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 3 · FollowupEditor (the body of 26 and D13's drawer) > lays out the observations field, the tasks, the history link, the member's note read-only and [DESA], disabled until the text changes 14ms
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 3 · FollowupEditor (the body of 26 and D13's drawer) > a stale save shows the notice and the typed text to recover; saving keeps the field read-only 10ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  16:23:52
+   Duration  737ms (environment 40%, tests 35%, transform 15%, setup 8%, import 2%)
+

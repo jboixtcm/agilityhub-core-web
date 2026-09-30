@@ -578,7 +578,10 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
       expect(navigate).toHaveBeenCalledWith("/inici", false);
     });
     expect(client.isImpersonated()).toBe(true);
-    expect(client.getMe()?.impersonation).toEqual({ actorName: "Jordi Soler" });
+    expect(client.getMe()?.impersonation).toEqual({
+      actorName: "Jordi Soler",
+      memberName: "Laura Serra Vidal",
+    });
     // The provider's restore waited for the code: the admin's own cookie was never read.
     expect(token.grants).toEqual(["urn:agilityhub:grant:handoff"]);
 

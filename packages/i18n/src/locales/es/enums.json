@@ -181,5 +181,66 @@
   "followupKind": {
     "TASK": "tarea",
     "MEMBER_NOTE": "nota de alumno"
+  },
+  "notificationCategory": {
+    "OPERATIONAL": "Operativa",
+    "PERSONAL": "Comunicados individuales",
+    "CLUB_CHANGES": "Cambios en reservas",
+    "CLUB_NEWS": "Comunicados del club",
+    "SYSTEM": "Sistema"
+  },
+  "notificationAudience": {
+    "MEMBER": "Alumno",
+    "INSTRUCTORS": "Instructores",
+    "ADMINS": "Administrador",
+    "APPLICANT": "Solicitante"
+  },
+  "notificationChannel": {
+    "APP": "App",
+    "EMAIL": "Correo",
+    "SMS": "SMS",
+    "PUSH": "Push"
+  },
+  "deliveryStatus": {
+    "QUEUED": "en cola",
+    "SENT": "enviado",
+    "DELIVERED": "entregado",
+    "FAILED": "fallido",
+    "SKIPPED_BY_PREFERENCE": "omitido por preferencia",
+    "SKIPPED_MODULE_OFF": "módulo desactivado",
+    "SKIPPED_NO_CONTACT": "sin contacto",
+    "SKIPPED_CAP": "límite de SMS",
+    "SKIPPED_STALE": "ya no hacía falta",
+    "SKIPPED_NOT_ALLOWED": "no permitido"
+  },
+  "templateIcon": {
+    "check": "Validado",
+    "x": "Cruz",
+    "unlock": "Candado abierto",
+    "warn": "Aviso",
+    "up": "Arriba",
+    "heart": "Corazón",
+    "bell": "Campana",
+    "doc": "Documento",
+    "flag": "Bandera",
+    "mail": "Correo",
+    "cal": "Calendario",
+    "clock": "Reloj",
+    "info": "Información",
+    "paw": "Huella",
+    "cone": "Cono",
+    "lock": "Candado"
+  },
+  "templateColor": {
+    "NEUTRAL": "Neutro",
+    "OK": "Correcto",
+    "WARNING": "Aviso",
+    "ERROR": "Error",
+    "ACCENT": "Destacado"
+  },
+  "templateStatus": {
+    "ACTIVE": "activa",
+    "DISABLED": "desactivada",
+    "ARCHIVED": "archivada"
   }
 }

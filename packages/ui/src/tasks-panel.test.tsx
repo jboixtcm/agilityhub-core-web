@@ -272,6 +272,69 @@ describe("E6-W02 step 2 · TasksPanel (R-10-10, mockup 26)", () => {
     });
     expect(onReject).toHaveBeenCalledWith("FILE_TYPE_NOT_ALLOWED prog.exe");
   });
+
+  it("round 2 #2: «Mostra'n més» below the list reads the next page, waits while it reads and says why a page failed", () => {
+    const onMore = vi.fn();
+    const { view } = panel({ more: { label: "Mostra'n més", loading: false, onMore } });
+    fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
+    expect(onMore).toHaveBeenCalledTimes(1);
+    view.rerender(
+      <TasksPanel
+        canEdit
+        labels={labels}
+        limits={{}}
+        more={{ label: "Mostra'n més", loading: true, onMore }}
+        onOpenAttachment={vi.fn()}
+        tasks={tasks}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /Mostra'n més|Carregant/u })).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
+    view.rerender(
+      <TasksPanel
+        canEdit
+        labels={labels}
+        limits={{}}
+        more={{ error: "No s'han pogut carregar les tasques.", label: "Mostra'n més", onMore }}
+        onOpenAttachment={vi.fn()}
+        tasks={tasks}
+      />,
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("No s'han pogut carregar les tasques.");
+    expect(screen.getByRole("button", { name: "Mostra'n més" })).toBeEnabled();
+  });
+
+  it("round 2 #4: a clip whose opening fails says why next to it; a later click clears it, and a late failure of an earlier click is dropped", async () => {
+    let fail: (message: string | undefined) => void = () => undefined;
+    const onOpenAttachment = vi.fn(
+      () =>
+        new Promise<string | undefined>((resolve) => {
+          fail = resolve;
+        }),
+    );
+    panel({ onOpenAttachment });
+    const clip = screen.getByRole("button", { name: "vídeo_balancí.mp4" });
+    fireEvent.click(clip);
+    await act(async () => {
+      fail("No s'ha pogut obrir el fitxer.");
+      await Promise.resolve();
+    });
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("No s'ha pogut obrir el fitxer.");
+    expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).toBe(alert);
+    fireEvent.click(clip);
+    expect(screen.queryByRole("alert")).toBeNull();
+    const first = fail;
+    fireEvent.click(clip);
+    await act(async () => {
+      first("Una resposta tardana");
+      fail(undefined);
+      await Promise.resolve();
+    });
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
 });
 
 describe("E6-W02 step 3 · FollowupEditor (the body of 26 and D13's drawer)", () => {

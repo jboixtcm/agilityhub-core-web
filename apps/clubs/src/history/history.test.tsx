@@ -201,6 +201,22 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     expect(historyRows().some((row) => row.includes("Seminari"))).toBe(false);
   });
 
+  it("round 2 #5 (R-10-14, §9): a ?tipus= the club does not offer clears itself — historyNoModules with ?tipus=TRAINING drops it from the address and reads «Tot» again", async () => {
+    const lines = requests();
+    window.history.replaceState(null, "", "/historic?tipus=TRAINING");
+    await renderHistory({
+      branding: { ...canic, modules: without("FREE_TRAINING").filter((m) => m !== "ACTIVITIES") },
+      scenario: "historyNoModules",
+    });
+    await waitFor(() => {
+      expect(historyRows().length).toBeGreaterThan(0);
+    });
+    expect(window.location.search).toBe("");
+    expect(historyRows().every((row) => row.includes(" | Classe "))).toBe(true);
+    expect(screen.queryByText("Encara no hi ha res a l'històric")).toBeNull();
+    expect(lines).toEqual(["/api/v1/me/history?type=TRAINING", "/api/v1/me/history"]);
+  });
+
   it("the chips drive `dogId` and `type` (↔ ?dogId= and ?tipus=); arriving with ?dogId= preselects that dog", async () => {
     const lines = requests();
     window.history.replaceState(null, "", "/historic?dogId=dog-rock");

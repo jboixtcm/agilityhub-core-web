@@ -17,6 +17,7 @@ import {
   attendanceState,
 } from "./fixtures/attendance";
 import { catalogState } from "./fixtures/catalogs";
+import { syncFollowupVariant } from "./fixtures/followup";
 import { apiError, levelsEnabled, maxInstructors, validationError } from "./planning-handlers";
 import { currentMockScenario, type MockScenarioDefinition } from "./scenarios";
 
@@ -254,6 +255,8 @@ export const attendanceHandlers = [
     const scenario = currentMockScenario();
     const refused = refusal(scenario);
     if (refused !== undefined) return refused;
+    // The card's task counters read the same tasks world as `GET /tasks` (`tasksMany` too).
+    syncFollowupVariant(scenario.followup);
     const card = instructorCardView(String(params.id), context(scenario));
     return card === undefined
       ? apiError("NOT_FOUND", "Dog not found", 404)

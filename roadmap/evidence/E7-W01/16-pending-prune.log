@@ -1,0 +1,4 @@
+paths removed: /members/{id}/notification-preferences
+paths kept: (none)
+schemas removed: NotificationPreferences NotificationPreferencesPatch
+schemas kept: DogPendingFields LicensePendingFields LicenseWithPendingFields DogPatchPendingFields PlanBillingMode

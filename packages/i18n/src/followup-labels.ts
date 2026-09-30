@@ -72,6 +72,7 @@ export function useFollowupTexts<Task extends FollowupTaskLike>(): DogFollowupTe
         title: t("instructor:tasks.historyTitle"),
       },
       loadError: t("instructor:tasks.loadError"),
+      openError: t("instructor:tasks.openError"),
       rejection,
       retry: t("instructor:tasks.retry"),
       staleVersion: (error) => apiCode(error) === "STALE_VERSION",

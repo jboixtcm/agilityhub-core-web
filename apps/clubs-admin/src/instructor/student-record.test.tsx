@@ -11,6 +11,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -220,6 +221,149 @@ describe("T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09)",
     expect(level).toHaveAttribute("title", "Nivell C");
     expect(screen.getByText("Attendance · last 30 days")).toBeVisible();
     expect(screen.getByRole("table", { name: "Last 5 classes" })).toBeVisible();
+    expect(document.body.textContent).not.toMatch(/instructor:|enums:|errors:/u);
+  });
+});
+
+describe("E6-W02 round 2 (review of 30-09): D13", () => {
+  const drawerCards = (drawer: HTMLElement) => [
+    ...drawer.querySelectorAll<HTMLElement>(".ah-tasks__list > .ah-task"),
+  ];
+  const openDrawer = async () => {
+    fireEvent.click(screen.getByRole("button", { name: "Gestionar tasques i notes" }));
+    return screen.findByRole("dialog", { name: "Gestionar tasques i notes" });
+  };
+
+  it("#2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there", async () => {
+    await renderRecord({ scenario: "tasksMany" });
+    const drawer = await openDrawer();
+    await waitFor(() => {
+      expect(drawerCards(drawer)).toHaveLength(50);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Mostra'n més" }));
+    await waitFor(() => {
+      expect(drawerCards(drawer)).toHaveLength(52);
+    });
+    const oldest = present(drawerCards(drawer)[51]);
+    expect(oldest).toHaveTextContent("Repàs 49: dues sessions curtes de contactes");
+    fireEvent.click(within(oldest).getByRole("button", { name: "Marca-la com a feta" }));
+    await waitFor(() => {
+      expect(drawerCards(drawer)[51]).toHaveTextContent("feta per l'Estel el 03-08");
+    });
+  });
+
+  it("#3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link", async () => {
+    const lines = requestLines();
+    await renderRecord();
+    const drawer = await openDrawer();
+    await waitFor(() => {
+      expect(drawerCards(drawer)).toHaveLength(3);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Afegir" }));
+    const form = within(drawer).getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: "Salts amb calma" },
+    });
+    const video = new File(["x"], "vídeo_salt.mp4", { type: "video/mp4" });
+    fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+      target: { files: [video] },
+    });
+    fireEvent.click(
+      within(present(drawerCards(drawer)[1])).getByRole("button", { name: "Edita la tasca" }),
+    );
+    fireEvent.change(within(drawer).getByLabelText("Text de la tasca"), {
+      target: { value: "Repasseu la taula" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Veure l'historial complet ›" }));
+    const history = await screen.findByRole("dialog", { name: "Historial de tasques" });
+    await waitFor(() => {
+      expect(within(history).getAllByRole("listitem")).toHaveLength(3);
+    });
+    fireEvent.click(within(history).getByRole("button", { name: "Tanca" }));
+    const back = await screen.findByRole("dialog", { name: "Gestionar tasques i notes" });
+    expect(within(back).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    expect(within(back).getByRole("button", { name: "vídeo_salt.mp4" })).toBeVisible();
+    expect(within(back).getByLabelText("Text de la tasca")).toHaveValue("Repasseu la taula");
+    expect(within(back).getByRole("button", { name: "Veure l'historial complet ›" })).toHaveFocus();
+    expect(lines.some((line) => /^(POST|PATCH|PUT) /u.test(line))).toBe(false);
+  });
+
+  it("#4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer", async () => {
+    let answer: "forbidden" | "network" = "forbidden";
+    server.use(
+      http.get("*/api/v1/attachments", () =>
+        answer === "network"
+          ? HttpResponse.error()
+          : HttpResponse.json(
+              { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "t" },
+              { status: 403 },
+            ),
+      ),
+    );
+    await renderRecord();
+    const note = blockOf("Notes als instructors — de l'alumne");
+    const clip = within(note).getByRole("button", { name: "foto_balancí.jpg" });
+    fireEvent.click(clip);
+    const refused = await within(note).findByRole("alert");
+    expect(refused).toHaveTextContent("No teniu permís per fer aquesta acció.");
+    expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).toBe(refused);
+    answer = "network";
+    fireEvent.click(clip);
+    await waitFor(() => {
+      expect(within(note).getByRole("alert")).toHaveTextContent("No s'ha pogut obrir el fitxer.");
+    });
+  });
+
+  it("#6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key", async () => {
+    await renderRecord({ locale: "es" });
+    expect(screen.getByRole("heading", { level: 1, name: "Laura + Duna" })).toBeVisible();
+    const header = present(document.querySelector<HTMLElement>(".student-record__header"));
+    expect([...header.querySelectorAll(".ah-chip")].map((chip) => chip.textContent)).toEqual([
+      "Nivel C · hace 8 meses",
+      "Abonada",
+      "Border collie · 4 años",
+    ]);
+    expect(within(header).getByRole("button", { name: "Gestionar tareas y notas" })).toBeVisible();
+    expect(
+      [...document.querySelectorAll(".student-record__metric")].map((card) =>
+        [...card.children].map((part) => clean(part.textContent)).join(" | "),
+      ),
+    ).toEqual([
+      "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisado",
+      "7 | Clases · últimos 30 días | mes móvil",
+      "2,3 | Entrenamientos / semana | media 30 días",
+      // The club's es day-month format (CLDR «d/M», packages/i18n `dayMonthNumeric`).
+      "lun 3/8 | Última clase | A+B · Central · Estel",
+    ]);
+    expect(
+      screen.getByRole("heading", { name: "Notas a los instructores — del alumno" }),
+    ).toBeVisible();
+    const tasks = blockOf("Tareas — las ve y marca el alumno");
+    await waitFor(() => {
+      expect(tasks.querySelectorAll("li")).toHaveLength(3);
+    });
+    expect(within(tasks).getByText("2 pendientes")).toBeVisible();
+    expect(within(tasks).getByText("1 hecha")).toBeVisible();
+    expect(
+      [...tasks.querySelectorAll("li")].map((row) => clean(row.lastElementChild?.textContent)),
+    ).toEqual(["pendiente", "pendiente", "hecha el 2-8"]);
+    expect(
+      screen.getByRole("heading", {
+        name: "Observaciones — privadas (instructores y administración)",
+      }),
+    ).toBeVisible();
+    const table = screen.getByRole("table", { name: "5 últimas clases" });
+    expect(
+      within(table)
+        .getAllByRole("columnheader")
+        .map((cell) => cell.textContent),
+    ).toEqual(["Fecha", "Niveles", "Pista", "Instructor", "Asistencia"]);
+    expect(
+      within(table)
+        .getAllByRole("row")
+        .slice(1)
+        .map((row) => row.querySelector("td:last-child")?.textContent),
+    ).toEqual(["presente", "presente", "presente", "avisado", "no presentado"]);
     expect(document.body.textContent).not.toMatch(/instructor:|enums:|errors:/u);
   });
 });

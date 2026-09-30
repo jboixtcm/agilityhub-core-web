@@ -56,6 +56,8 @@ import { UnreadFollowUpContext, useUnreadFollowUp } from "./followup/unread";
 import { StudentRecordPage } from "./instructor/StudentRecordPage";
 import { StudentsPage } from "./instructor/StudentsPage";
 import { WeekAgendaPage } from "./instructor/WeekAgendaPage";
+import { AnnouncementsPage } from "./messaging/AnnouncementsPage";
+import { NotificationLogPage } from "./messaging/NotificationLogPage";
 import { isIsoDate } from "./planning/calendar-shared";
 import { CalendarDayPage } from "./planning/CalendarDayPage";
 import { CalendarPage } from "./planning/CalendarPage";
@@ -99,6 +101,9 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/modalitats", roles: ["ADMIN"] },
   // Screen D9.
   { path: "/comunicats", roles: ["ADMIN"] },
+  // «Avisos enviats», the notification log (S11 §2, no mockup): reached from D9 and D10, with no
+  // sidebar entry of its own (it keeps «Comunicats» lit).
+  { path: "/notificacions", roles: ["ADMIN"] },
   // Screen D11.
   { path: "/parametres", roles: ["ADMIN"] },
   // Screen D12.
@@ -403,7 +408,9 @@ export function AdminNavigation({
           active:
             matchesPath(pathname, entry.href) ||
             // Mockup D13: «Alumnes» stays lit on a student's record.
-            (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")),
+            (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")) ||
+            // The notification log belongs to «Comunicats» (S11 §2).
+            (entry.id === "announcements" && matchesPath(pathname, "/notificacions")),
           ...(entry.count === undefined ? {} : { count: entry.count }),
           href: entry.href,
           icon: entry.icon,
@@ -581,6 +588,13 @@ function routeContent(
   }
   if (route.path === "/auditoria") {
     return <AuditPage client={client} />;
+  }
+  if (route.path === "/comunicats") {
+    // D9 (S11 §2): templates, their preview and «Enviar comunicat».
+    return <AnnouncementsPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/notificacions") {
+    return <NotificationLogPage client={client} key={pathname} />;
   }
   return <Placeholder />;
 }

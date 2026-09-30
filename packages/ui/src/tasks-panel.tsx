@@ -1,4 +1,13 @@
-import { type ChangeEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  Fragment,
+  type ReactNode,
+  type Ref,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import { Badge, Button, Drawer, IconButton, Modal, Skeleton, Textarea } from "./components";
 import { Icon } from "./icons/Icon";
@@ -113,8 +122,16 @@ export interface AttachmentChip {
 }
 
 /**
+ * Opens a clip: resolves to why it could not be opened (a translated message), or to nothing when
+ * the file opened.
+ */
+export type AttachmentOpener = (item: AttachmentChip) => Promise<string | undefined> | undefined;
+
+/**
  * «{icona de clip} {fitxer}» (mockups 26 and D13): each opens its file through `onOpen` (a fresh
- * signed url, never a kept one); with `onRemove`, a ✕ beside each.
+ * signed url, never a kept one); with `onRemove`, a ✕ beside each. A file that cannot be opened
+ * says why right after its clip, where it was clicked (AGENTS rule 4); the next click clears it,
+ * and the answer of an earlier click that arrives late is dropped.
  */
 export function AttachmentChips({
   busy = false,
@@ -125,37 +142,56 @@ export function AttachmentChips({
 }: {
   busy?: boolean;
   items: readonly AttachmentChip[];
-  onOpen: (item: AttachmentChip) => void;
+  onOpen: AttachmentOpener;
   onRemove?: ((item: AttachmentChip) => void) | undefined;
   removeLabel?: ((name: string) => string) | undefined;
 }) {
+  const [failure, setFailure] = useState<{ id: string; message: string }>();
+  const attempt = useRef(0);
   if (items.length === 0) return null;
+  const open = (item: AttachmentChip) => {
+    attempt.current += 1;
+    const current = attempt.current;
+    setFailure(undefined);
+    void Promise.resolve(onOpen(item)).then((message) => {
+      if (current === attempt.current && message !== undefined && message !== "") {
+        setFailure({ id: item.id, message });
+      }
+    });
+  };
   return (
     <span className="ah-attachment-chips">
       {items.map((item) => (
-        <span className="ah-attachment-chip" key={item.id}>
-          <button
-            className="ah-attachment-chip__open"
-            onClick={() => {
-              onOpen(item);
-            }}
-            type="button"
-          >
-            <Icon aria-hidden="true" name="clip" />
-            <span>{item.name}</span>
-          </button>
-          {onRemove === undefined || removeLabel === undefined ? null : (
-            <IconButton
-              className="ah-attachment-chip__remove"
-              disabled={busy}
-              icon="x"
-              label={removeLabel(item.name)}
+        <Fragment key={item.id}>
+          <span className="ah-attachment-chip">
+            <button
+              className="ah-attachment-chip__open"
               onClick={() => {
-                onRemove(item);
+                open(item);
               }}
-            />
-          )}
-        </span>
+              type="button"
+            >
+              <Icon aria-hidden="true" name="clip" />
+              <span>{item.name}</span>
+            </button>
+            {onRemove === undefined || removeLabel === undefined ? null : (
+              <IconButton
+                className="ah-attachment-chip__remove"
+                disabled={busy}
+                icon="x"
+                label={removeLabel(item.name)}
+                onClick={() => {
+                  onRemove(item);
+                }}
+              />
+            )}
+          </span>
+          {failure?.id === item.id ? (
+            <span className="ah-attachment-chip__error" role="alert">
+              {failure.message}
+            </span>
+          ) : null}
+        </Fragment>
       ))}
     </span>
   );
@@ -212,6 +248,11 @@ export interface TasksPanelProps<Task extends TaskPanelItem> {
   labels: TasksPanelLabels<Task>;
   limits: AttachmentLimits;
   loading?: boolean;
+  /**
+   * «Mostra'n més» below the list while the api may have another page: its reading state, and why
+   * the last page could not be read (said above the button, which asks it again).
+   */
+  more?: { error?: ReactNode; label: string; loading?: boolean; onMore: () => void } | undefined;
   tasks: readonly Task[];
   /** Absent: the history's read-only list (no «＋ Afegir»). */
   onCreate?: ((text: string, files: readonly File[]) => Promise<boolean>) | undefined;
@@ -219,7 +260,11 @@ export interface TasksPanelProps<Task extends TaskPanelItem> {
   onComplete?: ((task: Task) => Promise<boolean>) | undefined;
   onDelete?: ((task: Task) => Promise<boolean>) | undefined;
   onDetach?: ((task: Task, attachment: AttachmentChip) => Promise<boolean>) | undefined;
-  onOpenAttachment: (task: Task, attachment: AttachmentChip) => void;
+  /** Opens a task's file; resolves to why it could not (said next to the clip). */
+  onOpenAttachment: (
+    task: Task,
+    attachment: AttachmentChip,
+  ) => Promise<string | undefined> | undefined;
   /** `baseVersion`: the task's version when the pencil was tapped (never a later read's). */
   onPatch?:
     ((task: Task, text: string, baseVersion: number | undefined) => Promise<boolean>) | undefined;
@@ -244,6 +289,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
   labels,
   limits,
   loading = false,
+  more,
   onAttach,
   onComplete,
   onCreate,
@@ -471,9 +517,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
                     <AttachmentChips
                       busy={locked}
                       items={task.attachments}
-                      onOpen={(attachment) => {
-                        onOpenAttachment(task, attachment);
-                      }}
+                      onOpen={(attachment) => onOpenAttachment(task, attachment)}
                       onRemove={
                         onDetach === undefined
                           ? undefined
@@ -523,9 +567,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
                     </span>
                     <AttachmentChips
                       items={task.attachments}
-                      onOpen={(attachment) => {
-                        onOpenAttachment(task, attachment);
-                      }}
+                      onOpen={(attachment) => onOpenAttachment(task, attachment)}
                     />
                   </p>
                 )}
@@ -533,6 +575,23 @@ export function TasksPanel<Task extends TaskPanelItem>({
             );
           })}
         </ul>
+      )}
+      {more === undefined || loading ? null : (
+        <div className="ah-tasks__more">
+          {more.error === undefined || more.error === null ? null : (
+            <p className="ah-tasks__error" role="alert">
+              {more.error}
+            </p>
+          )}
+          <Button
+            loading={more.loading === true}
+            loadingLabel={labels.loading}
+            onClick={more.onMore}
+            variant="secondary"
+          >
+            {more.label}
+          </Button>
+        </div>
       )}
       <Modal
         closeLabel={labels.close}
@@ -600,7 +659,7 @@ export interface FollowupEditorProps<Task extends TaskPanelItem> {
   memberNote?:
     | {
         attachments: readonly AttachmentChip[];
-        onOpen: (attachment: AttachmentChip) => void;
+        onOpen: AttachmentOpener;
         text: string | null | undefined;
       }
     | undefined;
@@ -610,7 +669,7 @@ export interface FollowupEditorProps<Task extends TaskPanelItem> {
     onAttach: (files: readonly File[]) => void;
     onChange: (text: string) => void;
     onDetach: (attachment: AttachmentChip) => void;
-    onOpen: (attachment: AttachmentChip) => void;
+    onOpen: AttachmentOpener;
     onRecover: () => void;
     onSave: () => void;
     /** The text typed before someone else saved first (R-10-12), waiting to be recovered. */
@@ -620,6 +679,8 @@ export interface FollowupEditorProps<Task extends TaskPanelItem> {
     text: string;
   };
   onHistory?: (() => void) | undefined;
+  /** «Veure l'historial complet ›»: where the focus goes back when the history closes. */
+  historyLinkRef?: Ref<HTMLButtonElement> | undefined;
   onReject: (message: string) => void;
   rejection: (reason: AttachmentRejection, file: File) => string;
   /** The tasks block: the same `TasksPanel` as everywhere (26 and D13's drawer). */
@@ -634,6 +695,7 @@ export interface FollowupEditorProps<Task extends TaskPanelItem> {
 export function FollowupEditor<Task extends TaskPanelItem>({
   busy,
   error,
+  historyLinkRef,
   labels,
   limits,
   memberNote,
@@ -705,7 +767,12 @@ export function FollowupEditor<Task extends TaskPanelItem>({
       </section>
       <TasksPanel {...tasks} busy={busy} />
       {onHistory === undefined ? null : (
-        <button className="ah-followup__history" onClick={onHistory} type="button">
+        <button
+          className="ah-followup__history"
+          onClick={onHistory}
+          ref={historyLinkRef}
+          type="button"
+        >
           {labels.historyLink}
         </button>
       )}
@@ -778,17 +845,21 @@ export interface FollowupEditorModel<Task extends TaskPanelItem> {
     stale: boolean;
     text: string;
   };
+  /** Resolves to the failure (`undefined` when the file opened). */
   openAttachment: (
     entityType: FollowupEntity,
     entityId: string,
     attachmentId: string,
-  ) => Promise<void>;
+  ) => Promise<unknown>;
   patchTask: (task: Task, text: string, baseVersion?: number) => Promise<boolean>;
   readHistory: (page: number) => Promise<void>;
+  /** «Mostra'n més» of the editable list: one page further. */
+  readMoreTasks: () => Promise<void>;
   reloadTasks: () => void;
   removeAttachment: (attachmentId: string) => Promise<boolean>;
   reopenTask: (task: Task) => Promise<boolean>;
   tasks: FollowupLoadState<readonly Task[]>;
+  tasksPaging: { error?: unknown; more: boolean; pending: boolean };
 }
 
 export interface DogFollowupTexts<Task extends TaskPanelItem> {
@@ -797,6 +868,8 @@ export interface DogFollowupTexts<Task extends TaskPanelItem> {
   errorText: (error: unknown, fallback: string) => string;
   history: { close: string; more: string; title: string };
   loadError: string;
+  /** A file that could not be opened without an answer from the api (offline). */
+  openError: string;
   /** A write that got no answer from the api (offline). */
   writeError: string;
   rejection: (reason: AttachmentRejection, file: File) => string;
@@ -812,35 +885,64 @@ export interface DogFollowupTexts<Task extends TaskPanelItem> {
  * write through it, a refused file or a failed write said inside, and «Veure l'historial complet
  * ›» opening the full history.
  */
+/** A clip's opener: the model's failure said by its code, or `openError` without an answer. */
+function clipOpener<Task extends TaskPanelItem>(
+  model: FollowupEditorModel<Task>,
+  texts: DogFollowupTexts<Task>,
+  entityType: FollowupEntity,
+  entityId: string,
+): AttachmentOpener {
+  return (attachment) =>
+    model
+      .openAttachment(entityType, entityId, attachment.id)
+      .then((failure) =>
+        failure === undefined ? undefined : texts.errorText(failure, texts.openError),
+      );
+}
+
+/** Which block an action started from: its failure is said there, where the user is. */
+type FollowupScope = "observations" | "tasks";
+
 export function DogFollowupEditor<Task extends TaskPanelItem>({
   dogId,
+  historyLinkRef,
   model,
   onHistory,
   texts,
 }: {
   dogId: string;
+  historyLinkRef?: Ref<HTMLButtonElement> | undefined;
   model: FollowupEditorModel<Task>;
   onHistory: () => void;
   texts: DogFollowupTexts<Task>;
 }) {
-  const [refusedFile, setRefusedFile] = useState<string>();
+  const [refusedFile, setRefusedFile] = useState<{ message: string; scope: FollowupScope }>();
+  const [scope, setScope] = useState<FollowupScope>("observations");
   const card = model.card.status === "ready" ? model.card.data : undefined;
   const note = card?.instructorNote;
-  const { tasks } = model;
-  // Each new action clears the last refusal; a failed write stays until the next one.
-  const act = <Result,>(action: () => Result): Result => {
+  const { tasks, tasksPaging } = model;
+  // Each new action clears the last refusal and says where its own failure will show; a failed
+  // write stays until the next one (one write runs at a time).
+  const act = <Result,>(from: FollowupScope, action: () => Result): Result => {
     setRefusedFile(undefined);
+    setScope(from);
     return action();
   };
-  const error =
-    refusedFile ??
-    (model.error === undefined || (model.observations.stale && texts.staleVersion(model.error))
+  const refuse = (from: FollowupScope) => (message: string) => {
+    setRefusedFile({ message, scope: from });
+  };
+  const writeError =
+    model.error === undefined || (model.observations.stale && texts.staleVersion(model.error))
       ? undefined
-      : texts.errorText(model.error, texts.writeError));
+      : texts.errorText(model.error, texts.writeError);
+  const said = (from: FollowupScope) =>
+    refusedFile?.scope === from ? refusedFile.message : scope === from ? writeError : undefined;
+  const tasksError = said("tasks");
   return (
     <FollowupEditor<Task>
       busy={model.busy}
-      error={error}
+      error={said("observations")}
+      historyLinkRef={historyLinkRef}
       labels={texts.editor}
       limits={model.limits}
       memberNote={
@@ -848,27 +950,28 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
           ? undefined
           : {
               attachments: note.attachments,
-              onOpen: (attachment) =>
-                void model.openAttachment("INSTRUCTOR_NOTE", dogId, attachment.id),
+              onOpen: clipOpener(model, texts, "INSTRUCTOR_NOTE", dogId),
               text: note.text,
             }
       }
       observations={{
         attachments: card?.observations?.attachments ?? [],
         dirty: model.observations.dirty,
-        onAttach: (files) => void act(() => model.addAttachments("DOG_OBSERVATIONS", dogId, files)),
+        onAttach: (files) =>
+          void act("observations", () => model.addAttachments("DOG_OBSERVATIONS", dogId, files)),
         onChange: model.observations.setText,
-        onDetach: (attachment) => void act(() => model.removeAttachment(attachment.id)),
-        onOpen: (attachment) => void model.openAttachment("DOG_OBSERVATIONS", dogId, attachment.id),
+        onDetach: (attachment) =>
+          void act("observations", () => model.removeAttachment(attachment.id)),
+        onOpen: clipOpener(model, texts, "DOG_OBSERVATIONS", dogId),
         onRecover: model.observations.recover,
-        onSave: () => void act(() => model.observations.save()),
+        onSave: () => void act("observations", () => model.observations.save()),
         recoverable: model.observations.recoverable,
         saving: model.observations.saving,
         stale: model.observations.stale,
         text: model.observations.text,
       }}
       onHistory={onHistory}
-      onReject={setRefusedFile}
+      onReject={refuse("observations")}
       rejection={texts.rejection}
       tasks={{
         canEdit: true,
@@ -880,20 +983,35 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
                 {texts.retry}
               </Button>
             </span>
-          ) : undefined,
+          ) : (
+            tasksError
+          ),
         labels: texts.tasks,
         limits: model.limits,
         loading: tasks.status === "loading",
-        onAttach: (task, files) => act(() => model.addAttachments("TASK", task.id, files)),
-        onComplete: (task) => act(() => model.completeTask(task)),
-        onCreate: (text, files) => act(() => model.createTask(text, files)),
-        onDelete: (task) => act(() => model.deleteTask(task)),
-        onDetach: (_task, attachment) => act(() => model.removeAttachment(attachment.id)),
+        more:
+          tasks.status === "ready" && (tasksPaging.more || tasksPaging.error !== undefined)
+            ? {
+                error:
+                  tasksPaging.error === undefined
+                    ? undefined
+                    : texts.errorText(tasksPaging.error, texts.loadError),
+                label: texts.history.more,
+                loading: tasksPaging.pending,
+                onMore: () => void model.readMoreTasks(),
+              }
+            : undefined,
+        onAttach: (task, files) => act("tasks", () => model.addAttachments("TASK", task.id, files)),
+        onComplete: (task) => act("tasks", () => model.completeTask(task)),
+        onCreate: (text, files) => act("tasks", () => model.createTask(text, files)),
+        onDelete: (task) => act("tasks", () => model.deleteTask(task)),
+        onDetach: (_task, attachment) => act("tasks", () => model.removeAttachment(attachment.id)),
         onOpenAttachment: (task, attachment) =>
-          void model.openAttachment("TASK", task.id, attachment.id),
-        onPatch: (task, text, baseVersion) => act(() => model.patchTask(task, text, baseVersion)),
-        onReject: setRefusedFile,
-        onReopen: (task) => act(() => model.reopenTask(task)),
+          clipOpener(model, texts, "TASK", task.id)(attachment),
+        onPatch: (task, text, baseVersion) =>
+          act("tasks", () => model.patchTask(task, text, baseVersion)),
+        onReject: refuse("tasks"),
+        onReopen: (task) => act("tasks", () => model.reopenTask(task)),
         tasks: tasks.status === "ready" ? tasks.data : [],
       }}
     />
@@ -901,9 +1019,61 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
 }
 
 /**
- * «Veure l'historial complet ›» (S10 §2 row 26): every task of the dog, done ones included, in a
- * drawer, read-only, page by page with «Mostra'n més».
+ * «Veure l'historial complet ›» (S10 §2 row 26): every task of the dog, done ones included,
+ * read-only, page by page with «Mostra'n més». The body of the history drawer of 26, and of D13's
+ * drawer while it shows the history (`focusOnMount`: the focus moves into it there, since the link
+ * that opened it is hidden).
  */
+export function FollowupHistoryPanel<Task extends TaskPanelItem>({
+  focusOnMount = false,
+  model,
+  texts,
+}: {
+  focusOnMount?: boolean;
+  model: FollowupEditorModel<Task>;
+  texts: DogFollowupTexts<Task>;
+}) {
+  const { history, readHistory } = model;
+  const start = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    void readHistory(0);
+  }, [readHistory]);
+  useEffect(() => {
+    if (focusOnMount) start.current?.focus();
+  }, [focusOnMount]);
+  const pageError = history.error !== undefined && history.read > 0;
+  return (
+    <div className="ah-followup-history" ref={start} tabIndex={-1}>
+      <TasksPanel<Task>
+        canEdit={false}
+        error={
+          history.error === undefined || pageError
+            ? undefined
+            : texts.errorText(history.error, texts.loadError)
+        }
+        labels={texts.tasks}
+        limits={{}}
+        loading={history.read === 0 && history.pending}
+        more={
+          history.more || pageError
+            ? {
+                error: pageError ? texts.errorText(history.error, texts.loadError) : undefined,
+                label: texts.history.more,
+                loading: history.pending,
+                onMore: () => void readHistory(history.read),
+              }
+            : undefined
+        }
+        onOpenAttachment={(task, attachment) =>
+          clipOpener(model, texts, "TASK", task.id)(attachment)
+        }
+        tasks={history.items}
+      />
+    </div>
+  );
+}
+
+/** The history of 26 in its own drawer, over the editor (which keeps its drafts meanwhile). */
 export function FollowupHistoryDrawer<Task extends TaskPanelItem>({
   model,
   onClose,
@@ -913,36 +1083,9 @@ export function FollowupHistoryDrawer<Task extends TaskPanelItem>({
   onClose: () => void;
   texts: DogFollowupTexts<Task>;
 }) {
-  const { history, readHistory } = model;
-  useEffect(() => {
-    void readHistory(0);
-  }, [readHistory]);
   return (
     <Drawer closeLabel={texts.history.close} onClose={onClose} open title={texts.history.title}>
-      <TasksPanel<Task>
-        canEdit={false}
-        error={
-          history.error === undefined ? undefined : texts.errorText(history.error, texts.loadError)
-        }
-        labels={texts.tasks}
-        limits={{}}
-        loading={history.read === 0 && history.pending}
-        onOpenAttachment={(task, attachment) =>
-          void model.openAttachment("TASK", task.id, attachment.id)
-        }
-        tasks={history.items}
-      />
-      {history.more || (history.error !== undefined && history.read > 0) ? (
-        <Button
-          className="ah-followup__more"
-          loading={history.pending}
-          loadingLabel={texts.tasks.loading}
-          onClick={() => void readHistory(history.read)}
-          variant="secondary"
-        >
-          {texts.history.more}
-        </Button>
-      ) : null}
+      <FollowupHistoryPanel<Task> model={model} texts={texts} />
     </Drawer>
   );
 }

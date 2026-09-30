@@ -941,9 +941,11 @@ function bookingWeekKey(date: string): string {
 /**
  * `GET /class-sessions/{id}/bookings` (S08 §6) of a class of the calendar or day-grid world: its
  * `counters.booked` live bookings, plus one late cancellation; a cancelled class has its
- * `affectedBookings` cancelled by the club; a draft has none.
+ * `affectedBookings` cancelled by the club; a draft has none. `displayState` as the api derives it
+ * (a live booking of a class that has ended reads DONE), and each dog's `levelCode`, one of the
+ * class's levels.
  */
-export function classBookingItems(session: ClassSession): ClassBookingItem[] {
+export function classBookingItems(session: ClassSession, now = Date.now()): ClassBookingItem[] {
   const item = (
     [member, dog]: readonly [string, string, string],
     index: number,
@@ -953,10 +955,18 @@ export function classBookingItems(session: ClassSession): ClassBookingItem[] {
     bookingWeekKey: bookingWeekKey(session.date),
     classSessionId: session.id,
     classStartsAt: session.startsAt,
+    displayState:
+      state === "ACTIVE" ? (Date.parse(session.endsAt) <= now ? "DONE" : "CONFIRMED") : state,
     dogId: `dog-${slug(dog)}`,
     dogName: dog,
     id: `cb-${session.id}-${String(index)}`,
     late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
+    levelCode:
+      session.levelIds.length === 0
+        ? null
+        : (session.levelIds[index % session.levelIds.length] ?? "")
+            .replace(/^level-/u, "")
+            .toUpperCase(),
     memberId: `member-${slug(member)}`,
     memberName: member,
     origin: index === 1 ? "BACKOFFICE" : "APP",

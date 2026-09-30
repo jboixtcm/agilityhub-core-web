@@ -234,6 +234,7 @@
     "empty": "Todavía no hay ninguna tarea",
     "loading": "Cargando las tareas",
     "loadError": "No se han podido cargar las tareas.",
+    "openError": "No se ha podido abrir el archivo.",
     "retry": "Vuelve a intentarlo",
     "close": "Cierra",
     "historyLink": "Ver el historial completo ›",

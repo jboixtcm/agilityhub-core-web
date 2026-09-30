@@ -478,7 +478,7 @@ export interface paths {
         put?: never;
         /**
          * Register an uploaded attachment
-         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token, audited; staff → 403); TASK (a live task) and DOG_OBSERVATIONS (a dog) → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: the same fileKey again → the same attachment and no second AttachmentAdded; at most files.maxAttachmentsPerEntity live ones per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey whose upload purpose is not the entityType (e.g. DOG_DOCUMENT) or another account's → ATTACHMENT_ENTITY_MISMATCH; the stored object must match the upload (FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED); name ≤ 80. AttachmentAdded, and a task's attachmentCount + 1. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token, audited; an account with MEMBER and a staff role that owns the dog too, S01 R-01-07; staff otherwise → 403); TASK (a live task) and DOG_OBSERVATIONS (a dog) → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: the same fileKey again → the same attachment and no second AttachmentAdded; at most files.maxAttachmentsPerEntity live ones per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey whose upload purpose is not the entityType (e.g. DOG_DOCUMENT) or another account's → ATTACHMENT_ENTITY_MISMATCH; the stored object must match the upload (FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED); name ≤ 80. AttachmentAdded, and a task's attachmentCount + 1. Two simultaneous registrations on one entity are serialized: at the limit, the second → ATTACHMENT_LIMIT_REACHED. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["add"];
         delete?: never;
@@ -519,7 +519,7 @@ export interface paths {
         post?: never;
         /**
          * removeAttachment
-         * @description Roles: TASK and DOG_OBSERVATIONS → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED); INSTRUCTOR_NOTE → the dog's owner MEMBER (also the impersonation token, audited; staff → 403). R-10-11: removal = removedAt + removedByAccountId (AttachmentRemoved, a task's attachmentCount − 1); the file stays until the GDPR erasure; the attachment leaves the lists. Same Idempotency-Key → the same 204; a removed one → 404. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         * @description Roles: TASK and DOG_OBSERVATIONS → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED); INSTRUCTOR_NOTE → the dog's owner MEMBER (also the impersonation token, audited; an account with MEMBER and a staff role that owns the dog too, S01 R-01-07; staff otherwise → 403). R-10-11: removal = removedAt + removedByAccountId (AttachmentRemoved, a task's attachmentCount − 1); the file stays until the GDPR erasure; the attachment leaves the lists. Same Idempotency-Key → the same 204; a removed one → 404, also for the second of two simultaneous removals. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
          */
         delete: operations["removeAttachment"];
         options?: never;
@@ -662,7 +662,7 @@ export interface paths {
         put?: never;
         /**
          * Request a login or password-reset magic link
-         * @description ANON. R-01-04: neutral 202 whether the account/membership exists or not; no email enumeration. Shares the configured authentication IP quota with /oauth2/token.
+         * @description ANON. R-01-04: neutral 202 whether the account/membership exists or not; no email enumeration. The mailed N-25 link is https://{client host}/activacio?t=… (club clients) or https://{ID host}/magic-link?t=… (the ID); with purpose RESET it ends with &purpose=reset (screen 02: «Ja hi ets»), a LOGIN link carries no purpose. Shares the configured authentication IP quota with /oauth2/token.
          */
         post: operations["magicLink"];
         delete?: never;
@@ -680,7 +680,7 @@ export interface paths {
         };
         /**
          * bookings
-         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12. Without fields every item property is sent; with fields an item has id and the requested keys only. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). Universal list (CONVENCIONS_API §4) for D10/D12: each row carries its class's display description in the reader's language, its ring and the ring's colour. Without fields every item property is sent; with fields an item has id and the requested keys only. The list has no free-text search: q is INVALID_FILTER. Tenant comes from the JWT.
          */
         get: operations["bookings"];
         put?: never;
@@ -689,6 +689,26 @@ export interface paths {
          * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
          */
         post: operations["confirmBooking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * bookingFilterValues
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). CONVENCIONS_API §4 for D10/D12's universal filter: the top 50 values of field (one of GET /bookings' x-filterable fields; any other is INVALID_FILTER), each with its count over the whole set that filter selects, never one page; the filters on field itself are left out. Labels: the dog's name, the member's name, the class's start and description; any other field its value. q is INVALID_FILTER (the list has no free-text search). Tenant comes from the JWT.
+         */
+        get: operations["bookingFilterValues"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -746,7 +766,7 @@ export interface paths {
         put?: never;
         /**
          * cancelBooking
-         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). ADMIN without impersonation → 403. R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). ADMIN without impersonation and without MEMBER → 403. An account with MEMBER and INSTRUCTOR cancels its own (or its family group's) booking as a member (origin APP, cancelReason MEMBER; R-08-19) and another member's as an instructor (origin INSTRUCTOR) (R-01-07). R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
          */
         post: operations["cancelBooking"];
         delete?: never;
@@ -782,7 +802,7 @@ export interface paths {
         put?: never;
         /**
          * Create signup checkout session
-         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits.
+         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits. E5-T28 (A3-06): the session and its rows commit in the signup's retried transaction (a concurrent census write never gives a 500), and the provider session opens after that commit; a provider failure expires the session again. A rejection of the signup expires its open session (A3-01).
          */
         post: operations["create_1"];
         delete?: never;
@@ -806,7 +826,7 @@ export interface paths {
         put?: never;
         /**
          * createClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28).
          */
         post: operations["createClass"];
         delete?: never;
@@ -1535,6 +1555,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/email-unsubscribes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * unsubscribeEmail
+         * @description Roles: ANON (any caller; the token authorises). A valid token (signed, 30 days) turns emailByCategory.CLUB_NEWS off for its member and publishes EmailUnsubscribed{memberId}; using it again changes nothing. An expired, tampered or another club's token → UNSUBSCRIBE_TOKEN_INVALID (422). Transactional e-mails never carry the link. The club comes from the host.
+         */
+        post: operations["unsubscribeEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/exports": {
         parameters: {
             query?: never;
@@ -1740,7 +1780,7 @@ export interface paths {
         };
         /**
          * followup
-         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D14 universal list (CONVENCIONS_API §4, R-10-13): the visible FollowupItem rows (a deleted task's row is hidden), unread first (activityAt desc), then the rest (activityAt desc), ordered by the query; unread(item, me) = activityAt > readAllAt ∧ id ∉ readItemIds ∧ author ≠ me. memberName, dogName, levelCode (null with levels.enabled = false) and the note author's authorGender are read at request time. An undeclared filter or sort is 400 INVALID_FILTER. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D14 universal list (CONVENCIONS_API §4, R-10-13): the visible FollowupItem rows (a deleted task's row is hidden), unread first (activityAt desc), then the rest (activityAt desc), ordered by the query; unread(item, me) = activityAt > readAllAt ∧ id ∉ readItemIds ∧ author ≠ me. memberName (the dog's current owner), dogName and levelCode (null with levels.enabled = false) are read at request time; authorAccountId, authorName and authorGender are whoever wrote the task or the note, as they were then, never the dog's current owner. Pages hold at most 50 rows (S10 §3): size 20 or 50, and 200 or 1000 is 400 INVALID_FILTER. An undeclared filter or sort is 400 INVALID_FILTER. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
          */
         get: operations["followup"];
         put?: never;
@@ -1818,6 +1858,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * health
+         * @description ANON, global (no tenant, no locale, no data; an Authorization header is never read). 200 {status: UP} only when a Mongo ping answers within 1 s; otherwise 503 with the same envelope and status DOWN. version and builtAt come from the build.
+         */
         get: operations["health"];
         put?: never;
         post?: never;
@@ -2427,6 +2471,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * myNotificationPreferences
+         * @description Roles: MEMBER, and the impersonation token (INSTRUCTOR, ADMIN without MEMBER → 403). The member's NotificationPreference, the product defaults when the block is absent (OPERATIONAL e-mail off, the rest on, no reminder, push of club news on), with the reminder options, the account's locale and the club's locales and SMS/PUSH modules. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["myNotificationPreferences"];
+        /**
+         * saveMyNotificationPreferences
+         * @description Roles: MEMBER, and the impersonation token (audited as MEMBER_UPDATED with the impersonated member). Partial save (debounced by 12): an absent key keeps its value; reminderMinutesBefore outside messaging.reminderOptionsMinutes → INVALID_REMINDER_OPTION (422). NotificationPreferencesChanged{memberId, diff, byAccountId}; a changed reminder never resends a reminder already sent (R-11-16). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        put: operations["saveMyNotificationPreferences"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * meNotifications
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, and the impersonation token (the member's feed). Feed 11 (R-11-10): the caller's notifications with an APP delivery, of any audience (audience filters one), createdAt desc, 20 per page; channels lists SMS only when an SMS delivery is SENT or DELIVERED («i per SMS»); action.enabled is computed on reading (CLAIM_SEAT: the entry is still NOTIFIED and, in FIFO, confirmBy > now); unreadCount = GET /me/home notifications.unreadCount. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["meNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * readAllNotifications
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, and the impersonation token. Entering screen 11 marks every notification of the caller created until now read (DECISIONS_PENDENTS part C S11; idempotent); the bell of 03 goes out. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["readAllNotifications"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * readNotification
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, and the impersonation token. Marks one of the caller's notifications read (idempotent: readAt kept); another account's or club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["readNotification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/onboarding": {
         parameters: {
             query?: never;
@@ -2481,7 +2609,7 @@ export interface paths {
         get?: never;
         /**
          * Set or change the current account password
-         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists.
+         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists, except once in a session opened by a RESET magic link, within 15 minutes of the link's exchange (ruling E49); a LOGIN link never allows it.
          */
         put: operations["password"];
         post?: never;
@@ -2830,9 +2958,29 @@ export interface paths {
         put?: never;
         /**
          * Create a non-refreshable member impersonation token
-         * @description ADMIN of the same club, never an impersonated token. R-01-09. Access expires per auth.impersonationMinutes; no refresh token is issued.
+         * @description ADMIN of the same club, never an impersonated token. R-01-09. Access expires per auth.impersonationMinutes; no refresh token is issued. launchUrl = https://{club app host}/entrar?handoff=<code>: a one-shot handoff code valid 60 s, bound to this grant; the club app redeems it once with POST /oauth2/token grant_type=urn:agilityhub:grant:handoff, client_id=clubs-app, into this grant's JWT (no refresh token, no cookie). The JWT never travels in a URL (rulings E17/E47). token and expiresAt stay for API clients.
          */
         post: operations["impersonation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * saveMemberNotificationPreferences
+         * @description Roles: ADMIN (impersonation → 403). The same block from D10, audited as MEMBER_UPDATED (changes[].path = notificationPreferences, the actor's actorAccountId). Another club's member → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        put: operations["saveMemberNotificationPreferences"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2874,7 +3022,7 @@ export interface paths {
         head?: never;
         /**
          * Update payment method
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method.
          */
         patch: operations["updatePaymentMethod"];
         trace?: never;
@@ -2959,6 +3107,138 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/message-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * messageTemplates
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). D9 list with the counts per category: every CATALOG template of the club (the seed of a code without one is created on first use, R-11-01) and its CUSTOM ones; ARCHIVED only with includeArchived. The SMS column follows the SMS module (cells kept, R-11-17). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["messageTemplates"];
+        put?: never;
+        /**
+         * createMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [＋ Nova plantilla]: a CUSTOM template of PERSONAL, CLUB_NEWS or CLUB_CHANGES (SYSTEM or OPERATIONAL → VALIDATION_ERROR) with member variables only; matrix cells outside the category's caps → CHANNEL_NOT_ALLOWED; an active SMS cell needs smsBody. MessageTemplateChanged and CATALOG_CHANGED audit. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["createMessageTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/message-templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * messageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The editor of D9: the texts per club locale, the seed texts (CATALOG) and lastChange. Another club's template → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["messageTemplate"];
+        /**
+         * updateMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [DESA] (R-11-12): texts, icon, colour, matrix within caps, enabled (not a mandatory one: TEMPLATE_MANDATORY) and, for CUSTOM, the category; version+1 and customized. A missing required variable (N-02 link, N-08a admin_text) is VALIDATION_ERROR with details.missingVariables (MissingVariablesDetails) until the catalog has S11's TEMPLATE_MISSING_VARIABLE. A stale version → STALE_VERSION. MessageTemplateChanged, CATALOG_CHANGED audit, club cache evicted. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        put: operations["updateMessageTemplate"];
+        post?: never;
+        /**
+         * archiveMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Elimina»: a CUSTOM template becomes ARCHIVED (nothing is deleted, invisible in D9 and in the send dialog); a CATALOG one → TEMPLATE_NOT_CUSTOM (422). No body. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        delete: operations["archiveMessageTemplate"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/message-templates/{id}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * previewMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [Vista prèvia] of the saved texts or of an unsaved draft, in one locale, with the fictional data of that locale; SMS length and segments after transliteration; an unknown variable is a warning (rendered empty). sendTest (E7-T03) delivers the rendered draft to the acting admin only. Writes nothing else. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["previewMessageTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/message-templates/{id}/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * resetMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Restaura el text per defecte»: the seed texts, icon, colour and matrix back, customized = false; a CUSTOM template → TEMPLATE_NOT_CATALOG (422). MessageTemplateChanged, CATALOG_CHANGED audit. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["resetMessageTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/message-templates/{id}/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * sendMessageTemplate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Enviar comunicat» (R-11-13, N-24): N-24 or a CUSTOM template only (TEMPLATE_NOT_SENDABLE, 422); recipients = the members of the selection or of the filters (the semantics of GET /members, any status the list shows; NO_RECIPIENTS, 422). dryRun → 200 with the count and nothing written; otherwise 202, AnnouncementSent{templateId, batchId, recipientCount, filters}, one MEMBER notification per member (dedupKey {batchId}:{memberId}) and ANNOUNCEMENT_SENT audit. The same Idempotency-Key replays the same batchId. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["sendMessageTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * notifications
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The club's notification log (R-11-10, T-11-26), universal list (CONVENCIONS_API §4) createdAt desc by default: every notification, also those with no external channel sent and those without an APP delivery; never another club's. channel/status filter on any delivery; memberId on the recipient. An undeclared filter, sort or fields key is 400 INVALID_FILTER. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["notifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/notifications/export": {
         parameters: {
             query?: never;
@@ -2968,9 +3248,49 @@ export interface paths {
         };
         /**
          * Export notifications
-         * @description S14 §6, R-14-12. Same q/filter/sort and selected columns as the list. 200 binary file or 202 ExportAccepted. Sensitive values are masked; implementation and future-vertical field allowlists are deferred.
+         * @description Roles: ADMIN (impersonation → 403). S14 §6, R-14-12. The list contract of GET /notifications (S11 log, E7-T01): the same q/filter/sort, fields and selected columns; an undeclared one is 400 INVALID_FILTER. 200 binary file or 202 ExportAccepted. Sensitive values are masked. Contract only; returns 501 NOT_IMPLEMENTED after the role, tenant and query checks until E7-T03 serves the log.
          */
         get: operations["exportNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * notificationFilterValues
+         * @description Roles: ADMIN (impersonation → 403). The values of one x-filterable field with their counts under the other filters (CONVENCIONS_API §4); another field → INVALID_FILTER. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["notificationFilterValues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * notification
+         * @description Roles: ADMIN (impersonation → 403). The log's detail: the frozen rendered texts, every delivery with the provider's reference and last error. Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        get: operations["notification"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3431,6 +3751,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/push-subscriptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * subscribePush
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (unique per club through its hash), ACTIVE again if it had expired; PushSubscribed{accountId, endpoint = its SHA-256}. An endpoint that is no https URL or keys that are no base64url → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        post: operations["subscribePush"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/push-subscriptions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * unsubscribePush
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, the caller's own subscription (impersonation → IMPERSONATION_DENIED). Logout of the device: EXPIRED + expiredAt, PushUnsubscribed; another account's or club's → 404. No body. Requires PUSH. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role and resource guards. Tenant comes from the JWT.
+         */
+        delete: operations["unsubscribePush"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/ring-blocks": {
         parameters: {
             query?: never;
@@ -3440,7 +3800,7 @@ export interface paths {
         };
         /**
          * blocks
-         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER rows leave out note and createdByName (as RingBlockMemberView), and asking for them in fields is INVALID_FILTER. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR, MEMBER. Tenant and role guards apply. MEMBER rows leave out note and createdByName (as RingBlockMemberView), and asking for them in fields is INVALID_FILTER. Each row carries its ring's name and colour, a deactivated ring's included. The list has no free-text search: q is INVALID_FILTER. With fields an item has id and the requested keys only (CONVENCIONS_API §4). Tenant comes from the JWT.
          */
         get: operations["blocks"];
         put?: never;
@@ -3449,6 +3809,26 @@ export interface paths {
          * @description Roles: ADMIN, INSTRUCTOR. Tenant and role guards apply. RESERVATION requires FREE_TRAINING; cancelBookings requires ADMIN. Tenant comes from the JWT.
          */
         post: operations["createBlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ring-blocks/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * blockFilterValues
+         * @description Roles: ADMIN, INSTRUCTOR (MEMBER → 403; impersonation → IMPERSONATION_DENIED). CONVENCIONS_API §4 for the register's universal filter (/entrenaments): the top 50 values of field (one of GET /ring-blocks' x-filterable fields; any other is INVALID_FILTER), each with its count over the whole set that filter selects, never one page; the filters on field itself are left out. Labels: the ring's name (a deactivated ring's included); any other field its value. q is INVALID_FILTER (the list has no free-text search). Tenant comes from the JWT.
+         */
+        get: operations["blockFilterValues"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3850,7 +4230,7 @@ export interface paths {
         put?: never;
         /**
          * completeTask
-         * @description Roles: MEMBER owner of the dog (also the impersonation token, audited DOG_UPDATED with origin BACKOFFICE; a family-group dog → 404), INSTRUCTOR, ADMIN. PENDING → DONE with doneAt and doneBy {role, displayName, gender}; the D14 row gets completedAt (not activityAt); TaskCompleted → N-21 to every active instructor. Already DONE → TASK_ALREADY_DONE (422), also for the second of two simultaneous calls; deleted → 404. No body. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         * @description Roles: MEMBER owner of the dog (also the impersonation token, audited DOG_UPDATED with origin BACKOFFICE; a family-group dog → 404), INSTRUCTOR, ADMIN. An account with MEMBER and a staff role completes its own dog's task as the member (doneBy role MEMBER) and another member's as staff (S01 R-01-07). PENDING → DONE with doneAt and doneBy {role, displayName, gender}; the D14 row gets completedAt (not activityAt); TaskCompleted → N-21 to every active instructor. Already DONE → TASK_ALREADY_DONE (422), also for the second of two simultaneous calls, with or without an Idempotency-Key; deleted → 404. No body. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
          */
         post: operations["completeTask"];
         delete?: never;
@@ -3888,7 +4268,7 @@ export interface paths {
         };
         /**
          * trainingBookings
-         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER. Without fields every item property is sent; with fields an item has id and the requested keys only. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. Ring usage register, universal list (CONVENCIONS_API §4), listKey training-bookings; an undeclared filter is INVALID_FILTER, and so is q (no free-text search). Each row carries its slot's end (endsAt, endsAtLocal) and the member's number (null without one). Without fields every item property is sent; with fields an item has id and the requested keys only. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         get: operations["trainingBookings"];
         put?: never;
@@ -3915,6 +4295,26 @@ export interface paths {
          * @description Roles: ADMIN (S14 R-14-12: list exports are ADMIN only; INSTRUCTOR → 403). Same q/filter/sort and selected columns as GET /training-bookings (listKey training-bookings); 200 file or 202 ExportAccepted. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         get: operations["exportTrainingBookings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/training-bookings/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * trainingBookingFilterValues
+         * @description Roles: ADMIN, INSTRUCTOR (read); MEMBER → 403; impersonation → IMPERSONATION_DENIED. CONVENCIONS_API §4 for the register's universal filter (listKey training-bookings): the top 50 values of field (one of GET /training-bookings' x-filterable fields; any other is INVALID_FILTER), each with its count over the whole set that filter selects, never one page; the filters on field itself are left out. Labels: the ring's, the member's and the dog's names; any other field its value. q is INVALID_FILTER (the list has no free-text search). Requires FREE_TRAINING. Tenant comes from the JWT.
+         */
+        get: operations["trainingBookingFilterValues"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4034,7 +4434,7 @@ export interface paths {
         put?: never;
         /**
          * leaveWaitlist
-         * @description Roles: MEMBER (own or family group, also the impersonation token), ADMIN (D4/D12). R-08-16: ACTIVE or NOTIFIED only (WAITLIST_ENTRY_NOT_LIVE otherwise) → CANCELLED with cancelReason MEMBER, or ADMIN when an administrator acts (directly or impersonating); WaitlistLeft. Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token), ADMIN (D4/D12). R-08-16: ACTIVE or NOTIFIED only (WAITLIST_ENTRY_NOT_LIVE otherwise) → CANCELLED with cancelReason MEMBER, or ADMIN when an administrator acts (directly or impersonating); WaitlistLeft. An account with MEMBER and a staff role leaves its own (or its family group's) entry as a member (R-01-07). Requires WAITLIST. Tenant comes from the JWT.
          */
         post: operations["leaveWaitlist"];
         delete?: never;
@@ -4314,7 +4714,7 @@ export interface paths {
         put?: never;
         /**
          * validateWeek
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. A VALIDATED week that still holds DRAFT classes validates them again and keeps its `validatedAt` (T-06-23, E5-T28).
          */
         post: operations["validateWeek"];
         delete?: never;
@@ -4477,22 +4877,6 @@ export interface paths {
          * @description ECDSA signature over the timestamp header and raw request bytes. No bearer token or request tenant is required. Events are matched to the stored notification, club and recipient; sg_event_id is idempotent.
          */
         post: operations["receive"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/members/{id}/notification-preferences": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateMemberNotificationPreferences"];
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4991,6 +5375,24 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        /** @description Either the selection (memberIds) or the list's query (filters + q, the semantics of GET /members), as D5/D15 opened the dialog */
+        AnnouncementRecipients: {
+            /** @description field:op:value, the filters of GET /members */
+            filters?: string[] | null;
+            memberIds?: string[] | null;
+            q?: string | null;
+        };
+        AnnouncementRequest: {
+            /** @description true: count only («S'enviarà a {n} abonats»), 200 and nothing written */
+            dryRun: boolean;
+            recipients: components["schemas"]["AnnouncementRecipients"];
+        };
+        AnnouncementResult: {
+            /** @description null on dryRun */
+            batchId?: string | null;
+            /** Format: int32 */
+            recipientCount: number;
+        };
         ApiError: {
             code: string;
             details?: {
@@ -5129,6 +5531,12 @@ export interface components {
              * @description T1
              */
             editableUntil: string;
+        };
+        /** @description The three matrix columns of one audience (S11 §3): APP · EMAIL · SMS. PUSH is fixed by the code (`push`). */
+        AudienceChannels: {
+            APP: boolean;
+            EMAIL: boolean;
+            SMS: boolean;
         };
         /** @enum {string} */
         AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED";
@@ -5377,6 +5785,8 @@ export interface components {
             instructorName?: string | null;
             /** Format: date-time */
             instructorVisibleAt?: string | null;
+            /** @description The ring's colour for 07's dot before the title (E5-T29); null for a ring without one */
+            ringColor?: string | null;
             ringName?: string | null;
             /** @description Club-local date-time YYYY-MM-DDTHH:mm */
             startsAtLocal: string;
@@ -5392,7 +5802,7 @@ export interface components {
             limit: number;
             /**
              * Format: date-time
-             * @description Start of the next booking week
+             * @description Start of the next booking week: the end of the current one (R-08-01), for a CURRENT class and for a NEXT one alike; at this instant a NEXT class becomes bookable in the current week (29)
              */
             nextBookableAt: string;
             notSelectable: components["schemas"]["NotSelectable"][];
@@ -5406,6 +5816,8 @@ export interface components {
             /** Format: date-time */
             bookedAt?: string;
             bookingWeekKey?: string;
+            /** @description The class's display description in the reader's language (D10 «Classes», E5-T29) */
+            classDescription?: string;
             classSessionId?: string;
             /** Format: date-time */
             classStartsAt?: string;
@@ -5417,6 +5829,10 @@ export interface components {
             memberName?: string;
             /** @enum {string} */
             origin?: "APP" | "BACKOFFICE" | "INSTRUCTOR" | "SYSTEM";
+            /** @description The ring's colour; null for a ring without one */
+            ringColor?: string | null;
+            ringId?: string | null;
+            ringName?: string | null;
             /** @enum {string} */
             state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
         };
@@ -5433,6 +5849,8 @@ export interface components {
             legal: components["schemas"]["Legal"];
             locales: string[];
             modules: string[];
+            /** @description S11 R-11-07 (E7-T02): the VAPID public key (base64url) the browser subscribes with (`PushManager.subscribe`); null when the club has no PUSH module or the product has no key. */
+            pushPublicKey: string | null;
             signup: components["schemas"]["Signup"];
             status: string;
             theme: components["schemas"]["Theme"];
@@ -5609,6 +6027,33 @@ export interface components {
             /** Format: int64 */
             totalItems: number;
         };
+        /** @description Templates per category, the card «Plantilles per categoria» of D9 (archived ones excluded) */
+        CategoryCounts: {
+            /** Format: int32 */
+            CLUB_CHANGES: number;
+            /** Format: int32 */
+            CLUB_NEWS: number;
+            /** Format: int32 */
+            OPERATIONAL: number;
+            /** Format: int32 */
+            PERSONAL: number;
+        };
+        /** @description Per audience, the matrix cells the code lets the template activate (R-11-12); empty for an audience of no row of the code */
+        ChannelCaps: {
+            ADMINS: components["schemas"]["NotificationChannel"][];
+            INSTRUCTORS: components["schemas"]["NotificationChannel"][];
+            MEMBER: components["schemas"]["NotificationChannel"][];
+        };
+        /** @description «Canals per públic — aquesta plantilla» (D9): every row is present; a cell outside `caps` is always false and inert */
+        ChannelMatrix: {
+            ADMINS: components["schemas"]["AudienceChannels"];
+            INSTRUCTORS: components["schemas"]["AudienceChannels"];
+            MEMBER: components["schemas"]["AudienceChannels"];
+        };
+        ChannelState: {
+            channel: components["schemas"]["NotificationChannel"];
+            status: components["schemas"]["DeliveryStatus"];
+        };
         CheckoutSession: {
             checkoutSessionId: string;
             /** Format: uri */
@@ -5635,10 +6080,17 @@ export interface components {
             classSessionId: string;
             /** Format: date-time */
             classStartsAt: string;
+            /**
+             * @description S08 §6 derived label, as GET /bookings/{id} gives it: a past ACTIVE booking reads DONE, one with a NO_SHOW mark NO_SHOW
+             * @enum {string}
+             */
+            displayState: "CONFIRMED" | "DONE" | "NO_SHOW" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB" | "PAYMENT_PENDING";
             dogId: string;
             dogName: string;
             id: string;
             late?: boolean | null;
+            /** @description The dog's level code (R-10-16); null with levels.enabled = false or for a dog without a level */
+            levelCode?: string | null;
             memberId: string;
             memberName: string;
             /** @enum {string} */
@@ -6211,6 +6663,28 @@ export interface components {
             /** @description Club-local time HH:mm */
             toLocal: string;
         };
+        /** @enum {string} */
+        DeliveryStatus: "QUEUED" | "SENT" | "DELIVERED" | "FAILED" | "SKIPPED_BY_PREFERENCE" | "SKIPPED_MODULE_OFF" | "SKIPPED_NO_CONTACT" | "SKIPPED_CAP" | "SKIPPED_STALE" | "SKIPPED_NOT_ALLOWED";
+        DeliveryView: {
+            /** Format: int32 */
+            attempts: number;
+            channel: components["schemas"]["NotificationChannel"];
+            /** Format: date-time */
+            deliveredAt?: string | null;
+            /** Format: date-time */
+            failedAt?: string | null;
+            /** @description The provider's last error */
+            lastError?: string | null;
+            /** Format: date-time */
+            nextAttemptAt?: string | null;
+            /** @description The provider's message id */
+            providerRef?: string | null;
+            /** Format: date-time */
+            sentAt?: string | null;
+            status: components["schemas"]["DeliveryStatus"];
+            /** @description The address, phone (E.164) or push subscription id; null for APP */
+            target?: string | null;
+        };
         /** @description Derived presentation status; includes ERASED under S14. */
         DisplayStatus: {
             /** Format: date */
@@ -6379,6 +6853,28 @@ export interface components {
             ownerName?: string | null;
             /** @enum {string} */
             rightSource: "LEVEL" | "MANUAL";
+        };
+        /** @description E-mail per category; the fourth row CLUB_NEWS exists although mockup 12 does not show it (S11 §13-2) */
+        EmailByCategory: {
+            CLUB_CHANGES: boolean;
+            CLUB_NEWS: boolean;
+            OPERATIONAL: boolean;
+            PERSONAL: boolean;
+        };
+        /** @description Partial: an absent category keeps its value */
+        EmailByCategoryPatch: {
+            CLUB_CHANGES?: boolean | null;
+            CLUB_NEWS?: boolean | null;
+            OPERATIONAL?: boolean | null;
+            PERSONAL?: boolean | null;
+        };
+        EmailUnsubscribeRequest: {
+            /** @description The signed token of the «Deixar de rebre aquests comunicats» link (30 days) */
+            token: string;
+        };
+        EmailUnsubscribeResult: {
+            /** @description The category whose e-mail was turned off: always CLUB_NEWS */
+            category: components["schemas"]["NotificationCategory"];
         };
         EmptyRequest: Record<string, never>;
         EntryFee: {
@@ -6568,6 +7064,14 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        /** @description The native action (R-11-11): CHANGE_CLASS and CLAIM_SEAT are buttons, the rest open on tapping the card; enabled is computed on reading */
+        FeedAction: {
+            enabled: boolean;
+            params: {
+                [key: string]: string;
+            };
+            type: components["schemas"]["NotificationActionType"];
+        };
         FileKeyRequest: {
             fileKey: string;
         };
@@ -6602,7 +7106,7 @@ export interface components {
              */
             activityAt?: string;
             /**
-             * @description Only MEMBER_NOTE rows: the member's gender, for the author label «Laura (alumna)» (S10 §6, §10)
+             * @description Only MEMBER_NOTE rows: the gender of the member who wrote the note, as it was then (never the dog's current owner), for the author label «Laura (alumna)» (S10 §3, §6, §10)
              * @enum {string|null}
              */
             authorGender?: "MALE" | "FEMALE" | "OTHER" | null;
@@ -6706,7 +7210,8 @@ export interface components {
         HealthResponse: {
             /** Format: date-time */
             builtAt: string;
-            status: string;
+            /** @enum {string} */
+            status: "UP" | "DOWN";
             version: string;
         };
         HistoryDetail: {
@@ -6841,6 +7346,8 @@ export interface components {
         };
         Impersonation: {
             actorName: string;
+            /** @description The impersonated member's display name as D10 shows it, first name and last names, for the banner «Estàs veient l'app com {nom}»; not the account's name, which in a family group is another person's (E5-T29) */
+            memberName: string;
         };
         ImpersonationRequest: {
             reason?: string;
@@ -6850,9 +7357,9 @@ export interface components {
             expiresAt: string;
             /**
              * Format: uri
-             * @description S03 member-app launch URL
+             * @description S01 R-01-09 / S03 member-app launch URL: https://{club app host}/entrar?handoff=<one-shot code, 60 s>, redeemed once with the handoff grant (client_id clubs-app) into this grant's JWT; the JWT itself is never in the URL. Null only when the club has no verified club app domain.
              */
-            launchUrl?: string;
+            launchUrl?: string | null;
             token: string;
         };
         /** @description details of 422 INACTIVITY_PERIOD */
@@ -7582,6 +8089,38 @@ export interface components {
             /** @description Null = «Tots» */
             selectedDogId?: string | null;
         };
+        MeNotification: {
+            /** @description null when the code has no action («—») */
+            action?: components["schemas"]["FeedAction"] | null;
+            body: string;
+            category: components["schemas"]["NotificationCategory"];
+            /** @description Channels that reached the member; SMS only when SENT or DELIVERED («i per SMS») */
+            channels: components["schemas"]["NotificationChannel"][];
+            code: string;
+            color: components["schemas"]["TemplateColor"];
+            /** Format: date-time */
+            createdAt: string;
+            icon: components["schemas"]["TemplateIcon"];
+            id: string;
+            /** Format: date-time */
+            readAt?: string | null;
+            title: string;
+        };
+        MeNotifications: {
+            /** @description createdAt desc; only notifications with an APP delivery */
+            items: components["schemas"]["MeNotification"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /**
+             * Format: int64
+             * @description The same count as GET /me/home notifications.unreadCount
+             */
+            unreadCount: number;
+        };
         MeProfile: {
             address: components["schemas"]["Address"];
             contactEmails: components["schemas"]["ContactEmail"][];
@@ -7891,6 +8430,110 @@ export interface components {
             rememberProfile: boolean;
             roles: components["schemas"]["Profile"][];
         };
+        /** @description [＋ Nova plantilla]: a CUSTOM template (category PERSONAL · CLUB_NEWS · CLUB_CHANGES) */
+        MessageTemplateCreateRequest: {
+            body: {
+                [key: string]: string;
+            };
+            category: components["schemas"]["NotificationCategory"];
+            color: components["schemas"]["TemplateColor"];
+            icon: components["schemas"]["TemplateIcon"];
+            matrix: components["schemas"]["ChannelMatrix"];
+            /** @description Required when an SMS cell is active (SMS_BODY_REQUIRED); ≤ 160 GSM-7 rendered (SMS_BODY_TOO_LONG) */
+            smsBody?: {
+                [key: string]: string;
+            } | null;
+            title: {
+                [key: string]: string;
+            };
+        };
+        MessageTemplateDetail: {
+            /** @description Body (≤ 2000) per club locale; the text of the MEMBER audience (staff texts are product copy, §13-3) */
+            bodyI18n: {
+                [key: string]: string;
+            };
+            caps: components["schemas"]["ChannelCaps"];
+            category: components["schemas"]["NotificationCategory"];
+            code?: string | null;
+            color: components["schemas"]["TemplateColor"];
+            customized: boolean;
+            enabled: boolean;
+            icon: components["schemas"]["TemplateIcon"];
+            id: string;
+            kind: components["schemas"]["TemplateKind"];
+            lastChange?: components["schemas"]["LastChange"];
+            mandatory: boolean;
+            matrix: components["schemas"]["ChannelMatrix"];
+            name: string;
+            push: components["schemas"]["NotificationAudience"][];
+            /** @description The seed texts; null for CUSTOM */
+            seedDefault?: components["schemas"]["TemplateTexts"] | null;
+            /** @description «SMS (text curt)» per club locale; null when no SMS cell may be active */
+            smsBodyI18n?: {
+                [key: string]: string;
+            } | null;
+            status: components["schemas"]["TemplateStatus"];
+            /** @description Title per club locale (the `ca`/`es` tabs of D9) */
+            titleI18n: {
+                [key: string]: string;
+            };
+            variables: components["schemas"]["TemplateVariable"][];
+            /**
+             * Format: int64
+             * @description PUT optimistic lock (STALE_VERSION)
+             */
+            version: number;
+        };
+        MessageTemplateList: {
+            countsByCategory: components["schemas"]["CategoryCounts"];
+            items: components["schemas"]["MessageTemplateListItem"][];
+        };
+        MessageTemplateListItem: {
+            caps: components["schemas"]["ChannelCaps"];
+            category: components["schemas"]["NotificationCategory"];
+            /** @description N-xx of a CATALOG template; null for CUSTOM */
+            code?: string | null;
+            color: components["schemas"]["TemplateColor"];
+            customized: boolean;
+            enabled: boolean;
+            icon: components["schemas"]["TemplateIcon"];
+            id: string;
+            kind: components["schemas"]["TemplateKind"];
+            /** @description Last audited change (CATALOG_CHANGED, R-14-11); null when never edited */
+            lastChange?: components["schemas"]["LastChange"];
+            matrix: components["schemas"]["ChannelMatrix"];
+            /** @description The title in the admin's language */
+            name: string;
+            /** @description Audiences with a web push (fixed by the code; the Push column of D9 is informative, PUSH module) */
+            push: components["schemas"]["NotificationAudience"][];
+            /** @description The code's variables only (CUSTOM: the member ones, R-11-12) */
+            variables: components["schemas"]["TemplateVariable"][];
+        };
+        MessageTemplateUpdateRequest: {
+            body: {
+                [key: string]: string;
+            };
+            /** @description CUSTOM only (the category of a CATALOG template is the code's) */
+            category?: components["schemas"]["NotificationCategory"] | null;
+            color: components["schemas"]["TemplateColor"];
+            /** @description false = DISABLED; a mandatory template cannot (TEMPLATE_MANDATORY) */
+            enabled: boolean;
+            icon: components["schemas"]["TemplateIcon"];
+            matrix: components["schemas"]["ChannelMatrix"];
+            /** @description A full replacement: absent or null removes it (then no SMS cell may be active) */
+            smsBody?: {
+                [key: string]: string;
+            } | null;
+            title: {
+                [key: string]: string;
+            };
+            /** Format: int64 */
+            version: number;
+        };
+        MissingVariablesDetails: {
+            /** @description requiredVariables absent from the text (N-02 link, N-08a admin_text) */
+            missingVariables: string[];
+        };
         ModuleSettings: {
             modules: string[];
         };
@@ -7948,6 +8591,113 @@ export interface components {
             /** Format: date-time */
             uploadedAt: string;
             url: string;
+        };
+        /** @enum {string} */
+        NotificationActionType: "CHANGE_CLASS" | "CLAIM_SEAT" | "OPEN_BOOKING" | "OPEN_DOG" | "OPEN_TASKS" | "OPEN_INVOICES" | "OPEN_ACTIVITY" | "OPEN_SETUP" | "OPEN_SIGNUP" | "OPEN_MEMBER" | "OPEN_JOBS" | "OPEN_EXPORT" | "OPEN_CHALLENGE";
+        /** @enum {string} */
+        NotificationAudience: "MEMBER" | "INSTRUCTORS" | "ADMINS" | "APPLICANT";
+        /** @enum {string} */
+        NotificationCategory: "OPERATIONAL" | "PERSONAL" | "CLUB_CHANGES" | "CLUB_NEWS" | "SYSTEM";
+        /** @enum {string} */
+        NotificationChannel: "APP" | "EMAIL" | "SMS" | "PUSH";
+        NotificationDetail: {
+            audience: components["schemas"]["NotificationAudience"];
+            /** @description Rendered and frozen */
+            body: string;
+            category: components["schemas"]["NotificationCategory"];
+            channels: components["schemas"]["ChannelState"][];
+            code: string;
+            /** Format: date-time */
+            createdAt: string;
+            deliveries: components["schemas"]["DeliveryView"][];
+            /** @description null for a direct send (N-50, N-53, a test send) */
+            eventType?: string | null;
+            id: string;
+            /** @description The locale it was rendered in */
+            locale: string;
+            /** Format: date-time */
+            readAt?: string | null;
+            recipient: components["schemas"]["NotificationRecipient"];
+            smsBody?: string | null;
+            subject: components["schemas"]["NotificationSubject"];
+            /** @description null for SYSTEM codes (no template) */
+            templateId?: string | null;
+            /** Format: int64 */
+            templateVersion?: number | null;
+            /** @description Rendered and frozen */
+            title: string;
+        };
+        NotificationListItem: {
+            audience?: components["schemas"]["NotificationAudience"];
+            category?: components["schemas"]["NotificationCategory"];
+            /** @description One per delivery */
+            channels?: components["schemas"]["ChannelState"][];
+            code?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            id: string;
+            /** Format: date-time */
+            readAt?: string | null;
+            recipient?: components["schemas"]["NotificationRecipient"];
+        };
+        /** @description Universal list page (CONVENCIONS_API §4) of the notification log, createdAt desc by default */
+        NotificationPage: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["NotificationListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        NotificationPreferences: {
+            /** @description club.locales */
+            availableLocales: string[];
+            emailByCategory: components["schemas"]["EmailByCategory"];
+            /** @description Account.locale (PATCH /me, S01) */
+            locale: string;
+            modules: components["schemas"]["PreferenceModules"];
+            pushClubNews: boolean;
+            /**
+             * Format: int32
+             * @description null = «Mai»
+             */
+            reminderMinutesBefore?: number | null;
+            /** @description messaging.reminderOptionsMinutes */
+            reminderOptionsMinutes: number[];
+            /** @description Always true: the SMS of CLUB_CHANGES cannot be removed («+SMS», Josep 18-08) */
+            smsFixed: boolean;
+        };
+        /** @description Partial save (T-11-20): an absent key keeps its value */
+        NotificationPreferencesRequest: {
+            emailByCategory?: components["schemas"]["EmailByCategoryPatch"] | null;
+            pushClubNews?: boolean | null;
+            /**
+             * Format: int32
+             * @description Absent keeps the value; null = «Mai»; otherwise one of messaging.reminderOptionsMinutes (INVALID_REMINDER_OPTION)
+             */
+            reminderMinutesBefore?: number | null;
+        };
+        NotificationRecipient: {
+            displayName: string;
+            /** @description APPLICANT rows: the only recipient data */
+            email?: string | null;
+            memberId?: string | null;
+        };
+        /** @description The action parameters and the log filter (S11 §3); null keys do not apply */
+        NotificationSubject: {
+            activityId?: string | null;
+            bookingId?: string | null;
+            classSessionId?: string | null;
+            dogId?: string | null;
+            invoiceId?: string | null;
+            memberId?: string | null;
+            taskId?: string | null;
+            trainingBookingId?: string | null;
+            waitlistEntryId?: string | null;
         };
         Observations: {
             text: string;
@@ -8047,6 +8797,8 @@ export interface components {
             pendingDocuments: string[];
         };
         OwnerSummary: {
+            /** @description Member.firstName, a compound one whole («Joan Antoni»): «{guia}» of «{guia} + {gos}» when the dog has no handlerName (S10 R-10-00, E5-T29) */
+            firstName: string;
             fullName: string;
             /** Format: uuid */
             id: string;
@@ -8421,6 +9173,17 @@ export interface components {
             region: string;
             town: string;
         };
+        PreferenceModules: {
+            /** @description PUSH module: the push toggle shown */
+            push: boolean;
+            /** @description SMS module: «+SMS» shown */
+            sms: boolean;
+        };
+        PreviewWarning: {
+            /** @description Catalog code, e.g. TEMPLATE_UNKNOWN_VARIABLE (rendered empty, R-11-05) */
+            code: string;
+            variable?: string | null;
+        };
         Price: {
             amount: components["schemas"]["Money"];
             /** @enum {string} */
@@ -8621,6 +9384,24 @@ export interface components {
             cancelClasses?: boolean;
             notifyEmail?: boolean;
         };
+        PushKeys: {
+            auth: string;
+            p256dh: string;
+        };
+        PushSubscriptionCreated: {
+            id: string;
+        };
+        PushSubscriptionRequest: {
+            /** @description Derived from the User-Agent when absent («iPhone · Safari») */
+            deviceLabel?: string | null;
+            /** Format: uri */
+            endpoint: string;
+            keys: components["schemas"]["PushKeys"];
+        };
+        ReadResult: {
+            /** Format: int64 */
+            unreadCount: number;
+        };
         ReadmissionConsent: {
             granted: boolean;
             /** @enum {string} */
@@ -8788,7 +9569,11 @@ export interface components {
             note?: string | null;
             /** @enum {string} */
             reason?: "MAINTENANCE" | "PRIVATE_CLASS" | "THERAPY" | "PREPARATION" | "ACTIVITY" | "OTHER";
+            /** @description The ring's colour; null for a ring without one (E5-T29) */
+            ringColor?: string | null;
             ringId?: string;
+            /** @description The ring's name, a deactivated ring's included (the register shows history, E5-T29) */
+            ringName?: string | null;
             /** @enum {string} */
             state?: "ACTIVE" | "CANCELLED";
             /** Format: date-time */
@@ -9084,11 +9869,14 @@ export interface components {
             event: string;
             notificationId: string;
             sg_event_id: string;
+            /** @description A bounce's kind: `bounce` (hard) or `blocked` (soft, S11 R-11-08: no mark) */
+            type?: string;
         };
         SepaInput: {
             holderName?: string;
             holderTaxId?: string;
-            iban?: string;
+            /** @description SEPA_DD → SEPA_DD (E42): absent keeps the stored account, null clears it. */
+            iban?: string | null;
         };
         /** @description One device/session; id is an opaque revocation handle, never a token or hash */
         Session: {
@@ -9650,6 +10438,16 @@ export interface components {
             /** Format: date-time */
             startsAt: string;
         };
+        /** @description The SMS after transliteration to GSM-7 (R-11-06) */
+        SmsPreview: {
+            /** Format: int32 */
+            length: number;
+            /** Format: int32 */
+            segments: number;
+            text: string;
+            /** @description Cut with «…» at 160 characters */
+            truncated: boolean;
+        };
         StaleAttendanceDetails: {
             current: components["schemas"]["AttendanceSheet"];
         };
@@ -9775,6 +10573,55 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        /** @enum {string} */
+        TemplateColor: "NEUTRAL" | "OK" | "WARNING" | "ERROR" | "ACCENT";
+        /** @description An unsaved draft of one locale */
+        TemplateDraft: {
+            body: string;
+            smsBody?: string | null;
+            title: string;
+        };
+        /** @enum {string} */
+        TemplateIcon: "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | "flag" | "mail" | "cal" | "clock" | "info" | "paw" | "cone" | "lock";
+        /** @enum {string} */
+        TemplateKind: "CATALOG" | "CUSTOM";
+        /** @description Rendered with the fictional data of the locale («Laura», «Duna», «dimecres 12 · 18:50 · B+C · Central», R-11-12) */
+        TemplatePreview: {
+            body: string;
+            emailHtml: string;
+            emailSubject: string;
+            /** @description null when the template has no SMS text */
+            sms?: components["schemas"]["SmsPreview"] | null;
+            title: string;
+            warnings: components["schemas"]["PreviewWarning"][];
+        };
+        TemplatePreviewRequest: {
+            /** @description Without a draft, the saved texts */
+            draft?: components["schemas"]["TemplateDraft"] | null;
+            /** @description One of club.locales */
+            locale: string;
+            /** @description «envia prova»: one delivery of the rendered draft to the acting admin only (E7-T03) */
+            sendTest?: boolean | null;
+        };
+        /** @enum {string} */
+        TemplateStatus: "ACTIVE" | "DISABLED" | "ARCHIVED";
+        /** @description The seed texts of a CATALOG template, for «Restaura el text per defecte» */
+        TemplateTexts: {
+            bodyI18n: {
+                [key: string]: string;
+            };
+            smsBodyI18n?: {
+                [key: string]: string;
+            } | null;
+            titleI18n: {
+                [key: string]: string;
+            };
+        };
+        /** @description A template variable: the code key written `[[key]]` in the text, and its D9 label in the admin's language (notif.variable.<key>) */
+        TemplateVariable: {
+            key: string;
+            label: string;
+        };
         Theme: {
             colors: components["schemas"]["Colors"];
             fontFamily: string;
@@ -9882,9 +10729,24 @@ export interface components {
             date?: string;
             dogId?: string;
             dogName?: string;
+            /**
+             * Format: date-time
+             * @description The slot's end (E5-T29)
+             */
+            endsAt?: string;
+            /**
+             * @description Club-local HH:mm of endsAt
+             * @example 09:00
+             */
+            endsAtLocal?: string;
             id: string;
             memberId?: string;
             memberName?: string;
+            /**
+             * Format: int32
+             * @description Member.memberNumber; null for a member without one
+             */
+            memberNumber?: number | null;
             /** @enum {string} */
             origin?: "APP" | "BACKOFFICE";
             ringId?: string;
@@ -10147,9 +11009,13 @@ export interface components {
             dog: components["schemas"]["HoldDog"];
             dogId: string;
             dogName?: string | null;
+            /** @description Dog.handlerName; null when the member handles the dog (S10 R-10-00) */
+            handlerName?: string | null;
             id: string;
             /** Format: date-time */
             joinedAt: string;
+            /** @description The owner's first name: «{guia}» of D12's «En espera: {guia} + {gos}» when handlerName is null (S10 R-10-00) */
+            memberFirstName?: string | null;
             memberId: string;
             /** Format: date-time */
             notifiedAt?: string | null;
@@ -10344,34 +11210,6 @@ export interface components {
         WeekValidationResult: {
             validatedClassIds: string[];
         };
-        NotificationPreferences: {
-            emailByCategory: {
-                OPERATIONAL: boolean;
-                PERSONAL: boolean;
-                CLUB_CHANGES: boolean;
-                CLUB_NEWS: boolean;
-            };
-            smsFixed: boolean;
-            reminderMinutesBefore?: number | null;
-            reminderOptionsMinutes: (60 | 120 | 240 | 360 | 720 | 1440)[];
-            pushClubNews: boolean;
-            locale: string;
-            availableLocales: string[];
-            modules: {
-                sms: boolean;
-                push: boolean;
-            };
-        };
-        NotificationPreferencesPatch: {
-            emailByCategory?: {
-                OPERATIONAL?: boolean;
-                PERSONAL?: boolean;
-                CLUB_CHANGES?: boolean;
-                CLUB_NEWS?: boolean;
-            };
-            reminderMinutesBefore?: number | null;
-            pushClubNews?: boolean;
-        };
         DogPendingFields: {
             handlerName?: string;
         };
@@ -10387,20 +11225,8 @@ export interface components {
         /** @enum {string} */
         PlanBillingMode: "MONTHLY_FEE" | "MAINTENANCE";
     };
-    responses: {
-        /** @description Standard API error */
-        ApiError: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["ApiError"];
-            };
-        };
-    };
-    parameters: {
-        ResourceId: string;
-    };
+    responses: never;
+    parameters: never;
     requestBodies: never;
     headers: never;
     pathItems: never;
@@ -15797,6 +16623,133 @@ export interface operations {
             };
         };
     };
+    bookingFilterValues: {
+        parameters: {
+            query: {
+                field: string;
+                /** @description The list's q; this list has no free-text search, so a non-blank q is INVALID_FILTER */
+                q?: string;
+                /** @description The list's filters (field:op:value, repeated); only x-filterable fields */
+                filter?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FilterValues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValues"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     booking: {
         parameters: {
             query?: never;
@@ -16360,7 +17313,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -22226,6 +23179,131 @@ export interface operations {
             };
         };
     };
+    unsubscribeEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailUnsubscribeRequest"];
+            };
+        };
+        responses: {
+            /** @description EmailUnsubscribeResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailUnsubscribeResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNSUBSCRIBE_TOKEN_INVALID */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     exports: {
         parameters: {
             query?: {
@@ -23845,8 +24923,8 @@ export interface operations {
             query?: {
                 /** @description Zero-based page index. */
                 page?: number;
-                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
-                size?: 20 | 50 | 200 | 1000;
+                /** @description Requested page size: 20 or 50 (CONVENCIONS_API §4; this list's pages hold at most 50 rows); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
                 /** @description Free-text search within the caller's permitted projection. */
@@ -24348,7 +25426,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
+            /** @description HealthResponse, status UP */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -24438,6 +25516,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description HealthResponse with status DOWN: the database did not answer a ping within 1 s */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HealthResponse"];
                 };
             };
             /** @description Client error */
@@ -28817,6 +29904,621 @@ export interface operations {
             };
         };
     };
+    myNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationPreferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferences"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    saveMyNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesRequest"];
+            };
+        };
+        responses: {
+            /** @description NotificationPreferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferences"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_REMINDER_OPTION */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    meNotifications: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                audience?: components["schemas"]["NotificationAudience"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MeNotifications */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeNotifications"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    readAllNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ReadResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadResult"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    readNotification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ReadResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadResult"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     onboarding: {
         parameters: {
             query?: never;
@@ -32227,6 +33929,133 @@ export interface operations {
             };
         };
     };
+    saveMemberNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesRequest"];
+            };
+        };
+        responses: {
+            /** @description NotificationPreferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferences"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_REMINDER_OPTION */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     memberOverview: {
         parameters: {
             query?: never;
@@ -32983,6 +34812,1149 @@ export interface operations {
             };
         };
     };
+    messageTemplates: {
+        parameters: {
+            query?: {
+                category?: components["schemas"]["NotificationCategory"];
+                kind?: components["schemas"]["TemplateKind"];
+                includeArchived?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MessageTemplateList */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageTemplateList"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createMessageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageTemplateCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description MessageTemplateDetail */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageTemplateDetail"];
+                };
+            };
+            /** @description VALIDATION_ERROR, TEMPLATE_SYNTAX_ERROR, TEMPLATE_UNKNOWN_VARIABLE, SMS_BODY_REQUIRED, SMS_BODY_TOO_LONG */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CHANNEL_NOT_ALLOWED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    messageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MessageTemplateDetail */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageTemplateDetail"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateMessageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageTemplateUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description MessageTemplateDetail */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageTemplateDetail"];
+                };
+            };
+            /** @description VALIDATION_ERROR, TEMPLATE_SYNTAX_ERROR, TEMPLATE_UNKNOWN_VARIABLE, SMS_BODY_REQUIRED, SMS_BODY_TOO_LONG */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description STALE_VERSION */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CHANNEL_NOT_ALLOWED, TEMPLATE_MANDATORY */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    archiveMessageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description void */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description TEMPLATE_NOT_CUSTOM */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    previewMessageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TemplatePreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description TemplatePreview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TemplatePreview"];
+                };
+            };
+            /** @description VALIDATION_ERROR, TEMPLATE_SYNTAX_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    resetMessageTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MessageTemplateDetail */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageTemplateDetail"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description TEMPLATE_NOT_CATALOG */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    sendMessageTemplate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnnouncementRequest"];
+            };
+        };
+        responses: {
+            /** @description AnnouncementResult (dryRun) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnnouncementResult"];
+                };
+            };
+            /** @description AnnouncementResult */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnnouncementResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description TEMPLATE_NOT_SENDABLE, NO_RECIPIENTS */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    notifications: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationPage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPage"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     exportNotifications: {
         parameters: {
             query: {
@@ -32998,6 +35970,8 @@ export interface operations {
                 q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
+                fields?: string;
             };
             header?: never;
             path?: never;
@@ -33080,6 +36054,254 @@ export interface operations {
                 };
             };
             /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    notificationFilterValues: {
+        parameters: {
+            query: {
+                field: string;
+                q?: string;
+                filter?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FilterValues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValues"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    notification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationDetail */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationDetail"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     /** @description Seconds before retrying */
@@ -36771,6 +39993,252 @@ export interface operations {
             };
         };
     };
+    subscribePush: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushSubscriptionRequest"];
+            };
+        };
+        responses: {
+            /** @description PushSubscriptionCreated */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushSubscriptionCreated"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description PUSH_SUBSCRIPTION_INVALID */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    unsubscribePush: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description void */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     blocks: {
         parameters: {
             query?: {
@@ -36975,6 +40443,133 @@ export interface operations {
                 };
             };
             /** @description OUTSIDE_OPENING_HOURS, RING_HAS_BOOKINGS */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    blockFilterValues: {
+        parameters: {
+            query: {
+                field: string;
+                /** @description The list's q; this list has no free-text search, so a non-blank q is INVALID_FILTER */
+                q?: string;
+                /** @description The list's filters (field:op:value, repeated); only x-filterable fields */
+                filter?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FilterValues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValues"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -41175,6 +44770,133 @@ export interface operations {
             };
         };
     };
+    trainingBookingFilterValues: {
+        parameters: {
+            query: {
+                field: string;
+                /** @description The list's q; this list has no free-text search, so a non-blank q is INVALID_FILTER */
+                q?: string;
+                /** @description The list's filters (field:op:value, repeated); only x-filterable fields */
+                filter?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FilterValues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValues"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     trainingBooking: {
         parameters: {
             query?: never;
@@ -45195,33 +48917,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-        };
-    };
-    updateMemberNotificationPreferences: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NotificationPreferencesPatch"];
-            };
-        };
-        responses: {
-            /** @description Updated notification preferences */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotificationPreferences"];
-                };
-            };
-            default: components["responses"]["ApiError"];
         };
     };
 }

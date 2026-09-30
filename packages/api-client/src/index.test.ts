@@ -476,6 +476,58 @@ describe("typed API client", () => {
       "read-all:123e4567-e89b-42d3-a456-426614170202",
     ]);
   });
+
+  it("E7-W01 step 0 (R-11-13) sends an Idempotency-Key on POST /message-templates/{id}/send, never on the template writes nor on the preview, and keeps a caller's key", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string, status = 200) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return status === 204 ? new HttpResponse(null, { status }) : HttpResponse.json({});
+      };
+    const base = "https://core.example.test/api/v1";
+    server.use(
+      http.post(`${base}/message-templates`, record("create")),
+      http.put(`${base}/message-templates/:id`, record("update")),
+      http.delete(`${base}/message-templates/:id`, record("delete", 204)),
+      http.post(`${base}/message-templates/:id/preview`, record("preview")),
+      http.post(`${base}/message-templates/:id/reset`, record("reset")),
+      http.post(`${base}/message-templates/:id/send`, record("send", 202)),
+    );
+    const client = createApiClient({
+      baseUrl: base,
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614170301",
+    });
+    const raw = client as unknown as Record<
+      "DELETE" | "POST" | "PUT",
+      (path: string, init: unknown) => Promise<unknown>
+    >;
+    const id = { params: { path: { id: "tpl-1" } } };
+
+    await raw.POST("/message-templates", { body: {} });
+    await raw.PUT("/message-templates/{id}", { ...id, body: {} });
+    await raw.DELETE("/message-templates/{id}", id);
+    await raw.POST("/message-templates/{id}/preview", { ...id, body: {} });
+    await raw.POST("/message-templates/{id}/reset", id);
+    await raw.POST("/message-templates/{id}/send", { ...id, body: { dryRun: true } });
+    await raw.POST("/message-templates/{id}/send", {
+      body: { dryRun: false },
+      params: {
+        header: { "Idempotency-Key": "123e4567-e89b-42d3-a456-426614170399" },
+        path: { id: "tpl-1" },
+      },
+    });
+
+    expect(keys).toEqual([
+      "create:",
+      "update:",
+      "delete:",
+      "preview:",
+      "reset:",
+      "send:123e4567-e89b-42d3-a456-426614170301",
+      "send:123e4567-e89b-42d3-a456-426614170399",
+    ]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -518,7 +570,9 @@ describe("MSW bootstrap handlers", () => {
     // observations, the attachments, their two upload purposes and the mock storage's PUT).
     // E6-W03: + D12's week and its PDF (`attendance-handlers.ts`) and D14's list, counter, row
     // read and read-all (`followup-handlers.ts`).
-    expect(handlers).toHaveLength(238);
+    // E7-W01: + the ten S11 handlers of `messaging-handlers.ts` (D9's templates, preview, reset,
+    // deletion, the log, its filter values and detail), «Enviar comunicat» and the log's export.
+    expect(handlers).toHaveLength(250);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

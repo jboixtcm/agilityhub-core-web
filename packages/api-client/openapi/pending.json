@@ -5,148 +5,10 @@
     "version": "0.0.0-pending",
     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
   },
-  "paths": {
-    "/members/{id}/notification-preferences": {
-      "put": {
-        "operationId": "updateMemberNotificationPreferences",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ResourceId"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationPreferencesPatch"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Updated notification preferences",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferences"
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/ApiError"
-          }
-        }
-      }
-    }
-  },
+  "paths": {},
   "x-schema-overlays": {},
   "components": {
     "schemas": {
-      "NotificationPreferences": {
-        "type": "object",
-        "required": [
-          "emailByCategory",
-          "smsFixed",
-          "reminderOptionsMinutes",
-          "pushClubNews",
-          "locale",
-          "availableLocales",
-          "modules"
-        ],
-        "properties": {
-          "emailByCategory": {
-            "type": "object",
-            "required": ["OPERATIONAL", "PERSONAL", "CLUB_CHANGES", "CLUB_NEWS"],
-            "properties": {
-              "OPERATIONAL": {
-                "type": "boolean"
-              },
-              "PERSONAL": {
-                "type": "boolean"
-              },
-              "CLUB_CHANGES": {
-                "type": "boolean"
-              },
-              "CLUB_NEWS": {
-                "type": "boolean"
-              }
-            }
-          },
-          "smsFixed": {
-            "type": "boolean"
-          },
-          "reminderMinutesBefore": {
-            "type": ["integer", "null"]
-          },
-          "reminderOptionsMinutes": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "enum": [60, 120, 240, 360, 720, 1440]
-            }
-          },
-          "pushClubNews": {
-            "type": "boolean"
-          },
-          "locale": {
-            "type": "string"
-          },
-          "availableLocales": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "modules": {
-            "type": "object",
-            "required": ["sms", "push"],
-            "properties": {
-              "sms": {
-                "type": "boolean"
-              },
-              "push": {
-                "type": "boolean"
-              }
-            }
-          }
-        }
-      },
-      "NotificationPreferencesPatch": {
-        "type": "object",
-        "properties": {
-          "emailByCategory": {
-            "type": "object",
-            "properties": {
-              "OPERATIONAL": {
-                "type": "boolean"
-              },
-              "PERSONAL": {
-                "type": "boolean"
-              },
-              "CLUB_CHANGES": {
-                "type": "boolean"
-              },
-              "CLUB_NEWS": {
-                "type": "boolean"
-              }
-            }
-          },
-          "reminderMinutesBefore": {
-            "type": ["integer", "null"]
-          },
-          "pushClubNews": {
-            "type": "boolean"
-          }
-        }
-      },
       "DogPendingFields": {
         "type": "object",
         "properties": {
@@ -197,29 +59,6 @@
       "PlanBillingMode": {
         "type": "string",
         "enum": ["MONTHLY_FEE", "MAINTENANCE"]
-      }
-    },
-    "parameters": {
-      "ResourceId": {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      }
-    },
-    "responses": {
-      "ApiError": {
-        "description": "Standard API error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ApiError"
-            }
-          }
-        }
       }
     }
   }

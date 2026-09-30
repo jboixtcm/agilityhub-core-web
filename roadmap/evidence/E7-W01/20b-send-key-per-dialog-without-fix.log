@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/SendAnnouncementDialog.test.tsx (5 tests | 1 failed | 4 skipped) 505ms
+   ❯ T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) (5)
+     × one Idempotency-Key per submission: a send that got no answer is retried with its key — also after closing and opening the dialog again — and the api counts it once 503ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > one Idempotency-Key per submission: a send that got no answer is retried with its key — also after closing and opening the dialog again — and the api counts it once
+AssertionError: expected '64691afc-8124-4b49-b9c0-06ccb286dff5' to be 'e8b2cece-1169-405b-b262-236ea79ba642' // Object.is equality
+
+Expected: "e8b2cece-1169-405b-b262-236ea79ba642"
+Received: "64691afc-8124-4b49-b9c0-06ccb286dff5"
+
+ ❯ src/census/SendAnnouncementDialog.test.tsx:208:26
+    206|     const real = sends(requests).filter((request) => request.body?.dry…
+    207|     expect(real).toHaveLength(2);
+    208|     expect(real[1]?.key).toBe(real[0]?.key);
+       |                          ^
+    209|   });
+    210|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  17:35:08
+   Duration  1.46s (tests 37%, transform 28%, environment 19%, import 12%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/SendAnnouncementDialog.test.tsx -t one Idempotency-Key

@@ -23,6 +23,7 @@ import {
   resetFollowupState,
   resetInboxState,
   storedObservations,
+  syncFollowupVariant,
   taskView,
 } from "./fixtures/followup";
 import { fieldsProjection } from "./list-fields";
@@ -47,6 +48,13 @@ const MEMBER_OWN_DOGS: readonly string[] = [BOOKING_DOG_IDS.duna, BOOKING_DOG_ID
 export function resetFollowupMockState(): void {
   resetFollowupState();
   resetInboxState();
+}
+
+/** The current scenario, with its variant of the tasks world in place (`tasksMany`). */
+function followupScenario(): MockScenarioDefinition {
+  const scenario = currentMockScenario();
+  syncFollowupVariant(scenario.followup);
+  return scenario;
 }
 
 function impersonated(scenario: MockScenarioDefinition): boolean {
@@ -164,7 +172,7 @@ function attachmentEntityExists(entityType: AttachmentEntity, entityId: string):
  */
 export const followupHandlers = [
   http.get("*/api/v1/me/history", ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     if (!member(scenario)) return apiError("FORBIDDEN", "Forbidden", 403);
     const url = new URL(request.url);
     const type = url.searchParams.get("type");
@@ -182,7 +190,7 @@ export const followupHandlers = [
       : HttpResponse.json(view);
   }),
   http.get("*/api/v1/tasks", ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     const url = new URL(request.url);
@@ -217,7 +225,7 @@ export const followupHandlers = [
     });
   }),
   http.post("*/api/v1/tasks", async ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const key = request.headers.get("Idempotency-Key");
@@ -280,7 +288,7 @@ export const followupHandlers = [
     });
   }),
   http.get("*/api/v1/tasks/:id", ({ params }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     if (impersonated(scenario)) {
@@ -292,7 +300,7 @@ export const followupHandlers = [
       : HttpResponse.json(taskView(task));
   }),
   http.patch("*/api/v1/tasks/:id", async ({ params, request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const task = findTask(String(params.id));
@@ -311,7 +319,7 @@ export const followupHandlers = [
     return HttpResponse.json(taskView(task));
   }),
   http.delete("*/api/v1/tasks/:id", ({ params, request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const key = request.headers.get("Idempotency-Key");
@@ -325,7 +333,7 @@ export const followupHandlers = [
     });
   }),
   http.post("*/api/v1/tasks/:id/completion", ({ params }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     // MEMBER owner of the dog (also the impersonation token), INSTRUCTOR, ADMIN.
@@ -339,7 +347,7 @@ export const followupHandlers = [
     return HttpResponse.json(taskView(task));
   }),
   http.post("*/api/v1/tasks/:id/reopening", ({ params }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const task = findTask(String(params.id));
@@ -352,7 +360,7 @@ export const followupHandlers = [
     return HttpResponse.json(taskView(task));
   }),
   http.put("*/api/v1/dogs/:id/observations", async ({ params, request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const key = request.headers.get("Idempotency-Key");
@@ -398,7 +406,7 @@ export const followupHandlers = [
   http.post("*/api/v1/attachments/upload-url", async ({ request }) => {
     const body = (await request.clone().json()) as UploadRequest;
     if (body.purpose !== "TASK" && body.purpose !== "DOG_OBSERVATIONS") return undefined;
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     if (!allowedType(body.mimeType)) {
@@ -440,7 +448,7 @@ export const followupHandlers = [
     return new HttpResponse(null, { status: 200 });
   }),
   http.get("*/api/v1/attachments", ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     const url = new URL(request.url);
@@ -469,7 +477,7 @@ export const followupHandlers = [
     return HttpResponse.json({ items: liveAttachments(entityType, entityId).map(attachmentView) });
   }),
   http.post("*/api/v1/attachments", async ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     const body = (await request.json().catch(() => null)) as AttachmentRequest | null;
@@ -519,7 +527,7 @@ export const followupHandlers = [
     return idempotent(key, JSON.stringify(body), register);
   }),
   http.delete("*/api/v1/attachments/:id", ({ params, request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const off = tasksOff(scenario);
     if (off !== undefined) return off;
     const key = request.headers.get("Idempotency-Key");
@@ -541,7 +549,7 @@ export const followupHandlers = [
   }),
   // ── D14 (R-10-13) ──
   http.get("*/api/v1/followup", ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const url = new URL(request.url);
@@ -595,13 +603,13 @@ export const followupHandlers = [
     });
   }),
   http.get("*/api/v1/followup/unread-count", () => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     return HttpResponse.json({ count: inboxUnreadCount(scenario.me.account.id, scenario.inbox) });
   }),
   http.post("*/api/v1/followup/:id/read", ({ params, request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const key = request.headers.get("Idempotency-Key");
@@ -614,7 +622,7 @@ export const followupHandlers = [
     );
   }),
   http.post("*/api/v1/followup/read-all", ({ request }) => {
-    const scenario = currentMockScenario();
+    const scenario = followupScenario();
     const refused = staffWrite(scenario);
     if (refused !== undefined) return refused;
     const key = request.headers.get("Idempotency-Key");

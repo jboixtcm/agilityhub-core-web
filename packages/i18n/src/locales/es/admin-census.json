@@ -214,7 +214,10 @@
       "personal": "Comunicados personales",
       "push": "Notificaciones push de comunicados del club",
       "reminder": "Recordatorio de clase",
-      "sms": "+SMS"
+      "sms": "+SMS",
+      "club_news": "Comunicados del club",
+      "minutesBefore": "{count} min antes",
+      "sentLink": "Avisos enviados ›"
     },
     "resend": {
       "description": "Se enviará un enlace nuevo al correo de acceso de la cuenta.",

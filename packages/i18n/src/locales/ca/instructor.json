@@ -234,6 +234,7 @@
     "empty": "Encara no hi ha cap tasca",
     "loading": "Carregant les tasques",
     "loadError": "No s'han pogut carregar les tasques.",
+    "openError": "No s'ha pogut obrir el fitxer.",
     "retry": "Torna-ho a provar",
     "close": "Tanca",
     "historyLink": "Veure l'historial complet ›",
