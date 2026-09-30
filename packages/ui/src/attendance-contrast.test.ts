@@ -110,14 +110,14 @@ const CASES = PALETTES.flatMap((palette) =>
 );
 
 describe("E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast", () => {
-  it("nothing that can be chosen is faded: the only opacity is on a disabled circle that is not the state", () => {
+  it("nothing that can be chosen is faded: the only opacity is on a circle the api does not allow (never one locked by a save) that is not the state", () => {
     const faded = rules(attendanceCss)
       .filter(({ selectors }) =>
         selectors.some((selector) => selector.startsWith(".ah-attendance__circle")),
       )
       .filter(({ declarations: block }) => /(?:^|;)\s*opacity\s*:/u.test(block))
       .flatMap(({ selectors }) => selectors);
-    expect(faded).toEqual(['.ah-attendance__circle:disabled:not([aria-checked="true"])']);
+    expect(faded).toEqual(['.ah-attendance__circle--unavailable:not([aria-checked="true"])']);
   });
 
   it.each(CASES)(

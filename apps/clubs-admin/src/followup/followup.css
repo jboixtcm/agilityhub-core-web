@@ -1,0 +1,92 @@
+/* D14 «Seguiment alumnes» (mockup V3 at 1280 px). Theme tokens only. */
+.followup {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.followup__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.followup__title {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.followup__title h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.followup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.followup__chips {
+  display: flex;
+  gap: var(--ah-space-2);
+}
+
+.followup__chip {
+  min-height: 2rem;
+  padding: 0 var(--ah-space-3);
+  color: var(--ah-color-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+}
+
+.followup__chip[aria-pressed="true"] {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.followup__chip:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+/* R-10-13: the unread rows first and highlighted (a tint, the member in the primary colour and,
+   for screen readers, «no llegit» in the row). */
+.followup .followup__row--unread {
+  background: color-mix(in srgb, var(--ah-color-primary) 12%, transparent);
+}
+
+.followup .followup__row--unread .followup__member {
+  color: var(--ah-color-primary);
+}
+
+.followup__member {
+  font-weight: 700;
+}
+
+/* At 1280 px the eight columns fit without scrolling: the text is cut with an ellipsis. */
+.followup__text {
+  display: inline-block;
+  max-width: 17rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.followup__text--done {
+  text-decoration: line-through;
+}
+
+.followup__level {
+  min-width: 1.75rem;
+}

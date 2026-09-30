@@ -177,5 +177,9 @@
   "taskState": {
     "PENDING": "pending",
     "DONE": "done"
+  },
+  "followupKind": {
+    "TASK": "task",
+    "MEMBER_NOTE": "student note"
   }
 }

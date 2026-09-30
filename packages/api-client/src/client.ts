@@ -39,6 +39,9 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   { method: "PUT", path: /^\/dogs\/[^/]+\/observations$/ },
   { method: "DELETE", path: /^\/tasks\/[^/]+$/ },
   { method: "DELETE", path: /^\/attachments\/[^/]+$/ },
+  // S10 D14 (R-10-13): a row read and «Marcar-ho tot com a llegit».
+  /^\/followup\/[^/]+\/read$/,
+  "/followup/read-all",
 ];
 
 type MaybePromise<T> = Promise<T> | T;

@@ -22,15 +22,17 @@ const HANDOFF_ME_ATTEMPTS = 3;
  * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
  * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
  * It holds the impersonation access token (never refreshed) or the mark that it has expired.
- * A handoff code redeemed in the tab holds its token as `pending` until `/me` says whose session
- * it is, and `ended` when the api refused it afterwards: in either state the tab never reads the
- * refresh cookie, which may be the admin's own session.
+ * A handoff code sent to the token endpoint marks the tab `exchanging` before the request (E4-W18
+ * round 2), holds its token as `pending` until `/me` says whose session it is, and `ended` when the
+ * api refused it or never answered: in each state the tab never reads the refresh cookie, which
+ * may be the admin's own session. A tab reloaded while `exchanging` ends: the code has left the
+ * address and may have been redeemed, so it cannot be sent again.
  */
 export const IMPERSONATION_STORAGE_KEY = "agilityhub.impersonation";
 
 interface StoredImpersonation {
   expiresAt?: number;
-  state: "active" | "ended" | "expired" | "pending";
+  state: "active" | "ended" | "exchanging" | "expired" | "pending";
   token?: string;
 }
 
@@ -93,7 +95,9 @@ function readStoredImpersonation(): StoredImpersonation | undefined {
     const raw = tabStorage()?.getItem(IMPERSONATION_STORAGE_KEY);
     if (raw === null || raw === undefined) return undefined;
     const value = JSON.parse(raw) as Partial<StoredImpersonation>;
-    if (value.state === "expired" || value.state === "ended") return { state: value.state };
+    if (value.state === "expired" || value.state === "ended" || value.state === "exchanging") {
+      return { state: value.state };
+    }
     if (
       (value.state === "active" || value.state === "pending") &&
       typeof value.token === "string" &&
@@ -181,6 +185,8 @@ export class AuthClient extends EventTarget {
   private handoffConfirmation: Promise<Me> | null = null;
   /** A handoff tried in this tab and refused or unanswered: no cookie until someone signs in. */
   private handoffEnded = false;
+  /** This page found the tab reloaded while a handoff code was being exchanged (E4-W18 round 2). */
+  private handoffInterrupted = false;
   private readonly handoffSessions: "account" | "impersonation";
   private readonly identityBaseUrl: string;
   /** `active`: an impersonated session (never refreshed); `expired`: it ended in this tab. */
@@ -245,6 +251,18 @@ export class AuthClient extends EventTarget {
   hasPendingHandoff(): boolean {
     return (
       this.pendingHandoff !== null || (this.accountHandoffUnconfirmed && this.currentMe === null)
+    );
+  }
+
+  /**
+   * The tab was reloaded while an «Entra com l'abonat» code was being exchanged (E4-W18 round 2):
+   * the code has left the address and may already be redeemed, so it is ended — 01 says the link
+   * is no longer valid. False while this page itself is exchanging a code.
+   */
+  wasHandoffInterrupted(): boolean {
+    return (
+      this.exchangeInFlight === null &&
+      (this.handoffInterrupted || readStoredImpersonation()?.state === "exchanging")
     );
   }
 
@@ -617,6 +635,12 @@ export class AuthClient extends EventTarget {
       this.handoffEnded = true;
       return null;
     }
+    if (stored?.state === "exchanging") {
+      // Reloaded before the token endpoint answered: the code is gone and may be redeemed.
+      this.handoffInterrupted = true;
+      this.endHandoff();
+      return null;
+    }
     if (stored?.state === "pending" && stored.token !== undefined) {
       if (stored.expiresAt !== undefined && Date.now() >= stored.expiresAt) {
         this.endHandoff();
@@ -791,6 +815,7 @@ export class AuthClient extends EventTarget {
     this.impersonation = null;
     this.pendingHandoff = null;
     this.handoffEnded = false;
+    this.handoffInterrupted = false;
     this.accountHandoffUnconfirmed = false;
     writeStoredImpersonation(undefined);
   }
@@ -1006,6 +1031,9 @@ export class AuthClient extends EventTarget {
    */
   private async performExchange(form: URLSearchParams, handoff: boolean): Promise<Me> {
     const impersonationHandoff = handoff && this.handoffSessions === "impersonation";
+    // E47 (E4-W18 round 2): the tab gives up the cookie before the code is sent, so a reload while
+    // the token endpoint has not answered never restores the admin's own session.
+    if (impersonationHandoff) writeStoredImpersonation({ state: "exchanging" });
     let tokens: TokenResponse;
     try {
       tokens = await this.issueToken(form);

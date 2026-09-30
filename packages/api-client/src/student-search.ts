@@ -38,8 +38,9 @@ export function useStudentSearch(client: ApiClient, query: string) {
     pending: false,
     totalPages: 0,
   });
-  // One next page at a time, also for a second tap before the next render.
-  const reading = useRef(false);
+  // One next page at a time per query, also for a second tap before the next render: the guard
+  // holds the query whose next page is being read, so a new query's «Mostra'n més» answers at once.
+  const reading = useRef<string | undefined>(undefined);
 
   const readPage = useCallback(
     async (page: number) => {
@@ -86,9 +87,9 @@ export function useStudentSearch(client: ApiClient, query: string) {
 
   const ready = pages.key === requestKey;
   const more = async () => {
-    if (!ready || reading.current || pages.loaded >= pages.totalPages) return;
-    reading.current = true;
+    if (!ready || reading.current === requestKey || pages.loaded >= pages.totalPages) return;
     const forKey = requestKey;
+    reading.current = forKey;
     const page = pages.loaded;
     setPages((value) => ({ ...value, error: undefined, pending: true }));
     try {
@@ -107,7 +108,7 @@ export function useStudentSearch(client: ApiClient, query: string) {
     } catch (error) {
       setPages((value) => (value.key === forKey ? { ...value, error, pending: false } : value));
     } finally {
-      reading.current = false;
+      if (reading.current === forKey) reading.current = undefined;
     }
   };
 

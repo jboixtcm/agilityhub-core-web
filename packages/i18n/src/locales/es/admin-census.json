@@ -402,5 +402,46 @@
     "loading": "Cargando las reservas…",
     "error": "No se han podido cargar las reservas.",
     "retry": "Vuelve a intentarlo"
+  },
+  "followup": {
+    "title": "Seguimiento de alumnos",
+    "unread": "{count, plural, one {# pendiente de leer} other {# pendientes de leer}}",
+    "kinds": "Qué se muestra",
+    "filter": {
+      "all": "Todo",
+      "tasks": "Tareas",
+      "notes": "Notas de alumnos"
+    },
+    "readAll": "Marcarlo todo como leído",
+    "readingAll": "Marcándolo todo como leído",
+    "columns": {
+      "member": "Abonado",
+      "dog": "Perro",
+      "level": "Nivel",
+      "date": "Fecha",
+      "author": "Creador",
+      "text": "Texto",
+      "createdAt": "Creación",
+      "completedAt": "Finalización",
+      "kind": "Tipo",
+      "unread": "Pendiente de leer"
+    },
+    "author": {
+      "member": "{name} ({gender, select, female {alumna} other {alumno}})",
+      "task": "{name} (tarea)"
+    },
+    "none": "—",
+    "unreadMark": "no leído",
+    "unreadValue": {
+      "yes": "no leído",
+      "no": "leído"
+    },
+    "search": "Busca en el seguimiento",
+    "caption": "Tareas y notas de alumnos, las no leídas primero",
+    "emptyTitle": "No hay nada en el seguimiento",
+    "emptyDescription": "Las tareas de los instructores y las notas de los alumnos llegarán aquí.",
+    "selectRow": "Abre la ficha de {name}",
+    "error": "No se ha podido cargar el seguimiento.",
+    "dismiss": "Cierra"
   }
 }

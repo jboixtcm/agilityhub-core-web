@@ -539,4 +539,278 @@ export function applyOtherObservationsSave(dogId: string, at: string): void {
   stored.version += 1;
 }
 
+// ── D14 · `GET /followup` and the read marks (R-10-13) ─────────────────────────────────────────
+
+type FollowupItem = components["schemas"]["FollowupItem"];
+
+/** Club-wide variants of D14 (one per scenario): every row already read by the caller. */
+export type InboxVariant = "allRead";
+
+/** The account of the `instructor` scenario, which this world treats as Estel's (mockup 20). */
+export const ESTEL_ACCOUNT_ID = "10000000-0000-4000-8000-000000000003";
+const MARC_ACCOUNT_ID = "10000000-0000-4000-8000-0000000000c2";
+const LAURA_ACCOUNT_ID = "10000000-0000-4000-8000-0000000000a1";
+const PAU_ACCOUNT_ID = "10000000-0000-4000-8000-0000000000a2";
+/** «Marcar-ho tot com a llegit» of the `followupAllRead` scenario: after every row of the world. */
+export const INBOX_ALL_READ_AT = "2026-08-19T20:00:00Z";
+
+interface StoredInboxItem {
+  activityAt: string;
+  authorAccountId: string;
+  authorGender: NonNullable<FollowupItem["authorGender"]> | null;
+  authorName: string;
+  authorRole: NonNullable<FollowupItem["authorRole"]>;
+  completedAt: string | null;
+  createdAt: string;
+  dogId: string;
+  dogName: string;
+  hidden: boolean;
+  id: string;
+  kind: NonNullable<FollowupItem["kind"]>;
+  levelCode: string | null;
+  memberId: string;
+  memberName: string;
+  taskId: string | null;
+  textExcerpt: string;
+}
+
+/** Mockup D14's five rows (two members' notes, three tasks, one completed on 02-08). */
+function initialInbox(): StoredInboxItem[] {
+  const duna = {
+    dogId: DUNA,
+    dogName: "Duna",
+    levelCode: "C",
+    memberId: "member-laura",
+    memberName: "Laura Serra",
+  };
+  return [
+    {
+      ...duna,
+      activityAt: "2026-08-19T17:02:00Z",
+      authorAccountId: LAURA_ACCOUNT_ID,
+      authorGender: "FEMALE",
+      authorName: "Laura",
+      authorRole: "MEMBER",
+      completedAt: null,
+      createdAt: "2026-08-19T17:02:00Z",
+      hidden: false,
+      id: "f-note-duna",
+      kind: "MEMBER_NOTE",
+      taskId: null,
+      textExcerpt:
+        "A veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí",
+    },
+    {
+      activityAt: "2026-08-19T09:40:00Z",
+      authorAccountId: PAU_ACCOUNT_ID,
+      authorGender: "MALE",
+      authorName: "Pau",
+      authorRole: "MEMBER",
+      completedAt: null,
+      createdAt: "2026-08-19T09:40:00Z",
+      dogId: "dog-blat",
+      dogName: "Blat",
+      hidden: false,
+      id: "f-note-blat",
+      kind: "MEMBER_NOTE",
+      levelCode: "B",
+      memberId: "member-pau",
+      memberName: "Pau Riera",
+      taskId: null,
+      textExcerpt: "Aquesta setmana no podrem venir dijous",
+    },
+    {
+      ...duna,
+      activityAt: "2026-08-12T16:00:00Z",
+      authorAccountId: ESTEL_ACCOUNT_ID,
+      authorGender: null,
+      authorName: "Estel",
+      authorRole: "INSTRUCTOR",
+      completedAt: null,
+      createdAt: "2026-08-12T16:00:00Z",
+      hidden: false,
+      id: "f-task-balanci",
+      kind: "TASK",
+      taskId: "t-d14-balanci",
+      textExcerpt: "Practiqueu el balancí amb calma: sessions curtes",
+    },
+    {
+      activityAt: "2026-08-10T17:30:00Z",
+      authorAccountId: MARC_ACCOUNT_ID,
+      authorGender: null,
+      authorName: "Marc",
+      authorRole: "INSTRUCTOR",
+      completedAt: null,
+      createdAt: "2026-08-10T17:30:00Z",
+      dogId: "dog-nass",
+      dogName: "Nass",
+      hidden: false,
+      id: "f-task-contactes",
+      kind: "TASK",
+      levelCode: "B",
+      memberId: "member-anna",
+      memberName: "Anna Ballart",
+      taskId: "t-d14-contactes",
+      textExcerpt: "Repasseu la taula de contactes al jardí",
+    },
+    {
+      ...duna,
+      // Completing a task sets `completedAt` but never moves `activityAt` (R-10-13).
+      activityAt: "2026-07-28T16:00:00Z",
+      authorAccountId: ESTEL_ACCOUNT_ID,
+      authorGender: null,
+      authorName: "Estel",
+      authorRole: "INSTRUCTOR",
+      completedAt: "2026-08-02T09:15:00Z",
+      createdAt: "2026-07-28T16:00:00Z",
+      hidden: false,
+      id: "f-task-espera",
+      kind: "TASK",
+      taskId: "t3",
+      textExcerpt: "Treballar l'«espera» a la sortida",
+    },
+  ];
+}
+
+/** `FollowupReadMark` of one account (R-10-13): `readAllAt` and the rows read one by one. */
+interface ReadMark {
+  readAllAt: string | null;
+  readItemIds: string[];
+}
+
+export const inboxState: {
+  idempotency: Map<string, Replay>;
+  items: StoredInboxItem[];
+  marks: Map<string, ReadMark>;
+} = {
+  idempotency: new Map(),
+  items: initialInbox(),
+  marks: new Map(),
+};
+
+export function resetInboxState(): void {
+  inboxState.idempotency = new Map();
+  inboxState.items = initialInbox();
+  inboxState.marks = new Map();
+}
+
+function readMark(accountId: string, variant: InboxVariant | undefined): ReadMark {
+  const known = inboxState.marks.get(accountId);
+  if (known !== undefined) return known;
+  const created: ReadMark = {
+    readAllAt: variant === "allRead" ? INBOX_ALL_READ_AT : null,
+    readItemIds: [],
+  };
+  inboxState.marks.set(accountId, created);
+  return created;
+}
+
+/** R-10-13: `activityAt > readAllAt ∧ id ∉ readItemIds ∧ author ≠ me`. */
+function isUnread(item: StoredInboxItem, accountId: string, mark: ReadMark): boolean {
+  return (
+    (mark.readAllAt === null || item.activityAt > mark.readAllAt) &&
+    !mark.readItemIds.includes(item.id) &&
+    item.authorAccountId !== accountId
+  );
+}
+
+export interface InboxQuery {
+  accountId: string;
+  /** `field:op:value` filters on `x-filterable` (already validated). */
+  filters: readonly { field: string; op: string; value: string }[];
+  levelsEnabled: boolean;
+  /** `activityAt` direction within each group (unread first, then the rest). */
+  order: "asc" | "desc";
+  /** Free-text search (`q`); empty = none. */
+  q: string;
+  variant: InboxVariant | undefined;
+}
+
+/** The visible rows as the caller reads them, unread first then by `activityAt` (R-10-13). */
+export function inboxRows(query: InboxQuery): FollowupItem[] {
+  const mark = readMark(query.accountId, query.variant);
+  const fieldValue = (item: StoredInboxItem, unread: boolean, field: string): string => {
+    if (field === "unread") return String(unread);
+    const value = (item as unknown as Record<string, unknown>)[field];
+    return typeof value === "string" ? value : "";
+  };
+  const matches = (
+    item: StoredInboxItem,
+    unread: boolean,
+    filter: InboxQuery["filters"][number],
+  ) => {
+    const value = fieldValue(item, unread, filter.field);
+    const values = filter.value.split(",");
+    return filter.op === "ne"
+      ? value !== filter.value
+      : filter.op === "in"
+        ? values.includes(value)
+        : filter.op === "nin"
+          ? !values.includes(value)
+          : value === filter.value;
+  };
+  // `q`: free text within the caller's projection (names, author, text), case-insensitive.
+  const text = query.q.trim().toLocaleLowerCase("ca");
+  const found = (item: StoredInboxItem) =>
+    text === "" ||
+    [item.memberName, item.dogName, item.authorName, item.textExcerpt].some((value) =>
+      value.toLocaleLowerCase("ca").includes(text),
+    );
+  return inboxState.items
+    .filter((item) => !item.hidden && found(item))
+    .map((item) => ({ item, unread: isUnread(item, query.accountId, mark) }))
+    .filter(({ item, unread }) => query.filters.every((filter) => matches(item, unread, filter)))
+    .sort(
+      (left, right) =>
+        Number(right.unread) - Number(left.unread) ||
+        (query.order === "asc"
+          ? left.item.activityAt.localeCompare(right.item.activityAt)
+          : right.item.activityAt.localeCompare(left.item.activityAt)),
+    )
+    .map(({ item, unread }): FollowupItem => ({
+      activityAt: item.activityAt,
+      authorGender: item.authorGender,
+      authorName: item.authorName,
+      authorRole: item.authorRole,
+      completedAt: item.completedAt,
+      createdAt: item.createdAt,
+      dogId: item.dogId,
+      dogName: item.dogName,
+      id: item.id,
+      kind: item.kind,
+      levelCode: query.levelsEnabled ? item.levelCode : null,
+      memberId: item.memberId,
+      memberName: item.memberName,
+      taskId: item.taskId,
+      textExcerpt: item.textExcerpt,
+      unread,
+    }));
+}
+
+/** The menu counter: the caller's unread rows (the same count as the list's `unread` rows). */
+export function inboxUnreadCount(accountId: string, variant: InboxVariant | undefined): number {
+  const mark = readMark(accountId, variant);
+  return inboxState.items.filter((item) => !item.hidden && isUnread(item, accountId, mark)).length;
+}
+
+/** `POST /followup/{id}/read`: `readItemIds += id`; `false` = no such visible row (404). */
+export function readInboxItem(
+  accountId: string,
+  id: string,
+  variant: InboxVariant | undefined,
+): boolean {
+  if (!inboxState.items.some((item) => item.id === id && !item.hidden)) return false;
+  const mark = readMark(accountId, variant);
+  if (!mark.readItemIds.includes(id)) mark.readItemIds.push(id);
+  return true;
+}
+
+/** `POST /followup/read-all`: `readAllAt = now`, `readItemIds = []` (O(1), R-10-13). */
+export function readAllInbox(accountId: string, now: number): void {
+  inboxState.marks.set(accountId, {
+    readAllAt: new Date(now).toISOString(),
+    readItemIds: [],
+  });
+}
+
 export type { StoredAttachment, StoredTask, StoredUpload };

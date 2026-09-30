@@ -1,0 +1,141 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/App.test.tsx (17 tests | 1 failed | 16 skipped) 3052ms
+   ❯ E4-W18 step 2 (review #3): the back office's handoff is the caller's own session (5)
+     × round 2 #2 (review #2): three transient /me failures, then the background recovery signs in before the retry card listens — the tab enters /tauler without a click and the card goes 3050ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > round 2 #2 (review #2): three transient /me failures, then the background recovery signs in before the retry card listens — the tab enters /tauler without a click and the card goes
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/tauler' ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"access-page"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card access-card"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAccés al backoffice[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mNo s'ha pogut completar l'accés. Torna-ho a provar.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mTorna-ho a provar[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ timeout src/App.test.tsx:427:24
+    425|       () => {
+    426|         window.dispatchEvent(new Event("online"));
+    427|         expect(assign).toHaveBeenCalledWith("/tauler");
+       |                        ^
+    428|       },
+    429|       { timeout: 3000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 skipped (17)
+   Start at  15:40:37
+   Duration  4.31s (tests 72%, transform 16%, environment 6%, import 5%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t round 2 #2
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (45 tests | 1 failed | 44 skipped) 3061ms
+   ❯ T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app (10)
+     × E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03 3058ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/inici', false ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"auth-page auth-page--loading"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mNo s'ha pogut completar l'accés. Torna-ho a provar.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna-ho a provar[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ timeout src/App.test.tsx:835:26
+    833|       () => {
+    834|         window.dispatchEvent(new Event("online"));
+    835|         expect(navigate).toHaveBeenCalledWith("/inici", false);
+       |                          ^
+    836|       },
+    837|       { timeout: 3000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 44 skipped (45)
+   Start at  15:40:42
+   Duration  4.20s (tests 74%, transform 14%, environment 6%, import 5%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E4-W18 round 2 #2

@@ -10,6 +10,7 @@ import "./tasks-panel.css";
 import "./universal-list.css";
 
 export * from "./attendance";
+export * from "./attendance-sheet";
 export * from "./branding";
 export * from "./components";
 export * from "./day-grid";

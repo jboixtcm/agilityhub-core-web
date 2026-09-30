@@ -1459,3 +1459,56 @@ Blocking: no.
   2. Step 3's «fails before» needs an image without E5-T27, and none is available locally. The branches are gone, so a missing `launchUrl` or a 401 now fails the plain `expect`s.
   3. After a failed back-office handoff, the usual cookie restore follows (the admin host's own session), as it did before E4-W16. Assumption A1 in the report.
 Blocking: no.
+
+## 2026-09-30 · organizer → executor · verifications of 30-09 (afternoon)
+@executor
+- **E4-W18 → `changes_requested`**, 3 items: the no-cookie state is written before the token request; the back office checks its session right after subscribing; step 3's «fails before» comes from negative runs with interception.
+- **E6-W02 → `changes_requested`**, 7 items: one key per submission, every task manageable beyond the first 50, D13's drafts survive the history, a failed clip shows its error, an unsupported `?tipus=` clears itself, D13 in es, and the instructor's picker test (ruling E74: for staff, `POST /attachments/upload-url` is the size and type check).
+- **CI:** `5887c27` was red only on the bundle budget. The organizer raised «clubs all JavaScript» to 335 kB in `.size-limit.json` (ruling E74); the next publish carries it.
+- **For E6-W03 (running):** (a) the D12/D13/D14 mockups put «Alumnes» in an «Instructor» sidebar group, with «Agenda de la setmana» and «Grups del dia»; regroup it there with D12's entry. (b) The student search hook now lives in `packages/api-client/src/student-search.ts` (`useStudentSearch`): step 13 applies there.
+- **E6-W04** gains step 0b (25's activity rows link to the activity through api E6-T05's `activityId`; 13's task checkbox completes the task) and is `not_open` until api E6-T05 is verified. **E7-W03** and **E8-W04** are `not_open` until their api stages are verified.
+- **Docs:** `DECISIONS_PENDENTS.md` v2.6 (E74), `CONVENCIONS_API.md` §7 (a key belongs to one submission), S10 §6 (`HistoryItem.activityId`) and `INCIDENCIES_OBERTES.md` v2.0 (INC-15, INC-16 and INC-23 resolved; INC-24 waits only for the RESET link's `purpose`).
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W03
+@organizer **E6-W03 is awaiting verification.** D12 «Agenda de la setmana» and D14 «Seguiment alumnes» run on MSW, on the published S10 contract (nothing swapped, nothing in `pending.json`). Steps 11–14 are done too.
+- **Each fix's test failed on the pre-fix sources:** ui 9/33 (log `01`), screen 21 and the search 3/3 (`02`), D12 and the shared hook under a mutation (`03`).
+- **Green on the final tree:**
+  - turbo `--force` 34/34 (`20`);
+  - `i18n:check` (`19`);
+  - T-10-29 and T-10-30, 29 tests (`16`), T-10-32's D12/D14 half, and the badge and hook tests (`08`);
+  - Ajv and the mocks, 131 tests (`17`);
+  - Docker `pnpm e2e` 64 + 1 + 65 (`21`).
+- **Screenshots:** the five, in `roadmap/evidence/E6-W03/`.
+- **Shared:** screen 21 and D12 save through one hook (`packages/ui` `useAttendanceSheet`) over one transport (`packages/api-client` `attendanceSheetTransport`).
+- **Your 30-09 message:**
+  - (a) «Agenda de la setmana» and «Alumnes» are now an «Instructor» sidebar group, the first an instructor sees. «Grups del dia» has no entry: screen 20 is the member app's, with no back-office route (A10).
+  - (b) step 13 is in `packages/api-client/src/student-search.ts`.
+  - E74 is followed (A11).
+- **For you:**
+  1. Proposed literals: the list is in the report (Q1).
+  2. `DashboardCounters.followUpUnread` duplicates `GET /followup/unread-count`. The hook owns the menu counter; the dashboard value is only an ADMIN's first paint. Keep one of them? (Q2)
+  3. The legend's «(mitja alçada: 30 min)» is literal, while a training's height follows its own length. Proposal: `InstructorWeek` sends `training.slotMinutes` (an INSTRUCTOR gets 403 on `/parameters`). (Q3)
+  4. Mockup D14 highlights 2 rows but says «5 pendents de llegir». I followed R-10-13: an ADMIN sees 5 highlighted rows. D12's selected class reads 4/5, by R-10-02. (Q4)
+  5. Api proposal: `authorAccountId` in `GET /followup`'s `x-fields`. It is filterable, but its values cannot be listed. (Q5)
+  6. `openapi.next.json` (`db7c6c6`) stays staged for E7. D14 already uses its 20/50 page sizes.
+  7. E6-W02's `student-record.spec.ts` needed an exact «Alumnes» locator, because an instructor now also sees «Seguiment alumnes».
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E4-W18
+@organizer **E4-W18 round 2 is awaiting verification.** The three points are done; details under «### Round 2 report».
+- **#1:** an «Entra com l'abonat» tab writes `exchanging` to its session storage before it sends the code. A reload while `/oauth2/token` is unanswered ends the handoff: no `refresh_token` grant and no session.
+  - 01 then says «Aquest enllaç ja no és vàlid»: the code left the address and is kept nowhere, so there is nothing to retry, and the api may already have redeemed it.
+  - The test failed with the write reverted (log `15`).
+- **#2:** the back office (and 01, which had the same race) checks the session right after subscribing to `signedIn`. Both tests failed with the check removed (log `16`).
+  - A round-1 clubs-admin test had passed only because of that race: the mock's cookie restore always succeeds. Its no-cookie scenario is now explicit (a `400 REFRESH_EXPIRED` refresh).
+- **#3:** two negative runs of the E4-W16 core stage on image `77cef6c`, each failing with its E5-T27 message:
+  - no `launchUrl` (log `17`);
+  - a first password `PUT` answering 401 (log `18`).
+  - The interception is not in the suite: the spec's diff is empty.
+- **Green:**
+  - turbo 34/34 (`19`);
+  - `i18n:check` (`20`);
+  - the full `pnpm e2e:core`, 40 of 40, e4w16 5/5 with no fallbacks (`21`);
+  - Docker `pnpm e2e` 1 + 64 + 65 (`22`).
+Blocking: no.

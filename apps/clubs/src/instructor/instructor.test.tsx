@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, useStudentSearch } from "@agilityhub/api-client";
 import {
   ATTENDANCE_MOCK_NOW,
   mockScenario,
@@ -1134,5 +1134,148 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
     expect(window.location.pathname).toBe("/instructor/alumnes/dog-duna");
     expect(screen.getByText("Aquest mòdul està desactivat.")).toBeVisible();
     expect(requests.some((request) => request.line.startsWith("GET /tasks"))).toBe(false);
+  });
+});
+
+describe("E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal", () => {
+  it("a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled", async () => {
+    const requests = recordRequests();
+    await sheetPage();
+    const marc = await sheetRow("Marc + Chun-li");
+    fireEvent.click(within(marc).getByRole("radio", { name: "present" }));
+    // Meanwhile T1 passes: the api refuses the save and the list read again is closed.
+    mockScenario("attendanceClosed");
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El període per passar llista està tancat.")).toBeVisible();
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line === "GET /class-sessions/c1/attendance"),
+      ).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(within(marc).getByRole("radio", { name: "pendent" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    });
+    expect(within(marc).getByRole("radio", { name: "present" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(within(marc).getByRole("radio", { name: "present" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Desa" })).toBeDisabled();
+  });
+
+  it("once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer)", async () => {
+    const requests = recordRequests();
+    mockScenario("instructor");
+    const api = client();
+    const { result } = renderHook(() => useAttendanceSheet(api, "c1"));
+    await waitFor(() => {
+      expect(result.current.status).toBe("ready");
+    });
+    act(() => {
+      result.current.choose("b2", "PRESENT");
+    });
+    mockScenario("attendanceClosed");
+    await act(async () => {
+      await result.current.save();
+    });
+    expect(result.current.notice).toEqual({ code: "ATTENDANCE_WINDOW_CLOSED", kind: "error" });
+    expect(result.current.draft).toEqual({});
+    expect(result.current.changes).toEqual([]);
+
+    // The window is open again (the sheet read again allows it): the same choice, a new request.
+    mockScenario("instructor");
+    act(() => {
+      result.current.refetch();
+    });
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line === "GET /class-sessions/c1/attendance"),
+      ).toHaveLength(3);
+    });
+    await waitFor(() => {
+      expect(result.current.status === "ready" && result.current.sheet.sheet.canMarkPresence).toBe(
+        true,
+      );
+    });
+    act(() => {
+      result.current.choose("b2", "PRESENT");
+    });
+    await act(async () => {
+      await result.current.save();
+    });
+    expect(result.current.notice).toEqual({ kind: "saved" });
+    const puts = requests.filter((request) => request.line.startsWith("PUT"));
+    expect(puts).toHaveLength(2);
+    expect(puts[1]?.key).not.toBe(puts[0]?.key);
+  });
+});
+
+describe("E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query", () => {
+  it("a next page still loading for the old query does not hold the new query's «Mostra'n més»", async () => {
+    const requests = recordRequests();
+    const dogs = Array.from({ length: 51 }, (_, index) => ({
+      handlerName: null,
+      id: `00000000-0000-4000-8000-0000000001${String(index).padStart(2, "0")}`,
+      level: null,
+      name: `Gos ${String(index + 1)}`,
+      owner: {
+        fullName: "Clara Font Pons",
+        id: "00000000-0000-4000-8000-000000000c1a",
+        status: "ACTIVE",
+      },
+    }));
+    let release: (() => void) | undefined;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get("page") ?? "0");
+        const size = Number(url.searchParams.get("size") ?? "50");
+        // The old query's next page hangs until the end of the test.
+        if (page > 0 && url.searchParams.get("q") === null) await held;
+        return HttpResponse.json({
+          appliedFilters: [],
+          items: dogs.slice(page * size, (page + 1) * size),
+          page,
+          size,
+          totalItems: dogs.length,
+          totalPages: Math.ceil(dogs.length / size),
+        });
+      }),
+    );
+    mockScenario("instructor");
+    const api = client();
+    const { rerender, result } = renderHook(({ query }) => useStudentSearch(api, query), {
+      initialProps: { query: "" },
+    });
+    await waitFor(() => {
+      expect(result.current.hasMore).toBe(true);
+    });
+    act(() => {
+      void result.current.more();
+    });
+    rerender({ query: "Gos" });
+    await waitFor(() => {
+      expect(result.current.hasMore).toBe(true);
+    });
+    act(() => {
+      void result.current.more();
+    });
+    await waitFor(() => {
+      expect(result.current.items).toHaveLength(51);
+    });
+    const pages = requests
+      .filter((request) => request.line.startsWith("GET /dogs"))
+      .map((request) => {
+        const query = new URLSearchParams(request.line.split("?")[1] ?? "");
+        return `${query.get("q") ?? "-"}:${query.get("page") ?? ""}`;
+      });
+    expect(pages).toEqual(["-:0", "-:1", "Gos:0", "Gos:1"]);
+    release?.();
   });
 });

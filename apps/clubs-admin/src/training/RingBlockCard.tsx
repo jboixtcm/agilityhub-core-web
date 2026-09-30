@@ -104,7 +104,14 @@ interface AskedRange {
  * and the times as selects. `cancelBookings: true` only for an ADMIN, after E4-W02's confirmation
  * listing `details.bookings[]` (R-09-13); an instructor is told to ask the administration.
  */
-export function RingBlockCard({ client }: { client: ApiClient }) {
+export function RingBlockCard({
+  client,
+  onCreated,
+}: {
+  client: ApiClient;
+  /** A block or reservation was created (D12 reads its week again, E6-W03). */
+  onCreated?: () => void;
+}) {
   const { t } = useTranslation(["instructor", "enums", "errors", "admin-scheduling", "training"]);
   const formats = useClubFormats();
   const branding = useBranding();
@@ -171,6 +178,7 @@ export function RingBlockCard({ client }: { client: ApiClient }) {
       setSaved(kind);
       setAsked(undefined);
       grid.refetch();
+      onCreated?.();
       return;
     }
     setFailure(result.failure);
@@ -409,8 +417,9 @@ export function RingBlockCard({ client }: { client: ApiClient }) {
 }
 
 /**
- * `/agenda` (D12): the weekly agenda grid, the registrants and the attendance are S10 (E6-W03);
- * until then the page holds only the ring card of E5-W02.
+ * The ring card alone on a page, as E5-W02 first mounted it on `/agenda`. D12 now mounts
+ * `RingBlockCard` under its grid (`instructor/WeekAgendaPage.tsx`, E6-W03); this frame stays for
+ * the card's own tests.
  */
 export function AgendaRingCardPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation("shell");

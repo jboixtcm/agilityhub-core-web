@@ -163,13 +163,19 @@ export interface UniversalListProps<Row> {
   onRetry: () => void;
   onRowActivate?: (row: Row) => void;
   onStateChange: (state: UniversalListState) => void;
+  /** A row's extra class (D14 highlights the unread rows). */
+  rowClassName?: (row: Row) => string | undefined;
   /** Omitted: the rows are plain text (e.g. a role that cannot open the record). */
   rowHref?: (row: Row) => string;
   rowKey: (row: Row) => string;
   rows: Row[];
   savedViews: UniversalListSavedView[];
   state: UniversalListState;
-  statusFilter: {
+  /**
+   * The status select of the toolbar. Omitted when the screen filters by its own chips (D14's
+   * «Tot · Tasques · Notes d'alumnes»), which then read and write `state.filters` themselves.
+   */
+  statusFilter?: {
     field: string;
     label: string;
     options: UniversalListStatusOption[];
@@ -186,6 +192,8 @@ export interface UniversalListProps<Row> {
   /** The failed export's message, shown under the format buttons. */
   exportError?: string;
   loading?: boolean;
+  /** The page sizes the list's contract accepts (default all four of CONVENCIONS_API §4). */
+  pageSizes?: readonly UniversalListState["size"][];
   selectable?: boolean;
 }
 
@@ -297,6 +305,8 @@ export function UniversalList<Row>({
   onRetry,
   onRowActivate,
   onStateChange,
+  pageSizes = UNIVERSAL_LIST_PAGE_SIZES,
+  rowClassName,
   rowHref,
   rowKey,
   rows,
@@ -306,7 +316,8 @@ export function UniversalList<Row>({
   statusFilter,
   totalPages,
 }: UniversalListProps<Row>) {
-  const universalFilters = appliedFilters.filter((filter) => filter.field !== statusFilter.field);
+  const statusField = statusFilter?.field;
+  const universalFilters = appliedFilters.filter((filter) => filter.field !== statusField);
   const firstFilterColumn = filterColumns[0];
   const [filterField, setFilterField] = useState(firstFilterColumn?.key ?? "");
   const selectedFilterColumn = filterColumns.find((column) => column.key === filterField);
@@ -389,7 +400,7 @@ export function UniversalList<Row>({
   );
   const selectedIds = [...selected];
   const selectedView = savedViews.find((view) => view.id === selectedViewId);
-  const statusValue = currentStatus(state, statusFilter.field);
+  const statusValue = statusField === undefined ? "" : currentStatus(state, statusField);
 
   const activateRow = (event: MouseEvent<HTMLAnchorElement>, row: Row) => {
     if (
@@ -509,31 +520,33 @@ export function UniversalList<Row>({
           />
         </label>
 
-        <select
-          aria-label={statusFilter.label}
-          className="ah-universal-list__status"
-          onChange={(event) => {
-            const value = event.currentTarget.value;
-            const withoutStatus = state.filters.filter(
-              (filter) => filter.field !== statusFilter.field,
-            );
-            onStateChange({
-              ...state,
-              filters:
-                value === ""
-                  ? withoutStatus
-                  : [...withoutStatus, { field: statusFilter.field, operator: "eq", value }],
-              page: 0,
-            });
-          }}
-          value={statusValue}
-        >
-          {statusFilter.options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        {statusFilter === undefined ? null : (
+          <select
+            aria-label={statusFilter.label}
+            className="ah-universal-list__status"
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              const withoutStatus = state.filters.filter(
+                (filter) => filter.field !== statusFilter.field,
+              );
+              onStateChange({
+                ...state,
+                filters:
+                  value === ""
+                    ? withoutStatus
+                    : [...withoutStatus, { field: statusFilter.field, operator: "eq", value }],
+                page: 0,
+              });
+            }}
+            value={statusValue}
+          >
+            {statusFilter.options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
 
         <details className="ah-universal-list__menu ah-universal-list__filter-menu">
           <summary
@@ -625,7 +638,7 @@ export function UniversalList<Row>({
                 onClick={() => {
                   onStateChange({
                     ...state,
-                    filters: state.filters.filter((filter) => filter.field === statusFilter.field),
+                    filters: state.filters.filter((filter) => filter.field === statusField),
                     page: 0,
                   });
                 }}
@@ -891,7 +904,7 @@ export function UniversalList<Row>({
                   const id = rowKey(row);
                   const href = rowHref?.(row);
                   return (
-                    <tr key={id}>
+                    <tr className={rowClassName?.(row)} key={id}>
                       {selectable ? (
                         <td className="ah-universal-list__selection">
                           <Checkbox
@@ -954,9 +967,7 @@ export function UniversalList<Row>({
                     setSearchValue("");
                     onStateChange({
                       ...state,
-                      filters: state.filters.filter(
-                        (filter) => filter.field === statusFilter.field,
-                      ),
+                      filters: state.filters.filter((filter) => filter.field === statusField),
                       page: 0,
                       q: "",
                     });
@@ -1011,13 +1022,13 @@ export function UniversalList<Row>({
               aria-label={labels.rowsPerPage}
               onChange={(event) => {
                 const size = Number(event.currentTarget.value);
-                if (isPageSize(size)) {
+                if (isPageSize(size) && pageSizes.includes(size)) {
                   onStateChange({ ...state, page: 0, size });
                 }
               }}
               value={state.size}
             >
-              {UNIVERSAL_LIST_PAGE_SIZES.map((size) => (
+              {pageSizes.map((size) => (
                 <option key={size} value={size}>
                   {`${String(size)} ${labels.rowsPerPage}`}
                 </option>

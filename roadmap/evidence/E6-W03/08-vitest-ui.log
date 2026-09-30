@@ -1,0 +1,53 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > nothing that can be chosen is faded: the only opacity is on a circle the api does not allow (never one locked by a save) that is not the state 1ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the pending circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the no-show circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the pending circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the present circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the notified circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the no-show circle, not chosen, draws its ring at 3:1 or more on the surface 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen present circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen notified circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen no-show circle keeps its ring and its mark at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > light theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+ ✓ src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > dark theme: the chosen «pendent» draws its ring and its dot in the text colour, at 3:1 or more 0ms
+ ✓ src/universal-list.test.tsx > T-03-38 universal list filter builder > offers operators by field type from the universal contract 1ms
+ ✓ src/universal-list.test.tsx > T-03-38 universal list filter builder > round-trips filters whose values contain separators 0ms
+ ✓ src/universal-list.test.tsx > T-03-38 universal list URL sync > reads repeated filters and sort values without losing column order 0ms
+ ✓ src/universal-list.test.tsx > T-03-38 universal list URL sync > serializes the complete view state for links, reloads, and exports 0ms
+ ✓ src/universal-list.test.tsx > T-03-38 universal list URL sync > falls back to approved defaults for invalid pagination values 0ms
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > stacks cells per slot, exposes day buttons and tints cells through --schedule-color 83ms
+ ✓ src/schedule-grid.test.tsx > ScheduleGrid > renders the D4 variants: counts, draft outline, cancelled and link cells 7ms
+ ✓ src/attendance-sheet.test.tsx > E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a 422 ATTENDANCE_WINDOW_CLOSED whose re-read comes back closed empties the draft and disables the save; a later save sends a new key 63ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > renders the four circles white · green · yellow · red as one radio group 62ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a tap chooses a state; the arrow keys move to the next circle that can be chosen 22ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > a final (saved NOTIFIED) row is inert: no circle can be chosen or focused 5ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canMarkPresence gates white, green and red; canMarkNotice gates yellow 11ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) > canChooseAttendance and attendanceTone follow R-10-03 and the badge tones 1ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > diffSheet sends only the rows whose local state differs, in the sheet's order 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet keeps the caller's edits on the rows only the caller touched and takes the rest from details.current 0ms
+ ✓ src/attendance.test.tsx > E6-W01 step 3 diffSheet and mergeSheet (S10 R-10-04) > mergeSheet drops an edit the server now holds, and any edit on a row that became final 0ms
+ ✓ src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 11: the window closed (canMarkPresence false) drops every choice but «ha avisat», which canMarkNotice still allows 0ms
+ ✓ src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 11: «ha avisat» switched off drops the «ha avisat» choice; a closed sheet keeps nothing 0ms
+ ✓ src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 12: the base rows and the permissions are required arguments 0ms
+ ✓ src/attendance.test.tsx > E6-W03 step 14 (E6-W01 round-2 review #4): no flash on every save > while a save is in flight the circles are locked but not faded; only the ones the api refuses fade 6ms
+ ✓ src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > cycles «— → present → avisat → no presentat → —» on each click, in the state's tone 4ms
+ ✓ src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > skips «avisat» without canMarkNotice 3ms
+ ✓ src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > stops cycling on a final row and without canMarkPresence; a save only locks it 5ms
+ ✓ src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > is a native button, so it is keyboard-operable (focusable; Enter and Space click it) 1ms
+ ✓ src/attendance-sheet.test.tsx > E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > only a network failure (no answer) keeps the key: the retry of the same payload reuses it and nothing is read again 55ms
+ ✓ src/attendance-sheet.test.tsx > E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > 409 STALE_VERSION rebases on details.current with its permissions, and the next save gets a new key 56ms
+ ✓ src/attendance-sheet.test.tsx > E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > choices made before leaving (D12 → D13 → back) are rebased on the first read like any other 52ms
+
+ Test Files  5 passed (5)
+      Tests  44 passed (44)
+   Start at  15:07:19
+   Duration  870ms (environment 59%, setup 14%, tests 14%, transform 12%, import 1%)
+

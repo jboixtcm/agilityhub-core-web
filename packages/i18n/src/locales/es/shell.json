@@ -24,7 +24,7 @@
   "nav": {
     "activities": "Actividades",
     "admin": "Navegación de administración",
-    "agenda": "Agenda de la semana",
+    "weeklyAgenda": "Agenda de la semana",
     "announcements": "Comunicados",
     "audit": "Auditoría",
     "billing": "Facturación",
@@ -41,6 +41,7 @@
     "home": "Inicio",
     "inactivity": "Inactividades y bajas",
     "info": "Info",
+    "instructor": "Instructor",
     "main": "Navegación principal",
     "management": "Gestión",
     "members": "Abonados",

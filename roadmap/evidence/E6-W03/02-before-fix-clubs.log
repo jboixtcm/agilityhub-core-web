@@ -1,0 +1,238 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/instructor.test.tsx (41 tests | 3 failed | 38 skipped) 20353ms
+   ❯ E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal (2)
+     × a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled 10176ms
+     × once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer) 68ms
+   ❯ E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query (1)
+     × a next page still loading for the old query does not hold the new query's «Mostra'n més» 10107ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-checked"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-checked") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-checked="true"[39m
+Received:
+[31m  aria-checked="false"[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-sheet"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mdl 3 · 8:30 · A+B · Central[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"instructor-sheet__meta"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0m3/5[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning instructor-sheet__waiting"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-hour"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0m1 en espera[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"instructor-sheet__instructor"[39m
+          [36m>[39m
+            [0mEstel[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mEl període per passar llista està tancat.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card instructor-sheet__card"[39m
+        [36m>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"instructor-sheet__rows"[39m
+          [36m>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"instructor-sheet__row"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-sheet__main"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Mostra la foto de Duna a pantalla completa"[39m
+                  [33mclass[39m=[32m"instructor-sheet__photo"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+                  [36m/>[39m
+                [36m</button>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-sheet__who"[39m
+                [36m>[39m
+                  [36m<strong>[39m
+                    [0mLaura + Duna[0m
+                  [36m</strong>[39m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mC[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33maria-disabled[39m=[32m"true"[39m
+                  [33maria-label[39m=[32m"Assistència de Laura + Duna"[39m
+                  [33mclass[39m=[32m"ah-attendance"[39m
+                  [33mrole[39m=[32m"radiogroup"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-checked[39m=[32m"false"[39m
+                    [33maria-label[39m=[32m"pendent"[39m
+                    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+                    [33mdisabled[39m=[32m""[39m
+                    [33mrole[39m=[32m"radio"[39m
+                    [33mtabindex[39m=[32m"-1"[...
+ ❯ src/instructor/instructor.test.tsx:1156:68
+    1154|     });
+    1155|     await waitFor(() => {
+    1156|       expect(within(marc).getByRole("radio", { name: "pendent" })).toH…
+       |                                                                    ^
+    1157|         "aria-checked",
+    1158|         "true",
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer)
+AssertionError: expected { b2: 'PRESENT' } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "b2": "PRESENT",
++ }
+
+ ❯ src/instructor/instructor.test.tsx:1185:34
+    1183|     });
+    1184|     expect(result.current.notice).toEqual({ code: "ATTENDANCE_WINDOW_C…
+    1185|     expect(result.current.draft).toEqual({});
+       |                                  ^
+    1186|     expect(result.current.changes).toEqual([]);
+    1187|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query > a next page still loading for the old query does not hold the new query's «Mostra'n més»
+AssertionError: expected [ { handlerName: null, …(4) }, …(49) ] to have a length of 51 but got 50
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+- 51
++ 50
+
+ ❯ src/instructor/instructor.test.tsx:1270:36
+    1268|     });
+    1269|     await waitFor(() => {
+    1270|       expect(result.current.items).toHaveLength(51);
+       |                                    ^
+    1271|     });
+    1272|     const pages = requests
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 38 skipped (41)
+   Start at  15:04:18
+   Duration  21.77s (tests 94%, transform 3%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/instructor.test.tsx -t E6-W03

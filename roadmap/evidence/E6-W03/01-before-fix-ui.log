@@ -1,0 +1,144 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/attendance-contrast.test.ts (17 tests | 1 failed) 7ms
+   ❯ E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast (17)
+     × nothing that can be chosen is faded: the only opacity is on a circle the api does not allow (never one locked by a save) that is not the state 4ms
+ ❯ src/attendance.test.tsx (16 tests | 8 failed) 108ms
+   ❯ E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read (3)
+     × step 11: the window closed (canMarkPresence false) drops every choice but «ha avisat», which canMarkNotice still allows 4ms
+     × step 11: «ha avisat» switched off drops the «ha avisat» choice; a closed sheet keeps nothing 1ms
+     × step 12: the base rows and the permissions are required arguments 0ms
+   ❯ E6-W03 step 14 (E6-W01 round-2 review #4): no flash on every save (1)
+     × while a save is in flight the circles are locked but not faded; only the ones the api refuses fade 8ms
+   ❯ E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) (4)
+     × cycles «— → present → avisat → no presentat → —» on each click, in the state's tone 3ms
+     × skips «avisat» without canMarkNotice 1ms
+     × stops cycling on a final row and without canMarkPresence; a save only locks it 1ms
+     × is a native button, so it is keyboard-operable (focusable; Enter and Space click it) 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-contrast.test.ts > E6-W01 round 2 #6 (review #7, AGENTS rule 6): the attendance circles keep their contrast > nothing that can be chosen is faded: the only opacity is on a circle the api does not allow (never one locked by a save) that is not the state
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   ".ah-attendance__circle--unavailable:not([aria-checked=\"true\"])",
++   ".ah-attendance__circle:disabled:not([aria-checked=\"true\"])",
+  ]
+
+ ❯ src/attendance-contrast.test.ts:120:19
+    118|       .filter(({ declarations: block }) => /(?:^|;)\s*opacity\s*:/u.te…
+    119|       .flatMap(({ selectors }) => selectors);
+    120|     expect(faded).toEqual(['.ah-attendance__circle--unavailable:not([a…
+       |                   ^
+    121|   });
+    122|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 11: the window closed (canMarkPresence false) drops every choice but «ha avisat», which canMarkNotice still allows
+AssertionError: expected { b1: 'PENDING', b2: 'NOTIFIED', …(1) } to deeply equal { b2: 'NOTIFIED' }
+
+- Expected
++ Received
+
+  {
++   "b1": "PENDING",
+    "b2": "NOTIFIED",
++   "b4": "PRESENT",
+  }
+
+ ❯ src/attendance.test.tsx:207:7
+    205|     expect(
+    206|       mergeSheet(rows, draft, touched, rows, { canMarkNotice: true, ca…
+    207|     ).toEqual({ b2: "NOTIFIED" });
+       |       ^
+    208|   });
+    209|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 11: «ha avisat» switched off drops the «ha avisat» choice; a closed sheet keeps nothing
+AssertionError: expected { b1: 'PENDING', b2: 'NOTIFIED', …(1) } to deeply equal { b1: 'PENDING', b4: 'PRESENT' }
+
+- Expected
++ Received
+
+  {
+    "b1": "PENDING",
++   "b2": "NOTIFIED",
+    "b4": "PRESENT",
+  }
+
+ ❯ src/attendance.test.tsx:213:7
+    211|     expect(
+    212|       mergeSheet(rows, draft, touched, rows, { canMarkNotice: false, c…
+    213|     ).toEqual({ b1: "PENDING", b4: "PRESENT" });
+       |       ^
+    214|     expect(
+    215|       mergeSheet(rows, draft, touched, rows, { canMarkNotice: false, c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/attendance.test.tsx > E6-W03 steps 11 and 12 (E6-W01 round-2 review #1 and #2): mergeSheet and the permissions just read > step 12: the base rows and the permissions are required arguments
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/attendance.test.tsx:221:52
+    219|   it("step 12: the base rows and the permissions are required argument…
+    220|     // @ts-expect-error: without `baseRows` the «someone else changed …
+    221|     expect(() => mergeSheet(rows, draft, touched)).toThrow(TypeError);
+       |                                                    ^
+    222|   });
+    223| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/attendance.test.tsx > E6-W03 step 14 (E6-W01 round-2 review #4): no flash on every save > while a save is in flight the circles are locked but not faded; only the ones the api refuses fade
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"ah-attendance__circle--unavailable"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  ah-attendance__circle--unavailable[39m
+Received:
+[31m  ah-attendance__circle ah-attendance__circle--notified[39m
+ ❯ src/attendance.test.tsx:250:62
+    248|       />,
+    249|     );
+    250|     expect(screen.getByRole("radio", { name: "ha avisat" })).toHaveCla…
+       |                                                              ^
+    251|       "ah-attendance__circle--unavailable",
+    252|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > cycles «— → present → avisat → no presentat → —» on each click, in the state's tone
+ FAIL  src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > skips «avisat» without canMarkNotice
+ FAIL  src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > stops cycling on a final row and without canMarkPresence; a save only locks it
+ FAIL  src/attendance.test.tsx > E6-W03 step 1 AttendanceBadgeCycler (mockup D12, S10 R-10-03) > is a native button, so it is keyboard-operable (focusable; Enter and Space click it)
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `Cycler`.
+ ❯ createFiberFromTypeAndProps ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5021:28
+ ❯ createFiberFromElement ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5035:14
+ ❯ reconcileChildFibersImpl ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:6920:31
+ ❯ ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7098:33
+ ❯ reconcileChildren ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:9701:13
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10182:7
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  9 failed | 24 passed (33)
+   Start at  15:04:00
+   Duration  1.02s (environment 64%, setup 14%, transform 12%, tests 8%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance.test.tsx src/attendance-contrast.test.ts

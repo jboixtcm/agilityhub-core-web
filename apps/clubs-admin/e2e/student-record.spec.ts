@@ -63,7 +63,8 @@ test.describe("E6-W02 T-10-28 D13 «Fitxa d'alumne» (desktop) against MSW", () 
     page,
   }) => {
     await signIn(page);
-    await page.getByRole("link", { name: "Alumnes" }).click();
+    // Exact: since E6-W03 an instructor's sidebar also has «Seguiment alumnes» (D14).
+    await page.getByRole("link", { exact: true, name: "Alumnes" }).click();
     await page.waitForURL("**/alumnes");
     await page.getByPlaceholder("Cerca un alumne").fill("Duna");
     await page.getByRole("link", { name: "Laura + Duna · C" }).click();

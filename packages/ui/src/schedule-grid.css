@@ -198,6 +198,15 @@ button.ah-schedule-cell--empty:hover {
   font-weight: 800;
 }
 
+/* D12: «passar llista pendent» as a dot after the counts (its text is the tooltip). */
+.ah-schedule-cell__marker {
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--ah-color-warning);
+  border-radius: var(--ah-radius-full);
+}
+
 .ah-schedule-cell__subtitle {
   overflow: hidden;
   font-size: 0.65rem;

@@ -1,0 +1,50 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > mockup 20: the day chips, each class with n/n, the hourglass and its second line, the legend and the block with its reason and note 159ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a chip changes the day (?date=); an empty day reads «Cap classe aquest dia»; the instructor chip offers no «Tot el club» and shows another's day 76ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a tap on a class opens 21; [RESERVAR O BLOQUEJAR PISTA] opens 24 on the day's first ring 36ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a cancelled class reads «anul·lada»; a closed day shows no «passar llista pendent» 28ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > WAITLIST off: no hourglass on the cards and no waiting part in the legend 18ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > T-10-32 a viewer in America/Bogota at 0:30 club-local still asks for the club's day (Europe/Madrid) 21ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a failed read shows the error with a retry, which reads the day again 21ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > mockup 21: the title, n/n, «1 en espera», the instructor, the rows in the api's order, the status lines and the waiting list with its rule 43ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a tap changes the circle locally with no request; [DESA] sends only the changed items with the current version and a UUID key 66ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a saved «ha avisat» row is inert; «ha avisat» saved now shows its line from the answer 43ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the circles are inert when canMarkPresence and canMarkNotice are false (window closed) and the yellow one alone without the notice 31ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the dog's photo opens full screen; a tap closes it and the screen is as before 26ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything 28ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > 409 STALE_VERSION: the toast, the other's change kept, and only the caller's own edit sent again with the new version 61ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a refusal is shown by its code and nothing is lost: ATTENDANCE_NOT_OPEN reads the list again 41ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs 74ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a network failure keeps the choice and a retry sends the same payload with the same key 58ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-05 FIFO: the rule sentence with the confirmation minutes 18ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a class cancelled by the club: the banner, every circle inert and no [DESA] 16ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > «avís ja enviat» after the 8:00 batch; «2 tasques pendents» with TASKS, none without 45ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-00: a dog led by its guide reads «Júlia Roca + Rock» with «(abonat: Laura Serra Vidal)» 16ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing 69ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > the hook refuses a save captured before the refusal while that read is in flight 111ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada» 213ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > mockup 22: the header, «C · fa 8 mesos», the three metrics, the five badges, the three blocks and the manage button 40ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks and the button; FREE_TRAINING off drops the training tile 44ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > a dog that left shows «baixa»; levels off shows no level chip; the search icon opens the student search 13ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22 664ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page 290ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again 283ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > 20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN 37ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > without an answer from the api (offline) each screen keeps its own «No s'ha pogut carregar…» 28ms
+ ✓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > es 50ms
+ ✓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > en 52ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an instructor opens 20 at /instructor/dia with «El meu dia» current in the mockup's four tabs 24ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an impersonated session reaching 21 directly reads «No es permet la suplantació.» and asks nothing 20ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > a member cannot open 22 (RequireRole); screen 26 is E6-W02's page under «Alumnes» 42ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > round 2 #3 (review #4, S10 §9) with E6-W02 step 5: TASKS off sends screen 26's route back to 22 with the MODULE_DISABLED note 20ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled 42ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer) 118ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query > a next page still loading for the old query does not hold the new query's «Mostra'n més» 159ms
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  15:07:20
+   Duration  4.64s (tests 71%, transform 16%, environment 6%, import 5%, setup 1%)
+

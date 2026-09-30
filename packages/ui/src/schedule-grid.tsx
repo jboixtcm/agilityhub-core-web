@@ -28,6 +28,8 @@ export interface ScheduleGridCell {
 
 export interface ScheduleRow<Cell extends ScheduleGridCell> {
   cells: readonly Cell[];
+  /** A row's extra class (D12 draws the hour boundaries). */
+  className?: string | undefined;
   id: string;
   label: string;
   onSelect?: (() => void) | undefined;
@@ -100,7 +102,7 @@ export function ScheduleGrid<Cell extends ScheduleGridCell>({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr className="ah-schedule-grid__row" key={row.id}>
+              <tr className={classes("ah-schedule-grid__row", row.className)} key={row.id}>
                 <th className="ah-schedule-grid__row-label" scope="row">
                   {row.onSelect === undefined ? (
                     row.label
@@ -155,6 +157,11 @@ export interface ScheduleCellProps {
   href?: string | undefined;
   icon?: IconName | undefined;
   label?: string | undefined;
+  /**
+   * A status mark after the title: a dot whose text is its tooltip and, for screen readers, part
+   * of the cell (D12's «passar llista pendent», as screen 20 says it).
+   */
+  marker?: string | undefined;
   /** Bold counts after the title («4/5 +1»). */
   meta?: string | undefined;
   muted?: boolean;
@@ -179,6 +186,7 @@ export function ScheduleCell({
   href,
   icon,
   label,
+  marker,
   meta,
   muted = false,
   onClick,
@@ -206,6 +214,11 @@ export function ScheduleCell({
         {title}
         {meta === undefined || meta === "" ? null : (
           <strong className="ah-schedule-cell__meta">{meta}</strong>
+        )}
+        {marker === undefined || marker === "" ? null : (
+          <span className="ah-schedule-cell__marker" title={marker}>
+            <span className="ah-sr-only">{marker}</span>
+          </span>
         )}
       </span>
       {subtitle === undefined || subtitle === "" ? null : (

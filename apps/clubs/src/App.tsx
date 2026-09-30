@@ -548,7 +548,14 @@ export function AccessPage({
     handoff === null || handoff === "" ? null : "handoff",
   );
   const [message, setMessage] = useState<string>();
-  const [error, setError] = useState<string>();
+  // E4-W18 round 2: the tab was reloaded while a code was being exchanged. The code has left the
+  // address and may already be redeemed (it is single-use), so it cannot be sent again: the link
+  // is no longer valid, and the admin opens «Entra com l'abonat» again.
+  const [error, setError] = useState<string | undefined>(() =>
+    (handoff === null || handoff === "") && authClient.wasHandoffInterrupted()
+      ? t("auth:activation.invalidTitle")
+      : undefined,
+  );
   // The code was redeemed but `/me` keeps failing: the tab holds that session (never another
   // one) and offers a retry (E47).
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
@@ -601,6 +608,8 @@ export function AccessPage({
       }
     };
     authClient.addEventListener("signedIn", signedIn);
+    // A recovery that signed in before this listener was attached is entered as well.
+    signedIn();
     return () => {
       authClient.removeEventListener("signedIn", signedIn);
     };

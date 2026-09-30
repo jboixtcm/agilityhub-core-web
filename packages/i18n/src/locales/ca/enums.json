@@ -177,5 +177,9 @@
   "taskState": {
     "PENDING": "pendent",
     "DONE": "feta"
+  },
+  "followupKind": {
+    "TASK": "tasca",
+    "MEMBER_NOTE": "nota d'alumne"
   }
 }

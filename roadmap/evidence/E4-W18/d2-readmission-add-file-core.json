@@ -3,11 +3,11 @@
     {
       "files": [
         {
-          "fileKey": "b30b5f03-bf60-47c0-82d7-84c8f01400db",
+          "fileKey": "4fb93bb6-0f9a-4391-8e42-ca09929d6879",
           "name": "demo-document.pdf"
         },
         {
-          "fileKey": "7acd14ae-0a39-434b-b363-5f767f8bdd36",
+          "fileKey": "a3ee3d64-6629-4bee-80a3-03e7ee84a486",
           "name": "cartilla_retorn_2.jpg"
         }
       ],
@@ -17,18 +17,18 @@
   "status": 200,
   "timings": {
     "patch": {
-      "responseEndMs": 24,
-      "sentAfterClickMs": 76,
+      "responseEndMs": 18,
+      "sentAfterClickMs": 81,
       "status": 200
     },
     "put": {
-      "responseEndMs": 7,
-      "sentAfterClickMs": 66,
+      "responseEndMs": 6,
+      "sentAfterClickMs": 73,
       "status": 204
     },
     "signed": {
-      "responseEndMs": 15,
-      "sentAfterClickMs": 50,
+      "responseEndMs": 18,
+      "sentAfterClickMs": 54,
       "status": 201
     }
   }

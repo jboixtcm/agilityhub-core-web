@@ -15,6 +15,7 @@ import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
+import { AGENDA_MOCK_NOW, AGENDA_SELECTED_CLASS_ID } from "./fixtures/agenda";
 import { ATTENDANCE_MOCK_NOW } from "./fixtures/attendance";
 import auditEntriesFixture from "./fixtures/audit-entries.json";
 import {
@@ -43,6 +44,7 @@ import {
 } from "./fixtures/census";
 import dashboardFixture from "./fixtures/dashboard.json";
 import exportJobsFixture from "./fixtures/export-jobs.json";
+import { INBOX_ALL_READ_AT } from "./fixtures/followup";
 import {
   dogDocumentTypesCatalog,
   meDogDocumentTypes,
@@ -187,9 +189,15 @@ type MemberSignupView = components["schemas"]["MemberSignupView"];
 type RejectionRequest = components["schemas"]["RejectionRequest"];
 type ValidationRequest = components["schemas"]["ValidationRequest"];
 
-type NullableDashboard = Omit<Dashboard, "dogsByLevel" | "kpis" | "pendingSignups" | "riskReview"> & {
+type NullableDashboard = Omit<
+  Dashboard,
+  "dogsByLevel" | "kpis" | "pendingSignups" | "riskReview"
+> & {
   dogsByLevel: Dashboard["dogsByLevel"] | null;
-  kpis: Omit<Dashboard["kpis"], "activeMembers" | "classOccupancy" | "pendingSignups" | "trainingBookings"> & {
+  kpis: Omit<
+    Dashboard["kpis"],
+    "activeMembers" | "classOccupancy" | "pendingSignups" | "trainingBookings"
+  > & {
     activeMembers: Dashboard["kpis"]["activeMembers"] | null;
     classOccupancy: Dashboard["kpis"]["classOccupancy"] | null;
     pendingSignups: Dashboard["kpis"]["pendingSignups"] | null;
@@ -201,7 +209,8 @@ type NullableDashboard = Omit<Dashboard, "dogsByLevel" | "kpis" | "pendingSignup
 
 const initialDashboard = dashboardFixture as NullableDashboard;
 let dashboardState = structuredClone(initialDashboard);
-let signupReviewWorld: { variant: SignupReviewVariant | undefined; view: MemberSignupView } | undefined;
+let signupReviewWorld:
+  { variant: SignupReviewVariant | undefined; view: MemberSignupView } | undefined;
 // Members whose signup was validated or rejected: `GET /members/{id}/signup` answers NOT_PENDING.
 const resolvedSignups = new Set<string>();
 // Signup file keys removed through `DELETE /dogs/{id}/documents/{docId}/files/{fileId}`: a D2
@@ -262,7 +271,12 @@ function resolveSignup(memberId: string): void {
 /** The api's `409 INVALID_STATE` with its `details.reason` (S04 §6). */
 function invalidState(reason: string) {
   return HttpResponse.json<ApiErrorResponse>(
-    { code: "INVALID_STATE", details: { reason }, message: "Invalid state", traceId: "mock-trace-id" },
+    {
+      code: "INVALID_STATE",
+      details: { reason },
+      message: "Invalid state",
+      traceId: "mock-trace-id",
+    },
     { status: 409 },
   );
 }
@@ -940,7 +954,8 @@ function validationError(fieldErrors: { code: string; field: string }[]) {
 function parametersForbidden(request: Request) {
   const me = currentMockScenario().me;
   const impersonation =
-    request.headers.get("Authorization") === "Bearer mock-impersonation-token" || me.impersonation !== undefined;
+    request.headers.get("Authorization") === "Bearer mock-impersonation-token" ||
+    me.impersonation !== undefined;
   return impersonation || me.membership?.roles.includes("ADMIN") !== true
     ? apiError("FORBIDDEN", "Forbidden", 403)
     : undefined;
@@ -990,7 +1005,10 @@ function signupConfiguration(request: Request) {
 }
 
 /** R-04-08: with `signup.requireDogDocumentAtSignup` a submission needs at least one file. */
-function missingRequiredDogDocument(request: Request, documents: readonly { files: readonly unknown[] }[] | undefined) {
+function missingRequiredDogDocument(
+  request: Request,
+  documents: readonly { files: readonly unknown[] }[] | undefined,
+) {
   return (
     signupConfiguration(request).requireDogDocumentAtSignup === true &&
     !(documents ?? []).some((document) => document.files.length > 0)
@@ -1018,7 +1036,10 @@ function clubPaymentProviders(): NonNullable<ClubSettings["paymentProviders"]> {
 }
 
 /** `MemberSignupView.paymentMethods` for this request: the methods `GET /signup` offers, in its language. */
-function signupReviewMethods(request: Request, view: MemberSignupView): MemberSignupView["paymentMethods"] {
+function signupReviewMethods(
+  request: Request,
+  view: MemberSignupView,
+): MemberSignupView["paymentMethods"] {
   const acceptLanguage = request.headers.get("Accept-Language");
   return signupReviewPaymentMethods(
     view,
@@ -1039,11 +1060,15 @@ function signupPaymentMethod(
   if (patch.type !== "SEPA_DD") {
     return {
       accountMissing: false,
-      paymentMethod: { ...(patch.manual === undefined ? {} : { channel: patch.manual.channel }), type: patch.type },
+      paymentMethod: {
+        ...(patch.manual === undefined ? {} : { channel: patch.manual.channel }),
+        type: patch.type,
+      },
     };
   }
   const iban = patch.sepa?.iban;
-  const stored = member.paymentMethod?.type === "SEPA_DD" ? member.paymentMethod.maskedAccount : undefined;
+  const stored =
+    member.paymentMethod?.type === "SEPA_DD" ? member.paymentMethod.maskedAccount : undefined;
   const maskedAccount = iban === undefined ? stored : `···· ···· ···· ···· ${iban.slice(-4)}`;
   return {
     accountMissing: maskedAccount === undefined,
@@ -1103,7 +1128,10 @@ function normalisedIdentityDocument(document: { type: string; value: string }): 
 
 function validIban(value: string): boolean {
   const iban = value.replaceAll(/\s/gu, "").toUpperCase();
-  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban) || (iban.startsWith("ES") && iban.length !== 24)) {
+  if (
+    !/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban) ||
+    (iban.startsWith("ES") && iban.length !== 24)
+  ) {
     return false;
   }
   const digits = `${iban.slice(4)}${iban.slice(0, 4)}`.replaceAll(/[A-Z]/gu, (letter) =>
@@ -1331,21 +1359,22 @@ export const handlers = [
       response.kpis.trainingBookings = null;
     }
     if (!modules.includes("BILLING")) {
-      response.pendingSignups = response.pendingSignups === null
-        ? null
-        : {
-            ...response.pendingSignups,
-            items: response.pendingSignups.items.map((item) => {
-              const sanitized = {
-                ...item,
-                warnings: (item.warnings ?? []).filter(
-                  (warning) => warning !== "ACCOUNT_NOT_PROVIDED",
-                ),
-              };
-              delete sanitized.paymentMethodType;
-              return sanitized;
-            }),
-          };
+      response.pendingSignups =
+        response.pendingSignups === null
+          ? null
+          : {
+              ...response.pendingSignups,
+              items: response.pendingSignups.items.map((item) => {
+                const sanitized = {
+                  ...item,
+                  warnings: (item.warnings ?? []).filter(
+                    (warning) => warning !== "ACCOUNT_NOT_PROVIDED",
+                  ),
+                };
+                delete sanitized.paymentMethodType;
+                return sanitized;
+              }),
+            };
     }
     return HttpResponse.json(response);
   }),
@@ -1393,17 +1422,22 @@ export const handlers = [
       return apiError("STALE_VERSION", "Stale signup version", 409);
     }
     const plan =
-      body.planId === undefined ? undefined : view.planOptions.find((option) => option.planId === body.planId);
+      body.planId === undefined
+        ? undefined
+        : view.planOptions.find((option) => option.planId === body.planId);
     if (
       body.planId !== undefined &&
       (plan === undefined ||
-        (body.priceId !== undefined && !plan.prices.some((price) => price.priceId === body.priceId)))
+        (body.priceId !== undefined &&
+          !plan.prices.some((price) => price.priceId === body.priceId)))
     ) {
       return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
     }
     // S04 §5 (E39): no plan change while a card checkout of the submission is running.
     const planChanged = body.planId !== undefined && body.planId !== view.signup.planIdRequested;
-    const checkoutPending = (view.upfront?.lines ?? []).some((line) => line.status === "CHECKOUT_PENDING");
+    const checkoutPending = (view.upfront?.lines ?? []).some(
+      (line) => line.status === "CHECKOUT_PENDING",
+    );
     if (!dryRun && planChanged && checkoutPending) return invalidState("CHECKOUT_PENDING");
     if (dryRun) return HttpResponse.json(signupReviewDryRun(view, body));
     const levels = new Set(view.proposals.levels.map((level) => level.id));
@@ -1426,7 +1460,10 @@ export const handlers = [
       return validationError([{ code: "INVALID_DATE", field: "nextInvoiceDate" }]);
     }
     const quote = signupReviewDryRun(view, body).upfront;
-    const due = Math.max(0, (quote?.totalDue.amountMinor ?? 0) - (quote?.totalPaid.amountMinor ?? 0));
+    const due = Math.max(
+      0,
+      (quote?.totalDue.amountMinor ?? 0) - (quote?.totalPaid.amountMinor ?? 0),
+    );
     if ((body.upfrontAmountPaid?.amountMinor ?? 0) > due) {
       return apiError("UPFRONT_AMOUNT_EXCEEDS_DUE", "Upfront amount exceeds the amount due", 422);
     }
@@ -1525,7 +1562,9 @@ export const handlers = [
     // session of a RESET link (E49); a LOGIN link's session still sends it.
     if (currentMockScenario().me.account.hasPassword) {
       const allowed =
-        body.current === undefined ? consumeResetPasswordMark() : body.current === "secret-password";
+        body.current === undefined
+          ? consumeResetPasswordMark()
+          : body.current === "secret-password";
       if (!allowed) return apiError("INVALID_CREDENTIALS", "Invalid current password", 401);
     }
     return new HttpResponse(null, { status: 200 });
@@ -1572,9 +1611,7 @@ export const handlers = [
       dogs,
     });
   }),
-  http.get("*/api/v1/signup", ({ request }) =>
-    HttpResponse.json(signupConfiguration(request)),
-  ),
+  http.get("*/api/v1/signup", ({ request }) => HttpResponse.json(signupConfiguration(request))),
   http.post("*/api/v1/signup/identity-checks", async ({ request }) => {
     const body = (await request.json()) as SignupIdentityCheckRequest;
     const email = body.emails[0]?.toLocaleLowerCase() ?? "";
@@ -1589,7 +1626,10 @@ export const handlers = [
       return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
     }
     if (email === "existing@example.test") {
-      return HttpResponse.json({ maskedEmail: "e••••••g@e••••••.test", result: "VERIFICATION_SENT" });
+      return HttpResponse.json({
+        maskedEmail: "e••••••g@e••••••.test",
+        result: "VERIFICATION_SENT",
+      });
     }
     if (email === "pending@example.test") {
       return HttpResponse.json({ result: "SIGNUP_ALREADY_PENDING" });
@@ -1656,7 +1696,11 @@ export const handlers = [
     if (identity === undefined) {
       return apiError("INVALID_ID_DOCUMENT", "Invalid identity document", 400);
     }
-    if (body.payment?.iban !== undefined && body.payment.iban !== "" && !validIban(body.payment.iban)) {
+    if (
+      body.payment?.iban !== undefined &&
+      body.payment.iban !== "" &&
+      !validIban(body.payment.iban)
+    ) {
       return apiError("INVALID_IBAN", "Invalid IBAN", 400);
     }
     if (!body.consents.privacyPolicy.accepted) {
@@ -1675,9 +1719,7 @@ export const handlers = [
     }
     const plans = signupConfiguration(request).plans ?? [];
     if (
-      body.planId === undefined
-        ? plans.length > 0
-        : !plans.some((plan) => plan.id === body.planId)
+      body.planId === undefined ? plans.length > 0 : !plans.some((plan) => plan.id === body.planId)
     ) {
       return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
     }
@@ -1687,13 +1729,19 @@ export const handlers = [
     if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
-    if (body.person.emails[0] === "pending@example.test" || submittedSignupIdentities.has(identity)) {
+    if (
+      body.person.emails[0] === "pending@example.test" ||
+      submittedSignupIdentities.has(identity)
+    ) {
       return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 422);
     }
     submittedSignupIdentities.add(identity);
     submittedDogChips.add(body.dog.chip);
     const checkoutRequired = scenario.signupStripe === true;
-    const upfront = signupResultUpfront(submittedQuote(request, body.planId), body.payment?.firstMonthOption);
+    const upfront = signupResultUpfront(
+      submittedQuote(request, body.planId),
+      body.payment?.firstMonthOption,
+    );
     const result = {
       checkout: { required: checkoutRequired },
       memberId: "member-signup-357",
@@ -1739,7 +1787,10 @@ export const handlers = [
       dogs: [
         ...memberDogsState.dogs,
         {
-          ageYears: ageYears(body.dog.birthMonth, signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY),
+          ageYears: ageYears(
+            body.dog.birthMonth,
+            signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
+          ),
           breed: body.dog.breed,
           id: dogId,
           name: body.dog.name,
@@ -1763,7 +1814,7 @@ export const handlers = [
     return HttpResponse.json(result, { status: 201 });
   }),
   http.post("*/api/v1/checkout-sessions", async ({ request }) => {
-    await request.json() as CheckoutSessionRequest;
+    (await request.json()) as CheckoutSessionRequest;
     if (currentMockScenario().signupStripe !== true) {
       return apiError("PAYMENT_PROVIDER_NOT_ENABLED", "Payment provider not enabled", 422);
     }
@@ -1824,9 +1875,10 @@ export const handlers = [
       state: "PENDING",
       type: body.type,
       typeLabel:
-        meDogDocumentTypes(request.headers.get("Accept-Language"), currentMockScenario().branding).find(
-          (type) => type.key === documentType.key,
-        )?.label ?? documentType.key,
+        meDogDocumentTypes(
+          request.headers.get("Accept-Language"),
+          currentMockScenario().branding,
+        ).find((type) => type.key === documentType.key)?.label ?? documentType.key,
     };
     document.files = [...document.files, file];
     document.state = "RECEIVED";
@@ -2239,7 +2291,12 @@ export const handlers = [
     const page = auditPage(request, auditEntries);
     return page === undefined
       ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
-      : listExport(request, "audit-entries", page.totalItems, "00000000-0000-4000-8000-000000000402");
+      : listExport(
+          request,
+          "audit-entries",
+          page.totalItems,
+          "00000000-0000-4000-8000-000000000402",
+        );
   }),
   // S07 D7 and registrants exports (ADMIN), with the rows of the same `q` and filters as the list.
   http.get("*/api/v1/activities/export", ({ request }) => {
@@ -2461,18 +2518,22 @@ export const handlers = [
       delete memberPatch.signup;
       if (paymentMethod !== undefined) {
         // R-04-19: the method of an add-dog's ACTIVE member is changed on D10, not here.
-        if (member.status !== "PENDING") return validationError([{ code: "READ_ONLY", field: "paymentMethod" }]);
+        if (member.status !== "PENDING")
+          return validationError([{ code: "READ_ONLY", field: "paymentMethod" }]);
         // R-04-10: only an assignable method of the view (an enabled provider's, as GET /signup offers it).
         const assignable = signupReviewMethods(request, signupView).some(
           (option) => option.assignable && option.type === paymentMethod.type,
         );
-        if (!assignable) return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
+        if (!assignable)
+          return apiError("PAYMENT_METHOD_NOT_AVAILABLE", "Payment method not available", 422);
       }
       // E38 (the api's `MemberService.edit`): a readmission's edits change the submitted values;
       // `member` stays the LEFT record until the validation applies them.
       const readmission = signupView.readmission;
-      const person = readmission === undefined ? member : withReadmissionValues(member, readmission.submitted);
-      const payment = paymentMethod === undefined ? undefined : signupPaymentMethod(person, paymentMethod);
+      const person =
+        readmission === undefined ? member : withReadmissionValues(member, readmission.submitted);
+      const payment =
+        paymentMethod === undefined ? undefined : signupPaymentMethod(person, paymentMethod);
       const updated: components["schemas"]["Member"] = {
         ...person,
         ...memberPatch,
@@ -2501,7 +2562,9 @@ export const handlers = [
           body.firstName ?? person.firstName,
           body.lastName1 ?? person.lastName1,
           body.lastName2 ?? person.lastName2,
-        ].filter(Boolean).join(" "),
+        ]
+          .filter(Boolean)
+          .join(" "),
         version: member.version + 1,
       };
       if (payment !== undefined) {
@@ -2804,7 +2867,8 @@ export const handlers = [
         signupDog.breed = body.breed ?? signupDog.breed;
         signupDog.chip = body.chip ?? signupDog.chip;
         signupDog.sex = body.sex ?? signupDog.sex;
-        if (body.notesToInstructors !== undefined) signupDog.notesToInstructors = body.notesToInstructors;
+        if (body.notesToInstructors !== undefined)
+          signupDog.notesToInstructors = body.notesToInstructors;
         if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
         else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
         if (documents !== undefined) signupDog.documents = documents;
@@ -2986,7 +3050,9 @@ export const handlers = [
     return HttpResponse.json({ photoUrl: dog.dog.photoUrl });
   }),
   http.get("*/api/v1/dogs/:id/documents", ({ params }) => {
-    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    const signupDog = currentSignupReview().dogs.find(
+      (candidate) => candidate.id === String(params.id),
+    );
     if (signupDog !== undefined) return HttpResponse.json(signupDogDocuments(signupDog));
     const dog = currentDog(String(params.id));
     return dog === undefined
@@ -2996,19 +3062,29 @@ export const handlers = [
   http.post("*/api/v1/dogs/:id/documents", async ({ params, request }) => {
     const frozen = frozenReadmissionDog(String(params.id));
     if (frozen !== undefined) return frozen;
-    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    const signupDog = currentSignupReview().dogs.find(
+      (candidate) => candidate.id === String(params.id),
+    );
     if (signupDog !== undefined) {
       const body = (await request.json()) as DogDocumentUploadRequest;
       const documents = signupDogDocuments(signupDog);
       const document = documents.find((candidate) => candidate.type === body.type);
-      if (document === undefined) return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 422);
+      if (document === undefined)
+        return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 422);
       document.files = [
         ...document.files,
-        { id: "", name: body.name, uploadedAt: "2026-08-10T09:00:00Z", url: `https://files.example.test/${body.fileKey}` },
+        {
+          id: "",
+          name: body.name,
+          uploadedAt: "2026-08-10T09:00:00Z",
+          url: `https://files.example.test/${body.fileKey}`,
+        },
       ];
       document.state = "RECEIVED";
       storeSignupDogDocuments(signupDog, documents);
-      const stored = signupDogDocuments(signupDog).find((candidate) => candidate.type === body.type);
+      const stored = signupDogDocuments(signupDog).find(
+        (candidate) => candidate.type === body.type,
+      );
       return HttpResponse.json(stored, { status: 201 });
     }
     const dog = currentDog(String(params.id));
@@ -3033,7 +3109,9 @@ export const handlers = [
   http.delete("*/api/v1/dogs/:id/documents/:docId/files/:fileId", ({ params }) => {
     const frozen = frozenReadmissionDog(String(params.id));
     if (frozen !== undefined) return frozen;
-    const signupDog = currentSignupReview().dogs.find((candidate) => candidate.id === String(params.id));
+    const signupDog = currentSignupReview().dogs.find(
+      (candidate) => candidate.id === String(params.id),
+    );
     if (signupDog !== undefined) {
       const documents = signupDogDocuments(signupDog);
       const document = documents.find((candidate) => candidate.id === String(params.docId));
@@ -3725,7 +3803,7 @@ export const handlers = [
   ...calendarHandlers,
   ...activityHandlers,
   ...bookingHandlers,
-  // S10 (E6-W01): screens 20, 21 and 22.
+  // S10 (E6-W01, E6-W03): screens 20, 21 and 22, and D12.
   ...attendanceHandlers,
   http.get("*/api/v1/health", () =>
     HttpResponse.json({
@@ -3738,7 +3816,10 @@ export const handlers = [
 
 export {
   activityState,
+  AGENDA_MOCK_NOW,
+  AGENDA_SELECTED_CLASS_ID,
   ATTENDANCE_MOCK_NOW,
+  INBOX_ALL_READ_AT,
   bookingState,
   catalogState,
   JOBS_MOCK_NOW,

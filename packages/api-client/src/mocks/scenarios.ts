@@ -3,7 +3,7 @@ import type { components } from "../generated/schema";
 import type { AttendanceVariant } from "./fixtures/attendance";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
-import type { HistoryVariant } from "./fixtures/followup";
+import type { HistoryVariant, InboxVariant } from "./fixtures/followup";
 import meAdmin from "./fixtures/me-admin.json";
 import meImpersonated from "./fixtures/me-impersonated.json";
 import meInstructor from "./fixtures/me-instructor.json";
@@ -31,6 +31,8 @@ export interface MockScenarioDefinition {
   followup?: "stale";
   /** The screen 25 variant of `GET /me/history` (`fixtures/followup.ts`). */
   history?: HistoryVariant;
+  /** The D14 variant (`fixtures/followup.ts`): the caller has read every row already. */
+  inbox?: InboxVariant;
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
@@ -255,6 +257,19 @@ const scenarios = {
     branding: canic,
     history: "empty",
     me: member,
+    sessions: accountSessions,
+  },
+  /** S10 §9 (D12): an ADMIN of a club without FREE_TRAINING (no `TRAINING` cells). */
+  agendaNoTraining: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "FREE_TRAINING") },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-13 (D14): the instructor has read every row already (counter 0, no highlight). */
+  followupAllRead: {
+    branding: canic,
+    inbox: "allRead",
+    me: meInstructor as Me,
     sessions: accountSessions,
   },
   /** S10 R-10-12: another instructor saves Duna's observations just before the caller (409). */

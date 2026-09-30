@@ -1,0 +1,215 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:test: cache bypass, force executing 0d0f6fc9567f531b
+@agilityhub/api-client:lint: cache bypass, force executing be038c64088c3ce3
+@agilityhub/ui:test: cache bypass, force executing f68db42c6dd68403
+@agilityhub/course-core:lint: cache bypass, force executing ef70bf6c19ae37ee
+@agilityhub/course-core:test: cache bypass, force executing 1c26edab867f42c5
+@agilityhub/config:typecheck: cache bypass, force executing 6860c83ceac65ae7
+@agilityhub/shared-types:lint: cache bypass, force executing d383151fe730994b
+clubs-admin:lint: cache bypass, force executing a046f2fd314b4a7b
+id:lint: cache bypass, force executing 22651cf71461790e
+@agilityhub/ui:typecheck: cache bypass, force executing 07c8cab48e71f5a2
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/api-client:typecheck: cache bypass, force executing d00f06bbb3457035
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m18 passed[39m[22m[90m (18)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m342 passed[39m[22m[90m (342)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 15:05:31
+@agilityhub/course-core:test: [2m   Duration [22m 1.06s[2m (transform 81%, import 15%, tests 3%, worker 1%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 5.46s[39m[2m · 81% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+clubs:lint: cache bypass, force executing 3e5ff4f5ea4eaaa9
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/api-client:test:  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/uploads.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/auth-handoff.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1957[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads [2m(2)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)[33m 1453[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m the back office never issues again a code it issued before its own reload[33m 503[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 483[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 530[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/api-error.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance-contrast.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 612[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/booking-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 646[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 142[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-fields.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/followup-handlers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 396[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 39[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/agenda-handlers.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 472[2mms[22m[39m
+@agilityhub/ui:test: [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 201[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance-sheet.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 237[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/slot-grid.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 381[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 360[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 361[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 525[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/club-settings-handlers.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 34[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/attendance-handlers.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 812[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[32m 290[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/tasks-panel.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 641[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m123 passed[39m[22m[90m (123)[39m
+@agilityhub/ui:test: [2m   Start at [22m 15:05:31
+@agilityhub/ui:test: [2m   Duration [22m 3.96s[2m (environment 70%, setup 16%, tests 8%, transform 4%, worker 1%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/config:lint: cache bypass, force executing 42ac5d636417f38d
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 1290[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/backoffice-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1409[2mms[22m[39m
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 1433[2mms[22m[39m
+@agilityhub/course-core:build: cache bypass, force executing 431d96cbc72fd83b
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2254[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) [2m(16)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m gives staff the instructor projection of a class and the full block[33m 392[2mms[22m[39m
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/training-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1870[2mms[22m[39m
+@agilityhub/ui:lint: cache bypass, force executing da9276ce80ef04b9
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 3419[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E3-W10 build-time budget of the MSW mock worlds [2m(20)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m imports the mock modules afresh within the start-up budget[33m 1811[2mms[22m[39m
+@agilityhub/auth:lint: cache bypass, force executing a172bc87d5141c72
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/i18n:lint: cache bypass, force executing abc0727d167eb76b
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m68 tests[22m[2m)[22m[33m 3255[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (default)[33m 526[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (atLimit)[33m 429[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (atLimitNone)[33m 523[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (noRight)[33m 447[2mms[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[32m322 passed[39m[22m[90m (322)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 15:05:31
+@agilityhub/api-client:test: [2m   Duration [22m 6.19s[2m (tests 36%, import 34%, transform 30%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 17.64s[39m[2m · 30% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/course-core:typecheck: cache bypass, force executing 671f426b6643ad21
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/api-client:typecheck: src/mocks/agenda-handlers.test.ts(269,41): error TS2375: Type '{ filter?: string[]; size?: number; sort?: string[]; }' is not assignable to type '{ page?: number; size?: 200 | 20 | 50 | 1000; sort?: string[]; q?: string; filter?: string[]; fields?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+@agilityhub/api-client:typecheck:   Types of property 'size' are incompatible.
+@agilityhub/api-client:typecheck:     Type 'number' is not assignable to type '200 | 20 | 50 | 1000'.
+@agilityhub/i18n:typecheck: cache bypass, force executing 8b13db6049b45feb
+@agilityhub/api-client:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+@agilityhub/i18n:test: cache bypass, force executing 456966be493c478c
+@agilityhub/shared-types:build: cache bypass, force executing d3d69457da5c20b5
+@agilityhub/api-client#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+
+ Tasks:    9 successful, 21 total
+Cached:    0 cached, 21 total
+  Time:    8.273s 
+Failed:    @agilityhub/api-client#typecheck
+
+ ERROR  run failed: command  exited (2)

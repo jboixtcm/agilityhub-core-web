@@ -435,6 +435,47 @@ describe("typed API client", () => {
       "detach:123e4567-e89b-42d3-a456-426614170105",
     ]);
   });
+
+  it("E6-W03 step 0 (ruling E46) sends an Idempotency-Key on D14's row read and read-all, never on the list or the counter", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string, status = 200) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return status === 204 ? new HttpResponse(null, { status }) : HttpResponse.json({});
+      };
+    const base = "https://core.example.test/api/v1";
+    server.use(
+      http.get(`${base}/followup`, record("list")),
+      http.get(`${base}/followup/unread-count`, record("count")),
+      http.post(`${base}/followup/:id/read`, record("read", 204)),
+      http.post(`${base}/followup/read-all`, record("read-all", 204)),
+    );
+    let next = 0;
+    const client = createApiClient({
+      baseUrl: base,
+      createIdempotencyKey: () => {
+        next += 1;
+        return `123e4567-e89b-42d3-a456-42661417020${String(next)}`;
+      },
+    });
+    const raw = client as unknown as Record<
+      "GET" | "POST",
+      (path: string, init: unknown) => Promise<unknown>
+    >;
+
+    await raw.GET("/followup", {});
+    await raw.GET("/followup/unread-count", {});
+    await raw.POST("/followup/{id}/read", { params: { path: { id: "f1" } } });
+    await raw.POST("/followup/read-all", {});
+
+    expect(keys).toEqual([
+      "list:",
+      "count:",
+      "read:123e4567-e89b-42d3-a456-426614170201",
+      "read-all:123e4567-e89b-42d3-a456-426614170202",
+    ]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -475,7 +516,9 @@ describe("MSW bootstrap handlers", () => {
     // E6-W01: + the four S10 handlers of `attendance-handlers.ts` (20, 21 GET and PUT, 22).
     // E6-W02: + the 14 S10 handlers of `followup-handlers.ts` (25's history, the tasks, the
     // observations, the attachments, their two upload purposes and the mock storage's PUT).
-    expect(handlers).toHaveLength(232);
+    // E6-W03: + D12's week and its PDF (`attendance-handlers.ts`) and D14's list, counter, row
+    // read and read-all (`followup-handlers.ts`).
+    expect(handlers).toHaveLength(238);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

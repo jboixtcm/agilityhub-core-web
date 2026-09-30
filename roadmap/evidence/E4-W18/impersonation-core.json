@@ -7,8 +7,10 @@
       "status": 503
     },
     {
-      "accountName": null,
-      "impersonation": null,
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName"
+      ],
       "page": "/entrar",
       "status": 200
     },

@@ -109,13 +109,19 @@ describe("T-02-14 clubs-admin shell", () => {
   it("T-06-26 shows «Plantilla setmanal» to instructors (read-only D3, S06 §13-10)", async () => {
     await renderNavigation(["INSTRUCTOR"]);
 
-    expect(screen.getByRole("link", { name: "Plantilla setmanal" })).toHaveAttribute("href", "/plantilles");
+    expect(screen.getByRole("link", { name: "Plantilla setmanal" })).toHaveAttribute(
+      "href",
+      "/plantilles",
+    );
   });
 
   it("T-06-28 shows «Calendari de classes» to instructors (read-only D4, A22 c)", async () => {
     await renderNavigation(["INSTRUCTOR"]);
 
-    expect(screen.getByRole("link", { name: "Calendari de classes" })).toHaveAttribute("href", "/calendari");
+    expect(screen.getByRole("link", { name: "Calendari de classes" })).toHaveAttribute(
+      "href",
+      "/calendari",
+    );
   });
 
   it("shows the fixed sidebar groups to administrators", async () => {
@@ -183,7 +189,11 @@ describe("E3-W07 step 9 menu counters (S14 R-14-08)", () => {
     await waitFor(() => {
       expect(screen.getByRole("link", { name: /Preinscripcions\s*3/u })).toBeVisible();
     });
-    expect(screen.getByRole("link", { name: /Preinscripcions\s*3/u }).querySelector(".ah-sidebar__count")).not.toBeNull();
+    expect(
+      screen
+        .getByRole("link", { name: /Preinscripcions\s*3/u })
+        .querySelector(".ah-sidebar__count"),
+    ).not.toBeNull();
     expect(counters()).toBe(1);
 
     window.history.pushState(null, "", "/abonats");
@@ -362,6 +372,14 @@ describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's o
         http.post("*/oauth2/token", async ({ request }) => {
           const grant = new URLSearchParams(await request.clone().text()).get("grant_type") ?? "";
           grants.push(grant);
+          // This tab has no back-office session of its own (no refresh cookie on this host): the
+          // usual restore that follows a failed handoff (A1) finds nothing, so the retry stays.
+          if (grant === "refresh_token") {
+            return HttpResponse.json(
+              { code: "REFRESH_EXPIRED", details: {}, message: "No session", traceId: "t" },
+              { status: 400 },
+            );
+          }
           return grant === HANDOFF_GRANT && down ? answer() : undefined;
         }),
       );
@@ -382,6 +400,48 @@ describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's o
       expect(grants.filter((grant) => grant === HANDOFF_GRANT)).toHaveLength(2);
     },
   );
+
+  it("round 2 #2 (review #2): three transient /me failures, then the background recovery signs in before the retry card listens — the tab enters /tauler without a click and the card goes", async () => {
+    let failures = 3;
+    server.use(
+      http.get("*/api/v1/me", () => {
+        if (failures === 0) return undefined;
+        failures -= 1;
+        return unavailable();
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-handoff-code");
+    const assign = stubPageLoads();
+    const client = authClient();
+    const recovered = new Promise<void>((resolve) => {
+      client.addEventListener("signedIn", () => {
+        resolve();
+      });
+    });
+    // The page hears of the failed code only after the session's own recovery has signed in, so
+    // its `signedIn` listener is attached after the event.
+    const exchange = client.exchangeHandoff.bind(client);
+    vi.spyOn(client, "exchangeHandoff").mockImplementation(async (code) => {
+      try {
+        return await exchange(code);
+      } catch (error) {
+        await recovered;
+        throw error;
+      }
+    });
+    await renderApplication(client);
+
+    await waitFor(
+      () => {
+        window.dispatchEvent(new Event("online"));
+        expect(assign).toHaveBeenCalledWith("/tauler");
+      },
+      { timeout: 3000 },
+    );
+    expect(client.getMe()?.account.email).toBe("aina.serra@example.test");
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(screen.getByRole("status")).toHaveTextContent("Obrint el backoffice…");
+  });
 
   it("a refused code (400 HANDOFF_INVALID) still says «no és vàlid o ha caducat», with no retry", async () => {
     window.history.pushState(null, "", "/entrar?handoff=invalid");

@@ -76,14 +76,33 @@
 }
 
 /*
- * A circle that cannot be chosen now (a final row, the window closed, a save in flight) is an
- * inactive control, which WCAG 1.4.11 exempts: it fades as in mockup 21, except the row's state.
+ * A circle the api does not allow now (a final row, the window closed, «ha avisat» switched off)
+ * is an inactive control, which WCAG 1.4.11 exempts: it fades as in mockup 21, except the row's
+ * state. A circle only locked while the sheet is saved keeps its look (no flash on every save).
  */
-.ah-attendance__circle:disabled:not([aria-checked="true"]) {
+.ah-attendance__circle--unavailable:not([aria-checked="true"]) {
   opacity: 0.35;
 }
 
 .ah-attendance__circle:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+/* D12's badge that cycles on click: a Badge in the state's tone, as a button. */
+.ah-attendance-badge {
+  min-width: 2.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ah-attendance-badge:disabled {
+  cursor: default;
+}
+
+.ah-attendance-badge:focus-visible {
   outline: 2px solid var(--ah-color-primary);
   outline-offset: 2px;
 }

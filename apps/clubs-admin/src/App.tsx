@@ -51,15 +51,17 @@ import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
+import { FollowUpPage } from "./followup/FollowUpPage";
+import { UnreadFollowUpContext, useUnreadFollowUp } from "./followup/unread";
 import { StudentRecordPage } from "./instructor/StudentRecordPage";
 import { StudentsPage } from "./instructor/StudentsPage";
+import { WeekAgendaPage } from "./instructor/WeekAgendaPage";
 import { isIsoDate } from "./planning/calendar-shared";
 import { CalendarDayPage } from "./planning/CalendarDayPage";
 import { CalendarPage } from "./planning/CalendarPage";
 import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
-import { AgendaRingCardPage } from "./training/RingBlockCard";
 import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
 
 interface AdminRouteDefinition {
@@ -107,8 +109,8 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // «Alumnes» of the D12/D13/D14 sidebar (no mockup, S10 §13-9) and screen D13 (E6-W02).
   { path: "/alumnes", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/alumnes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen D14.
-  { path: "/seguiment", roles: ["ADMIN"] },
+  // Screen D14 (S10 §2: INSTRUCTOR and ADMIN).
+  { path: "/seguiment", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D16.
   { path: "/pistes", roles: ["ADMIN"] },
   // Screen D17.
@@ -193,19 +195,29 @@ interface GatedSidebarGroup {
   roles?: readonly Role[];
 }
 
+/** The S10 entries an impersonated session never reaches (the api answers IMPERSONATION_DENIED). */
+const INSTRUCTOR_ONLY_ENTRIES: readonly string[] = ["weekly-agenda", "student-follow-up"];
+
 export function AdminNavigation({
   counters,
+  followUpUnread,
+  instructorEntriesDenied = false,
   modules,
   pathname,
   roles,
 }: {
   counters?: components["schemas"]["DashboardCounters"];
+  /** `GET /followup/unread-count` (E6-W03 step 6); it supersedes `counters.followUpUnread`. */
+  followUpUnread?: number | undefined;
+  /** `403 IMPERSONATION_DENIED` on the S10 routes: their entries are hidden (step 7). */
+  instructorEntriesDenied?: boolean;
   modules: readonly string[];
   pathname: string;
   roles: readonly Role[];
 }) {
   const { t } = useTranslation("shell");
   const hasPlatformRole = (roles as readonly string[]).includes("AGILITYHUB_ADMIN");
+  const unreadFollowUp = followUpUnread ?? counters?.followUpUnread;
   const definitions: GatedSidebarGroup[] = [
     {
       label: t("shell:nav.dashboard"),
@@ -216,6 +228,28 @@ export function AdminNavigation({
           id: "dashboard",
           label: t("shell:nav.dashboard"),
           roles: ["ADMIN"],
+        },
+      ],
+    },
+    {
+      // Mockups D12 and D13 (organizer 30-09): the instructor's own group. «Grups del dia» is
+      // screen 20 of the member app, with no back-office route: it has no entry here.
+      label: t("shell:nav.instructor"),
+      roles: ["INSTRUCTOR", "ADMIN"],
+      entries: [
+        {
+          // Screen D12 (S10 §2); E5-W03 moved the old `training` entry to `/entrenaments`.
+          href: "/agenda",
+          icon: "cal",
+          id: "weekly-agenda",
+          label: t("shell:nav.weeklyAgenda"),
+        },
+        {
+          // «Alumnes», the student search that opens D13.
+          href: "/alumnes",
+          icon: "paw",
+          id: "students",
+          label: t("shell:nav.students"),
         },
       ],
     },
@@ -244,13 +278,15 @@ export function AdminNavigation({
           label: t("shell:nav.inactivity"),
         },
         {
-          ...(counters?.followUpUnread === undefined || counters.followUpUnread === 0
+          ...(unreadFollowUp === undefined || unreadFollowUp === 0
             ? {}
-            : { count: counters.followUpUnread }),
+            : { count: unreadFollowUp }),
           href: "/seguiment",
           icon: "list",
           id: "student-follow-up",
           label: t("shell:nav.studentFollowUp"),
+          // S10 §2 row D14: instructors too; the group renders for them with this entry only.
+          roles: ["INSTRUCTOR", "ADMIN"],
         },
       ],
     },
@@ -269,21 +305,6 @@ export function AdminNavigation({
           icon: "day",
           id: "class-calendar",
           label: t("shell:nav.classCalendar"),
-          roles: ["INSTRUCTOR", "ADMIN"],
-        },
-        {
-          href: "/agenda",
-          icon: "day",
-          id: "agenda",
-          label: t("shell:nav.agenda"),
-          roles: ["INSTRUCTOR", "ADMIN"],
-        },
-        {
-          // Mockups D12, D13 and D14: «Alumnes», the student search that opens D13.
-          href: "/alumnes",
-          icon: "paw",
-          id: "students",
-          label: t("shell:nav.students"),
           roles: ["INSTRUCTOR", "ADMIN"],
         },
         {
@@ -363,21 +384,21 @@ export function AdminNavigation({
     },
   ];
 
+  // A group's roles are its entries' default; an entry with its own roles (D14's) overrides them,
+  // and a group shows when at least one of its entries does.
   const groups: SidebarGroup[] = definitions
-    .filter(
-      (group) =>
-        group.roles === undefined ||
-        group.roles.some((requiredRole) => roles.includes(requiredRole)),
-    )
     .map((group) => ({
       label: group.label,
       entries: group.entries
         .filter((entry) => isModuleUiItemEnabled(modules, "menuEntries", entry.id))
-        .filter(
-          (entry) =>
-            (entry.roles === undefined || entry.roles.some((role) => roles.includes(role))) &&
-            (entry.platformOnly !== true || hasPlatformRole),
-        )
+        .filter((entry) => !instructorEntriesDenied || !INSTRUCTOR_ONLY_ENTRIES.includes(entry.id))
+        .filter((entry) => {
+          const required = entry.roles ?? group.roles;
+          return (
+            (required === undefined || required.some((role) => roles.includes(role))) &&
+            (entry.platformOnly !== true || hasPlatformRole)
+          );
+        })
         .map((entry) => ({
           active:
             matchesPath(pathname, entry.href) ||
@@ -507,8 +528,12 @@ function routeContent(
     );
   }
   if (route.path === "/agenda") {
-    // D12: the agenda grid is E6-W03; E5-W02 mounts only its ring card (S09 §2 row D12).
-    return <AgendaRingCardPage client={client} />;
+    // D12 (S10 §2): the week, the attendance panel and E5-W02's ring card (S09 §2 row D12).
+    return <WeekAgendaPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/seguiment") {
+    // D14 (S10 §2), module TASKS through `modules.ts`.
+    return <FollowUpPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/entrenaments") {
     return <TrainingRegisterPage client={client} onNavigate={onNavigate} />;
@@ -590,6 +615,14 @@ function AdminShell({
     setCountersRequest((value) => value + 1);
   }, []);
   const countersAllowed = session.roles.includes("ADMIN");
+  // S10 §2 row D14 (step 6): the «Seguiment alumnes» counter of an INSTRUCTOR or ADMIN of a club
+  // with TASKS, read on load, on focus and every 60 s. The dashboard's `followUpUnread` is only
+  // the first paint of an ADMIN until this answers.
+  const unreadFollowUp = useUnreadFollowUp(
+    client,
+    branding.modules.includes("TASKS") &&
+      (session.roles.includes("INSTRUCTOR") || session.roles.includes("ADMIN")),
+  );
 
   // R-14-08: ADMIN only (an INSTRUCTOR would get 403); on load, on focus and after the commands
   // that change them (`refreshCounters`), never on every navigation.
@@ -643,13 +676,17 @@ function AdminShell({
       </header>
       <AdminNavigation
         {...(counters === undefined ? {} : { counters })}
+        followUpUnread={unreadFollowUp.count}
+        instructorEntriesDenied={unreadFollowUp.denied}
         modules={branding.modules}
         pathname={pathname}
         roles={session.roles}
       />
       <main className="admin-shell__content">
         <CountersRefreshContext.Provider value={refreshCounters}>
-          {children}
+          <UnreadFollowUpContext.Provider value={unreadFollowUp}>
+            {children}
+          </UnreadFollowUpContext.Provider>
         </CountersRefreshContext.Provider>
       </main>
     </div>
@@ -706,9 +743,15 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
       return;
     }
     const signedIn = () => {
-      if (authClient.getMe() !== null) enterHandoff();
+      if (authClient.getMe() === null) return;
+      setHandoffUnanswered(false);
+      setPending("handoff");
+      enterHandoff();
     };
     authClient.addEventListener("signedIn", signedIn);
+    // E4-W18 round 2 (review #2): a recovery that signed in before this listener was attached is
+    // entered as well, so the retry card never stays over a session that is already there.
+    signedIn();
     return () => {
       authClient.removeEventListener("signedIn", signedIn);
     };

@@ -1,5 +1,11 @@
 import type { components } from "../../generated/schema";
 
+import {
+  AGENDA_BLOCKS,
+  AGENDA_SELECTED_CLASS_ID,
+  AGENDA_TRAININGS,
+  agendaWeekClasses,
+} from "./agenda";
 import { clubInstant, clubLocalDateOf, clubLocalTime } from "./calendar";
 import { catalogState } from "./catalogs";
 import { censusDogs } from "./census";
@@ -40,10 +46,12 @@ export const OWN_INSTRUCTOR_ID = "instructor-estel";
  */
 export type AttendanceVariant = "closed" | "fifo" | "noticeDisabled" | "stale";
 
-interface StoredClass {
+export interface StoredClass {
   capacity: number;
   /** Past T1 on the day it is drawn for (the closed day of 20). */
   closed: boolean;
+  /** Other instructors of the class, shown with `classes.maxInstructorsPerClass > 1` (R-10-16). */
+  coInstructorIds?: string[];
   date: string;
   displayDescription: string;
   endTime: string;
@@ -366,6 +374,8 @@ function initialClasses(): StoredClass[] {
       version: 2,
       waitlist: [],
     },
+    // D12's week (E6-W03, `fixtures/agenda.ts`): the same sheets as 21, so both screens agree.
+    ...agendaWeekClasses(),
   ];
 }
 
@@ -378,18 +388,18 @@ interface Replay {
 export const attendanceState: {
   classes: StoredClass[];
   idempotency: Map<string, Replay>;
-  /** The `stale` variant's other save happened already. */
-  otherSaved: boolean;
+  /** The classes whose `stale` other save happened already. */
+  otherSaved: Set<string>;
 } = {
   classes: initialClasses(),
   idempotency: new Map(),
-  otherSaved: false,
+  otherSaved: new Set(),
 };
 
 export function resetAttendanceState(): void {
   attendanceState.classes = initialClasses();
   attendanceState.idempotency = new Map();
-  attendanceState.otherSaved = false;
+  attendanceState.otherSaved = new Set();
 }
 
 /** The world's view options: what the scenario's club and caller change in the answers. */
@@ -589,6 +599,150 @@ export function instructorDayView(
   };
 }
 
+type InstructorWeek = components["schemas"]["InstructorWeek"];
+type WeekCell = components["schemas"]["WeekCell"];
+
+/** What the caller asks D12 for (S10 §6): the week of `date`, and the two filters. */
+export interface WeekQuery {
+  date: string;
+  /** Classes only (`me` already resolved); trainings and blocks are always shown (R-10-15). */
+  instructorId: string | null;
+  /** `classes.maxInstructorsPerClass` (R-10-16): > 1 shows «Marc, Estel» and «Els meus» shares. */
+  maxInstructors: number;
+  now: number;
+  /** Everything (classes, trainings, blocks). */
+  ringId: string | null;
+}
+
+/** Monday of the ISO week of a `YYYY-MM-DD` date (the club's calendar day). */
+function isoMonday(date: string): string {
+  const day = new Date(`${date}T12:00:00Z`).getUTCDay();
+  return plusDays(date, day === 0 ? -6 : 1 - day);
+}
+
+function ringName(ringId: string): string {
+  return catalogState.rings.find((ring) => ring.id === ringId)?.name ?? "";
+}
+
+/**
+ * Every live ring block of the week (24's and D12's card's, D4's), besides the mockup's: one
+ * already drawn by the fixture (same day, ring and hours, e.g. D4's seed of the current
+ * Wednesday) is the same block, not a second one.
+ */
+function liveWeekBlocks(start: string, end: string) {
+  const drawn = new Set(
+    AGENDA_BLOCKS.map((block) => `${block.date}|${block.ringId}|${block.time}|${block.endTime}`),
+  );
+  return ringBlockListItems()
+    .filter((block) => block.state === "ACTIVE" && block.date >= start && block.date <= end)
+    .filter(
+      (block) => !drawn.has(`${block.date}|${block.ringId}|${block.fromLocal}|${block.toLocal}`),
+    )
+    .map((block) => ({
+      createdByName: block.createdByName,
+      date: block.date,
+      endTime: block.toLocal,
+      id: block.id,
+      note: block.note ?? null,
+      reason: block.reason,
+      ringId: block.ringId,
+      time: block.fromLocal,
+    }));
+}
+
+/**
+ * `GET /instructor/week` (S10 §6, R-10-15): the ISO week of `date` in the club's zone, Monday to
+ * Saturday (Sunday only with items); the classes of the week (never a draft; `CANCELLED` too) with
+ * their `attendanceStatus`, the free-training bookings (`FREE_TRAINING`) and the ring blocks;
+ * `rows` are the distinct start times. `instructorId` filters classes only, `ringId` everything.
+ */
+export function instructorWeekView(query: WeekQuery, context: AttendanceContext): InstructorWeek {
+  const start = isoMonday(query.date);
+  const sunday = plusDays(start, 6);
+  const today = clubLocalDateOf(new Date(query.now).toISOString());
+  const waitlistOn = context.modules.includes("WAITLIST");
+  const inWeek = (date: string) => date >= start && date <= sunday;
+  const onRing = (ringId: string | null) => query.ringId === null || ringId === query.ringId;
+  const instructorsOf = (stored: StoredClass) => [
+    stored.instructorId,
+    ...(query.maxInstructors > 1 ? (stored.coInstructorIds ?? []) : []),
+  ];
+  const classCells = attendanceState.classes
+    .filter((stored) => inWeek(stored.date) && onRing(stored.ringId))
+    .filter(
+      (stored) => query.instructorId === null || instructorsOf(stored).includes(query.instructorId),
+    )
+    .map((stored): WeekCell => {
+      const ring = ringRef(stored.ringId);
+      return {
+        attendanceStatus: attendanceStatus(stored, context),
+        booked: booked(stored),
+        capacity: stored.capacity,
+        classId: stored.id,
+        date: stored.date,
+        displayDescription: stored.displayDescription,
+        endTime: stored.endTime,
+        instructorName: instructorsOf(stored).map(instructorName).join(", "),
+        kind: "CLASS",
+        ringColor: ring?.color ?? null,
+        ringName: ring?.name ?? null,
+        state: stored.state,
+        time: stored.startTime,
+        ...(waitlistOn
+          ? { waiting: stored.waitlist.filter((item) => item.state === "ACTIVE").length }
+          : {}),
+      };
+    });
+  const trainingCells: WeekCell[] = context.modules.includes("FREE_TRAINING")
+    ? AGENDA_TRAININGS.filter((item) => inWeek(item.date) && onRing(item.ringId)).map((item) => ({
+        date: item.date,
+        endTime: item.endTime,
+        kind: "TRAINING",
+        ringName: ringName(item.ringId),
+        time: item.time,
+        trainingBookingId: item.id,
+        who: item.who,
+      }))
+    : [];
+  const blockCells = [...AGENDA_BLOCKS, ...liveWeekBlocks(start, sunday)]
+    .filter((item) => inWeek(item.date) && onRing(item.ringId))
+    .map((item): WeekCell => ({
+      blockId: item.id,
+      createdByName: item.createdByName,
+      date: item.date,
+      endTime: item.endTime,
+      kind: "BLOCK",
+      note: item.note,
+      reason: item.reason,
+      ringName: ringName(item.ringId),
+      time: item.time,
+    }));
+  const cells = [...classCells, ...trainingCells, ...blockCells].sort(
+    (left, right) =>
+      left.date.localeCompare(right.date) ||
+      left.time.localeCompare(right.time) ||
+      left.kind.localeCompare(right.kind),
+  );
+  const relative = today < start ? "FUTURE" : today > sunday ? "PAST" : "CURRENT";
+  return {
+    cells,
+    filters: {
+      instructorId: query.instructorId,
+      instructors: ATTENDANCE_INSTRUCTORS.map((instructor) => ({ ...instructor })),
+      ringId: query.ringId,
+      rings: catalogState.rings
+        .filter((ring) => ring.active)
+        .map((ring) => ({ color: ring.color, id: ring.id, name: ring.name })),
+    },
+    rows: [...new Set(cells.map((cell) => cell.time))].sort(),
+    week: {
+      endDate: cells.some((cell) => cell.date === sunday) ? sunday : plusDays(start, 5),
+      relative,
+      startDate: start,
+    },
+  };
+}
+
 interface SaveFailure {
   code: string;
   details?: Record<string, unknown>;
@@ -596,21 +750,28 @@ interface SaveFailure {
 }
 
 /**
- * R-10-04's other instructor: with the `stale` variant, Marc saves Chun-li present on the 8:30
- * sheet just before the caller's first save (version 4 → 5).
+ * R-10-04's other instructor: with the `stale` variant, just before the caller's first save, Marc
+ * saves Chun-li present on 21's 8:30 sheet (version 4 → 5), and Núria saves Pau present on D12's
+ * selected class (version 3 → 4).
  */
+const OTHER_SAVES: Readonly<Record<string, { bookingId: string; by: string }>> = {
+  c1: { bookingId: "b2", by: "Marc" },
+  [AGENDA_SELECTED_CLASS_ID]: { bookingId: "b-d12-5", by: "Núria" },
+};
+
 export function applyOtherSave(stored: StoredClass, now: number): void {
-  if (attendanceState.otherSaved || stored.id !== "c1") return;
-  attendanceState.otherSaved = true;
+  const other = OTHER_SAVES[stored.id];
+  if (other === undefined || attendanceState.otherSaved.has(stored.id)) return;
+  attendanceState.otherSaved.add(stored.id);
   const at = new Date(now - 60_000).toISOString();
   stored.rows = stored.rows.map((item) =>
-    item.bookingId === "b2"
-      ? { ...item, markedAt: at, markedByName: "Marc", state: "PRESENT" }
+    item.bookingId === other.bookingId
+      ? { ...item, markedAt: at, markedByName: other.by, state: "PRESENT" }
       : item,
   );
   stored.version += 1;
   stored.savedAt = at;
-  stored.savedByName = "Marc";
+  stored.savedByName = other.by;
 }
 
 /**

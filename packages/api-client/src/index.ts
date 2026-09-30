@@ -1,5 +1,12 @@
 export { ApiError, type ApiFieldError, apiFieldErrors, isApiError } from "./api-error";
 export {
+  type AttendanceSaveRequest,
+  type AttendanceSheet,
+  type AttendanceSheetRow,
+  type AttendanceSheetSaveOutcome,
+  attendanceSheetTransport,
+} from "./attendance-sheet";
+export {
   BRANDING_CACHE_PREFIX,
   brandingCacheKey,
   normalizeBranding,

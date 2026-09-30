@@ -1,0 +1,235 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda.test.tsx (13 tests | 1 failed | 12 skipped) 10304ms
+   ❯ E6-W03 step 11 on D12 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal (1)
+     × a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind, the badges inert and [DESA LA LLISTA] disabled 10302ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > E6-W03 step 11 on D12 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind, the badges inert and [DESA LA LLISTA] disabled
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  —[39m
+Received:
+[31m  present[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"week-agenda"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"week-agenda__header"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mAgenda de la setmana[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"week-agenda__navigator"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana anterior"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<strong[39m
+              [33mclass[39m=[32m"week-agenda__current"[39m
+            [36m>[39m
+              [0mSetmana actual[0m
+            [36m</strong>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana següent"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"week-agenda__range"[39m
+            [36m>[39m
+              [0mdel 10 al 15 d’agost[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+            [33mclass[39m=[32m"week-agenda__filters"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mInstructor[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Instructor"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mInstructor: Tots[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"me"[39m
+                [36m>[39m
+                  [0mInstructor: Els meus[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-estel"[39m
+                [36m>[39m
+                  [0mInstructor: Estel[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-marc"[39m
+                [36m>[39m
+                  [0mInstructor: Marc[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-nuria"[39m
+                [36m>[39m
+                  [0mInstructor: Núria[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mFiltre de pista[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Filtre de pista"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTotes les pistes[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-muntanya"[39m
+                [36m>[39m
+                  [0mMuntanya[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-central"[39m
+                [36m>[39m
+                  [0mCentral[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-carretera"[39m
+                [36m>[39m
+                  [0mCarretera[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-cadells"[39m
+                [36m>[39m
+                  [0mCadells[0m
+                [36m</option>[39m
+                ...
+ ❯ src/instructor/week-agenda.test.tsx:504:21
+    502|     });
+    503|     await waitFor(() => {
+    504|       expect(pau()).toHaveTextContent("—");
+       |                     ^
+    505|     });
+    506|     expect(pau()).toBeDisabled();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 skipped (13)
+   Start at  15:05:00
+   Duration  11.53s (tests 90%, transform 4%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/week-agenda.test.tsx -t step 11
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/attendance-sheet.test.tsx (4 tests | 1 failed) 223ms
+   ❯ E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal (4)
+     × a 422 ATTENDANCE_WINDOW_CLOSED whose re-read comes back closed empties the draft and disables the save; a later save sends a new key 63ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-sheet.test.tsx > E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a 422 ATTENDANCE_WINDOW_CLOSED whose re-read comes back closed empties the draft and disables the save; a later save sends a new key
+AssertionError: expected { b2: 'PRESENT' } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "b2": "PRESENT",
++ }
+
+ ❯ src/attendance-sheet.test.tsx:76:34
+     74|     // The list read again is closed: the choice it no longer allows i…
+     75|     expect(fake.reads()).toBe(2);
+     76|     expect(result.current.draft).toEqual({});
+       |                                  ^
+     77|     expect(result.current.changes).toEqual([]);
+     78|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  15:05:12
+   Duration  692ms (environment 46%, tests 37%, setup 10%, transform 6%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance-sheet.test.tsx

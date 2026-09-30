@@ -10,12 +10,14 @@ import {
   findAttendanceClass,
   instructorCardView,
   instructorDayView,
+  instructorWeekView,
   OWN_INSTRUCTOR_ID,
   resetAttendanceState,
   saveAttendanceItems,
   attendanceState,
 } from "./fixtures/attendance";
-import { apiError, levelsEnabled, validationError } from "./planning-handlers";
+import { catalogState } from "./fixtures/catalogs";
+import { apiError, levelsEnabled, maxInstructors, validationError } from "./planning-handlers";
 import { currentMockScenario, type MockScenarioDefinition } from "./scenarios";
 
 type AttendanceSaveRequest = components["schemas"]["AttendanceSaveRequest"];
@@ -90,8 +92,91 @@ function clubToday(now: number): string {
   }).format(new Date(now));
 }
 
-/** Screens 20, 21 and 22 (S10 §6, api E6-T01), mocks-first on the published contract. */
+/**
+ * A tiny valid PDF (one landscape A4 page, a correct cross-reference table), as the synchronous
+ * `GET /instructor/week/export?format=pdf` answers the grid (R-10-15).
+ */
+function weekPdf(): Uint8Array {
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] >>",
+  ];
+  let body = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  objects.forEach((object, index) => {
+    offsets.push(body.length);
+    body += `${String(index + 1)} 0 obj\n${object}\nendobj\n`;
+  });
+  const xref = body.length;
+  body += `xref\n0 ${String(objects.length + 1)}\n0000000000 65535 f \n`;
+  for (const offset of offsets) body += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  body += `trailer\n<< /Size ${String(objects.length + 1)} /Root 1 0 R >>\nstartxref\n${String(xref)}\n%%EOF\n`;
+  return new TextEncoder().encode(body);
+}
+
+/** D12's query (S10 §6): `date`, `instructorId` (`me` = the caller) and `ringId`, validated. */
+function weekQuery(
+  url: URL,
+  scenario: MockScenarioDefinition,
+): Parameters<typeof instructorWeekView>[0] | Response {
+  const now = Date.now();
+  const date = url.searchParams.get("date") ?? clubToday(now);
+  if (!isRealDate(date)) return validationError("date");
+  const requested = url.searchParams.get("instructorId");
+  const instructorId =
+    requested === null || requested === ""
+      ? null
+      : requested === "me"
+        ? callerInstructorId(scenario)
+        : requested;
+  if (
+    instructorId !== null &&
+    !ATTENDANCE_INSTRUCTORS.some((instructor) => instructor.id === instructorId)
+  ) {
+    return apiError("NOT_FOUND", "Instructor not found", 404);
+  }
+  const ringId = url.searchParams.get("ringId");
+  if (ringId !== null && ringId !== "" && !catalogState.rings.some((ring) => ring.id === ringId)) {
+    return apiError("NOT_FOUND", "Ring not found", 404);
+  }
+  return {
+    date,
+    instructorId,
+    maxInstructors: maxInstructors(),
+    now,
+    ringId: ringId === null || ringId === "" ? null : ringId,
+  };
+}
+
+/** Screens 20, 21 and 22 and D12 (S10 §6, api E6-T01), mocks-first on the published contract. */
 export const attendanceHandlers = [
+  http.get("*/api/v1/instructor/week", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = refusal(scenario);
+    if (refused !== undefined) return refused;
+    const query = weekQuery(new URL(request.url), scenario);
+    if (query instanceof Response) return query;
+    return HttpResponse.json(instructorWeekView(query, context(scenario)));
+  }),
+  http.get("*/api/v1/instructor/week/export", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = refusal(scenario);
+    if (refused !== undefined) return refused;
+    const url = new URL(request.url);
+    if (url.searchParams.get("format") !== "pdf") return validationError("format");
+    const query = weekQuery(url, scenario);
+    if (query instanceof Response) return query;
+    const week = instructorWeekView(query, context(scenario));
+    // The api's name (`{club.slug}_agenda_{yyyyMMdd}.pdf`); the page saves its own (E6-W03).
+    const fileName = `${scenario.branding.club.slug}_agenda_${week.week.startDate.replaceAll("-", "")}.pdf`;
+    return new HttpResponse(weekPdf(), {
+      headers: {
+        "Content-Disposition": `attachment; filename="${fileName}"`,
+        "Content-Type": "application/pdf",
+      },
+    });
+  }),
   http.get("*/api/v1/instructor/day", ({ request }) => {
     const scenario = currentMockScenario();
     const refused = refusal(scenario);

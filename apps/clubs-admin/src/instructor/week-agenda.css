@@ -1,0 +1,228 @@
+/* D12 «Agenda de la setmana» (mockup V7 at 1280 px). Theme tokens only. */
+.week-agenda {
+  --week-agenda-cell: 3.6rem;
+
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.week-agenda__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.week-agenda__navigator {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ah-space-2);
+}
+
+.week-agenda__current {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.week-agenda__range {
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.week-agenda__arrow {
+  align-self: center;
+}
+
+.week-agenda__arrow--previous svg {
+  transform: rotate(180deg);
+}
+
+.week-agenda__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+/* The two filters are chips with their select inside («Instructor: Tots ▾», «Totes les pistes ▾»). */
+.week-agenda__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  padding: 0 var(--ah-space-3);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.week-agenda__filter svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.week-agenda__filter select {
+  min-height: 2.25rem;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.week-agenda__filter select option {
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+}
+
+.week-agenda__filter--instructor {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.week-agenda__filter:focus-within {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.week-agenda__grid {
+  padding: var(--ah-space-3);
+}
+
+/* Thin lines at the hour boundaries only (mockup V6): rows of the same hour form one band. */
+.week-agenda .ah-schedule-grid__row {
+  border-top-color: transparent;
+}
+
+.week-agenda .ah-schedule-grid__row.week-agenda__hour {
+  border-top-color: var(--ah-color-border);
+}
+
+.week-agenda .ah-schedule-cell {
+  min-height: var(--week-agenda-cell);
+}
+
+.week-agenda .ah-schedule-cell--empty {
+  min-height: calc(var(--week-agenda-cell) / 2);
+}
+
+/* A training takes `training.slotMinutes` of a class's height (R-10-15: half at 30 minutes). */
+.week-agenda__half .ah-schedule-cell {
+  height: calc(var(--week-agenda-cell) * var(--week-agenda-span, 0.5));
+  min-height: 0;
+  padding-block: 0.1rem;
+  gap: 0;
+  overflow: hidden;
+  line-height: 1.15;
+}
+
+.week-agenda__block .ah-schedule-cell {
+  min-height: calc(var(--week-agenda-cell) * 0.75);
+}
+
+/* A block reads whole («16:00–18:00 Bloqueig», «Carretera — manteniment»): it may wrap. */
+.week-agenda__block .ah-schedule-cell__title,
+.week-agenda__block .ah-schedule-cell__subtitle {
+  white-space: normal;
+}
+
+.week-agenda__legend {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.week-agenda__below {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-4);
+  align-items: start;
+}
+
+.week-agenda__panel {
+  display: grid;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4);
+}
+
+.week-agenda__panel-title {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.week-agenda__rows {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Mockup D12: name and level · the tasks or the status line · the badge, on one line. */
+.week-agenda__row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: var(--ah-space-3);
+  align-items: center;
+  min-height: 3rem;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.week-agenda__who {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  white-space: nowrap;
+}
+
+/* Mockup D12 V7: each name is an orange, underlined link to the dog's record (D13). */
+.week-agenda__student {
+  color: var(--ah-color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.week-agenda__student:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.week-agenda__owner,
+.week-agenda__tasks,
+.week-agenda__status {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.week-agenda__level {
+  min-width: 1.75rem;
+  justify-content: center;
+}
+
+.week-agenda__panel-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.week-agenda__panel-footer .ah-button {
+  text-transform: uppercase;
+}
+
+.week-agenda__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-3);
+}

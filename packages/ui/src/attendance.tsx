@@ -72,17 +72,24 @@ export function diffSheet(
   });
 }
 
+/** The sheet-wide permissions the api delivers (`sheet.canMarkPresence`, `sheet.canMarkNotice`). */
+export type AttendanceSheetPermissions = Omit<AttendancePermissions, "final">;
+
 /**
- * R-10-04's merge after `409 STALE_VERSION`: the list becomes `details.current` (`serverRows`) and
- * only the caller's own edits (`touchedIds`) are reapplied, except on a row the other person
- * changed meanwhile (its state differs from `baseRows`, the list the caller edited) or that is now
- * `final`: those take the server's state. Everything else comes from the server.
+ * R-10-04's rebase of the caller's choices on a list just read (after `409 STALE_VERSION` it is
+ * `details.current`; after any other refusal, the list read again): only the caller's own edits
+ * (`touchedIds`) are reapplied, and never on a row the other person changed meanwhile (its state
+ * differs from `baseRows`, the list the caller edited), nor a choice the list just read no longer
+ * allows (R-10-03: a `final` row, the window closed, «ha avisat» switched off). Everything else
+ * comes from the server. `baseRows` and `permissions` are required, so neither check can be
+ * switched off by omission.
  */
 export function mergeSheet(
   serverRows: readonly AttendanceSheetRow[],
   draft: AttendanceDraft,
   touchedIds: ReadonlySet<string>,
-  baseRows: readonly AttendanceSheetRow[] = [],
+  baseRows: readonly AttendanceSheetRow[],
+  permissions: AttendanceSheetPermissions,
 ): Record<string, AttendanceState> {
   const base = new Map(baseRows.map((row) => [row.bookingId, row.state]));
   const merged: Record<string, AttendanceState> = {};
@@ -92,9 +99,9 @@ export function mergeSheet(
     if (
       mine !== undefined &&
       touchedIds.has(row.bookingId) &&
-      row.final !== true &&
       !theirs &&
-      mine !== row.state
+      mine !== row.state &&
+      canChooseAttendance(mine, { ...permissions, final: row.final === true })
     ) {
       merged[row.bookingId] = mine;
     }
@@ -103,7 +110,10 @@ export function mergeSheet(
 }
 
 export interface AttendanceCirclesProps {
-  /** Inert while the sheet is being saved, whatever the permissions. */
+  /**
+   * Inert while the sheet is being saved, whatever the permissions. Unlike a circle the api does
+   * not allow now, a locked one keeps its look: a save does not flash the list.
+   */
   disabled?: boolean;
   /** The group's accessible name («Assistència de Laura + Duna»). */
   label: string;
@@ -128,9 +138,8 @@ export function AttendanceCircles({
   value,
 }: AttendanceCirclesProps) {
   const buttons = useRef(new Map<AttendanceState, HTMLButtonElement>());
-  const enabled = disabled
-    ? []
-    : ATTENDANCE_STATES.filter((state) => canChooseAttendance(state, permissions));
+  const available = ATTENDANCE_STATES.filter((state) => canChooseAttendance(state, permissions));
+  const enabled = disabled ? [] : available;
   // The one tab stop of the group: the chosen circle, else the first one that can be chosen.
   const tabStop = enabled.includes(value) ? value : enabled[0];
 
@@ -164,7 +173,12 @@ export function AttendanceCircles({
           <button
             aria-checked={checked}
             aria-label={labels[state]}
-            className={`ah-attendance__circle ah-attendance__circle--${state.toLowerCase().replace("_", "-")}`}
+            className={[
+              "ah-attendance__circle",
+              `ah-attendance__circle--${state.toLowerCase().replace("_", "-")}`,
+              // Refused by the api's permissions (R-10-03), not merely locked by a save.
+              ...(available.includes(state) ? [] : ["ah-attendance__circle--unavailable"]),
+            ].join(" ")}
             disabled={!allowed}
             key={state}
             onClick={() => {
@@ -188,5 +202,68 @@ export function AttendanceCircles({
         );
       })}
     </div>
+  );
+}
+
+/**
+ * The state a click on D12's badge moves to (mockup D12: «— → present → avisat → no presentat →
+ * —»): the next one in that cycle the api allows now, skipping «avisat» without `canMarkNotice`.
+ */
+export function nextAttendanceState(
+  value: AttendanceState,
+  permissions: AttendancePermissions,
+): AttendanceState {
+  const from = ATTENDANCE_STATES.indexOf(value);
+  for (let step = 1; step < ATTENDANCE_STATES.length; step += 1) {
+    const next = ATTENDANCE_STATES[(from + step) % ATTENDANCE_STATES.length];
+    if (next !== undefined && canChooseAttendance(next, permissions)) return next;
+  }
+  return value;
+}
+
+export interface AttendanceBadgeCyclerProps extends AttendancePermissions {
+  /** Locked while the sheet is being saved (not faded, unlike an inert badge). */
+  disabled?: boolean;
+  /** The accessible name: who, and the state now («Assistència de Laura + Duna: present»). */
+  label: string;
+  /** The badge text of each state (`enums:attendanceStateShort.*`, «—» for `PENDING`). */
+  labels: Readonly<Record<AttendanceState, string>>;
+  onChange: (state: AttendanceState) => void;
+  value: AttendanceState;
+}
+
+/**
+ * D12's attendance control (mockup D12, S10 R-10-03): a badge in the state's tone that cycles on
+ * each click (or Enter/Space), skipping «avisat» without `canMarkNotice`. It is inert on a `final`
+ * row (a saved «ha avisat» never changes) and without `canMarkPresence`.
+ */
+export function AttendanceBadgeCycler({
+  canMarkNotice,
+  canMarkPresence,
+  disabled = false,
+  final,
+  label,
+  labels,
+  onChange,
+  value,
+}: AttendanceBadgeCyclerProps) {
+  const inert = final || !canMarkPresence;
+  return (
+    <button
+      aria-label={label}
+      className={[
+        "ah-badge",
+        `ah-tone--${attendanceTone(value)}`,
+        "ah-attendance-badge",
+        ...(inert ? ["ah-attendance-badge--inert"] : []),
+      ].join(" ")}
+      disabled={inert || disabled}
+      onClick={() => {
+        onChange(nextAttendanceState(value, { canMarkNotice, canMarkPresence, final }));
+      }}
+      type="button"
+    >
+      {labels[value]}
+    </button>
   );
 }

@@ -12,16 +12,24 @@ import {
   FOLLOWUP_UPLOAD_PATH,
   followupDogStatus,
   followupState,
+  inboxRows,
+  inboxState,
+  inboxUnreadCount,
   liveAttachments,
   memberHistoryView,
   nextFollowupId,
+  readAllInbox,
+  readInboxItem,
   resetFollowupState,
+  resetInboxState,
   storedObservations,
   taskView,
 } from "./fixtures/followup";
-import { apiError, validationError } from "./planning-handlers";
+import { fieldsProjection } from "./list-fields";
+import { apiError, levelsEnabled, validationError } from "./planning-handlers";
 import { currentMockScenario, type MockScenarioDefinition } from "./scenarios";
 
+type FollowupItem = components["schemas"]["FollowupItem"];
 type AttachmentRequest = components["schemas"]["AttachmentRequest"];
 type AttachmentEntity = AttachmentRequest["entityType"];
 type ObservationsRequest = components["schemas"]["ObservationsRequest"];
@@ -38,6 +46,7 @@ const MEMBER_OWN_DOGS: readonly string[] = [BOOKING_DOG_IDS.duna, BOOKING_DOG_ID
 /** Resets the follow-up world (tests call it between cases, like the other mock states). */
 export function resetFollowupMockState(): void {
   resetFollowupState();
+  resetInboxState();
 }
 
 function impersonated(scenario: MockScenarioDefinition): boolean {
@@ -530,4 +539,142 @@ export const followupHandlers = [
       return { body: null, status: 204 };
     });
   }),
+  // ── D14 (R-10-13) ──
+  http.get("*/api/v1/followup", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = staffWrite(scenario);
+    if (refused !== undefined) return refused;
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? "0");
+    const size = Number(url.searchParams.get("size") ?? "50");
+    // The api (E6-T02, snapshot db7c6c6) pages this list by 20 or 50 rows at most (S10 §3).
+    if (!Number.isInteger(page) || page < 0 || !INBOX_PAGE_SIZES.includes(size)) {
+      return apiError("INVALID_FILTER", "Invalid follow-up page", 400);
+    }
+    const sort = url.searchParams.getAll("sort");
+    const [sortField, direction = "desc"] = (sort[0] ?? "activityAt,desc").split(",");
+    if (sort.length > 1 || sortField !== "activityAt" || !["asc", "desc"].includes(direction)) {
+      return apiError("INVALID_FILTER", "Invalid follow-up sort", 400);
+    }
+    const filters = url.searchParams.getAll("filter").map((raw) => {
+      const [field = "", op = "", ...rest] = raw.split(":");
+      return { field, op, value: rest.join(":") };
+    });
+    if (
+      filters.some(
+        (filter) =>
+          !INBOX_FILTERABLE.includes(filter.field) ||
+          !INBOX_OPERATORS.includes(filter.op) ||
+          filter.value === "",
+      )
+    ) {
+      return apiError("INVALID_FILTER", "Invalid follow-up filter", 400);
+    }
+    const project = fieldsProjection<FollowupItem>(url, INBOX_FIELDS, ["id"]);
+    if (project === undefined) return apiError("INVALID_FILTER", "Invalid follow-up fields", 400);
+    const rows = inboxRows({
+      accountId: scenario.me.account.id,
+      filters,
+      levelsEnabled: levelsEnabled(),
+      order: direction === "asc" ? "asc" : "desc",
+      q: url.searchParams.get("q") ?? "",
+      variant: scenario.inbox,
+    });
+    const items = rows.slice(page * size, (page + 1) * size);
+    return HttpResponse.json({
+      appliedFilters: filters.map((filter) => ({
+        field: filter.field,
+        op: filter.op,
+        value: filter.field === "unread" ? filter.value === "true" : filter.value,
+      })),
+      items: project === null ? items : items.map(project),
+      page,
+      size,
+      totalItems: rows.length,
+      totalPages: Math.ceil(rows.length / size),
+    });
+  }),
+  http.get("*/api/v1/followup/unread-count", () => {
+    const scenario = currentMockScenario();
+    const refused = staffWrite(scenario);
+    if (refused !== undefined) return refused;
+    return HttpResponse.json({ count: inboxUnreadCount(scenario.me.account.id, scenario.inbox) });
+  }),
+  http.post("*/api/v1/followup/:id/read", ({ params, request }) => {
+    const scenario = currentMockScenario();
+    const refused = staffWrite(scenario);
+    if (refused !== undefined) return refused;
+    const key = request.headers.get("Idempotency-Key");
+    if (key === null || key === "") return validationError("Idempotency-Key", "REQUIRED");
+    const id = String(params.id);
+    return inboxIdempotent(key, `read:${id}`, () =>
+      readInboxItem(scenario.me.account.id, id, scenario.inbox)
+        ? { body: null, status: 204 }
+        : failure(404, "NOT_FOUND"),
+    );
+  }),
+  http.post("*/api/v1/followup/read-all", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = staffWrite(scenario);
+    if (refused !== undefined) return refused;
+    const key = request.headers.get("Idempotency-Key");
+    if (key === null || key === "") return validationError("Idempotency-Key", "REQUIRED");
+    return inboxIdempotent(key, "read-all", () => {
+      readAllInbox(scenario.me.account.id, Date.now());
+      return { body: null, status: 204 };
+    });
+  }),
 ];
+
+/** `x-fields`, `x-filterable` and the page sizes of `GET /followup` (S10 §6, api E6-T02). */
+const INBOX_FIELDS = [
+  "id",
+  "kind",
+  "taskId",
+  "dogId",
+  "dogName",
+  "levelCode",
+  "memberId",
+  "memberName",
+  "authorName",
+  "authorRole",
+  "authorGender",
+  "textExcerpt",
+  "createdAt",
+  "completedAt",
+  "activityAt",
+  "unread",
+] as const;
+const INBOX_FILTERABLE: readonly string[] = [
+  "kind",
+  "memberId",
+  "dogId",
+  "authorAccountId",
+  "unread",
+];
+const INBOX_OPERATORS: readonly string[] = ["eq", "ne", "in", "nin"];
+const INBOX_PAGE_SIZES: readonly number[] = [20, 50];
+
+/** The D14 writes' `Idempotency-Key` (CONVENCIONS_API §7), as `idempotent` does for the tasks. */
+function inboxIdempotent(
+  key: string,
+  signature: string,
+  answer: () => { body: unknown; status: number },
+) {
+  const replay = inboxState.idempotency.get(key);
+  if (replay !== undefined) {
+    if (replay.signature !== signature) {
+      return apiError("IDEMPOTENCY_KEY_REUSED", "Idempotency key reused", 409, {
+        reason: "DIFFERENT_REQUEST",
+      });
+    }
+    return replay.status === 204
+      ? new HttpResponse(null, { status: 204 })
+      : HttpResponse.json(replay.body as Record<string, unknown>, { status: replay.status });
+  }
+  const result = answer();
+  if (result.status < 300) inboxState.idempotency.set(key, { ...result, signature });
+  return result.status === 204
+    ? new HttpResponse(null, { status: 204 })
+    : HttpResponse.json(result.body as Record<string, unknown>, { status: result.status });
+}

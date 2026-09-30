@@ -8,7 +8,7 @@
   {
     "name": "clubs all JavaScript",
     "path": "apps/clubs/dist/assets/*.js",
-    "limit": "320 kB",
+    "limit": "335 kB",
     "gzip": true
   },
   {

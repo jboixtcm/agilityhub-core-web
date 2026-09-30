@@ -402,5 +402,46 @@
     "loading": "Loading the bookings…",
     "error": "The bookings could not be loaded.",
     "retry": "Try again"
+  },
+  "followup": {
+    "title": "Student follow-up",
+    "unread": "{count, plural, one {# unread} other {# unread}}",
+    "kinds": "What is shown",
+    "filter": {
+      "all": "All",
+      "tasks": "Tasks",
+      "notes": "Student notes"
+    },
+    "readAll": "Mark all as read",
+    "readingAll": "Marking all as read",
+    "columns": {
+      "member": "Member",
+      "dog": "Dog",
+      "level": "Level",
+      "date": "Date",
+      "author": "Author",
+      "text": "Text",
+      "createdAt": "Created",
+      "completedAt": "Completed",
+      "kind": "Type",
+      "unread": "Unread"
+    },
+    "author": {
+      "member": "{name} (student)",
+      "task": "{name} (task)"
+    },
+    "none": "—",
+    "unreadMark": "unread",
+    "unreadValue": {
+      "yes": "unread",
+      "no": "read"
+    },
+    "search": "Search the follow-up",
+    "caption": "Tasks and student notes, unread first",
+    "emptyTitle": "Nothing to follow up",
+    "emptyDescription": "Instructors' tasks and students' notes will arrive here.",
+    "selectRow": "Open {name}'s record",
+    "error": "The follow-up could not be loaded.",
+    "dismiss": "Close"
   }
 }

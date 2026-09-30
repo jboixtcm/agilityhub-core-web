@@ -11,6 +11,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import {
   AuthClient,
   createAuthenticatedApiClient,
+  IMPERSONATION_STORAGE_KEY,
   MemoryRefreshTokenStore,
   SessionProvider,
 } from "@agilityhub/auth";
@@ -741,6 +742,102 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
       token.stop();
     },
   );
+
+  it("E4-W18 round 2 #1 (review #1, E47): a tab reloaded while /oauth2/token has not answered the code sends no refresh_token grant, opens no session (not the tab's own cookie) and says «Aquest enllaç ja no és vàlid»", async () => {
+    // The tab's refresh cookie: its own session, signed in before the admin's link was opened.
+    const cookie = new MemoryRefreshTokenStore();
+    const withCookie = () =>
+      new AuthClient({
+        apiBaseUrl: `${window.location.origin}/api/v1`,
+        clientId: "clubs-app",
+        identityBaseUrl: window.location.origin,
+        mockMode: true,
+        mockRefreshTokenStore: cookie,
+      });
+    await withCookie().login("laura@example.test", "secret-password");
+    const token = recordTokenGrants();
+    // The handoff grant stays unanswered until the end of the test.
+    let answer: (() => void) | undefined;
+    const unanswered = new Promise<void>((resolve) => {
+      answer = resolve;
+    });
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        if (grant !== HANDOFF_GRANT) return undefined;
+        await unanswered;
+        return HttpResponse.error();
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-5");
+    await renderApplication(withCookie(), canicBranding, "ca", vi.fn());
+    expect(screen.getByRole("status")).toHaveTextContent("Validant l'enllaç…");
+    await waitFor(() => {
+      expect(token.grants).toEqual([HANDOFF_GRANT]);
+    });
+
+    // A reload now: a new client in the same tab, with the same cookie; the code already gone.
+    cleanup();
+    expect(window.location.search).toBe("");
+    const reloaded = withCookie();
+    const restore = vi.spyOn(reloaded, "restoreSession");
+    const navigate = vi.fn();
+    await renderApplication(reloaded, canicBranding, "ca", navigate);
+    expect(await screen.findByRole("alert")).toHaveTextContent("Aquest enllaç ja no és vàlid");
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+    await restored(restore);
+    expect(token.grants).toEqual([HANDOFF_GRANT]);
+    expect(reloaded.getMe()).toBeNull();
+    expect(reloaded.isImpersonated()).toBe(false);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBe('{"state":"ended"}');
+    answer?.();
+    token.stop();
+  });
+
+  it("E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03", async () => {
+    let failures = 3;
+    server.use(
+      http.get("*/api/v1/me", ({ request }) => {
+        if (request.headers.get("Authorization") !== "Bearer mock-impersonation-token") {
+          return undefined;
+        }
+        if (failures === 0) return undefined;
+        failures -= 1;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+          { status: 503 },
+        );
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-6");
+    const client = authClient();
+    const recovered = new Promise<void>((resolve) => {
+      client.addEventListener("signedIn", () => {
+        resolve();
+      });
+    });
+    // The page hears of the failed code only after the client's own recovery has signed in.
+    const exchange = client.exchangeHandoff.bind(client);
+    vi.spyOn(client, "exchangeHandoff").mockImplementation(async (code) => {
+      try {
+        return await exchange(code);
+      } catch (error) {
+        await recovered;
+        throw error;
+      }
+    });
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+    await waitFor(
+      () => {
+        window.dispatchEvent(new Event("online"));
+        expect(navigate).toHaveBeenCalledWith("/inici", false);
+      },
+      { timeout: 3000 },
+    );
+    expect(client.isImpersonated()).toBe(true);
+  });
 
   it("E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner", async () => {
     const token = recordTokenGrants();

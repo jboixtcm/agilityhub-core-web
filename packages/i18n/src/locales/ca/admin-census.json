@@ -417,5 +417,46 @@
     "loading": "Carregant les reserves…",
     "error": "No s'han pogut carregar les reserves.",
     "retry": "Torna-ho a provar"
+  },
+  "followup": {
+    "title": "Seguiment alumnes",
+    "unread": "{count, plural, one {# pendent de llegir} other {# pendents de llegir}}",
+    "kinds": "Què es mostra",
+    "filter": {
+      "all": "Tot",
+      "tasks": "Tasques",
+      "notes": "Notes d'alumnes"
+    },
+    "readAll": "Marcar-ho tot com a llegit",
+    "readingAll": "Marcant-ho tot com a llegit",
+    "columns": {
+      "member": "Abonat",
+      "dog": "Gos",
+      "level": "Nivell",
+      "date": "Data",
+      "author": "Creador",
+      "text": "Text",
+      "createdAt": "Creació",
+      "completedAt": "Finalització",
+      "kind": "Tipus",
+      "unread": "Pendent de llegir"
+    },
+    "author": {
+      "member": "{name} ({gender, select, female {alumna} other {alumne}})",
+      "task": "{name} (tasca)"
+    },
+    "none": "—",
+    "unreadMark": "no llegit",
+    "unreadValue": {
+      "yes": "no llegit",
+      "no": "llegit"
+    },
+    "search": "Cerca al seguiment",
+    "caption": "Tasques i notes d'alumnes, les no llegides primer",
+    "emptyTitle": "No hi ha res al seguiment",
+    "emptyDescription": "Les tasques dels instructors i les notes dels alumnes arribaran aquí.",
+    "selectRow": "Obre la fitxa de {name}",
+    "error": "No s'ha pogut carregar el seguiment.",
+    "dismiss": "Tanca"
   }
 }
