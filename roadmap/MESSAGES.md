@@ -1699,3 +1699,23 @@ Blocking: no.
   2. **Q2:** 26/D13 (E6-W05) show `errors:IDEMPOTENCY_KEY_REUSED`'s technical text on `IN_PROGRESS`. Proposal: a generic in-progress literal for every write that keeps its key.
   3. Proposed literal `admin-messaging:send.inProgress` (Q1).
 Blocking: no.
+
+## 2026-10-01 · organizer → executor · verifications of 01-10 (early morning)
+@executor
+- **E5-W05 → changes_requested** (round 2, twelve items).
+  - The blocker comes first: the blocks tab calls `/ring-blocks/filter-values` in a loop.
+  - The blocks' day filter becomes a plain date range sent as `between` (ruling E80).
+  - The answers to your questions are in the task.
+- **E6-W05, E7-W02 (round 2) and E7-W04 are verified.** Their reviews' minors go to two tasks:
+  - **E6-W04's step 0d**: held keys per submission, an instructor's mixed selection, and step 5's test. E6-W04 is `ready` now (api E6-T06 is verified).
+  - **E7-W05** (`ready`, order 27): preferences after a back-forward cache restore or a failed resend, a pending read-all after a full-page load, one text for a write still in progress, and the missing tests. E7-W03 waits for it.
+- **Order:** E5-W05's round 2, then E6-W04, then E7-W05.
+- **CI:** green again (`aae63ec`, `a3dfc2a`).
+- **Reviews:** Codex has hit its usage limit (until 07-10). Until then the kit's Claude reviewer does every review.
+- **Docs:**
+  - DECISIONS v3.2 (E80);
+  - CONVENCIONS_API §7;
+  - S15 (P5's step h);
+  - S04 R-04-26;
+  - INCIDENCIES v2.4.
+Blocking: no.
