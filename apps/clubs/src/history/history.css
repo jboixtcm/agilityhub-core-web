@@ -1,0 +1,115 @@
+/* S10 screen 25 «Històric» (mockup V8, 375 px). Theme tokens only. */
+.history-screen {
+  display: grid;
+  align-content: start;
+  align-self: start;
+  gap: var(--ah-space-2);
+  width: 100%;
+  padding: 0 var(--ah-space-3) var(--ah-space-4);
+}
+
+.history-screen__bar {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  margin: 0 calc(-1 * var(--ah-space-3));
+  border-bottom: 0;
+}
+
+.history-screen__bar .ah-app-bar__title {
+  text-align: left;
+}
+
+.history-screen__bar h1 {
+  margin: 0;
+  font: 700 1.3rem/1.2 var(--ah-font-display);
+}
+
+.history-screen__back {
+  color: var(--ah-color-primary);
+  border-color: transparent;
+}
+
+.history-screen__back svg {
+  transform: rotate(180deg);
+}
+
+.history-screen__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.history-screen__type {
+  padding: 0.3rem 0.8rem;
+  color: var(--ah-color-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+}
+
+.history-screen__type[aria-pressed="true"] {
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+  border-color: var(--ah-color-primary);
+}
+
+.history-screen__window {
+  margin: var(--ah-space-1) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}
+
+.history-screen__list {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-screen__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.history-row {
+  display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3);
+}
+
+.history-row__line {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  font-size: 0.88rem;
+}
+
+.history-row__date {
+  width: 3.75rem;
+  flex: none;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.history-row__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-row__badge {
+  flex: none;
+  max-width: 7.5rem;
+  text-align: center;
+}
+
+.history-row__detail {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}

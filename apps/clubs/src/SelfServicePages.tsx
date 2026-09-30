@@ -3,6 +3,7 @@ import {
   isApiError,
   type ApiClient,
   type components,
+  uploadSigned,
 } from "@agilityhub/api-client";
 import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
@@ -170,27 +171,8 @@ function PageHeader({ title }: { title: string }) {
   );
 }
 
-async function uploadFile(client: ApiClient, file: File, purpose: "DOG_DOCUMENT" | "DOG_PHOTO") {
-  const upload = await client.POST("/attachments/upload-url", {
-    body: {
-      fileName: file.name,
-      mimeType: file.type,
-      purpose,
-      sizeBytes: file.size,
-    },
-  });
-  if (upload.data === undefined) {
-    throw new TypeError("The upload URL response did not contain data", { cause: upload.error });
-  }
-  const response = await fetch(upload.data.uploadUrl, {
-    body: file,
-    headers: upload.data.headers,
-    method: "PUT",
-  });
-  if (!response.ok) {
-    throw new TypeError("The signed file upload failed");
-  }
-  return upload.data.fileKey;
+function uploadFile(client: ApiClient, file: File, purpose: "DOG_DOCUMENT" | "DOG_PHOTO") {
+  return uploadSigned(client, file, purpose);
 }
 
 function DogPhoto({

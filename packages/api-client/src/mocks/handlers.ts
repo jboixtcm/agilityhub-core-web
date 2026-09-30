@@ -90,6 +90,7 @@ import {
   withReadmissionValues,
 } from "./fixtures/signup-review";
 import { TRAINING_MOCK_NOW, trainingState } from "./fixtures/training";
+import { followupHandlers, resetFollowupMockState } from "./followup-handlers";
 import {
   exportFileName,
   exportFileResponse,
@@ -1291,6 +1292,9 @@ function orderedIds<Item extends { id: string; order: number }>(
 }
 
 export const handlers = [
+  // S10 (E6-W02) first: its signed-upload purposes (TASK, DOG_OBSERVATIONS) are answered before the
+  // generic upload handler below, which keeps the other purposes.
+  ...followupHandlers,
   http.get("*/api/v1/branding", () =>
     HttpResponse.json(currentMockScenario().branding, {
       headers: { ETag: '"mock-branding-v1"' },
@@ -1918,6 +1922,32 @@ export const handlers = [
           label: "Mida màxima per fitxer",
           type: "INT",
           value: 25,
+          version: 1,
+        });
+      }
+      // CATALEG_PARAMETRES «Fitxers» and the S10 proposal (E6-W02: the attachment picker's limits).
+      if (key === "files.allowedTypes") {
+        const value = ["image/*", "video/mp4", "video/quicktime", "application/pdf"];
+        return HttpResponse.json<Parameter>({
+          ...base,
+          default: value,
+          editableBy: "PLATFORM",
+          key,
+          label: "Tipus de fitxer admesos",
+          type: "LIST",
+          value,
+          version: 1,
+        });
+      }
+      if (key === "files.maxAttachmentsPerEntity") {
+        return HttpResponse.json<Parameter>({
+          ...base,
+          default: 10,
+          editableBy: "PLATFORM",
+          key,
+          label: "Adjunts per element",
+          type: "INT",
+          value: 10,
           version: 1,
         });
       }
@@ -3724,6 +3754,7 @@ export {
   resetCatalogState,
   resetCensusRecordState,
   resetDashboardMockState,
+  resetFollowupMockState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
   resetPlanningState,

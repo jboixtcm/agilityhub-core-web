@@ -1,0 +1,94 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/mock-worlds.budget.test.ts (20 tests | 4 failed) 3469ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (20)
+     × imports the mock modules afresh within the start-up budget 1437ms
+     × builds resetBackofficeMockState within its budget 225ms
+     × builds resetPlanningState within its budget 839ms
+     × builds resetTrainingMockState within its budget 80ms
+stdout | src/mocks/zz-scratch-measure.test.ts > scratch > measures
+WALL 42.75 (216.2 ms / 5.06) CPU 43.45 (226.5 ms / 5.21)
+
+stdout | src/mocks/zz-scratch-measure.test.ts > scratch > measures
+WALL 42.40 (219.3 ms / 5.17) CPU 42.95 (219.1 ms / 5.10)
+
+stdout | src/mocks/zz-scratch-measure.test.ts > scratch > measures
+WALL 45.93 (216.3 ms / 4.71) CPU 42.57 (230.6 ms / 5.42)
+
+ ❯ src/mocks/zz-scratch-measure.test.ts (1 test | 1 failed) 7769ms
+   ❯ scratch (1)
+     × measures 7769ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+AssertionError: import of the mock modules: 229.37 ms = 43.39 × the reference work (5.29 ms); budget 24 ×: expected 43.39185379973142 to be less than 24
+ ❯ src/mocks/mock-worlds.budget.test.ts:199:7
+    197|       cost.ratio,
+    198|       costMessage("import of the mock modules", cost, startupBudgetRat…
+    199|     ).toBeLessThan(startupBudgetRatio);
+       |       ^
+    200|   });
+    201|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetBackofficeMockState within its budget
+AssertionError: resetBackofficeMockState: 33.96 ms = 6.74 × the reference work (5.04 ms); budget 1 ×: expected 6.737862486357423 to be less than 1
+ ❯ src/mocks/mock-worlds.budget.test.ts:206:57
+    204|     const cost = await relativeCost(reset);
+    205|
+    206|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    207|   });
+    208|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetPlanningState within its budget
+AssertionError: resetPlanningState: 149.72 ms = 29.48 × the reference work (5.08 ms); budget 9 ×: expected 29.47995034795568 to be less than 9
+ ❯ src/mocks/mock-worlds.budget.test.ts:206:57
+    204|     const cost = await relativeCost(reset);
+    205|
+    206|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    207|   });
+    208|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > builds resetTrainingMockState within its budget
+AssertionError: resetTrainingMockState: 7.52 ms = 1.52 × the reference work (4.94 ms); budget 1 ×: expected 1.5226088732190886 to be less than 1
+ ❯ src/mocks/mock-worlds.budget.test.ts:206:57
+    204|     const cost = await relativeCost(reset);
+    205|
+    206|     expect(cost.ratio, costMessage(name, cost, budget)).toBeLessThan(b…
+       |                                                         ^
+    207|   });
+    208|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/mocks/zz-scratch-measure.test.ts > scratch > measures
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/mocks/zz-scratch-measure.test.ts:162:3
+    160|
+    161| describe("scratch", () => {
+    162|   it("measures", async () => {
+       |   ^
+    163|     for (let i = 0; i < 3; i += 1) {
+    164|       const wall = await relativeCost(async () => { await import("./ha…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 16 passed (21)
+   Start at  13:36:28
+   Duration  8.38s (tests 91%, import 4%, transform 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-worlds.budget.test.ts src/mocks/zz-scratch-measure.test.ts --silent=false

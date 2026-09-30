@@ -1,6 +1,6 @@
-import type { ApiClient, components } from "@agilityhub/api-client";
+import { type ApiClient, useStudentSearch } from "@agilityhub/api-client";
 import { AppBar, Button, Card, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { navigateInApp } from "../booking/shared";
@@ -8,126 +8,7 @@ import { navigateInApp } from "../booking/shared";
 import "./instructor.css";
 import { readErrorText, studentName } from "./shared";
 
-type DogListItem = components["schemas"]["DogListItem"];
-
 const SEARCH_DEBOUNCE_MS = 300;
-/** CONVENCIONS_API §4: the list's page size; «Mostra'n més» reads the next page. */
-const PAGE_SIZE = 50;
-
-interface SearchPages {
-  /** A failed first page (the screen's error) or a failed next page (the rows stay). */
-  error?: unknown;
-  items: DogListItem[];
-  /** The query (and retry) these pages answer. */
-  key: string;
-  /** Pages read so far. */
-  loaded: number;
-  /** The next page is being read. */
-  pending: boolean;
-  totalPages: number;
-}
-
-/**
- * The pages of `GET /dogs` for one query, read one after another (CONVENCIONS_API §4, as the
- * universal lists do): the first when the query settles, each next one on `more()`, appended. An
- * answer for another query than the one on screen is dropped.
- */
-function useSearchPages(client: ApiClient, query: string) {
-  const [reload, setReload] = useState(0);
-  const requestKey = `${query}|${String(reload)}`;
-  const [pages, setPages] = useState<SearchPages>({
-    items: [],
-    key: "",
-    loaded: 0,
-    pending: false,
-    totalPages: 0,
-  });
-  // One next page at a time, also for a second tap before the next render.
-  const reading = useRef(false);
-
-  const readPage = useCallback(
-    async (page: number) => {
-      const { data } = await client.GET("/dogs", {
-        params: {
-          query: {
-            fields: "id,name,handlerName,owner,level",
-            filter: ["status:eq:ACTIVE"],
-            page,
-            size: PAGE_SIZE,
-            sort: ["name,asc"],
-            ...(query === "" ? {} : { q: query }),
-          },
-        },
-      });
-      if (data === undefined) throw new TypeError("The dogs response did not contain data");
-      return data;
-    },
-    [client, query],
-  );
-
-  useEffect(() => {
-    let current = true;
-    readPage(0).then(
-      (data) => {
-        if (!current) return;
-        setPages({
-          items: data.items,
-          key: requestKey,
-          loaded: 1,
-          pending: false,
-          totalPages: data.totalPages,
-        });
-      },
-      (error: unknown) => {
-        if (!current) return;
-        setPages({ error, items: [], key: requestKey, loaded: 0, pending: false, totalPages: 0 });
-      },
-    );
-    return () => {
-      current = false;
-    };
-  }, [readPage, requestKey]);
-
-  const ready = pages.key === requestKey;
-  const more = async () => {
-    if (!ready || reading.current || pages.loaded >= pages.totalPages) return;
-    reading.current = true;
-    const forKey = requestKey;
-    const page = pages.loaded;
-    setPages((value) => ({ ...value, error: undefined, pending: true }));
-    try {
-      const data = await readPage(page);
-      setPages((value) => {
-        if (value.key !== forKey) return value;
-        const known = new Set(value.items.map((item) => item.id));
-        return {
-          ...value,
-          items: [...value.items, ...data.items.filter((item) => !known.has(item.id))],
-          loaded: page + 1,
-          pending: false,
-          totalPages: data.totalPages,
-        };
-      });
-    } catch (error) {
-      setPages((value) => (value.key === forKey ? { ...value, error, pending: false } : value));
-    } finally {
-      reading.current = false;
-    }
-  };
-
-  return {
-    error: ready ? pages.error : undefined,
-    firstFailed: ready && pages.loaded === 0 && pages.error !== undefined,
-    hasMore: ready && pages.loaded > 0 && pages.loaded < pages.totalPages,
-    items: ready ? pages.items : [],
-    loading: !ready,
-    more,
-    pending: ready && pages.pending,
-    retry: () => {
-      setReload((value) => value + 1);
-    },
-  };
-}
 
 /**
  * The instructor's student search (`/instructor/alumnes`, S10 §2 «Alumnes (sense mockup)», §13-9):
@@ -148,7 +29,7 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
     };
   }, [text]);
 
-  const dogs = useSearchPages(client, query);
+  const dogs = useStudentSearch(client, query);
   const loadError = t("instructor:students.loadError");
 
   return (

@@ -107,6 +107,39 @@ function costMessage(name: string, cost: Cost, budget: number): string {
   return `${name}: ${cost.ms.toFixed(2)} ms = ${cost.ratio.toFixed(2)} × the reference work (${cost.referenceMs.toFixed(2)} ms); budget ${String(budget)} ×`;
 }
 
+/** This process's CPU time (user + system), in ms: the host's other processes do not count in it. */
+function cpuMs(): number {
+  const { system, user } = process.cpuUsage();
+  return (user + system) / 1_000;
+}
+
+/** The reference work is repeated so that its CPU time is well above the clock's accounting step. */
+const CPU_REFERENCE_REPEATS = 10;
+
+/**
+ * E4-W18 step 5: `relativeCost` in this process's CPU time. A fresh import waits for the test
+ * runner to serve each module, and on a loaded host (a parallel `turbo run test`, the other lane's
+ * containers) that wall-clock wait grew far more than the reference work: 20 × against a budget
+ * of 17 × while the same import alone took 6.8 ×. The CPU time spent importing and building the
+ * worlds is the code's cost, and the load of the host does not add to it.
+ */
+async function relativeCpuCost(build: Build, prepare: () => void = () => undefined): Promise<Cost> {
+  for (let warmUp = 0; warmUp < 3; warmUp += 1) referenceWork();
+  let ms = Number.POSITIVE_INFINITY;
+  let referenceMs = Number.POSITIVE_INFINITY;
+  for (let round = 0; round < 5; round += 1) {
+    prepare();
+    let started = cpuMs();
+    for (let repeat = 0; repeat < CPU_REFERENCE_REPEATS; repeat += 1) referenceWork();
+    referenceMs = Math.min(referenceMs, (cpuMs() - started) / CPU_REFERENCE_REPEATS);
+    started = cpuMs();
+    const pending = build();
+    if (pending instanceof Promise) await pending;
+    ms = Math.min(ms, cpuMs() - started);
+  }
+  return { ms, ratio: ms / referenceMs, referenceMs };
+}
+
 // Measured on 25-09 (Node 22, the executor's Mac, the reference work 4.6–4.9 ms): the planning world
 // 3.01–3.12 × (14 ms: three calendar weeks, blocks and training bookings through `clubInstant`, plus
 // the day grid), the day grid 0.10 ×, every other world 0.02 × or less; under a parallel
@@ -120,9 +153,13 @@ const defaultBudgetRatio = 1;
 // A reset only rebuilds what depends on the date or on the requests: the rest is built once, when
 // the modules are imported (`initialWeekTemplates` runs `withInconsistencies`, the JSON fixtures, the
 // handler list), and the reset budgets never time it. A fresh import of `handlers.ts` runs all of
-// it, as `startMockWorker` does. Measured on 25-09: 5.06–5.68 × (24–27 ms); under a parallel
-// `turbo run test`, 9.07 × (64 ms). The budget is about three times the quiet measure.
-const startupBudgetRatio = 17;
+// it, as `startMockWorker` does. Measured on 25-09 in wall-clock time: 5.06–5.68 × (24–27 ms);
+// under a parallel `turbo run test`, 9.07 × (64 ms), and 20 × on 29-09 against the budget of 17 ×.
+// Measured on 30-09 in CPU time (`relativeCpuCost`, the reference work 4.9–5.2 ms): 7.99–8.13 ×
+// alone and 8.01–8.10 × under a parallel `turbo run test --force`, where the wall-clock ratio of the
+// same run reached 10.64 ×. The budget is about three times the CPU measure. Without the per-zone
+// formatter cache of `clubInstant` the import took 43.39 × (229 ms), and this test failed.
+const startupBudgetRatio = 24;
 
 describe("E3-W10 build-time budget of the MSW mock worlds", () => {
   it("finds every stateful world the handlers reset", () => {
@@ -145,7 +182,7 @@ describe("E3-W10 build-time budget of the MSW mock worlds", () => {
 
   it("imports the mock modules afresh within the start-up budget", async () => {
     let fresh: typeof startup.handlers = startup.handlers;
-    const cost = await relativeCost(
+    const cost = await relativeCpuCost(
       async () => {
         fresh = await import("./handlers");
       },

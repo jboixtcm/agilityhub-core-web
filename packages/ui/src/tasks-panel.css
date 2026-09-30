@@ -1,0 +1,285 @@
+/* S10 screen 26 and D13's drawer (mockup V8): the tasks panel and the follow-up editor. Theme tokens only. */
+.ah-followup {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.ah-followup__block {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.ah-followup__title,
+.ah-tasks__title {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ah-followup__title span {
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.ah-followup__field {
+  min-height: 6.75rem;
+  resize: vertical;
+}
+
+.ah-followup__clips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.ah-followup__note {
+  display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.ah-followup__note p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.ah-followup__history {
+  justify-self: center;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-primary);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.ah-followup__history:hover,
+.ah-followup__history:focus-visible {
+  text-decoration: underline;
+}
+
+.ah-followup__save {
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.ah-followup__load-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.ah-followup__more {
+  justify-self: center;
+  margin-top: var(--ah-space-3);
+}
+
+.ah-followup__error,
+.ah-tasks__error {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text);
+  background: color-mix(in srgb, var(--ah-color-danger) 14%, var(--ah-color-surface));
+  border: 1px solid var(--ah-color-danger);
+  border-radius: var(--ah-radius-md);
+}
+
+.ah-followup__stale {
+  display: grid;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  background: color-mix(in srgb, var(--ah-color-warning) 14%, var(--ah-color-surface));
+  border: 1px solid var(--ah-color-warning);
+  border-radius: var(--ah-radius-md);
+}
+
+.ah-followup__stale p,
+.ah-followup__stale blockquote {
+  margin: 0;
+}
+
+.ah-followup__stale blockquote {
+  padding-left: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  white-space: pre-line;
+  border-left: 3px solid var(--ah-color-border);
+}
+
+.ah-tasks {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.ah-tasks__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+  min-height: 2.25rem;
+}
+
+.ah-tasks .ah-tasks__title {
+  color: var(--ah-color-primary);
+}
+
+.ah-tasks__add {
+  color: var(--ah-color-primary);
+  border-color: transparent;
+}
+
+.ah-tasks__empty {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+}
+
+.ah-tasks__list {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ah-task {
+  display: grid;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-3);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+/* Mockup 26: a pending task is outlined in the theme's colour, a done one is quiet. */
+.ah-task--pending {
+  border-color: color-mix(in srgb, var(--ah-color-primary) 55%, var(--ah-color-border));
+}
+
+.ah-task--form {
+  border-style: dashed;
+}
+
+.ah-task__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+}
+
+.ah-task__actions {
+  display: inline-flex;
+  gap: var(--ah-space-1);
+}
+
+.ah-task__actions .ah-icon-button {
+  min-width: 2rem;
+  min-height: 2rem;
+  color: var(--ah-color-text-muted);
+  border-color: transparent;
+}
+
+.ah-task__text {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.ah-task--done .ah-task__text {
+  color: var(--ah-color-text-muted);
+  text-decoration: line-through;
+}
+
+.ah-task__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--ah-space-1);
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.78rem;
+}
+
+.ah-task__edit {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.ah-task__form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+}
+
+.ah-task__form-actions .ah-attachment-picker {
+  margin-right: auto;
+}
+
+.ah-tasks__confirm-text {
+  margin: 0 0 var(--ah-space-3);
+  color: var(--ah-color-text-muted);
+}
+
+.ah-attachment-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1) var(--ah-space-2);
+}
+
+.ah-attachment-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.ah-attachment-chip__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.ah-attachment-chip__open:hover span,
+.ah-attachment-chip__open:focus-visible span {
+  text-decoration: underline;
+}
+
+.ah-attachment-chip__open svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.ah-attachment-chip__remove {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+  border-color: transparent;
+}
+
+/* The clip is a quiet control (mockups 26 and D13 show only the clip chips). */
+.ah-attachment-picker .ah-button {
+  min-height: 2rem;
+  padding-inline: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-color: transparent;
+}
+
+.ah-attachment-picker .ah-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}

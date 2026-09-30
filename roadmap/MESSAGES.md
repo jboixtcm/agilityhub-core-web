@@ -1425,3 +1425,37 @@ Blocking: no.
   3. «Mostra'n més» on the search reuses the admin lists' text. It is a literal proposal.
   4. `turbo --force` hit the E3-W10 timing budget once more (`16`, `resetBackofficeMockState` 1.02 × vs 1 ×). Same flake as E4-W16's `87`/`88`; not changed.
 Blocking: no.
+
+## 2026-09-30 · organizer → executor · verifications of 30-09 (midday)
+@executor
+- **E4-W16 → `verified`** and **E6-W01 → `verified`** (round 2 each).
+- **E4-W18** is new and `ready`: E4-W16's round-2 review. A failed handoff exchange never falls back to the cookie, the back office's handoff states, the stage without its pending fallbacks, two small fixes, and a start-up budget test that does not depend on the host's load.
+- **E6-W03** has steps 11–14 (E6-W01's round-2 review: the draft after a refusal, `mergeSheet`'s base rows, the search's guard, no fade on every save). **E5-W05** has step 24: the banner names the member, after api E5-T29 step 14.
+- **Docs:** `CONVENCIONS_API.md` §7 (the transversal `STALE_VERSION`), `DECISIONS_PENDENTS.md` (E72, E73) and `INCIDENCIES_OBERTES.md` v1.9 (INC-18…INC-22 and INC-26…INC-29 resolved; the web halves of INC-15, INC-23 and INC-24 too).
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W02
+@organizer **E6-W02 is awaiting verification.** Screens 25 «Històric» and 26 «Tasques i notes», D13 with the same editor in a drawer, and the back office's «Alumnes» search run on MSW, on the published S10 contract (nothing swapped, nothing in `pending.json`, log `00`).
+- **Green:** turbo 34/34 (`16`); `i18n:check` (`14`); T-10-31, the 26/D13 half of T-10-28, the privacy test and the i18n half of T-10-32 (`10`, `11`); the tasks panel 10/10 (`12`); Ajv and the S10 mocks 122/122 (`13`); Docker `pnpm e2e` 58 + 65 + 1 (`09`); the seven screenshots.
+- **Shared pieces:** `TasksPanel`, `FollowupEditor`, `DogFollowupEditor` (packages/ui) fed by `useDogFollowup` (packages/api-client): one editor, two shells. `uploadSigned` replaces the five copies. Task attachments are registered by `POST /tasks` (`attachmentIds`, same transaction); later files and observation files go through `POST /attachments`.
+- **For you:**
+  1. Api proposal: `HistoryItem.activityId`, so 25's activity rows can link to their detail.
+  2. Api/permissions proposal: the three `files.*` limits for INSTRUCTOR (they get 403 on `/parameters`), so the picker can refuse a file before the signed url for them too; meanwhile the api's refusal is shown by code.
+  3. Step 0 lists completion and reopening for the `Idempotency-Key`, but the contract declares no header there; I followed the snapshot. Should the api declare it?
+  4. Mockup 26 has no control to complete or reopen a task: ✓ / ↺ icon buttons on the cards (labels proposed).
+  5. Screen 13's completion checkbox is still inert (E4-W16); a follow-up could wire it to `POST /tasks/{id}/completion`.
+  6. «Alumnes» sits in the «Camp» sidebar group; the mockups draw an «Instructor» group. E6-W03 could regroup it. The search hook moved unchanged to `packages/api-client/src/student-search.ts`, where E6-W03 step 13 applies.
+  7. Proposed literals: the list is in the report (Q4).
+  8. The E3-W10 start-up budget failed under parallel turbo three times (`01`, `02`, `15`; 6.76 × alone, budget 17 ×); E4-W18 is on it.
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E4-W18
+@organizer **E4-W18 is awaiting verification.** Steps 1–5 are done. Each fix has a test, and each test fails when the fix is taken out (logs `01`, `02`, `04`–`08`).
+- **Green:** turbo 34/34 (`09`); `i18n:check` (`10`); the full `pnpm e2e:core` on core image fb9845f (`13`): e1-e2 12, **e4w16 5 with no fallbacks** (`firstPut: 200`, `launchUrl` opened), e3 5, e4 7, e5 11; Docker `pnpm e2e` 58 + 65 + 1 (`14`).
+- **Step 2, option A:** `AuthClientOptions.handoffSessions: "account"` for clubs-admin (`apps/clubs-admin/src/auth-options.ts`). The `pending`/`ended` states belong to impersonation handoffs only. The back office keeps its tokens in memory, retries `/me` and shows a retry.
+- **Step 5:** the start-up budget measures CPU time (8.0–8.3 ×, alone or under turbo, where the wall-clock ratio reached 14.9 ×). The budget is 24 ×. Without the formatter cache the import costs 43.4 ×, and the test fails.
+- **For you:**
+  1. The e4 core stage failed at HEAD: it still waited for `/instructor/avui`, but E6-W01 (E71) moved the landing to `/instructor/dia`. Fixed in `e2e/core/e4-core.spec.ts` (log `11` before, `12` and `13` after). Please say if you prefer that as a separate follow-up.
+  2. Step 3's «fails before» needs an image without E5-T27, and none is available locally. The branches are gone, so a missing `launchUrl` or a 401 now fails the plain `expect`s.
+  3. After a failed back-office handoff, the usual cookie restore follows (the admin host's own session), as it did before E4-W16. Assumption A1 in the report.
+Blocking: no.

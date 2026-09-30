@@ -1110,7 +1110,7 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
     expect(screen.queryByRole("link", { name: "El meu dia" })).toBeNull();
   });
 
-  it("a member cannot open 22 (RequireRole); screen 26's route is a placeholder until E6-W02", async () => {
+  it("a member cannot open 22 (RequireRole); screen 26 is E6-W02's page under «Alumnes»", async () => {
     const requests = recordRequests();
     await renderApp("/instructor/alumnes/dog-duna", { scenario: "member" });
     await screen.findByRole("navigation", { name: "Navegació principal" });
@@ -1118,22 +1118,21 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
     expect(requests.some((request) => request.line.includes("/instructor-card"))).toBe(false);
     cleanup();
     await renderApp("/instructor/alumnes/dog-duna/tasques", { scenario: "instructor" });
-    expect(await screen.findByRole("link", { name: "Alumnes" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Tasques i notes — Laura + Duna" }),
+    ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Alumnes" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("round 2 #3 (review #4, S10 §9): with TASKS off, screen 26's route opened directly is unavailable", async () => {
+  it("round 2 #3 (review #4, S10 §9) with E6-W02 step 5: TASKS off sends screen 26's route back to 22 with the MODULE_DISABLED note", async () => {
+    const requests = recordRequests();
     await renderApp("/instructor/alumnes/dog-duna/tasques", {
       branding: without("TASKS"),
       scenario: "instructorNoTasks",
     });
-    expect(await screen.findByRole("heading", { level: 1, name: "No disponible" })).toBeVisible();
-    cleanup();
-    await renderApp("/instructor/alumnes/dog-duna/tasques", { scenario: "instructor" });
-    // With TASKS on it is still E6-W02's placeholder («Aviat»).
-    expect(await screen.findByText("Aviat")).toBeVisible();
-    expect(screen.queryByRole("heading", { level: 1, name: "No disponible" })).toBeNull();
+    expect(await screen.findByRole("heading", { level: 1, name: "Fitxa d'alumne" })).toBeVisible();
+    expect(window.location.pathname).toBe("/instructor/alumnes/dog-duna");
+    expect(screen.getByText("Aquest mòdul està desactivat.")).toBeVisible();
+    expect(requests.some((request) => request.line.startsWith("GET /tasks"))).toBe(false);
   });
 });

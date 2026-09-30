@@ -3,6 +3,7 @@ import type { components } from "../generated/schema";
 import type { AttendanceVariant } from "./fixtures/attendance";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
+import type { HistoryVariant } from "./fixtures/followup";
 import meAdmin from "./fixtures/me-admin.json";
 import meImpersonated from "./fixtures/me-impersonated.json";
 import meInstructor from "./fixtures/me-instructor.json";
@@ -26,6 +27,10 @@ export interface MockScenarioDefinition {
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
+  /** S10 R-10-12 (E6-W02): another instructor saves the observations just before the caller (409). */
+  followup?: "stale";
+  /** The screen 25 variant of `GET /me/history` (`fixtures/followup.ts`). */
+  history?: HistoryVariant;
   me: Me;
   sessions: SessionList;
   invalidMagicLink?: boolean;
@@ -217,6 +222,45 @@ const scenarios = {
   /** S10 §9: an instructor of a club without TASKS (no task lines, no blocks on 22). */
   instructorNoTasks: {
     branding: { ...canic, modules: canic.modules.filter((module) => module !== "TASKS") },
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-14 (E6-W02): a member with a single accessible dog (`showDog: false`, no chips on 25). */
+  historySingleDog: {
+    branding: canic,
+    history: "singleDog",
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S10 §9: a club without FREE_TRAINING and ACTIVITIES (25 without their chips and rows). */
+  historyNoModules: {
+    branding: {
+      ...canic,
+      modules: canic.modules.filter(
+        (module) => module !== "FREE_TRAINING" && module !== "ACTIVITIES",
+      ),
+    },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** R-10-14: every detail line (a future cancellation on top, «ha avisat», club, system…). */
+  historyAllReasons: {
+    branding: canic,
+    history: "allReasons",
+    me: member,
+    sessions: accountSessions,
+  },
+  /** R-10-14: nothing in the window yet (25's empty state, §13-11). */
+  historyEmpty: {
+    branding: canic,
+    history: "empty",
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S10 R-10-12: another instructor saves Duna's observations just before the caller (409). */
+  tasksStale: {
+    branding: canic,
+    followup: "stale",
     me: meInstructor as Me,
     sessions: accountSessions,
   },

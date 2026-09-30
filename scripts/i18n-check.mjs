@@ -173,6 +173,9 @@ const dynamicKeyPrefixes = [
   // S10 (E6-W01): the attendance states of 21, and the `displayState` of 22's last classes.
   "enums:attendanceState.",
   "enums:attendanceStateShort.",
+  // S10 (E6-W02): the history badges of 25 and the task states of 26, D13 and 13.
+  "enums:historyState.",
+  "enums:taskState.",
   // S08 (E5-W01): rendered by the api's state, so a new value needs only its key.
   "enums:bookableState.",
   "enums:bookingOrigin.",

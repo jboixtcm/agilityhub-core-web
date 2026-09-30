@@ -5,6 +5,7 @@ import {
   type ApiClient,
   type components,
   type ListItemWith,
+  uploadSigned,
 } from "@agilityhub/api-client";
 import { fmtMaskedIban, fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
@@ -1577,23 +1578,9 @@ function DocumentList({
     if (file === undefined) return;
     setPending(true);
     try {
-      const signed = await client.POST("/attachments/upload-url", {
-        body: {
-          fileName: file.name,
-          mimeType: file.type,
-          purpose: "DOG_DOCUMENT",
-          sizeBytes: file.size,
-        },
-      });
-      if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
-      const response = await fetch(signed.data.uploadUrl, {
-        body: file,
-        headers: signed.data.headers,
-        method: "PUT",
-      });
-      if (!response.ok) throw new TypeError("File upload failed");
+      const fileKey = await uploadSigned(client, file, "DOG_DOCUMENT");
       const created = await client.POST("/dogs/{id}/documents", {
-        body: { fileKey: signed.data.fileKey, name: name.trim() === "" ? file.name : name, type },
+        body: { fileKey, name: name.trim() === "" ? file.name : name, type },
         params: { path: { id: dog.id } },
       });
       if (created.data === undefined) throw new TypeError("Document response did not contain data");
@@ -2358,24 +2345,9 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             onClick={() =>
               void run(async () => {
                 if (photo === undefined) return;
-                const signed = await client.POST("/attachments/upload-url", {
-                  body: {
-                    fileName: photo.name,
-                    mimeType: photo.type,
-                    purpose: "DOG_PHOTO",
-                    sizeBytes: photo.size,
-                  },
-                });
-                if (signed.data === undefined)
-                  throw new TypeError("Upload response did not contain data");
-                const uploaded = await fetch(signed.data.uploadUrl, {
-                  body: photo,
-                  headers: signed.data.headers,
-                  method: "PUT",
-                });
-                if (!uploaded.ok) throw new TypeError("Photo upload failed");
+                const fileKey = await uploadSigned(client, photo, "DOG_PHOTO");
                 const result = await client.PUT("/dogs/{id}/photo", {
-                  body: { fileKey: signed.data.fileKey },
+                  body: { fileKey },
                   params: { path: { id: dog.id } },
                 });
                 if (result.data === undefined)

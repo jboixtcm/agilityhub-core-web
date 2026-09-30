@@ -1,0 +1,236 @@
+/* S10 D13 «Fitxa d'alumne» (mockup V7, 1280 px) and the back office's student search. Theme tokens only. */
+.student-record {
+  display: grid;
+  gap: var(--ah-space-4);
+  padding: var(--ah-space-6);
+}
+
+.student-record__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-4);
+}
+
+.student-record__identity {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-3);
+  min-width: 0;
+}
+
+.student-record__header h1 {
+  margin: 0 var(--ah-space-2) 0 0;
+  font: 700 1.6rem/1.2 var(--ah-font-display);
+}
+
+.student-record__level {
+  color: var(--ah-color-primary);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--ah-color-primary) 16%, transparent);
+  border-color: transparent;
+}
+
+.student-record__dog {
+  text-transform: lowercase;
+}
+
+.student-record__owner {
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.student-record__manage {
+  flex: none;
+  color: var(--ah-color-primary);
+  text-transform: uppercase;
+  border-color: var(--ah-color-primary);
+}
+
+.student-record__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--ah-space-4);
+}
+
+.student-record__metric {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-4);
+}
+
+.student-record__metric strong {
+  color: var(--ah-color-primary);
+  font: 700 2rem/1.1 var(--ah-font-display);
+}
+
+.student-record__metric span {
+  font-size: 0.85rem;
+}
+
+.student-record__metric small {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.student-record__blocks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ah-space-4);
+}
+
+.student-record__block {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4) var(--ah-space-5);
+}
+
+.student-record__block h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.student-record__block p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.student-record__block--private {
+  border-color: color-mix(in srgb, var(--ah-color-warning) 55%, var(--ah-color-border));
+}
+
+.student-record__block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.student-record__block-head h2 {
+  margin-right: auto;
+}
+
+.student-record__clips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-3);
+}
+
+.student-record__clips button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  padding: 0;
+  color: var(--ah-color-text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.student-record__clips button:hover,
+.student-record__clips button:focus-visible {
+  text-decoration: underline;
+}
+
+.student-record__tasks {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.student-record__tasks li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.student-record__task-meta {
+  color: var(--ah-color-text-muted);
+}
+
+.student-record__task-text {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  min-width: 0;
+}
+
+/* Mockup D13: one line per task, the text cut with an ellipsis (the drawer shows it whole). */
+.student-record__task-text span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.student-record__task-text svg {
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.student-record__tasks li[data-done] .student-record__task-text {
+  color: var(--ah-color-text-muted);
+  text-decoration: line-through;
+}
+
+.student-record__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.students-page {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-4);
+  max-width: 48rem;
+  padding: var(--ah-space-6);
+}
+
+.students-page h1 {
+  margin: 0;
+  font: 700 1.6rem/1.2 var(--ah-font-display);
+}
+
+.students-page__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.students-page__list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ah-space-3) var(--ah-space-4);
+  color: var(--ah-color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.students-page__list a:hover,
+.students-page__list a:focus-visible {
+  background: var(--ah-color-surface-2);
+}
+
+.students-page__more {
+  justify-self: center;
+}

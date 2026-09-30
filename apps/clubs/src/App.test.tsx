@@ -137,8 +137,9 @@ describe("T-02-14 clubs shell", () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");
     // A page with the shell header: since E5-W01 03 draws the mockup's own header (mark,
-    // greeting and bell) instead, and since E5-W02 08 its «Entrenaments» bar.
-    window.history.pushState(null, "", "/historic");
+    // greeting and bell) instead, since E5-W02 08 its «Entrenaments» bar, and since E6-W02 25
+    // its «Històric» bar.
+    window.history.pushState(null, "", "/perfil");
     await renderApplication(client);
 
     expect(document.querySelector(".clubs-shell__logo")).toHaveAttribute(
@@ -656,6 +657,122 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
     expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
     expect(client.isImpersonated()).toBe(false);
     expect(navigate).not.toHaveBeenCalled();
+  });
+
+  /** Waits for every `restoreSession()` the provider started on `client`. */
+  async function restored(restore: { mock: { results: { value: unknown }[] } }) {
+    await Promise.allSettled(restore.mock.results.map(({ value }) => value));
+  }
+
+  const HANDOFF_GRANT = "urn:agilityhub:grant:handoff";
+  const RETRY_MESSAGE = "No s'ha pogut completar l'accés. Torna-ho a provar.";
+
+  /** `/oauth2/token` answers the handoff grant with `answer` while `failing()`; the rest as usual. */
+  function failHandoffGrant(answer: () => Response, failing: () => boolean = () => true) {
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === HANDOFF_GRANT && failing() ? answer() : undefined;
+      }),
+    );
+  }
+
+  it.each([
+    {
+      answer: () =>
+        HttpResponse.json(
+          { code: "HANDOFF_INVALID", details: {}, message: "Handoff invalid", traceId: "t" },
+          { status: 400 },
+        ),
+      message: "Aquest enllaç ja no és vàlid",
+      name: "a refused code (400 HANDOFF_INVALID)",
+      retry: false,
+    },
+    {
+      answer: () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+          { status: 503 },
+        ),
+      message: RETRY_MESSAGE,
+      name: "a 5xx",
+      retry: true,
+    },
+    {
+      answer: () => HttpResponse.error(),
+      message: RETRY_MESSAGE,
+      name: "no answer (offline)",
+      retry: true,
+    },
+  ])(
+    "E4-W18 step 1 (E47): $name from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload",
+    async ({ answer, message, retry }) => {
+      const token = recordTokenGrants();
+      failHandoffGrant(answer);
+      window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-3");
+      const client = authClient();
+      const restore = vi.spyOn(client, "restoreSession");
+      const navigate = vi.fn();
+      await renderApplication(client, canicBranding, "ca", navigate);
+
+      expect(await screen.findByRole("alert")).toHaveTextContent(message);
+      expect(screen.queryAllByRole("button", { name: "Torna-ho a provar" })).toHaveLength(
+        retry ? 1 : 0,
+      );
+      if (retry) expect(screen.queryByText("Aquest enllaç ja no és vàlid")).toBeNull();
+      await restored(restore);
+      expect(token.grants).toEqual([HANDOFF_GRANT]);
+      expect(window.location.search).toBe("");
+      expect(client.getMe()).toBeNull();
+      expect(client.isImpersonated()).toBe(false);
+      expect(navigate).not.toHaveBeenCalled();
+
+      // A reload of the tab (a new client on the same address, the code already gone): still
+      // anonymous on 01, and no cookie.
+      cleanup();
+      expect(window.location.pathname).toBe("/entrar");
+      const reloaded = authClient();
+      const restoreAfterReload = vi.spyOn(reloaded, "restoreSession");
+      await renderApplication(reloaded);
+      expect(await screen.findByRole("button", { name: "ENTRA" })).toBeVisible();
+      await restored(restoreAfterReload);
+      expect(reloaded.getMe()).toBeNull();
+      expect(token.grants).toEqual([HANDOFF_GRANT]);
+      token.stop();
+    },
+  );
+
+  it("E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner", async () => {
+    const token = recordTokenGrants();
+    let failing = true;
+    failHandoffGrant(
+      () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+          { status: 503 },
+        ),
+      () => failing,
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-impersonation-handoff-4");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(RETRY_MESSAGE);
+    failing = false;
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/inici", false);
+    });
+    expect(client.isImpersonated()).toBe(true);
+    expect(token.grants).toEqual([HANDOFF_GRANT, HANDOFF_GRANT]);
+
+    cleanup();
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(authClient());
+    expect(await screen.findByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    expect(token.grants).toEqual([HANDOFF_GRANT, HANDOFF_GRANT]);
+    token.stop();
   });
 
   it("step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab", async () => {

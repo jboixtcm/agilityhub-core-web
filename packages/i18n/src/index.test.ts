@@ -9,6 +9,14 @@ describe("@agilityhub/i18n", () => {
     expect(t("common:gallery.save", "en")).toBe("Save");
   });
 
+  it("E4-W18 step 4: the es retry of the access pages reads like the rest of auth («Vuelve a intentarlo»)", async () => {
+    const es = (await import("./locales/es/auth.json")).default;
+    expect(es.activation.retry).toBe("Vuelve a intentarlo");
+    expect(es.activation.retry).toBe(es.onboarding.retry);
+    // The message shown right above that button on 01 (E4-W16's retry after a handoff).
+    expect(es.access.genericError).toMatch(/Vuelve a intentarlo\.$/u);
+  });
+
   it("loads namespaces on demand", async () => {
     const instance = await createI18n({
       branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },

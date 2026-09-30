@@ -1,0 +1,940 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/tasks.test.tsx (11 tests | 1 failed | 10 skipped) 10168ms
+   ❯ T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) (10)
+     × an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays 10165ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays
+TestingLibraryElementError: Unable to find an element with the text: Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Torna"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mTasques i notes — Laura + Duna[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-followup"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-title"[39m
+          [33mclass[39m=[32m"ah-followup__block"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-followup__title"[39m
+            [33mid[39m=[32m"_r_0_-title"[39m
+          [36m>[39m
+            [0mObservacions[0m
+            [0m [0m
+            [36m<span>[39m
+              [0m· privades · camp únic[0m
+            [36m</span>[39m
+          [36m</h2>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mfor[39m=[32m"_r_0_"[39m
+          [36m>[39m
+            [0mObservacions privades[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+            [33mid[39m=[32m"_r_0_"[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+            [33mrows[39m=[32m"3"[39m
+          [36m>[39m
+            [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-followup__clips"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-picker"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mAdjunta un fitxer[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+                [33mmultiple[39m=[32m""[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mtype[39m=[32m"file"[39m
+              [36m/>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_1_"[39m
+          [33mclass[39m=[32m"ah-tasks"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-tasks__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-tasks__title"[39m
+              [33mid[39m=[32m"_r_1_"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAfegir[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</header>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"ah-tasks__list"[39m
+          [36m>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--done"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                [36m>[39m
+                  [0mfeta[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m31-07 · Estel[0m
+                  [0m · feta per l'Estel el 03-08[0m
+                  [0m · [0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-attachment-chips"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-attachment-chip"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [36m<span>[39m
+                        [0mvídeo_balancí.mp4[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</span>[39m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                [36m>[39m
+                  [0mpendent[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mLa meva versió[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m30-07 · Marc[0m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--done"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                [36m>[39m
+                  [0mfeta[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mTreballar l'«espera» a la línia de sortida[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m28-07 · Estel[0m
+                  [0m · feta per la Laura el 02-08[0m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</section>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-followup__history"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mVeure l'historial complet ›[0m
+        [36m</button>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-note"[39m
+          [33mclass[39m=[32m"ah-followup__block"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-followup__title"[39m
+            [33mid[39m=[32m"_r_0_-note"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+            [0m [0m
+            [36m<span>[39m
+              [0m· de l'alumne · només lectura[0m
+            [36m</span>[39m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-followup__note"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+            [36m</p>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-chips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chip"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mfoto_balancí.jpg[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDesa[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Torna"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mTasques i notes — Laura + Duna[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-followup"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-title"[39m
+          [33mclass[39m=[32m"ah-followup__block"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-followup__title"[39m
+            [33mid[39m=[32m"_r_0_-title"[39m
+          [36m>[39m
+            [0mObservacions[0m
+            [0m [0m
+            [36m<span>[39m
+              [0m· privades · camp únic[0m
+            [36m</span>[39m
+          [36m</h2>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mfor[39m=[32m"_r_0_"[39m
+          [36m>[39m
+            [0mObservacions privades[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+            [33mid[39m=[32m"_r_0_"[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+            [33mrows[39m=[32m"3"[39m
+          [36m>[39m
+            [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-followup__clips"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-picker"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mAdjunta un fitxer[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+                [33mmultiple[39m=[32m""[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mtype[39m=[32m"file"[39m
+              [36m/>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_1_"[39m
+          [33mclass[39m=[32m"ah-tasks"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-tasks__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-tasks__title"[39m
+              [33mid[39m=[32m"_r_1_"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mAfegir[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</header>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"ah-tasks__list"[39m
+          [36m>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--done"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                [36m>[39m
+                  [0mfeta[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m31-07 · Estel[0m
+                  [0m · feta per l'Estel el 03-08[0m
+                  [0m · [0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-attachment-chips"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-attachment-chip"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [36m<span>[39m
+                        [0mvídeo_balancí.mp4[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</span>[39m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                [36m>[39m
+                  [0mpendent[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Marca-la com a feta"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mLa meva versió[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m30-07 · Marc[0m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mclass[39m=[32m"ah-task ah-task--done"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-task__head"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                [36m>[39m
+                  [0mfeta[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-task__actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Torna-la a pendent"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Elimina la tasca"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__text"[39m
+              [36m>[39m
+                [0mTreballar l'«espera» a la línia de sortida[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"ah-task__meta"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0m28-07 · Estel[0m
+                  [0m · feta per la Laura el 02-08[0m
+                [36m</span>[39m
+              [36m</p>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</section>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-followup__history"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mVeure l'historial complet ›[0m
+        [36m</button>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-note"[39m
+          [33mclass[39m=[32m"ah-followup__block"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-followup__title"[39m
+            [33mid[39m=[32m"_r_0_-note"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+            [0m [0m
+            [36m<span>[39m
+              [0m· de l'alumne · només lectura[0m
+            [36m</span>[39m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-followup__note"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+            [36m</p>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-chips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chip"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mfoto_balancí.jpg[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary ah-followup__save"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDesa[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/tasks.test.tsx:268:20
+    266|     fireEvent.click(within(card(1)).getByRole("button", { name: "Desa"…
+    267|     expect(
+    268|       await screen.findByText(
+       |                    ^
+    269|         "Aquest element s'ha modificat des d'un altre lloc. Actualitze…
+    270|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  13:18:43
+   Duration  11.33s (tests 90%, transform 5%, environment 2%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/tasks.test.tsx -t own version

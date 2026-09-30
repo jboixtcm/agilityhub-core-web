@@ -1,0 +1,37 @@
+{
+  "title": "Historial",
+  "back": "Volver",
+  "close": "Cierra",
+  "dogs": {
+    "label": "Perros",
+    "all": "Todos",
+    "ownDog": "{name} · {level}",
+    "groupDog": "{name} · {level} ({owner})",
+    "groupDogNoLevel": "{name} ({owner})"
+  },
+  "types": {
+    "label": "Tipo",
+    "all": "Todo",
+    "CLASS": "Clases",
+    "TRAINING": "Entrenamientos",
+    "ACTIVITY": "Actividades"
+  },
+  "window": "{months, plural, one {Último mes, del más reciente al más antiguo} other {Últimos # meses, del más reciente al más antiguo}}",
+  "withDog": "{title} · con {dog}",
+  "detail": {
+    "noShow": "Sin aviso previo · cuenta como hecha",
+    "byMemberLate": "Por ti, el {date} a las {time} · cuenta como hecha",
+    "noticeLate": "Avisaste al club el {date} a las {time} · cuenta como hecha",
+    "byMemberInTime": "Por ti, dentro de plazo · no cuenta",
+    "noticeInTime": "Avisaste al club, dentro de plazo · no cuenta",
+    "byClubOnBehalf": "Por el club en tu nombre · no cuenta",
+    "system": "Por inactividad o baja · no cuenta",
+    "trainingByMember": "Por ti",
+    "byClub": "«{message}»"
+  },
+  "list": "Historial de clases, entrenamientos y actividades",
+  "empty": "Todavía no hay nada en el historial",
+  "loading": "Cargando el historial",
+  "loadError": "No se ha podido cargar el historial.",
+  "retry": "Vuelve a intentarlo"
+}

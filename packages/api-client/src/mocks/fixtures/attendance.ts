@@ -3,6 +3,7 @@ import type { components } from "../../generated/schema";
 import { clubInstant, clubLocalDateOf, clubLocalTime } from "./calendar";
 import { catalogState } from "./catalogs";
 import { censusDogs } from "./census";
+import { instructorNoteAttachments, observationsBlock, tasksBlock } from "./followup";
 import { ringBlockListItems } from "./training";
 
 type AttendanceRow = components["schemas"]["AttendanceRow"];
@@ -729,9 +730,8 @@ function dunaCard(): InstructorCard {
       status: "ACTIVE",
     },
     instructorNote: {
-      attachments: [
-        { id: "a1", mimeType: "image/jpeg", name: "foto_balancí.jpg", url: DUNA_PHOTO },
-      ],
+      // Its attachments (foto_balancí.jpg) are the follow-up world's.
+      attachments: [],
       text: "A veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí",
       updatedAt: "2026-08-01T17:02:00Z",
     },
@@ -796,23 +796,7 @@ function dunaCard(): InstructorCard {
       trainingsPerWeek: 2.3,
       windowDays: 30,
     },
-    observations: {
-      attachments: [],
-      text: "Va molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.",
-      updatedAt: "2026-08-01T10:00:00Z",
-      updatedByName: "Marc",
-      version: 4,
-    },
-    tasks: {
-      doneCount: 1,
-      latest: {
-        createdAt: "2026-07-31T16:00:00Z",
-        createdByName: "Estel",
-        id: "t1",
-        text: "Aquesta setmana practiqueu el balancí amb calma: sessions curtes…",
-      },
-      pendingCount: 2,
-    },
+    // The observations and the tasks come from the follow-up world (`fixtures/followup.ts`).
   };
 }
 
@@ -865,19 +849,28 @@ function censusCard(dogId: string): InstructorCard | undefined {
       trainingsPerWeek: 0,
       windowDays: 30,
     },
-    observations: { attachments: [], text: null, updatedAt: null, updatedByName: null, version: 1 },
-    tasks: { doneCount: 0, latest: null, pendingCount: 0 },
   };
 }
 
-/** `GET /dogs/{id}/instructor-card` (S10 §6), with the blocks the club's modules allow. */
+/**
+ * `GET /dogs/{id}/instructor-card` (S10 §6), with the blocks the club's modules allow. The tasks,
+ * the observations and the attachments are the follow-up world's (E6-W02), so a write on 26 or in
+ * D13's drawer shows on the next read of 22 and D13.
+ */
 export function instructorCardView(
   dogId: string,
   context: AttendanceContext,
 ): InstructorCard | undefined {
   const card = dogId === "dog-duna" ? dunaCard() : censusCard(dogId);
   if (card === undefined) return undefined;
-  const { instructorNote, level, observations, tasks, ...rest } = card;
+  const { level } = card;
+  const rest = { dog: card.dog, lastClasses: card.lastClasses, member: card.member };
+  const instructorNote = {
+    ...(card.instructorNote ?? { text: null, updatedAt: null }),
+    attachments: instructorNoteAttachments(dogId),
+  };
+  const observations = observationsBlock(dogId);
+  const tasks = tasksBlock(dogId);
   const { trainingsCount, trainingsPerWeek, ...metrics } = card.metrics;
   return {
     ...rest,

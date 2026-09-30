@@ -110,36 +110,7 @@
   white-space: nowrap;
 }
 
-.activity-history-row {
-  display: grid;
-  gap: var(--ah-space-1);
-  padding: var(--ah-space-2) var(--ah-space-3);
-}
-
-.activity-history-row__line {
-  display: flex;
-  align-items: center;
-  gap: var(--ah-space-2);
-  font-size: 0.85rem;
-}
-
-.activity-history-row__date {
-  width: 3rem;
-  flex: none;
-  color: var(--ah-color-text-muted);
-  font-size: 0.78rem;
-}
-
-.activity-history-row__title {
-  flex: 1;
-  min-width: 0;
-}
-
-.activity-history-row__note {
-  margin: 0;
-  color: var(--ah-color-text-muted);
-  font-size: 0.78rem;
-}
+/* The activity rows of screen 25 are `history/HistoryRow.tsx` (history.css). */
 
 .activity-detail {
   gap: var(--ah-space-3);

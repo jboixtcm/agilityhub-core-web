@@ -29,6 +29,18 @@ export {
   requestExport,
   saveFile,
 } from "./exports";
+export {
+  attachmentName,
+  type DogFollowup,
+  type FollowupAttachmentEntity,
+  type FollowupBusy,
+  type FollowupCard,
+  FOLLOWUP_HISTORY_PAGE_SIZE,
+  type FollowupHistory,
+  type FollowupLoad,
+  type FollowupTask,
+  useDogFollowup,
+} from "./followup";
 export type { components, operations, paths } from "./generated/schema";
 export { itemsWith, type ListItemWith, listFields } from "./list-fields";
 export { createQueryClient, queryKeys, useBranding, useMe } from "./query";
@@ -59,3 +71,16 @@ export {
   useRingBlockGrid,
   useRingBlockSubmit,
 } from "./ring-blocks";
+export {
+  STUDENT_SEARCH_PAGE_SIZE,
+  type StudentSearchDog,
+  useStudentSearch,
+} from "./student-search";
+export {
+  type FileLimits,
+  loadFileLimits,
+  putSignedFile,
+  type SignedUploadTarget,
+  type UploadPurpose,
+  uploadSigned,
+} from "./uploads";

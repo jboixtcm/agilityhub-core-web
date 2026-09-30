@@ -220,11 +220,14 @@ async function loginAdmin(page: Page): Promise<void> {
   await settle(page, "/tauler");
 }
 
-/** Clubs app login (seed accounts of `club-canic.yaml`); `landing` = `/inici` or `/instructor/avui`. */
+/**
+ * Clubs app login (seed accounts of `club-canic.yaml`); `landing` = `/inici`, or `/instructor/dia`
+ * for an instructor (20, E6-W01 round 2 #7, ruling E71; the e5 stage's helper already waits there).
+ */
 async function loginClubs(
   page: Page,
   email: string,
-  landing: "/inici" | "/instructor/avui",
+  landing: "/inici" | "/instructor/dia",
   labels: { email: string; password: string } = {
     email: "Correu electrònic",
     password: "Contrasenya",
@@ -831,7 +834,7 @@ test("T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled cla
 
   const instructorContext = await localizedContext(browser, mobile, "ca");
   const instructor = await instructorContext.newPage();
-  await loginClubs(instructor, "instructor@example.test", "/instructor/avui");
+  await loginClubs(instructor, "instructor@example.test", "/instructor/dia");
   await navigateClubRoute(instructor, `/instructor/avui?date=${registrantsWednesday}`);
   grid = instructor.getByRole("table", { name: "Quadre del dia" });
   await expect(grid).toBeVisible();

@@ -32,6 +32,13 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   /^\/jobs\/[^/]+\/trigger$/,
   // S10 [DESA] of screens 21 and D12 (R-10-04).
   { method: "PUT", path: /^\/class-sessions\/[^/]+\/attendance$/ },
+  // S10 screen 26 and D13 (R-10-10…R-10-12): the routes whose contract declares the header. The
+  // completion and the reopening do not (they are idempotent by state: `TASK_ALREADY_DONE`).
+  "/tasks",
+  "/attachments",
+  { method: "PUT", path: /^\/dogs\/[^/]+\/observations$/ },
+  { method: "DELETE", path: /^\/tasks\/[^/]+$/ },
+  { method: "DELETE", path: /^\/attachments\/[^/]+$/ },
 ];
 
 type MaybePromise<T> = Promise<T> | T;

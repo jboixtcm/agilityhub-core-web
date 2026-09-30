@@ -1,14 +1,21 @@
 import { mockScenario, resetOnboardingMockState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
+import {
+  AuthClient,
+  IMPERSONATION_STORAGE_KEY,
+  MemoryRefreshTokenStore,
+  SessionProvider,
+} from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ADMIN_ROUTES, AdminNavigation, App } from "./App";
+import { ADMIN_AUTH_OPTIONS } from "./auth-options";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -33,8 +40,8 @@ afterAll(() => {
 
 function authClient() {
   return new AuthClient({
+    ...ADMIN_AUTH_OPTIONS,
     apiBaseUrl: `${window.location.origin}/api/v1`,
-    clientId: "clubs-admin",
     identityBaseUrl: window.location.origin,
     mockMode: true,
     mockRefreshTokenStore: new MemoryRefreshTokenStore(),
@@ -240,6 +247,151 @@ describe("T-01-20 clubs-admin handoff", () => {
     await waitFor(() => {
       expect(exchange).toHaveBeenCalledWith("mock-handoff-code");
     });
+  });
+});
+
+describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's own session", () => {
+  const RETRY_MESSAGE = "No s'ha pogut completar l'accés. Torna-ho a provar.";
+  const REFUSED_MESSAGE = "Aquest accés al backoffice no és vàlid o ha caducat.";
+  const HANDOFF_GRANT = "urn:agilityhub:grant:handoff";
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    sessionStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  /** `window.location.assign` (a full page load, which jsdom cannot do) recorded; the rest real. */
+  function stubPageLoads() {
+    const real = window.location;
+    const assign = vi.fn();
+    vi.stubGlobal("location", {
+      assign,
+      get hash() {
+        return real.hash;
+      },
+      get host() {
+        return real.host;
+      },
+      get href() {
+        return real.href;
+      },
+      get origin() {
+        return real.origin;
+      },
+      get pathname() {
+        return real.pathname;
+      },
+      get search() {
+        return real.search;
+      },
+    });
+    return assign;
+  }
+
+  /** Waits until the page offers its retry, waking the client's backoff with `online`. */
+  async function retryButton() {
+    return waitFor(
+      () => {
+        const button = screen.queryByRole("button", { name: "Torna-ho a provar" });
+        if (button === null) {
+          window.dispatchEvent(new Event("online"));
+          throw new Error("still retrying");
+        }
+        return button;
+      },
+      { timeout: 3000 },
+    );
+  }
+
+  /** Nothing the tab keeps in its session storage carries the handoff's tokens. */
+  function sessionStorageValues(): string[] {
+    return Array.from({ length: sessionStorage.length }, (_, index) => {
+      const key = sessionStorage.key(index) ?? "";
+      return `${key}=${sessionStorage.getItem(key) ?? ""}`;
+    });
+  }
+
+  function unavailable() {
+    return HttpResponse.json(
+      { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+      { status: 503 },
+    );
+  }
+
+  it("a transient /me failure shows a retry, never «no és vàlid o ha caducat»: the code leaves the address, no token lands in session storage, and the retry opens /tauler", async () => {
+    let down = true;
+    server.use(http.get("*/api/v1/me", () => (down ? unavailable() : undefined)));
+    window.history.pushState(null, "", "/entrar?handoff=mock-handoff-code");
+    const assign = stubPageLoads();
+    const client = authClient();
+    await renderApplication(client);
+
+    expect(screen.getByRole("status")).toHaveTextContent("Obrint el backoffice…");
+    expect(window.location.search).toBe("");
+    const retry = await retryButton();
+    expect(screen.getByRole("alert")).toHaveTextContent(RETRY_MESSAGE);
+    expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    expect(assign).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+    expect(sessionStorageValues().filter((entry) => entry.includes("mock-access-token"))).toEqual(
+      [],
+    );
+    expect(client.hasPendingHandoff()).toBe(true);
+
+    down = false;
+    fireEvent.click(retry);
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/tauler");
+    });
+    expect(client.getMe()?.impersonation).toBeUndefined();
+    expect(client.getMe()?.account.email).toBe("aina.serra@example.test");
+    expect(client.isImpersonated()).toBe(false);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it.each([
+    { answer: unavailable, name: "a 5xx" },
+    { answer: () => HttpResponse.error(), name: "no answer (offline)" },
+  ])(
+    "$name from /oauth2/token shows a retry that sends the same code again and opens /tauler",
+    async ({ answer }) => {
+      const grants: string[] = [];
+      let down = true;
+      server.use(
+        http.post("*/oauth2/token", async ({ request }) => {
+          const grant = new URLSearchParams(await request.clone().text()).get("grant_type") ?? "";
+          grants.push(grant);
+          return grant === HANDOFF_GRANT && down ? answer() : undefined;
+        }),
+      );
+      window.history.pushState(null, "", "/entrar?handoff=mock-handoff-code");
+      const assign = stubPageLoads();
+      await renderApplication(authClient());
+
+      expect(await screen.findByRole("alert")).toHaveTextContent(RETRY_MESSAGE);
+      expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+      expect(window.location.search).toBe("");
+      expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+
+      down = false;
+      fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+      await waitFor(() => {
+        expect(assign).toHaveBeenCalledWith("/tauler");
+      });
+      expect(grants.filter((grant) => grant === HANDOFF_GRANT)).toHaveLength(2);
+    },
+  );
+
+  it("a refused code (400 HANDOFF_INVALID) still says «no és vàlid o ha caducat», with no retry", async () => {
+    window.history.pushState(null, "", "/entrar?handoff=invalid");
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+
+    expect(await screen.findByText(REFUSED_MESSAGE)).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(window.location.search).toBe("");
+    expect(assign).not.toHaveBeenCalled();
   });
 });
 

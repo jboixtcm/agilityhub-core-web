@@ -1,0 +1,75 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/App.test.tsx (16 tests | 4 failed | 12 skipped) 134ms
+   ❯ E4-W18 step 2 (review #3): the back office's handoff is the caller's own session (4)
+     × a transient /me failure shows a retry, never «no és vàlid o ha caducat»: the code leaves the address, no token lands in session storage, and the retry opens /tauler 82ms
+     × a 5xx from /oauth2/token shows a retry that sends the same code again and opens /tauler 21ms
+     × no answer (offline) from /oauth2/token shows a retry that sends the same code again and opens /tauler 11ms
+     × a refused code (400 HANDOFF_INVALID) still says «no és vàlid o ha caducat», with no retry 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > a transient /me failure shows a retry, never «no és vàlid o ha caducat»: the code leaves the address, no token lands in session storage, and the retry opens /tauler
+AssertionError: expected '?handoff=mock-handoff-code' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ ?handoff=mock-handoff-code
+
+ ❯ src/App.test.tsx:331:36
+    329|
+    330|     expect(screen.getByRole("status")).toHaveTextContent("Obrint el ba…
+    331|     expect(window.location.search).toBe("");
+       |                                    ^
+    332|     const retry = await retryButton();
+    333|     expect(screen.getByRole("alert")).toHaveTextContent(RETRY_MESSAGE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > a 5xx from /oauth2/token shows a retry that sends the same code again and opens /tauler
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > no answer (offline) from /oauth2/token shows a retry that sends the same code again and opens /tauler
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  No s'ha pogut completar l'accés. Torna-ho a provar.[39m
+Received:
+[31m  Aquest accés al backoffice no és vàlid o ha caducat.[39m
+ ❯ src/App.test.tsx:372:48
+    370|       await renderApplication(authClient());
+    371|
+    372|       expect(await screen.findByRole("alert")).toHaveTextContent(RETRY…
+       |                                                ^
+    373|       expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    374|       expect(window.location.search).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > a refused code (400 HANDOFF_INVALID) still says «no és vàlid o ha caducat», with no retry
+AssertionError: expected '?handoff=invalid' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ ?handoff=invalid
+
+ ❯ src/App.test.tsx:393:36
+    391|     expect(await screen.findByText(REFUSED_MESSAGE)).toBeVisible();
+    392|     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })…
+    393|     expect(window.location.search).toBe("");
+       |                                    ^
+    394|     expect(assign).not.toHaveBeenCalled();
+    395|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 skipped (16)
+   Start at  13:43:07
+   Duration  1.68s (transform 53%, environment 18%, import 16%, tests 8%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E4-W18

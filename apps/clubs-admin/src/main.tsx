@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 
 import { App } from "./App";
+import { ADMIN_AUTH_OPTIONS } from "./auth-options";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
@@ -52,8 +53,8 @@ async function bootstrap(root: HTMLElement) {
     ],
   });
   const authClient = new AuthClient({
+    ...ADMIN_AUTH_OPTIONS,
     apiBaseUrl,
-    clientId: "clubs-admin",
     identityBaseUrl,
     mockMode: mockEnabled,
     ...(mockEnabled ? { mockRefreshTokenStore: new MemoryRefreshTokenStore() } : {}),

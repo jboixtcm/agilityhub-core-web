@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { isApiError, type ApiClient, type components, uploadSigned } from "@agilityhub/api-client";
 import {
   Button,
   Drawer,
@@ -271,24 +271,10 @@ function SignupDogDocuments({
     setPending("upload");
     setError(undefined);
     try {
-      const signed = await client.POST("/attachments/upload-url", {
-        body: {
-          fileName: file.name,
-          mimeType: file.type === "" ? "application/octet-stream" : file.type,
-          purpose: "DOG_DOCUMENT",
-          sizeBytes: file.size,
-        },
-      });
-      if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
-      // R-04-08: the storage signed these headers (Content-Type, If-None-Match); S3 answers 403 without them.
-      const stored = await fetch(signed.data.uploadUrl, {
-        body: file,
-        headers: signed.data.headers,
-        method: "PUT",
-      });
-      if (!stored.ok) throw new TypeError("File upload failed");
+      // R-04-08: the shared helper sends the storage's signed headers unchanged (S3 answers 403 without them).
+      const fileKey = await uploadSigned(client, file, "DOG_DOCUMENT");
       const created = await client.POST("/dogs/{id}/documents", {
-        body: { fileKey: signed.data.fileKey, name: file.name, type: selectedType },
+        body: { fileKey, name: file.name, type: selectedType },
         params: { path: { id: dog.id } },
       });
       const document = created.data;
@@ -534,19 +520,8 @@ function ReadmissionDogDocuments({
     setError(undefined);
     let fileKey: string;
     try {
-      const signed = await client.POST("/attachments/upload-url", {
-        body: {
-          fileName: file.name,
-          mimeType: file.type === "" ? "application/octet-stream" : file.type,
-          purpose: "DOG_DOCUMENT",
-          sizeBytes: file.size,
-        },
-      });
-      if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
-      // R-04-08: the storage signed these headers (Content-Type, If-None-Match); S3 answers 403 without them.
-      const stored = await fetch(signed.data.uploadUrl, { body: file, headers: signed.data.headers, method: "PUT" });
-      if (!stored.ok) throw new TypeError("File upload failed");
-      fileKey = signed.data.fileKey;
+      // R-04-08: the shared helper sends the storage's signed headers unchanged (S3 answers 403 without them).
+      fileKey = await uploadSigned(client, file, "DOG_DOCUMENT");
     } catch (cause) {
       setError(dogErrorText(cause, t));
       setPending(undefined);

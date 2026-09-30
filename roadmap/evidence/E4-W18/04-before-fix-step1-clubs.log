@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (43 tests | 4 failed | 39 skipped) 146ms
+   ❯ T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app (8)
+     × E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 104ms
+     × E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 16ms
+     × E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 13ms
+     × E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+AssertionError: expected [ Array(2) ] to deeply equal [ 'urn:agilityhub:grant:handoff' ]
+
+- Expected
++ Received
+
+  [
+    "urn:agilityhub:grant:handoff",
++   "refresh_token",
+  ]
+
+ ❯ src/App.test.tsx:719:28
+    717|       if (retry) expect(screen.queryByText("Aquest enllaç ja no és vàl…
+    718|       await restored(restore);
+    719|       expect(token.grants).toEqual([HANDOFF_GRANT]);
+       |                            ^
+    720|       expect(window.location.search).toBe("");
+    721|       expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  No s'ha pogut completar l'accés. Torna-ho a provar.[39m
+Received:
+[31m  Aquest enllaç ja no és vàlid[39m
+ ❯ src/App.test.tsx:713:48
+    711|       await renderApplication(client, canicBranding, "ca", navigate);
+    712|
+    713|       expect(await screen.findByRole("alert")).toHaveTextContent(messa…
+       |                                                ^
+    714|       expect(screen.queryAllByRole("button", { name: "Torna-ho a prova…
+    715|         retry ? 1 : 0,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  No s'ha pogut completar l'accés. Torna-ho a provar.[39m
+Received:
+[31m  Aquest enllaç ja no és vàlid[39m
+ ❯ src/App.test.tsx:756:46
+    754|     await renderApplication(client, canicBranding, "ca", navigate);
+    755|
+    756|     expect(await screen.findByRole("alert")).toHaveTextContent(RETRY_M…
+       |                                              ^
+    757|     failing = false;
+    758|     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a pro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 39 skipped (43)
+   Start at  13:40:59
+   Duration  1.39s (transform 48%, environment 21%, import 15%, tests 11%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E4-W18

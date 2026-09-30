@@ -1,4 +1,4 @@
-import type { components } from "@agilityhub/api-client";
+import { type components, isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
@@ -51,6 +51,8 @@ import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
 import { Gallery } from "./dev/gallery";
+import { StudentRecordPage } from "./instructor/StudentRecordPage";
+import { StudentsPage } from "./instructor/StudentsPage";
 import { isIsoDate } from "./planning/calendar-shared";
 import { CalendarDayPage } from "./planning/CalendarDayPage";
 import { CalendarPage } from "./planning/CalendarPage";
@@ -102,7 +104,8 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // «Entrenaments» (menú Camp): the ring-usage register, no mockup (S09 §2 writes `/admin/training`;
   // the admin app's paths are Catalan and unprefixed). Gated by FREE_TRAINING through `modules.ts`.
   { path: "/entrenaments", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen D13.
+  // «Alumnes» of the D12/D13/D14 sidebar (no mockup, S10 §13-9) and screen D13 (E6-W02).
+  { path: "/alumnes", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/alumnes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D14.
   { path: "/seguiment", roles: ["ADMIN"] },
@@ -276,6 +279,14 @@ export function AdminNavigation({
           roles: ["INSTRUCTOR", "ADMIN"],
         },
         {
+          // Mockups D12, D13 and D14: «Alumnes», the student search that opens D13.
+          href: "/alumnes",
+          icon: "paw",
+          id: "students",
+          label: t("shell:nav.students"),
+          roles: ["INSTRUCTOR", "ADMIN"],
+        },
+        {
           href: "/entrenaments",
           icon: "cone",
           id: "training",
@@ -368,7 +379,10 @@ export function AdminNavigation({
             (entry.platformOnly !== true || hasPlatformRole),
         )
         .map((entry) => ({
-          active: matchesPath(pathname, entry.href),
+          active:
+            matchesPath(pathname, entry.href) ||
+            // Mockup D13: «Alumnes» stays lit on a student's record.
+            (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")),
           ...(entry.count === undefined ? {} : { count: entry.count }),
           href: entry.href,
           icon: entry.icon,
@@ -498,6 +512,14 @@ function routeContent(
   }
   if (route.path === "/entrenaments") {
     return <TrainingRegisterPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/alumnes") {
+    return <StudentsPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/alumnes/:id") {
+    // D13 (S10 §2): INSTRUCTOR and ADMIN, never an impersonation (an admin session never is one).
+    const dogId = decodeURIComponent(pathname.split("/")[2] ?? "");
+    return <StudentRecordPage client={client} dogId={dogId} key={pathname} />;
   }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;
@@ -636,32 +658,87 @@ function AdminShell({
 
 function AccessPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation("auth");
-  const handoff = new URLSearchParams(window.location.search).get("handoff");
+  // R-01-13: the one-time code of 03b («Obre el backoffice»), read once.
+  const [handoff] = useState(() => new URLSearchParams(window.location.search).get("handoff"));
   const handoffStarted = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [pending, setPending] = useState<"handoff" | "login" | "magic" | null>(
-    handoff === null ? null : "handoff",
+    handoff === null || handoff === "" ? null : "handoff",
   );
   const [message, setMessage] = useState<string>();
   const [error, setError] = useState<string>();
+  // E4-W18 step 2: the code or its `/me` went unanswered (5xx, offline): a retry, never «no és
+  // vàlid o ha caducat».
+  const [handoffUnanswered, setHandoffUnanswered] = useState(false);
+
+  const enterHandoff = useCallback(() => {
+    window.location.assign("/tauler");
+  }, []);
+  const failHandoff = useCallback(
+    (cause: unknown) => {
+      const transient =
+        authClient.hasPendingHandoff() ||
+        (isApiError(cause) && (cause.status === 0 || cause.status >= 500));
+      setHandoffUnanswered(transient);
+      setError(transient ? undefined : t("auth:admin.handoffError"));
+      setPending(null);
+    },
+    [authClient, t],
+  );
 
   useEffect(() => {
-    if (handoff === null || handoffStarted.current) {
+    if (handoff === null || handoff === "" || handoffStarted.current) {
       return;
     }
     handoffStarted.current = true;
-    void authClient.exchangeHandoff(handoff).then(
-      () => {
-        window.location.assign("/tauler");
-      },
-      () => {
-        setError(t("auth:admin.handoffError"));
-        setPending(null);
-      },
+    // The code is single-use: it leaves the address (and the history) before it is redeemed.
+    const address = new URL(window.location.href);
+    address.searchParams.delete("handoff");
+    window.history.replaceState(null, "", `${address.pathname}${address.search}${address.hash}`);
+    void authClient.exchangeHandoff(handoff).then(enterHandoff, failHandoff);
+  }, [authClient, enterHandoff, failHandoff, handoff]);
+
+  // The session's own restore keeps trying in the background: its answer enters as well.
+  useEffect(() => {
+    if (!handoffUnanswered) {
+      return;
+    }
+    const signedIn = () => {
+      if (authClient.getMe() !== null) enterHandoff();
+    };
+    authClient.addEventListener("signedIn", signedIn);
+    return () => {
+      authClient.removeEventListener("signedIn", signedIn);
+    };
+  }, [authClient, enterHandoff, handoffUnanswered]);
+
+  if (handoffUnanswered) {
+    return (
+      <main className="access-page">
+        <Card className="access-card">
+          <h1>{t("auth:admin.title")}</h1>
+          <p role="alert">{t("auth:access.genericError")}</p>
+          <Button
+            disabled={pending !== null}
+            onClick={() => {
+              setPending("handoff");
+              // `/me` of a redeemed code, or the code itself when the token endpoint went unanswered.
+              const retry =
+                authClient.hasPendingHandoff() || handoff === null || handoff === ""
+                  ? authClient.retryHandoff()
+                  : authClient.exchangeHandoff(handoff);
+              void retry.then(enterHandoff, failHandoff);
+            }}
+            type="button"
+          >
+            {pending === "handoff" ? t("auth:admin.handoffLoading") : t("auth:activation.retry")}
+          </Button>
+        </Card>
+      </main>
     );
-  }, [authClient, handoff, t]);
+  }
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();

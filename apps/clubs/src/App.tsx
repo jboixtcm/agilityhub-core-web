@@ -45,13 +45,16 @@ import { BookingDetailPage } from "./booking/BookingDetailPage";
 import { BookPage } from "./booking/BookPage";
 import { ConfirmPage } from "./booking/ConfirmPage";
 import { HomePage } from "./booking/HomePage";
+import { navigateInApp } from "./booking/shared";
 import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
+import { HistoryPage } from "./history/HistoryPage";
 import { InfoPage } from "./InfoPage";
 import { AttendancePage } from "./instructor/AttendancePage";
 import { DayPage } from "./instructor/DayPage";
 import { RingBlockPage } from "./instructor/RingBlockPage";
 import { StudentCardPage } from "./instructor/StudentCardPage";
 import { StudentSearchPage } from "./instructor/StudentSearchPage";
+import { TasksPage } from "./instructor/TasksPage";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -106,13 +109,12 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 24 (S09 §2 writes it as `/instructor/ring-blocks/new`).
   { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen 26 (E6-W02): a placeholder until then, with its own route so that its module (TASKS,
-  // `modules.ts`) guards it; E0-W06's `/instructor/tasques` is gone.
+  // Screen 26 (S10 §2, E6-W02; TASKS through `modules.ts`, off → back to 22 with a note).
   { path: "/instructor/alumnes/:dogId/tasques", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/instructor/*", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
   { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen 25.
+  // Screen 25 (S10 §2, E6-W02): MEMBER and impersonated sessions (`MemberHistoryRoute`).
   { path: "/historic" },
   // Activity detail (S07 §2, no mockup; ACTIVITIES through `moduleUi`): MEMBER and impersonated
   // sessions only (`MemberActivityRoute`).
@@ -338,14 +340,17 @@ export function MobileNavigation({
       active:
         item.id === "profile"
           ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
-          : item.id === "training"
-            ? ["/entrenaments", "/entrenaments/:id"].some((path) => matchesPath(pathname, path))
-            : item.id === "reserve"
-              ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
-                ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some((path) =>
-                  matchesPath(pathname, path),
-                )
-              : matchesPath(pathname, item.href),
+          : item.id === "home"
+            ? // Mockup 25: the history is reached from 03, and «Inici» stays lit.
+              ["/inici", "/historic"].some((path) => matchesPath(pathname, path))
+            : item.id === "training"
+              ? ["/entrenaments", "/entrenaments/:id"].some((path) => matchesPath(pathname, path))
+              : item.id === "reserve"
+                ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
+                  ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some(
+                    (path) => matchesPath(pathname, path),
+                  )
+                : matchesPath(pathname, item.href),
       href: item.href,
       icon: item.icon,
       label: item.label,
@@ -555,15 +560,22 @@ export function AccessPage({
     },
     [authClient, navigate],
   );
-  const failHandoff = useCallback(() => {
-    if (authClient.hasPendingHandoff()) {
-      setHandoffUnconfirmed(true);
-    } else {
-      setHandoffUnconfirmed(false);
-      setError(t("auth:activation.invalidTitle"));
-    }
-    setPending(null);
-  }, [authClient, t]);
+  const failHandoff = useCallback(
+    (cause: unknown) => {
+      if (authClient.hasPendingHandoff()) {
+        setHandoffUnconfirmed(true);
+      } else if (isApiError(cause) && (cause.status === 0 || cause.status >= 500)) {
+        // E4-W18 step 1: the code went unanswered (5xx, offline): the tab stays anonymous (no
+        // cookie), and the retry sends the same code again.
+        setHandoffUnconfirmed(true);
+      } else {
+        setHandoffUnconfirmed(false);
+        setError(t("auth:activation.invalidTitle"));
+      }
+      setPending(null);
+    },
+    [authClient, t],
+  );
 
   useEffect(() => {
     if (handoff === null || handoff === "" || handoffStarted.current) {
@@ -609,7 +621,12 @@ export function AccessPage({
         <Button
           onClick={() => {
             setPending("handoff");
-            void authClient.retryHandoff().then(enterHandoff, failHandoff);
+            // `/me` of a redeemed code, or the code itself when the token endpoint went unanswered.
+            const retry =
+              authClient.hasPendingHandoff() || handoff === null || handoff === ""
+                ? authClient.retryHandoff()
+                : authClient.exchangeHandoff(handoff);
+            void retry.then(enterHandoff, failHandoff);
           }}
           type="button"
         >
@@ -1370,6 +1387,45 @@ function InstructorRoute({ children }: { children: ReactNode }) {
   return <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>{children}</RequireRole>;
 }
 
+/**
+ * Screen 25 (S10 §6): `/me/history` is MEMBER only, and an impersonation token acts as the member
+ * (the banner stays in the shell). Any other session takes the usual `RequireRole` path.
+ */
+function MemberHistoryRoute({ client }: { client: ApiClient }) {
+  const { me } = useSession();
+  return me?.impersonation !== undefined ? (
+    <RequireAuth>
+      <HistoryPage client={client} />
+    </RequireAuth>
+  ) : (
+    <RequireRole roles={["MEMBER"]}>
+      <HistoryPage client={client} />
+    </RequireRole>
+  );
+}
+
+/**
+ * Screen 26 (S10 §9): without TASKS the page does not exist, so an authorised caller goes back to
+ * 22 with the `errors:MODULE_DISABLED` note (no dead page).
+ */
+function TasksRoute({ client, dogId }: { client: ApiClient; dogId: string }) {
+  const branding = useBranding();
+  const enabled = branding.modules.includes("TASKS");
+  const cardPath = `/instructor/alumnes/${encodeURIComponent(dogId)}`;
+  useEffect(() => {
+    if (enabled) return undefined;
+    // On a direct load this effect runs in the App's first commit, before the App's own effect
+    // listens to `popstate`: the redirect waits for that commit to finish.
+    const timer = window.setTimeout(() => {
+      navigateInApp(cardPath, { notice: { code: "MODULE_DISABLED", tone: "danger" } }, true);
+    }, 0);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [cardPath, enabled]);
+  return enabled ? <TasksPage client={client} dogId={dogId} /> : null;
+}
+
 function LegacyAccessRedirect() {
   useEffect(() => {
     window.location.replace("/entrar");
@@ -1558,6 +1614,18 @@ export function App({
           key={pathname}
         />
       </InstructorRoute>
+    ) : route.path === "/instructor/alumnes/:dogId/tasques" ? (
+      // Screen 26 (S10 §2).
+      <InstructorRoute>
+        <TasksRoute
+          client={apiClient}
+          dogId={safeDecode(pathname.split("/")[3] ?? "")}
+          key={pathname}
+        />
+      </InstructorRoute>
+    ) : pathname === "/historic" ? (
+      // Screen 25 (S10 §2).
+      <MemberHistoryRoute client={apiClient} />
     ) : route.path === "/activitats/:id" ? (
       <MemberActivityRoute
         activityId={safeDecode(pathname.split("/")[2] ?? "")}
@@ -1658,6 +1726,7 @@ export function App({
             "/reservar",
             "/reservar/confirmar",
             "/entrenaments",
+            "/historic",
           ].includes(pathname) ||
           [
             "/activitats/:id",
@@ -1667,6 +1736,7 @@ export function App({
             "/instructor/pistes/:ringId/reservar",
             "/instructor/classes/:id",
             "/instructor/alumnes/:dogId",
+            "/instructor/alumnes/:dogId/tasques",
           ].includes(route.path)
         }
       >

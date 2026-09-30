@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ❯ src/index.test.ts (4 tests | 1 failed) 28ms
+   ❯ @agilityhub/i18n (4)
+     × E4-W18 step 4: the es retry of the access pages reads like the rest of auth («Vuelve a intentarlo») 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/index.test.ts > @agilityhub/i18n > E4-W18 step 4: the es retry of the access pages reads like the rest of auth («Vuelve a intentarlo»)
+AssertionError: expected 'Volver a intentarlo' to be 'Vuelve a intentarlo' // Object.is equality
+
+Expected: "Vuelve a intentarlo"
+Received: "Volver a intentarlo"
+
+ ❯ src/index.test.ts:14:33
+     12|   it("E4-W18 step 4: the es retry of the access pages reads like the r…
+     13|     const es = (await import("./locales/es/auth.json")).default;
+     14|     expect(es.activation.retry).toBe("Vuelve a intentarlo");
+       |                                 ^
+     15|     expect(es.activation.retry).toBe(es.onboarding.retry);
+     16|     // The message shown right above that button on 01 (E4-W16's retry…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  13:44:08
+   Duration  263ms (transform 65%, import 19%, tests 15%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/index.test.ts

@@ -7,8 +7,9 @@ import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 import { expect, test } from "./oauth-token-log";
 
 // E4-W16 real-core stage (steps 11, 10, 1, 5 and 7), on its own fresh core and seed. Steps 1 and
-// 10 need api E5-T27 (the impersonation `launchUrl` with a handoff code; the RESET mark): on an
-// older image they prove the fallback the web shows and are reported as pending real-core proof.
+// 10 need api E5-T27 (the impersonation `launchUrl` with a handoff code; the RESET mark), which the
+// image carries: since E4-W18 step 3 both fail without it. Only the RESET link's own `purpose`
+// waits for api E5-T29 (E5-W05 step 21) and is reported as pending real-core proof.
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -395,29 +396,12 @@ test("T-01-19 E4-W16 step 10 · a RESET link sets the new password once without 
   await page.getByRole("button", { name: "DESA LA CONTRASENYA" }).click();
   const firstAnswer = await first;
   expect(firstAnswer.request().postDataJSON()).toEqual({ new: corePassword, repeat: corePassword });
-  if (firstAnswer.status() === 401) {
-    // An image without api E5-T27 still asks for `current` after a RESET link (INC-24): the web
-    // maps it to «L'enllaç ja s'ha fet servir…» with «Recupera-la»; the full proof is pending.
-    await expect(page.getByRole("alert")).toContainText(
-      "L'enllaç ja s'ha fet servir: demana'n un altre",
-    );
-    await expect(page.getByRole("link", { name: "Recupera-la" })).toHaveAttribute(
-      "href",
-      "/entrar",
-    );
-    writeEvidence("recovery-core.json", {
-      firstPut: firstAnswer.status(),
-      pending: "real-core proof of step 10 waits for the api E5-T27 image (E49)",
-    });
-    test.info().annotations.push({
-      description: "api E5-T27 is not in this image: the RESET session still needs `current`",
-      type: "pending real-core proof",
-    });
-    await screenshot(page, "02-recuperacio-core-375.png");
-    await context.close();
-    return;
-  }
-  expect(firstAnswer.status()).toBe(200);
+  // E4-W18 step 3: the image carries api E5-T27 (E49), so a RESET session sets the password once
+  // without `current`; a 401 here fails the stage (no fallback any more).
+  expect(
+    firstAnswer.status(),
+    "api E5-T27: a RESET session sets the password without current",
+  ).toBe(200);
   await expect(page.getByText("Contrasenya desada")).toBeVisible();
   const second = page.waitForResponse(
     (response) =>
@@ -478,28 +462,10 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
     launchUrl?: null | string;
     token: string;
   };
-  const launchUrl =
-    typeof body.launchUrl === "string" && body.launchUrl !== "" ? body.launchUrl : undefined;
-
-  if (launchUrl === undefined) {
-    await admin.context().unroute("**/api/v1/me");
-    // api E5-T27 is not in this image: D10 shows its error in the dialog and opens nothing.
-    await expect(dialog.getByRole("alert")).toHaveText("No s'ha pogut completar l'acció.");
-    expect(await popup).toBeUndefined();
-    writeEvidence("impersonation-core.json", {
-      launchUrl: body.launchUrl ?? "absent",
-      opened: false,
-      pending: "real-core proof of step 1 waits for the api E5-T27 image",
-      status: answer.status(),
-    });
-    test.info().annotations.push({
-      description:
-        "api E5-T27 is not in this image (no launchUrl): the fallback is proven, the handoff is pending",
-      type: "pending real-core proof",
-    });
-    await dialog.getByRole("button", { name: "Cancel·la" }).click();
-    return;
-  }
+  // E4-W18 step 3: the image carries api E5-T27, so the answer must carry the club app's
+  // `launchUrl` with a one-time code; its absence fails the stage (no fallback any more).
+  const launchUrl = body.launchUrl ?? "";
+  expect(launchUrl, "api E5-T27: the impersonation answer carries a launchUrl").not.toBe("");
 
   const launch = new URL(launchUrl);
   const code = launch.searchParams.get("handoff") ?? "";

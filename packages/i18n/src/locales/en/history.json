@@ -1,0 +1,37 @@
+{
+  "title": "History",
+  "back": "Back",
+  "close": "Close",
+  "dogs": {
+    "label": "Dogs",
+    "all": "All",
+    "ownDog": "{name} · {level}",
+    "groupDog": "{name} · {level} ({owner})",
+    "groupDogNoLevel": "{name} ({owner})"
+  },
+  "types": {
+    "label": "Type",
+    "all": "All",
+    "CLASS": "Classes",
+    "TRAINING": "Training",
+    "ACTIVITY": "Activities"
+  },
+  "window": "{months, plural, one {Last month, newest first} other {Last # months, newest first}}",
+  "withDog": "{title} · with {dog}",
+  "detail": {
+    "noShow": "No notice given · counts as attended",
+    "byMemberLate": "By you, on {date} at {time} · counts as attended",
+    "noticeLate": "You told the club on {date} at {time} · counts as attended",
+    "byMemberInTime": "By you, in time · does not count",
+    "noticeInTime": "You told the club, in time · does not count",
+    "byClubOnBehalf": "By the club on your behalf · does not count",
+    "system": "Due to inactivity or leave · does not count",
+    "trainingByMember": "By you",
+    "byClub": "“{message}”"
+  },
+  "list": "History of classes, training and activities",
+  "empty": "Nothing in the history yet",
+  "loading": "Loading the history",
+  "loadError": "The history could not be loaded.",
+  "retry": "Try again"
+}

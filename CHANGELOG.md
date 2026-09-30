@@ -92,6 +92,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - An instructor lands on 20 after 01 and 03b (ruling E71).
 
   `pnpm e2e:core` gains the E5 stage on its own fresh seed (`seed:demo --week-start` = the club-local Monday after the run's day, `E5_WEEK_START`); the core's clock goes to the scenario's `demoNow` before any login and back at the end. The 04 rows carry `data-class-id`/`data-bookable-state` and the `SlotGrid` cells `data-slot-state`/`data-ring` for that spec.
+- Add the member's history, the instructor's tasks and notes, and the desktop student record (E6-W02, S10 screens 25 and 26 and D13), mocks-first on the published api E6-T01 contract:
+  - 25 «Històric» (`/historic?dogId=&tipus=`, MEMBER and impersonated): the dog chips with «Tots» by default (none with a single dog), the type chips the modules allow, «Darrers {n} mesos…», and one row per `GET /me/history` item with its badge and R-10-14 detail line, read in the club's time zone; a refused dog falls back to «Tots» with `errors:DOG_NOT_ACCESSIBLE`;
+  - 26 «Tasques i notes» (`/instructor/alumnes/:dogId/tasques`): the private observations with their clips and [DESA] (`409 STALE_VERSION` keeps the typed text to recover), the tasks with «＋ Afegir», the pencil (sent with the version it was opened at), the ✕ with «Vols eliminar aquesta tasca?», completion and reopening, signed-url attachments opened with a fresh url, the full history in a drawer, and the member's note read-only; TASKS off sends the route back to 22 with `errors:MODULE_DISABLED`;
+  - D13 «Fitxa d'alumne» (`/alumnes/:id`): the header chips, four metric cards with their subtitles, the member's note, the api's tasks, the private observations and the «5 darreres classes» table; [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; «Alumnes» in the sidebar (`/alumnes`) searches the students.
+
+  `packages/ui` exports `TasksPanel`, `FollowupEditor`, `DogFollowupEditor`, `FollowupHistoryDrawer`, `AttachmentPicker` and `attachmentRejection`; `packages/api-client` exports `useDogFollowup`, `useStudentSearch`, `uploadSigned` (the one signed-upload helper, now also used by 13, D2's drawer, D7, D10 and D15; the public signup keeps its own url and shares `putSignedFile`) and `loadFileLimits`, and sends `Idempotency-Key` on `POST /tasks`, `POST /attachments`, `PUT /dogs/{id}/observations`, `DELETE /tasks/{id}` and `DELETE /attachments/{id}`; `packages/i18n` gains the `history` namespace and `useFollowupTexts`. The MSW follow-up world is stateful (tasks, observations, attachments, uploads on the page's own origin) and feeds the card of 22 and D13.
 
 ### Changed
 
@@ -107,6 +113,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - The add-dog «enviada» page is titled «Afegeix un gos» with «TORNA ALS MEUS GOSSOS»; «Canviar de perfil · {perfil}» follows the membership's gender; the onboarding offers only the club's languages.
   - `pnpm e2e:core` gains an E4-W16 stage (impersonation fallback, the drawer download, D10's actions, 13's task rows, the RESET link), and the E3 N-37 check prints what the core stored when it fails.
   - Round 2: a redeemed handoff keeps its session while `/me` is retried (network errors and 5xx, with backoff); the tab never reads the refresh cookie meanwhile, nor after a refused `/me`, and 01 shows «No s'ha pogut completar l'accés» with «Torna-ho a provar». The mock keeps every redeemed code spent and never issues a code twice across page loads. Done tasks on 13 keep full contrast (no dimming), and the counter uses ICU plurals («1 pendent · 1 feta»). The E3 N-37 check reads the S11 notification shape (`recipient.accountId`, an APP `DELIVERED` delivery, `action.type`). On the api image with E5-T27, the real-core step 1 runs the whole handoff: the first `/me` answers 503 and is retried, the banner shows the name `/me` carries, and the code is refused a second time. `scripts/e2e-core.sh` runs the Playwright container with `--no-deps`, so a stage no longer re-runs the seed next to the running core.
+
+- Follow-ups of E4-W16's round-2 review (E4-W18):
+  - «Entra com l'abonat»:
+    - when the token endpoint refuses the code, answers 5xx or cannot be reached, the tab is ended (also after a reload): it never sends a `refresh_token` grant with the cookie;
+    - 01 shows «Aquest enllaç ja no és vàlid» for a refused code;
+    - for a transient failure, 01 shows «No s'ha pogut completar l'accés» with «Torna-ho a provar», which sends the same code again.
+  - The back office's handoff (`AuthClientOptions.handoffSessions: "account"`, shared through `apps/clubs-admin/src/auth-options.ts`) opens the caller's own session:
+    - its tokens stay in memory, never in `sessionStorage`;
+    - `/me` is retried on a network error or a 5xx;
+    - the code leaves the address before it is redeemed;
+    - a transient failure shows a retry instead of «no és vàlid o ha caducat».
+  - The E4-W16 real-core stage no longer has its fallbacks for a missing `launchUrl` or a `401` on the first `PUT /me/password`: both are plain assertions on the E5-T27 image. The e4 stage waits for an instructor's landing on `/instructor/dia` (E71).
+  - es «Vuelve a intentarlo» on the access retry, and 13's contrast test reads the colour that paints the task text.
+  - The mock start-up budget test measures CPU time (`process.cpuUsage()`) against the reference work, so a loaded host no longer fails it; the budget is 24 ×, and the import without `clubInstant`'s formatter cache (43 ×) still fails it.
 
 - Follow-ups of the E4-W13 and E4-W14 round-2 reviews (E4-W17):
   - The real-core T-04-34 proves T-04-19's card: the submitted card is withdrawn, then a file is added to the record's card (200), and after the rejection the record keeps exactly its own card, name and breed. The lookup takes the seed's «Demo Boira»; the dead `400` branch and two redundant asserts are gone.

@@ -165,5 +165,17 @@
     "NO_SHOW": "no presentat",
     "CANCELLED_LATE": "anul·lada tard",
     "PENDING": "sense marcar"
+  },
+  "historyState": {
+    "DONE": "feta",
+    "DONE_TRAINING": "fet",
+    "CANCELLED": "anul·lada",
+    "CANCELLED_LATE": "anul·lada tard",
+    "CANCELLED_BY_CLUB": "cancel·lada pel club",
+    "NO_SHOW": "no presentat"
+  },
+  "taskState": {
+    "PENDING": "pendent",
+    "DONE": "feta"
   }
 }

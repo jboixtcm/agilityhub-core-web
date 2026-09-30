@@ -3,6 +3,7 @@ import {
   isApiError,
   type ApiClient,
   type components,
+  uploadSigned,
 } from "@agilityhub/api-client";
 import type { UniversalFilter, UniversalListSavedView, UniversalListState } from "@agilityhub/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -143,23 +144,13 @@ export async function loadActivitySettings(client: ApiClient): Promise<ActivityS
   };
 }
 
-/** Signed upload (S03 pattern): upload URL → `PUT` with the returned headers → the `fileKey`. */
-export async function uploadFile(
+/** Signed upload (CONVENCIONS_API §5) through the shared helper → the `fileKey`. */
+export function uploadFile(
   client: ApiClient,
   file: File,
   purpose: "ACTIVITY_DOCUMENT" | "ACTIVITY_IMAGE",
 ): Promise<string> {
-  const signed = await client.POST("/attachments/upload-url", {
-    body: { fileName: file.name, mimeType: file.type, purpose, sizeBytes: file.size },
-  });
-  if (signed.data === undefined) throw new TypeError("Upload response did not contain data");
-  const response = await fetch(signed.data.uploadUrl, {
-    body: file,
-    headers: signed.data.headers,
-    method: "PUT",
-  });
-  if (!response.ok) throw new TypeError("File upload failed");
-  return signed.data.fileKey;
+  return uploadSigned(client, file, purpose);
 }
 
 function filterValue(value: unknown): string {

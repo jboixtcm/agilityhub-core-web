@@ -1,0 +1,32 @@
+{
+  "dogAfterRejection": {
+    "breed": "Fictional mixed breed",
+    "chip": "941000000000805",
+    "deactivatedAt": "2026-08-21T22:00:00Z",
+    "deactivationReason": "MEMBER_LEFT",
+    "name": "Demo Boira",
+    "status": "INACTIVE",
+    "documents": [
+      "VACCINATION_CARD: demo-document.pdf"
+    ]
+  },
+  "dogBefore": {
+    "breed": "Fictional mixed breed",
+    "chip": "941000000000805",
+    "deactivatedAt": "2026-08-21T22:00:00Z",
+    "deactivationReason": "MEMBER_LEFT",
+    "name": "Demo Boira",
+    "status": "INACTIVE",
+    "documents": [
+      "VACCINATION_CARD: demo-document.pdf"
+    ]
+  },
+  "leftMemberWithDocument": true,
+  "phonesKeptAfterRejection": true,
+  "statusAfterRejection": "LEFT",
+  "submittedCardAtRejection": [
+    "demo-document.pdf",
+    "cartilla_retorn_2.jpg"
+  ],
+  "submittedDogName": "Retorn E3"
+}

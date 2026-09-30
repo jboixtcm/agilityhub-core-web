@@ -641,3 +641,13 @@
   width: 100%;
   margin-top: var(--ah-space-2);
 }
+
+/* Screen 26: «Tasques i notes — {guia} + {gos}» is read whole (mockup 26), on two lines if needed. */
+.instructor-tasks .ah-app-bar__title,
+.instructor-tasks .instructor-screen__bar h1 {
+  white-space: normal;
+}
+
+.instructor-tasks .instructor-screen__bar h1 {
+  font-size: 1.05rem;
+}

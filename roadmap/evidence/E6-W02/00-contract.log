@@ -1,0 +1,49 @@
+openapi.json sha256 7c1693450e7c679b
+openapi.next.json sha256 8c36a5d3f25f8cec
+openapi.next.sha 06c35a1
+/api/v1/me/history: in openapi.json=True identical in next=True
+    GET memberHistory Idempotency-Key=none
+/api/v1/tasks: in openapi.json=True identical in next=True
+    GET tasks Idempotency-Key=none
+    POST createTask Idempotency-Key=required
+/api/v1/tasks/{id}: in openapi.json=True identical in next=True
+    DELETE deleteTask Idempotency-Key=required
+    GET task Idempotency-Key=none
+    PATCH updateTask Idempotency-Key=none
+/api/v1/tasks/{id}/completion: in openapi.json=True identical in next=True
+    POST completeTask Idempotency-Key=none
+/api/v1/tasks/{id}/reopening: in openapi.json=True identical in next=True
+    POST reopenTask Idempotency-Key=none
+/api/v1/attachments: in openapi.json=True identical in next=True
+    GET listAttachments Idempotency-Key=none
+    POST add Idempotency-Key=optional
+/api/v1/attachments/upload-url: in openapi.json=True identical in next=True
+    POST upload Idempotency-Key=none
+/api/v1/attachments/{id}: in openapi.json=True identical in next=True
+    DELETE removeAttachment Idempotency-Key=required
+/api/v1/dogs/{id}/observations: in openapi.json=True identical in next=True
+    PUT saveObservations Idempotency-Key=required
+/api/v1/dogs/{id}/instructor-card: in openapi.json=True identical in next=True
+    GET instructorCard Idempotency-Key=none
+schema MemberHistory: in openapi.json=True identical in next=True
+schema HistoryItem: in openapi.json=True identical in next=True
+schema HistoryDetail: in openapi.json=True identical in next=True
+schema HistoryDog: in openapi.json=True identical in next=True
+schema Task: in openapi.json=True identical in next=True
+schema TaskList: in openapi.json=True identical in next=True
+schema Actor: in openapi.json=True identical in next=True
+schema Attachment: in openapi.json=True identical in next=True
+schema AttachmentList: in openapi.json=True identical in next=True
+schema AttachmentRequest: in openapi.json=True identical in next=True
+schema Upload: in openapi.json=True identical in next=True
+schema UploadRequest: in openapi.json=True identical in next=True
+schema Observations: in openapi.json=True identical in next=True
+schema ObservationsRequest: in openapi.json=True identical in next=True
+schema TaskCreateRequest: in openapi.json=True identical in next=True
+schema TaskPatchRequest: in openapi.json=True identical in next=True
+schema InstructorCard: in openapi.json=True identical in next=True
+schema CardMetrics: in openapi.json=True identical in next=True
+schema LastClass: in openapi.json=True identical in next=True
+TaskCreateRequest.attachmentIds: fileKeys of TASK uploads, registered in the same transaction
+paths only in openapi.next.json: 16 ['/api/v1/email-unsubscribes', '/api/v1/me/notification-preferences', '/api/v1/me/notifications', '/api/v1/me/notifications/read-all', '/api/v1/me/notifications/{id}/read', '/api/v1/members/{id}/notification-preferences', '/api/v1/message-templates', '/api/v1/message-templates/{id}', '/api/v1/message-templates/{id}/preview', '/api/v1/message-templates/{id}/reset', '/api/v1/message-templates/{id}/send', '/api/v1/notifications', '/api/v1/notifications/filter-values', '/api/v1/notifications/{id}', '/api/v1/push-subscriptions', '/api/v1/push-subscriptions/{id}']
+pending.json paths: ['/members/{id}/notification-preferences']

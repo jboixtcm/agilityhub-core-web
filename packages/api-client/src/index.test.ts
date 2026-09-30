@@ -368,6 +368,73 @@ describe("typed API client", () => {
 
     expect(keys).toEqual(["put:", "delete:123e4567-e89b-42d3-a456-426614174005"]);
   });
+
+  it("E6-W02 step 0 (ruling E46) sends an Idempotency-Key on the S10 task, observation and attachment writes whose contract declares it, never on their reads nor on the completion", async () => {
+    const keys: string[] = [];
+    const record =
+      (name: string, status = 200) =>
+      ({ request }: { request: Request }) => {
+        keys.push(`${name}:${request.headers.get("Idempotency-Key") ?? ""}`);
+        return status === 204 ? new HttpResponse(null, { status }) : HttpResponse.json({});
+      };
+    const base = "https://core.example.test/api/v1";
+    server.use(
+      http.get(`${base}/tasks`, record("list")),
+      http.post(`${base}/tasks`, record("create")),
+      http.patch(`${base}/tasks/:id`, record("patch")),
+      http.delete(`${base}/tasks/:id`, record("delete", 204)),
+      http.post(`${base}/tasks/:id/completion`, record("completion")),
+      http.post(`${base}/tasks/:id/reopening`, record("reopening")),
+      http.put(`${base}/dogs/:id/observations`, record("observations")),
+      http.post(`${base}/attachments/upload-url`, record("upload-url")),
+      http.post(`${base}/attachments`, record("attach")),
+      http.delete(`${base}/attachments/:id`, record("detach", 204)),
+    );
+    let next = 0;
+    const client = createApiClient({
+      baseUrl: base,
+      createIdempotencyKey: () => {
+        next += 1;
+        return `123e4567-e89b-42d3-a456-42661417010${String(next)}`;
+      },
+    });
+    const raw = client as unknown as Record<
+      "DELETE" | "GET" | "PATCH" | "POST" | "PUT",
+      (path: string, init: unknown) => Promise<unknown>
+    >;
+    const path = (id: string) => ({ params: { path: { id } } });
+
+    await raw.GET("/tasks", { params: { query: { dogId: "dog-duna" } } });
+    await raw.POST("/tasks", { body: { dogId: "dog-duna", text: "Balancí" } });
+    await raw.PATCH("/tasks/{id}", { ...path("t1"), body: { text: "Balancí", version: 1 } });
+    await raw.DELETE("/tasks/{id}", path("t1"));
+    await raw.POST("/tasks/{id}/completion", path("t2"));
+    await raw.POST("/tasks/{id}/reopening", path("t3"));
+    await raw.PUT("/dogs/{id}/observations", {
+      ...path("dog-duna"),
+      body: { text: "", version: 4 },
+    });
+    await raw.POST("/attachments/upload-url", {
+      body: { fileName: "a.jpg", mimeType: "image/jpeg", purpose: "TASK", sizeBytes: 1 },
+    });
+    await raw.POST("/attachments", {
+      body: { entityId: "t1", entityType: "TASK", fileKey: "k", name: "a.jpg" },
+    });
+    await raw.DELETE("/attachments/{id}", path("a1"));
+
+    expect(keys).toEqual([
+      "list:",
+      "create:123e4567-e89b-42d3-a456-426614170101",
+      "patch:",
+      "delete:123e4567-e89b-42d3-a456-426614170102",
+      "completion:",
+      "reopening:",
+      "observations:123e4567-e89b-42d3-a456-426614170103",
+      "upload-url:",
+      "attach:123e4567-e89b-42d3-a456-426614170104",
+      "detach:123e4567-e89b-42d3-a456-426614170105",
+    ]);
+  });
 });
 
 describe("TanStack Query defaults", () => {
@@ -406,7 +473,9 @@ describe("MSW bootstrap handlers", () => {
     // E5-W02: + the seven S09 handlers of `training-handlers.ts`.
     // E5-W03: + the 13 back-office handlers of `backoffice-handlers.ts` and the register export.
     // E6-W01: + the four S10 handlers of `attendance-handlers.ts` (20, 21 GET and PUT, 22).
-    expect(handlers).toHaveLength(218);
+    // E6-W02: + the 14 S10 handlers of `followup-handlers.ts` (25's history, the tasks, the
+    // observations, the attachments, their two upload purposes and the mock storage's PUT).
+    expect(handlers).toHaveLength(232);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

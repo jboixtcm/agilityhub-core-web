@@ -1,0 +1,37 @@
+{
+  "title": "Històric",
+  "back": "Torna",
+  "close": "Tanca",
+  "dogs": {
+    "label": "Gossos",
+    "all": "Tots",
+    "ownDog": "{name} · {level}",
+    "groupDog": "{name} · {level} ({owner})",
+    "groupDogNoLevel": "{name} ({owner})"
+  },
+  "types": {
+    "label": "Tipus",
+    "all": "Tot",
+    "CLASS": "Classes",
+    "TRAINING": "Entrenaments",
+    "ACTIVITY": "Activitats"
+  },
+  "window": "{months, plural, one {Darrer mes, del més recent al més antic} other {Darrers # mesos, del més recent al més antic}}",
+  "withDog": "{title} · amb {dog}",
+  "detail": {
+    "noShow": "Sense avís previ · compta com a feta",
+    "byMemberLate": "Per tu, el {date} a les {time} · compta com a feta",
+    "noticeLate": "Vas avisar el club el {date} a les {time} · compta com a feta",
+    "byMemberInTime": "Per tu, dins termini · no compta",
+    "noticeInTime": "Vas avisar el club, dins termini · no compta",
+    "byClubOnBehalf": "Pel club en nom teu · no compta",
+    "system": "Per inactivitat o baixa · no compta",
+    "trainingByMember": "Per tu",
+    "byClub": "«{message}»"
+  },
+  "list": "Històric de classes, entrenaments i activitats",
+  "empty": "Encara no hi ha res a l'històric",
+  "loading": "Carregant l'històric",
+  "loadError": "No s'ha pogut carregar l'històric.",
+  "retry": "Torna-ho a provar"
+}

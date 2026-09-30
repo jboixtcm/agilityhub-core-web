@@ -58,6 +58,14 @@ export interface AuthClientOptions {
   apiBaseUrl?: string;
   clientId?: string;
   fetch?: typeof globalThis.fetch;
+  /**
+   * What a handoff code opens in this app (E4-W18 step 2). `impersonation` (the member app, the
+   * default): «Entra com l'abonat» (E47) — the code's session is held apart until `/me` says whose
+   * it is, and a refused or unanswered code leaves the tab anonymous, never the refresh cookie.
+   * `account` (the back office): the caller's own account opened from another app (03b) — a usual
+   * session, never kept in session storage, whose unanswered `/me` is asked again.
+   */
+  handoffSessions?: "account" | "impersonation";
   identityBaseUrl?: string;
   mockMode?: boolean;
   mockRefreshTokenStore?: MockRefreshTokenStore;
@@ -168,9 +176,12 @@ export class AuthClient extends EventTarget {
   private currentMe: Me | null = null;
   private exchangeInFlight: Promise<Me> | null = null;
   private readonly fetcher: typeof globalThis.fetch;
+  /** `account` mode: the tokens of a redeemed code whose `/me` has not answered yet (kept in memory). */
+  private accountHandoffUnconfirmed = false;
   private handoffConfirmation: Promise<Me> | null = null;
-  /** A handoff redeemed in this tab whose session the api refused afterwards: no cookie either. */
+  /** A handoff tried in this tab and refused or unanswered: no cookie until someone signs in. */
   private handoffEnded = false;
+  private readonly handoffSessions: "account" | "impersonation";
   private readonly identityBaseUrl: string;
   /** `active`: an impersonated session (never refreshed); `expired`: it ended in this tab. */
   private impersonation: "active" | "expired" | null = null;
@@ -193,6 +204,7 @@ export class AuthClient extends EventTarget {
     this.apiBaseUrl = options.apiBaseUrl ?? DEFAULT_API_BASE_URL;
     this.clientId = options.clientId ?? "clubs-app";
     this.fetcher = options.fetch ?? globalThis.fetch.bind(globalThis);
+    this.handoffSessions = options.handoffSessions ?? "impersonation";
     this.identityBaseUrl = options.identityBaseUrl ?? DEFAULT_IDENTITY_BASE_URL;
     if (options.mockRefreshTokenStore !== undefined && options.mockMode !== true) {
       throw new TypeError("The memory refresh-token store is only available in mock mode");
@@ -231,7 +243,9 @@ export class AuthClient extends EventTarget {
    * session, and `retryHandoff()` asks again. The cookie is never read meanwhile.
    */
   hasPendingHandoff(): boolean {
-    return this.pendingHandoff !== null;
+    return (
+      this.pendingHandoff !== null || (this.accountHandoffUnconfirmed && this.currentMe === null)
+    );
   }
 
   /** Asks `/me` again for the session a handoff code opened in this tab (with the same backoff). */
@@ -239,6 +253,9 @@ export class AuthClient extends EventTarget {
     if (this.pendingHandoff === null && this.currentMe !== null) {
       // A background retry entered it meanwhile.
       return this.currentMe;
+    }
+    if (this.handoffSessions === "account") {
+      return this.confirmAccountHandoff();
     }
     return this.confirmHandoff();
   }
@@ -568,10 +585,11 @@ export class AuthClient extends EventTarget {
           });
           throw error;
         }
-        // A refused code leaves the tab as it was: the usual restore follows.
+        // A refused magic link, or the back office's own handoff (`account`): the usual restore
+        // follows. An «Entra com l'abonat» code that failed has ended the tab (below).
       }
     }
-    // A handoff redeemed in this tab and refused afterwards: never the cookie instead.
+    // A handoff tried in this tab and refused or unanswered: never the cookie instead (E47).
     if (this.handoffEnded) {
       return null;
     }
@@ -773,6 +791,7 @@ export class AuthClient extends EventTarget {
     this.impersonation = null;
     this.pendingHandoff = null;
     this.handoffEnded = false;
+    this.accountHandoffUnconfirmed = false;
     writeStoredImpersonation(undefined);
   }
 
@@ -986,9 +1005,19 @@ export class AuthClient extends EventTarget {
    * code holds its session until `/me` says whose it is (`confirmHandoff`).
    */
   private async performExchange(form: URLSearchParams, handoff: boolean): Promise<Me> {
-    const tokens = await this.issueToken(form);
+    const impersonationHandoff = handoff && this.handoffSessions === "impersonation";
+    let tokens: TokenResponse;
+    try {
+      tokens = await this.issueToken(form);
+    } catch (error) {
+      // E47 (E4-W18 step 1): an «Entra com l'abonat» code tried in this tab and refused, or left
+      // unanswered (5xx, offline), leaves the tab anonymous until someone signs in on 01 — never
+      // the refresh cookie, which may be the admin's own session.
+      if (impersonationHandoff) this.endHandoff();
+      throw error;
+    }
     this.leaveImpersonation();
-    if (handoff) {
+    if (impersonationHandoff) {
       this.clearLocalSession();
       this.holdHandoff({
         expiresAt: Date.now() + tokens.expires_in * 1_000,
@@ -998,6 +1027,10 @@ export class AuthClient extends EventTarget {
       return this.confirmHandoff();
     }
     this.acceptTokens(tokens);
+    if (handoff) {
+      // The back office (`account`): the caller's own session, asked again while `/me` is down.
+      return this.confirmAccountHandoff();
+    }
     try {
       const me = await this.loadMe();
       this.currentMe = me;
@@ -1006,6 +1039,37 @@ export class AuthClient extends EventTarget {
     } catch (error) {
       this.clearLocalSession();
       throw error;
+    }
+  }
+
+  /**
+   * E4-W18 step 2: the back office's handoff (`account`) is the caller's own session: its tokens
+   * are a usual sliding session in memory (never in session storage). `/me` is asked again on a
+   * network error or a 5xx (2 s, 5 s, or at once when online); after that the tab keeps the tokens
+   * and `retryHandoff()` asks again. A refusal (any 4xx) drops them.
+   */
+  private async confirmAccountHandoff(): Promise<Me> {
+    for (let attempt = 1; ; attempt += 1) {
+      try {
+        const me = await this.loadMe();
+        this.accountHandoffUnconfirmed = false;
+        this.currentMe = me;
+        this.retryAttempt = 0;
+        this.signedOutNotified = false;
+        this.dispatchEvent(new Event("signedIn"));
+        return me;
+      } catch (error) {
+        if (!isTransient(error)) {
+          this.accountHandoffUnconfirmed = false;
+          this.clearLocalSession();
+          throw error;
+        }
+        if (attempt >= HANDOFF_ME_ATTEMPTS) {
+          this.accountHandoffUnconfirmed = true;
+          throw error;
+        }
+        await waitForRetry(RETRY_DELAYS_MS[attempt - 1] ?? RETRY_DELAYS_MS[0]);
+      }
     }
   }
 

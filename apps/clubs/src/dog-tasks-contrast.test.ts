@@ -67,18 +67,53 @@ function css(rgb: Rgb): string {
 }
 
 const canic = brandingCanicFixture.theme.colors;
+
+/** The theme colour behind each token the club's theme sets (`applyBrandingTheme`). */
+const THEME_KEYS: Readonly<Record<string, keyof typeof canic>> = {
+  "--ah-color-border": "border",
+  "--ah-color-danger": "danger",
+  "--ah-color-info": "info",
+  "--ah-color-primary": "primary",
+  "--ah-color-success": "success",
+  "--ah-color-surface": "surface",
+  "--ah-color-text": "text",
+  "--ah-color-text-muted": "textMuted",
+  "--ah-color-warning": "warning",
+};
+
+function darkToken(name: string): Rgb {
+  const key = THEME_KEYS[name];
+  if (key === undefined) throw new TypeError(`No theme colour for ${name}`);
+  return hexChannels(canic[key]);
+}
+
+/**
+ * The token that paints a selector's text: the last `color: var(--ah-color-…)` of its rules, or
+ * the card's own text colour when no rule sets one.
+ */
+function paintToken(selector: string): string {
+  const tokensUsed = rules(clubStyles)
+    .filter(({ selectors }) => selectors.includes(selector))
+    .flatMap(({ declarations }) =>
+      [...declarations.matchAll(/(?:^|;)\s*color\s*:\s*var\((--ah-color-[\w-]+)\)/gu)].map(
+        ([, token]) => token ?? "",
+      ),
+    );
+  return tokensUsed.at(-1) ?? "--ah-color-text";
+}
+
 const PALETTES = [
   {
     background: hexChannels(canic.surface),
     muted: hexChannels(canic.textMuted),
     name: "dark (the club's fixture theme)",
-    text: hexChannels(canic.text),
+    token: darkToken,
   },
   {
     background: lightToken("--ah-color-surface"),
     muted: lightToken("--ah-color-text-muted"),
     name: "light (the product's default tokens)",
-    text: lightToken("--ah-color-text"),
+    token: lightToken,
   },
 ];
 
@@ -100,12 +135,19 @@ describe("E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays re
 
   it.each(PALETTES)(
     "the task text and «feta el …» reach 4.5:1 on the card in the $name palette",
-    ({ background, muted, text }) => {
+    ({ background, muted, token }) => {
       const opacity = taskRowOpacity();
+      // E4-W18 step 4 (review nit #5): the task text with the colour that paints it
+      // (`.dog-task p` → `--ah-color-text-muted` today), not the card's text colour.
+      const text = token(paintToken(".dog-task p"));
       const textRatio = contrastRatio(css(blend(text, background, opacity)), css(background));
       const metaRatio = contrastRatio(css(blend(muted, background, opacity)), css(background));
       expect(textRatio).toBeGreaterThanOrEqual(4.5);
       expect(metaRatio).toBeGreaterThanOrEqual(4.5);
     },
   );
+
+  it("E4-W18 step 4: the task text's paint is read from the stylesheet (`.dog-task p` → muted)", () => {
+    expect(paintToken(".dog-task p")).toBe("--ah-color-text-muted");
+  });
 });

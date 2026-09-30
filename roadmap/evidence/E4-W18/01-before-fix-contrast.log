@@ -1,0 +1,60 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/dog-tasks-contrast.test.ts (4 tests | 3 failed) 6ms
+   ❯ E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable (4)
+     × the task text and «feta el …» reach 4.5:1 on the card in the dark (the club's fixture theme) palette 2ms
+     × the task text and «feta el …» reach 4.5:1 on the card in the light (the product's default tokens) palette 1ms
+     × E4-W18 step 4: the task text's paint is read from the stylesheet (`.dog-task p` → muted) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > the task text and «feta el …» reach 4.5:1 on the card in the dark (the club's fixture theme) palette
+AssertionError: expected 1.2780687968547981 to be greater than or equal to 4.5
+ ❯ src/dog-tasks-contrast.test.ts:145:25
+    143|       const textRatio = contrastRatio(css(blend(text, background, opac…
+    144|       const metaRatio = contrastRatio(css(blend(muted, background, opa…
+    145|       expect(textRatio).toBeGreaterThanOrEqual(4.5);
+       |                         ^
+    146|       expect(metaRatio).toBeGreaterThanOrEqual(4.5);
+    147|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > the task text and «feta el …» reach 4.5:1 on the card in the light (the product's default tokens) palette
+AssertionError: expected 1.4523710931424376 to be greater than or equal to 4.5
+ ❯ src/dog-tasks-contrast.test.ts:145:25
+    143|       const textRatio = contrastRatio(css(blend(text, background, opac…
+    144|       const metaRatio = contrastRatio(css(blend(muted, background, opa…
+    145|       expect(textRatio).toBeGreaterThanOrEqual(4.5);
+       |                         ^
+    146|       expect(metaRatio).toBeGreaterThanOrEqual(4.5);
+    147|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > E4-W18 step 4: the task text's paint is read from the stylesheet (`.dog-task p` → muted)
+AssertionError: expected '--ah-color-border' to be '--ah-color-text-muted' // Object.is equality
+
+Expected: "--ah-color-text-muted"
+Received: "--ah-color-border"
+
+ ❯ src/dog-tasks-contrast.test.ts:151:39
+    149|
+    150|   it("E4-W18 step 4: the task text's paint is read from the stylesheet…
+    151|     expect(paintToken(".dog-task p")).toBe("--ah-color-text-muted");
+       |                                       ^
+    152|   });
+    153| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 4 passed (7)
+   Start at  13:32:39
+   Duration  632ms (environment 56%, transform 27%, setup 12%, import 4%, tests 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/dog-tasks-contrast-head.test.ts src/dog-tasks-contrast.test.ts

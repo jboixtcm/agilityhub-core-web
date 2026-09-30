@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/App.test.tsx (16 tests | 3 failed | 12 skipped) 226ms
+   ❯ E4-W18 step 2 (review #3): the back office's handoff is the caller's own session (4)
+     × a transient /me failure shows a retry, never «no és vàlid o ha caducat»: the code leaves the address, no token lands in session storage, and the retry opens /tauler 187ms
+     × a 5xx from /oauth2/token shows a retry that sends the same code again and opens /tauler 13ms
+     × no answer (offline) from /oauth2/token shows a retry that sends the same code again and opens /tauler 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > a transient /me failure shows a retry, never «no és vàlid o ha caducat»: the code leaves the address, no token lands in session storage, and the retry opens /tauler
+AssertionError: expected '{"expiresAt":1790769494254,"state":"p…' to be null
+
+- Expected:
+null
+
++ Received:
+"{\"expiresAt\":1790769494254,\"state\":\"pending\",\"token\":\"mock-access-token\"}"
+
+ ❯ src/App.test.tsx:336:63
+    334|     expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    335|     expect(assign).not.toHaveBeenCalled();
+    336|     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull…
+       |                                                               ^
+    337|     expect(sessionStorageValues().filter((entry) => entry.includes("mo…
+    338|       [],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > a 5xx from /oauth2/token shows a retry that sends the same code again and opens /tauler
+ FAIL  src/App.test.tsx > E4-W18 step 2 (review #3): the back office's handoff is the caller's own session > no answer (offline) from /oauth2/token shows a retry that sends the same code again and opens /tauler
+AssertionError: expected '{"state":"ended"}' to be null
+
+- Expected:
+null
+
++ Received:
+"{\"state\":\"ended\"}"
+
+ ❯ src/App.test.tsx:375:65
+    373|       expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    374|       expect(window.location.search).toBe("");
+    375|       expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNu…
+       |                                                                 ^
+    376|
+    377|       down = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 12 skipped (16)
+   Start at  13:43:12
+   Duration  1.57s (transform 49%, environment 18%, tests 15%, import 14%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E4-W18

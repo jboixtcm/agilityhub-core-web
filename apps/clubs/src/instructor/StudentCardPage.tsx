@@ -14,10 +14,16 @@ import {
   type Tone,
   useBranding,
 } from "@agilityhub/ui";
-import { type MouseEvent, useCallback } from "react";
+import { type MouseEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { navigateInApp, useLoader } from "../booking/shared";
+import {
+  navigateInApp,
+  noticeText,
+  pageNotice,
+  type PageNotice,
+  useLoader,
+} from "../booking/shared";
 
 import "./instructor.css";
 import { bareWeekday, readErrorText, studentName } from "./shared";
@@ -54,6 +60,8 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
     return data;
   }, [client, dogId]);
   const card = useLoader(load);
+  // Screen 26 sends a caller back here when the club has no TASKS (`errors:MODULE_DISABLED`).
+  const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
   const tasksModule = branding.modules.includes("TASKS");
   const trainingModule = branding.modules.includes("FREE_TRAINING");
   const tasksPath = `/instructor/alumnes/${encodeURIComponent(dogId)}/tasques`;
@@ -88,11 +96,24 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
       title={<h1>{t("instructor:card.title")}</h1>}
     />
   );
+  const noticeToast =
+    notice === undefined ? null : (
+      <Toast
+        dismissLabel={t("instructor:tasks.close")}
+        onDismiss={() => {
+          setNotice(undefined);
+        }}
+        tone={notice.tone}
+      >
+        {noticeText(t, notice)}
+      </Toast>
+    );
 
   if (card.status !== "ready") {
     return (
       <section className="instructor-screen instructor-card">
         {bar}
+        {noticeToast}
         {card.status === "loading" ? (
           <Skeleton
             className="instructor-screen__skeleton"
@@ -145,6 +166,7 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
   return (
     <section className="instructor-screen instructor-card">
       {bar}
+      {noticeToast}
       <Card className="instructor-card__header">
         <div className="instructor-card__who">
           {dog.photoUrl == null ? (

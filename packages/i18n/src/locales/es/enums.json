@@ -165,5 +165,17 @@
     "NO_SHOW": "no presentado",
     "CANCELLED_LATE": "anulada tarde",
     "PENDING": "sin marcar"
+  },
+  "historyState": {
+    "DONE": "hecha",
+    "DONE_TRAINING": "hecho",
+    "CANCELLED": "anulada",
+    "CANCELLED_LATE": "anulada tarde",
+    "CANCELLED_BY_CLUB": "cancelada por el club",
+    "NO_SHOW": "no presentado"
+  },
+  "taskState": {
+    "PENDING": "pendiente",
+    "DONE": "hecha"
   }
 }

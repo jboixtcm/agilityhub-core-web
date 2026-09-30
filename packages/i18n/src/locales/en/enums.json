@@ -165,5 +165,17 @@
     "NO_SHOW": "no-show",
     "CANCELLED_LATE": "cancelled late",
     "PENDING": "not marked"
+  },
+  "historyState": {
+    "DONE": "attended",
+    "DONE_TRAINING": "done",
+    "CANCELLED": "cancelled",
+    "CANCELLED_LATE": "cancelled late",
+    "CANCELLED_BY_CLUB": "cancelled by the club",
+    "NO_SHOW": "no-show"
+  },
+  "taskState": {
+    "PENDING": "pending",
+    "DONE": "done"
   }
 }

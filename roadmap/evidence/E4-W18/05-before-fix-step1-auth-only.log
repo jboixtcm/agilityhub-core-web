@@ -1,0 +1,66 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (43 tests | 4 failed | 39 skipped) 202ms
+   ❯ T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app (8)
+     × E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 102ms
+     × E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 16ms
+     × E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 13ms
+     × E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner 67ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+AssertionError: expected [ Array(2) ] to deeply equal [ 'urn:agilityhub:grant:handoff' ]
+
+- Expected
++ Received
+
+  [
+    "urn:agilityhub:grant:handoff",
++   "refresh_token",
+  ]
+
+ ❯ src/App.test.tsx:719:28
+    717|       if (retry) expect(screen.queryByText("Aquest enllaç ja no és vàl…
+    718|       await restored(restore);
+    719|       expect(token.grants).toEqual([HANDOFF_GRANT]);
+       |                            ^
+    720|       expect(window.location.search).toBe("");
+    721|       expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner
+AssertionError: expected [ Array(3) ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+  [
+    "urn:agilityhub:grant:handoff",
++   "refresh_token",
+    "urn:agilityhub:grant:handoff",
+  ]
+
+ ❯ src/App.test.tsx:763:26
+    761|     });
+    762|     expect(client.isImpersonated()).toBe(true);
+    763|     expect(token.grants).toEqual([HANDOFF_GRANT, HANDOFF_GRANT]);
+       |                          ^
+    764|
+    765|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 39 skipped (43)
+   Start at  13:40:52
+   Duration  1.35s (transform 45%, environment 20%, tests 16%, import 15%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E4-W18

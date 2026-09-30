@@ -1,0 +1,14 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table 169ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card 53ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters 117ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > T-10-32 (D13): en with no missing key; `Level.name` is the api's (its ca fallback), never translated here 33ms
+ ✓ src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 475ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  13:24:05
+   Duration  2.43s (transform 37%, tests 36%, environment 13%, import 11%, setup 3%)
+

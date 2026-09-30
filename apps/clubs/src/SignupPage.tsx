@@ -3,6 +3,7 @@ import {
   isApiError,
   type ApiClient,
   type components,
+  putSignedFile,
 } from "@agilityhub/api-client";
 import { fmtMaskedIban, LOCALE_STORAGE_KEY, productLocales, useClubFormats } from "@agilityhub/i18n";
 import {
@@ -1353,13 +1354,9 @@ function DogStep({
           body: { contentType: file.type, fileName: proposed, sizeBytes: file.size },
         });
         if (response.data === undefined) throw new TypeError("Missing upload URL response");
-        // R-04-08: the storage signed these headers (Content-Type, If-None-Match: *); sent unchanged.
-        const put = await fetch(response.data.uploadUrl, {
-          body: file,
-          headers: response.data.headers,
-          method: "PUT",
-        });
-        if (!put.ok) throw new TypeError("Signed upload failed");
+        // R-04-08: the storage signed these headers (Content-Type, If-None-Match: *); the shared
+        // PUT sends them unchanged and no bearer (the public signup has its own upload url).
+        await putSignedFile(response.data, file);
         uploaded.push({ fileKey: response.data.fileKey, name: proposed });
       }
       // Functional update: fields typed while the upload was in flight are kept.

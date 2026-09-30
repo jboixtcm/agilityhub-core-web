@@ -1,0 +1,148 @@
+http://127.0.0.1:4174/calendari?estat=anul%C2%B7lades&setmana=2026-10-12
+- banner:
+  - strong: Club Agility Cànic
+  - text: Idioma
+  - combobox "Idioma":
+    - option "Català" [selected]
+    - option "Castellà"
+  - button "Exportacions"
+  - button "Menú d’usuari"
+- complementary:
+  - navigation "Navegació d’administració":
+    - heading "Tauler" [level=2]
+    - link "Tauler":
+      - /url: /tauler
+    - heading "Persones" [level=2]
+    - link "Preinscripcions 3":
+      - /url: /tauler
+    - link "Abonats":
+      - /url: /abonats
+    - link "Gossos":
+      - /url: /gossos
+    - link "Inactivitats i baixes":
+      - /url: /inactivitats
+    - link "Seguiment alumnes":
+      - /url: /seguiment
+    - heading "Camp" [level=2]
+    - link "Plantilla setmanal":
+      - /url: /plantilles
+    - link "Calendari de classes":
+      - /url: /calendari
+    - link "Agenda de la setmana":
+      - /url: /agenda
+    - link "Alumnes":
+      - /url: /alumnes
+    - link "Entrenaments":
+      - /url: /entrenaments
+    - link "Activitats":
+      - /url: /activitats
+    - link "Recorreguts":
+      - /url: /recorreguts
+    - heading "Gestió" [level=2]
+    - link "Facturació":
+      - /url: /facturacio
+    - link "Modalitats i tarifes":
+      - /url: /modalitats
+    - link "Comunicats":
+      - /url: /comunicats
+    - heading "Configuració" [level=2]
+    - link "Pistes":
+      - /url: /pistes
+    - link "Instructors i administradors":
+      - /url: /equip
+    - link "Paràmetres":
+      - /url: /parametres
+    - link "Auditoria":
+      - /url: /auditoria
+- main:
+  - heading "Calendari de classes" [level=1]
+  - group "Estat de les classes":
+    - button "Actives"
+    - button "Esborrany"
+    - button "Anul·lades" [pressed]
+  - button "Setmana anterior"
+  - button "Setmana": del 12 al 18 d’octubre ▾
+  - button "Setmana següent"
+  - button "Crear classe"
+  - button "Bloqueja pista"
+  - table "Calendari de classes · del 12 al 18 d’octubre":
+    - caption: Calendari de classes · del 12 al 18 d’octubre
+    - rowgroup:
+      - row "dl 12 dt 13 dc 14 dj 15 dv 16 ds 17":
+        - cell
+        - columnheader "dl 12":
+          - button "dl 12"
+        - columnheader "dt 13":
+          - button "dt 13"
+        - columnheader "dc 14":
+          - button "dc 14"
+        - columnheader "dj 15":
+          - button "dj 15"
+        - columnheader "dv 16":
+          - button "dv 16"
+        - columnheader "ds 17":
+          - button "ds 17"
+    - rowgroup:
+      - row "9:30 dc 14 9:30 · Cadells · 0/5 · anul·lada · revisió de les 7:30 · anul·lada":
+        - rowheader "9:30"
+        - cell
+        - cell
+        - cell "dc 14 9:30 · Cadells · 0/5 · anul·lada · revisió de les 7:30 · anul·lada":
+          - button "dc 14 9:30 · Cadells · 0/5 · anul·lada · revisió de les 7:30 · anul·lada":
+            - text: Cadells
+            - strong: 0/5
+            - text: anul·lada · revisió de les 7:30
+        - cell
+        - cell
+        - cell
+      - row "11:00 Central bloquejada · manteniment 11:00–12:00":
+        - rowheader "11:00"
+        - cell
+        - cell
+        - cell "Central bloquejada · manteniment 11:00–12:00":
+          - button "Central bloquejada · manteniment 11:00–12:00": Central bloquejada manteniment 11:00–12:00
+        - cell
+        - cell
+        - cell
+      - row "16:00 Carretera bloquejada · manteniment 16:00–18:00":
+        - rowheader "16:00"
+        - cell
+        - cell
+        - cell "Carretera bloquejada · manteniment 16:00–18:00":
+          - button "Carretera bloquejada · manteniment 16:00–18:00": Carretera bloquejada manteniment 16:00–18:00
+        - cell
+        - cell
+        - cell
+      - row "18:30 ds 17 18:30 · A+B · 0/5 · anul·lada · activitat · anul·lada Activitat · Torneig d'Estiu 2026 · totes les pistes":
+        - rowheader "18:30"
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell "ds 17 18:30 · A+B · 0/5 · anul·lada · activitat · anul·lada Activitat · Torneig d'Estiu 2026 · totes les pistes":
+          - button "ds 17 18:30 · A+B · 0/5 · anul·lada · activitat · anul·lada":
+            - text: A+B
+            - strong: 0/5
+            - text: anul·lada · activitat
+          - link "Activitat · Torneig d'Estiu 2026 · totes les pistes":
+            - /url: /activitats/696e838a-9f15-4680-9441-164b621b9ec6
+            - text: Activitat · Torneig d'Estiu 2026 totes les pistes · 18:30–20:30
+      - row "18:50 dc 14 18:50 · B+C · 0/5 · anul·lada · eliminada · anul·lada":
+        - rowheader "18:50"
+        - cell
+        - cell
+        - cell "dc 14 18:50 · B+C · 0/5 · anul·lada · eliminada · anul·lada":
+          - button "dc 14 18:50 · B+C · 0/5 · anul·lada · eliminada · anul·lada":
+            - text: B+C
+            - strong: 0/5
+            - text: anul·lada · eliminada
+        - cell
+        - cell
+        - cell
+  - paragraph: n/n +e = inscrits/places + llista d'espera · = pista bloquejada · Clica el nom d'un dia per veure'l per pista o per instructor
+  - region "Avisos d'incoherència de la setmana":
+    - heading "Avisos d'incoherència de la setmana" [level=2]
+    - list:
+      - listitem:
+        - button "dijous 18:50 — Aina assignat a dues pistes alhora (Cadells i Petita)" [disabled]
